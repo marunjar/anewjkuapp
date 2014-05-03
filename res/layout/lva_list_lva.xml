@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="fill_vertical"
+    android:orientation="horizontal"
+    android:paddingRight="10dp" >
+
+    <View
+        android:id="@+id/lva_list_chip"
+        style="@style/chip" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:id="@+id/lva_list_lva_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="3dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textStyle="bold" />
+        
+        <TextView
+            android:id="@+id/lva_list_lva_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/lva_list_lva_title"
+            android:gravity="center_vertical"
+            android:padding="3dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textStyle="bold" />
+        
+        <TextView
+            android:id="@+id/lva_list_lva_nr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/lva_list_lva_title"
+            android:gravity="center_vertical"
+            android:padding="3dp"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/lva_list_lva_skz"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/lva_list_lva_title"
+            android:layout_toRightOf="@id/lva_list_lva_nr"
+            android:gravity="center_vertical"
+            android:padding="3dp"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </RelativeLayout>
+
+</LinearLayout>

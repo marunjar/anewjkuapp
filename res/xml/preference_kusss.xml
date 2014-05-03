@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/pref_cat_kusss_main" >
+        <Preference android:title="@string/pref_cat_update_password" >
+            <intent android:action="org.voidsink.anewjkuapp.prefs.LOGIN" />
+        </Preference>
+
+        <ListPreference
+            android:defaultValue="85"
+            android:entries="@array/pref_kusss_sync_interval_entries"
+            android:entryValues="@array/pref_kusss_sync_interval_values"
+            android:key="pref_key_sync_interval"
+            android:summary="@string/pref_kusss_sync_interval_summary"
+            android:title="@string/pref_kusss_sync_interval_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_cat_kusss_calendar" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_key_notify_calendar"
+            android:summary="@string/pref_kusss_calendar_notify_summary"
+            android:title="@string/pref_kusss_notify_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_cat_kusss_grade" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_key_notify_grade"
+            android:summary="@string/pref_kusss_grade_notify_summary"
+            android:title="@string/pref_kusss_notify_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_cat_kusss_exam" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_key_notify_exam"
+            android:summary="@string/pref_kusss_exam_notify_summary"
+            android:title="@string/pref_kusss_notify_title" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

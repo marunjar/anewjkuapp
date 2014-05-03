@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="pref_kusss_sync_interval_entries">
+        <item name="1h">Jede Stunde</item>
+        <item name="1d">Jeden Tag</item>
+        <item name="3.5d">Zweimal Wöchentlich</item>
+        <item name="7d">Wöchentlich</item>
+    </array>
+    
+    <string-array name="pref_kusss_sync_interval_values">
+        <item name="1h">1</item>
+        <item name="1d">25</item>
+        <item name="3.5d">85</item>
+        <item name="7d">169</item>
+    </string-array>
+
+</resources>

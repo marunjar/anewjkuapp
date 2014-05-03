@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.voidsink.anewjkuapp"
+    android:versionCode="100008"
+    android:versionName="0.08" >
+
+    <uses-sdk
+        android:minSdkVersion="10"
+        android:targetSdkVersion="19" />
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_SYNC_STATS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".activity.MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:permission="android.permission.MANAGE_ACCOUNTS"
+            android:screenOrientation="portrait" >
+
+            <!-- Call from preference screen -->
+
+            <intent-filter>
+                <action android:name="org.voidsink.anewjkuapp.prefs.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.KusssAuthenticatorActivity"
+            android:permission="android.permission.MANAGE_ACCOUNTS"
+            android:screenOrientation="portrait" >
+
+            <!-- Call from preference screen -->
+
+            <intent-filter>
+                <action android:name="org.voidsink.anewjkuapp.prefs.LOGIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".service.KusssService"
+            android:exported="false"
+            android:label="@string/kusss_service_title" >
+        </service>
+        <service
+            android:name=".service.KusssAuthenticatorService"
+            android:permission="android.permission.AUTHENTICATE_ACCOUNTS" >
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
+        <service
+            android:name=".service.KusssCalendarSyncService"
+            android:exported="false"
+            android:process=":sync" >
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/syncadapter_calendar" />
+        </service>
+        <service
+            android:name=".service.KusssSyncService"
+            android:exported="false"
+            android:process=":sync" >
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/syncadapter_kusss" />
+        </service>
+
+        <provider
+            android:name="org.voidsink.anewjkuapp.provider.KusssContentProvider"
+            android:authorities="org.voidsink.anewjkuapp.provider"
+            android:exported="false"
+            android:label="@string/kusss_provider_name"
+            android:syncable="true" />
+    </application>
+
+</manifest>
