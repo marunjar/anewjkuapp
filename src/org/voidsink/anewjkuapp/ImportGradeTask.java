@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.voidsink.anewjkuapp.base.BaseAsyncTask;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Grade;
 import org.voidsink.anewjkuapp.kusss.GradeType;
@@ -22,17 +23,14 @@ import android.content.Context;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
-public class ImportGradeTask extends AsyncTask<Void, Void, Void> {
+public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 
 	private static final String TAG = ImportLvaTask.class.getSimpleName();
 
 	private static final Object sync_lock = new Object();
-
-	private boolean importDone = false;
 
 	private ContentProviderClient mProvider;
 	private Account mAccount;
@@ -217,15 +215,11 @@ public class ImportGradeTask extends AsyncTask<Void, Void, Void> {
 			} finally {
 				mSyncNotification.cancel();
 				mGradeChangeNotification.show();
-				importDone = true;
+				setImportDone(true);
 			}
 		}
 
 		return null;
-	}
-
-	public boolean isDone() {
-		return importDone;
 	}
 
 }

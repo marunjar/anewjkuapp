@@ -543,6 +543,8 @@ int string pref_cat_sync_settings 0x7f060035
 int string pref_cat_update_password 0x7f060036
 int string pref_kusss_calendar_notify_summary 0x7f060042
 int string pref_kusss_calendar_sync_summary 0x7f060041
+int string pref_kusss_exam_get_from_lva_summary 0x7f06007a
+int string pref_kusss_exam_get_from_lva_title 0x7f060079
 int string pref_kusss_exam_notify_summary 0x7f060048
 int string pref_kusss_exam_sync_summary 0x7f060047
 int string pref_kusss_grade_notify_summary 0x7f060045

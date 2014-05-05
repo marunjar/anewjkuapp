@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MensaMenuAdapter extends BaseArrayAdapter<MensaItem> {
 
@@ -26,6 +27,10 @@ public class MensaMenuAdapter extends BaseArrayAdapter<MensaItem> {
 		super(context, textViewResourceId);
 
 		this.inflater = LayoutInflater.from(context);
+	}
+
+	public MensaMenuAdapter(Context context) {
+		this(context, 0);
 	}
 
 	@Override
@@ -202,5 +207,9 @@ public class MensaMenuAdapter extends BaseArrayAdapter<MensaItem> {
 			}
 		}
 
+		if (getCount() == 0) {
+			Toast.makeText(getContext(), "kein Speiseplan gefunden",
+					Toast.LENGTH_LONG).show();
+		}
 	}
 }

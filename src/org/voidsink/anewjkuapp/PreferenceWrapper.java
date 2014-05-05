@@ -38,6 +38,9 @@ public final class PreferenceWrapper {
 	private static final String PREF_LAST_FRAGMENT = "pref_key_last_fragment";
 	private static final String PREF_LAST_FRAGMENT_DEFAULT = "";
 
+	private static final String PREF_GET_NEW_EXAMS = "pref_key_get_exams_from_lva";
+	private static final boolean PREF_GET_NEW_EXAMS_DEFAULT = false;
+	
 	private PreferenceWrapper() {
 
 	}
@@ -95,6 +98,17 @@ public final class PreferenceWrapper {
 		}
 	}
 
+	public static boolean getNewExamsByLvaNr(Context mContext) {
+		SharedPreferences sp = PreferenceManager
+				.getDefaultSharedPreferences(mContext);
+		try {
+			return sp.getBoolean(PREF_GET_NEW_EXAMS,
+					PREF_GET_NEW_EXAMS_DEFAULT);
+		} catch (Exception e) {
+			return PREF_GET_NEW_EXAMS_DEFAULT;
+		}
+	}	
+	
 	public static boolean getNotifyExam(Context mContext) {
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(mContext);

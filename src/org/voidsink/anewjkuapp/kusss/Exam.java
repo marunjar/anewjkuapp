@@ -40,7 +40,8 @@ public class Exam {
 						.get(1).text()); // (lvaNr,term)
 				if (lvaNrTermMatcher.find()) {
 					String lvaNrTerm = lvaNrTermMatcher.group();
-					setTitle(columns.get(1).text().substring(0, lvaNrTermMatcher.start()));
+					setTitle(columns.get(1).text()
+							.substring(0, lvaNrTermMatcher.start()));
 
 					Matcher lvaNrMatcher = lvaNrPattern.matcher(lvaNrTerm); // lvaNr
 					if (lvaNrMatcher.find()) {
@@ -110,12 +111,15 @@ public class Exam {
 	public void addAdditionalInfo(Element row) {
 		Elements columns = row.getElementsByTag("td");
 		if (columns.size() == 1) {
-			Elements info = columns.get(0).getElementsByAttributeValue("class",
-					"info_icon");
-			if (info.size() > 0) {
-				setInfo(info.text());
-			} else {
-				setDescription(columns.text());
+			String text = columns.get(0).text().trim();
+			if (!text.isEmpty()) {
+				Elements info = columns.get(0).getElementsByAttributeValue(
+						"class", "info_icon");
+				if (info.size() > 0) {
+					setInfo(text);
+				} else {
+					setDescription(text);
+				}
 			}
 		}
 	}

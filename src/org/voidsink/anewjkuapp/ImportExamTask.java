@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.voidsink.anewjkuapp.base.BaseAsyncTask;
 import org.voidsink.anewjkuapp.kusss.Exam;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.notification.NewExamNotification;
@@ -23,17 +24,14 @@ import android.content.Context;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
-public class ImportExamTask extends AsyncTask<Void, Void, Void> {
+public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 
 	private static final String TAG = ImportLvaTask.class.getSimpleName();
 	private static final Object sync_lock = new Object();
 	private static final DateFormat df = SimpleDateFormat.getDateInstance();
-
-	private boolean importDone = false;
 
 	private ContentProviderClient mProvider;
 	private Account mAccount;
@@ -92,12 +90,19 @@ public class ImportExamTask extends AsyncTask<Void, Void, Void> {
 								this.mAccount.name,
 								AccountManager.get(mContext).getPassword(
 										this.mAccount))) {
-					Log.d(TAG, "load exams");
 
-					List<Exam> exams = KusssHandler.handler.getNewExams();
+					List<Exam> exams = null;
+					if (PreferenceWrapper.getNewExamsByLvaNr(mContext)) {
+						Log.d(TAG, "load exams by lvanr");
+						exams = KusssHandler.handler
+								.getNewExamsByLvaNr();
+					} else {
+						Log.d(TAG, "load exams");
+						exams = KusssHandler.handler.getNewExams();
+					}
 					if (exams == null) {
 						mSyncResult.stats.numParseExceptions++;
-					}					
+					}
 					Map<String, Exam> examMap = new HashMap<String, Exam>();
 					for (Exam exam : exams) {
 						examMap.put(
@@ -235,15 +240,11 @@ public class ImportExamTask extends AsyncTask<Void, Void, Void> {
 			} finally {
 				mSyncNotification.cancel();
 				mNewExamNotification.show();
-				importDone = true;
+				setImportDone(true);
 			}
 		}
 
 		return null;
-	}
-
-	public boolean isDone() {
-		return importDone;
 	}
 
 }

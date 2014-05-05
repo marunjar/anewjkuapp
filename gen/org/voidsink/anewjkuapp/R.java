@@ -1452,6 +1452,8 @@ containing a value of this type.
         public static final int pref_cat_update_password=0x7f060036;
         public static final int pref_kusss_calendar_notify_summary=0x7f060042;
         public static final int pref_kusss_calendar_sync_summary=0x7f060041;
+        public static final int pref_kusss_exam_get_from_lva_summary=0x7f06007a;
+        public static final int pref_kusss_exam_get_from_lva_title=0x7f060079;
         public static final int pref_kusss_exam_notify_summary=0x7f060048;
         public static final int pref_kusss_exam_sync_summary=0x7f060047;
         public static final int pref_kusss_grade_notify_summary=0x7f060045;

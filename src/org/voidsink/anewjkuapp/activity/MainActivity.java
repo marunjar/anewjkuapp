@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -169,14 +170,7 @@ public class MainActivity extends ActionBarActivity implements
 			// update the main content by replacing fragments
 			if ((item.getStartFragment() != null)) {
 				attachFragment(item.getStartFragment());
-			} else {
-				getSupportFragmentManager()
-						.beginTransaction()
-						.replace(R.id.container,
-								PlaceholderFragment.newInstance(position + 1))
-						.commit();
-			}
-
+			} 
 			if (item.updateActionBarTitle()) {
 				mTitle = item.getLabel();
 				getSupportActionBar().setTitle(mTitle);
@@ -216,21 +210,11 @@ public class MainActivity extends ActionBarActivity implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-
-		switch (id) {
-		case R.id.action_settings:
-			startActivity(new Intent(this, SettingsActivity.class));
-			return true;
-		default:
-			break;
-		}
+		Log.i(TAG, "onOptionsItemSelected");
 		return super.onOptionsItemSelected(item);
 	}
-
+	
+	
 	public void onClickChangeLog(View v) {
 		new ChangeLog(this).getFullLogDialog().show();
 	}

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="0.09" versioncode="100009">
+       <change>Prüfungen können nach LVA-Nr (ohne Semester) geladen werden</change> 
+    </release>
     <release version="0.08" versioncode="100008">
-       <change>Menü vom Choice kann wieder geladen werde</change> 
+       <change>Menü vom Choice kann wieder geladen werden</change> 
     </release>
     <release version="0.07" versioncode="100007">
        <change>für Betatest vorbereiten</change> 

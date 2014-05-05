@@ -36,7 +36,7 @@ public class MensaDay implements MensaItem {
 	}
 
 	public boolean isEmpty() {
-		return (this.date == null) || (this.menus.size() == 0);
+		return (this.menus.size() == 0);
 	}
 
 	public Date getDate() {

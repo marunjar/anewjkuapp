@@ -13,6 +13,7 @@ import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.component.VEvent;
 
+import org.voidsink.anewjkuapp.base.BaseAsyncTask;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
@@ -29,19 +30,16 @@ import android.content.Context;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
 
-public class ImportCalendarTask extends AsyncTask<Void, Void, Void> {
+public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 
 	private static final String TAG = ImportCalendarTask.class.getSimpleName();
 
 	private static final Object sync_lock = new Object();
-
-	private boolean importDone = false;
 
 	private final CalendarBuilder mCalendarBuilder;
 
@@ -438,7 +436,7 @@ public class ImportCalendarTask extends AsyncTask<Void, Void, Void> {
 				}
 			} finally {
 				mSyncNotification.cancel();
-				importDone = true;
+				setImportDone(true);
 			}
 		}
 
@@ -462,10 +460,6 @@ public class ImportCalendarTask extends AsyncTask<Void, Void, Void> {
 
 		return String.format("%s: %s", df.format(new Date(eventDTStart)),
 				eventTitle);
-	}
-
-	public boolean isDone() {
-		return importDone;
 	}
 
 }

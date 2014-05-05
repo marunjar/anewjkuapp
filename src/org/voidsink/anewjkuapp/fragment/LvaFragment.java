@@ -18,13 +18,17 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
 public class LvaFragment extends BaseFragment {
 
+	private static final String TAG = LvaFragment.class.getSimpleName();
 	private ListView mListView;
 	private LvaListAdapter mAdapter;
 
@@ -38,7 +42,7 @@ public class LvaFragment extends BaseFragment {
 		mListView.setAdapter(mAdapter);
 
 		new LvaLoadTask().execute();
-		
+
 		return view;
 	}
 
@@ -46,7 +50,25 @@ public class LvaFragment extends BaseFragment {
 	public void onStart() {
 		super.onStart();
 	}
-	
+
+	@Override
+	protected boolean onRefreshSelected(MenuItem item) {
+		Looper.prepare();
+
+		Log.d(TAG, "importing LVAs");
+
+		ImportLvaTask lvaTask = new ImportLvaTask(
+				MainActivity.getAccount(mContext), mContext);
+		lvaTask.execute();
+		while (!lvaTask.isDone()) {
+			try {
+				Thread.sleep(600);
+			} catch (Exception e) {
+			}
+		}
+		return true;
+	}
+
 	private class LvaLoadTask extends AsyncTask<String, Void, Void> {
 		private ProgressDialog progressDialog;
 		private List<LvaListItem> mLvas;
@@ -95,6 +117,5 @@ public class LvaFragment extends BaseFragment {
 			super.onPostExecute(result);
 		}
 	}
-	
 
 }

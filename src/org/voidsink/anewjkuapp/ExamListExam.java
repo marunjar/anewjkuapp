@@ -10,13 +10,13 @@ public class ExamListExam implements ExamListItem {
 
 	private int lvaNr;
 	private String info;
-	private CharSequence title;
-	private CharSequence description;
+	private String title;
+	private String description;
 	private String term;
 	private int skz;
 	private Date date;
-	private CharSequence time;
-	private CharSequence location;
+	private String time;
+	private String location;
 
 	public ExamListExam(Cursor c, LvaMap map) {
 		this.lvaNr = c.getInt(ImportExamTask.COLUMN_EXAM_LVANR);
@@ -46,15 +46,15 @@ public class ExamListExam implements ExamListItem {
 		return true;
 	}
 
-	public CharSequence getTitle() {
+	public String getTitle() {
 		return this.title;
 	}
 
-	public CharSequence getDescription() {
+	public String getDescription() {
 		return this.description;
 	}
 
-	public CharSequence getInfo() {
+	public String getInfo() {
 		return this.info;
 	}
 
@@ -62,7 +62,7 @@ public class ExamListExam implements ExamListItem {
 		return this.lvaNr;
 	}
 
-	public CharSequence getTerm() {
+	public String getTerm() {
 		return this.term;
 	}
 
@@ -74,11 +74,11 @@ public class ExamListExam implements ExamListItem {
 		return this.date;
 	}
 
-	public CharSequence getTime() {
+	public String getTime() {
 		return this.time;
 	}
 
-	public CharSequence getLocation() {
+	public String getLocation() {
 		return this.location;
 	}
 

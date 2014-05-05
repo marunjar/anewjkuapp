@@ -8,8 +8,10 @@ import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,11 +21,15 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import android.text.format.DateUtils;
 import android.util.Log;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 
 public class KusssHandler {
+
+	private static final SimpleDateFormat df = new SimpleDateFormat(
+			"dd/MM/yyyy");
 
 	private static final String TAG = KusssHandler.class.getSimpleName();
 
@@ -295,6 +301,79 @@ public class KusssHandler {
 		return exams;
 	}
 
-	public static KusssHandler handler = new KusssHandler();
+	public List<Exam> getNewExamsByLvaNr() {
 
+		List<Exam> exams = new ArrayList<Exam>();
+		try {
+			List<LVA> lvas = getLvas();
+			System.out.println(lvas.size());
+			List<ExamGrade> grades = getGrades();
+			Map<Integer, ExamGrade> gradeCache = new HashMap<Integer, ExamGrade>();
+			for (ExamGrade grade : grades) {
+				if (grade.getLvaNr() > 0) {
+					ExamGrade existing = gradeCache.get(grade.getLvaNr());
+					if (existing != null) {
+						Log.w(TAG,
+								existing.getTitle() + " --> "
+										+ grade.getTitle());
+					}
+					gradeCache.put(grade.getLvaNr(), grade);
+				}
+			}
+
+			for (LVA lva : lvas) {
+				ExamGrade grade = gradeCache.get(lva.getLvaNr());
+				if (grade != null) {
+					if ((grade.getGrade() == Grade.G5)
+							|| (grade.getDate().getTime() > (System
+									.currentTimeMillis() - (182 * DateUtils.DAY_IN_MILLIS)))) {
+						Log.d(TAG,
+								"positive in last 6 Months: "
+										+ grade.getTitle());
+						grade = null;
+					}
+				}
+				if (grade == null) {
+					Document doc = Jsoup
+							.connect(URL_GET_EXAMS)
+							.data("search", "true")
+							.data("searchType", "specific")
+							.data("searchDateFrom",
+									df.format(new Date(System
+											.currentTimeMillis())))
+							.data("searchDateTo",
+									df.format(new Date(System
+											.currentTimeMillis()
+											+ DateUtils.YEAR_IN_MILLIS)))
+							.data("searchLvaNr",
+									Integer.toString(lva.getLvaNr())).get();
+
+					Elements rows = doc.select(SELECT_NEW_EXAMS);
+
+					int i = 0;
+					while (i < rows.size()) {
+						Element row = rows.get(i);
+						Exam exam = new Exam(row);
+						i++;
+
+						if (exam.isInitialized()) {
+							while (i < rows.size()
+									&& rows.get(i).attr("class")
+											.equals(row.attr("class"))) {
+								exam.addAdditionalInfo(rows.get(i));
+								i++;
+							}
+							exams.add(exam);
+						}
+					}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return exams;
+	}
+
+	public static KusssHandler handler = new KusssHandler();
 }

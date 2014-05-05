@@ -104,5 +104,7 @@
     <string name="progress_load_calendar">Termine werden geladen...</string>
     <string name="progress_login">Einloggen...</string>
     <string name="listview_footer_button">Mehr...</string>
+    <string name="pref_kusss_exam_get_from_lva_title">Prüfungen nach LVA-Nr laden</string>
+    <string name="pref_kusss_exam_get_from_lva_summary">findet Prüfungen zu LVAs auch aus früheren Semestern, ist dafür aber langsamer ...</string>
 
 </resources>

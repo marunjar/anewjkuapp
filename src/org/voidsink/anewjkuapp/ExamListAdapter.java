@@ -85,8 +85,18 @@ public class ExamListAdapter extends BaseArrayAdapter<ExamListItem> {
 		}
 
 		eventItemHolder.title.setText(eventItem.getTitle());
-		eventItemHolder.description.setText(eventItem.getDescription());
-		eventItemHolder.info.setText(eventItem.getInfo());
+		if (!eventItem.getDescription().isEmpty()) {
+			eventItemHolder.description.setText(eventItem.getDescription());
+			eventItemHolder.description.setVisibility(View.VISIBLE);
+		} else {
+			eventItemHolder.description.setVisibility(View.GONE);
+		}
+		if (!eventItem.getInfo().isEmpty()) {
+			eventItemHolder.info.setText(eventItem.getInfo());
+			eventItemHolder.info.setVisibility(View.VISIBLE);
+		} else {
+			eventItemHolder.info.setVisibility(View.GONE);
+		}
 		eventItemHolder.lvaNr.setText(Integer.toString(eventItem.getLvaNr()));
 		eventItemHolder.term.setText(eventItem.getTerm());
 		eventItemHolder.skz.setText(String.format("[%s]", eventItem.getSkz()));

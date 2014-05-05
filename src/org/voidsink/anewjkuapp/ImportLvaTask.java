@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.voidsink.anewjkuapp.base.BaseAsyncTask;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.kusss.LVA;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
@@ -18,17 +19,14 @@ import android.content.Context;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
-public class ImportLvaTask extends AsyncTask<Void, Void, Void> {
+public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
 
 	private static final String TAG = ImportLvaTask.class.getSimpleName();
 
 	private static final Object sync_lock = new Object();
-
-	private boolean importDone = false;
 
 	private ContentProviderClient mProvider;
 	private Account mAccount;
@@ -43,7 +41,7 @@ public class ImportLvaTask extends AsyncTask<Void, Void, Void> {
 			KusssContentContract.Lva.LVA_COL_TITLE,
 			KusssContentContract.Lva.LVA_COL_SKZ,
 			KusssContentContract.Lva.LVA_COL_TYPE,
-			KusssContentContract.Lva.LVA_COL_TEACHER};
+			KusssContentContract.Lva.LVA_COL_TEACHER };
 
 	public static final int COLUMN_LVA_ID = 0;
 	public static final int COLUMN_LVA_TERM = 1;
@@ -53,6 +51,12 @@ public class ImportLvaTask extends AsyncTask<Void, Void, Void> {
 	public static final int COLUMN_LVA_TYPE = 5;
 	public static final int COLUMN_LVA_TEACHER = 6;
 
+	public ImportLvaTask(Account account, Context context) {
+		this(account, null, null, null, null, context);
+		this.mProvider = context.getContentResolver().acquireContentProviderClient(KusssContentContract.Lva.CONTENT_URI);
+		this.mSyncResult = new SyncResult();
+	}
+	
 	public ImportLvaTask(Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult,
 			Context context) {
@@ -67,7 +71,8 @@ public class ImportLvaTask extends AsyncTask<Void, Void, Void> {
 	protected Void doInBackground(Void... params) {
 		Log.d(TAG, "Start importing LVA");
 
-		SyncNotification mSyncNotification = new SyncNotification(mContext, R.string.notification_sync_lva);
+		SyncNotification mSyncNotification = new SyncNotification(mContext,
+				R.string.notification_sync_lva);
 		mSyncNotification.show("LVAs werden geladen");
 
 		synchronized (sync_lock) {
@@ -182,15 +187,11 @@ public class ImportLvaTask extends AsyncTask<Void, Void, Void> {
 				Log.e(TAG, "import failed: " + e);
 			} finally {
 				mSyncNotification.cancel();
-				importDone = true;
+				setImportDone(true);
 			}
 		}
 
 		return null;
-	}
-
-	public boolean isDone() {
-		return importDone;
 	}
 
 }
