@@ -104,7 +104,7 @@ public class MapFragment extends BaseFragment {
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		menu.clear();
+		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.map, menu);
 	}
 	

@@ -51,23 +51,23 @@ public class LvaFragment extends BaseFragment {
 		super.onStart();
 	}
 
-	@Override
-	protected boolean onRefreshSelected(MenuItem item) {
-		Looper.prepare();
-
-		Log.d(TAG, "importing LVAs");
-
-		ImportLvaTask lvaTask = new ImportLvaTask(
-				MainActivity.getAccount(mContext), mContext);
-		lvaTask.execute();
-		while (!lvaTask.isDone()) {
-			try {
-				Thread.sleep(600);
-			} catch (Exception e) {
-			}
-		}
-		return true;
-	}
+//	@Override
+//	protected boolean onRefreshSelected(MenuItem item) {
+//		Looper.prepare();
+//
+//		Log.d(TAG, "importing LVAs");
+//
+//		ImportLvaTask lvaTask = new ImportLvaTask(
+//				MainActivity.getAccount(mContext), mContext);
+//		lvaTask.execute();
+//		while (!lvaTask.isDone()) {
+//			try {
+//				Thread.sleep(600);
+//			} catch (Exception e) {
+//			}
+//		}
+//		return true;
+//	}
 
 	private class LvaLoadTask extends AsyncTask<String, Void, Void> {
 		private ProgressDialog progressDialog;

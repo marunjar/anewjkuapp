@@ -24,6 +24,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -69,6 +71,12 @@ public class CalendarFragment extends BaseFragment {
 		then = now + 14 * DateUtils.DAY_IN_MILLIS;
 
 		loadData();
+	}
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.calendar, menu);
 	}
 
 	private void loadMoreData() {

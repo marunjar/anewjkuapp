@@ -337,13 +337,7 @@ public class NavigationDrawerFragment extends BaseFragment {
 			return true;
 		}
 
-		switch (item.getItemId()) {
-		case R.id.action_refresh:
-			// KusssAuthenticator.TriggerRefresh(this.getActivity());
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	/**

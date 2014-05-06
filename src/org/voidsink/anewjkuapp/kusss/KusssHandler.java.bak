@@ -44,7 +44,7 @@ public class KusssHandler {
 	private static final String URL_SELECT_TERM = "https://www.kusss.jku.at/kusss/select-term.action";
 
 	private static final String SELECT_MY_LVAS = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > table > tbody > tr:has(td)";
-	private static final String SELECT_MY_GRADES = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > *";
+	private static final String SELECT_MY_GRADES = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > table > tbody > tr:has(td)";
 	private static final String SELECT_NOT_LOGGED_IN = "body > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > h4";
 	// private static final String SELECT_ACTUAL_EXAMS =
 	// "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > table > tbody > tr > td > form > table > tbody > tr:has(td)";
@@ -251,19 +251,17 @@ public class KusssHandler {
 					.get();
 
 			Elements rows = doc.select(SELECT_MY_GRADES);
-
+			Log.i(TAG, rows.size() + " rows found");
+			
 			GradeType type = null;
 			for (Element row : rows) {
-				if (row.tag().toString().equals("h3")) {
-					type = GradeType.parseGradeType(row.text());
-				} else if (row.tag().toString().equals("table")) {
-					Elements gradeRows = row
-							.select("tbody > tr[class]:has(td)");
-					for (Element gradeRow : gradeRows) {
-						ExamGrade grade = new ExamGrade(type, gradeRow);
-						if (grade.isInitialized()) {
-							grades.add(grade);
-						}
+				Elements headers = row.getElementsByTag("h3");
+				if (headers.size() == 1) {
+					type = GradeType.parseGradeType(headers.get(0).text());
+				} else {
+					ExamGrade grade = new ExamGrade(type, row);
+					if (grade.isInitialized()) {
+						grades.add(grade);
 					}
 				}
 			}
@@ -271,7 +269,6 @@ public class KusssHandler {
 			e.printStackTrace();
 			return null;
 		}
-		Log.d(TAG, grades.size() + " grades found");
 		return grades;
 	}
 

@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +23,8 @@ import android.widget.TextView;
 
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.voidsink.anewjkuapp.DrawerItem;
+import org.voidsink.anewjkuapp.ImportExamTask;
+import org.voidsink.anewjkuapp.ImportGradeTask;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
@@ -170,7 +173,7 @@ public class MainActivity extends ActionBarActivity implements
 			// update the main content by replacing fragments
 			if ((item.getStartFragment() != null)) {
 				attachFragment(item.getStartFragment());
-			} 
+			}
 			if (item.updateActionBarTitle()) {
 				mTitle = item.getLabel();
 				getSupportActionBar().setTitle(mTitle);
@@ -183,7 +186,8 @@ public class MainActivity extends ActionBarActivity implements
 			Fragment f = null;
 			try {
 				f = (Fragment) startFragment.newInstance();
-				PreferenceWrapper.setLastFragment(this, startFragment.getCanonicalName());
+				PreferenceWrapper.setLastFragment(this,
+						startFragment.getCanonicalName());
 			} catch (Exception e) {
 				f = null;
 			}
@@ -211,10 +215,25 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Log.i(TAG, "onOptionsItemSelected");
-		return super.onOptionsItemSelected(item);
+
+		switch (item.getItemId()) {
+		case R.id.action_refresh_exams:
+			Log.d(TAG, "importing Exams");
+			new ImportExamTask(getAccount(MainActivity.this), MainActivity.this)
+					.execute();
+			return true;
+		case R.id.action_refresh_grades:
+			Log.d(TAG, "importing Exams");
+			new ImportGradeTask(getAccount(MainActivity.this),
+					MainActivity.this).execute();
+			return true;
+		case R.id.action_refresh_calendar:
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
-	
-	
+
 	public void onClickChangeLog(View v) {
 		new ChangeLog(this).getFullLogDialog().show();
 	}

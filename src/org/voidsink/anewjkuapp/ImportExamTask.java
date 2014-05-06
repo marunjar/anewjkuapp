@@ -8,8 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.fortuna.ical4j.data.CalendarBuilder;
+
 import org.apache.commons.lang.time.DateUtils;
 import org.voidsink.anewjkuapp.base.BaseAsyncTask;
+import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.kusss.Exam;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.notification.NewExamNotification;
@@ -58,6 +61,12 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 	public static final int COLUMN_EXAM_DESCRIPTION = 6;
 	public static final int COLUMN_EXAM_INFO = 7;
 
+	public ImportExamTask(Account account, Context context) {
+		this(account, null, null, null, null, context);
+		this.mProvider = context.getContentResolver().acquireContentProviderClient(KusssContentContract.Exam.CONTENT_URI);
+		this.mSyncResult = new SyncResult();
+	}
+	
 	public ImportExamTask(Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult,
 			Context context) {

@@ -19,10 +19,12 @@
     <string name="grade_3">Befriedigend</string>
     <string name="grade_4">Genügend</string>
     <string name="grade_5">Nicht genügend</string>
-    <string name="grade_type_interim">Vorläufige Lehrveranstaltungsbeurteilungen</string>
-    <string name="grade_type_final">Lehrveranstaltungsbeurteilungen</string>
-    <string name="grade_type_recognized_ca">Anerkannte Lehrveranstaltungsbeurteilungen</string>
+    <string name="grade_type_interim_ca">Vorläufige Lehrveranstaltungsbeurteilungen</string>
+    <string name="grade_type_final_ca">Lehrveranstaltungsbeurteilungen</string>
+    <string name="grade_type_recognized_cc">Sonstige Beurteilungen</string>
+    <string name="grade_type_recognized_a">Anerkannte Beurteilungen</string>
     <string name="grade_type_recognized_exam">Anerkannte Prüfungen</string>
+    <string name="grade_type_final_exam">Prüfungen</string>
     <string name="grade_type_unknown">TODO</string>
     <string name="grade_unknown">Nicht bewertet</string>
     <string name="notification_sync_running">Daten werden synchronisiert</string>

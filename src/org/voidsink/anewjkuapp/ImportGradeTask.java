@@ -60,6 +60,12 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 	public static final int COLUMN_GRADE_TITLE = 7;
 	public static final int COLUMN_GRADE_CODE = 8;
 
+	public ImportGradeTask(Account account, Context context) {
+		this(account, null, null, null, null, context);
+		this.mProvider = context.getContentResolver().acquireContentProviderClient(KusssContentContract.Exam.CONTENT_URI);
+		this.mSyncResult = new SyncResult();
+	}
+	
 	public ImportGradeTask(Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult,
 			Context context) {

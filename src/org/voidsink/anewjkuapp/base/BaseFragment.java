@@ -30,9 +30,9 @@ public class BaseFragment extends Fragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Log.i(TAG, "onOptionsItemSelected");
-		
+
 		switch (item.getItemId()) {
-		case R.id.action_refresh:
+		case R.id.action_refresh_calendar:
 			return onRefreshSelected(item);
 		case R.id.action_settings:
 			startActivity(new Intent(mContext, SettingsActivity.class));
@@ -57,7 +57,7 @@ public class BaseFragment extends Fragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		menu.clear();
 		inflater.inflate(R.menu.main, menu);
-		
+
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 

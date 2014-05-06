@@ -78,6 +78,12 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 	public static final int COLUMN_EVENT_DELETED = 8;
 	public static final int COLUMN_EVENT_CAL_ID = 9;
 
+	public ImportCalendarTask(Account account, Context context, String getTypeID, CalendarBuilder calendarBuilder) {
+		this(account, null, null, null, null, context, getTypeID, calendarBuilder, null);
+		this.mProvider = context.getContentResolver().acquireContentProviderClient(CalendarContractWrapper.Events.CONTENT_URI());
+		this.mSyncResult = new SyncResult();
+	}
+	
 	public ImportCalendarTask(Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult,
 			Context context, String getTypeID, CalendarBuilder calendarBuilder,
