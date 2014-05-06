@@ -205,8 +205,8 @@ public class MainActivity extends ActionBarActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		if (!mNavigationDrawerFragment.isDrawerOpen()) {
-			supportInvalidateOptionsMenu();
+		if (mNavigationDrawerFragment != null
+				&& !mNavigationDrawerFragment.isDrawerOpen()) {
 			restoreActionBar();
 		}
 		return super.onCreateOptionsMenu(menu);

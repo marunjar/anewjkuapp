@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="0.10" versioncode="100010">
+       <change>Gingerbread Force Close fixed</change>
+    </release>
     <release version="0.09" versioncode="100009">
        <change>KUSSS Update: neue Kategorien für Beurteilungen</change>
        <change>Prüfungen können nach LVA-Nr (ohne Semester) geladen werden</change> 
