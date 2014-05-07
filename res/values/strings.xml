@@ -62,6 +62,7 @@
     <string name="pref_app_use_light_theme_title">helles Design verwenden</string>
     <string name="pref_app_map_file_title">eigene Kartendatei</string>
     <string name="search_poi_title">Suche</string>
+    <string name="search_poi_hint">Hörsaal hier eingeben</string>
     <string name="group_user">User</string>
     <string name="group_oeh">ÖH</string>
     <string name="group_kusss">KUSSS</string>

@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 import org.mapsforge.core.graphics.Bitmap;
 import org.mapsforge.core.model.LatLong;
@@ -43,21 +44,28 @@ import org.mapsforge.map.rendertheme.XmlRenderTheme;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 
+import android.app.SearchManager;
+import android.app.SearchableInfo;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 /**
  * A fragment representing a single Item detail screen. This fragment is either
  * contained in a {@link ItemListActivity} in two-pane mode (on tablets) or a
  * {@link ItemDetailActivity} on handsets.
  */
-public class MapFragment extends BaseFragment {
+public class MapFragment extends BaseFragment implements
+		SearchView.OnQueryTextListener {
 	MyLocationOverlay myLocationOverlay;
 
 	/**
@@ -77,6 +85,8 @@ public class MapFragment extends BaseFragment {
 
 	private LayerManager mLayerManager;
 
+	private SearchView mSearchView;
+
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
 	 * fragment (e.g. upon screen orientation changes).
@@ -84,7 +94,7 @@ public class MapFragment extends BaseFragment {
 	public MapFragment() {
 		super();
 	}
-	
+
 	@Override
 	public void onPause() {
 		myLocationOverlay.disableMyLocation();
@@ -106,8 +116,41 @@ public class MapFragment extends BaseFragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.map, menu);
+
+		MenuItem searchItem = menu.findItem(R.id.action_search_poi);
+		mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+		setupSearchView(searchItem);
 	}
-	
+
+	private void setupSearchView(MenuItem searchItem) {
+
+		// if (false /*isAlwaysExpanded()*/) {
+		// mSearchView.setIconifiedByDefault(false);
+		// } else {
+		// searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
+		// | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+		// }
+
+		SearchManager searchManager = (SearchManager) mContext
+				.getSystemService(Context.SEARCH_SERVICE);
+		if (searchManager != null) {
+			List<SearchableInfo> searchables = searchManager
+					.getSearchablesInGlobalSearch();
+
+			SearchableInfo info = searchManager.getSearchableInfo(getActivity()
+					.getComponentName());
+			for (SearchableInfo inf : searchables) {
+				if (inf.getSuggestAuthority() != null
+						&& inf.getSuggestAuthority().startsWith("applications")) {
+					info = inf;
+				}
+			}
+			//mSearchView.setSearchableInfo(info);
+		}
+
+		mSearchView.setOnQueryTextListener(this);
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -222,5 +265,16 @@ public class MapFragment extends BaseFragment {
 
 	protected File getMapFile() {
 		return new File(getActivity().getFilesDir(), MAP_FILE_NAME);
+	}
+
+	@Override
+	public boolean onQueryTextChange(String newText) {
+		return false;
+	}
+
+	@Override
+	public boolean onQueryTextSubmit(String newText) {
+		Toast.makeText(mContext, newText + " submitted", Toast.LENGTH_SHORT).show();
+		return false;
 	}
 }

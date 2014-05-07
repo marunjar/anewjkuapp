@@ -7,5 +7,5 @@
         android:id="@+id/action_refresh_exams"
         android:icon="@drawable/ic_menu_refresh"
         android:title="@string/action_refresh"
-        app:showAsAction="withText|ifRoom"/>
+        app:showAsAction="ifRoom"/>
 </menu>

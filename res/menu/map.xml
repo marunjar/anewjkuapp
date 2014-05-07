@@ -4,9 +4,11 @@
     tools:context="org.voidsink.anewjkuapp.fragment.MapFragment" >
 
     <item
-        android:id="@+id/search_poi"
-        android:actionViewClass="android.widget.SearchView"
+        android:id="@+id/action_search_poi"
         android:icon="@drawable/ic_menu_search"
-        android:showAsAction="collapseActionView|ifRoom"
-        android:title="@string/search_poi_title"/>
+        android:title="@string/search_poi_title"
+        android:queryHint="@string/search_poi_hint"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView"/>
+
 </menu>
