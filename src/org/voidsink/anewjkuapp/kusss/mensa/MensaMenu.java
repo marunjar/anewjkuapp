@@ -28,6 +28,8 @@ public class MensaMenu implements MensaItem {
 					this.name = this.meal.substring(0, index).trim();
 					this.meal = this.meal.substring(index + 1,
 							this.meal.length()).trim();
+				} else {
+					this.name = "";
 				}
 			}
 			this.price = jsonObject.getInt("price") / 100f;

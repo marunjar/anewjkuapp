@@ -82,7 +82,13 @@ public class MensaMenuAdapter extends BaseArrayAdapter<MensaItem> {
 			mensaMenuItemHolder = (MensaMenuHolder) convertView.getTag();
 		}
 
-		mensaMenuItemHolder.name.setText(mensaMenuItem.getName());
+		String name = mensaMenuItem.getName();
+		if (name != null && !name.isEmpty()) {
+			mensaMenuItemHolder.name.setText(name);
+			mensaMenuItemHolder.name.setVisibility(View.VISIBLE);
+		} else {
+			mensaMenuItemHolder.name.setVisibility(View.GONE);
+		}
 		String soup = mensaMenuItem.getSoup();
 		if (soup != null && !soup.isEmpty()) {
 			mensaMenuItemHolder.soup.setText(soup);
