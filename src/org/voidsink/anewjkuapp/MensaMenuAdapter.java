@@ -153,7 +153,12 @@ public class MensaMenuAdapter extends BaseArrayAdapter<MensaItem> {
 			dayItemHolder = (MensaDayHolder) convertView.getTag();
 		}
 
-		dayItemHolder.date.setText(df.format(dayItem.getDate()));
+		if (dayItem.isModified()) {
+			dayItemHolder.date.setText(df.format(dayItem.getDate()) + "\n\nEs könnte aber auch was anderes geben.");
+		} else {
+			dayItemHolder.date.setText(df.format(dayItem.getDate()));			
+		}
+		
 
 		return convertView;
 	}

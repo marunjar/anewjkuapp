@@ -101,7 +101,9 @@ public abstract class JSONMenuLoader implements MenuLoader {
 					for (int i = 0; i < jsonDays.length(); i++) {
 						JSONObject jsonDay = jsonDays.getJSONObject(i);
 						MensaDay day = new MensaDay(jsonDay);
-
+						
+						onNewDay(day);
+						
 						mensa.addDay(day);
 						JSONArray jsonMenus = jsonDay.getJSONArray("menus");
 						for (int j = 0; j < jsonMenus.length(); j++) {
@@ -116,6 +118,10 @@ public abstract class JSONMenuLoader implements MenuLoader {
 			return null;
 		}
 		return mensa;
+	}
+
+	protected void onNewDay(MensaDay day) {
+		
 	}
 
 	protected boolean getNameFromMeal() {

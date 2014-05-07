@@ -1,5 +1,7 @@
 package org.voidsink.anewjkuapp.kusss.mensa;
 
+import java.util.Date;
+
 public class ChoiceMenuLoader extends JSONMenuLoader {
 
 	@Override
@@ -10,6 +12,13 @@ public class ChoiceMenuLoader extends JSONMenuLoader {
 	@Override
 	protected boolean getNameFromMeal() {
 		return true;
+	}
+	
+	@Override
+	protected void onNewDay(MensaDay day) {
+		if (day.getDate() == null) {
+			day.setDate(new Date());
+		}
 	}
 
 	@Override

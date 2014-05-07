@@ -17,6 +17,7 @@ public class MensaDay implements MensaItem {
 
 	private Date date;
 	private List<MensaMenu> menus;
+	private boolean isModified = false;
 
 	public MensaDay(JSONObject jsonDay) {
 		try {
@@ -46,6 +47,15 @@ public class MensaDay implements MensaItem {
 	@Override
 	public int getType() {
 		return TYPE_DAY;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+		this.isModified = true;
+	}
+	
+	public boolean isModified() {
+		return this.isModified;
 	}
 
 }
