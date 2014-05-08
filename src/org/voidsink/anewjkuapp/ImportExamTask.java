@@ -129,116 +129,115 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 					Cursor c = mProvider.query(examUri, EXAM_PROJECTION, null,
 							null, null);
 
-					if (c != null) {
+					if (c == null) {
+						Log.w(TAG, "selection failed");
+					} else {
 						Log.d(TAG, "Found " + c.getCount()
 								+ " local entries. Computing merge solution...");
-					} else {
-						Log.w(TAG, "selection failed");
-					}
-
-					int examId;
-					String examTerm;
-					int examLvaNr;
-					long examDate;
-					String examTime;
-					String examLocation;
-					// delete exams one day after exam
-					long validUntil = System.currentTimeMillis()
-							+ DateUtils.MILLIS_PER_DAY;
-
-					while (c.moveToNext()) {
-						examId = c.getInt(COLUMN_EXAM_ID);
-						examTerm = c.getString(COLUMN_EXAM_TERM);
-						examLvaNr = c.getInt(COLUMN_EXAM_LVANR);
-						examDate = c.getLong(COLUMN_EXAM_DATE);
-						examTime = c.getString(COLUMN_EXAM_TIME);
-						examLocation = c.getString(COLUMN_EXAM_LOCATION);
-
-						Exam exam = examMap.get(String.format("%s-%d",
-								examTerm, examLvaNr));
-						if (exam != null) {
-							examMap.remove(String.format("%s-%d", examTerm,
-									examLvaNr));
-							// Check to see if the entry needs to be updated
-							Uri existingUri = examUri.buildUpon()
-									.appendPath(Integer.toString(examId))
-									.build();
-							Log.d(TAG, "Scheduling update: " + existingUri);
-
-							if (!DateUtils.isSameDay(new Date(examDate),
-									exam.getDate())
-									|| !examTime.equals(exam.getTime())
-									|| !examLocation.equals(exam.getLocation())) {
-								mNewExamNotification.addUpdate(String.format(
-										"%s: %s, %s, %s",
-										df.format(exam.getDate()),
-										exam.getTitle(), exam.getTime(),
-										exam.getLocation()));
+						int examId;
+						String examTerm;
+						int examLvaNr;
+						long examDate;
+						String examTime;
+						String examLocation;
+						// delete exams one day after exam
+						long validUntil = System.currentTimeMillis()
+								+ DateUtils.MILLIS_PER_DAY;
+	
+						while (c.moveToNext()) {
+							examId = c.getInt(COLUMN_EXAM_ID);
+							examTerm = c.getString(COLUMN_EXAM_TERM);
+							examLvaNr = c.getInt(COLUMN_EXAM_LVANR);
+							examDate = c.getLong(COLUMN_EXAM_DATE);
+							examTime = c.getString(COLUMN_EXAM_TIME);
+							examLocation = c.getString(COLUMN_EXAM_LOCATION);
+	
+							Exam exam = examMap.get(String.format("%s-%d",
+									examTerm, examLvaNr));
+							if (exam != null) {
+								examMap.remove(String.format("%s-%d", examTerm,
+										examLvaNr));
+								// Check to see if the entry needs to be updated
+								Uri existingUri = examUri.buildUpon()
+										.appendPath(Integer.toString(examId))
+										.build();
+								Log.d(TAG, "Scheduling update: " + existingUri);
+	
+								if (!DateUtils.isSameDay(new Date(examDate),
+										exam.getDate())
+										|| !examTime.equals(exam.getTime())
+										|| !examLocation.equals(exam.getLocation())) {
+									mNewExamNotification.addUpdate(String.format(
+											"%s: %s, %s, %s",
+											df.format(exam.getDate()),
+											exam.getTitle(), exam.getTime(),
+											exam.getLocation()));
+								}
+	
+								batch.add(ContentProviderOperation
+										.newUpdate(
+												KusssContentContract
+														.asEventSyncAdapter(
+																existingUri,
+																mAccount.name,
+																mAccount.type))
+										.withValue(
+												KusssContentContract.Exam.EXAM_COL_ID,
+												Integer.toString(examId))
+										.withValues(exam.getContentValues())
+										.build());
+								mSyncResult.stats.numUpdates++;
+							} else if (examDate < validUntil) {
+								// Entry doesn't exist. Remove only newer
+								// events from the database.
+								Uri deleteUri = examUri.buildUpon()
+										.appendPath(Integer.toString(examId))
+										.build();
+								Log.d(TAG, "Scheduling delete: " + deleteUri);
+	
+								batch.add(ContentProviderOperation.newDelete(
+										KusssContentContract.asEventSyncAdapter(
+												deleteUri, mAccount.name,
+												mAccount.type)).build());
+								mSyncResult.stats.numDeletes++;
 							}
-
+						}
+						c.close();
+	
+						for (Exam exam : examMap.values()) {
 							batch.add(ContentProviderOperation
-									.newUpdate(
+									.newInsert(
 											KusssContentContract
-													.asEventSyncAdapter(
-															existingUri,
+													.asEventSyncAdapter(examUri,
 															mAccount.name,
 															mAccount.type))
-									.withValue(
-											KusssContentContract.Exam.EXAM_COL_ID,
-											Integer.toString(examId))
-									.withValues(exam.getContentValues())
-									.build());
-							mSyncResult.stats.numUpdates++;
-						} else if (examDate < validUntil) {
-							// Entry doesn't exist. Remove only newer
-							// events from the database.
-							Uri deleteUri = examUri.buildUpon()
-									.appendPath(Integer.toString(examId))
-									.build();
-							Log.d(TAG, "Scheduling delete: " + deleteUri);
-
-							batch.add(ContentProviderOperation.newDelete(
-									KusssContentContract.asEventSyncAdapter(
-											deleteUri, mAccount.name,
-											mAccount.type)).build());
-							mSyncResult.stats.numDeletes++;
+									.withValues(exam.getContentValues()).build());
+							Log.d(TAG, "Scheduling insert: " + exam.getTerm() + " "
+									+ exam.getLvaNr());
+	
+							mNewExamNotification.addUpdate(String.format(
+									"%s: %s, %s, %s", df.format(exam.getDate()),
+									exam.getTitle(), exam.getTime(),
+									exam.getLocation()));
+	
+							mSyncResult.stats.numInserts++;
 						}
-					}
-					c.close();
-
-					for (Exam exam : examMap.values()) {
-						batch.add(ContentProviderOperation
-								.newInsert(
-										KusssContentContract
-												.asEventSyncAdapter(examUri,
-														mAccount.name,
-														mAccount.type))
-								.withValues(exam.getContentValues()).build());
-						Log.d(TAG, "Scheduling insert: " + exam.getTerm() + " "
-								+ exam.getLvaNr());
-
-						mNewExamNotification.addUpdate(String.format(
-								"%s: %s, %s, %s", df.format(exam.getDate()),
-								exam.getTitle(), exam.getTime(),
-								exam.getLocation()));
-
-						mSyncResult.stats.numInserts++;
-					}
-
-					if (batch.size() > 0) {
-						mSyncNotification
-								.update("Prüfungen werden gespeichert");
-
-						Log.d(TAG, "Applying batch update");
-						mProvider.applyBatch(batch);
-						Log.d(TAG, "Notify resolver");
-						mResolver.notifyChange(
-								KusssContentContract.Exam.CONTENT_URI, null, // No
-																				// local
-																				// observer
-								false); // IMPORTANT: Do not sync to network
-					} else {
-						Log.w(TAG, "No batch operations found! Do nothing");
+	
+						if (batch.size() > 0) {
+							mSyncNotification
+									.update("Prüfungen werden gespeichert");
+	
+							Log.d(TAG, "Applying batch update");
+							mProvider.applyBatch(batch);
+							Log.d(TAG, "Notify resolver");
+							mResolver.notifyChange(
+									KusssContentContract.Exam.CONTENT_URI, null, // No
+																					// local
+																					// observer
+									false); // IMPORTANT: Do not sync to network
+						} else {
+							Log.w(TAG, "No batch operations found! Do nothing");
+						}
 					}
 				} else {
 					mSyncResult.stats.numAuthExceptions++;

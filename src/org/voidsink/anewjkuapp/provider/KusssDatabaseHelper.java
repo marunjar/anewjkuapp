@@ -54,20 +54,20 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
             KusssContentContract.Grade.GRADE_COL_TYPE + " integer" + 
             ");";
 
-    public static final String DB_CREATE_POI = "create table if not exists "
-            + PoiContentContract.Poi.TABLE_NAME + "(" +
+    public static final String DB_CREATE_POI = "create virtual table "
+            + PoiContentContract.Poi.TABLE_NAME + " using fts3 (" +
             PoiContentContract.Poi.COL_ID + " integer primary key autoincrement, " +
             PoiContentContract.Poi.COL_LAT + " real not null, " + 
             PoiContentContract.Poi.COL_LON + " real not null, " + 
             PoiContentContract.Poi.COL_NAME + " text not null, " + 
-            PoiContentContract.Poi.COL_FROM_USER + " integer, " + 
+            PoiContentContract.Poi.COL_IS_DEFAULT + " integer, " + 
             
             PoiContentContract.Poi.COL_ADR_CITY + " text, " + 
             PoiContentContract.Poi.COL_ADR_COUNTRY + " text, " + 
             PoiContentContract.Poi.COL_ADR_POSTAL_CODE + " integer, " + 
             PoiContentContract.Poi.COL_ADR_STATE + " text, " + 
             PoiContentContract.Poi.COL_ADR_STREET + " text, " + 
-            PoiContentContract.Poi.COL_DESC + " text " + 
+            PoiContentContract.Poi.COL_DESCR + " text " + 
             ");";
     
 	public KusssDatabaseHelper(Context context) {
@@ -94,4 +94,11 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 		context.deleteDatabase(DATABASE_NAME);
 	}
 
+	public static boolean toBool(int integer) {
+		return (integer == 1) ? true : false;
+	}
+	public static int toInt(boolean bool) {
+		return (bool) ? 1 : 0;
+	}
+	
 }

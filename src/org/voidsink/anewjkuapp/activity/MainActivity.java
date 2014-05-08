@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,15 +19,18 @@ import android.view.ViewGroup;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.TextView;
+import net.fortuna.ical4j.data.CalendarBuilder;
 
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.voidsink.anewjkuapp.DrawerItem;
+import org.voidsink.anewjkuapp.ImportCalendarTask;
 import org.voidsink.anewjkuapp.ImportExamTask;
 import org.voidsink.anewjkuapp.ImportGradeTask;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
+import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.fragment.*;
 
 import de.cketti.library.changelog.ChangeLog;
@@ -218,16 +220,19 @@ public class MainActivity extends ActionBarActivity implements
 
 		switch (item.getItemId()) {
 		case R.id.action_refresh_exams:
-			Log.d(TAG, "importing Exams");
-			new ImportExamTask(getAccount(MainActivity.this), MainActivity.this)
-					.execute();
+			Log.d(TAG, "importing exams");
+			new ImportExamTask(getAccount(this), this).execute();
 			return true;
 		case R.id.action_refresh_grades:
-			Log.d(TAG, "importing Exams");
-			new ImportGradeTask(getAccount(MainActivity.this),
-					MainActivity.this).execute();
+			Log.d(TAG, "importing grades");
+			new ImportGradeTask(getAccount(this), MainActivity.this).execute();
 			return true;
 		case R.id.action_refresh_calendar:
+			Log.d(TAG, "importing calendars");
+			new ImportCalendarTask(getAccount(this), this,
+					CalendarUtils.ARG_CALENDAR_ID_EXAM, new CalendarBuilder()).execute();
+			new ImportCalendarTask(getAccount(this), this,
+					CalendarUtils.ARG_CALENDAR_ID_LVA, new CalendarBuilder()).execute();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -271,5 +276,4 @@ public class MainActivity extends ActionBarActivity implements
 			return rootView;
 		}
 	}
-
 }

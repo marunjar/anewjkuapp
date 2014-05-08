@@ -6,7 +6,7 @@ import android.net.Uri;
 
 public class PoiContentContract {
 
-	public static final String AUTHORITY = "org.voidsink.anewjkuapp.provider";
+	public static final String AUTHORITY = "org.voidsink.anewjkuapp.provider.poi";
 
 	public static final String CONTENT_TYPE_DIR = "vnd.android.cursor.dir";
 	public static final String CONTENT_TYPE_ITEM = "vnd.android.cursor.item";
@@ -25,13 +25,13 @@ public class PoiContentContract {
 		public static final String COL_LAT = "latitude";
 		public static final String COL_LON = "longtitude";
 		public static final String COL_NAME = "name";
-		public static final String COL_DESC = "description";
+		public static final String COL_DESCR = "description";
 		public static final String COL_ADR_STREET = "adr_street";
 		public static final String COL_ADR_CITY = "adr_city";
 		public static final String COL_ADR_STATE = "adr_state";
 		public static final String COL_ADR_COUNTRY = "adr_country";
 		public static final String COL_ADR_POSTAL_CODE = "adr_postal_code";
-		public static final String COL_FROM_USER = "from_user";
+		public static final String COL_IS_DEFAULT = "from_user";
 	}
 
 	public static Uri asEventSyncAdapter(Uri uri, String account,

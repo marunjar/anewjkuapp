@@ -18,17 +18,14 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
 public class LvaFragment extends BaseFragment {
 
-	private static final String TAG = LvaFragment.class.getSimpleName();
+//	private static final String TAG = LvaFragment.class.getSimpleName();
 	private ListView mListView;
 	private LvaListAdapter mAdapter;
 

@@ -22,7 +22,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.List;
 
 import org.mapsforge.core.graphics.Bitmap;
 import org.mapsforge.core.model.LatLong;
@@ -41,16 +40,17 @@ import org.mapsforge.map.reader.header.FileOpenResult;
 import org.mapsforge.map.reader.header.MapFileInfo;
 import org.mapsforge.map.rendertheme.InternalRenderTheme;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
+import org.voidsink.anewjkuapp.ImportPoiTask;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 
 import android.app.SearchManager;
-import android.app.SearchableInfo;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -72,8 +72,10 @@ public class MapFragment extends BaseFragment implements
 	 * The fragment argument representing the item ID that this fragment
 	 * represents.
 	 */
-	private static final String ARG_ITEM_ID = "item_id";
 	private static final String MAP_FILE_NAME = "campus.map";
+	private static final String POI_TEST_FILE_NAME = "hoersaal.gpx";
+
+	private static final String TAG = MapFragment.class.getSimpleName();
 
 	/**
 	 * The dummy content this fragment is presenting.
@@ -113,6 +115,43 @@ public class MapFragment extends BaseFragment implements
 	}
 
 	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_poi_test_data:
+			Log.i(TAG, "import POI test data");
+			importPoiTestData();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	private void importPoiTestData() {
+		try {
+			// write file to sd for simulated import
+			OutputStream mapFileWriter = new BufferedOutputStream(getActivity()
+					.openFileOutput(POI_TEST_FILE_NAME, Context.MODE_PRIVATE));
+			InputStream assetData = new BufferedInputStream(getActivity()
+					.getAssets().open(POI_TEST_FILE_NAME));
+
+			byte[] buffer = new byte[1024];
+			int len = assetData.read(buffer);
+			while (len != -1) {
+				mapFileWriter.write(buffer, 0, len);
+				len = assetData.read(buffer);
+			}
+			mapFileWriter.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		new ImportPoiTask(mContext, new File(getActivity().getFilesDir(),
+				POI_TEST_FILE_NAME), true).execute();
+	}
+
+	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.map, menu);
@@ -131,22 +170,14 @@ public class MapFragment extends BaseFragment implements
 		// | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 		// }
 
-//		SearchManager searchManager = (SearchManager) mContext
-//				.getSystemService(Context.SEARCH_SERVICE);
-//		if (searchManager != null) {
-//			List<SearchableInfo> searchables = searchManager
-//					.getSearchablesInGlobalSearch();
-//
-//			SearchableInfo info = searchManager.getSearchableInfo(getActivity()
-//					.getComponentName());
-//			for (SearchableInfo inf : searchables) {
-//				if (inf.getSuggestAuthority() != null
-//						&& inf.getSuggestAuthority().startsWith("applications")) {
-//					info = inf;
-//				}
-//			}
-//			mSearchView.setSearchableInfo(info);
-//		}
+			// Get the SearchView and set the searchable configuration
+			SearchManager searchManager = (SearchManager) getActivity()
+					.getSystemService(Context.SEARCH_SERVICE);
+			// Assumes current activity is the searchable activity
+			mSearchView.setSearchableInfo(searchManager
+					.getSearchableInfo(getActivity().getComponentName()));
+			// mSearchView.setIconifiedByDefault(false); // Do not iconify the
+			// widget; expand it by default
 
 		mSearchView.setOnQueryTextListener(this);
 	}
@@ -195,7 +226,8 @@ public class MapFragment extends BaseFragment implements
 				getMapFile(), InternalRenderTheme.OSMARENDER, false));
 
 		// a marker to show at the position
-		Drawable drawable = getResources().getDrawable(R.drawable.marker_red);
+		Drawable drawable = getResources().getDrawable(
+				R.drawable.ic_marker_own_position);
 		Bitmap bitmap = AndroidGraphicFactory.convertToBitmap(drawable);
 
 		// create the overlay and tell it to follow the location
@@ -274,7 +306,8 @@ public class MapFragment extends BaseFragment implements
 
 	@Override
 	public boolean onQueryTextSubmit(String newText) {
-		Toast.makeText(mContext, newText + " submitted", Toast.LENGTH_SHORT).show();
+		Toast.makeText(mContext, newText + " submitted", Toast.LENGTH_SHORT)
+				.show();
 		return false;
 	}
 }

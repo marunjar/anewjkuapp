@@ -13,6 +13,7 @@
     <string name="action_refresh">Aktualisieren</string>
     <string name="action_changelog">Change Log</string>
     <string name="action_settings">Einstellungen</string>
+    <string name="action_poi_test_data">create Test POIs</string>
     <string name="action_settings_summary">Einstellungen von KUSSS, Benachrichtigungen, ...</string>
     <string name="grade_1">Sehr gut</string>
     <string name="grade_2">Gut</string>
@@ -38,6 +39,8 @@
     <string name="notification_new_exams">%d neue Prüfung(en) gefunden</string>
     <string name="notification_grades_changed_title">neue Note(n) verfügbar</string>
     <string name="notification_grades_changed">%d neue Note(n) verfügbar</string>
+    <string name="notification_poi_changed_title">neue Orte verfügbar</string>
+    <string name="notification_poi_changed">%d neue Orte verfügbar</string>
     <string name="pref_cat_sync_settings">Einstellungen bearbeiten</string>
     <string name="pref_cat_update_password">Passwort aktualisieren</string>
     <string name="pref_cat_kusss_main">KUSSS</string>
