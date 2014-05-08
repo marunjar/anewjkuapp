@@ -114,6 +114,12 @@
             android:exported="false"
             android:label="@string/kusss_provider_name"
             android:syncable="true" />
-    </application>
+        <provider
+            android:name="org.voidsink.anewjkuapp.provider.PoiContentProvider"
+            android:authorities="org.voidsink.anewjkuapp.provider"
+            android:exported="false"
+            android:label="@string/poi_provider_name"
+            android:syncable="false" />
+        </application>
 
 </manifest>

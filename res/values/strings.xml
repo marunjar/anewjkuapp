@@ -96,6 +96,7 @@
     <string name="kusss_service_title">KUSSS Service</string>
     <string name="sign_in">Einloggen</string>
     <string name="kusss_provider_name">KUSSS</string>
+    <string name="poi_provider_name">POIs</string>
     <string name="notification_error">"JKU App" Fehler</string>
     <string name="notification_error_account_is_null">kein Account vorhanden</string>
     <string name="notification_error_account_not_available">Account konnte nicht validiert werden</string>

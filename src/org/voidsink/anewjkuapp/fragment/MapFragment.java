@@ -131,22 +131,22 @@ public class MapFragment extends BaseFragment implements
 		// | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 		// }
 
-		SearchManager searchManager = (SearchManager) mContext
-				.getSystemService(Context.SEARCH_SERVICE);
-		if (searchManager != null) {
-			List<SearchableInfo> searchables = searchManager
-					.getSearchablesInGlobalSearch();
-
-			SearchableInfo info = searchManager.getSearchableInfo(getActivity()
-					.getComponentName());
-			for (SearchableInfo inf : searchables) {
-				if (inf.getSuggestAuthority() != null
-						&& inf.getSuggestAuthority().startsWith("applications")) {
-					info = inf;
-				}
-			}
-			//mSearchView.setSearchableInfo(info);
-		}
+//		SearchManager searchManager = (SearchManager) mContext
+//				.getSystemService(Context.SEARCH_SERVICE);
+//		if (searchManager != null) {
+//			List<SearchableInfo> searchables = searchManager
+//					.getSearchablesInGlobalSearch();
+//
+//			SearchableInfo info = searchManager.getSearchableInfo(getActivity()
+//					.getComponentName());
+//			for (SearchableInfo inf : searchables) {
+//				if (inf.getSuggestAuthority() != null
+//						&& inf.getSuggestAuthority().startsWith("applications")) {
+//					info = inf;
+//				}
+//			}
+//			mSearchView.setSearchableInfo(info);
+//		}
 
 		mSearchView.setOnQueryTextListener(this);
 	}

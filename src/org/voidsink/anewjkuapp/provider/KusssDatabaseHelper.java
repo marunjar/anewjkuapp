@@ -1,6 +1,7 @@
 package org.voidsink.anewjkuapp.provider;
 
 import org.voidsink.anewjkuapp.KusssContentContract;
+import org.voidsink.anewjkuapp.PoiContentContract;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -12,10 +13,10 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 	private static final String TAG = KusssDatabaseHelper.class.getSimpleName();
 	
     private static final String DATABASE_NAME = "kusss.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     
     // Database creation sql statement
-    public static final String DB_CREATE_LVA = "create table " 
+    public static final String DB_CREATE_LVA = "create table if not exists " 
     		+ KusssContentContract.Lva.LVA_TABLE_NAME + "(" +
     		KusssContentContract.Lva.LVA_COL_ID + " integer primary key autoincrement, " +
     		KusssContentContract.Lva.LVA_COL_TERM + " text not null, " + 
@@ -28,7 +29,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
     		KusssContentContract.Lva.LVA_COL_SWS + " real" +
             ");";
 
-    public static final String DB_CREATE_EXAM = "create table "
+    public static final String DB_CREATE_EXAM = "create table if not exists "
             + KusssContentContract.Exam.EXAM_TABLE_NAME + "(" +
             KusssContentContract.Exam.EXAM_COL_ID + " integer primary key autoincrement, " +
             KusssContentContract.Exam.EXAM_COL_TERM + " text not null, " + 
@@ -40,7 +41,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
             KusssContentContract.Exam.EXAM_COL_INFO + " text" + 
             ");";
     
-    public static final String DB_CREATE_GRADE = "create table "
+    public static final String DB_CREATE_GRADE = "create table if not exists "
             + KusssContentContract.Grade.GRADE_TABLE_NAME + "(" +
             KusssContentContract.Grade.GRADE_COL_ID + " integer primary key autoincrement, " +
             KusssContentContract.Grade.GRADE_COL_TERM + " text, " + 
@@ -52,6 +53,22 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
             KusssContentContract.Grade.GRADE_COL_TITLE + " text, " +
             KusssContentContract.Grade.GRADE_COL_TYPE + " integer" + 
             ");";
+
+    public static final String DB_CREATE_POI = "create table if not exists "
+            + PoiContentContract.Poi.TABLE_NAME + "(" +
+            PoiContentContract.Poi.COL_ID + " integer primary key autoincrement, " +
+            PoiContentContract.Poi.COL_LAT + " real not null, " + 
+            PoiContentContract.Poi.COL_LON + " real not null, " + 
+            PoiContentContract.Poi.COL_NAME + " text not null, " + 
+            PoiContentContract.Poi.COL_FROM_USER + " integer, " + 
+            
+            PoiContentContract.Poi.COL_ADR_CITY + " text, " + 
+            PoiContentContract.Poi.COL_ADR_COUNTRY + " text, " + 
+            PoiContentContract.Poi.COL_ADR_POSTAL_CODE + " integer, " + 
+            PoiContentContract.Poi.COL_ADR_STATE + " text, " + 
+            PoiContentContract.Poi.COL_ADR_STREET + " text, " + 
+            PoiContentContract.Poi.COL_DESC + " text " + 
+            ");";
     
 	public KusssDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -59,18 +76,17 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
+		Log.d(TAG, "Create database");
 		db.execSQL(DB_CREATE_LVA);
 		db.execSQL(DB_CREATE_EXAM);
 		db.execSQL(DB_CREATE_GRADE);
+		db.execSQL(DB_CREATE_POI);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
-				+ newVersion + ", which will destroy all old data");
-		db.execSQL("DROP TABLE IF EXISTS " + KusssContentContract.Lva.LVA_TABLE_NAME);
-		db.execSQL("DROP TABLE IF EXISTS " + KusssContentContract.Exam.EXAM_TABLE_NAME);
-		db.execSQL("DROP TABLE IF EXISTS " + KusssContentContract.Grade.GRADE_TABLE_NAME);
+				+ newVersion + ", which will destroy most of all old data");
 		onCreate(db);
 	}
 

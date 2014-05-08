@@ -24,6 +24,7 @@ public class SyncNotification {
 		this.mBuilder = new NotificationCompat.Builder(this.mContext)
 				.setSmallIcon(R.drawable.ic_stat_notify_kusss)
 				.setOngoing(true)
+				.setAutoCancel(true)
 				.setLargeIcon(
 						BitmapFactory.decodeResource(
 								this.mContext.getResources(),
