@@ -1,7 +1,11 @@
 package org.voidsink.anewjkuapp.provider;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.voidsink.anewjkuapp.PoiContentContract;
 
+import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
@@ -9,21 +13,37 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.provider.BaseColumns;
 import android.text.TextUtils;
 
 public class PoiContentProvider extends ContentProvider {
 
 	private static final int CODE_POI = 1;
 	private static final int CODE_POI_ID = 2;
+	private static final int CODE_POI_SEARCH = 3;
 
 	private static final UriMatcher sUriMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
+	private static final Map<String, String> searchProjectionMap = new HashMap<String, String>();
 
 	static {
 		sUriMatcher.addURI(PoiContentContract.AUTHORITY,
 				PoiContentContract.Poi.PATH, CODE_POI);
 		sUriMatcher.addURI(PoiContentContract.AUTHORITY,
 				PoiContentContract.Poi.PATH + "/#", CODE_POI_ID);
+		sUriMatcher.addURI(PoiContentContract.AUTHORITY,
+				SearchManager.SUGGEST_URI_PATH_QUERY, CODE_POI_SEARCH);
+		sUriMatcher.addURI(PoiContentContract.AUTHORITY,
+				SearchManager.SUGGEST_URI_PATH_QUERY + "/*", CODE_POI_SEARCH);
+
+		searchProjectionMap.put(PoiContentContract.Poi.COL_ID,
+				PoiContentContract.Poi.COL_ID + " AS " + BaseColumns._ID);
+		searchProjectionMap.put(PoiContentContract.Poi.COL_NAME,
+				PoiContentContract.Poi.COL_NAME + " AS "
+						+ SearchManager.SUGGEST_COLUMN_TEXT_1);
+		searchProjectionMap.put(PoiContentContract.Poi.COL_DESCR,
+				PoiContentContract.Poi.COL_DESCR + " AS "
+						+ SearchManager.SUGGEST_COLUMN_TEXT_2);
 	}
 
 	private KusssDatabaseHelper mDbHelper;
@@ -116,6 +136,21 @@ public class PoiContentProvider extends ContentProvider {
 			builder.setTables(PoiContentContract.Poi.TABLE_NAME);
 			return builder.query(db, projection, selection, selectionArgs,
 					null, null, sortOrder);
+		case CODE_POI_SEARCH:
+			final String limit = uri
+					.getQueryParameter(SearchManager.SUGGEST_PARAMETER_LIMIT);
+
+			builder.setProjectionMap(searchProjectionMap);
+			builder.setTables(PoiContentContract.Poi.TABLE_NAME);
+
+			if (selection == null) {
+				selection = PoiContentContract.Poi.TABLE_NAME + " MATCH ?";
+				selectionArgs = new String[] { uri.getLastPathSegment()};
+			}
+
+			Cursor c = builder.query(db, projection, selection, selectionArgs,
+					null, null, sortOrder, limit);
+			return c;
 		default:
 			throw new IllegalArgumentException("URI " + uri
 					+ " is not supported.");
