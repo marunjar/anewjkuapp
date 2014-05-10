@@ -66,4 +66,8 @@ public class BaseFragment extends Fragment {
 		Log.i(getClass().getSimpleName(), "onDestroyOptionsMenu");
 		super.onDestroyOptionsMenu();
 	}
+
+	public void handleIntent(Intent intent) {
+		
+	}
 }

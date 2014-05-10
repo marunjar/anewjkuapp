@@ -29,6 +29,7 @@ import org.voidsink.anewjkuapp.ImportGradeTask;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.fragment.*;
@@ -118,10 +119,9 @@ public class MainActivity extends ActionBarActivity implements
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer, mDrawerLayout);
 
 		Intent intent = getIntent();
-		if (intent != null && intent.hasExtra(ARG_SHOW_FRAGMENT)) {
-			// show fragment from intent
-			attachFragmentByClassName(intent.getStringExtra(ARG_SHOW_FRAGMENT));
-		} else if (savedInstanceState != null) {
+		handleIntent(intent);
+
+		if (savedInstanceState != null) {
 			// restore saved fragment
 			attachFragmentByClassName(savedInstanceState
 					.getString(ARG_SHOW_FRAGMENT));
@@ -131,11 +131,26 @@ public class MainActivity extends ActionBarActivity implements
 
 		if (getAccount(this) == null) {
 			StartCreateAccount(this);
+		} else {
+			ChangeLog cl = new ChangeLog(this);
+			if (cl.isFirstRun()) {
+				cl.getLogDialog().show();
+			}
 		}
+	}
 
-		ChangeLog cl = new ChangeLog(this);
-		if (cl.isFirstRun()) {
-			cl.getLogDialog().show();
+	private void handleIntent(Intent intent) {
+		if (intent != null && intent.hasExtra(ARG_SHOW_FRAGMENT)) {
+			// show fragment from intent
+			attachFragmentByClassName(intent.getStringExtra(ARG_SHOW_FRAGMENT));
+		}
+		Fragment f = getSupportFragmentManager().findFragmentByTag(
+				ARG_SHOW_FRAGMENT);
+		if (f != null) {
+//			Log.i(TAG, "fragment: " + f.getClass().getSimpleName());
+			if (BaseFragment.class.isInstance(f)) {
+				((BaseFragment) f).handleIntent(intent);
+			}
 		}
 	}
 
@@ -147,6 +162,8 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
+
+		handleIntent(intent);
 
 		if (intent != null && intent.hasExtra(ARG_SHOW_FRAGMENT)) {
 			// show fragment from intent
@@ -216,7 +233,7 @@ public class MainActivity extends ActionBarActivity implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Log.i(TAG, "onOptionsItemSelected");
+//		Log.i(TAG, "onOptionsItemSelected");
 
 		switch (item.getItemId()) {
 		case R.id.action_refresh_exams:
@@ -230,9 +247,11 @@ public class MainActivity extends ActionBarActivity implements
 		case R.id.action_refresh_calendar:
 			Log.d(TAG, "importing calendars");
 			new ImportCalendarTask(getAccount(this), this,
-					CalendarUtils.ARG_CALENDAR_ID_EXAM, new CalendarBuilder()).execute();
+					CalendarUtils.ARG_CALENDAR_ID_EXAM, new CalendarBuilder())
+					.execute();
 			new ImportCalendarTask(getAccount(this), this,
-					CalendarUtils.ARG_CALENDAR_ID_LVA, new CalendarBuilder()).execute();
+					CalendarUtils.ARG_CALENDAR_ID_LVA, new CalendarBuilder())
+					.execute();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

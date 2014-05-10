@@ -1,8 +1,5 @@
 package org.voidsink.anewjkuapp.provider;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.voidsink.anewjkuapp.PoiContentContract;
 
 import android.app.SearchManager;
@@ -24,7 +21,6 @@ public class PoiContentProvider extends ContentProvider {
 
 	private static final UriMatcher sUriMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
-	private static final Map<String, String> searchProjectionMap = new HashMap<String, String>();
 
 	static {
 		sUriMatcher.addURI(PoiContentContract.AUTHORITY,
@@ -33,17 +29,6 @@ public class PoiContentProvider extends ContentProvider {
 				PoiContentContract.Poi.PATH + "/#", CODE_POI_ID);
 		sUriMatcher.addURI(PoiContentContract.AUTHORITY,
 				SearchManager.SUGGEST_URI_PATH_QUERY, CODE_POI_SEARCH);
-		sUriMatcher.addURI(PoiContentContract.AUTHORITY,
-				SearchManager.SUGGEST_URI_PATH_QUERY + "/*", CODE_POI_SEARCH);
-
-		searchProjectionMap.put(PoiContentContract.Poi.COL_ID,
-				PoiContentContract.Poi.COL_ID + " AS " + BaseColumns._ID);
-		searchProjectionMap.put(PoiContentContract.Poi.COL_NAME,
-				PoiContentContract.Poi.COL_NAME + " AS "
-						+ SearchManager.SUGGEST_COLUMN_TEXT_1);
-		searchProjectionMap.put(PoiContentContract.Poi.COL_DESCR,
-				PoiContentContract.Poi.COL_DESCR + " AS "
-						+ SearchManager.SUGGEST_COLUMN_TEXT_2);
 	}
 
 	private KusssDatabaseHelper mDbHelper;
@@ -140,12 +125,26 @@ public class PoiContentProvider extends ContentProvider {
 			final String limit = uri
 					.getQueryParameter(SearchManager.SUGGEST_PARAMETER_LIMIT);
 
-			builder.setProjectionMap(searchProjectionMap);
+			// builder.setProjectionMap(searchProjectionMap);
 			builder.setTables(PoiContentContract.Poi.TABLE_NAME);
 
 			if (selection == null) {
 				selection = PoiContentContract.Poi.TABLE_NAME + " MATCH ?";
-				selectionArgs = new String[] { uri.getLastPathSegment()};
+				selectionArgs = new String[] { uri.getLastPathSegment() };
+			}
+			if (projection == null) {
+				projection = new String[] {
+						PoiContentContract.Poi.COL_ID + " AS "
+								+ BaseColumns._ID,
+						PoiContentContract.Poi.COL_NAME + " AS "
+								+ SearchManager.SUGGEST_COLUMN_TEXT_1,
+						PoiContentContract.Poi.COL_NAME
+								+ " AS "
+								+ SearchManager.SUGGEST_COLUMN_INTENT_EXTRA_DATA,
+						PoiContentContract.Poi.COL_DESCR + " AS "
+								+ SearchManager.SUGGEST_COLUMN_TEXT_2,
+						PoiContentContract.Poi.COL_ID + " AS "
+								+ SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID };
 			}
 
 			Cursor c = builder.query(db, projection, selection, selectionArgs,

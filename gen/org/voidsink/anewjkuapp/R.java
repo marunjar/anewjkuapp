@@ -1091,11 +1091,12 @@ containing a value of this type.
         public static final int ic_drawer=0x7f020058;
         public static final int ic_launcher=0x7f020059;
         public static final int ic_launcher_grey=0x7f02005a;
-        public static final int ic_marker_own_position=0x7f02005b;
-        public static final int ic_menu_preferences=0x7f02005c;
-        public static final int ic_menu_refresh=0x7f02005d;
-        public static final int ic_menu_search=0x7f02005e;
-        public static final int ic_stat_notify_kusss=0x7f02005f;
+        public static final int ic_marker_goal_position=0x7f02005b;
+        public static final int ic_marker_own_position=0x7f02005c;
+        public static final int ic_menu_preferences=0x7f02005d;
+        public static final int ic_menu_refresh=0x7f02005e;
+        public static final int ic_menu_search=0x7f02005f;
+        public static final int ic_stat_notify_kusss=0x7f020060;
     }
     public static final class id {
         public static final int about_app=0x7f070057;

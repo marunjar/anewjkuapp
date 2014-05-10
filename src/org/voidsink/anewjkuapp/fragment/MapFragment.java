@@ -46,6 +46,7 @@ import org.voidsink.anewjkuapp.base.BaseFragment;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -101,6 +102,36 @@ public class MapFragment extends BaseFragment implements
 	public void onPause() {
 		myLocationOverlay.disableMyLocation();
 		super.onPause();
+	}
+
+	@Override
+	public void handleIntent(Intent intent) {
+		super.handleIntent(intent);
+		if (intent != null) {
+			if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+				String query = intent
+						.getStringExtra(SearchManager.EXTRA_DATA_KEY);
+				Log.i(TAG, "extra_data_key: " + query);
+				mSearchView.setQuery(query, true);
+				query = intent.getStringExtra(SearchManager.QUERY);
+				Log.i(TAG, "query: " + query);
+
+				query = intent.getData().toString();
+				Log.i(TAG, "uri: " + query);
+			} else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+				String query = intent
+						.getStringExtra(SearchManager.EXTRA_DATA_KEY);
+				Log.i(TAG, "extra_data_key: " + query);
+				mSearchView.setQuery(query, false);
+				query = intent.getStringExtra(SearchManager.QUERY);
+				Log.i(TAG, "query: " + query);
+
+				if (intent.getData() != null) {
+					query = intent.getData().toString();
+					Log.i(TAG, "uri: " + query);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -170,14 +201,14 @@ public class MapFragment extends BaseFragment implements
 		// | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 		// }
 
-			// Get the SearchView and set the searchable configuration
-			SearchManager searchManager = (SearchManager) getActivity()
-					.getSystemService(Context.SEARCH_SERVICE);
-			// Assumes current activity is the searchable activity
-			mSearchView.setSearchableInfo(searchManager
-					.getSearchableInfo(getActivity().getComponentName()));
-			// mSearchView.setIconifiedByDefault(false); // Do not iconify the
-			// widget; expand it by default
+		// Get the SearchView and set the searchable configuration
+		SearchManager searchManager = (SearchManager) getActivity()
+				.getSystemService(Context.SEARCH_SERVICE);
+		// Assumes current activity is the searchable activity
+		mSearchView.setSearchableInfo(searchManager
+				.getSearchableInfo(getActivity().getComponentName()));
+		// mSearchView.setIconifiedByDefault(false); // Do not iconify the
+		// widget; expand it by default
 
 		mSearchView.setOnQueryTextListener(this);
 	}
@@ -292,7 +323,6 @@ public class MapFragment extends BaseFragment implements
 		}
 		org.mapsforge.map.android.graphics.AndroidResourceBitmap
 				.clearResourceBitmaps();
-
 	}
 
 	protected File getMapFile() {
@@ -301,6 +331,7 @@ public class MapFragment extends BaseFragment implements
 
 	@Override
 	public boolean onQueryTextChange(String newText) {
+		Log.i(TAG, newText);
 		return false;
 	}
 

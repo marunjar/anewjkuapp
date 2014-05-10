@@ -241,11 +241,12 @@ int drawable drawer_shadow 0x7f020057
 int drawable ic_drawer 0x7f020058
 int drawable ic_launcher 0x7f020059
 int drawable ic_launcher_grey 0x7f02005a
-int drawable ic_marker_own_position 0x7f02005b
-int drawable ic_menu_preferences 0x7f02005c
-int drawable ic_menu_refresh 0x7f02005d
-int drawable ic_menu_search 0x7f02005e
-int drawable ic_stat_notify_kusss 0x7f02005f
+int drawable ic_marker_goal_position 0x7f02005b
+int drawable ic_marker_own_position 0x7f02005c
+int drawable ic_menu_preferences 0x7f02005d
+int drawable ic_menu_refresh 0x7f02005e
+int drawable ic_menu_search 0x7f02005f
+int drawable ic_stat_notify_kusss 0x7f020060
 int id about_app 0x7f070057
 int id about_app_header 0x7f070056
 int id about_changelog 0x7f070055

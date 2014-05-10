@@ -8,11 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.fortuna.ical4j.data.CalendarBuilder;
-
 import org.apache.commons.lang.time.DateUtils;
 import org.voidsink.anewjkuapp.base.BaseAsyncTask;
-import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.kusss.Exam;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.notification.NewExamNotification;
