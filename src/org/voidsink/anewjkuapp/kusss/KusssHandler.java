@@ -29,7 +29,7 @@ import net.fortuna.ical4j.model.Calendar;
 public class KusssHandler {
 
 	private static final SimpleDateFormat df = new SimpleDateFormat(
-			"dd/MM/yyyy");
+			"dd.MM.yyyy");
 
 	private static final String TAG = KusssHandler.class.getSimpleName();
 
@@ -306,12 +306,13 @@ public class KusssHandler {
 		return exams;
 	}
 
-	public List<Exam> getNewExamsByLvaNr() {
+	public List<Exam> getNewExamsByLvaNr(List<LVA> lvas) throws IOException {
 
 		List<Exam> exams = new ArrayList<Exam>();
-		try {
-			List<LVA> lvas = getLvas();
-			System.out.println(lvas.size());
+		Log.i(TAG, "1. lvas: " + lvas.size());
+		// lvas = getLvas();
+		// Log.i(TAG, "2. lvas: " + lvas.size());
+		if (lvas.size() > 0) {
 			List<ExamGrade> grades = getGrades();
 			Map<Integer, ExamGrade> gradeCache = new HashMap<Integer, ExamGrade>();
 			for (ExamGrade grade : grades) {
@@ -339,43 +340,56 @@ public class KusssHandler {
 					}
 				}
 				if (grade == null) {
-					Document doc = Jsoup
-							.connect(URL_GET_EXAMS)
-							.data("search", "true")
-							.data("searchType", "specific")
-							.data("searchDateFrom",
-									df.format(new Date(System
-											.currentTimeMillis())))
-							.data("searchDateTo",
-									df.format(new Date(System
-											.currentTimeMillis()
-											+ DateUtils.YEAR_IN_MILLIS)))
-							.data("searchLvaNr",
-									Integer.toString(lva.getLvaNr())).get();
-
-					Elements rows = doc.select(SELECT_NEW_EXAMS);
-
-					int i = 0;
-					while (i < rows.size()) {
-						Element row = rows.get(i);
-						Exam exam = new Exam(row);
-						i++;
-
-						if (exam.isInitialized()) {
-							while (i < rows.size()
-									&& rows.get(i).attr("class")
-											.equals(row.attr("class"))) {
-								exam.addAdditionalInfo(rows.get(i));
-								i++;
-							}
-							exams.add(exam);
+					List<Exam> newExams = getNewExamsByLvaNr(lva.getLvaNr());
+					for (Exam newExam : newExams) {
+						if (newExam != null) {
+							exams.add(newExam);
 						}
 					}
 				}
 			}
+		}
+		return exams;
+	}
+
+	private List<Exam> getNewExamsByLvaNr(int lvaNr) {
+		List<Exam> exams = new ArrayList<Exam>();
+		try {
+			Log.i(TAG, "getNewExamsByLvaNr: " + lvaNr);
+			Document doc = Jsoup
+					.connect(URL_GET_EXAMS)
+					.data("search", "true")
+					.data("searchType", "specific")
+					.data("searchDateFrom",
+							df.format(new Date(System.currentTimeMillis())))
+					.data("searchDateTo",
+							df.format(new Date(System.currentTimeMillis()
+									+ DateUtils.YEAR_IN_MILLIS)))
+					.data("searchLvaNr", Integer.toString(lvaNr))
+					.data("searchLvaTitle", "").data("searchCourseClass", "")
+					.get();
+
+			Elements rows = doc.select(SELECT_NEW_EXAMS);
+
+			int i = 0;
+			while (i < rows.size()) {
+				Element row = rows.get(i);
+				Exam exam = new Exam(row);
+				i++;
+
+				if (exam.isInitialized()) {
+					while (i < rows.size()
+							&& rows.get(i).attr("class")
+									.equals(row.attr("class"))) {
+						exam.addAdditionalInfo(rows.get(i));
+						i++;
+					}
+					exams.add(exam);
+				}
+			}
 		} catch (IOException e) {
+			exams = null;
 			e.printStackTrace();
-			return null;
 		}
 		return exams;
 	}

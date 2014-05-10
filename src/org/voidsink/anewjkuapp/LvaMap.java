@@ -15,7 +15,7 @@ import android.database.Cursor;
 
 public class LvaMap {
 
-	Map<String, LVA> map;
+	private Map<String, LVA> map;
 
 	public LvaMap(Context context) {
 		this.map = new HashMap<String, LVA>();
@@ -64,6 +64,10 @@ public class LvaMap {
 			}
 		});
 		return lvas.get(0);
+	}
+	
+	public List<LVA> getLVAs() {
+		return new ArrayList<LVA>(this.map.values());
 	}
 
 }

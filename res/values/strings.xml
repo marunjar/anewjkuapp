@@ -13,8 +13,8 @@
     <string name="action_refresh">Aktualisieren</string>
     <string name="action_changelog">Change Log</string>
     <string name="action_settings">Einstellungen</string>
-    <string name="action_poi_test_data">create Test POIs</string>
     <string name="action_settings_summary">Einstellungen von KUSSS, Benachrichtigungen, ...</string>
+    <string name="action_snap_to_location">TODO: snap to location</string>
     <string name="grade_1">Sehr gut</string>
     <string name="grade_2">Gut</string>
     <string name="grade_3">Befriedigend</string>

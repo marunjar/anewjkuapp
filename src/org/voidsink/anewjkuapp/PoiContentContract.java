@@ -3,6 +3,7 @@ package org.voidsink.anewjkuapp;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 
 import android.net.Uri;
+import android.os.Build;
 
 public class PoiContentContract {
 
@@ -14,6 +15,14 @@ public class PoiContentContract {
 	public static Uri CONTENT_URI = Uri.parse(String.format("content://%1$s",
 			AUTHORITY));
 
+	public static final String getFTS() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+			return "fts4";
+		} else {
+			return "fts3";
+		}
+	}	
+	
 	public static class Poi {
 		public static final String PATH = "poi";
 		public static final Uri CONTENT_URI = PoiContentContract.CONTENT_URI

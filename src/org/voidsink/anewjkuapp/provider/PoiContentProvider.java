@@ -29,6 +29,8 @@ public class PoiContentProvider extends ContentProvider {
 				PoiContentContract.Poi.PATH + "/#", CODE_POI_ID);
 		sUriMatcher.addURI(PoiContentContract.AUTHORITY,
 				SearchManager.SUGGEST_URI_PATH_QUERY, CODE_POI_SEARCH);
+		sUriMatcher.addURI(PoiContentContract.AUTHORITY,
+				SearchManager.SUGGEST_URI_PATH_QUERY + "/*", CODE_POI_SEARCH);
 	}
 
 	private KusssDatabaseHelper mDbHelper;
@@ -130,17 +132,14 @@ public class PoiContentProvider extends ContentProvider {
 
 			if (selection == null) {
 				selection = PoiContentContract.Poi.TABLE_NAME + " MATCH ?";
-				selectionArgs = new String[] { uri.getLastPathSegment() };
+				selectionArgs = new String[] { uri.getLastPathSegment()  + "*"};
 			}
 			if (projection == null) {
-				projection = new String[] {
+				projection = new String[] {"*",
 						PoiContentContract.Poi.COL_ID + " AS "
 								+ BaseColumns._ID,
 						PoiContentContract.Poi.COL_NAME + " AS "
 								+ SearchManager.SUGGEST_COLUMN_TEXT_1,
-						PoiContentContract.Poi.COL_NAME
-								+ " AS "
-								+ SearchManager.SUGGEST_COLUMN_INTENT_EXTRA_DATA,
 						PoiContentContract.Poi.COL_DESCR + " AS "
 								+ SearchManager.SUGGEST_COLUMN_TEXT_2,
 						PoiContentContract.Poi.COL_ID + " AS "

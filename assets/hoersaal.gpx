@@ -9,12 +9,13 @@
  xmlns:locus="http://www.locusmap.eu">
 <wpt lat="48.335184" lon="14.324484">
 	<time>2014-05-07T13:53:54Z</time>
-	<name><![CDATA[HS 18]]></name>
-	<desc><![CDATA[HS 18]]></desc>
+	<name><![CDATA[HS 19]]></name>
+	<desc><![CDATA[Intel Mobile Communications Hall]]></desc>
 </wpt>
 <wpt lat="48.335256" lon="14.324655">
 	<time>2014-05-08T04:46:21Z</time>
-	<name><![CDATA[HS 19]]></name>
+	<name><![CDATA[HS 18]]></name>
+	<desc><![CDATA[Compuware - dynaTrace Hörsaal]]></desc>
 </wpt>
 <wpt lat="48.337797" lon="14.319556">
 	<time>2014-05-08T04:48:33Z</time>
@@ -24,7 +25,7 @@
 <wpt lat="48.337950" lon="14.320410">
 	<time>2014-05-08T04:54:33Z</time>
 	<name><![CDATA[HS 2]]></name>
-	<desc><![CDATA[Raiffeisensaal]]></desc>
+	<desc><![CDATA[Sparkassensaal]]></desc>
 </wpt>
 <wpt lat="48.337973" lon="14.320064">
 	<time>2014-05-08T04:54:51Z</time>
@@ -77,5 +78,25 @@
 			</gpxx:Address>
 		</gpxx:WaypointExtension>
 	</extensions>
+</wpt>
+<wpt lat="48.337058" lon="14.319586">
+	<time>2014-05-07T13:14:30Z</time>
+	<name><![CDATA[Uniteich]]></name>
+</wpt>
+<wpt lat="48.334932" lon="14.323816">
+	<time>2014-05-10T04:55:28Z</time>
+	<name><![CDATA[Lernzone S3]]></name>
+</wpt>
+<wpt lat="48.335323" lon="14.323109">
+	<time>2014-05-10T04:55:46Z</time>
+	<name><![CDATA[Lernzone S2]]></name>
+</wpt>
+<wpt lat="48.335852" lon="14.322280">
+	<time>2014-05-10T04:56:11Z</time>
+	<name><![CDATA[MT 132]]></name>
+</wpt>
+<wpt lat="48.337293" lon="14.317859">
+	<time>2014-05-10T04:56:50Z</time>
+	<name><![CDATA[HS 8]]></name>
 </wpt>
 </gpx>

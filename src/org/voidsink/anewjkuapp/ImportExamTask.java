@@ -99,9 +99,11 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 
 					List<Exam> exams = null;
 					if (PreferenceWrapper.getNewExamsByLvaNr(mContext)) {
+						LvaMap lvaMap = new LvaMap(mContext);
+						
 						Log.d(TAG, "load exams by lvanr");
 						exams = KusssHandler.handler
-								.getNewExamsByLvaNr();
+								.getNewExamsByLvaNr(lvaMap.getLVAs());
 					} else {
 						Log.d(TAG, "load exams");
 						exams = KusssHandler.handler.getNewExams();

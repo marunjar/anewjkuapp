@@ -27,10 +27,12 @@ public class ExamListExam implements ExamListItem {
 		this.time = c.getString(ImportExamTask.COLUMN_EXAM_TIME);
 		this.location = c.getString(ImportExamTask.COLUMN_EXAM_LOCATION);
 		LVA lva = map.getLVA(this.term, this.lvaNr);
-		this.title = lva.getTitle();
-		this.skz = lva.getSKZ();
+		if (lva != null) {
+			this.title = lva.getTitle();
+			this.skz = lva.getSKZ();
+		}
 	}
-	
+
 	@Override
 	public int getType() {
 		return EXAM_TYPE;

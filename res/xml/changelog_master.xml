@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
-    <release version="0.11" versioncode="100010">
+    <release version="0.11" versioncode="100011">
        <change>Termine werden nach Verbindungsabbruch nicht mehr gelöscht</change>
        <change>Refresh funktioniert jetzt</change>
+       <change>"Prüfungen nach LVA-Nr laden" optimiert</change>
     </release>
     <release version="0.10" versioncode="100010">
        <change>Gingerbread Force Close fixed</change>

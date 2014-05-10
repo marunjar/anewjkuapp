@@ -24,8 +24,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.mapsforge.core.graphics.Bitmap;
+import org.mapsforge.core.model.BoundingBox;
+import org.mapsforge.core.model.Dimension;
 import org.mapsforge.core.model.LatLong;
 import org.mapsforge.core.model.MapPosition;
+import org.mapsforge.core.util.LatLongUtils;
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.mapsforge.map.android.layer.MyLocationOverlay;
 import org.mapsforge.map.android.util.AndroidUtil;
@@ -33,6 +36,7 @@ import org.mapsforge.map.android.view.MapView;
 import org.mapsforge.map.layer.LayerManager;
 import org.mapsforge.map.layer.Layers;
 import org.mapsforge.map.layer.cache.TileCache;
+import org.mapsforge.map.layer.overlay.Marker;
 import org.mapsforge.map.layer.renderer.TileRendererLayer;
 import org.mapsforge.map.model.MapViewPosition;
 import org.mapsforge.map.reader.MapDatabase;
@@ -68,6 +72,7 @@ import android.widget.Toast;
 public class MapFragment extends BaseFragment implements
 		SearchView.OnQueryTextListener {
 	MyLocationOverlay myLocationOverlay;
+	Marker goalLocationOverlay;
 
 	/**
 	 * The fragment argument representing the item ID that this fragment
@@ -116,7 +121,10 @@ public class MapFragment extends BaseFragment implements
 				query = intent.getStringExtra(SearchManager.QUERY);
 				Log.i(TAG, "query: " + query);
 
-				query = intent.getData().toString();
+				if (intent.getData() != null) {
+					query = intent.getData().toString();
+					Log.i(TAG, "uri: " + query);
+				}
 				Log.i(TAG, "uri: " + query);
 			} else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 				String query = intent
@@ -137,7 +145,8 @@ public class MapFragment extends BaseFragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
-		this.myLocationOverlay.enableMyLocation(true);
+		this.myLocationOverlay.enableMyLocation(this.goalLocationOverlay
+				.getLatLong() == null);
 	}
 
 	@Override
@@ -145,12 +154,65 @@ public class MapFragment extends BaseFragment implements
 		super.onCreate(savedInstanceState);
 	}
 
+	private void setNewGoal(LatLong latLong) {
+		if (latLong != null) {
+			this.myLocationOverlay.setSnapToLocationEnabled(false);
+			this.goalLocationOverlay.setLatLong(latLong);
+
+			if (this.myLocationOverlay.getLastLocation() != null) {
+				LatLong mLocation = MyLocationOverlay
+						.locationToLatLong(this.myLocationOverlay
+								.getLastLocation());
+
+				// zoom to bounds
+				BoundingBox bb = new BoundingBox(Math.min(latLong.latitude,
+						mLocation.latitude), Math.min(latLong.longitude,
+						mLocation.longitude), Math.max(latLong.latitude,
+						mLocation.latitude), Math.max(latLong.longitude,
+						mLocation.longitude));
+				Dimension dimension = this.mapView.getModel().mapViewDimension
+						.getDimension();
+				this.mapView.getModel().mapViewPosition
+						.setMapPosition(new MapPosition(latLong, LatLongUtils
+								.zoomForBounds(dimension, bb, this.mapView
+										.getModel().displayModel.getTileSize())));
+			} else {
+				this.mapViewPosition.setCenter(latLong);
+			}
+		} else {
+			this.goalLocationOverlay.setLatLong(null);
+			this.myLocationOverlay.setSnapToLocationEnabled(true);
+		}
+		this.goalLocationOverlay.requestRedraw();
+		this.myLocationOverlay.requestRedraw();
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.action_poi_test_data:
+		case R.id.action_test_import_poi_data:
 			Log.i(TAG, "import POI test data");
 			importPoiTestData();
+			return true;
+		case R.id.action_snap_to_location:
+			item.setChecked(!item.isChecked());
+			this.myLocationOverlay.setSnapToLocationEnabled(item.isChecked());
+			if (item.isChecked()) {
+				item.setIcon(android.R.drawable.ic_menu_myplaces);
+				Toast.makeText(getActivity(), "snap enabled",
+						Toast.LENGTH_SHORT).show();
+			} else {
+				item.setIcon(android.R.drawable.ic_menu_mylocation);
+				Toast.makeText(getActivity(), "snap disabled",
+						Toast.LENGTH_SHORT).show();
+			}
+			return true;
+		case R.id.action_test_toggle_current_goal:
+			if (this.goalLocationOverlay.getLatLong() == null) {
+				setNewGoal(new LatLong(48.33706, 14.31960));
+			} else {
+				setNewGoal(null);
+			}
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -256,12 +318,18 @@ public class MapFragment extends BaseFragment implements
 		layers.add(createTileRendererLayer(this.tileCache, mapViewPosition,
 				getMapFile(), InternalRenderTheme.OSMARENDER, false));
 
-		// a marker to show at the position
+		// overlay with a marker to show the goal position
 		Drawable drawable = getResources().getDrawable(
-				R.drawable.ic_marker_own_position);
+				R.drawable.ic_marker_goal_position);
 		Bitmap bitmap = AndroidGraphicFactory.convertToBitmap(drawable);
+		this.goalLocationOverlay = new Marker(null, bitmap, 0, 0);
+		this.mLayerManager.getLayers().add(this.goalLocationOverlay);
 
-		// create the overlay and tell it to follow the location
+		// overlay with a marker to show the actual position
+		drawable = getResources()
+				.getDrawable(R.drawable.ic_marker_own_position);
+		bitmap = AndroidGraphicFactory.convertToBitmap(drawable);
+
 		this.myLocationOverlay = new MyLocationOverlay(this.getActivity(),
 				this.mapViewPosition, bitmap);
 		this.myLocationOverlay.setSnapToLocationEnabled(true);
@@ -331,7 +399,7 @@ public class MapFragment extends BaseFragment implements
 
 	@Override
 	public boolean onQueryTextChange(String newText) {
-		Log.i(TAG, newText);
+		//Log.i(TAG, newText);
 		return false;
 	}
 
