@@ -18,6 +18,7 @@ public class PoiContentProvider extends ContentProvider {
 	private static final int CODE_POI = 1;
 	private static final int CODE_POI_ID = 2;
 	private static final int CODE_POI_SEARCH = 3;
+	private static final int CODE_POI_BY_NAME = 4;
 
 	private static final UriMatcher sUriMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
@@ -28,12 +29,26 @@ public class PoiContentProvider extends ContentProvider {
 		sUriMatcher.addURI(PoiContentContract.AUTHORITY,
 				PoiContentContract.Poi.PATH + "/#", CODE_POI_ID);
 		sUriMatcher.addURI(PoiContentContract.AUTHORITY,
+				PoiContentContract.Poi.PATH + "/*", CODE_POI_BY_NAME);
+		sUriMatcher.addURI(PoiContentContract.AUTHORITY,
 				SearchManager.SUGGEST_URI_PATH_QUERY, CODE_POI_SEARCH);
 		sUriMatcher.addURI(PoiContentContract.AUTHORITY,
 				SearchManager.SUGGEST_URI_PATH_QUERY + "/*", CODE_POI_SEARCH);
 	}
 
 	private KusssDatabaseHelper mDbHelper;
+
+	public static boolean matchFromExt(Uri uri) {
+		switch (sUriMatcher.match(uri)) {
+		case CODE_POI_ID:
+			return true;
+		case CODE_POI_BY_NAME:
+			return true;
+		case CODE_POI_SEARCH:
+			return true;
+		}
+		return false;
+	}
 
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
@@ -67,10 +82,13 @@ public class PoiContentProvider extends ContentProvider {
 		switch (sUriMatcher.match(uri)) {
 		case CODE_POI:
 			return PoiContentContract.CONTENT_TYPE_DIR + "/"
-					+ PoiContentContract.Poi.PATH;
+					+ PoiContentContract.Poi.MIMETYPE;
 		case CODE_POI_ID:
 			return PoiContentContract.CONTENT_TYPE_ITEM + "/"
-					+ PoiContentContract.Poi.PATH;
+					+ PoiContentContract.Poi.MIMETYPE;
+		case CODE_POI_BY_NAME:
+			return PoiContentContract.CONTENT_TYPE_ITEM + "/"
+					+ PoiContentContract.Poi.MIMETYPE;
 		default:
 			throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}
@@ -118,6 +136,14 @@ public class PoiContentProvider extends ContentProvider {
 			builder.appendWhere(PoiContentContract.Poi.COL_ROWID + "="
 					+ uri.getLastPathSegment());
 		case CODE_POI:
+			if (TextUtils.isEmpty(sortOrder))
+				sortOrder = PoiContentContract.Poi.COL_NAME + " ASC";
+			builder.setTables(PoiContentContract.Poi.TABLE_NAME);
+			return builder.query(db, projection, selection, selectionArgs,
+					null, null, sortOrder);
+		case CODE_POI_BY_NAME:
+			builder.appendWhere(PoiContentContract.Poi.COL_NAME + "='"
+					+ uri.getLastPathSegment() + "'");
 			if (TextUtils.isEmpty(sortOrder))
 				sortOrder = PoiContentContract.Poi.COL_NAME + " ASC";
 			builder.setTables(PoiContentContract.Poi.TABLE_NAME);

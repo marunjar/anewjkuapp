@@ -153,7 +153,7 @@ public class MapFragment extends BaseFragment implements
 		while (c.moveToNext()) {
 			pois.add(new Poi(c));
 		}
-		c.moveToFirst();
+		c.close();
 
 		if (pois.size() == 0) {
 			Toast.makeText(mContext, "Ziel nicht gefunden", Toast.LENGTH_SHORT)
@@ -185,9 +185,6 @@ public class MapFragment extends BaseFragment implements
 						}
 					});
 			poiSelector.show();
-
-//			Toast.makeText(mContext, "mehrere Ziele gefunden",
-//					Toast.LENGTH_SHORT).show();
 		}
 	}
 

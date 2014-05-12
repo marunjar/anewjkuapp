@@ -14,7 +14,7 @@ public class PoiContentContract {
 
 	public static Uri CONTENT_URI = Uri.parse(String.format("content://%1$s",
 			AUTHORITY));
-
+	
 	public static final String getFTS() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 			return "fts4";
@@ -25,6 +25,8 @@ public class PoiContentContract {
 	
 	public static class Poi {
 		public static final String PATH = "poi";
+		public static final String MIMETYPE = "vnd.anewjkuapp.poi";
+		
 		public static final Uri CONTENT_URI = PoiContentContract.CONTENT_URI
 				.buildUpon().appendPath(PATH).build();
 

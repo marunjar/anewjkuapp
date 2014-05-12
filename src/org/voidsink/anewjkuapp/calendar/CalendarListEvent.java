@@ -9,14 +9,14 @@ import org.apache.commons.lang.time.DateUtils;
 public class CalendarListEvent implements CalendarListItem {
 
 	private int mColor;
-	private CharSequence mTitle;
-	private CharSequence mTime;
-	private CharSequence mLocation;
+	private String mTitle;
+	private String mTime;
+	private String mLocation;
 	private long mDtStart;
 	private long mDtEnd;
 
-	public CalendarListEvent(int color, CharSequence title,
-			CharSequence location, long dtStart, long dtEnd) {
+	public CalendarListEvent(int color, String title,
+			String location, long dtStart, long dtEnd) {
 		this.mColor = color;
 		this.mTitle = title;
 		this.mLocation = location;
@@ -46,15 +46,15 @@ public class CalendarListEvent implements CalendarListItem {
 		return EVENT_TYPE;
 	}
 
-	public CharSequence getLocation() {
+	public String getLocation() {
 		return mLocation;
 	}
 
-	public CharSequence getTime() {
+	public String getTime() {
 		return mTime;
 	}
 
-	public CharSequence getTitle() {
+	public String getTitle() {
 		return mTitle;
 	}
 
