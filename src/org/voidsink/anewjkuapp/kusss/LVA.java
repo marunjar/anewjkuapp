@@ -75,17 +75,17 @@ public class LVA {
 		return this.teacher;
 	}
 
-	private void setSWS(double sws) {
-		this.sws = sws;
-	}
+//	private void setSWS(double sws) {
+//		this.sws = sws;
+//	}
 
 	public double getSWS() {
 		return this.sws;
 	}
 
-	private void setECTS(double ects) {
-		this.ects = ects;
-	}
+//	private void setECTS(double ects) {
+//		this.ects = ects;
+//	}
 
 	public double getECTS() {
 		return this.ects;

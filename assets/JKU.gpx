@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<gpx version="1.1" creator="Locus Android"
+ xmlns="http://www.topografix.com/GPX/1/1"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd"
+ xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3"
+ xmlns:gpxtrkx="http://www.garmin.com/xmlschemas/TrackStatsExtension/v1"
+ xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1"
+ xmlns:locus="http://www.locusmap.eu">
+<wpt lat="48.335184" lon="14.324484">
+	<time>2014-05-07T13:53:54Z</time>
+	<name><![CDATA[HS 19]]></name>
+	<desc><![CDATA[Intel Mobile Communications Hall]]></desc>
+</wpt>
+<wpt lat="48.335256" lon="14.324655">
+	<time>2014-05-08T04:46:21Z</time>
+	<name><![CDATA[HS 18]]></name>
+	<desc><![CDATA[Compuware - dynaTrace Hörsaal]]></desc>
+</wpt>
+<wpt lat="48.337797" lon="14.319556">
+	<time>2014-05-08T04:48:33Z</time>
+	<name><![CDATA[HS 1]]></name>
+	<desc><![CDATA[Raiffeisensaal]]></desc>
+</wpt>
+<wpt lat="48.337950" lon="14.320410">
+	<time>2014-05-08T04:54:33Z</time>
+	<name><![CDATA[HS 2]]></name>
+	<desc><![CDATA[Sparkassensaal]]></desc>
+	<sym>z-favorites</sym>
+	<extensions>
+		<locus:icon>z-favorites.png</locus:icon>
+	</extensions>
+</wpt>
+<wpt lat="48.337973" lon="14.320064">
+	<time>2014-05-08T04:54:51Z</time>
+	<name><![CDATA[HS 3]]></name>
+</wpt>
+<wpt lat="48.338001" lon="14.319759">
+	<time>2014-05-08T04:55:07Z</time>
+	<name><![CDATA[HS 4]]></name>
+</wpt>
+<wpt lat="48.338057" lon="14.319101">
+	<time>2014-05-08T04:56:33Z</time>
+	<name><![CDATA[HS 6]]></name>
+</wpt>
+<wpt lat="48.338070" lon="14.318829">
+	<time>2014-05-08T04:56:43Z</time>
+	<name><![CDATA[HS 7]]></name>
+</wpt>
+<wpt lat="48.338033" lon="14.319441">
+	<time>2014-05-08T04:57:17Z</time>
+	<name><![CDATA[HS 5]]></name>
+</wpt>
+<wpt lat="48.337408" lon="14.317177">
+	<time>2014-05-08T08:38:40Z</time>
+	<name><![CDATA[HS 9]]></name>
+	<desc><![CDATA[Borealis Hörsaal, EG]]></desc>
+	<extensions>
+		<gpxx:WaypointExtension>
+			<gpxx:Address>
+				<gpxx:StreetAddress>Altenbergerstr. 69</gpxx:StreetAddress>
+				<gpxx:City>Linz</gpxx:City>
+				<gpxx:State>Oberösterreich</gpxx:State>
+				<gpxx:Country>Österreich</gpxx:Country>
+				<gpxx:PostalCode>4040</gpxx:PostalCode>
+			</gpxx:Address>
+		</gpxx:WaypointExtension>
+	</extensions>
+</wpt>
+<wpt lat="48.337408" lon="14.317177">
+	<time>2014-05-08T08:38:40Z</time>
+	<name><![CDATA[HS 10]]></name>
+	<desc><![CDATA[Fabasoft Hörsaal, 1. OG]]></desc>
+	<extensions>
+		<gpxx:WaypointExtension>
+			<gpxx:Address>
+				<gpxx:StreetAddress>Altenbergerstr. 69</gpxx:StreetAddress>
+				<gpxx:City>Linz</gpxx:City>
+				<gpxx:State>Oberösterreich</gpxx:State>
+				<gpxx:Country>Österreich</gpxx:Country>
+				<gpxx:PostalCode>4040</gpxx:PostalCode>
+			</gpxx:Address>
+		</gpxx:WaypointExtension>
+	</extensions>
+</wpt>
+<wpt lat="48.337058" lon="14.319586">
+	<time>2014-05-07T13:14:30Z</time>
+	<name><![CDATA[Uniteich]]></name>
+</wpt>
+<wpt lat="48.335323" lon="14.323109">
+	<time>2014-05-10T04:55:46Z</time>
+	<name><![CDATA[Lernzone S3]]></name>
+	<desc><![CDATA[S2 052, EG]]></desc>
+	<sym>z-favorites</sym>
+	<extensions>
+		<locus:icon>z-favorites.png</locus:icon>
+	</extensions>
+</wpt>
+<wpt lat="48.335852" lon="14.322280">
+	<time>2014-05-10T04:56:11Z</time>
+	<name><![CDATA[MT 132]]></name>
+</wpt>
+<wpt lat="48.337293" lon="14.317859">
+	<time>2014-05-10T04:56:50Z</time>
+	<name><![CDATA[HS 8]]></name>
+	<desc><![CDATA[EG]]></desc>
+	<sym>z-favorites</sym>
+	<extensions>
+		<locus:icon>z-favorites.png</locus:icon>
+	</extensions>
+</wpt>
+<wpt lat="48.335208" lon="14.324013">
+	<time>2014-05-12T08:03:34Z</time>
+	<name><![CDATA[S3 063]]></name>
+	<desc><![CDATA[PC-Pool, EG]]></desc>
+</wpt>
+<wpt lat="48.335020" lon="14.323806">
+	<time>2014-05-12T08:04:57Z</time>
+	<name><![CDATA[S3 057]]></name>
+	<desc><![CDATA[Seminarraum, EG]]></desc>
+</wpt>
+<wpt lat="48.334932" lon="14.323843">
+	<time>2014-05-12T08:05:32Z</time>
+	<name><![CDATA[Lernzone S3]]></name>
+	<desc><![CDATA[S3 056, EG]]></desc>
+	<sym>z-favorites</sym>
+	<extensions>
+		<locus:icon>z-favorites.png</locus:icon>
+	</extensions>
+</wpt>
+<wpt lat="48.335105" lon="14.323874">
+	<time>2014-05-12T08:05:59Z</time>
+	<name><![CDATA[S3 058]]></name>
+	<desc><![CDATA[Seminarraum, EG]]></desc>
+</wpt>
+<wpt lat="48.337510" lon="14.322009">
+	<time>2014-05-12T10:24:32Z</time>
+	<name><![CDATA[LUI]]></name>
+	<desc><![CDATA[Linzer Uni Inn, Keller]]></desc>
+	<sym>z-favorites</sym>
+	<extensions>
+		<locus:icon>z-favorites.png</locus:icon>
+	</extensions>
+</wpt>
+<wpt lat="48.335109" lon="14.324218">
+	<time>2014-05-12T10:33:35Z</time>
+	<name><![CDATA[S3 047]]></name>
+	<desc><![CDATA[Seminarraum, EG]]></desc>
+</wpt>
+<wpt lat="48.334996" lon="14.324086">
+	<time>2014-05-12T10:35:00Z</time>
+	<name><![CDATA[S3 048]]></name>
+	<desc><![CDATA[Seminarraum, EG]]></desc>
+</wpt>
+<wpt lat="48.334949" lon="14.324036">
+	<time>2014-05-12T10:35:31Z</time>
+	<name><![CDATA[S3 055]]></name>
+	<desc><![CDATA[Seminarraum, EG]]></desc>
+</wpt>
+<wpt lat="48.335428" lon="14.323518">
+	<time>2014-05-12T14:31:39Z</time>
+	<name><![CDATA[S2 044]]></name>
+	<desc><![CDATA[Seminarraum, EG]]></desc>
+	<sym>z-favorites</sym>
+	<extensions>
+		<locus:icon>z-favorites.png</locus:icon>
+	</extensions>
+</wpt>
+<wpt lat="48.335350" lon="14.323384">
+	<time>2014-05-12T14:32:21Z</time>
+	<name><![CDATA[S2 046]]></name>
+	<desc><![CDATA[Seminarraum, EG]]></desc>
+</wpt>
+<wpt lat="48.335325" lon="14.323337">
+	<time>2014-05-12T14:32:49Z</time>
+	<name><![CDATA[S2 048]]></name>
+	<desc><![CDATA[Seminarraum, EG]]></desc>
+	<sym>z-favorites</sym>
+	<extensions>
+		<locus:icon>z-favorites.png</locus:icon>
+	</extensions>
+</wpt>
+<wpt lat="48.335563" lon="14.323329">
+	<time>2014-05-12T14:35:01Z</time>
+	<name><![CDATA[S2 059]]></name>
+	<desc><![CDATA[Seminarraum, EG]]></desc>
+</wpt>
+<wpt lat="48.335563" lon="14.323329">
+	<time>2014-05-12T14:35:23Z</time>
+	<name><![CDATA[S2 060]]></name>
+	<desc><![CDATA[JKU B&V, EG]]></desc>
+</wpt>
+<wpt lat="48.335485" lon="14.323202">
+	<time>2014-05-12T14:35:47Z</time>
+	<name><![CDATA[S2 054]]></name>
+	<desc><![CDATA[Seminarraum, EG]]></desc>
+</wpt>
+<wpt lat="48.335411" lon="14.323068">
+	<time>2014-05-12T14:36:11Z</time>
+	<name><![CDATA[S2 053]]></name>
+	<desc><![CDATA[Seminarraum, EG]]></desc>
+</wpt>
+<wpt lat="48.335379" lon="14.323219">
+	<time>2014-05-12T14:38:11Z</time>
+	<name><![CDATA[S2 Z74]]></name>
+	<desc><![CDATA[Seminarraum, ZG]]></desc>
+</wpt>
+<wpt lat="48.337636" lon="14.321977">
+	<time>2014-05-12T15:03:24Z</time>
+	<name><![CDATA[Mensa]]></name>
+	<desc><![CDATA[EG]]></desc>
+	<sym>z-favorites</sym>
+	<extensions>
+		<locus:icon>z-favorites.png</locus:icon>
+	</extensions>
+</wpt>
+<wpt lat="48.337916" lon="14.321915">
+	<time>2014-05-12T15:03:49Z</time>
+	<name><![CDATA[Kepler's]]></name>
+	<sym>z-favorites</sym>
+	<extensions>
+		<locus:icon>z-favorites.png</locus:icon>
+	</extensions>
+</wpt>
+</gpx>

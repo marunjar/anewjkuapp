@@ -30,7 +30,7 @@ public class PoiContentContract {
 
 		// DB Table consts
 		public static final String TABLE_NAME = "poi";
-		public static final String COL_ID = "_id";
+		public static final String COL_ROWID = "rowid";
 		public static final String COL_LAT = "latitude";
 		public static final String COL_LON = "longtitude";
 		public static final String COL_NAME = "name";

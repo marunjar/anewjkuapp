@@ -3,7 +3,6 @@ package org.voidsink.anewjkuapp.notification;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.fragment.MapFragment;

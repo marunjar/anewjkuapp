@@ -10,6 +10,8 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.PeriodicSync;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -41,6 +43,9 @@ public final class PreferenceWrapper {
 	private static final String PREF_GET_NEW_EXAMS = "pref_key_get_exams_from_lva";
 	private static final boolean PREF_GET_NEW_EXAMS_DEFAULT = false;
 	
+	private static final String PREF_LAST_VERSION = "pref_key_last_version";
+	private static final int PREF_LAST_VERSION_DEFAULT = -1;
+	
 	private PreferenceWrapper() {
 
 	}
@@ -52,6 +57,7 @@ public final class PreferenceWrapper {
 			return Integer.parseInt(sp.getString(PREF_SYNC_INTERVAL_KEY,
 					Integer.toString(PREF_SYNC_INTERVAL_DEFAULT)));
 		} catch (Exception e) {
+			Log.e(TAG, "Failure", e);
 			return PREF_SYNC_INTERVAL_DEFAULT;
 		}
 	}
@@ -94,6 +100,7 @@ public final class PreferenceWrapper {
 			return sp.getBoolean(PREF_NOTIFY_CALENDAR_KEY,
 					PREF_NOTIFY_CALENDAR_DEFAULT);
 		} catch (Exception e) {
+			Log.e(TAG, "Failure", e);
 			return PREF_NOTIFY_CALENDAR_DEFAULT;
 		}
 	}
@@ -105,6 +112,7 @@ public final class PreferenceWrapper {
 			return sp.getBoolean(PREF_GET_NEW_EXAMS,
 					PREF_GET_NEW_EXAMS_DEFAULT);
 		} catch (Exception e) {
+			Log.e(TAG, "Failure", e);
 			return PREF_GET_NEW_EXAMS_DEFAULT;
 		}
 	}	
@@ -116,6 +124,7 @@ public final class PreferenceWrapper {
 			return sp
 					.getBoolean(PREF_NOTIFY_EXAM_KEY, PREF_NOTIFY_EXAM_DEFAULT);
 		} catch (Exception e) {
+			Log.e(TAG, "Failure", e);
 			return PREF_NOTIFY_EXAM_DEFAULT;
 		}
 	}
@@ -127,6 +136,7 @@ public final class PreferenceWrapper {
 			return sp.getBoolean(PREF_NOTIFY_GRADE_KEY,
 					PREF_NOTIFY_GRADE_DEFAULT);
 		} catch (Exception e) {
+			Log.e(TAG, "Failure", e);
 			return PREF_NOTIFY_GRADE_DEFAULT;
 		}
 	}
@@ -138,6 +148,7 @@ public final class PreferenceWrapper {
 			return sp.getBoolean(PREF_USE_LIGHT_THEME,
 					PREF_USE_LIGHT_THEME_DEFAULT);
 		} catch (Exception e) {
+			Log.e(TAG, "Failure", e);
 			return PREF_USE_LIGHT_THEME_DEFAULT;
 		}
 	}
@@ -148,6 +159,7 @@ public final class PreferenceWrapper {
 		try {
 			return sp.getString(PREF_MAP_FILE, PREF_MAP_FILE_DEFAULT);
 		} catch (Exception e) {
+			Log.e(TAG, "Failure", e);
 			return PREF_MAP_FILE_DEFAULT;
 		}
 	}
@@ -158,6 +170,7 @@ public final class PreferenceWrapper {
 		try {
 			return sp.getString(PREF_LAST_FRAGMENT, PREF_LAST_FRAGMENT_DEFAULT);
 		} catch (Exception e) {
+			Log.e(TAG, "Failure", e);
 			return PREF_LAST_FRAGMENT_DEFAULT;
 		}
 	}
@@ -170,4 +183,34 @@ public final class PreferenceWrapper {
 		}
 	}
 
+	public static int getLastVersion(Context mContext) {
+		SharedPreferences sp = PreferenceManager
+				.getDefaultSharedPreferences(mContext);
+		try {
+			return sp.getInt(PREF_LAST_VERSION, PREF_LAST_VERSION_DEFAULT);
+		} catch (Exception e) {
+			Log.e(TAG, "Failure", e);
+            return PREF_LAST_VERSION_DEFAULT;
+		}		
+	}
+	
+	public static int getCurrentVersion(Context mContext) {
+        try {
+            PackageInfo packageInfo = mContext.getPackageManager().getPackageInfo(
+            		mContext.getPackageName(), 0);
+
+            return packageInfo.versionCode;
+        } catch (NameNotFoundException e) {
+            Log.e(TAG, "Could not get version information from manifest!", e);
+            return PREF_LAST_VERSION_DEFAULT;
+        }
+		
+	}
+
+	public static void setLastVersion(Context mContext, int version) {
+		SharedPreferences sp = PreferenceManager
+				.getDefaultSharedPreferences(mContext);
+		sp.edit().putInt(PREF_LAST_VERSION, version).commit();
+	}
+	
 }

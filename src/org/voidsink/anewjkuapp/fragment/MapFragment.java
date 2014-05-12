@@ -15,13 +15,9 @@
  */
 package org.voidsink.anewjkuapp.fragment;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.mapsforge.core.graphics.Bitmap;
 import org.mapsforge.core.model.BoundingBox;
@@ -30,7 +26,6 @@ import org.mapsforge.core.model.LatLong;
 import org.mapsforge.core.model.MapPosition;
 import org.mapsforge.core.util.LatLongUtils;
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
-import org.mapsforge.map.android.layer.MyLocationOverlay;
 import org.mapsforge.map.android.util.AndroidUtil;
 import org.mapsforge.map.android.view.MapView;
 import org.mapsforge.map.layer.LayerManager;
@@ -45,23 +40,37 @@ import org.mapsforge.map.reader.header.MapFileInfo;
 import org.mapsforge.map.rendertheme.InternalRenderTheme;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
 import org.voidsink.anewjkuapp.ImportPoiTask;
+import org.voidsink.anewjkuapp.LocationOverlay;
+import org.voidsink.anewjkuapp.MapUtils;
+import org.voidsink.anewjkuapp.Poi;
+import org.voidsink.anewjkuapp.PoiAdapter;
+import org.voidsink.anewjkuapp.PoiContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 
+import android.app.AlertDialog;
 import android.app.SearchManager;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -71,15 +80,14 @@ import android.widget.Toast;
  */
 public class MapFragment extends BaseFragment implements
 		SearchView.OnQueryTextListener {
-	MyLocationOverlay myLocationOverlay;
+	LocationOverlay mMyLocationOverlay;
 	Marker goalLocationOverlay;
 
 	/**
 	 * The fragment argument representing the item ID that this fragment
 	 * represents.
 	 */
-	private static final String MAP_FILE_NAME = "campus.map";
-	private static final String POI_TEST_FILE_NAME = "hoersaal.gpx";
+	public static final String MAP_FILE_NAME = "campus.map";
 
 	private static final String TAG = MapFragment.class.getSimpleName();
 
@@ -105,7 +113,7 @@ public class MapFragment extends BaseFragment implements
 
 	@Override
 	public void onPause() {
-		myLocationOverlay.disableMyLocation();
+		mMyLocationOverlay.disableMyLocation();
 		super.onPause();
 	}
 
@@ -114,38 +122,107 @@ public class MapFragment extends BaseFragment implements
 		super.handleIntent(intent);
 		if (intent != null) {
 			if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-				String query = intent
-						.getStringExtra(SearchManager.EXTRA_DATA_KEY);
-				Log.i(TAG, "extra_data_key: " + query);
-				mSearchView.setQuery(query, true);
-				query = intent.getStringExtra(SearchManager.QUERY);
-				Log.i(TAG, "query: " + query);
-
 				if (intent.getData() != null) {
-					query = intent.getData().toString();
-					Log.i(TAG, "uri: " + query);
+					finishSearch(intent.getData());
+				} else {
+					String query = intent.getStringExtra(SearchManager.QUERY);
+					doSearch(query);
 				}
-				Log.i(TAG, "uri: " + query);
 			} else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-				String query = intent
-						.getStringExtra(SearchManager.EXTRA_DATA_KEY);
-				Log.i(TAG, "extra_data_key: " + query);
-				mSearchView.setQuery(query, false);
-				query = intent.getStringExtra(SearchManager.QUERY);
-				Log.i(TAG, "query: " + query);
-
 				if (intent.getData() != null) {
-					query = intent.getData().toString();
-					Log.i(TAG, "uri: " + query);
+					finishSearch(intent.getData());
+				} else {
+					String query = intent.getStringExtra(SearchManager.QUERY);
+					doSearch(query);
 				}
 			}
 		}
 	}
 
+	private void doSearch(String query) {
+		Log.i(TAG, "query: " + query);
+
+		List<Poi> pois = new ArrayList<Poi>();
+
+		ContentResolver cr = mContext.getContentResolver();
+		Uri searchUri = PoiContentContract.CONTENT_URI.buildUpon()
+				.appendPath(SearchManager.SUGGEST_URI_PATH_QUERY)
+				.appendEncodedPath(query).build();
+		Cursor c = cr.query(searchUri, ImportPoiTask.POI_PROJECTION, null,
+				null, null);
+		while (c.moveToNext()) {
+			pois.add(new Poi(c));
+		}
+		c.moveToFirst();
+
+		if (pois.size() == 0) {
+			Toast.makeText(mContext, "Ziel nicht gefunden", Toast.LENGTH_SHORT)
+					.show();
+		} else if (pois.size() == 1) {
+			finishSearch(pois.get(0));
+		} else {
+			AlertDialog.Builder poiSelector = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.Theme_Dialog));
+			
+			poiSelector.setIcon(R.drawable.ic_launcher);
+
+			final PoiAdapter arrayAdapter = new PoiAdapter(mContext);
+			arrayAdapter.addAll(pois);
+
+			poiSelector.setNegativeButton(android.R.string.cancel,
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
+					});
+
+			poiSelector.setAdapter(arrayAdapter,
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							finishSearch(arrayAdapter.getItem(which));
+						}
+					});
+			poiSelector.show();
+
+//			Toast.makeText(mContext, "mehrere Ziele gefunden",
+//					Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	private void finishSearch(Poi poi) {
+		if (poi != null) {
+			finishSearch(PoiContentContract.Poi.CONTENT_URI.buildUpon()
+					.appendEncodedPath(Integer.toString(poi.getId())).build());
+		}
+	}
+
+	private void finishSearch(Uri uri) {
+		Log.i(TAG, "finish search: " + uri.toString());
+
+		// jump to point with given Uri
+		ContentResolver cr = getActivity().getContentResolver();
+
+		Cursor c = cr
+				.query(uri, ImportPoiTask.POI_PROJECTION, null, null, null);
+		while (c.moveToNext()) {
+
+			String name = c.getString(ImportPoiTask.COLUMN_POI_NAME);
+			double lon = c.getDouble(ImportPoiTask.COLUMN_POI_LON);
+			double lat = c.getDouble(ImportPoiTask.COLUMN_POI_LAT);
+
+			setNewGoal(new LatLong(lat, lon), name);
+
+			break;
+		}
+		mSearchView.setQuery("", false);
+	}
+
 	@Override
 	public void onResume() {
 		super.onResume();
-		this.myLocationOverlay.enableMyLocation(this.goalLocationOverlay
+		this.mMyLocationOverlay.enableMyLocation(this.goalLocationOverlay
 				.getLatLong() == null);
 	}
 
@@ -154,14 +231,31 @@ public class MapFragment extends BaseFragment implements
 		super.onCreate(savedInstanceState);
 	}
 
-	private void setNewGoal(LatLong latLong) {
+	private void setNewGoal(LatLong latLong, String name) {
 		if (latLong != null) {
-			this.myLocationOverlay.setSnapToLocationEnabled(false);
-			this.goalLocationOverlay.setLatLong(latLong);
+			this.mMyLocationOverlay.setSnapToLocationEnabled(false);
 
-			if (this.myLocationOverlay.getLastLocation() != null) {
-				LatLong mLocation = MyLocationOverlay
-						.locationToLatLong(this.myLocationOverlay
+			// generate Bubble image
+			TextView bubbleView = new TextView(this.mContext);
+			MapUtils.setBackground(bubbleView,
+					getResources().getDrawable(R.drawable.balloon_overlay));
+			bubbleView.setGravity(Gravity.CENTER);
+			bubbleView.setMaxEms(20);
+			bubbleView.setTextSize(15);
+			bubbleView.setTextColor(Color.BLACK);
+			bubbleView.setText(name);
+			Bitmap bubble = MapUtils.viewToBitmap(mContext, bubbleView);
+			bubble.incrementRefCount();
+
+			// set new goal
+			this.goalLocationOverlay.setLatLong(latLong);
+			this.goalLocationOverlay.setBitmap(bubble);
+			this.goalLocationOverlay.setHorizontalOffset(0);
+			this.goalLocationOverlay.setVerticalOffset(-bubble.getHeight() / 2);
+
+			if (this.mMyLocationOverlay.getLastLocation() != null) {
+				LatLong mLocation = LocationOverlay
+						.locationToLatLong(this.mMyLocationOverlay
 								.getLastLocation());
 
 				// zoom to bounds
@@ -181,67 +275,22 @@ public class MapFragment extends BaseFragment implements
 			}
 		} else {
 			this.goalLocationOverlay.setLatLong(null);
-			this.myLocationOverlay.setSnapToLocationEnabled(true);
+			this.mMyLocationOverlay.setSnapToLocationEnabled(true);
 		}
 		this.goalLocationOverlay.requestRedraw();
-		this.myLocationOverlay.requestRedraw();
+		this.mMyLocationOverlay.requestRedraw();
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.action_test_import_poi_data:
-			Log.i(TAG, "import POI test data");
-			importPoiTestData();
-			return true;
 		case R.id.action_snap_to_location:
 			item.setChecked(!item.isChecked());
-			this.myLocationOverlay.setSnapToLocationEnabled(item.isChecked());
-			if (item.isChecked()) {
-				item.setIcon(android.R.drawable.ic_menu_myplaces);
-				Toast.makeText(getActivity(), "snap enabled",
-						Toast.LENGTH_SHORT).show();
-			} else {
-				item.setIcon(android.R.drawable.ic_menu_mylocation);
-				Toast.makeText(getActivity(), "snap disabled",
-						Toast.LENGTH_SHORT).show();
-			}
-			return true;
-		case R.id.action_test_toggle_current_goal:
-			if (this.goalLocationOverlay.getLatLong() == null) {
-				setNewGoal(new LatLong(48.33706, 14.31960));
-			} else {
-				setNewGoal(null);
-			}
+			this.mMyLocationOverlay.setSnapToLocationEnabled(item.isChecked());
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}
-
-	private void importPoiTestData() {
-		try {
-			// write file to sd for simulated import
-			OutputStream mapFileWriter = new BufferedOutputStream(getActivity()
-					.openFileOutput(POI_TEST_FILE_NAME, Context.MODE_PRIVATE));
-			InputStream assetData = new BufferedInputStream(getActivity()
-					.getAssets().open(POI_TEST_FILE_NAME));
-
-			byte[] buffer = new byte[1024];
-			int len = assetData.read(buffer);
-			while (len != -1) {
-				mapFileWriter.write(buffer, 0, len);
-				len = assetData.read(buffer);
-			}
-			mapFileWriter.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		new ImportPoiTask(mContext, new File(getActivity().getFilesDir(),
-				POI_TEST_FILE_NAME), true).execute();
 	}
 
 	@Override
@@ -252,6 +301,12 @@ public class MapFragment extends BaseFragment implements
 		MenuItem searchItem = menu.findItem(R.id.action_search_poi);
 		mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 		setupSearchView(searchItem);
+
+		if (mMyLocationOverlay != null) {
+			MenuItem snapToLocationItem = menu
+					.findItem(R.id.action_snap_to_location);
+			mMyLocationOverlay.setSnapToLocationItem(snapToLocationItem);
+		}
 	}
 
 	private void setupSearchView(MenuItem searchItem) {
@@ -280,25 +335,6 @@ public class MapFragment extends BaseFragment implements
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_map, container,
 				false);
-		try {
-			// write file to sd for mapsforge
-			OutputStream mapFileWriter = new BufferedOutputStream(getActivity()
-					.openFileOutput(MAP_FILE_NAME, Context.MODE_PRIVATE));
-			InputStream assetData = new BufferedInputStream(getActivity()
-					.getAssets().open(MAP_FILE_NAME));
-
-			byte[] buffer = new byte[1024];
-			int len = assetData.read(buffer);
-			while (len != -1) {
-				mapFileWriter.write(buffer, 0, len);
-				len = assetData.read(buffer);
-			}
-			mapFileWriter.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
 		this.mapView = (MapView) rootView.findViewById(R.id.mapView);
 		this.mapView.setClickable(true);
@@ -330,10 +366,10 @@ public class MapFragment extends BaseFragment implements
 				.getDrawable(R.drawable.ic_marker_own_position);
 		bitmap = AndroidGraphicFactory.convertToBitmap(drawable);
 
-		this.myLocationOverlay = new MyLocationOverlay(this.getActivity(),
+		this.mMyLocationOverlay = new LocationOverlay(this.getActivity(),
 				this.mapViewPosition, bitmap);
-		this.myLocationOverlay.setSnapToLocationEnabled(true);
-		this.mLayerManager.getLayers().add(this.myLocationOverlay);
+		this.mMyLocationOverlay.setSnapToLocationEnabled(true);
+		this.mLayerManager.getLayers().add(this.mMyLocationOverlay);
 
 		return rootView;
 	}
@@ -399,14 +435,14 @@ public class MapFragment extends BaseFragment implements
 
 	@Override
 	public boolean onQueryTextChange(String newText) {
-		//Log.i(TAG, newText);
+		// Log.i(TAG, newText);
 		return false;
 	}
 
 	@Override
 	public boolean onQueryTextSubmit(String newText) {
-		Toast.makeText(mContext, newText + " submitted", Toast.LENGTH_SHORT)
-				.show();
+//		Toast.makeText(mContext, newText + " submitted", Toast.LENGTH_SHORT)
+//				.show();
 		return false;
 	}
 }

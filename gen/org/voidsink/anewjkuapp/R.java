@@ -1088,17 +1088,18 @@ containing a value of this type.
         public static final int abc_textfield_searchview_right_holo_dark=0x7f020055;
         public static final int abc_textfield_searchview_right_holo_light=0x7f020056;
         public static final int activated_background=0x7f020057;
-        public static final int drawer_shadow=0x7f020058;
-        public static final int ic_drawer=0x7f020059;
-        public static final int ic_launcher=0x7f02005a;
-        public static final int ic_launcher_grey=0x7f02005b;
-        public static final int ic_marker_goal_position=0x7f02005c;
-        public static final int ic_marker_own_position=0x7f02005d;
-        public static final int ic_menu_mylocation=0x7f02005e;
-        public static final int ic_menu_preferences=0x7f02005f;
-        public static final int ic_menu_refresh=0x7f020060;
-        public static final int ic_menu_search=0x7f020061;
-        public static final int ic_stat_notify_kusss=0x7f020062;
+        public static final int balloon_overlay=0x7f020058;
+        public static final int drawer_shadow=0x7f020059;
+        public static final int ic_drawer=0x7f02005a;
+        public static final int ic_launcher=0x7f02005b;
+        public static final int ic_launcher_grey=0x7f02005c;
+        public static final int ic_marker_goal_position=0x7f02005d;
+        public static final int ic_marker_own_position=0x7f02005e;
+        public static final int ic_menu_mylocation=0x7f02005f;
+        public static final int ic_menu_preferences=0x7f020060;
+        public static final int ic_menu_refresh=0x7f020061;
+        public static final int ic_menu_search=0x7f020062;
+        public static final int ic_stat_notify_kusss=0x7f020063;
     }
     public static final class id {
         public static final int about_app=0x7f070057;
@@ -1123,11 +1124,9 @@ containing a value of this type.
         public static final int action_refresh_calendar=0x7f070090;
         public static final int action_refresh_exams=0x7f070091;
         public static final int action_refresh_grades=0x7f070093;
-        public static final int action_search_poi=0x7f070095;
+        public static final int action_search_poi=0x7f070094;
         public static final int action_settings=0x7f070092;
-        public static final int action_snap_to_location=0x7f070094;
-        public static final int action_test_import_poi_data=0x7f070096;
-        public static final int action_test_toggle_current_goal=0x7f070097;
+        public static final int action_snap_to_location=0x7f070095;
         public static final int activity_chooser_view_content=0x7f070025;
         public static final int always=0x7f07000b;
         public static final int attribution=0x7f070061;
@@ -1516,6 +1515,11 @@ containing a value of this type.
     
  API 11 theme customizations can go here. 
 
+        Base application theme for API 11+. This theme completely replaces
+        AppBaseTheme from res/values/styles.xml on API 11+ devices.
+    
+ API 11 theme customizations can go here. 
+
         Base application theme for API 14+. This theme completely replaces
         AppBaseTheme from BOTH res/values/styles.xml and
         res/values-v11/styles.xml on API 14+ devices.
@@ -1528,6 +1532,7 @@ containing a value of this type.
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         
+ API 11 theme customizations can go here. 
  API 11 theme customizations can go here. 
  API 14 theme customizations can go here. 
          */
@@ -1647,6 +1652,7 @@ containing a value of this type.
         /**  Base platform-dependent theme providing a light-themed activity. 
          */
         public static final int Theme_Base_Light=0x7f0c007f;
+        public static final int Theme_Dialog=0x7f0c0090;
         /**  Styles in here can be extended for customisation in your application. Each utilises
          one of the Base styles. If Holo themes are available on the current platform version
          they will be used instead of the compat styles. 

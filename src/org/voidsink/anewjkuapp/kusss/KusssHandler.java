@@ -21,13 +21,16 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import android.annotation.SuppressLint;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.util.SparseIntArray;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 
 public class KusssHandler {
 
+	@SuppressLint("SimpleDateFormat")
 	private static final SimpleDateFormat df = new SimpleDateFormat(
 			"dd.MM.yyyy");
 
@@ -314,6 +317,7 @@ public class KusssHandler {
 		// Log.i(TAG, "2. lvas: " + lvas.size());
 		if (lvas.size() > 0) {
 			List<ExamGrade> grades = getGrades();
+			
 			Map<Integer, ExamGrade> gradeCache = new HashMap<Integer, ExamGrade>();
 			for (ExamGrade grade : grades) {
 				if (grade.getLvaNr() > 0) {

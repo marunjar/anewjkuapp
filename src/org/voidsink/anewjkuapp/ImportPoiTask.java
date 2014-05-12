@@ -25,7 +25,6 @@ import org.xml.sax.SAXException;
 
 import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
@@ -34,54 +33,7 @@ import android.os.RemoteException;
 import android.util.Log;
 
 public class ImportPoiTask extends BaseAsyncTask<Void, Void, Void> {
-
-	private class POI {
-		private String mName;
-		private double mLat;
-		private double mLon;
-		private String mDescr;
-
-		POI(String name, double lat, double lon) {
-			this.mName = name;
-			this.mLat = lat;
-			this.mLon = lon;
-			this.mDescr = "";
-		}
-
-		public String getName() {
-			return this.mName;
-		}
-
-		public void parse(Element wpt) {
-			NodeList descriptions = wpt.getElementsByTagName("desc");
-			if (descriptions.getLength() == 1) {
-				mDescr = ((Element) descriptions.item(0)).getTextContent();
-			}
-		}
-
-		public ContentValues getContentValues(boolean isDefault) {
-			ContentValues cv = new ContentValues();
-			cv.put(PoiContentContract.Poi.COL_NAME, this.mName);
-			cv.put(PoiContentContract.Poi.COL_LAT, this.mLat);
-			cv.put(PoiContentContract.Poi.COL_LON, this.mLon);
-			cv.put(PoiContentContract.Poi.COL_DESCR, this.mDescr);
-			cv.put(PoiContentContract.Poi.COL_IS_DEFAULT,
-					KusssDatabaseHelper.toInt(isDefault));
-			return cv;
-		}
-
-		public ContentValues getContentValues(boolean oldIsDefault,
-				boolean newIsDefault) {
-			if (oldIsDefault) {
-				// no way back
-				newIsDefault = oldIsDefault;
-			}
-			ContentValues cv = getContentValues(newIsDefault);
-
-			return cv;
-		}
-	}
-
+	
 	private static final String TAG = ImportPoiTask.class.getSimpleName();
 
 	private ContentProviderClient mProvider;
@@ -90,8 +42,10 @@ public class ImportPoiTask extends BaseAsyncTask<Void, Void, Void> {
 	private boolean mIsDefault;
 
 	public static final String[] POI_PROJECTION = new String[] {
-			PoiContentContract.Poi.COL_ID, PoiContentContract.Poi.COL_NAME,
-			PoiContentContract.Poi.COL_LON, PoiContentContract.Poi.COL_LAT,
+			PoiContentContract.Poi.COL_ROWID, 
+			PoiContentContract.Poi.COL_NAME,
+			PoiContentContract.Poi.COL_LON, 
+			PoiContentContract.Poi.COL_LAT,
 			PoiContentContract.Poi.COL_DESCR,
 			PoiContentContract.Poi.COL_IS_DEFAULT };
 
@@ -116,7 +70,7 @@ public class ImportPoiTask extends BaseAsyncTask<Void, Void, Void> {
 		Log.d(TAG, "start importing POIs");
 		PoiNotification mNotification = new PoiNotification(mContext);
 		try {
-			Map<String, POI> poiMap = new HashMap<String, POI>();
+			Map<String, Poi> poiMap = new HashMap<String, Poi>();
 
 			try {
 				DocumentBuilderFactory factory = DocumentBuilderFactory
@@ -142,7 +96,7 @@ public class ImportPoiTask extends BaseAsyncTask<Void, Void, Void> {
 						String name = ((Element) names.item(0))
 								.getTextContent();
 
-						POI poi = new POI(name, lat, lon);
+						Poi poi = new Poi(name, lat, lon);
 						if (!poiMap.containsKey(poi.getName())) {
 							Log.d(TAG, "poi found: " + poi.getName());
 
@@ -178,11 +132,12 @@ public class ImportPoiTask extends BaseAsyncTask<Void, Void, Void> {
 					// TODO
 					while (c.moveToNext()) {
 						poiId = c.getInt(COLUMN_POI_ID);
+						System.out.println(Integer.toString(poiId));
 						poiName = c.getString(COLUMN_POI_NAME);
 						poiIsDefault = KusssDatabaseHelper.toBool(c
 								.getInt(COLUMN_POI_IS_DEFAULT));
 
-						POI poi = poiMap.get(poiName);
+						Poi poi = poiMap.get(poiName);
 						if (poi != null) {
 							poiMap.remove(poiName);
 
@@ -201,7 +156,7 @@ public class ImportPoiTask extends BaseAsyncTask<Void, Void, Void> {
 										// mAccount.name,
 										// mAccount.type))
 										.withValue(
-												PoiContentContract.Poi.COL_ID,
+												PoiContentContract.Poi.COL_ROWID,
 												Integer.toString(poiId))
 										.withValues(
 												poi.getContentValues(
@@ -231,7 +186,7 @@ public class ImportPoiTask extends BaseAsyncTask<Void, Void, Void> {
 					}
 					c.close();
 
-					for (POI poi : poiMap.values()) {
+					for (Poi poi : poiMap.values()) {
 						batch.add(ContentProviderOperation
 								.newInsert(poiUri)
 								// PoiContentContract

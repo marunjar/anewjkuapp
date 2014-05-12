@@ -2,6 +2,7 @@ package org.voidsink.anewjkuapp.activity;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.annotation.TargetApi;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -20,8 +21,8 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.TextView;
 import net.fortuna.ical4j.data.CalendarBuilder;
-
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
+import org.voidsink.anewjkuapp.AppUtils;
 import org.voidsink.anewjkuapp.DrawerItem;
 import org.voidsink.anewjkuapp.ImportCalendarTask;
 import org.voidsink.anewjkuapp.ImportExamTask;
@@ -33,7 +34,6 @@ import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.fragment.*;
-
 import de.cketti.library.changelog.ChangeLog;
 
 public class MainActivity extends ActionBarActivity implements
@@ -65,6 +65,7 @@ public class MainActivity extends ActionBarActivity implements
 		return accounts[0];
 	}
 
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 	public static void StartCreateAccount(Context context) {
 		if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
 			context.startActivity(new Intent(Settings.ACTION_ADD_ACCOUNT)
@@ -101,6 +102,10 @@ public class MainActivity extends ActionBarActivity implements
 
 		super.onCreate(savedInstanceState);
 
+		// do things if new version was installed
+		AppUtils.doOnNewVersion(this);
+		
+		// initialize graphic factory for mapsforge
 		AndroidGraphicFactory.createInstance(this.getApplication());
 
 		setContentView(R.layout.activity_main);
@@ -171,6 +176,7 @@ public class MainActivity extends ActionBarActivity implements
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void attachFragmentByClassName(final String clazzname) {
 		if (clazzname != null && !clazzname.isEmpty()) {
 			// Log.i(TAG, "attach " + clazzname);

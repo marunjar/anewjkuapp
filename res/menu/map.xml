@@ -4,12 +4,6 @@
     tools:context="org.voidsink.anewjkuapp.fragment.MapFragment" >
 
     <item
-        android:id="@+id/action_snap_to_location"
-        android:title="@string/action_snap_to_location"
-        android:icon="@drawable/ic_menu_mylocation"
-        android:checkable="true"
-        app:showAsAction="always"/>
-    <item
         android:id="@+id/action_search_poi"
         android:icon="@drawable/ic_menu_search"
         android:queryHint="@string/search_poi_hint"
@@ -17,14 +11,9 @@
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView"/>
     <item
-        android:id="@+id/action_test_import_poi_data"
-        android:orderInCategory="998"
-        android:title="create test poi"
-        app:showAsAction="never"/>
-    <item
-        android:id="@+id/action_test_toggle_current_goal"
-        android:orderInCategory="999"
-        android:title="toggle current as goal"
-        app:showAsAction="never"/>
-
+        android:id="@+id/action_snap_to_location"
+        android:title="@string/action_snap_to_location"
+        android:icon="@drawable/ic_menu_mylocation"
+        android:checkable="true"
+        app:showAsAction="always"/>
 </menu>

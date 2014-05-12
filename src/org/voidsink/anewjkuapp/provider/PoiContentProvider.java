@@ -46,7 +46,7 @@ public class PoiContentProvider extends ContentProvider {
 					selection, selectionArgs);
 			break;
 		case CODE_POI_ID:
-			whereIdClause = PoiContentContract.Poi.COL_ID + "="
+			whereIdClause = PoiContentContract.Poi.COL_ROWID + "="
 					+ uri.getLastPathSegment();
 			if (!TextUtils.isEmpty(selection))
 				whereIdClause += " AND " + selection;
@@ -115,11 +115,11 @@ public class PoiContentProvider extends ContentProvider {
 		 */
 		switch (sUriMatcher.match(uri)) {
 		case CODE_POI_ID:
-			builder.appendWhere(PoiContentContract.Poi.COL_ID + "="
+			builder.appendWhere(PoiContentContract.Poi.COL_ROWID + "="
 					+ uri.getLastPathSegment());
 		case CODE_POI:
 			if (TextUtils.isEmpty(sortOrder))
-				sortOrder = PoiContentContract.Poi.COL_ID + " ASC";
+				sortOrder = PoiContentContract.Poi.COL_NAME + " ASC";
 			builder.setTables(PoiContentContract.Poi.TABLE_NAME);
 			return builder.query(db, projection, selection, selectionArgs,
 					null, null, sortOrder);
@@ -127,27 +127,29 @@ public class PoiContentProvider extends ContentProvider {
 			final String limit = uri
 					.getQueryParameter(SearchManager.SUGGEST_PARAMETER_LIMIT);
 
-			// builder.setProjectionMap(searchProjectionMap);
 			builder.setTables(PoiContentContract.Poi.TABLE_NAME);
 
 			if (selection == null) {
 				selection = PoiContentContract.Poi.TABLE_NAME + " MATCH ?";
-				selectionArgs = new String[] { uri.getLastPathSegment()  + "*"};
+				selectionArgs = new String[] { uri.getLastPathSegment() + "*" };
+			}
+			if (sortOrder == null || TextUtils.isEmpty(sortOrder)) {
+				sortOrder = PoiContentContract.Poi.COL_NAME + " ASC";
 			}
 			if (projection == null) {
-				projection = new String[] {"*",
-						PoiContentContract.Poi.COL_ID + " AS "
+				projection = new String[] {
+						PoiContentContract.Poi.COL_ROWID + " AS "
 								+ BaseColumns._ID,
 						PoiContentContract.Poi.COL_NAME + " AS "
 								+ SearchManager.SUGGEST_COLUMN_TEXT_1,
 						PoiContentContract.Poi.COL_DESCR + " AS "
 								+ SearchManager.SUGGEST_COLUMN_TEXT_2,
-						PoiContentContract.Poi.COL_ID + " AS "
+						PoiContentContract.Poi.COL_ROWID + " AS "
 								+ SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID };
 			}
-
 			Cursor c = builder.query(db, projection, selection, selectionArgs,
 					null, null, sortOrder, limit);
+
 			return c;
 		default:
 			throw new IllegalArgumentException("URI " + uri
@@ -167,7 +169,7 @@ public class PoiContentProvider extends ContentProvider {
 					selection, selectionArgs);
 		}
 		case CODE_POI_ID: {
-			whereIdClause = PoiContentContract.Poi.COL_ID + "="
+			whereIdClause = PoiContentContract.Poi.COL_ROWID + "="
 					+ uri.getLastPathSegment();
 			if (!TextUtils.isEmpty(selection))
 				whereIdClause += " AND " + selection;

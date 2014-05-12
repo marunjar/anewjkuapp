@@ -6,7 +6,6 @@ import org.voidsink.anewjkuapp.PoiContentContract;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Build;
 import android.util.Log;
 
 public class KusssDatabaseHelper extends SQLiteOpenHelper {
@@ -14,13 +13,13 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 	private static final String TAG = KusssDatabaseHelper.class.getSimpleName();
 
 	private static final String DATABASE_NAME = "kusss.db";
-	private static final int DATABASE_VERSION = 3;
+	private static final int DATABASE_VERSION = 4;
 
 	// Database creation sql statement
 	public static final String DB_CREATE_LVA = "create table if not exists "
 			+ KusssContentContract.Lva.LVA_TABLE_NAME + "("
 			+ KusssContentContract.Lva.LVA_COL_ID
-			+ " integer primary key autoincrement, "
+			+ " integer primary key autoincrement not null, "
 			+ KusssContentContract.Lva.LVA_COL_TERM + " text not null, "
 			+ KusssContentContract.Lva.LVA_COL_LVANR + " integer not null, "
 			+ KusssContentContract.Lva.LVA_COL_TITLE + " text not null, "
@@ -33,7 +32,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 	public static final String DB_CREATE_EXAM = "create table if not exists "
 			+ KusssContentContract.Exam.EXAM_TABLE_NAME + "("
 			+ KusssContentContract.Exam.EXAM_COL_ID
-			+ " integer primary key autoincrement, "
+			+ " integer primary key autoincrement not null, "
 			+ KusssContentContract.Exam.EXAM_COL_TERM + " text not null, "
 			+ KusssContentContract.Exam.EXAM_COL_LVANR + " integer not null, "
 			+ KusssContentContract.Exam.EXAM_COL_DATE + " integer not null, "
@@ -45,7 +44,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 	public static final String DB_CREATE_GRADE = "create table if not exists "
 			+ KusssContentContract.Grade.GRADE_TABLE_NAME + "("
 			+ KusssContentContract.Grade.GRADE_COL_ID
-			+ " integer primary key autoincrement, "
+			+ " integer primary key autoincrement not null, "
 			+ KusssContentContract.Grade.GRADE_COL_TERM + " text, "
 			+ KusssContentContract.Grade.GRADE_COL_LVANR + " integer, "
 			+ KusssContentContract.Grade.GRADE_COL_DATE + " integer not null, "
@@ -58,11 +57,9 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 
 	public static final String DB_CREATE_POI = "create virtual table "
 			+ PoiContentContract.Poi.TABLE_NAME + " using " + PoiContentContract.getFTS() + " ("
-			+ PoiContentContract.Poi.COL_ID
-			+ " integer primary key autoincrement, "
+			+ PoiContentContract.Poi.COL_NAME + " text primary key not null, "
 			+ PoiContentContract.Poi.COL_LAT + " real not null, "
 			+ PoiContentContract.Poi.COL_LON + " real not null, "
-			+ PoiContentContract.Poi.COL_NAME + " text not null, "
 			+ PoiContentContract.Poi.COL_IS_DEFAULT + " integer, " +
 
 			PoiContentContract.Poi.COL_ADR_CITY + " text, "
