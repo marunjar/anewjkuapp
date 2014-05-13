@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.voidsink.anewjkuapp.GradeListAdapter;
-import org.voidsink.anewjkuapp.GradeListGrade;
 import org.voidsink.anewjkuapp.GradeListItem;
 import org.voidsink.anewjkuapp.ImportGradeTask;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.base.BaseFragment;
+import org.voidsink.anewjkuapp.kusss.ExamGrade;
 
 import android.accounts.Account;
 import android.app.ProgressDialog;
@@ -76,7 +76,7 @@ public class GradeFragment extends BaseFragment {
 
 				if (c != null) {
 					while (c.moveToNext()) {
-						mGrades.add(new GradeListGrade(c));
+						mGrades.add(new ExamGrade(c));
 					}
 					c.close();
 				}

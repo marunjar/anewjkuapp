@@ -18,7 +18,7 @@ public class CalendarListSection implements CalendarListItem {
 
 	@Override
 	public int getType() {
-		return SECTION_TYPE;
+		return TYPE_SECTION;
 	}
 
 	public CharSequence getText() {

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseArrayAdapter;
+import org.voidsink.anewjkuapp.kusss.ExamGrade;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -33,16 +34,16 @@ public class GradeListAdapter extends BaseArrayAdapter<GradeListItem> {
 				if (last == null) {
 					if (item.isGrade()) {
 						insert = new GradeListType(
-								((GradeListGrade) item).getGradeType());
+								((ExamGrade) item).getGradeType());
 						objects.add(i, insert);
 						item = insert;
 					}
 				} else {
 					if (last.isGrade() && item.isGrade()) {
-						if (!((GradeListGrade) last).getGradeType().equals(
-								((GradeListGrade) item).getGradeType())) {
+						if (!((ExamGrade) last).getGradeType().equals(
+								((ExamGrade) item).getGradeType())) {
 							insert = new GradeListType(
-									((GradeListGrade) item).getGradeType());
+									((ExamGrade) item).getGradeType());
 							objects.add(i, insert);
 							item = insert;
 						}
@@ -76,7 +77,7 @@ public class GradeListAdapter extends BaseArrayAdapter<GradeListItem> {
 
 	private View getGradeView(View convertView, ViewGroup parent,
 			GradeListItem item) {
-		GradeListGrade gradeItem = (GradeListGrade) item;
+		ExamGrade gradeItem = (ExamGrade) item;
 		GradeListGradeHolder gradeItemHolder = null;
 
 		if (convertView == null) {

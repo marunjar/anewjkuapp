@@ -153,7 +153,7 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 									.build();
 							Log.d(TAG, "Scheduling update: " + existingUri);
 
-							if (!gradeType.equals(grade.getType())
+							if (!gradeType.equals(grade.getGradeType())
 									|| !gradeGrade.equals(grade.getGrade())) {
 								mGradeChangeNotification.addUpdate(String
 										.format("%s: %s", grade.getTitle(),

@@ -43,7 +43,7 @@ public class CalendarListEvent implements CalendarListItem {
 
 	@Override
 	public int getType() {
-		return EVENT_TYPE;
+		return TYPE_EVENT;
 	}
 
 	public String getLocation() {

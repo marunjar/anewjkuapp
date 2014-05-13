@@ -2,6 +2,7 @@ package org.voidsink.anewjkuapp.kusss;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
+import android.database.Cursor;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,9 +12,11 @@ import java.util.regex.Pattern;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.voidsink.anewjkuapp.GradeListItem;
+import org.voidsink.anewjkuapp.ImportGradeTask;
 import org.voidsink.anewjkuapp.KusssContentContract;
 
-public class ExamGrade {
+public class ExamGrade implements GradeListItem{
 
 	@SuppressLint("SimpleDateFormat")
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat(
@@ -33,13 +36,13 @@ public class ExamGrade {
 	private String term;
 	private int lvaNr;
 	private Date date;
-	private final GradeType type;
+	private final GradeType gradeType;
 	private String title;
 	private String code;
 
 	public ExamGrade(GradeType type, Date date, int lvaNr, String term,
 			Grade grade, int skz, String title, String code) {
-		this.type = type;
+		this.gradeType = type;
 		this.date = date;
 		this.lvaNr = lvaNr;
 		this.term = term;
@@ -99,6 +102,19 @@ public class ExamGrade {
 			}
 		}
 	}
+	
+	public ExamGrade(Cursor c) {
+		this.lvaNr = c.getInt(ImportGradeTask.COLUMN_GRADE_LVANR);
+		this.term = c.getString(ImportGradeTask.COLUMN_GRADE_TERM);
+		this.date = new Date(c.getLong(ImportGradeTask.COLUMN_GRADE_DATE));
+		this.gradeType = GradeType.parseGradeType(c
+				.getInt(ImportGradeTask.COLUMN_GRADE_TYPE));
+		this.grade = Grade.parseGradeType(c
+				.getInt(ImportGradeTask.COLUMN_GRADE_GRADE));
+		this.skz = c.getInt(ImportGradeTask.COLUMN_GRADE_SKZ);
+		this.title = c.getString(ImportGradeTask.COLUMN_GRADE_TITLE);
+		
+	}
 
 	private void setCode(String code) {
 		this.code = code;
@@ -152,12 +168,12 @@ public class ExamGrade {
 		return this.skz;
 	}
 
-	public GradeType getType() {
-		return this.type;
+	public GradeType getGradeType() {
+		return this.gradeType;
 	}
 
 	public boolean isInitialized() {
-		return this.type != null && this.date != null && this.grade != null;
+		return this.gradeType != null && this.date != null && this.grade != null;
 	}
 
 	public String getTitle() {
@@ -171,9 +187,19 @@ public class ExamGrade {
 		cv.put(KusssContentContract.Grade.GRADE_COL_LVANR, getLvaNr());
 		cv.put(KusssContentContract.Grade.GRADE_COL_SKZ, getSkz());
 		cv.put(KusssContentContract.Grade.GRADE_COL_TERM, getTerm());
-		cv.put(KusssContentContract.Grade.GRADE_COL_TYPE, getType().ordinal());
+		cv.put(KusssContentContract.Grade.GRADE_COL_TYPE, getGradeType().ordinal());
 		cv.put(KusssContentContract.Grade.GRADE_COL_CODE, getCode());
 		cv.put(KusssContentContract.Grade.GRADE_COL_TITLE, getTitle());
 		return cv;
+	}
+
+	@Override
+	public boolean isGrade() {
+		return true;
+	}
+
+	@Override
+	public int getType() {
+		return GradeListItem.TYPE_GRADE;
 	}
 }
