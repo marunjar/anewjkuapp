@@ -87,7 +87,6 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 			return;
 		}
 
-		CalendarChangedNotification mNotification = new CalendarChangedNotification(mContext);
 		try {
 			Looper.prepare();
 			
@@ -95,7 +94,7 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 
 			ImportCalendarTask task = new ImportCalendarTask(account, extras,
 					authority, provider, syncResult, getContext(),
-					CalendarUtils.ARG_CALENDAR_ID_EXAM, mCalendarBuilder, mNotification);
+					CalendarUtils.ARG_CALENDAR_ID_EXAM);
 			task.execute();
 			while (!task.isDone() && !mSyncCancled) {
 				try {
@@ -111,7 +110,7 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 
 			task = new ImportCalendarTask(account, extras, authority, provider,
 					syncResult, getContext(),
-					CalendarUtils.ARG_CALENDAR_ID_LVA, mCalendarBuilder, mNotification);
+					CalendarUtils.ARG_CALENDAR_ID_LVA);
 
 			task.execute();
 			while (!task.isDone() && !mSyncCancled) {
@@ -124,10 +123,9 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 				}
 			}
 		} catch (Exception e) {
+			Log.e(TAG, "onPerformSync", e);
 			KusssNotificationBuilder.showErrorNotification(mContext,
 					R.string.notification_error, e);
-		} finally {
-			mNotification.show();
 		}
 	}
 

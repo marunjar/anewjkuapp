@@ -20,7 +20,7 @@ import android.view.ViewGroup;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.TextView;
-import net.fortuna.ical4j.data.CalendarBuilder;
+
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.voidsink.anewjkuapp.AppUtils;
 import org.voidsink.anewjkuapp.DrawerItem;
@@ -34,6 +34,8 @@ import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.fragment.*;
+import org.voidsink.anewjkuapp.notification.CalendarChangedNotification;
+
 import de.cketti.library.changelog.ChangeLog;
 
 public class MainActivity extends ActionBarActivity implements
@@ -253,10 +255,10 @@ public class MainActivity extends ActionBarActivity implements
 		case R.id.action_refresh_calendar:
 			Log.d(TAG, "importing calendars");
 			new ImportCalendarTask(getAccount(this), this,
-					CalendarUtils.ARG_CALENDAR_ID_EXAM, new CalendarBuilder())
+					CalendarUtils.ARG_CALENDAR_ID_EXAM)
 					.execute();
 			new ImportCalendarTask(getAccount(this), this,
-					CalendarUtils.ARG_CALENDAR_ID_LVA, new CalendarBuilder())
+					CalendarUtils.ARG_CALENDAR_ID_LVA)
 					.execute();
 			return true;
 		default:

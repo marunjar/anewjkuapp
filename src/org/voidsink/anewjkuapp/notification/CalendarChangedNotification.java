@@ -21,11 +21,13 @@ public class CalendarChangedNotification {
 
 	private Context mContext;
 
+	private String mName;
 	private List<String> mInserts;
 	private List<String> mUpdates;
 	private List<String> mDeletes;
 
-	public CalendarChangedNotification(Context mContext) {
+	public CalendarChangedNotification(Context mContext, String name) {
+		this.mName = name;
 		this.mContext = mContext;
 		this.mInserts = new ArrayList<String>();
 		this.mUpdates = new ArrayList<String>();
@@ -48,11 +50,13 @@ public class CalendarChangedNotification {
 		if (PreferenceWrapper.getNotifyCalendar(mContext)
 				&& (mInserts.size() > 0 || mUpdates.size() > 0 || mDeletes
 						.size() > 0)) {
-			PendingIntent pendingIntent = PendingIntent
-					.getActivity(mContext, NOTIFICATION_CALENDAR_CHANGED, new Intent(mContext,
-							MainActivity.class).putExtra(MainActivity.ARG_SHOW_FRAGMENT, CalendarFragment.class.getName())
-							.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
-			
+			PendingIntent pendingIntent = PendingIntent.getActivity(
+					mContext,
+					NOTIFICATION_CALENDAR_CHANGED,
+					new Intent(mContext, MainActivity.class).putExtra(
+							MainActivity.ARG_SHOW_FRAGMENT,
+							CalendarFragment.class.getName()).addFlags(
+							Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
 
 			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
 					mContext)
@@ -63,12 +67,14 @@ public class CalendarChangedNotification {
 									R.drawable.ic_launcher_grey))
 					.setContentIntent(pendingIntent)
 					.setContentTitle(
-							mContext.getText(R.string.notification_events_changed_title))
+							String.format(
+									mContext.getString(R.string.notification_events_changed_title),
+									mName))
 					.setContentText(
 							String.format(
 									mContext.getString(R.string.notification_events_changed),
 									(mInserts.size() + mUpdates.size() + mDeletes
-											.size())))
+											.size()), mName))
 					.setContentIntent(pendingIntent)
 					.setAutoCancel(true)
 					.setNumber(
@@ -79,7 +85,8 @@ public class CalendarChangedNotification {
 
 			inBoxStyle.setBigContentTitle(String.format(
 					mContext.getString(R.string.notification_events_changed),
-					(mInserts.size() + mUpdates.size() + mDeletes.size())));
+					(mInserts.size() + mUpdates.size() + mDeletes.size()),
+					mName));
 
 			Collections.sort(mInserts);
 			for (String text : mInserts) {
@@ -98,7 +105,8 @@ public class CalendarChangedNotification {
 
 			((NotificationManager) mContext
 					.getSystemService(Context.NOTIFICATION_SERVICE)).notify(
-					NOTIFICATION_CALENDAR_CHANGED, mBuilder.build());
+					NOTIFICATION_CALENDAR_CHANGED + mName.hashCode(),
+					mBuilder.build());
 		}
 	}
 }

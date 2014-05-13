@@ -19,10 +19,13 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,11 +36,14 @@ import android.widget.ListView;
 
 public class CalendarFragment extends BaseFragment {
 
+	private static final String TAG = CalendarFragment.class.getSimpleName();
+	
 	private ListView mListView;
 	private CalendarEventAdapter mAdapter;
+	private ContentObserver mCalendarObserver;
 
 	long now = 0, then = 0;
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -58,7 +64,6 @@ public class CalendarFragment extends BaseFragment {
 			}
 		});
 		loadMore.setClickable(true);
-		
 		return view;
 	}
 
@@ -71,6 +76,17 @@ public class CalendarFragment extends BaseFragment {
 		then = now + 14 * DateUtils.DAY_IN_MILLIS;
 
 		loadData();
+		
+		mCalendarObserver = new CalendarContentObserver(new Handler());
+		getActivity().getContentResolver().registerContentObserver(CalendarContractWrapper.Events
+				.CONTENT_URI().buildUpon().appendPath("#").build(), false, mCalendarObserver);
+	}
+	
+	@Override
+	public void onDestroy() {
+		getActivity().getContentResolver().unregisterContentObserver(mCalendarObserver);
+		
+		super.onDestroy();
 	}
 	
 	@Override
@@ -85,6 +101,7 @@ public class CalendarFragment extends BaseFragment {
 	}
 
 	private void loadData() {
+		Log.d(TAG, "loadData");
 		new CalendarLoadTask().execute();
 	}
 
@@ -179,4 +196,16 @@ public class CalendarFragment extends BaseFragment {
 
 	}
 
+	private class CalendarContentObserver extends ContentObserver {
+
+		public CalendarContentObserver(Handler handler) {
+			super(handler);
+		}
+
+		@Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+            //loadData();
+        }
+    }		
 }

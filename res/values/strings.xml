@@ -12,7 +12,7 @@
     <string name="action_refresh">Aktualisieren</string>
     <string name="action_changelog">Change Log</string>
     <string name="action_settings">Einstellungen</string>
-    <string name="action_settings_summary">Einstellungen von KUSSS, Benachrichtigungen, ...</string>
+    <string name="action_settings_summary">Einstellungen von KUSSS, Benachrichtigungen, &#8230;</string>
     <string name="action_snap_to_location">TODO: snap to location</string>
     <string name="grade_1">Sehr gut</string>
     <string name="grade_2">Gut</string>
@@ -32,14 +32,14 @@
     <string name="notification_sync_exam">Prüfungen werden synchronisiert</string>
     <string name="notification_sync_grade">Noten werden synchronisiert</string>
     <string name="notification_sync_lva">LVAs werden synchronisiert</string>
-    <string name="notification_events_changed_title">Termine geändert</string>
-    <string name="notification_events_changed">%d Termine geändert</string>
+    <string name="notification_events_changed_title" formatted="false">Termin(e) in "%s" geändert</string>
+    <string name="notification_events_changed" formatted="false">%d Termin(e) in "%s" geändert</string>
     <string name="notification_new_exams_title">neue Prüfung(en) gefunden</string>
-    <string name="notification_new_exams">%d neue Prüfung(en) gefunden</string>
+    <string name="notification_new_exams" formatted="false">%d neue Prüfung(en) gefunden</string>
     <string name="notification_grades_changed_title">neue Note(n) verfügbar</string>
-    <string name="notification_grades_changed">%d neue Note(n) verfügbar</string>
+    <string name="notification_grades_changed" formatted="false">%d neue Note(n) verfügbar</string>
     <string name="notification_poi_changed_title">neue Orte verfügbar</string>
-    <string name="notification_poi_changed">%d neue Orte verfügbar</string>
+    <string name="notification_poi_changed" formatted="false">%d neue Orte verfügbar</string>
     <string name="pref_cat_sync_settings">Einstellungen bearbeiten</string>
     <string name="pref_cat_update_password">Passwort aktualisieren</string>
     <string name="pref_cat_kusss_main">KUSSS</string>
@@ -94,7 +94,7 @@
     <string name="oeh_rights_5_title">Wie oft darf ich eine LVA wiederholen?</string>
     <string name="oeh_rights_5_summary">Bei allen Prüfungen hast du 4 Wiederholungen, d.h. insgesamt 5 Antritte. Prüfungstechnisch gibt es zwei unterschiedliche Kursformen. Einerseits solche mit "immanentem Prüfungscharakter", d.h. die Note setzt sich aus mehreren Leistungsprüfungen wie z.B. Hausübungen zusammen. Hier kannst du ab der dritten Wiederholung eine kommissionelle Prüfung verlangen; dein Antrag muss vom Vizerektor für Lehre genehmigt werden. Bei allen anderen LVAs und Fachprüfungen muss ab der dritten Wiederholung eine kommissionelle Prüfung abgehalten werden. Kommissionelle Prüfungen sind vom Modus her meist gleich, werden aber von mehreren ProfessorInnen beurteilt. Bei positiven Prüfungen ist eine Wiederholung innerhalb von 6 Monaten möglich, wenn du eine bessere Note haben willst.</string>
     <string name="oeh_rights_6_title">Links</string>
-    <string name="oeh_rights_6_summary"><a href="http://www.jku.at/content/e262/e239/e3257">Detaillierte Informationen zum Studienrecht der JKU</a>\n\n<a href="www.ris.bka.gv.at/GeltendeFassung/Bundesnormen/20002128/UG%2c%20Fassung%20vom%2015.04.2014.pdf">Das Universitätsgesetz</a></string>
+    <string name="oeh_rights_6_summary"><a href="http://www.jku.at/content/e262/e239/e3257">Detaillierte Informationen zum Studienrecht der JKU</a>\n\n<a href="http://www.ris.bka.gv.at/GeltendeFassung.wxe?Abfrage=Bundesnormen&amp;Gesetzesnummer=20002128">Das Universitätsgesetz</a></string>
     <string name="kusss_service_title">KUSSS Service</string>
     <string name="sign_in">Einloggen</string>
     <string name="kusss_provider_name">KUSSS</string>

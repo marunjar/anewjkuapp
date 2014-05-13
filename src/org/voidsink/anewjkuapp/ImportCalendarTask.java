@@ -52,8 +52,6 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 
 	private final long mSyncFromNow;
 
-	private CalendarChangedNotification mNotification;
-
 	public static final String[] EVENT_PROJECTION = new String[] {
 			CalendarContractWrapper.Events._ID(), //
 			CalendarContractWrapper.Events.EVENT_LOCATION(), // VEvent.getLocation()
@@ -78,39 +76,34 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 	public static final int COLUMN_EVENT_DELETED = 8;
 	public static final int COLUMN_EVENT_CAL_ID = 9;
 
-	public ImportCalendarTask(Account account, Context context,
-			String getTypeID, CalendarBuilder calendarBuilder) {
-		this(account, null, null, null, null, context, getTypeID,
-				calendarBuilder, null);
-		this.mProvider = context.getContentResolver()
+	public ImportCalendarTask(Account account, Context context, String getTypeID) {
+		this(account, null, null, context.getContentResolver()
 				.acquireContentProviderClient(
-						CalendarContractWrapper.Events.CONTENT_URI());
-		this.mSyncResult = new SyncResult();
+						CalendarContractWrapper.Events.CONTENT_URI()),
+				new SyncResult(), context, getTypeID);
 	}
 
 	public ImportCalendarTask(Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult,
-			Context context, String getTypeID, CalendarBuilder calendarBuilder,
-			CalendarChangedNotification notification) {
+			Context context, String getTypeID) {
 		this.mAccount = account;
 		this.mProvider = provider;
 		this.mResolver = context.getContentResolver();
 		this.mSyncResult = syncResult;
 		this.mContext = context;
 		this.mGetTypeID = getTypeID;
-		this.mCalendarBuilder = calendarBuilder;
+		this.mCalendarBuilder = new CalendarBuilder();
 		this.mSyncFromNow = System.currentTimeMillis();
-		this.mNotification = notification;
 	}
 
 	public String getCalendarName(String getTypeID) {
 		switch (getTypeID) {
 		case CalendarUtils.ARG_CALENDAR_ID_EXAM:
-			return "Exam";
+			return "JKU Exams";
 		case CalendarUtils.ARG_CALENDAR_ID_LVA:
-			return "LVA";
+			return "JKU LVAs";
 		default:
-			return "Calendar";
+			return "Kalender";
 		}
 	}
 
@@ -121,6 +114,8 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 		SyncNotification mSyncNotification = new SyncNotification(mContext,
 				R.string.notification_sync_calendar);
 		mSyncNotification.show(getCalendarName(this.mGetTypeID));
+		CalendarChangedNotification mNotification = new CalendarChangedNotification(
+				mContext, getCalendarName(this.mGetTypeID));
 
 		synchronized (sync_lock) {
 
@@ -262,8 +257,10 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 													+ existingUri + " dirty="
 													+ eventDirty);
 
-											mNotification
-													.addUpdate(getEventString(match));
+											if (mNotification != null) {
+												mNotification
+														.addUpdate(getEventString(match));
+											}
 
 											batch.add(ContentProviderOperation
 													.newUpdate(
@@ -351,6 +348,9 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 							}
 							c.close();
 
+							Log.d(TAG, "Cursor closed, " + eventsMap.size()
+									+ " events left");
+
 							// Add new items
 							for (VEvent v : eventsMap.values()) {
 								mSyncNotification
@@ -404,7 +404,6 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 												TimeZone.getDefault().getID());
 
 								if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-
 									if (mGetTypeID
 											.equals(CalendarUtils.ARG_CALENDAR_ID_EXAM)) {
 										builder.withValue(
@@ -442,19 +441,19 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 
 								Log.d(TAG, "Applying batch update");
 								mProvider.applyBatch(batch);
-								Log.d(TAG, "Notify resolver");
-								mResolver.notifyChange(calUri, // URI where data
-																// was
-																// smodified
-										null, // No local observer
-										false); // IMPORTANT: Do not sync to
-												// network
 							} else {
 								Log.w(TAG,
 										"No batch operations found! Do nothing");
 							}
+							Log.d(TAG, "Notify resolver");
+							mResolver.notifyChange(calUri.buildUpon().appendPath(calendarId).build(), // URI where data
+									// was
+									// smodified
+									null, // No local observer
+									false); // IMPORTANT: Do not sync to
+											// network
 						} catch (Exception e) {
-							Log.e(TAG, "import failed: " + e);
+							Log.e(TAG, "import failed: ", e);
 						}
 					}
 				} else {
@@ -462,6 +461,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 				}
 			} finally {
 				mSyncNotification.cancel();
+				mNotification.show();
 				setImportDone(true);
 			}
 		}
