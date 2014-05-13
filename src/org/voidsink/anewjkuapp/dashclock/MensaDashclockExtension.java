@@ -20,7 +20,6 @@ import org.voidsink.anewjkuapp.kusss.mensa.RaabMenuLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.google.android.apps.dashclock.api.DashClockExtension;
@@ -35,9 +34,9 @@ public class MensaDashclockExtension extends DashClockExtension {
 	protected void onUpdateData(int reason) {
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
-		long mFromTime = sp.getLong("pref_key_dashclock_ext_mensa_from", 0);
-		long mToTime = sp.getLong("pref_key_dashclock_ext_mensa_to",
-				DateUtils.DAY_IN_MILLIS);
+		long mFromTime = sp.getLong("pref_key_dashclock_ext_mensa_from",
+				32400000);
+		long mToTime = sp.getLong("pref_key_dashclock_ext_mensa_to", 46800000);
 
 		Date now = new Date();
 

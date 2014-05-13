@@ -4,7 +4,6 @@ import net.fortuna.ical4j.data.CalendarBuilder;
 
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
-import org.voidsink.anewjkuapp.notification.CalendarChangedNotification;
 import org.voidsink.anewjkuapp.notification.KusssNotificationBuilder;
 
 import android.accounts.Account;
@@ -28,6 +27,7 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 	// Define a variable to contain a content resolver instance
 	private boolean mSyncCancled;
 	private Context mContext;
+
 	private CalendarBuilder mCalendarBuilder;
 
 	/**
@@ -42,8 +42,6 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 		this.mSyncCancled = false;
 		this.mContext = context;
 		this.mCalendarBuilder = new CalendarBuilder(); // must create in main
-														// thread, intialization
-														// crashes in Tasks
 	}
 
 	/**
@@ -60,7 +58,7 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 		 */
 		this.mSyncCancled = false;
 		this.mContext = context;
-		this.mCalendarBuilder = new CalendarBuilder();
+		this.mCalendarBuilder = new CalendarBuilder(); // must create in main
 	}
 
 	@Override
@@ -77,7 +75,7 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 		final AccountManager am = AccountManager.get(getContext());
 		// Lets give another try to authenticate the user
 		final String password = am.getPassword(account);
-		
+
 		Log.d(TAG, "starting sync of account: " + account.name);
 
 		if (!KusssHandler.handler.isAvailable(account.name, password)) {
@@ -89,12 +87,12 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 
 		try {
 			Looper.prepare();
-			
+
 			Log.d(TAG, "importing: " + CalendarUtils.ARG_CALENDAR_ID_EXAM);
 
 			ImportCalendarTask task = new ImportCalendarTask(account, extras,
 					authority, provider, syncResult, getContext(),
-					CalendarUtils.ARG_CALENDAR_ID_EXAM);
+					CalendarUtils.ARG_CALENDAR_ID_EXAM, mCalendarBuilder);
 			task.execute();
 			while (!task.isDone() && !mSyncCancled) {
 				try {
@@ -110,7 +108,7 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 
 			task = new ImportCalendarTask(account, extras, authority, provider,
 					syncResult, getContext(),
-					CalendarUtils.ARG_CALENDAR_ID_LVA);
+					CalendarUtils.ARG_CALENDAR_ID_LVA, mCalendarBuilder);
 
 			task.execute();
 			while (!task.isDone() && !mSyncCancled) {

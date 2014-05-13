@@ -12,7 +12,6 @@ import org.voidsink.anewjkuapp.LvaMap;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.base.BaseFragment;
-import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 
 import android.accounts.Account;
 import android.app.ProgressDialog;
