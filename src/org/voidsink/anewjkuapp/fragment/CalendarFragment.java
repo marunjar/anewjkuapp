@@ -174,7 +174,6 @@ public class CalendarFragment extends BaseFragment {
 					c.close();
 				}
 			}
-
 			return null;
 		}
 
@@ -205,7 +204,8 @@ public class CalendarFragment extends BaseFragment {
 		@Override
         public void onChange(boolean selfChange) {
             super.onChange(selfChange);
-            //loadData();
+            System.out.println("selfChange: " + selfChange);
+            loadData();
         }
     }		
 }

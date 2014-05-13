@@ -441,17 +441,20 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 
 								Log.d(TAG, "Applying batch update");
 								mProvider.applyBatch(batch);
+								Log.d(TAG, "Notify resolver");
+								mResolver.notifyChange(calUri.buildUpon()
+										.appendPath(calendarId).build(), // URI
+																			// where
+																			// data
+																			// was
+																			// modified
+										null, // No local observer
+										false); // IMPORTANT: Do not sync to
+												// network
 							} else {
 								Log.w(TAG,
 										"No batch operations found! Do nothing");
 							}
-							Log.d(TAG, "Notify resolver");
-							mResolver.notifyChange(calUri.buildUpon().appendPath(calendarId).build(), // URI where data
-									// was
-									// smodified
-									null, // No local observer
-									false); // IMPORTANT: Do not sync to
-											// network
 						} catch (Exception e) {
 							Log.e(TAG, "import failed: ", e);
 						}
