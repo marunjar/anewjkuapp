@@ -74,6 +74,10 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".dashclock.MensaDashclockSettings"
+            android:exported="true"
+            android:label="@string/extension_mensa_title" />
 
         <service
             android:name=".service.KusssService"
@@ -114,6 +118,29 @@
             <meta-data
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter_kusss" />
+        </service>
+        <service
+            android:name=".dashclock.MensaDashclockExtension"
+            android:icon="@drawable/ic_launcher_grey"
+            android:label="@string/extension_mensa_title"
+            android:permission="com.google.android.apps.dashclock.permission.READ_EXTENSION_DATA" >
+            <intent-filter>
+                <action android:name="com.google.android.apps.dashclock.Extension" />
+            </intent-filter>
+
+            <meta-data
+                android:name="protocolVersion"
+                android:value="1" />
+            <meta-data
+                android:name="worldReadable"
+                android:value="true" />
+            <meta-data
+                android:name="description"
+                android:value="@string/extension_mensa_description" />
+            <!-- A settings activity is optional -->
+            <meta-data
+                android:name="settingsActivity"
+                android:value=".dashclock.MensaDashclockSettings" />
         </service>
 
         <provider

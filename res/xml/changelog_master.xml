@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
     <release version="0.12" versioncode="100012">
+       <change>Mensa Dashclock Extension ab Android 4.2</change>
        <change>Campusplan</change>
     </release>
     <release version="0.11" versioncode="100011">

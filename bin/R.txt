@@ -488,6 +488,8 @@ int string changelog_title 0x7f060001
 int string changelog_version_format 0x7f060004
 int string default_chip_color 0x7f060012
 int string drawer_menu_item_icon 0x7f06005b
+int string extension_mensa_description 0x7f060083
+int string extension_mensa_title 0x7f060082
 int string grade_1 0x7f060020
 int string grade_2 0x7f060021
 int string grade_3 0x7f060022
@@ -848,9 +850,10 @@ int xml authenticator 0x7f050000
 int xml changelog 0x7f050001
 int xml changelog_master 0x7f050002
 int xml preference_app 0x7f050003
-int xml preference_headers 0x7f050004
-int xml preference_kusss 0x7f050005
-int xml preference_sync 0x7f050006
-int xml searchable 0x7f050007
-int xml syncadapter_calendar 0x7f050008
-int xml syncadapter_kusss 0x7f050009
+int xml preference_dashclock_extension_mensa 0x7f050004
+int xml preference_headers 0x7f050005
+int xml preference_kusss 0x7f050006
+int xml preference_sync 0x7f050007
+int xml searchable 0x7f050008
+int xml syncadapter_calendar 0x7f050009
+int xml syncadapter_kusss 0x7f05000a

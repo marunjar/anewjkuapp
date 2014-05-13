@@ -44,7 +44,7 @@ public final class PreferenceWrapper {
 	private static final boolean PREF_GET_NEW_EXAMS_DEFAULT = false;
 	
 	private static final String PREF_LAST_VERSION = "pref_key_last_version";
-	private static final int PREF_LAST_VERSION_DEFAULT = -1;
+	public static final int PREF_LAST_VERSION_NONE = -1;
 	
 	private PreferenceWrapper() {
 
@@ -187,10 +187,10 @@ public final class PreferenceWrapper {
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(mContext);
 		try {
-			return sp.getInt(PREF_LAST_VERSION, PREF_LAST_VERSION_DEFAULT);
+			return sp.getInt(PREF_LAST_VERSION, PREF_LAST_VERSION_NONE);
 		} catch (Exception e) {
 			Log.e(TAG, "Failure", e);
-            return PREF_LAST_VERSION_DEFAULT;
+            return PREF_LAST_VERSION_NONE;
 		}		
 	}
 	
@@ -202,7 +202,7 @@ public final class PreferenceWrapper {
             return packageInfo.versionCode;
         } catch (NameNotFoundException e) {
             Log.e(TAG, "Could not get version information from manifest!", e);
-            return PREF_LAST_VERSION_DEFAULT;
+            return PREF_LAST_VERSION_NONE;
         }
 		
 	}

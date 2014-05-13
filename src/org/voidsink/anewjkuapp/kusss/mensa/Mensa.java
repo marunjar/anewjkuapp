@@ -1,11 +1,13 @@
 package org.voidsink.anewjkuapp.kusss.mensa;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.voidsink.anewjkuapp.MensaItem;
 
-public class Mensa implements MensaItem{
+public class Mensa implements MensaItem {
 
 	private String name;
 	private List<MensaDay> days;
@@ -36,6 +38,16 @@ public class Mensa implements MensaItem{
 	@Override
 	public int getType() {
 		return TYPE_MENSA;
+	}
+
+	public MensaDay getDay(Date now) {
+		for (MensaDay mensaDay : this.days) {
+			if (!mensaDay.isEmpty()
+					&& DateUtils.isSameDay(now, mensaDay.getDate())) {
+				return mensaDay;
+			}
+		}
+		return null;
 	}
 
 }

@@ -72,7 +72,7 @@ public abstract class JSONMenuLoader implements MenuLoader {
 	private String getLocation(int nr) {
 		switch (nr) {
 		case 1:
-			return "JKU Mensa";
+			return "Classic";
 		case 2:
 			return "Choice";
 		case 3:

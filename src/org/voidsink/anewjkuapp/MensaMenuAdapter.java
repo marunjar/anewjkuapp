@@ -219,8 +219,8 @@ public class MensaMenuAdapter extends BaseArrayAdapter<MensaItem> {
 		}
 
 		if (getCount() == 0) {
-			Toast.makeText(getContext(), "kein Speiseplan gefunden",
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(getContext(), "kein Speiseplan verfügbar",
+					Toast.LENGTH_SHORT).show();
 		}
 	}
 }

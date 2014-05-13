@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="aktiv" >
+        <org.voidsink.anewjkuapp.base.TimePreference
+            android:defaultValue="32400000"
+            android:key="pref_key_dashclock_ext_mensa_from"
+            android:title="Von" />
+        <org.voidsink.anewjkuapp.base.TimePreference
+            android:defaultValue="46800000"
+            android:key="pref_key_dashclock_ext_mensa_to"
+            android:title="Bis" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Mensa" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_key_dashclock_ext_mensa_classic"
+            android:title="Classic" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_key_dashclock_ext_mensa_choice"
+            android:title="Choice" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_key_dashclock_ext_mensa_khg"
+            android:title="KHG" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_key_dashclock_ext_mensa_raab"
+            android:title="Raab" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

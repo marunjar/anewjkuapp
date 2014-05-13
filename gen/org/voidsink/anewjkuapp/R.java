@@ -1397,6 +1397,8 @@ containing a value of this type.
         public static final int changelog_version_format=0x7f060004;
         public static final int default_chip_color=0x7f060012;
         public static final int drawer_menu_item_icon=0x7f06005b;
+        public static final int extension_mensa_description=0x7f060083;
+        public static final int extension_mensa_title=0x7f060082;
         public static final int grade_1=0x7f060020;
         public static final int grade_2=0x7f060021;
         public static final int grade_3=0x7f060022;
@@ -1754,12 +1756,13 @@ containing a value of this type.
         public static final int changelog=0x7f050001;
         public static final int changelog_master=0x7f050002;
         public static final int preference_app=0x7f050003;
-        public static final int preference_headers=0x7f050004;
-        public static final int preference_kusss=0x7f050005;
-        public static final int preference_sync=0x7f050006;
-        public static final int searchable=0x7f050007;
-        public static final int syncadapter_calendar=0x7f050008;
-        public static final int syncadapter_kusss=0x7f050009;
+        public static final int preference_dashclock_extension_mensa=0x7f050004;
+        public static final int preference_headers=0x7f050005;
+        public static final int preference_kusss=0x7f050006;
+        public static final int preference_sync=0x7f050007;
+        public static final int searchable=0x7f050008;
+        public static final int syncadapter_calendar=0x7f050009;
+        public static final int syncadapter_kusss=0x7f05000a;
     }
     public static final class styleable {
         /**  ============================================ 

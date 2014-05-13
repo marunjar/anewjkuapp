@@ -41,16 +41,18 @@ public class SettingsActivity extends PreferenceActivity implements
 		PreferenceManager.getDefaultSharedPreferences(this)
 				.registerOnSharedPreferenceChangeListener(this);
 
-//		Preference mPrefMapFile = findPreference(PreferenceWrapper.PREF_MAP_FILE);
-//		mPrefMapFile.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-//			
-//			@Override
-//			public boolean onPreferenceClick(Preference preference) {
-//				return findMapFile();
-//			}
-//		});		
+		// Preference mPrefMapFile =
+		// findPreference(PreferenceWrapper.PREF_MAP_FILE);
+		// mPrefMapFile.setOnPreferenceClickListener(new
+		// OnPreferenceClickListener() {
+		//
+		// @Override
+		// public boolean onPreferenceClick(Preference preference) {
+		// return findMapFile();
+		// }
+		// });
 	}
-	
+
 	protected boolean findMapFile() {
 		// TODO Auto-generated method stub
 		Toast.makeText(getApplication(), "TODO", Toast.LENGTH_SHORT).show();
@@ -96,7 +98,11 @@ public class SettingsActivity extends PreferenceActivity implements
 	protected boolean isValidFragment(String fragmentName) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			if (KusssSettingsFragment.class.getName().equals(fragmentName)
-					|| AppSettingsFragment.class.getName().equals(fragmentName)) {
+					|| AppSettingsFragment.class.getName().equals(fragmentName)
+					|| DashclockMensaSettingsFragment.class.getName().equals(
+							fragmentName)
+
+			) {
 				return (true);
 			} else {
 				return super.isValidFragment(fragmentName);
@@ -135,6 +141,24 @@ public class SettingsActivity extends PreferenceActivity implements
 
 			// Load the preferences from an XML resource
 			addPreferencesFromResource(R.xml.preference_app);
+		}
+	}
+
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public static class DashclockMensaSettingsFragment extends
+			PreferenceFragment {
+		@Override
+		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+
+			// Make sure default values are applied. In a real app, you would
+			// want this in a shared function that is used to retrieve the
+			// SharedPreferences wherever they are needed.
+			PreferenceManager.setDefaultValues(getActivity(),
+					R.xml.preference_dashclock_extension_mensa, false);
+
+			// Load the preferences from an XML resource
+			addPreferencesFromResource(R.xml.preference_dashclock_extension_mensa);
 		}
 	}
 

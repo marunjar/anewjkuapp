@@ -1,17 +1,18 @@
 package org.voidsink.anewjkuapp.kusss.mensa;
 
+import android.annotation.SuppressLint;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.voidsink.anewjkuapp.MensaItem;
 
 public class MensaDay implements MensaItem {
 
+	@SuppressLint("SimpleDateFormat")
 	private static final SimpleDateFormat df = new SimpleDateFormat(
 			"yyyy/MM/dd");
 
@@ -53,9 +54,8 @@ public class MensaDay implements MensaItem {
 		this.date = date;
 		this.isModified = true;
 	}
-	
+
 	public boolean isModified() {
 		return this.isModified;
 	}
-
 }
