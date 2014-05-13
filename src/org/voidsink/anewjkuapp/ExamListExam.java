@@ -2,7 +2,7 @@ package org.voidsink.anewjkuapp;
 
 import java.util.Date;
 
-import org.voidsink.anewjkuapp.kusss.LVA;
+import org.voidsink.anewjkuapp.kusss.Lva;
 
 import android.database.Cursor;
 
@@ -26,7 +26,7 @@ public class ExamListExam implements ExamListItem {
 		this.date = new Date(c.getLong(ImportExamTask.COLUMN_EXAM_DATE));
 		this.time = c.getString(ImportExamTask.COLUMN_EXAM_TIME);
 		this.location = c.getString(ImportExamTask.COLUMN_EXAM_LOCATION);
-		LVA lva = map.getLVA(this.term, this.lvaNr);
+		Lva lva = map.getLVA(this.term, this.lvaNr);
 		if (lva != null) {
 			this.title = lva.getTitle();
 			this.skz = lva.getSKZ();

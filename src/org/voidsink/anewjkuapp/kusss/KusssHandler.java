@@ -24,7 +24,6 @@ import org.jsoup.select.Elements;
 import android.annotation.SuppressLint;
 import android.text.format.DateUtils;
 import android.util.Log;
-import android.util.SparseIntArray;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 
@@ -200,8 +199,8 @@ public class KusssHandler {
 		return true;
 	}
 
-	public List<LVA> getLvas() {
-		List<LVA> lvas = new ArrayList<LVA>();
+	public List<Lva> getLvas() {
+		List<Lva> lvas = new ArrayList<Lva>();
 		try {
 			List<String> terms = new ArrayList<>(getTerms().keySet());
 			if (terms != null) {
@@ -214,7 +213,7 @@ public class KusssHandler {
 							// .select("body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > table > tbody > tr");
 							Elements rows = doc.select(SELECT_MY_LVAS);
 							for (Element row : rows) {
-								LVA lva = new LVA(term, row);
+								Lva lva = new Lva(term, row);
 								if (lva.isInitialized()) {
 									lvas.add(lva);
 								}
@@ -309,7 +308,7 @@ public class KusssHandler {
 		return exams;
 	}
 
-	public List<Exam> getNewExamsByLvaNr(List<LVA> lvas) throws IOException {
+	public List<Exam> getNewExamsByLvaNr(List<Lva> lvas) throws IOException {
 
 		List<Exam> exams = new ArrayList<Exam>();
 		Log.i(TAG, "1. lvas: " + lvas.size());
@@ -331,7 +330,7 @@ public class KusssHandler {
 				}
 			}
 
-			for (LVA lva : lvas) {
+			for (Lva lva : lvas) {
 				ExamGrade grade = gradeCache.get(lva.getLvaNr());
 				if (grade != null) {
 					if ((grade.getGrade() == Grade.G5)

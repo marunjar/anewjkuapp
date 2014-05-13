@@ -5,11 +5,12 @@ import java.util.regex.Pattern;
 import org.jsoup.nodes.Element;
 import org.voidsink.anewjkuapp.ImportLvaTask;
 import org.voidsink.anewjkuapp.KusssContentContract;
+import org.voidsink.anewjkuapp.LvaListItem;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 
-public class LVA {
+public class Lva implements LvaListItem{
 
 	private final Pattern lvaNrPattern = Pattern.compile("\\d{3}\\.\\d{3}");
 
@@ -20,14 +21,14 @@ public class LVA {
 	private String teacher;
 	private double sws;
 	private double ects;
-	private String type;
+	private String lvaType;
 
-	public LVA(String term, int lvaNr) {
+	public Lva(String term, int lvaNr) {
 		this.term = term;
 		this.lvaNr = lvaNr;
 	}
 
-	public LVA(String term, Element row) {
+	public Lva(String term, Element row) {
 		this(term, 0);
 
 		if (row.childNodeSize() >= 10) {
@@ -36,7 +37,7 @@ public class LVA {
 				if (lvaNrPattern.matcher(lvaNrText).matches()) {
 					this.lvaNr = Integer.parseInt(lvaNrText.replace(".", ""));
 					setTitle(row.child(3).text());
-					setType(row.child(4).text()); // type (UE, ...)
+					setLvaType(row.child(4).text()); // type (UE, ...)
 					setTeacher(row.child(8).text()); // Leiter
 					setSKZ(Integer.parseInt(row.child(9).text())); // SKZ
 					// setECTS(Double.parseDouble(row.child(5).text())); // ECTS
@@ -48,7 +49,7 @@ public class LVA {
 		}
 	}
 
-	public LVA(Cursor c) {
+	public Lva(Cursor c) {
 		this.term = c.getString(ImportLvaTask.COLUMN_LVA_TERM);
 		this.lvaNr = c.getInt(ImportLvaTask.COLUMN_LVA_LVANR);
 		this.title = c.getString(ImportLvaTask.COLUMN_LVA_TITLE);
@@ -56,7 +57,7 @@ public class LVA {
 		this.teacher = c.getString(ImportLvaTask.COLUMN_LVA_TEACHER);
 		// this.sws = c.getDouble(ImportLvaTask.COLUMN_LVA_SWS);
 		// this.ects = c.getDouble(ImportLvaTask.COLUMN_LVA_ECTS);
-		this.type = c.getString(ImportLvaTask.COLUMN_LVA_TYPE);
+		this.lvaType = c.getString(ImportLvaTask.COLUMN_LVA_TYPE);
 	}
 
 	private void setSKZ(int skz) {
@@ -91,12 +92,12 @@ public class LVA {
 		return this.ects;
 	}
 
-	private void setType(String type) {
-		this.type = type;
+	private void setLvaType(String type) {
+		this.lvaType = type;
 	}
 
-	public String getType() {
-		return this.type;
+	public String getLvaType() {
+		return this.lvaType;
 	}
 
 	private void setTitle(String title) {
@@ -128,7 +129,7 @@ public class LVA {
 		cv.put(KusssContentContract.Lva.LVA_COL_SWS, getSWS());
 		cv.put(KusssContentContract.Lva.LVA_COL_TEACHER, getTeacher());
 		cv.put(KusssContentContract.Lva.LVA_COL_TERM, getTerm());
-		cv.put(KusssContentContract.Lva.LVA_COL_TYPE, getType());
+		cv.put(KusssContentContract.Lva.LVA_COL_TYPE, getLvaType());
 
 		return cv;
 	}
@@ -139,6 +140,16 @@ public class LVA {
 
 	public static String getKey(String term, int lvaNr) {
 		return term + "-" + lvaNr;
+	}
+
+	@Override
+	public boolean isLva() {
+		return true;
+	}
+
+	@Override
+	public int getType() {
+		return LvaListItem.TYPE_LVA;
 	}
 	
 	

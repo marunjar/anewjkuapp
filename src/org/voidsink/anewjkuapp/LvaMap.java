@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.voidsink.anewjkuapp.kusss.LVA;
+import org.voidsink.anewjkuapp.kusss.Lva;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 import android.content.ContentResolver;
@@ -15,10 +15,10 @@ import android.database.Cursor;
 
 public class LvaMap {
 
-	private Map<String, LVA> map;
+	private Map<String, Lva> map;
 
 	public LvaMap(Context context) {
-		this.map = new HashMap<String, LVA>();
+		this.map = new HashMap<String, Lva>();
 
 		ContentResolver cr = context.getContentResolver();
 		Cursor c = cr.query(KusssContentContract.Lva.CONTENT_URI,
@@ -27,7 +27,7 @@ public class LvaMap {
 
 		if (c != null) {
 			while (c.moveToNext()) {
-				LVA lva = new LVA(c);
+				Lva lva = new Lva(c);
 				this.map.put(lva.getKey(), lva);
 			}
 			c.close();
@@ -35,18 +35,18 @@ public class LvaMap {
 
 	}
 
-	public LVA getExactLVA(String term, int lvaNr) {
-		return this.map.get(LVA.getKey(term, lvaNr));
+	public Lva getExactLVA(String term, int lvaNr) {
+		return this.map.get(Lva.getKey(term, lvaNr));
 	}
 
-	public LVA getLVA(String term, int lvaNr) {
-		LVA lva = this.map.get(LVA.getKey(term, lvaNr));
+	public Lva getLVA(String term, int lvaNr) {
+		Lva lva = this.map.get(Lva.getKey(term, lvaNr));
 		if (lva != null) {
 			return lva;
 		}
 
-		List<LVA> lvas = new ArrayList<LVA>();
-		for (LVA tmp : this.map.values()) {
+		List<Lva> lvas = new ArrayList<Lva>();
+		for (Lva tmp : this.map.values()) {
 			if (lvaNr == tmp.getLvaNr()) {
 				lvas.add(tmp);
 			}
@@ -56,9 +56,9 @@ public class LvaMap {
 			return null;
 		}
 
-		Collections.sort(lvas, new Comparator<LVA>() {
+		Collections.sort(lvas, new Comparator<Lva>() {
 			@Override
-			public int compare(LVA lhs, LVA rhs) {
+			public int compare(Lva lhs, Lva rhs) {
 				// sort by term desc
 				return rhs.getTerm().compareTo(lhs.getTerm());
 			}
@@ -66,8 +66,8 @@ public class LvaMap {
 		return lvas.get(0);
 	}
 	
-	public List<LVA> getLVAs() {
-		return new ArrayList<LVA>(this.map.values());
+	public List<Lva> getLVAs() {
+		return new ArrayList<Lva>(this.map.values());
 	}
 
 }

@@ -15,7 +15,7 @@ public class LvaListTerm implements LvaListItem {
 
 	@Override
 	public int getType() {
-		return TERM_TYPE;
+		return TYPE_TERM;
 	}
 	
 	public String getTerm() {

@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.voidsink.anewjkuapp.base.BaseAsyncTask;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
-import org.voidsink.anewjkuapp.kusss.LVA;
+import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
 
 import android.accounts.Account;
@@ -89,12 +89,12 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
 										this.mAccount))) {
 					Log.d(TAG, "load lvas");
 
-					List<LVA> lvas = KusssHandler.handler.getLvas();
+					List<Lva> lvas = KusssHandler.handler.getLvas();
 					if (lvas == null) {
 						mSyncResult.stats.numParseExceptions++;
 					}
-					Map<String, LVA> lvaMap = new HashMap<String, LVA>();
-					for (LVA lva : lvas) {
+					Map<String, Lva> lvaMap = new HashMap<String, Lva>();
+					for (Lva lva : lvas) {
 						lvaMap.put(
 								String.format("%s-%d", lva.getTerm(),
 										lva.getLvaNr()), lva);
@@ -126,7 +126,7 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
 						lvaTerm = c.getString(COLUMN_LVA_TERM);
 						lvaNr = c.getInt(COLUMN_LVA_LVANR);
 
-						LVA lva = lvaMap.get(String.format("%s-%d", lvaTerm,
+						Lva lva = lvaMap.get(String.format("%s-%d", lvaTerm,
 								lvaNr));
 						if (lva != null) {
 							lvaMap.remove(String
@@ -153,7 +153,7 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
 					}
 					c.close();
 
-					for (LVA lva : lvaMap.values()) {
+					for (Lva lva : lvaMap.values()) {
 						batch.add(ContentProviderOperation
 								.newInsert(
 										KusssContentContract

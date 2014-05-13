@@ -5,6 +5,7 @@ import java.util.List;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseArrayAdapter;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
+import org.voidsink.anewjkuapp.kusss.Lva;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -28,16 +29,16 @@ public class LvaListAdapter extends BaseArrayAdapter<LvaListItem> {
 				item = objects.get(i);
 				if (last == null) {
 					if (item.isLva()) {
-						insert = new LvaListTerm(((LvaListLva) item).getTerm());
+						insert = new LvaListTerm(((Lva) item).getTerm());
 						objects.add(i, insert);
 						item = insert;
 					}
 				} else {
 					if (last.isLva() && item.isLva()) {
-						if (!((LvaListLva) last).getTerm().equals(
-								((LvaListLva) item).getTerm())) {
+						if (!((Lva) last).getTerm().equals(
+								((Lva) item).getTerm())) {
 							insert = new LvaListTerm(
-									((LvaListLva) item).getTerm());
+									((Lva) item).getTerm());
 							objects.add(i, insert);
 							item = insert;
 						}
@@ -68,7 +69,7 @@ public class LvaListAdapter extends BaseArrayAdapter<LvaListItem> {
 	}
 
 	private View getLvaView(View convertView, ViewGroup parent, LvaListItem item) {
-		LvaListLva eventItem = (LvaListLva) item;
+		Lva eventItem = (Lva) item;
 		LvaListLvaHolder eventItemHolder = null;
 
 		if (convertView == null) {
@@ -97,7 +98,7 @@ public class LvaListAdapter extends BaseArrayAdapter<LvaListItem> {
 				.setBackgroundColor(CalendarUtils.COLOR_DEFAULT_LVA);
 		eventItemHolder.lvaNr.setText(Integer.toString(eventItem.getLvaNr()));
 		eventItemHolder.title.setText(eventItem.getTitle());
-		eventItemHolder.skz.setText(String.format("[%s]", eventItem.getSkz()));
+		eventItemHolder.skz.setText(String.format("[%s]", eventItem.getSKZ()));
 		eventItemHolder.type.setText(eventItem.getLvaType());
 
 		return convertView;

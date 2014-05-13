@@ -7,10 +7,10 @@ import org.voidsink.anewjkuapp.ImportLvaTask;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.LvaListAdapter;
 import org.voidsink.anewjkuapp.LvaListItem;
-import org.voidsink.anewjkuapp.LvaListLva;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.base.BaseFragment;
+import org.voidsink.anewjkuapp.kusss.Lva;
 
 import android.accounts.Account;
 import android.app.ProgressDialog;
@@ -81,13 +81,7 @@ public class LvaFragment extends BaseFragment {
 
 				if (c != null) {
 					while (c.moveToNext()) {
-						mLvas.add(new LvaListLva(c
-								.getString(ImportLvaTask.COLUMN_LVA_TERM), c
-								.getInt(ImportLvaTask.COLUMN_LVA_LVANR), c
-								.getString(ImportLvaTask.COLUMN_LVA_TITLE), c
-								.getInt(ImportLvaTask.COLUMN_LVA_SKZ), c
-								.getString(ImportLvaTask.COLUMN_LVA_TYPE)));
-
+						mLvas.add(new Lva(c));
 					}
 					c.close();
 				}
