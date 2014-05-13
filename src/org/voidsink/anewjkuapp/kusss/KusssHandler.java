@@ -69,7 +69,7 @@ public class KusssHandler {
 
 			return isLoggedIn();
 		} catch (Exception e) {
-			Log.e(TAG, e.toString());
+			Log.e(TAG, "login", e);
 			return false;
 		}
 	}
@@ -97,7 +97,7 @@ public class KusssHandler {
 
 			return !isLoggedIn();
 		} catch (Exception e) {
-			Log.e(TAG, e.toString());
+			Log.e(TAG, "logout", e);
 			return true;
 		}
 	}
@@ -112,7 +112,7 @@ public class KusssHandler {
 			}
 
 		} catch (IOException e) {
-			Log.e(TAG, e.toString());
+			Log.e(TAG, "isLoggedIn", e);
 			return false;
 		}
 		return true;
@@ -140,7 +140,7 @@ public class KusssHandler {
 
 			iCal = mCalendarBuilder.build(conn.getInputStream());
 		} catch (Exception e) {
-			Log.e(TAG, e.toString());
+			Log.e(TAG, "getLVAIcal", e);
 			iCal = null;
 		}
 
@@ -160,7 +160,7 @@ public class KusssHandler {
 
 			iCal = mCalendarBuilder.build(conn.getInputStream());
 		} catch (Exception e) {
-			Log.e(TAG, e.toString());
+			Log.e(TAG, "getExamIcal", e);
 			iCal = null;
 		}
 
@@ -180,7 +180,7 @@ public class KusssHandler {
 						termDropdownEntry.text());
 			}
 		} catch (Exception e) {
-			Log.e(TAG, e.toString());
+			Log.e(TAG, "getTerms", e);
 			return null;
 		}
 		return terms;
@@ -192,7 +192,7 @@ public class KusssHandler {
 					.data("previousQueryString", "")
 					.data("reloadAction", "listmystudentlvas.action").post();
 		} catch (IOException e) {
-			Log.e(TAG, e.toString());
+			Log.e(TAG, "selectTerm", e);
 			return false;
 		}
 		Log.d(TAG, term + " selected");
@@ -223,7 +223,7 @@ public class KusssHandler {
 				}
 			}
 		} catch (Exception e) {
-			Log.e(TAG, e.toString());
+			Log.e(TAG, "getLvas", e);
 			return null;
 		}
 		return lvas;
@@ -240,7 +240,7 @@ public class KusssHandler {
 				}
 			}
 		} catch (Exception e) {
-			Log.e(TAG, e.toString());
+			Log.e(TAG, "isSelected", e);
 			return false;
 		}
 		return false;
@@ -270,7 +270,7 @@ public class KusssHandler {
 				}
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.e(TAG, "getGrades", e);
 			return null;
 		}
 		Log.d(TAG, grades.size() + " grades found");
@@ -302,7 +302,7 @@ public class KusssHandler {
 				}
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.e(TAG, "getNewExams", e);
 			return null;
 		}
 		return exams;
@@ -311,18 +311,15 @@ public class KusssHandler {
 	public List<Exam> getNewExamsByLvaNr(List<Lva> lvas) throws IOException {
 
 		List<Exam> exams = new ArrayList<Exam>();
-		Log.i(TAG, "1. lvas: " + lvas.size());
-		// lvas = getLvas();
-		// Log.i(TAG, "2. lvas: " + lvas.size());
 		if (lvas.size() > 0) {
 			List<ExamGrade> grades = getGrades();
-			
+
 			Map<Integer, ExamGrade> gradeCache = new HashMap<Integer, ExamGrade>();
 			for (ExamGrade grade : grades) {
 				if (grade.getLvaNr() > 0) {
 					ExamGrade existing = gradeCache.get(grade.getLvaNr());
 					if (existing != null) {
-						Log.w(TAG,
+						Log.d(TAG,
 								existing.getTitle() + " --> "
 										+ grade.getTitle());
 					}
@@ -358,7 +355,7 @@ public class KusssHandler {
 	private List<Exam> getNewExamsByLvaNr(int lvaNr) {
 		List<Exam> exams = new ArrayList<Exam>();
 		try {
-			Log.i(TAG, "getNewExamsByLvaNr: " + lvaNr);
+			Log.d(TAG, "getNewExamsByLvaNr: " + lvaNr);
 			Document doc = Jsoup
 					.connect(URL_GET_EXAMS)
 					.data("search", "true")
@@ -391,8 +388,8 @@ public class KusssHandler {
 				}
 			}
 		} catch (IOException e) {
+			Log.e(TAG, "getNewExamsByLvaNr", e);
 			exams = null;
-			e.printStackTrace();
 		}
 		return exams;
 	}

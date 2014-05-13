@@ -10,14 +10,17 @@ import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.base.BaseFragment;
+import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 
 import android.accounts.Account;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,6 +32,7 @@ public class GradeFragment extends BaseFragment {
 
 	private ListView mListView;
 	private GradeListAdapter mAdapter;
+	private ContentObserver mGradeObserver;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,7 +47,7 @@ public class GradeFragment extends BaseFragment {
 
 		return view;
 	}
-	
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
@@ -51,8 +55,20 @@ public class GradeFragment extends BaseFragment {
 	}
 
 	@Override
-	public void onStart() {
-		super.onStart();
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		mGradeObserver = new GradeContentObserver(new Handler());
+		getActivity().getContentResolver().registerContentObserver(
+				KusssContentContract.Grade.CONTENT_URI, false, mGradeObserver);
+	}
+
+	@Override
+	public void onDestroy() {
+		getActivity().getContentResolver().unregisterContentObserver(
+				mGradeObserver);
+
+		super.onDestroy();
 	}
 
 	private class GradeLoadTask extends AsyncTask<String, Void, Void> {
@@ -103,4 +119,16 @@ public class GradeFragment extends BaseFragment {
 		}
 	}
 
+	private class GradeContentObserver extends ContentObserver {
+
+		public GradeContentObserver(Handler handler) {
+			super(handler);
+		}
+
+		@Override
+		public void onChange(boolean selfChange) {
+			super.onChange(selfChange);
+			new GradeLoadTask().execute();
+		}
+	}
 }

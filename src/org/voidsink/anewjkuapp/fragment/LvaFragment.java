@@ -15,9 +15,11 @@ import org.voidsink.anewjkuapp.kusss.Lva;
 import android.accounts.Account;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,9 +27,10 @@ import android.widget.ListView;
 
 public class LvaFragment extends BaseFragment {
 
-//	private static final String TAG = LvaFragment.class.getSimpleName();
+	// private static final String TAG = LvaFragment.class.getSimpleName();
 	private ListView mListView;
 	private LvaListAdapter mAdapter;
+	private ContentObserver mLvaObserver;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,23 +51,21 @@ public class LvaFragment extends BaseFragment {
 		super.onStart();
 	}
 
-//	@Override
-//	protected boolean onRefreshSelected(MenuItem item) {
-//		Looper.prepare();
-//
-//		Log.d(TAG, "importing LVAs");
-//
-//		ImportLvaTask lvaTask = new ImportLvaTask(
-//				MainActivity.getAccount(mContext), mContext);
-//		lvaTask.execute();
-//		while (!lvaTask.isDone()) {
-//			try {
-//				Thread.sleep(600);
-//			} catch (Exception e) {
-//			}
-//		}
-//		return true;
-//	}
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		mLvaObserver = new LvaContentObserver(new Handler());
+		getActivity().getContentResolver().registerContentObserver(
+				KusssContentContract.Exam.CONTENT_URI, false, mLvaObserver);
+	}
+
+	@Override
+	public void onDestroy() {
+		getActivity().getContentResolver().unregisterContentObserver(
+				mLvaObserver);
+
+		super.onDestroy();
+	}
 
 	private class LvaLoadTask extends AsyncTask<String, Void, Void> {
 		private ProgressDialog progressDialog;
@@ -106,6 +107,19 @@ public class LvaFragment extends BaseFragment {
 			progressDialog.dismiss();
 
 			super.onPostExecute(result);
+		}
+	}
+
+	private class LvaContentObserver extends ContentObserver {
+
+		public LvaContentObserver(Handler handler) {
+			super(handler);
+		}
+
+		@Override
+		public void onChange(boolean selfChange) {
+			super.onChange(selfChange);
+			new LvaLoadTask().execute();
 		}
 	}
 

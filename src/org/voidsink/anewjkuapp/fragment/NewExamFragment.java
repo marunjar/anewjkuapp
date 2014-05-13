@@ -12,13 +12,16 @@ import org.voidsink.anewjkuapp.LvaMap;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.base.BaseFragment;
+import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 
 import android.accounts.Account;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,6 +33,7 @@ public class NewExamFragment extends BaseFragment {
 
 	private ListView mListView;
 	private ExamListAdapter mAdapter;
+	private ContentObserver mNewExamObserver;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,10 +45,10 @@ public class NewExamFragment extends BaseFragment {
 		mListView.setAdapter(mAdapter);
 
 		new ExamLoadTask().execute();
-		
+
 		return view;
 	}
-	
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
@@ -52,20 +56,32 @@ public class NewExamFragment extends BaseFragment {
 	}
 
 	@Override
-	public void onStart() {
-		super.onStart();
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		mNewExamObserver = new NewExamContentObserver(new Handler());
+		getActivity().getContentResolver().registerContentObserver(
+				KusssContentContract.Exam.CONTENT_URI, false, mNewExamObserver);
+	}
+
+	@Override
+	public void onDestroy() {
+		getActivity().getContentResolver().unregisterContentObserver(
+				mNewExamObserver);
+
+		super.onDestroy();
 	}
 
 	private class ExamLoadTask extends AsyncTask<String, Void, Void> {
 		private ProgressDialog progressDialog;
-		private List<ExamListItem>  mExams;
+		private List<ExamListItem> mExams;
 
 		@Override
 		protected Void doInBackground(String... urls) {
 			Account mAccount = MainActivity.getAccount(mContext);
 			if (mAccount != null) {
 				LvaMap map = new LvaMap(mContext);
-				
+
 				ContentResolver cr = mContext.getContentResolver();
 				Cursor c = cr.query(KusssContentContract.Exam.CONTENT_URI,
 						ImportExamTask.EXAM_PROJECTION, null, null,
@@ -99,5 +115,18 @@ public class NewExamFragment extends BaseFragment {
 			super.onPostExecute(result);
 		}
 	}
-	
+
+	private class NewExamContentObserver extends ContentObserver {
+
+		public NewExamContentObserver(Handler handler) {
+			super(handler);
+		}
+
+		@Override
+		public void onChange(boolean selfChange) {
+			super.onChange(selfChange);
+			new ExamLoadTask().execute();
+		}
+	}
+
 }
