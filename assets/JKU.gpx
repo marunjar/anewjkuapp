@@ -10,52 +10,67 @@
 <wpt lat="48.335184" lon="14.324484">
 	<time>2014-05-07T13:53:54Z</time>
 	<name><![CDATA[HS 19]]></name>
-	<desc><![CDATA[Intel Mobile Communications Hall]]></desc>
+	<desc><![CDATA[Intel Mobile Communications Hall, S3 Z18, ZG]]></desc>
 </wpt>
 <wpt lat="48.335256" lon="14.324655">
 	<time>2014-05-08T04:46:21Z</time>
 	<name><![CDATA[HS 18]]></name>
-	<desc><![CDATA[Compuware - dynaTrace Hörsaal]]></desc>
-</wpt>
-<wpt lat="48.337797" lon="14.319556">
-	<time>2014-05-08T04:48:33Z</time>
-	<name><![CDATA[HS 1]]></name>
-	<desc><![CDATA[Raiffeisensaal]]></desc>
-</wpt>
-<wpt lat="48.337950" lon="14.320410">
-	<time>2014-05-08T04:54:33Z</time>
-	<name><![CDATA[HS 2]]></name>
-	<desc><![CDATA[Sparkassensaal]]></desc>
+	<desc><![CDATA[Compuware - dynaTrace Hörsaal, S3 Z18, ZG]]></desc>
 	<sym>z-favorites</sym>
 	<extensions>
 		<locus:icon>z-favorites.png</locus:icon>
 	</extensions>
 </wpt>
-<wpt lat="48.337973" lon="14.320064">
+<wpt lat="48.337824" lon="14.319571">
+	<time>2014-05-08T04:48:33Z</time>
+	<name><![CDATA[HS 1]]></name>
+	<desc><![CDATA[Raiffeisensaal, K 041B]]></desc>
+</wpt>
+<wpt lat="48.337950" lon="14.320410">
+	<time>2014-05-08T04:54:33Z</time>
+	<name><![CDATA[HS 2]]></name>
+	<desc><![CDATA[Sparkassensaal, HT 182E, 1. OG]]></desc>
+</wpt>
+<wpt lat="48.337967" lon="14.320179">
 	<time>2014-05-08T04:54:51Z</time>
 	<name><![CDATA[HS 3]]></name>
+	<desc><![CDATA[HT 180E, 1. OG]]></desc>
 </wpt>
-<wpt lat="48.338001" lon="14.319759">
+<wpt lat="48.337991" lon="14.319945">
 	<time>2014-05-08T04:55:07Z</time>
 	<name><![CDATA[HS 4]]></name>
+	<desc><![CDATA[HT 179F, 1. OG]]></desc>
 </wpt>
-<wpt lat="48.338057" lon="14.319101">
+<wpt lat="48.338065" lon="14.319016">
 	<time>2014-05-08T04:56:33Z</time>
 	<name><![CDATA[HS 6]]></name>
+	<desc><![CDATA[HT 174H, 1. OG]]></desc>
 </wpt>
 <wpt lat="48.338070" lon="14.318829">
 	<time>2014-05-08T04:56:43Z</time>
 	<name><![CDATA[HS 7]]></name>
+	<desc><![CDATA[HT 172H, 1. OG]]></desc>
+	<sym>z-favorites</sym>
+	<extensions>
+		<locus:icon>z-favorites.png</locus:icon>
+	</extensions>
 </wpt>
-<wpt lat="48.338033" lon="14.319441">
+<wpt lat="48.338032" lon="14.319463">
 	<time>2014-05-08T04:57:17Z</time>
 	<name><![CDATA[HS 5]]></name>
+	<desc><![CDATA[HT 175G, 1. OG]]></desc>
+	<sym>z-favorites</sym>
+	<extensions>
+		<locus:icon>z-favorites.png</locus:icon>
+	</extensions>
 </wpt>
 <wpt lat="48.337408" lon="14.317177">
 	<time>2014-05-08T08:38:40Z</time>
 	<name><![CDATA[HS 9]]></name>
-	<desc><![CDATA[Borealis Hörsaal, EG]]></desc>
+	<desc><![CDATA[Borealis Hörsaal, HG 001, EG]]></desc>
+	<sym>z-favorites</sym>
 	<extensions>
+		<locus:icon>z-favorites.png</locus:icon>
 		<gpxx:WaypointExtension>
 			<gpxx:Address>
 				<gpxx:StreetAddress>Altenbergerstr. 69</gpxx:StreetAddress>
@@ -70,8 +85,10 @@
 <wpt lat="48.337408" lon="14.317177">
 	<time>2014-05-08T08:38:40Z</time>
 	<name><![CDATA[HS 10]]></name>
-	<desc><![CDATA[Fabasoft Hörsaal, 1. OG]]></desc>
+	<desc><![CDATA[Fabasoft Hörsaal, HG 101, 1. OG]]></desc>
+	<sym>z-favorites</sym>
 	<extensions>
+		<locus:icon>z-favorites.png</locus:icon>
 		<gpxx:WaypointExtension>
 			<gpxx:Address>
 				<gpxx:StreetAddress>Altenbergerstr. 69</gpxx:StreetAddress>
@@ -91,23 +108,20 @@
 	<time>2014-05-10T04:55:46Z</time>
 	<name><![CDATA[Lernzone S2]]></name>
 	<desc><![CDATA[S2 052, EG]]></desc>
+</wpt>
+<wpt lat="48.335965" lon="14.322533">
+	<time>2014-05-10T04:56:11Z</time>
+	<name><![CDATA[MT 132]]></name>
+	<desc><![CDATA[1. OG]]></desc>
 	<sym>z-favorites</sym>
 	<extensions>
 		<locus:icon>z-favorites.png</locus:icon>
 	</extensions>
-</wpt>
-<wpt lat="48.335852" lon="14.322280">
-	<time>2014-05-10T04:56:11Z</time>
-	<name><![CDATA[MT 132]]></name>
 </wpt>
 <wpt lat="48.337293" lon="14.317859">
 	<time>2014-05-10T04:56:50Z</time>
 	<name><![CDATA[HS 8]]></name>
-	<desc><![CDATA[EG]]></desc>
-	<sym>z-favorites</sym>
-	<extensions>
-		<locus:icon>z-favorites.png</locus:icon>
-	</extensions>
+	<desc><![CDATA[P 013, EG]]></desc>
 </wpt>
 <wpt lat="48.335208" lon="14.324013">
 	<time>2014-05-12T08:03:34Z</time>
@@ -208,18 +222,213 @@
 <wpt lat="48.337636" lon="14.321977">
 	<time>2014-05-12T15:03:24Z</time>
 	<name><![CDATA[Mensa]]></name>
-	<desc><![CDATA[EG]]></desc>
+	<desc><![CDATA[UC 001/2, EG]]></desc>
+</wpt>
+<wpt lat="48.337916" lon="14.321915">
+	<time>2014-05-12T15:03:49Z</time>
+	<name><![CDATA[Kepler's]]></name>
+	<desc><![CDATA[UC 003, EG]]></desc>
+</wpt>
+<wpt lat="48.337796" lon="14.316764">
+	<time>2014-05-15T12:03:04Z</time>
+	<name><![CDATA[HS 11]]></name>
+	<desc><![CDATA[T 005, EG]]></desc>
+</wpt>
+<wpt lat="48.337796" lon="14.316764">
+	<time>2014-05-15T12:03:27Z</time>
+	<name><![CDATA[HS 12]]></name>
+	<desc><![CDATA[T 006, EG]]></desc>
+</wpt>
+<wpt lat="48.337796" lon="14.316764">
+	<time>2014-05-15T12:03:47Z</time>
+	<name><![CDATA[HS 13]]></name>
+	<desc><![CDATA[T 007]]></desc>
+</wpt>
+<wpt lat="48.337796" lon="14.316764">
+	<time>2014-05-15T12:04:41Z</time>
+	<name><![CDATA[HS 14]]></name>
+	<desc><![CDATA[T 008, EG]]></desc>
+</wpt>
+<wpt lat="48.336365" lon="14.318095">
+	<time>2014-05-15T12:16:49Z</time>
+	<name><![CDATA[HS 15]]></name>
+	<desc><![CDATA[Siemens VAI Hörsaal, MZ 001A, EG]]></desc>
+</wpt>
+<wpt lat="48.336395" lon="14.317780">
+	<time>2014-05-15T12:18:26Z</time>
+	<name><![CDATA[HS 16]]></name>
+	<desc><![CDATA[voestalpine Saal, MZ 009A, EG]]></desc>
+</wpt>
+<wpt lat="48.336575" lon="14.317723">
+	<time>2014-05-15T12:19:13Z</time>
+	<name><![CDATA[HS 17]]></name>
+	<desc><![CDATA[Hypo-OÖ Saal, MZ 001B, EG]]></desc>
+</wpt>
+<wpt lat="48.337041" lon="14.317690">
+	<time>2014-05-15T12:39:32Z</time>
+	<name><![CDATA[BA 9907]]></name>
+	<desc><![CDATA[Keller]]></desc>
+</wpt>
+<wpt lat="48.337041" lon="14.317690">
+	<time>2014-05-15T12:39:45Z</time>
+	<name><![CDATA[BA 9908]]></name>
+	<desc><![CDATA[Keller]]></desc>
+</wpt>
+<wpt lat="48.337041" lon="14.317690">
+	<time>2014-05-15T12:39:57Z</time>
+	<name><![CDATA[BA 9909]]></name>
+	<desc><![CDATA[Keller]]></desc>
+</wpt>
+<wpt lat="48.337041" lon="14.317690">
+	<time>2014-05-15T12:40:13Z</time>
+	<name><![CDATA[BA 9910]]></name>
+	<desc><![CDATA[Keller]]></desc>
+</wpt>
+<wpt lat="48.337041" lon="14.317690">
+	<time>2014-05-15T12:40:28Z</time>
+	<name><![CDATA[BA 9911]]></name>
+	<desc><![CDATA[Keller]]></desc>
+</wpt>
+<wpt lat="48.337041" lon="14.317690">
+	<time>2014-05-15T12:40:40Z</time>
+	<name><![CDATA[BA 9912]]></name>
+	<desc><![CDATA[Keller]]></desc>
+</wpt>
+<wpt lat="48.329027" lon="14.322040">
+	<time>2014-05-15T12:49:53Z</time>
+	<name><![CDATA[ESH 1]]></name>
+	<desc><![CDATA[Evangelisches Studentenheim, Keller]]></desc>
+</wpt>
+<wpt lat="48.329027" lon="14.322040">
+	<time>2014-05-15T12:50:27Z</time>
+	<name><![CDATA[ESH 2]]></name>
+	<desc><![CDATA[Evangelisches Studentenheim, Keller]]></desc>
+</wpt>
+<wpt lat="48.329027" lon="14.322040">
+	<time>2014-05-15T12:50:39Z</time>
+	<name><![CDATA[ESH 3]]></name>
+	<desc><![CDATA[Evangelisches Studentenheim, Keller]]></desc>
+</wpt>
+<wpt lat="48.337803" lon="14.317249">
+	<time>2014-05-15T12:58:20Z</time>
+	<name><![CDATA[HF 9904]]></name>
+	<desc><![CDATA[Keller]]></desc>
+</wpt>
+<wpt lat="48.337803" lon="14.317249">
+	<time>2014-05-15T12:58:32Z</time>
+	<name><![CDATA[HF 9905]]></name>
+	<desc><![CDATA[Keller]]></desc>
+</wpt>
+<wpt lat="48.337803" lon="14.317249">
+	<time>2014-05-15T12:58:46Z</time>
+	<name><![CDATA[HF 9901]]></name>
+	<desc><![CDATA[Keller]]></desc>
+</wpt>
+<wpt lat="48.337803" lon="14.317249">
+	<time>2014-05-15T12:59:09Z</time>
+	<name><![CDATA[HF 9915]]></name>
+	<desc><![CDATA[Computerraum]]></desc>
+</wpt>
+<wpt lat="48.338011" lon="14.319710">
+	<time>2014-05-15T13:02:43Z</time>
+	<name><![CDATA[HT 177F]]></name>
+	<desc><![CDATA[1. OG]]></desc>
 	<sym>z-favorites</sym>
 	<extensions>
 		<locus:icon>z-favorites.png</locus:icon>
 	</extensions>
 </wpt>
-<wpt lat="48.337916" lon="14.321915">
-	<time>2014-05-12T15:03:49Z</time>
-	<name><![CDATA[Kepler's]]></name>
+<wpt lat="48.338043" lon="14.319232">
+	<time>2014-05-15T13:05:10Z</time>
+	<name><![CDATA[HT 176G]]></name>
+	<desc><![CDATA[1. OG]]></desc>
+</wpt>
+<wpt lat="48.337102" lon="14.318199">
+	<time>2014-05-15T13:19:27Z</time>
+	<name><![CDATA[LUI Gastgarten]]></name>
+	<desc><![CDATA[(nur im Sommer)]]></desc>
+</wpt>
+<wpt lat="48.332356" lon="14.301843">
+	<time>2014-05-15T13:25:26Z</time>
+	<name><![CDATA[Akademikerhilfe]]></name>
+</wpt>
+<wpt lat="48.319846" lon="14.275189">
+	<time>2014-05-15T15:09:33Z</time>
+	<name><![CDATA[PE 001]]></name>
+	<desc><![CDATA[Petrinum, Petrinumstraße 12]]></desc>
+</wpt>
+<wpt lat="48.319846" lon="14.275189">
+	<time>2014-05-15T15:09:43Z</time>
+	<name><![CDATA[PE 002]]></name>
+	<desc><![CDATA[Petrinum, Petrinumstraße 12]]></desc>
+</wpt>
+<wpt lat="48.319846" lon="14.275189">
+	<time>2014-05-15T15:09:52Z</time>
+	<name><![CDATA[PE 003]]></name>
+	<desc><![CDATA[Petrinum, Petrinumstraße 12]]></desc>
+</wpt>
+<wpt lat="48.335977" lon="14.322804">
+	<time>2014-05-15T15:12:42Z</time>
+	<name><![CDATA[MT 327]]></name>
+	<desc><![CDATA[3. OG]]></desc>
 	<sym>z-favorites</sym>
 	<extensions>
 		<locus:icon>z-favorites.png</locus:icon>
 	</extensions>
+</wpt>
+<wpt lat="48.335977" lon="14.322804">
+	<time>2014-05-15T15:13:53Z</time>
+	<name><![CDATA[MT 226]]></name>
+	<desc><![CDATA[2. OG]]></desc>
+</wpt>
+<wpt lat="48.335977" lon="14.322804">
+	<time>2014-05-15T15:14:20Z</time>
+	<name><![CDATA[MT 226/1]]></name>
+	<desc><![CDATA[2. OG]]></desc>
+</wpt>
+<wpt lat="48.335946" lon="14.322333">
+	<time>2014-05-15T15:18:37Z</time>
+	<name><![CDATA[MT 130]]></name>
+	<desc><![CDATA[1. OG]]></desc>
+</wpt>
+<wpt lat="48.335846" lon="14.322282">
+	<time>2014-05-15T15:19:05Z</time>
+	<name><![CDATA[MT 127]]></name>
+	<desc><![CDATA[1. OG]]></desc>
+</wpt>
+<wpt lat="48.335898" lon="14.322419">
+	<time>2014-05-15T15:19:33Z</time>
+	<name><![CDATA[MT 128]]></name>
+	<desc><![CDATA[1. OG]]></desc>
+</wpt>
+<wpt lat="48.335861" lon="14.322560">
+	<time>2014-05-15T15:20:07Z</time>
+	<name><![CDATA[MT 126]]></name>
+	<desc><![CDATA[1. OG]]></desc>
+</wpt>
+<wpt lat="48.330105" lon="14.324027">
+	<time>2014-05-15T15:24:00Z</time>
+	<name><![CDATA[ADM Halle]]></name>
+	<desc><![CDATA[USI Übungsstätte]]></desc>
+</wpt>
+<wpt lat="48.334028" lon="14.320650">
+	<time>2014-05-15T15:25:34Z</time>
+	<name><![CDATA[BSZ Auhof]]></name>
+	<desc><![CDATA[USI Übungsstätte]]></desc>
+</wpt>
+<wpt lat="48.329491" lon="14.323550">
+	<time>2014-05-15T15:28:06Z</time>
+	<name><![CDATA[Kletterpark Linz]]></name>
+	<desc><![CDATA[USI Übungsstätte]]></desc>
+</wpt>
+<wpt lat="48.335460" lon="14.323322">
+	<time>2014-05-15T15:31:54Z</time>
+	<name><![CDATA[S2 120]]></name>
+	<desc><![CDATA[1. OG]]></desc>
+</wpt>
+<wpt lat="48.335460" lon="14.323322">
+	<time>2014-05-15T15:32:14Z</time>
+	<name><![CDATA[S2 219]]></name>
+	<desc><![CDATA[2. OG]]></desc>
 </wpt>
 </gpx>

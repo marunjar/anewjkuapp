@@ -224,8 +224,7 @@ public class MapFragment extends BaseFragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
-		this.mMyLocationOverlay.enableMyLocation(this.goalLocationOverlay
-				.getLatLong() == null);
+		this.mMyLocationOverlay.enableMyLocation(false);
 	}
 
 	@Override
