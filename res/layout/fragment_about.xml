@@ -56,7 +56,23 @@
                 android:text="@string/about_me_summary"
                 android:textAppearance="?android:attr/textAppearanceSmall" >
             </TextView>
-        </LinearLayout>
+            <TextView
+                android:id="@+id/used_lib_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/used_lib_title"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/used_lib"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/used_lib_summary"
+                android:textAppearance="?android:attr/textAppearanceSmall" >
+            </TextView>
+            </LinearLayout>
     </ScrollView>
 
     <Button
