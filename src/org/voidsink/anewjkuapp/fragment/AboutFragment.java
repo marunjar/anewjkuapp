@@ -1,15 +1,19 @@
 package org.voidsink.anewjkuapp.fragment;
 
+import java.io.File;
+
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class AboutFragment extends BaseFragment {
 
@@ -36,7 +40,9 @@ public class AboutFragment extends BaseFragment {
 								"Send email..."));
 					}
 				});
-
+		File path = Environment.getExternalStoragePublicDirectory("JKU App");
+		Toast.makeText(getActivity(), path.toString(), Toast.LENGTH_SHORT).show();
+		
 		return view;
 	}
 }

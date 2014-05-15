@@ -1397,8 +1397,8 @@ containing a value of this type.
         public static final int changelog_version_format=0x7f060004;
         public static final int default_chip_color=0x7f060012;
         public static final int drawer_menu_item_icon=0x7f06005b;
-        public static final int extension_mensa_description=0x7f060083;
-        public static final int extension_mensa_title=0x7f060082;
+        public static final int extension_mensa_description=0x7f060084;
+        public static final int extension_mensa_title=0x7f060083;
         public static final int grade_1=0x7f060020;
         public static final int grade_2=0x7f060021;
         public static final int grade_3=0x7f060022;
@@ -1418,7 +1418,7 @@ containing a value of this type.
         public static final int group_user=0x7f060053;
         public static final int kusss_provider_name=0x7f060073;
         public static final int kusss_service_title=0x7f060071;
-        public static final int listview_footer_button=0x7f06007f;
+        public static final int listview_footer_button=0x7f060080;
         public static final int navigation_drawer_close=0x7f06001a;
         public static final int navigation_drawer_open=0x7f060019;
         public static final int notification_error=0x7f060075;
@@ -1469,8 +1469,8 @@ containing a value of this type.
         public static final int pref_cat_update_password=0x7f06003b;
         public static final int pref_kusss_calendar_notify_summary=0x7f060047;
         public static final int pref_kusss_calendar_sync_summary=0x7f060046;
-        public static final int pref_kusss_exam_get_from_lva_summary=0x7f060081;
-        public static final int pref_kusss_exam_get_from_lva_title=0x7f060080;
+        public static final int pref_kusss_exam_get_from_lva_summary=0x7f060082;
+        public static final int pref_kusss_exam_get_from_lva_title=0x7f060081;
         public static final int pref_kusss_exam_notify_summary=0x7f06004d;
         public static final int pref_kusss_exam_sync_summary=0x7f06004c;
         public static final int pref_kusss_grade_notify_summary=0x7f06004a;
@@ -1485,8 +1485,9 @@ containing a value of this type.
         public static final int progress_load_exam=0x7f06007a;
         public static final int progress_load_grade=0x7f06007b;
         public static final int progress_load_lva=0x7f06007c;
+        public static final int progress_load_map_files=0x7f06007e;
         public static final int progress_load_menu=0x7f060079;
-        public static final int progress_login=0x7f06007e;
+        public static final int progress_login=0x7f06007f;
         public static final int progress_title=0x7f060078;
         public static final int search_poi_hint=0x7f060052;
         public static final int search_poi_title=0x7f060051;

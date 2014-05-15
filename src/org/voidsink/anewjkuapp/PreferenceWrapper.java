@@ -1,5 +1,6 @@
 package org.voidsink.anewjkuapp;
 
+import java.io.File;
 import java.util.List;
 
 import org.voidsink.anewjkuapp.activity.MainActivity;
@@ -153,15 +154,20 @@ public final class PreferenceWrapper {
 		}
 	}
 
-	public static String getMapFile(Context mContext) {
+	public static File getMapFile(Context mContext) {
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(mContext);
+		File mapFile = null;
 		try {
-			return sp.getString(PREF_MAP_FILE, PREF_MAP_FILE_DEFAULT);
+			mapFile = new File(sp.getString(PREF_MAP_FILE, PREF_MAP_FILE_DEFAULT));
 		} catch (Exception e) {
 			Log.e(TAG, "Failure", e);
-			return PREF_MAP_FILE_DEFAULT;
+			mapFile = null;
 		}
+		if (mapFile != null && (!mapFile.exists() || !mapFile.canRead())) {
+			mapFile = null;
+		}
+		return mapFile;
 	}
 
 	public static String getLastFragment(Context mContext) {

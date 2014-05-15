@@ -45,6 +45,7 @@ import org.voidsink.anewjkuapp.MapUtils;
 import org.voidsink.anewjkuapp.Poi;
 import org.voidsink.anewjkuapp.PoiAdapter;
 import org.voidsink.anewjkuapp.PoiContentContract;
+import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 
@@ -161,8 +162,9 @@ public class MapFragment extends BaseFragment implements
 		} else if (pois.size() == 1) {
 			finishSearch(pois.get(0));
 		} else {
-			AlertDialog.Builder poiSelector = new AlertDialog.Builder(new ContextThemeWrapper(mContext, R.style.Theme_Dialog));
-			
+			AlertDialog.Builder poiSelector = new AlertDialog.Builder(
+					new ContextThemeWrapper(mContext, R.style.Theme_Dialog));
+
 			poiSelector.setIcon(R.drawable.ic_launcher);
 
 			final PoiAdapter arrayAdapter = new PoiAdapter(mContext);
@@ -365,7 +367,7 @@ public class MapFragment extends BaseFragment implements
 
 		this.mMyLocationOverlay = new LocationOverlay(this.getActivity(),
 				this.mapViewPosition, bitmap);
-		this.mMyLocationOverlay.setSnapToLocationEnabled(true);
+		this.mMyLocationOverlay.setSnapToLocationEnabled(false);
 		this.mLayerManager.getLayers().add(this.mMyLocationOverlay);
 
 		return rootView;
@@ -395,8 +397,9 @@ public class MapFragment extends BaseFragment implements
 	}
 
 	protected MapPosition getInitialPosition() {
+		File mapFile = getMapFile();
 		MapDatabase mapDatabase = new MapDatabase();
-		final FileOpenResult result = mapDatabase.openFile(getMapFile());
+		final FileOpenResult result = mapDatabase.openFile(mapFile);
 		if (result.isSuccess()) {
 			final MapFileInfo mapFileInfo = mapDatabase.getMapFileInfo();
 			if (mapFileInfo != null && mapFileInfo.startPosition != null) {
@@ -410,7 +413,8 @@ public class MapFragment extends BaseFragment implements
 						(byte) 17); // Insel im Uniteich
 			}
 		}
-		throw new IllegalArgumentException("Invalid Map File " + MAP_FILE_NAME);
+		throw new IllegalArgumentException("Invalid Map File "
+				+ mapFile.toString());
 	}
 
 	@Override
@@ -427,7 +431,14 @@ public class MapFragment extends BaseFragment implements
 	}
 
 	protected File getMapFile() {
-		return new File(getActivity().getFilesDir(), MAP_FILE_NAME);
+		File mapFile = PreferenceWrapper.getMapFile(mContext);
+		if (mapFile == null || !mapFile.exists() || !mapFile.canRead()) {
+			mapFile = new File(getActivity().getFilesDir(), MAP_FILE_NAME);
+			Log.i(TAG, "use internal map: " + mapFile.toString());
+		} else {
+			Log.i(TAG, "use external map: " + mapFile.toString());
+		}
+		return mapFile;
 	}
 
 	@Override
@@ -438,8 +449,8 @@ public class MapFragment extends BaseFragment implements
 
 	@Override
 	public boolean onQueryTextSubmit(String newText) {
-//		Toast.makeText(mContext, newText + " submitted", Toast.LENGTH_SHORT)
-//				.show();
+		// Toast.makeText(mContext, newText + " submitted", Toast.LENGTH_SHORT)
+		// .show();
 		return false;
 	}
 }

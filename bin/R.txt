@@ -488,8 +488,8 @@ int string changelog_title 0x7f060001
 int string changelog_version_format 0x7f060004
 int string default_chip_color 0x7f060012
 int string drawer_menu_item_icon 0x7f06005b
-int string extension_mensa_description 0x7f060083
-int string extension_mensa_title 0x7f060082
+int string extension_mensa_description 0x7f060084
+int string extension_mensa_title 0x7f060083
 int string grade_1 0x7f060020
 int string grade_2 0x7f060021
 int string grade_3 0x7f060022
@@ -509,7 +509,7 @@ int string group_other 0x7f060056
 int string group_user 0x7f060053
 int string kusss_provider_name 0x7f060073
 int string kusss_service_title 0x7f060071
-int string listview_footer_button 0x7f06007f
+int string listview_footer_button 0x7f060080
 int string navigation_drawer_close 0x7f06001a
 int string navigation_drawer_open 0x7f060019
 int string notification_error 0x7f060075
@@ -560,8 +560,8 @@ int string pref_cat_sync_settings 0x7f06003a
 int string pref_cat_update_password 0x7f06003b
 int string pref_kusss_calendar_notify_summary 0x7f060047
 int string pref_kusss_calendar_sync_summary 0x7f060046
-int string pref_kusss_exam_get_from_lva_summary 0x7f060081
-int string pref_kusss_exam_get_from_lva_title 0x7f060080
+int string pref_kusss_exam_get_from_lva_summary 0x7f060082
+int string pref_kusss_exam_get_from_lva_title 0x7f060081
 int string pref_kusss_exam_notify_summary 0x7f06004d
 int string pref_kusss_exam_sync_summary 0x7f06004c
 int string pref_kusss_grade_notify_summary 0x7f06004a
@@ -576,8 +576,9 @@ int string progress_load_calendar 0x7f06007d
 int string progress_load_exam 0x7f06007a
 int string progress_load_grade 0x7f06007b
 int string progress_load_lva 0x7f06007c
+int string progress_load_map_files 0x7f06007e
 int string progress_load_menu 0x7f060079
-int string progress_login 0x7f06007e
+int string progress_login 0x7f06007f
 int string progress_title 0x7f060078
 int string search_poi_hint 0x7f060052
 int string search_poi_title 0x7f060051
