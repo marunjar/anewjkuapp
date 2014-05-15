@@ -91,6 +91,9 @@ public class MapFragment extends BaseFragment implements
 	public static final String MAP_FILE_NAME = "campus.map";
 
 	private static final String TAG = MapFragment.class.getSimpleName();
+	private static final byte MAX_ZOOM_LEVEL = 19;
+	private static final byte MIN_ZOOM_LEVEL = 15;
+	private static final byte DEFAULT_ZOOM_LEVEL = 17;
 
 	/**
 	 * The dummy content this fragment is presenting.
@@ -391,8 +394,8 @@ public class MapFragment extends BaseFragment implements
 		if (center.equals(new LatLong(0, 0))) {
 			mvp.setMapPosition(this.getInitialPosition());
 		}
-		mvp.setZoomLevelMax((byte) 19);
-		mvp.setZoomLevelMin((byte) 15);// full campus fits to screen
+		mvp.setZoomLevelMax((byte) MAX_ZOOM_LEVEL);
+		mvp.setZoomLevelMin((byte) MIN_ZOOM_LEVEL);// full campus fits to screen
 		return mvp;
 	}
 
@@ -401,16 +404,27 @@ public class MapFragment extends BaseFragment implements
 		MapDatabase mapDatabase = new MapDatabase();
 		final FileOpenResult result = mapDatabase.openFile(mapFile);
 		if (result.isSuccess()) {
+			LatLong uniteich = new LatLong(48.33706, 14.31960);
 			final MapFileInfo mapFileInfo = mapDatabase.getMapFileInfo();
-			if (mapFileInfo != null && mapFileInfo.startPosition != null) {
-				return new MapPosition(mapFileInfo.startPosition,
-						(byte) mapFileInfo.startZoomLevel);
+			if (mapFileInfo != null) {
+				if (mapFileInfo.boundingBox.contains(uniteich)) {
+					// Insel im Uniteich
+					return new MapPosition(uniteich, (byte) DEFAULT_ZOOM_LEVEL);
+				} else if (mapFileInfo.startPosition != null) {
+					// given start position, zoom in range
+					return new MapPosition(mapFileInfo.startPosition,
+							(byte) Math.max(
+									Math.min(mapFileInfo.startZoomLevel,
+											MAX_ZOOM_LEVEL), MIN_ZOOM_LEVEL));
+				} else {
+					// center of the map
+					return new MapPosition(
+							mapFileInfo.boundingBox.getCenterPoint(),
+							(byte) DEFAULT_ZOOM_LEVEL);
+				}
 			} else {
-				// return new
-				// MapPosition(mapFileInfo.boundingBox.getCenterPoint(), (byte)
-				// 12);
-				return new MapPosition(new LatLong(48.33706, 14.31960),
-						(byte) 17); // Insel im Uniteich
+				// Insel im Uniteich
+				return new MapPosition(uniteich, (byte) DEFAULT_ZOOM_LEVEL);
 			}
 		}
 		throw new IllegalArgumentException("Invalid Map File "
