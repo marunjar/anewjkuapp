@@ -110,7 +110,7 @@ public class MainActivity extends ActionBarActivity implements
 
 		// do things if new version was installed
 		AppUtils.doOnNewVersion(this);
-		
+
 		// initialize graphic factory for mapsforge
 		AndroidGraphicFactory.createInstance(this.getApplication());
 
@@ -158,7 +158,7 @@ public class MainActivity extends ActionBarActivity implements
 		Fragment f = getSupportFragmentManager().findFragmentByTag(
 				ARG_SHOW_FRAGMENT);
 		if (f != null) {
-//			Log.i(TAG, "fragment: " + f.getClass().getSimpleName());
+			// Log.i(TAG, "fragment: " + f.getClass().getSimpleName());
 			if (BaseFragment.class.isInstance(f)) {
 				((BaseFragment) f).handleIntent(intent);
 			}
@@ -219,11 +219,13 @@ public class MainActivity extends ActionBarActivity implements
 				f = (Fragment) startFragment.newInstance();
 				PreferenceWrapper.setLastFragment(this,
 						startFragment.getCanonicalName());
+
+				getSupportFragmentManager().beginTransaction()
+						.replace(R.id.container, f, ARG_SHOW_FRAGMENT).commit();
 			} catch (Exception e) {
+				Log.w(TAG, "fragment instantiation failed", e);
 				f = null;
 			}
-			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.container, f, ARG_SHOW_FRAGMENT).commit();
 		}
 	}
 
@@ -245,7 +247,7 @@ public class MainActivity extends ActionBarActivity implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-//		Log.i(TAG, "onOptionsItemSelected");
+		// Log.i(TAG, "onOptionsItemSelected");
 
 		switch (item.getItemId()) {
 		case R.id.action_refresh_exams:

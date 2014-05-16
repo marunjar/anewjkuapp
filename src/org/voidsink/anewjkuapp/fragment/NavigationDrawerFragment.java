@@ -30,6 +30,7 @@ import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.base.BaseFragment;
+import org.voidsink.anewjkuapp.demo.DemoTabbedViewPagerFragment;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation
@@ -75,7 +76,7 @@ public class NavigationDrawerFragment extends BaseFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		// Read in the flag indicating whether or not the user has demonstrated
 		// awareness of the
 		// drawer. See PREF_USER_LEARNED_DRAWER for details.
@@ -114,7 +115,7 @@ public class NavigationDrawerFragment extends BaseFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
+
 		// Indicate that this fragment would like to influence the set of
 		// actions in the action bar.
 		setHasOptionsMenu(true);
@@ -305,7 +306,7 @@ public class NavigationDrawerFragment extends BaseFragment {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
-		
+
 		super.onSaveInstanceState(outState);
 	}
 

@@ -117,9 +117,7 @@ public class MensaDashclockExtension extends DashClockExtension {
 												MainActivity.ARG_SHOW_FRAGMENT,
 												MensaFragment.class.getName())
 										.addFlags(
-												Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-
-						));
+												Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)));
 			}
 		} else {
 			publishUpdate(new ExtensionData().visible(false));
