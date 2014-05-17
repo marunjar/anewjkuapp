@@ -13,7 +13,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 	private static final String TAG = KusssDatabaseHelper.class.getSimpleName();
 
 	private static final String DATABASE_NAME = "kusss.db";
-	private static final int DATABASE_VERSION = 4;
+	private static final int DATABASE_VERSION = 5;
 
 	// Database creation sql statement
 	public static final String DB_CREATE_LVA = "create table if not exists "
@@ -56,7 +56,8 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 			+ " integer" + ");";
 
 	public static final String DB_CREATE_POI = "create virtual table "
-			+ PoiContentContract.Poi.TABLE_NAME + " using " + PoiContentContract.getFTS() + " ("
+			+ PoiContentContract.Poi.TABLE_NAME + " using "
+			+ PoiContentContract.getFTS() + " ("
 			+ PoiContentContract.Poi.COL_NAME + " text primary key not null, "
 			+ PoiContentContract.Poi.COL_LAT + " real not null, "
 			+ PoiContentContract.Poi.COL_LON + " real not null, "
@@ -88,6 +89,10 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
 				+ newVersion + ", which will destroy most of all old data");
+		if (oldVersion < 5) {
+			db.execSQL("DROP TABLE IF EXISTS "
+					+ KusssContentContract.Lva.LVA_TABLE_NAME);
+		}
 		onCreate(db);
 	}
 

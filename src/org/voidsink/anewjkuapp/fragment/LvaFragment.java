@@ -10,7 +10,9 @@ import org.voidsink.anewjkuapp.LvaListItem;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.base.BaseFragment;
+import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Lva;
+import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 
 import android.accounts.Account;
 import android.app.ProgressDialog;
@@ -21,6 +23,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -60,6 +64,12 @@ public class LvaFragment extends BaseFragment {
 	}
 
 	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.lva, menu);
+	}
+
+	@Override
 	public void onDestroy() {
 		getActivity().getContentResolver().unregisterContentObserver(
 				mLvaObserver);
@@ -73,20 +83,11 @@ public class LvaFragment extends BaseFragment {
 
 		@Override
 		protected Void doInBackground(String... urls) {
-			Account mAccount = MainActivity.getAccount(mContext);
-			if (mAccount != null) {
-				ContentResolver cr = mContext.getContentResolver();
-				Cursor c = cr.query(KusssContentContract.Lva.CONTENT_URI,
-						ImportLvaTask.LVA_PROJECTION, null, null,
-						KusssContentContract.Lva.LVA_COL_TERM + " DESC");
-
-				if (c != null) {
-					while (c.moveToNext()) {
-						mLvas.add(new Lva(c));
-					}
-					c.close();
-				}
+			List<Lva> lvas = KusssContentProvider.getLvas(mContext);
+			for (Lva lva : lvas) {
+				mLvas.add(lva);
 			}
+			lvas = null;
 			return null;
 		}
 

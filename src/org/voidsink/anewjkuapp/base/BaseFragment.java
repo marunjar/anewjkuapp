@@ -63,7 +63,7 @@ public class BaseFragment extends Fragment {
 
 	@Override
 	public void onDestroyOptionsMenu() {
-		Log.i(getClass().getSimpleName(), "onDestroyOptionsMenu");
+//		Log.i(getClass().getSimpleName(), "onDestroyOptionsMenu");
 		super.onDestroyOptionsMenu();
 	}
 

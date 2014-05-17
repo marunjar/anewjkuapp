@@ -30,7 +30,6 @@ import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.base.BaseFragment;
-import org.voidsink.anewjkuapp.demo.DemoTabbedViewPagerFragment;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation
@@ -96,6 +95,7 @@ public class NavigationDrawerFragment extends BaseFragment {
 				new DrawerMenuItem("Prüfungen", NewExamFragment.class),
 				new DrawerMenuItem("Noten", GradeFragment.class),
 				new DrawerMenuItem("LVAs", LvaFragment.class),
+				new DrawerMenuItem("Stats", StatisticFragment.class),
 				new DrawerMenuSection("ÖH"),
 				// new DrawerMenuItem("News"),
 				// new DrawerMenuItem("Courier"),

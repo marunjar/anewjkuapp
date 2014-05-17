@@ -10,7 +10,7 @@ import org.voidsink.anewjkuapp.LvaListItem;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-public class Lva implements LvaListItem{
+public class Lva implements LvaListItem {
 
 	private final Pattern lvaNrPattern = Pattern.compile("\\d{3}\\.\\d{3}");
 
@@ -40,8 +40,10 @@ public class Lva implements LvaListItem{
 					setLvaType(row.child(4).text()); // type (UE, ...)
 					setTeacher(row.child(8).text()); // Leiter
 					setSKZ(Integer.parseInt(row.child(9).text())); // SKZ
-					// setECTS(Double.parseDouble(row.child(5).text())); // ECTS
-					// setSWS(Double.parseDouble(row.child(6).text())); // SWS
+					setECTS(Double.parseDouble(row.child(5).text()
+							.replace(",", "."))); // ECTS
+					setSWS(Double.parseDouble(row.child(6).text()
+							.replace(",", "."))); // SWS
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -55,8 +57,8 @@ public class Lva implements LvaListItem{
 		this.title = c.getString(ImportLvaTask.COLUMN_LVA_TITLE);
 		this.skz = c.getInt(ImportLvaTask.COLUMN_LVA_SKZ);
 		this.teacher = c.getString(ImportLvaTask.COLUMN_LVA_TEACHER);
-		// this.sws = c.getDouble(ImportLvaTask.COLUMN_LVA_SWS);
-		// this.ects = c.getDouble(ImportLvaTask.COLUMN_LVA_ECTS);
+		this.sws = c.getDouble(ImportLvaTask.COLUMN_LVA_SWS);
+		this.ects = c.getDouble(ImportLvaTask.COLUMN_LVA_ECTS);
 		this.lvaType = c.getString(ImportLvaTask.COLUMN_LVA_TYPE);
 	}
 
@@ -76,17 +78,17 @@ public class Lva implements LvaListItem{
 		return this.teacher;
 	}
 
-//	private void setSWS(double sws) {
-//		this.sws = sws;
-//	}
+	private void setSWS(double sws) {
+		this.sws = sws;
+	}
 
 	public double getSWS() {
 		return this.sws;
 	}
 
-//	private void setECTS(double ects) {
-//		this.ects = ects;
-//	}
+	private void setECTS(double ects) {
+		this.ects = ects;
+	}
 
 	public double getECTS() {
 		return this.ects;
@@ -151,6 +153,5 @@ public class Lva implements LvaListItem{
 	public int getType() {
 		return LvaListItem.TYPE_LVA;
 	}
-	
-	
+
 }

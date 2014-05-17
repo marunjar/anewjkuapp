@@ -11,6 +11,7 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
+import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 
 import android.accounts.Account;
 import android.app.ProgressDialog;
@@ -76,27 +77,12 @@ public class GradeFragment extends BaseFragment {
 
 		@Override
 		protected Void doInBackground(String... urls) {
-			Account mAccount = MainActivity.getAccount(mContext);
-			if (mAccount != null) {
-				ContentResolver cr = mContext.getContentResolver();
-				Cursor c = cr.query(KusssContentContract.Grade.CONTENT_URI,
-						ImportGradeTask.GRADE_PROJECTION, null, null,
-						KusssContentContract.Grade.GRADE_TABLE_NAME + "."
-								+ KusssContentContract.Grade.GRADE_COL_TYPE
-								+ " ASC,"
-								+ KusssContentContract.Grade.GRADE_TABLE_NAME
-								+ "."
-								+ KusssContentContract.Grade.GRADE_COL_DATE
-								+ " DESC");
-
-				if (c != null) {
-					while (c.moveToNext()) {
-						mGrades.add(new ExamGrade(c));
-					}
-					c.close();
-				}
+			List<ExamGrade> examGrades = KusssContentProvider.getGrades(mContext);
+			for (ExamGrade examGrade : examGrades) {
+				mGrades.add(examGrade);
 			}
-
+			examGrades = null;
+			
 			return null;
 		}
 

@@ -1,9 +1,20 @@
 package org.voidsink.anewjkuapp.provider;
 
-import org.voidsink.anewjkuapp.KusssContentContract;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.voidsink.anewjkuapp.ImportGradeTask;
+import org.voidsink.anewjkuapp.ImportLvaTask;
+import org.voidsink.anewjkuapp.KusssContentContract;
+import org.voidsink.anewjkuapp.activity.MainActivity;
+import org.voidsink.anewjkuapp.kusss.ExamGrade;
+import org.voidsink.anewjkuapp.kusss.Lva;
+
+import android.accounts.Account;
 import android.content.ContentProvider;
+import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -253,5 +264,50 @@ public class KusssContentProvider extends ContentProvider {
 			throw new IllegalArgumentException("URI " + uri
 					+ " is not supported.");
 		}
+	}
+
+	public static List<ExamGrade> getGrades(Context context) {
+		List<ExamGrade> mGrades = new ArrayList<ExamGrade>();
+
+		Account mAccount = MainActivity.getAccount(context);
+		if (mAccount != null) {
+			ContentResolver cr = context.getContentResolver();
+			Cursor c = cr.query(KusssContentContract.Grade.CONTENT_URI,
+					ImportGradeTask.GRADE_PROJECTION, null, null,
+					KusssContentContract.Grade.GRADE_TABLE_NAME + "."
+							+ KusssContentContract.Grade.GRADE_COL_TYPE
+							+ " ASC,"
+							+ KusssContentContract.Grade.GRADE_TABLE_NAME + "."
+							+ KusssContentContract.Grade.GRADE_COL_DATE
+							+ " DESC");
+
+			if (c != null) {
+				while (c.moveToNext()) {
+					mGrades.add(new ExamGrade(c));
+				}
+				c.close();
+			}
+			c = null;
+		}
+		return mGrades;
+	}
+
+	public static List<Lva> getLvas(Context context) {
+		List<Lva> mLvas = new ArrayList<Lva>();
+		Account mAccount = MainActivity.getAccount(context);
+		if (mAccount != null) {
+			ContentResolver cr = context.getContentResolver();
+			Cursor c = cr.query(KusssContentContract.Lva.CONTENT_URI,
+					ImportLvaTask.LVA_PROJECTION, null, null,
+					KusssContentContract.Lva.LVA_COL_TERM + " DESC");
+
+			if (c != null) {
+				while (c.moveToNext()) {
+					mLvas.add(new Lva(c));
+				}
+				c.close();
+			}
+		}
+		return mLvas;
 	}
 }

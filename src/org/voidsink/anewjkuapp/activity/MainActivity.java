@@ -32,6 +32,7 @@ import org.voidsink.anewjkuapp.DrawerItem;
 import org.voidsink.anewjkuapp.ImportCalendarTask;
 import org.voidsink.anewjkuapp.ImportExamTask;
 import org.voidsink.anewjkuapp.ImportGradeTask;
+import org.voidsink.anewjkuapp.ImportLvaTask;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
@@ -266,6 +267,10 @@ public class MainActivity extends ActionBarActivity implements
 			new ImportCalendarTask(getAccount(this), this,
 					CalendarUtils.ARG_CALENDAR_ID_LVA, new CalendarBuilder())
 					.execute();
+			return true;
+		case R.id.action_refresh_lvas:
+			Log.d(TAG, "importing lvas");
+			new ImportLvaTask(getAccount(this), MainActivity.this).execute();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

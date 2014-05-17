@@ -41,7 +41,9 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
 			KusssContentContract.Lva.LVA_COL_TITLE,
 			KusssContentContract.Lva.LVA_COL_SKZ,
 			KusssContentContract.Lva.LVA_COL_TYPE,
-			KusssContentContract.Lva.LVA_COL_TEACHER };
+			KusssContentContract.Lva.LVA_COL_TEACHER,
+			KusssContentContract.Lva.LVA_COL_SWS,
+			KusssContentContract.Lva.LVA_COL_ECTS };
 
 	public static final int COLUMN_LVA_ID = 0;
 	public static final int COLUMN_LVA_TERM = 1;
@@ -50,13 +52,17 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
 	public static final int COLUMN_LVA_SKZ = 4;
 	public static final int COLUMN_LVA_TYPE = 5;
 	public static final int COLUMN_LVA_TEACHER = 6;
+	public static final int COLUMN_LVA_SWS = 7;
+	public static final int COLUMN_LVA_ECTS = 8;
 
 	public ImportLvaTask(Account account, Context context) {
 		this(account, null, null, null, null, context);
-		this.mProvider = context.getContentResolver().acquireContentProviderClient(KusssContentContract.Lva.CONTENT_URI);
+		this.mProvider = context.getContentResolver()
+				.acquireContentProviderClient(
+						KusssContentContract.Lva.CONTENT_URI);
 		this.mSyncResult = new SyncResult();
 	}
-	
+
 	public ImportLvaTask(Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult,
 			Context context) {
