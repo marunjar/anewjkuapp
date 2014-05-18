@@ -5,19 +5,14 @@ import java.util.List;
 
 import org.voidsink.anewjkuapp.GradeListAdapter;
 import org.voidsink.anewjkuapp.GradeListItem;
-import org.voidsink.anewjkuapp.ImportGradeTask;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 
-import android.accounts.Account;
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.database.ContentObserver;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;

@@ -16,7 +16,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 public class StatisticPageAdapter extends FragmentStatePagerAdapter {
 
-	private Context mContext;
 	private List<Lva> mLvas;
 	private List<ExamGrade> mGrades;
 	private ArrayList<String> mTerms;
@@ -24,7 +23,6 @@ public class StatisticPageAdapter extends FragmentStatePagerAdapter {
 	public StatisticPageAdapter(FragmentManager fm, Context context) {
 		super(fm);
 
-		this.mContext = context;
 		this.mLvas = KusssContentProvider.getLvas(context);
 		this.mGrades = KusssContentProvider.getGrades(context);
 		this.mTerms = new ArrayList<String>();

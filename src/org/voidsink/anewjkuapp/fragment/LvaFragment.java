@@ -3,22 +3,16 @@ package org.voidsink.anewjkuapp.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.voidsink.anewjkuapp.ImportLvaTask;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.LvaListAdapter;
 import org.voidsink.anewjkuapp.LvaListItem;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.base.BaseFragment;
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 
-import android.accounts.Account;
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.database.ContentObserver;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -60,7 +54,7 @@ public class LvaFragment extends BaseFragment {
 		super.onCreate(savedInstanceState);
 		mLvaObserver = new LvaContentObserver(new Handler());
 		getActivity().getContentResolver().registerContentObserver(
-				KusssContentContract.Exam.CONTENT_URI, false, mLvaObserver);
+				KusssContentContract.Lva.CONTENT_URI, false, mLvaObserver);
 	}
 
 	@Override
