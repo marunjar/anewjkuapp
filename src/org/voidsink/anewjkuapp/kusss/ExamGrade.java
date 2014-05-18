@@ -113,7 +113,7 @@ public class ExamGrade implements GradeListItem{
 				.getInt(ImportGradeTask.COLUMN_GRADE_GRADE));
 		this.skz = c.getInt(ImportGradeTask.COLUMN_GRADE_SKZ);
 		this.title = c.getString(ImportGradeTask.COLUMN_GRADE_TITLE);
-		
+		this.code = c.getString(ImportGradeTask.COLUMN_GRADE_CODE);
 	}
 
 	private void setCode(String code) {

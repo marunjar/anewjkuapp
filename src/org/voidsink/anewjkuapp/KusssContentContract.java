@@ -30,6 +30,7 @@ public class KusssContentContract {
 		public static final String LVA_COL_SKZ = "skz";
 		public static final String LVA_COL_ECTS = "ects";
 		public static final String LVA_COL_SWS = "sws";
+		public static final String LVA_COL_CODE = "code";
 	}
 
 	public static class Exam {

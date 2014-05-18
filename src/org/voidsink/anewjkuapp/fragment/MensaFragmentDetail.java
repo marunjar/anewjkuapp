@@ -37,8 +37,7 @@ public abstract class MensaFragmentDetail extends BaseFragment {
 
 	private class MenuLoadTask extends AsyncTask<String, Void, Void> {
 		private Mensa mensa;
-		private ProgressDialog progressDialog;
-
+		
 		@Override
 		protected Void doInBackground(String... urls) {
 			mensa = createLoader().getMensa(mContext);
@@ -49,9 +48,6 @@ public abstract class MensaFragmentDetail extends BaseFragment {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			progressDialog = ProgressDialog.show(mContext,
-					getString(R.string.progress_title),
-					getString(R.string.progress_load_menu), true);
 		}
 
 		@Override
@@ -59,7 +55,6 @@ public abstract class MensaFragmentDetail extends BaseFragment {
 			mAdapter.clear();
 			mAdapter.addMensa(mensa);
 			mAdapter.notifyDataSetChanged();
-			progressDialog.dismiss();
 
 			super.onPostExecute(result);
 		}

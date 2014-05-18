@@ -3,6 +3,7 @@ package org.voidsink.anewjkuapp.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.voidsink.anewjkuapp.AppUtils;
 import org.voidsink.anewjkuapp.GradeListAdapter;
 import org.voidsink.anewjkuapp.GradeListItem;
 import org.voidsink.anewjkuapp.KusssContentContract;
@@ -68,23 +69,24 @@ public class GradeFragment extends BaseFragment {
 
 	private class GradeLoadTask extends AsyncTask<String, Void, Void> {
 		private ProgressDialog progressDialog;
-		private List<GradeListItem> mGrades;
+		private List<ExamGrade> mGrades;
 
 		@Override
 		protected Void doInBackground(String... urls) {
-			List<ExamGrade> examGrades = KusssContentProvider.getGrades(mContext);
+			List<ExamGrade> examGrades = KusssContentProvider
+					.getGrades(mContext);
 			for (ExamGrade examGrade : examGrades) {
 				mGrades.add(examGrade);
 			}
 			examGrades = null;
-			
+
 			return null;
 		}
 
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			mGrades = new ArrayList<GradeListItem>();
+			mGrades = new ArrayList<ExamGrade>();
 			progressDialog = ProgressDialog.show(mContext,
 					getString(R.string.progress_title),
 					getString(R.string.progress_load_exam), true);
@@ -92,8 +94,11 @@ public class GradeFragment extends BaseFragment {
 
 		@Override
 		protected void onPostExecute(Void result) {
+			AppUtils.sortGrades(mGrades);
+			List<GradeListItem> listItems = new ArrayList<GradeListItem>(
+					mGrades);
 			mAdapter.clear();
-			mAdapter.addAll(GradeListAdapter.insertSections(mGrades));
+			mAdapter.addAll(GradeListAdapter.insertSections(listItems));
 			progressDialog.dismiss();
 			super.onPostExecute(result);
 		}

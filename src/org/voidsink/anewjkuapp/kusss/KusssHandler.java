@@ -35,7 +35,7 @@ public class KusssHandler {
 
 	private static final String TAG = KusssHandler.class.getSimpleName();
 
-	private static final String URL_MY_LVAS = "https://www.kusss.jku.at/kusss/listmystudentlvas.action";
+	private static final String URL_MY_LVAS = "https://www.kusss.jku.at/kusss/assignment-results.action";
 	private static final String URL_GET_TERMS = "https://www.kusss.jku.at/kusss/listmystudentlvas.action";
 	private static final String URL_GET_ICAL = "https://www.kusss.jku.at/kusss/ical-multi-sz.action";
 	private static final String URL_MY_GRADES = "https://www.kusss.jku.at/kusss/gradeinfo.action";

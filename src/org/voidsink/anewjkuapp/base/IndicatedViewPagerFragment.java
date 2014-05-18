@@ -2,6 +2,7 @@ package org.voidsink.anewjkuapp.base;
 
 import org.voidsink.anewjkuapp.R;
 
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,14 +15,13 @@ import android.view.ViewGroup;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 
-public abstract class IndicatedViewPagerFragment extends Fragment {
+public abstract class IndicatedViewPagerFragment extends BaseFragment {
 
 	private static final String ARG_CURRENT_TAB = "CURRENT_TAB";
-	// When requested, this adapter returns a DemoObjectFragment,
-	// representing an object in the collection.
-	PagerAdapter mPagerAdapter;
-	ViewPager mViewPager;
-	FragmentTabHost mTabHost;
+	private PagerAdapter mPagerAdapter;
+	private ViewPager mViewPager;
+	private FragmentTabHost mTabHost;
+	private DataSetObserver mDataSetObserver;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -31,6 +31,22 @@ public abstract class IndicatedViewPagerFragment extends Fragment {
 		// fragments, so use getSupportFragmentManager.
 		mPagerAdapter = getPagerAdapter(getActivity()
 				.getSupportFragmentManager());
+		// new observer to refresh tabs on notifyDataSetChanged
+		mDataSetObserver = new DataSetObserver() {
+			@Override
+			public void onChanged() {
+				super.onChanged();
+				generateTabs();
+			}
+		};
+		mPagerAdapter.registerDataSetObserver(mDataSetObserver);
+	}
+
+	@Override
+	public void onDestroy() {
+		mPagerAdapter.unregisterDataSetObserver(mDataSetObserver);
+		mTabHost = null;
+		super.onDestroy();
 	}
 
 	protected abstract PagerAdapter getPagerAdapter(FragmentManager fm);
@@ -54,14 +70,7 @@ public abstract class IndicatedViewPagerFragment extends Fragment {
 			mTabHost.setup(getActivity(), getChildFragmentManager(),
 					android.R.id.tabcontent);
 
-			for (int i = 0; i < mPagerAdapter.getCount(); i++) {
-				String title = (String) mPagerAdapter.getPageTitle(i);
-				TabSpec tab = mTabHost.newTabSpec("tag" + Integer.toString(i))
-						.setIndicator(title);
-				mTabHost.addTab(tab, DummyFragment.class, null);
-				mTabHost.getTabWidget().getChildAt(i)
-						.setFocusableInTouchMode(true);
-			}
+			generateTabs();
 
 			mViewPager = (ViewPager) view.findViewById(R.id.pager);
 			mViewPager
@@ -71,9 +80,43 @@ public abstract class IndicatedViewPagerFragment extends Fragment {
 							// When swiping between pages, select the
 							// corresponding tab.
 							mTabHost.setCurrentTab(position);
-							mTabHost.getTabWidget().focusCurrentTab(position);
 						}
 					});
+		}
+
+		mViewPager.setAdapter(mPagerAdapter);
+
+		// wont work at the moment
+		if (savedInstanceState != null) {
+			int startPosition = savedInstanceState.getInt(ARG_CURRENT_TAB);
+			if (startPosition >= 0 && startPosition <= mPagerAdapter.getCount()) {
+				mViewPager.setCurrentItem(startPosition, true);
+				if (mTabHost != null) {
+					mTabHost.setCurrentTab(startPosition);
+				}
+			}
+		}
+
+		return view;
+	}
+
+	private void generateTabs() {
+		if (mTabHost != null) {
+			// store position
+			int pos = mTabHost.getCurrentTab();
+			// clear tabs
+			mTabHost.setOnTabChangedListener(null);
+			mTabHost.clearAllTabs();
+			// create new tabs
+			for (int i = 0; i < mPagerAdapter.getCount(); i++) {
+				String title = (String) mPagerAdapter.getPageTitle(i);
+				TabSpec tab = mTabHost.newTabSpec("tag" + Integer.toString(i))
+						.setIndicator(title);
+				mTabHost.addTab(tab, DummyFragment.class, null);
+				mTabHost.getTabWidget().getChildAt(i)
+						.setFocusableInTouchMode(true);
+			}
+			// create new listener
 			mTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
 				@Override
 				public void onTabChanged(String tabId) {
@@ -81,29 +124,18 @@ public abstract class IndicatedViewPagerFragment extends Fragment {
 					mViewPager.setCurrentItem(pos, true);
 				}
 			});
+			// recover position
+			if (pos >= 0 && pos < mTabHost.getTabWidget().getTabCount()) {
+				mTabHost.setCurrentTab(pos);
+			}
 		}
-
-		mViewPager.setAdapter(mPagerAdapter);
-		// wont work at the moment
-		// if (savedInstanceState != null) {
-		// int startPosition = savedInstanceState.getInt(ARG_CURRENT_TAB);
-		// if (startPosition >= 0 && startPosition <= mPagerAdapter.getCount())
-		// {
-		// mViewPager.setCurrentItem(startPosition, true);
-		// if (mTabHost != null) {
-		// mTabHost.setCurrentTab(startPosition);
-		// }
-		// }
-		// }
-
-		return view;
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		outState.putInt(ARG_CURRENT_TAB, mTabHost.getCurrentTab());
+		outState.putInt(ARG_CURRENT_TAB, mViewPager.getCurrentItem());
 	}
 
 	protected boolean useTabHost() {
@@ -117,12 +149,6 @@ public abstract class IndicatedViewPagerFragment extends Fragment {
 			return null;// super.onCreateView(inflater, container,
 						// savedInstanceState);
 		}
-	}
-
-	@Override
-	public void onDestroy() {
-		mTabHost = null;
-		super.onDestroy();
 	}
 
 }

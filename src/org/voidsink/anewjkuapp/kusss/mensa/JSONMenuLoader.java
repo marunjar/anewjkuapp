@@ -12,7 +12,9 @@ import java.net.URL;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.voidsink.anewjkuapp.R;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -63,6 +65,7 @@ public abstract class JSONMenuLoader implements MenuLoader {
 			} catch (IOException e) {
 				e.printStackTrace();
 				result = sp.getString(cacheDataKey, null);
+			} finally {
 			}
 		}
 
@@ -99,9 +102,9 @@ public abstract class JSONMenuLoader implements MenuLoader {
 					for (int i = 0; i < jsonDays.length(); i++) {
 						JSONObject jsonDay = jsonDays.getJSONObject(i);
 						MensaDay day = new MensaDay(jsonDay);
-						
+
 						onNewDay(day);
-						
+
 						mensa.addDay(day);
 						JSONArray jsonMenus = jsonDay.getJSONArray("menus");
 						for (int j = 0; j < jsonMenus.length(); j++) {
@@ -119,7 +122,7 @@ public abstract class JSONMenuLoader implements MenuLoader {
 	}
 
 	protected void onNewDay(MensaDay day) {
-		
+
 	}
 
 	protected boolean getNameFromMeal() {

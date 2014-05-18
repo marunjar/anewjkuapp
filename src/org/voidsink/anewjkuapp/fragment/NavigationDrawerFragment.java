@@ -95,7 +95,6 @@ public class NavigationDrawerFragment extends BaseFragment {
 				new DrawerMenuItem("Prüfungen", NewExamFragment.class),
 				new DrawerMenuItem("Noten", GradeFragment.class),
 				new DrawerMenuItem("LVAs", LvaFragment.class),
-				new DrawerMenuItem("Stats", StatisticFragment.class),
 				new DrawerMenuSection("ÖH"),
 				// new DrawerMenuItem("News"),
 				// new DrawerMenuItem("Courier"),
