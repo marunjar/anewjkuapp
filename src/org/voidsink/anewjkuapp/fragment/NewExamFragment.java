@@ -60,7 +60,7 @@ public class NewExamFragment extends BaseFragment {
 
 		mNewExamObserver = new NewExamContentObserver(new Handler());
 		getActivity().getContentResolver().registerContentObserver(
-				KusssContentContract.Exam.CONTENT_URI, false, mNewExamObserver);
+				KusssContentContract.Exam.CONTENT_CHANGED_URI, false, mNewExamObserver);
 	}
 
 	@Override

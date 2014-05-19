@@ -205,7 +205,7 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 						mProvider.applyBatch(batch);
 						Log.d(TAG, "Notify resolver");
 						mResolver.notifyChange(
-								KusssContentContract.Grade.CONTENT_URI, null, // No
+								KusssContentContract.Grade.CONTENT_CHANGED_URI, null, // No
 																				// local
 																				// observer
 								false); // IMPORTANT: Do not sync to network

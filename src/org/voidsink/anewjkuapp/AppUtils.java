@@ -164,7 +164,10 @@ public class AppUtils {
 
 			@Override
 			public int compare(ExamGrade lhs, ExamGrade rhs) {
-				int value = lhs.getDate().compareTo(rhs.getDate());
+				int value = lhs.getGradeType().compareTo(rhs.getGradeType());
+				if (value == 0) {
+					value = lhs.getDate().compareTo(rhs.getDate());
+				}
 				if (value == 0) {
 					value = lhs.getTerm().compareTo(rhs.getTerm());
 				}

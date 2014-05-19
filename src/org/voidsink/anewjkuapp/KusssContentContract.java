@@ -16,8 +16,11 @@ public class KusssContentContract {
 
 	public static class Lva {
 		public static final String PATH = "lva";
+		public static final String PATH_CONTENT_CHANGED = "lva_changed";
 		public static final Uri CONTENT_URI = KusssContentContract.CONTENT_URI
 				.buildUpon().appendPath(PATH).build();
+		public static final Uri CONTENT_CHANGED_URI = KusssContentContract.CONTENT_URI
+				.buildUpon().appendPath(PATH_CONTENT_CHANGED).build();
 
 		// DB Table consts
 		public static final String LVA_TABLE_NAME = "lva";
@@ -35,8 +38,11 @@ public class KusssContentContract {
 
 	public static class Exam {
 		public static final String PATH = "exam";
+		public static final String PATH_CONTENT_CHANGED = "exam_changed";
 		public static final Uri CONTENT_URI = KusssContentContract.CONTENT_URI
 				.buildUpon().appendPath(PATH).build();
+		public static final Uri CONTENT_CHANGED_URI = KusssContentContract.CONTENT_URI
+				.buildUpon().appendPath(PATH_CONTENT_CHANGED).build();
 
 		public static final String EXAM_TABLE_NAME = "exam";
 		public static final String EXAM_COL_ID = "_id";
@@ -51,8 +57,11 @@ public class KusssContentContract {
 
 	public static class Grade {
 		public static final String PATH = "grade";
+		public static final String PATH_CONTENT_CHANGED = "grade_changed";
 		public static final Uri CONTENT_URI = KusssContentContract.CONTENT_URI
 				.buildUpon().appendPath(PATH).build();
+		public static final Uri CONTENT_CHANGED_URI = KusssContentContract.CONTENT_URI
+				.buildUpon().appendPath(PATH_CONTENT_CHANGED).build();
 
 		public static final String GRADE_TABLE_NAME = "grade";
 		public static final String GRADE_COL_ID = "_id";

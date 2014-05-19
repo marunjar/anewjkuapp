@@ -197,7 +197,7 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
 							mProvider.applyBatch(batch);
 							Log.d(TAG, "Notify resolver");
 							mResolver.notifyChange(
-									KusssContentContract.Lva.CONTENT_URI, null, // No
+									KusssContentContract.Lva.CONTENT_CHANGED_URI, null, // No
 																				// local
 																				// observer
 									false); // IMPORTANT: Do not sync to network

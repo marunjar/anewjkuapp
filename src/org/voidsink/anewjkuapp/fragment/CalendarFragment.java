@@ -76,19 +76,8 @@ public class CalendarFragment extends BaseFragment {
 		then = now + 14 * DateUtils.DAY_IN_MILLIS;
 
 		loadData();
-		
-		mCalendarObserver = new CalendarContentObserver(new Handler());
-		getActivity().getContentResolver().registerContentObserver(CalendarContractWrapper.Events
-				.CONTENT_URI().buildUpon().appendPath("#").build(), false, mCalendarObserver);
 	}
-	
-	@Override
-	public void onDestroy() {
-		getActivity().getContentResolver().unregisterContentObserver(mCalendarObserver);
-		
-		super.onDestroy();
-	}
-	
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
@@ -108,6 +97,17 @@ public class CalendarFragment extends BaseFragment {
 	@Override
 	public void onStart() {
 		super.onStart();
+
+		mCalendarObserver = new CalendarContentObserver(new Handler());
+		getActivity().getContentResolver().registerContentObserver(CalendarContractWrapper.Events
+				.CONTENT_URI().buildUpon().appendPath("#").build(), false, mCalendarObserver);
+	}
+	
+	@Override
+	public void onStop() {
+		getActivity().getContentResolver().unregisterContentObserver(mCalendarObserver);
+		
+		super.onStop();
 	}
 
 	private class CalendarLoadTask extends AsyncTask<String, Void, Void> {

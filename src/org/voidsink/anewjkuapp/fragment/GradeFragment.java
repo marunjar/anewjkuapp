@@ -51,20 +51,20 @@ public class GradeFragment extends BaseFragment {
 	}
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onStart() {
+		super.onStart();
 
 		mGradeObserver = new GradeContentObserver(new Handler());
 		getActivity().getContentResolver().registerContentObserver(
-				KusssContentContract.Grade.CONTENT_URI, false, mGradeObserver);
+				KusssContentContract.Grade.CONTENT_CHANGED_URI, false, mGradeObserver);
 	}
 
 	@Override
-	public void onDestroy() {
+	public void onStop() {
 		getActivity().getContentResolver().unregisterContentObserver(
 				mGradeObserver);
 
-		super.onDestroy();
+		super.onStop();
 	}
 
 	private class GradeLoadTask extends AsyncTask<String, Void, Void> {

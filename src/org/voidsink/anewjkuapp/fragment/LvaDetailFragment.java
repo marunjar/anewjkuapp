@@ -62,7 +62,7 @@ public class LvaDetailFragment extends BaseFragment {
 		this.mDoneLvas = new ArrayList<LvaWithGrade>();
 		this.mFailedLvas = new ArrayList<LvaWithGrade>();
 
-		Log.i(TAG, this.mTerms.toString());
+//		Log.i(TAG, this.mTerms.toString());
 		for (Lva lva : lvas) {
 			if (mTerms.contains(lva.getTerm())) {
 				ExamGrade grade = findGrade(this.mGrades, lva);
@@ -98,7 +98,7 @@ public class LvaDetailFragment extends BaseFragment {
 			}
 		}
 		if (finalGrade == null) {
-			Log.i(TAG, "findByLvaNr: " + lva.getTitle());
+			Log.d(TAG, "findByLvaNr: " + lva.getLvaNr() + "/" + lva.getTitle());
 			for (ExamGrade grade : grades) {
 				if (grade.getLvaNr() == lva.getLvaNr()) {
 					if (finalGrade == null || finalGrade.getGrade() == Grade.G5) {
@@ -109,12 +109,6 @@ public class LvaDetailFragment extends BaseFragment {
 		}
 
 		return finalGrade;
-	}
-
-	@Override
-	public void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
 	}
 
 	@Override

@@ -33,6 +33,7 @@ public class KusssContentProvider extends ContentProvider {
 
 	private static final UriMatcher sUriMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
+//	private static final String TAG = KusssContentProvider.class.getSimpleName();
 
 	static {
 		sUriMatcher.addURI(KusssContentContract.AUTHORITY,
@@ -167,7 +168,6 @@ public class KusssContentProvider extends ContentProvider {
 	@Override
 	public boolean onCreate() {
 		mDbHelper = new KusssDatabaseHelper(getContext());
-
 		return true;
 	}
 
@@ -310,4 +310,5 @@ public class KusssContentProvider extends ContentProvider {
 		}
 		return mLvas;
 	}
+
 }

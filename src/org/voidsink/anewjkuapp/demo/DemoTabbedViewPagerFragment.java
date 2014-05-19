@@ -8,7 +8,7 @@ import android.support.v4.view.PagerAdapter;
 public class DemoTabbedViewPagerFragment extends IndicatedViewPagerFragment {
 
 	@Override
-	protected PagerAdapter getPagerAdapter(FragmentManager fm) {
+	protected PagerAdapter createPagerAdapter(FragmentManager fm) {
 		return new DemoPagerAdapter(fm);
 	}
 

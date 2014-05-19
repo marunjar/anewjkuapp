@@ -16,7 +16,7 @@ public class MensaFragment extends IndicatedViewPagerFragment {
 	}
 
 	@Override
-	protected PagerAdapter getPagerAdapter(FragmentManager fm) {
+	protected PagerAdapter createPagerAdapter(FragmentManager fm) {
 		return new MensaPagerAdapter(fm);
 	}
 

@@ -230,7 +230,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 							mProvider.applyBatch(batch);
 							Log.d(TAG, "Notify resolver");
 							mResolver.notifyChange(
-									KusssContentContract.Exam.CONTENT_URI, null, // No
+									KusssContentContract.Exam.CONTENT_CHANGED_URI, null, // No
 																					// local
 																					// observer
 									false); // IMPORTANT: Do not sync to network

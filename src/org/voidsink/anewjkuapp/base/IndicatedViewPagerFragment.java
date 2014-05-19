@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ import android.widget.TabHost.TabSpec;
 public abstract class IndicatedViewPagerFragment extends BaseFragment {
 
 	private static final String ARG_CURRENT_TAB = "CURRENT_TAB";
+	private static final String TAG = IndicatedViewPagerFragment.class
+			.getSimpleName();
 	private PagerAdapter mPagerAdapter;
 	private ViewPager mViewPager;
 	private FragmentTabHost mTabHost;
@@ -29,15 +32,27 @@ public abstract class IndicatedViewPagerFragment extends BaseFragment {
 
 		// ViewPager and its adapters use support library
 		// fragments, so use getSupportFragmentManager.
-		mPagerAdapter = getPagerAdapter(getActivity()
+		mPagerAdapter = createPagerAdapter(getActivity()
 				.getSupportFragmentManager());
 		// new observer to refresh tabs on notifyDataSetChanged
 		mDataSetObserver = new DataSetObserver() {
 			@Override
 			public void onChanged() {
+//				Log.i(TAG, "onChanged");
+
 				super.onChanged();
-				generateTabs();
+
+				if (isResumed()) {
+					generateTabs();
+				}
 			}
+
+			@Override
+			public void onInvalidated() {
+				Log.i(TAG, "onInvalidated");
+				super.onInvalidated();
+			}
+
 		};
 		mPagerAdapter.registerDataSetObserver(mDataSetObserver);
 	}
@@ -49,11 +64,17 @@ public abstract class IndicatedViewPagerFragment extends BaseFragment {
 		super.onDestroy();
 	}
 
-	protected abstract PagerAdapter getPagerAdapter(FragmentManager fm);
+	protected abstract PagerAdapter createPagerAdapter(FragmentManager fm);
+	
+	protected PagerAdapter getPagerAdapter() {
+		return this.mPagerAdapter;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+
+		Log.i(TAG, "onCreateView");
 
 		mTabHost = null;
 		View view = null;
@@ -86,14 +107,10 @@ public abstract class IndicatedViewPagerFragment extends BaseFragment {
 
 		mViewPager.setAdapter(mPagerAdapter);
 
-		// wont work at the moment
 		if (savedInstanceState != null) {
 			int startPosition = savedInstanceState.getInt(ARG_CURRENT_TAB);
 			if (startPosition >= 0 && startPosition <= mPagerAdapter.getCount()) {
 				mViewPager.setCurrentItem(startPosition, true);
-				if (mTabHost != null) {
-					mTabHost.setCurrentTab(startPosition);
-				}
 			}
 		}
 
@@ -132,10 +149,21 @@ public abstract class IndicatedViewPagerFragment extends BaseFragment {
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
+	public void onStart() {
+		Log.i(TAG, "onStart");
+		super.onStart();
+	}
 
+	@Override
+	public void onStop() {
+		Log.i(TAG, "onStop");
+		super.onStart();
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
 		outState.putInt(ARG_CURRENT_TAB, mViewPager.getCurrentItem());
+		super.onSaveInstanceState(outState);
 	}
 
 	protected boolean useTabHost() {
