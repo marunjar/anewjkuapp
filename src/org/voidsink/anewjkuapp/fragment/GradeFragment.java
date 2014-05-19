@@ -36,7 +36,7 @@ public class GradeFragment extends BaseFragment {
 		View view = inflater.inflate(R.layout.fragment_grade, container, false);
 
 		mListView = (ListView) view.findViewById(R.id.grade_list);
-		mAdapter = new GradeListAdapter(mContext);
+		mAdapter = new GradeListAdapter(getContext());
 		mListView.setAdapter(mAdapter);
 
 		new GradeLoadTask().execute();
@@ -74,7 +74,7 @@ public class GradeFragment extends BaseFragment {
 		@Override
 		protected Void doInBackground(String... urls) {
 			List<ExamGrade> examGrades = KusssContentProvider
-					.getGrades(mContext);
+					.getGrades(getContext());
 			for (ExamGrade examGrade : examGrades) {
 				mGrades.add(examGrade);
 			}
@@ -87,7 +87,7 @@ public class GradeFragment extends BaseFragment {
 		protected void onPreExecute() {
 			super.onPreExecute();
 			mGrades = new ArrayList<ExamGrade>();
-			progressDialog = ProgressDialog.show(mContext,
+			progressDialog = ProgressDialog.show(getContext(),
 					getString(R.string.progress_title),
 					getString(R.string.progress_load_exam), true);
 		}

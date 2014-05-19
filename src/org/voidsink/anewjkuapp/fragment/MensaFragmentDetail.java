@@ -6,7 +6,6 @@ import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.kusss.mensa.Mensa;
 import org.voidsink.anewjkuapp.kusss.mensa.MenuLoader;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -26,7 +25,7 @@ public abstract class MensaFragmentDetail extends BaseFragment {
 				false);
 
 		mListView = (ListView) view.findViewById(R.id.menu_list);
-		mAdapter = new MensaMenuAdapter(mContext,
+		mAdapter = new MensaMenuAdapter(getContext(),
 				android.R.layout.simple_list_item_1);
 		mListView.setAdapter(mAdapter);
 
@@ -40,7 +39,7 @@ public abstract class MensaFragmentDetail extends BaseFragment {
 		
 		@Override
 		protected Void doInBackground(String... urls) {
-			mensa = createLoader().getMensa(mContext);
+			mensa = createLoader().getMensa(getContext());
 
 			return null;
 		}

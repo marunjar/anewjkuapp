@@ -148,7 +148,7 @@ public class MapFragment extends BaseFragment implements
 
 		List<Poi> pois = new ArrayList<Poi>();
 
-		ContentResolver cr = mContext.getContentResolver();
+		ContentResolver cr = getContext().getContentResolver();
 		Uri searchUri = PoiContentContract.CONTENT_URI.buildUpon()
 				.appendPath(SearchManager.SUGGEST_URI_PATH_QUERY)
 				.appendEncodedPath(query).build();
@@ -160,17 +160,17 @@ public class MapFragment extends BaseFragment implements
 		c.close();
 
 		if (pois.size() == 0) {
-			Toast.makeText(mContext, "Ziel nicht gefunden", Toast.LENGTH_SHORT)
+			Toast.makeText(getContext(), "Ziel nicht gefunden", Toast.LENGTH_SHORT)
 					.show();
 		} else if (pois.size() == 1) {
 			finishSearch(pois.get(0));
 		} else {
 			AlertDialog.Builder poiSelector = new AlertDialog.Builder(
-					new ContextThemeWrapper(mContext, R.style.Theme_Dialog));
+					new ContextThemeWrapper(getContext(), R.style.Theme_Dialog));
 
 			poiSelector.setIcon(R.drawable.ic_launcher);
 
-			final PoiAdapter arrayAdapter = new PoiAdapter(mContext);
+			final PoiAdapter arrayAdapter = new PoiAdapter(getContext());
 			arrayAdapter.addAll(pois);
 
 			poiSelector.setNegativeButton(android.R.string.cancel,
@@ -237,7 +237,7 @@ public class MapFragment extends BaseFragment implements
 			this.mMyLocationOverlay.setSnapToLocationEnabled(false);
 
 			// generate Bubble image
-			TextView bubbleView = new TextView(this.mContext);
+			TextView bubbleView = new TextView(this.getContext());
 			MapUtils.setBackground(bubbleView,
 					getResources().getDrawable(R.drawable.balloon_overlay));
 			bubbleView.setGravity(Gravity.CENTER);
@@ -245,7 +245,7 @@ public class MapFragment extends BaseFragment implements
 			bubbleView.setTextSize(15);
 			bubbleView.setTextColor(Color.BLACK);
 			bubbleView.setText(name);
-			Bitmap bubble = MapUtils.viewToBitmap(mContext, bubbleView);
+			Bitmap bubble = MapUtils.viewToBitmap(getContext(), bubbleView);
 			bubble.incrementRefCount();
 
 			// set new goal
@@ -444,7 +444,7 @@ public class MapFragment extends BaseFragment implements
 	}
 
 	protected File getMapFile() {
-		File mapFile = PreferenceWrapper.getMapFile(mContext);
+		File mapFile = PreferenceWrapper.getMapFile(getContext());
 		if (mapFile == null || !mapFile.exists() || !mapFile.canRead()) {
 			mapFile = new File(getActivity().getFilesDir(), MAP_FILE_NAME);
 			Log.i(TAG, "use internal map: " + mapFile.toString());

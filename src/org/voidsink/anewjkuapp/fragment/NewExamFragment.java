@@ -40,7 +40,7 @@ public class NewExamFragment extends BaseFragment {
 		View view = inflater.inflate(R.layout.fragment_exam, container, false);
 
 		mListView = (ListView) view.findViewById(R.id.exam_list);
-		mAdapter = new ExamListAdapter(mContext);
+		mAdapter = new ExamListAdapter(getContext());
 		mListView.setAdapter(mAdapter);
 
 		new ExamLoadTask().execute();
@@ -77,11 +77,11 @@ public class NewExamFragment extends BaseFragment {
 
 		@Override
 		protected Void doInBackground(String... urls) {
-			Account mAccount = MainActivity.getAccount(mContext);
+			Account mAccount = MainActivity.getAccount(getContext());
 			if (mAccount != null) {
-				LvaMap map = new LvaMap(mContext);
+				LvaMap map = new LvaMap(getContext());
 
-				ContentResolver cr = mContext.getContentResolver();
+				ContentResolver cr = getContext().getContentResolver();
 				Cursor c = cr.query(KusssContentContract.Exam.CONTENT_URI,
 						ImportExamTask.EXAM_PROJECTION, null, null,
 						KusssContentContract.Exam.EXAM_COL_DATE + " ASC");
@@ -101,7 +101,7 @@ public class NewExamFragment extends BaseFragment {
 		protected void onPreExecute() {
 			super.onPreExecute();
 			mExams = new ArrayList<ExamListItem>();
-			progressDialog = ProgressDialog.show(mContext,
+			progressDialog = ProgressDialog.show(getContext(),
 					getString(R.string.progress_title),
 					getString(R.string.progress_load_exam), true);
 		}

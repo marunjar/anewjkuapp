@@ -129,17 +129,17 @@ public class AppUtils {
 	}
 
 	public static void sortLVAs(List<Lva> lvas) {
-		Collections.sort(lvas, new Comparator<Lva>() {
-
-			@Override
-			public int compare(Lva lhs, Lva rhs) {
-				int value = lhs.getTerm().compareTo(rhs.getTerm());
-				if (value == 0) {
-					value = lhs.getTitle().compareTo(rhs.getTitle());
-				}
-				return value;
-			}
-		});
+		// Collections.sort(lvas, new Comparator<Lva>() {
+		//
+		// @Override
+		// public int compare(Lva lhs, Lva rhs) {
+		// int value = lhs.getTitle().compareTo(rhs.getTitle());
+		// if (value == 0) {
+		// value = lhs.getTerm().compareTo(rhs.getTerm());
+		// }
+		// return value;
+		// }
+		// });
 	}
 
 	public static void sortLVAsWithGrade(List<LvaWithGrade> lvas) {
@@ -147,11 +147,11 @@ public class AppUtils {
 
 			@Override
 			public int compare(LvaWithGrade lhs, LvaWithGrade rhs) {
-				int value = lhs.getLva().getTerm()
-						.compareTo(rhs.getLva().getTerm());
+				int value = lhs.getLva().getTitle()
+						.compareTo(rhs.getLva().getTitle());
 				if (value == 0) {
-					value = lhs.getLva().getTitle()
-							.compareTo(rhs.getLva().getTitle());
+					value = lhs.getLva().getTerm()
+							.compareTo(rhs.getLva().getTerm());
 				}
 				return value;
 			}
@@ -177,6 +177,66 @@ public class AppUtils {
 				return value;
 			}
 		});
+	}
+
+	private static void removeDuplicates(LvaWithGrade lva,
+			List<LvaWithGrade> lvas) {
+		int i = 0;
+		while (i < lvas.size()) {
+			LvaWithGrade lva2 = lvas.get(i);
+
+			if (lva != lva2
+					&& lva.getLva().getCode().equals(lva2.getLva().getCode())) {
+				Log.i("removeDuplicates", "remove " + lva2.getLva().getCode()
+						+ " " + lva2.getLva().getTitle());
+				lvas.remove(i);
+			} else {
+				i++;
+			}
+		}
+	}
+
+	public static void removeDuplicates(List<LvaWithGrade> mDoneLvas,
+			List<LvaWithGrade> mOpenLvas, List<LvaWithGrade> mFailedLvas) {
+		int i = 0;
+		while (i < mDoneLvas.size()) {
+			removeDuplicates(mDoneLvas.get(i), mDoneLvas);
+			removeDuplicates(mDoneLvas.get(i), mOpenLvas);
+			removeDuplicates(mDoneLvas.get(i), mFailedLvas);
+			i++;
+		}
+		i = 0;
+		while (i < mOpenLvas.size()) {
+			removeDuplicates(mOpenLvas.get(i), mDoneLvas);
+			removeDuplicates(mOpenLvas.get(i), mOpenLvas);
+			removeDuplicates(mOpenLvas.get(i), mFailedLvas);
+			i++;
+		}
+		i = 0;
+		while (i < mFailedLvas.size()) {
+			removeDuplicates(mFailedLvas.get(i), mDoneLvas);
+			removeDuplicates(mFailedLvas.get(i), mOpenLvas);
+			removeDuplicates(mFailedLvas.get(i), mFailedLvas);
+			i++;
+		}
+	}
+
+	public static double getAvgGrade(List<LvaWithGrade> lvas) {
+		double sum = 0;
+		int count = 0;
+		for (LvaWithGrade lva : lvas) {
+			ExamGrade grade = lva.getGrade();
+			if (grade != null) {
+				sum += grade.getGrade().getValue();
+				count++;
+			}
+		}
+
+		if (count == 0) {
+			return 0;
+		} else {
+			return sum / count;
+		}
 	}
 
 }

@@ -144,7 +144,7 @@ public class NavigationDrawerFragment extends BaseFragment {
 					}
 				});
 
-		BaseAdapter mAdapter = new DrawerAdapter(mContext, mDrawerItems);
+		BaseAdapter mAdapter = new DrawerAdapter(getContext(), mDrawerItems);
 
 		mDrawerListView.setAdapter(mAdapter);
 
@@ -159,13 +159,13 @@ public class NavigationDrawerFragment extends BaseFragment {
 	public void onResume() {
 		super.onResume();
 
-		Account account = MainActivity.getAccount(mContext);
+		Account account = MainActivity.getAccount(getContext());
 		if (account == null) {
 			mUser.setText("Click to login");
 			mUser.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					MainActivity.StartCreateAccount(mContext);
+					MainActivity.StartCreateAccount(getContext());
 				}
 			});
 		} else {

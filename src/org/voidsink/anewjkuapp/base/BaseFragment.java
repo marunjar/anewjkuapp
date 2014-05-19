@@ -15,16 +15,17 @@ import android.view.MenuItem;
 public class BaseFragment extends Fragment {
 
 	private static final String TAG = BaseFragment.class.getSimpleName();
-	protected Context mContext = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		// Log.i(getClass().getSimpleName(), "onCreate");
-
-		this.mContext = this.getActivity();
 		setHasOptionsMenu(true);
+	}
+
+	protected Context getContext() {
+		return this.getActivity();
 	}
 
 	@Override
@@ -35,7 +36,7 @@ public class BaseFragment extends Fragment {
 		case R.id.action_refresh_calendar:
 			return onRefreshSelected(item);
 		case R.id.action_settings:
-			startActivity(new Intent(mContext, SettingsActivity.class));
+			startActivity(new Intent(getContext(), SettingsActivity.class));
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -63,11 +64,11 @@ public class BaseFragment extends Fragment {
 
 	@Override
 	public void onDestroyOptionsMenu() {
-//		Log.i(getClass().getSimpleName(), "onDestroyOptionsMenu");
+		// Log.i(getClass().getSimpleName(), "onDestroyOptionsMenu");
 		super.onDestroyOptionsMenu();
 	}
 
 	public void handleIntent(Intent intent) {
-		
+
 	}
 }

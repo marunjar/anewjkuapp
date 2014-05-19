@@ -41,7 +41,7 @@ public class LvaDetailFragment extends BaseFragment {
 	private static final String TAG = LvaDetailFragment.class.getSimpleName();
 
 	private List<String> mTerms;
-	private List<ExamGrade> mGrades;
+
 	private List<LvaWithGrade> mOpenLvas;
 	private List<LvaWithGrade> mDoneLvas;
 	private List<LvaWithGrade> mFailedLvas;
@@ -56,7 +56,6 @@ public class LvaDetailFragment extends BaseFragment {
 	public LvaDetailFragment(List<String> terms, List<Lva> lvas,
 			List<ExamGrade> grades) {
 		this.mTerms = terms;
-		this.mGrades = grades;
 
 		this.mOpenLvas = new ArrayList<LvaWithGrade>();
 		this.mDoneLvas = new ArrayList<LvaWithGrade>();
@@ -65,7 +64,7 @@ public class LvaDetailFragment extends BaseFragment {
 //		Log.i(TAG, this.mTerms.toString());
 		for (Lva lva : lvas) {
 			if (mTerms.contains(lva.getTerm())) {
-				ExamGrade grade = findGrade(this.mGrades, lva);
+				ExamGrade grade = findGrade(grades, lva);
 				if (grade == null) {
 					this.mOpenLvas.add(new LvaWithGrade(lva, grade));
 					// Log.i(TAG, "open: " + lva.getKey() + " - " +
@@ -81,6 +80,8 @@ public class LvaDetailFragment extends BaseFragment {
 				}
 			}
 		}
+		// remove duplicates
+		AppUtils.removeDuplicates(this.mDoneLvas, this.mOpenLvas, this.mFailedLvas);
 	}
 
 	public LvaDetailFragment(String term, List<Lva> lvas, List<ExamGrade> grades) {
@@ -119,7 +120,7 @@ public class LvaDetailFragment extends BaseFragment {
 
 		expListView = (ExpandableListView) view
 				.findViewById(R.id.stat_lva_lists);
-		adapter = new LvaListAdapter(mContext, this.mDoneLvas, this.mOpenLvas,
+		adapter = new LvaListAdapter(getContext(), this.mDoneLvas, this.mOpenLvas,
 				this.mFailedLvas);
 		expListView.setAdapter((ExpandableListAdapter) adapter);
 
@@ -134,7 +135,7 @@ public class LvaDetailFragment extends BaseFragment {
 		mRenderer.setPanEnabled(false);
 		mRenderer.setInScroll(true);
 		
-		if (PreferenceWrapper.getUseLightDesign(mContext)) {
+		if (PreferenceWrapper.getUseLightDesign(getContext())) {
 			mRenderer.setShowLegend(false);
 			mRenderer.setShowLabels(true);
 		} else {

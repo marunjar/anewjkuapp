@@ -59,13 +59,22 @@
                 android:gravity="center_vertical"
                 android:padding="3dp"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
-
+            <TextView
+                android:id="@+id/lva_list2_item_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/lva_list2_item_title"
+                android:layout_toRightOf="@id/lva_list2_item_lvanr"
+                android:gravity="center_vertical"
+                android:padding="3dp"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+            
             <TextView
                 android:id="@+id/lva_list2_item_skz"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/lva_list2_item_title"
-                android:layout_toRightOf="@id/lva_list2_item_lvanr"
+                android:layout_toRightOf="@id/lva_list2_item_code"
                 android:gravity="center_vertical"
                 android:padding="3dp"
                 android:textAppearance="?android:attr/textAppearanceSmall" />

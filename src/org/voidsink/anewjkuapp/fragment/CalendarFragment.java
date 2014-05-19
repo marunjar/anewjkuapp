@@ -37,13 +37,13 @@ import android.widget.ListView;
 public class CalendarFragment extends BaseFragment {
 
 	private static final String TAG = CalendarFragment.class.getSimpleName();
-	
+
 	private ListView mListView;
 	private CalendarEventAdapter mAdapter;
 	private ContentObserver mCalendarObserver;
 
 	long now = 0, then = 0;
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -51,12 +51,13 @@ public class CalendarFragment extends BaseFragment {
 				false);
 
 		mListView = (ListView) view.findViewById(R.id.calendar_events);
-		mAdapter = new CalendarEventAdapter(mContext);
+		mAdapter = new CalendarEventAdapter(getContext());
 		mListView.setAdapter(mAdapter);
 
-		Button loadMore = (Button) inflater.inflate(R.layout.listview_footer_button, null);
+		Button loadMore = (Button) inflater.inflate(
+				R.layout.listview_footer_button, null);
 		mListView.addFooterView(loadMore);
-		
+
 		loadMore.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -99,14 +100,16 @@ public class CalendarFragment extends BaseFragment {
 		super.onStart();
 
 		mCalendarObserver = new CalendarContentObserver(new Handler());
-		getActivity().getContentResolver().registerContentObserver(CalendarContractWrapper.Events
-				.CONTENT_URI().buildUpon().appendPath("#").build(), false, mCalendarObserver);
+		getActivity().getContentResolver().registerContentObserver(
+				CalendarContractWrapper.Events.CONTENT_URI().buildUpon()
+						.appendPath("#").build(), false, mCalendarObserver);
 	}
-	
+
 	@Override
 	public void onStop() {
-		getActivity().getContentResolver().unregisterContentObserver(mCalendarObserver);
-		
+		getActivity().getContentResolver().unregisterContentObserver(
+				mCalendarObserver);
+
 		super.onStop();
 	}
 
@@ -121,7 +124,7 @@ public class CalendarFragment extends BaseFragment {
 
 			// fetch calendar colors
 			this.mColors = new HashMap<String, Integer>();
-			ContentResolver cr = mContext.getContentResolver();
+			ContentResolver cr = getContext().getContentResolver();
 			Cursor c = cr
 					.query(CalendarContractWrapper.Calendars.CONTENT_URI(),
 							new String[] {
@@ -134,16 +137,16 @@ public class CalendarFragment extends BaseFragment {
 			}
 			c.close();
 
-			Account mAccount = MainActivity.getAccount(mContext);
+			Account mAccount = MainActivity.getAccount(getContext());
 			if (mAccount != null) {
-				AccountManager mAm = AccountManager.get(mContext);
+				AccountManager mAm = AccountManager.get(getContext());
 
 				String calIDLva = mAm.getUserData(mAccount,
 						CalendarUtils.ARG_CALENDAR_ID_LVA);
 				String calIDExam = mAm.getUserData(mAccount,
 						CalendarUtils.ARG_CALENDAR_ID_EXAM);
 
-				cr = mContext.getContentResolver();
+				cr = getContext().getContentResolver();
 				c = cr.query(
 						CalendarContractWrapper.Events.CONTENT_URI(),
 						ImportCalendarTask.EVENT_PROJECTION,
@@ -180,7 +183,7 @@ public class CalendarFragment extends BaseFragment {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			progressDialog = ProgressDialog.show(mContext,
+			progressDialog = ProgressDialog.show(getContext(),
 					getString(R.string.progress_title),
 					getString(R.string.progress_load_calendar), true);
 		}
@@ -202,9 +205,9 @@ public class CalendarFragment extends BaseFragment {
 		}
 
 		@Override
-        public void onChange(boolean selfChange) {
-            super.onChange(selfChange);
-            loadData();
-        }
-    }		
+		public void onChange(boolean selfChange) {
+			super.onChange(selfChange);
+			loadData();
+		}
+	}
 }
