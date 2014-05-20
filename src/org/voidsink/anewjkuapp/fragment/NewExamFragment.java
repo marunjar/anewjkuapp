@@ -3,6 +3,7 @@ package org.voidsink.anewjkuapp.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.voidsink.anewjkuapp.AppUtils;
 import org.voidsink.anewjkuapp.ExamListAdapter;
 import org.voidsink.anewjkuapp.ExamListExam;
 import org.voidsink.anewjkuapp.ExamListItem;
@@ -10,7 +11,6 @@ import org.voidsink.anewjkuapp.ImportExamTask;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.LvaMap;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 
 import android.accounts.Account;
@@ -77,7 +77,7 @@ public class NewExamFragment extends BaseFragment {
 
 		@Override
 		protected Void doInBackground(String... urls) {
-			Account mAccount = MainActivity.getAccount(getContext());
+			Account mAccount = AppUtils.getAccount(getContext());
 			if (mAccount != null) {
 				LvaMap map = new LvaMap(getContext());
 

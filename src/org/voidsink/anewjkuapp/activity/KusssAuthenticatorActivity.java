@@ -1,5 +1,6 @@
 package org.voidsink.anewjkuapp.activity;
 
+import org.voidsink.anewjkuapp.AppUtils;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
@@ -63,7 +64,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 		String accountName = null;
 
 		mIsNewAccount = false;
-		Account mAccount = MainActivity.getAccount(this);
+		Account mAccount = AppUtils.getAccount(this);
 		if (mAccount != null) {
 			accountName = mAccount.name;
 

@@ -16,6 +16,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Toast;
 
+import org.voidsink.anewjkuapp.AppUtils;
+import org.voidsink.anewjkuapp.ImportExamTask;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 
@@ -79,6 +81,9 @@ public class SettingsActivity extends PreferenceActivity implements
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
 		switch (key) {
+		case PreferenceWrapper.PREF_GET_NEW_EXAMS:
+			new ImportExamTask(AppUtils.getAccount(this), this).execute();
+			break;
 		case PreferenceWrapper.PREF_SYNC_INTERVAL_KEY:
 			PreferenceWrapper.applySyncInterval(this);
 			break;

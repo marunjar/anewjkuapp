@@ -16,6 +16,8 @@ import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 
 import edu.emory.mathcs.backport.java.util.Collections;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -197,26 +199,17 @@ public class AppUtils {
 	}
 
 	public static void removeDuplicates(List<LvaWithGrade> mDoneLvas,
-			List<LvaWithGrade> mOpenLvas, List<LvaWithGrade> mFailedLvas) {
+			List<LvaWithGrade> mOpenLvas) {
 		int i = 0;
 		while (i < mDoneLvas.size()) {
 			removeDuplicates(mDoneLvas.get(i), mDoneLvas);
 			removeDuplicates(mDoneLvas.get(i), mOpenLvas);
-			removeDuplicates(mDoneLvas.get(i), mFailedLvas);
 			i++;
 		}
 		i = 0;
 		while (i < mOpenLvas.size()) {
 			removeDuplicates(mOpenLvas.get(i), mDoneLvas);
 			removeDuplicates(mOpenLvas.get(i), mOpenLvas);
-			removeDuplicates(mOpenLvas.get(i), mFailedLvas);
-			i++;
-		}
-		i = 0;
-		while (i < mFailedLvas.size()) {
-			removeDuplicates(mFailedLvas.get(i), mDoneLvas);
-			removeDuplicates(mFailedLvas.get(i), mOpenLvas);
-			removeDuplicates(mFailedLvas.get(i), mFailedLvas);
 			i++;
 		}
 	}
@@ -239,4 +232,15 @@ public class AppUtils {
 		}
 	}
 
+	public static Account getAccount(Context context) {
+		// get first account
+		Account[] accounts = AccountManager.get(context).getAccountsByType(
+				KusssAuthenticator.ACCOUNT_TYPE);
+		if (accounts.length == 0) {
+			return null;
+		}
+		return accounts[0];
+	}
+	
+	
 }

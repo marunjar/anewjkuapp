@@ -311,6 +311,9 @@ public class KusssHandler {
 	public List<Exam> getNewExamsByLvaNr(List<Lva> lvas) throws IOException {
 
 		List<Exam> exams = new ArrayList<Exam>();
+		if (lvas == null || lvas.size() == 0) {
+			lvas = getLvas();
+		}
 		if (lvas.size() > 0) {
 			List<ExamGrade> grades = getGrades();
 

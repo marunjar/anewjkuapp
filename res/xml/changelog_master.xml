@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
-    <release version="0.13" versioncode="100013">
+    <release version="0.14" versioncode="100014">
        <change>Mensa optimiert</change>
        <change>neue LVA Liste</change>
        <change>manuelle Updates für Dashclock Extension erlauben</change>

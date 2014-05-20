@@ -1438,10 +1438,9 @@ containing a value of this type.
         public static final int kusss_provider_name=0x7f060075;
         public static final int kusss_service_title=0x7f060073;
         public static final int listview_footer_button=0x7f060082;
-        public static final int lva_all=0x7f06008a;
-        public static final int lva_all_terms=0x7f06008b;
+        public static final int lva_all=0x7f060089;
+        public static final int lva_all_terms=0x7f06008a;
         public static final int lva_done=0x7f060087;
-        public static final int lva_failed=0x7f060089;
         public static final int lva_open=0x7f060088;
         public static final int navigation_drawer_close=0x7f06001a;
         public static final int navigation_drawer_open=0x7f060019;

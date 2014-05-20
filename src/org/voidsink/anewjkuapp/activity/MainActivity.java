@@ -1,7 +1,8 @@
 package org.voidsink.anewjkuapp.activity;
 
+import java.util.List;
+
 import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.annotation.TargetApi;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -36,6 +37,8 @@ import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.fragment.*;
+import org.voidsink.anewjkuapp.kusss.Lva;
+import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 
 import de.cketti.library.changelog.ChangeLog;
 
@@ -57,16 +60,6 @@ public class MainActivity extends ActionBarActivity implements
 	 * {@link #restoreActionBar()}.
 	 */
 	private CharSequence mTitle;
-
-	public static Account getAccount(Context context) {
-		// get first account
-		Account[] accounts = AccountManager.get(context).getAccountsByType(
-				KusssAuthenticator.ACCOUNT_TYPE);
-		if (accounts.length == 0) {
-			return null;
-		}
-		return accounts[0];
-	}
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 	public static void StartCreateAccount(Context context) {
@@ -137,7 +130,7 @@ public class MainActivity extends ActionBarActivity implements
 			attachFragmentByClassName(PreferenceWrapper.getLastFragment(this));
 		}
 
-		if (getAccount(this) == null) {
+		if (AppUtils.getAccount(this) == null) {
 			StartCreateAccount(this);
 		} else {
 			ChangeLog cl = new ChangeLog(this);
@@ -216,7 +209,7 @@ public class MainActivity extends ActionBarActivity implements
 				f = (Fragment) startFragment.newInstance();
 				PreferenceWrapper.setLastFragment(this,
 						startFragment.getCanonicalName());
-
+				
 				getSupportFragmentManager().beginTransaction()
 						.replace(R.id.container, f, ARG_SHOW_FRAGMENT).commit();
 			} catch (Exception e) {
@@ -245,28 +238,33 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Log.i(TAG, "onOptionsItemSelected");
-
+		Account account = AppUtils.getAccount(this);
+		
 		switch (item.getItemId()) {
 		case R.id.action_refresh_exams:
 			Log.d(TAG, "importing exams");
-			new ImportExamTask(getAccount(this), this).execute();
+			new ImportExamTask(account, this).execute();
 			return true;
 		case R.id.action_refresh_grades:
 			Log.d(TAG, "importing grades");
-			new ImportGradeTask(getAccount(this), MainActivity.this).execute();
+			new ImportGradeTask(account, MainActivity.this).execute();
 			return true;
 		case R.id.action_refresh_calendar:
 			Log.d(TAG, "importing calendars");
-			new ImportCalendarTask(getAccount(this), this,
+			new ImportCalendarTask(account, this,
 					CalendarUtils.ARG_CALENDAR_ID_EXAM, new CalendarBuilder())
 					.execute();
-			new ImportCalendarTask(getAccount(this), this,
+			new ImportCalendarTask(account, this,
 					CalendarUtils.ARG_CALENDAR_ID_LVA, new CalendarBuilder())
 					.execute();
 			return true;
 		case R.id.action_refresh_lvas:
 			Log.d(TAG, "importing lvas");
-			new ImportLvaTask(getAccount(this), MainActivity.this).execute();
+			new ImportLvaTask(account, MainActivity.this).execute();
+			List<Lva> lvas = KusssContentProvider.getLvas(this);
+			if (lvas != null && lvas.size() == 0) {
+				new ImportGradeTask(account, MainActivity.this).execute();
+			}
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

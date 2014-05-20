@@ -22,6 +22,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.voidsink.anewjkuapp.AppUtils;
 import org.voidsink.anewjkuapp.DrawerAdapter;
 import org.voidsink.anewjkuapp.DrawerItem;
 import org.voidsink.anewjkuapp.DrawerMenuItem;
@@ -159,7 +160,7 @@ public class NavigationDrawerFragment extends BaseFragment {
 	public void onResume() {
 		super.onResume();
 
-		Account account = MainActivity.getAccount(getContext());
+		Account account = AppUtils.getAccount(getContext());
 		if (account == null) {
 			mUser.setText("Click to login");
 			mUser.setOnClickListener(new View.OnClickListener() {

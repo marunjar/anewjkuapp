@@ -40,7 +40,6 @@ public class LvaDetailFragment extends BaseFragment {
 
 	private List<LvaWithGrade> mOpenLvas;
 	private List<LvaWithGrade> mDoneLvas;
-	private List<LvaWithGrade> mFailedLvas;
 	private ExpandableListView expListView;
 
 	private LvaListAdapter adapter;
@@ -55,19 +54,14 @@ public class LvaDetailFragment extends BaseFragment {
 
 		this.mOpenLvas = new ArrayList<LvaWithGrade>();
 		this.mDoneLvas = new ArrayList<LvaWithGrade>();
-		this.mFailedLvas = new ArrayList<LvaWithGrade>();
 
 		// Log.i(TAG, this.mTerms.toString());
 		for (Lva lva : lvas) {
 			if (mTerms.contains(lva.getTerm())) {
 				ExamGrade grade = findGrade(grades, lva);
-				if (grade == null) {
+				if (grade == null || grade.getGrade() == Grade.G5) {
 					this.mOpenLvas.add(new LvaWithGrade(lva, grade));
 					// Log.i(TAG, "open: " + lva.getKey() + " - " +
-					// lva.getECTS());
-				} else if (grade.getGrade() == Grade.G5) {
-					this.mFailedLvas.add(new LvaWithGrade(lva, grade));
-					// Log.i(TAG, "failed: " + lva.getKey() + " - " +
 					// lva.getECTS());
 				} else {
 					this.mDoneLvas.add(new LvaWithGrade(lva, grade));
@@ -77,8 +71,7 @@ public class LvaDetailFragment extends BaseFragment {
 			}
 		}
 		// remove duplicates
-		AppUtils.removeDuplicates(this.mDoneLvas, this.mOpenLvas,
-				this.mFailedLvas);
+		AppUtils.removeDuplicates(this.mDoneLvas, this.mOpenLvas);
 	}
 
 	public LvaDetailFragment(String term, List<Lva> lvas, List<ExamGrade> grades) {
@@ -118,7 +111,7 @@ public class LvaDetailFragment extends BaseFragment {
 		expListView = (ExpandableListView) view
 				.findViewById(R.id.stat_lva_lists);
 		adapter = new LvaListAdapter(getContext(), this.mDoneLvas,
-				this.mOpenLvas, this.mFailedLvas);
+				this.mOpenLvas);
 		expListView.setAdapter((ExpandableListAdapter) adapter);
 
 		PieChart pieChart = (PieChart) view.findViewById(R.id.pie_chart);
@@ -127,8 +120,6 @@ public class LvaDetailFragment extends BaseFragment {
 				AppUtils.getECTS(mDoneLvas), Color.rgb(0, 220, 0));
 		addSerieToChart(pieChart, getString(R.string.lva_open),
 				AppUtils.getECTS(mOpenLvas), Color.rgb(220, 220, 0));
-		addSerieToChart(pieChart, getString(R.string.lva_failed),
-				AppUtils.getECTS(mFailedLvas), Color.rgb(220, 0, 0));
 
 		if (pieChart.getSeriesSet().size() > 0) {
 			pieChart.setVisibility(View.VISIBLE);

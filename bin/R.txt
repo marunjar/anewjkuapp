@@ -528,10 +528,9 @@ int string group_user 0x7f060053
 int string kusss_provider_name 0x7f060075
 int string kusss_service_title 0x7f060073
 int string listview_footer_button 0x7f060082
-int string lva_all 0x7f06008a
-int string lva_all_terms 0x7f06008b
+int string lva_all 0x7f060089
+int string lva_all_terms 0x7f06008a
 int string lva_done 0x7f060087
-int string lva_failed 0x7f060089
 int string lva_open 0x7f060088
 int string navigation_drawer_close 0x7f06001a
 int string navigation_drawer_open 0x7f060019

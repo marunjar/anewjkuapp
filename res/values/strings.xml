@@ -119,7 +119,6 @@
     <string name="extension_mensa_description">Zeige das Menü der ausgewählten Mensa für den heutigen Tag an</string>
     <string name="lva_done">abgeschlossene LVAs</string>
     <string name="lva_open">offene LVAs</string>
-    <string name="lva_failed">fehlgeschlagene LVAs</string>
     <string name="lva_all">alle LVAs</string>
     <string name="lva_all_terms">alle Semester</string>
 </resources>

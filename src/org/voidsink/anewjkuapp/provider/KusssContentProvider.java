@@ -3,10 +3,10 @@ package org.voidsink.anewjkuapp.provider;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.voidsink.anewjkuapp.AppUtils;
 import org.voidsink.anewjkuapp.ImportGradeTask;
 import org.voidsink.anewjkuapp.ImportLvaTask;
 import org.voidsink.anewjkuapp.KusssContentContract;
-import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Lva;
 
@@ -269,7 +269,7 @@ public class KusssContentProvider extends ContentProvider {
 	public static List<ExamGrade> getGrades(Context context) {
 		List<ExamGrade> mGrades = new ArrayList<ExamGrade>();
 
-		Account mAccount = MainActivity.getAccount(context);
+		Account mAccount = AppUtils.getAccount(context);
 		if (mAccount != null) {
 			ContentResolver cr = context.getContentResolver();
 			Cursor c = cr.query(KusssContentContract.Grade.CONTENT_URI,
@@ -294,7 +294,7 @@ public class KusssContentProvider extends ContentProvider {
 
 	public static List<Lva> getLvas(Context context) {
 		List<Lva> mLvas = new ArrayList<Lva>();
-		Account mAccount = MainActivity.getAccount(context);
+		Account mAccount = AppUtils.getAccount(context);
 		if (mAccount != null) {
 			ContentResolver cr = context.getContentResolver();
 			Cursor c = cr.query(KusssContentContract.Lva.CONTENT_URI,

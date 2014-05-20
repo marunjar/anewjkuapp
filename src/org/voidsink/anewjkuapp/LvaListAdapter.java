@@ -21,29 +21,25 @@ public class LvaListAdapter extends BaseExpandableListAdapter implements
 
 	private List<LvaWithGrade> mDoneLvas;
 	private List<LvaWithGrade> mOpenLvas;
-	private List<LvaWithGrade> mFailedLvas;
 	private List<LvaWithGrade> mAllLvas;
 	private LayoutInflater inflater;
 	private Context mContext;
 
 	public LvaListAdapter(Context context, List<LvaWithGrade> doneLvas,
-			List<LvaWithGrade> openLvas, List<LvaWithGrade> failedLvas) {
+			List<LvaWithGrade> openLvas) {
 		this.inflater = LayoutInflater.from(context);
 		this.mContext = context;
 
 		this.mDoneLvas = doneLvas;
 		this.mOpenLvas = openLvas;
-		this.mFailedLvas = failedLvas;
 
 		this.mAllLvas = new ArrayList<LvaWithGrade>();
 		this.mAllLvas.addAll(this.mDoneLvas);
 		this.mAllLvas.addAll(this.mOpenLvas);
-		this.mAllLvas.addAll(this.mFailedLvas);
 
 		AppUtils.sortLVAsWithGrade(this.mAllLvas);
 		AppUtils.sortLVAsWithGrade(this.mDoneLvas);
 		AppUtils.sortLVAsWithGrade(this.mOpenLvas);
-		AppUtils.sortLVAsWithGrade(this.mFailedLvas);
 	}
 
 	public int getCount() {
@@ -165,8 +161,6 @@ public class LvaListAdapter extends BaseExpandableListAdapter implements
 		case 1:
 			return this.mOpenLvas;
 		case 2:
-			return this.mFailedLvas;
-		case 3:
 			return this.mAllLvas;
 		default:
 			return null;
@@ -180,8 +174,6 @@ public class LvaListAdapter extends BaseExpandableListAdapter implements
 		case 1:
 			return mContext.getString(R.string.lva_open);
 		case 2:
-			return mContext.getString(R.string.lva_failed);
-		case 3:
 			return mContext.getString(R.string.lva_all);
 		default:
 			return null;
@@ -190,7 +182,7 @@ public class LvaListAdapter extends BaseExpandableListAdapter implements
 
 	@Override
 	public int getGroupCount() {
-		return 4;
+		return 3;
 	}
 
 	@Override

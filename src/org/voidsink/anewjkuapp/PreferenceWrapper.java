@@ -3,7 +3,6 @@ package org.voidsink.anewjkuapp;
 import java.io.File;
 import java.util.List;
 
-import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 
 import android.accounts.Account;
@@ -41,7 +40,7 @@ public final class PreferenceWrapper {
 	private static final String PREF_LAST_FRAGMENT = "pref_key_last_fragment";
 	private static final String PREF_LAST_FRAGMENT_DEFAULT = "";
 
-	private static final String PREF_GET_NEW_EXAMS = "pref_key_get_exams_from_lva";
+	public static final String PREF_GET_NEW_EXAMS = "pref_key_get_exams_from_lva";
 	private static final boolean PREF_GET_NEW_EXAMS_DEFAULT = false;
 	
 	private static final String PREF_LAST_VERSION = "pref_key_last_version";
@@ -66,7 +65,7 @@ public final class PreferenceWrapper {
 	public static void applySyncInterval(Context mContext) {
 		int interval = getSyncInterval(mContext);
 
-		Account mAccount = MainActivity.getAccount(mContext);
+		Account mAccount = AppUtils.getAccount(mContext);
 
 		if (mAccount != null) {
 			List<PeriodicSync> syncs = ContentResolver.getPeriodicSyncs(

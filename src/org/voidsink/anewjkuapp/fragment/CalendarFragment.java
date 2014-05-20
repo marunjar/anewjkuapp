@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.voidsink.anewjkuapp.AppUtils;
 import org.voidsink.anewjkuapp.ImportCalendarTask;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarEventAdapter;
@@ -137,7 +137,7 @@ public class CalendarFragment extends BaseFragment {
 			}
 			c.close();
 
-			Account mAccount = MainActivity.getAccount(getContext());
+			Account mAccount = AppUtils.getAccount(getContext());
 			if (mAccount != null) {
 				AccountManager mAm = AccountManager.get(getContext());
 
