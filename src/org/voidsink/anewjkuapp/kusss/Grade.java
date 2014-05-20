@@ -9,11 +9,11 @@ import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 public enum Grade {
 	G1(1), G2(2), G3(3), G4(4), G5(5);
 
-	private static final int COLOR_1 = Color.rgb(0, 240, 0);
-	private static final int COLOR_2 = Color.rgb(160, 240, 0);
-	private static final int COLOR_3 = Color.rgb(240, 240, 0);
-	private static final int COLOR_4 = Color.rgb(240, 120, 0);
-	private static final int COLOR_5 = Color.rgb(240, 0, 0);
+	private static final int COLOR_1 = Color.rgb(0, 220, 0);
+	private static final int COLOR_2 = Color.rgb(147, 220, 0);
+	private static final int COLOR_3 = Color.rgb(220, 220, 0);
+	private static final int COLOR_4 = Color.rgb(220, 110, 0);
+	private static final int COLOR_5 = Color.rgb(220, 0, 0);
 	private int value;
 	
 	private Grade(int value) {

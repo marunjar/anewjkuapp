@@ -1,8 +1,8 @@
 package org.voidsink.anewjkuapp.fragment;
 
 import android.annotation.SuppressLint;
-import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.EmbossMaskFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,28 +10,24 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.achartengine.ChartFactory;
-import org.achartengine.GraphicalView;
-import org.achartengine.model.CategorySeries;
-import org.achartengine.renderer.DefaultRenderer;
-import org.achartengine.renderer.SimpleSeriesRenderer;
 import org.voidsink.anewjkuapp.AppUtils;
 import org.voidsink.anewjkuapp.LvaListAdapter;
-import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Grade;
 import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
+
+import com.androidplot.pie.PieChart;
+import com.androidplot.pie.Segment;
+import com.androidplot.pie.SegmentFormatter;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
 
@@ -61,7 +57,7 @@ public class LvaDetailFragment extends BaseFragment {
 		this.mDoneLvas = new ArrayList<LvaWithGrade>();
 		this.mFailedLvas = new ArrayList<LvaWithGrade>();
 
-//		Log.i(TAG, this.mTerms.toString());
+		// Log.i(TAG, this.mTerms.toString());
 		for (Lva lva : lvas) {
 			if (mTerms.contains(lva.getTerm())) {
 				ExamGrade grade = findGrade(grades, lva);
@@ -81,7 +77,8 @@ public class LvaDetailFragment extends BaseFragment {
 			}
 		}
 		// remove duplicates
-		AppUtils.removeDuplicates(this.mDoneLvas, this.mOpenLvas, this.mFailedLvas);
+		AppUtils.removeDuplicates(this.mDoneLvas, this.mOpenLvas,
+				this.mFailedLvas);
 	}
 
 	public LvaDetailFragment(String term, List<Lva> lvas, List<ExamGrade> grades) {
@@ -120,53 +117,23 @@ public class LvaDetailFragment extends BaseFragment {
 
 		expListView = (ExpandableListView) view
 				.findViewById(R.id.stat_lva_lists);
-		adapter = new LvaListAdapter(getContext(), this.mDoneLvas, this.mOpenLvas,
-				this.mFailedLvas);
+		adapter = new LvaListAdapter(getContext(), this.mDoneLvas,
+				this.mOpenLvas, this.mFailedLvas);
 		expListView.setAdapter((ExpandableListAdapter) adapter);
 
-		final LinearLayout mCharts = (LinearLayout) view
-				.findViewById(R.id.stat_charts);
-		final CategorySeries mSeries = new CategorySeries("");
-		final DefaultRenderer mRenderer = new DefaultRenderer();
+		PieChart pieChart = (PieChart) view.findViewById(R.id.pie_chart);
 
-		mRenderer.setStartAngle(180);
-		mRenderer.setDisplayValues(true);
-		mRenderer.setZoomEnabled(false);
-		mRenderer.setPanEnabled(false);
-		mRenderer.setInScroll(true);
-		
-		if (PreferenceWrapper.getUseLightDesign(getContext())) {
-			mRenderer.setShowLegend(false);
-			mRenderer.setShowLabels(true);
-		} else {
-			mRenderer.setShowLegend(true);
-			mRenderer.setShowLabels(true);
-		}
-		
-		TypedArray a = getActivity().getTheme().obtainStyledAttributes(new int[] {android.R.attr.textColorPrimary});
-		mRenderer.setLabelsColor(a.getColor(0, Color.GRAY));
-		
-		mRenderer.setLabelsTextSize(getResources().getDimensionPixelSize(
-				R.dimen.text_size_small));
-		mRenderer.setLegendTextSize(getResources().getDimensionPixelSize(
-				R.dimen.text_size_small));
-		
-		addSerieToChart(mSeries, mRenderer, getString(R.string.lva_done),
-				AppUtils.getECTS(mDoneLvas), Color.GREEN);
-		addSerieToChart(mSeries, mRenderer, getString(R.string.lva_open),
-				AppUtils.getECTS(mOpenLvas), Color.YELLOW);
-		addSerieToChart(mSeries, mRenderer, getString(R.string.lva_failed),
-				AppUtils.getECTS(mFailedLvas), Color.RED);
+		addSerieToChart(pieChart, getString(R.string.lva_done),
+				AppUtils.getECTS(mDoneLvas), Color.rgb(0, 220, 0));
+		addSerieToChart(pieChart, getString(R.string.lva_open),
+				AppUtils.getECTS(mOpenLvas), Color.rgb(220, 220, 0));
+		addSerieToChart(pieChart, getString(R.string.lva_failed),
+				AppUtils.getECTS(mFailedLvas), Color.rgb(220, 0, 0));
 
-		final GraphicalView mChartView = ChartFactory.getPieChartView(
-				getActivity(), mSeries, mRenderer);
-		mRenderer.setClickEnabled(true);
-		if (mSeries.getItemCount() > 0) {
-			mCharts.setVisibility(View.VISIBLE);
-			mCharts.addView(mChartView, new LayoutParams(
-					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		if (pieChart.getSeriesSet().size() > 0) {
+			pieChart.setVisibility(View.VISIBLE);
 		} else {
-			mCharts.setVisibility(View.GONE);
+			pieChart.setVisibility(View.GONE);
 		}
 
 		return view;
@@ -178,13 +145,17 @@ public class LvaDetailFragment extends BaseFragment {
 		inflater.inflate(R.menu.lva, menu);
 	}
 
-	private void addSerieToChart(CategorySeries series,
-			DefaultRenderer renderer, String category, double value, int color) {
+	private void addSerieToChart(PieChart chart, String category, double value,
+			int color) {
 		if (value > 0) {
-			series.add(category, value);
-			SimpleSeriesRenderer seriesRenderer = new SimpleSeriesRenderer();
-			seriesRenderer.setColor(color);
-			renderer.addSeriesRenderer(seriesRenderer);
+			EmbossMaskFilter emf = new EmbossMaskFilter(
+					new float[] { 1, 1, 1 }, 0.4f, 10, 3f);
+			Segment segment = new Segment(category, value);
+			SegmentFormatter formatter = new SegmentFormatter(color,
+					Color.BLACK, Color.BLACK, Color.DKGRAY);
+			formatter.getFillPaint().setMaskFilter(emf);
+
+			chart.addSegment(segment, formatter);
 		}
 	}
 }

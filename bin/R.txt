@@ -382,6 +382,7 @@ int id oeh_rights_6_summary 0x7f07007c
 int id oeh_rights_6_title 0x7f07007b
 int id pager 0x7f07007d
 int id pager_title_strip 0x7f07007e
+int id pie_chart 0x7f070060
 int id progress_circular 0x7f070018
 int id progress_horizontal 0x7f070019
 int id radio 0x7f07002f
@@ -401,7 +402,6 @@ int id showCustom 0x7f070007
 int id showHome 0x7f070004
 int id showTitle 0x7f070006
 int id split_action_bar 0x7f07001e
-int id stat_charts 0x7f070060
 int id stat_lva_lists 0x7f070061
 int id submit 0x7f07003e
 int id submit_area 0x7f070039

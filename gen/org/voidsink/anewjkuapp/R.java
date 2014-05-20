@@ -1235,6 +1235,7 @@ containing a value of this type.
         public static final int oeh_rights_6_title=0x7f07007b;
         public static final int pager=0x7f07007d;
         public static final int pager_title_strip=0x7f07007e;
+        public static final int pie_chart=0x7f070060;
         public static final int progress_circular=0x7f070018;
         public static final int progress_horizontal=0x7f070019;
         public static final int radio=0x7f07002f;
@@ -1254,7 +1255,6 @@ containing a value of this type.
         public static final int showHome=0x7f070004;
         public static final int showTitle=0x7f070006;
         public static final int split_action_bar=0x7f07001e;
-        public static final int stat_charts=0x7f070060;
         public static final int stat_lva_lists=0x7f070061;
         public static final int submit=0x7f07003e;
         public static final int submit_area=0x7f070039;
