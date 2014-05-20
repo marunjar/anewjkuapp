@@ -55,70 +55,67 @@ public class MensaDashclockExtension extends DashClockExtension {
 				+ mToTime + "(" + mNow + ")");
 
 		if (mNow >= mFromTime && mNow <= mToTime) {
-			if (reason == DashClockExtension.UPDATE_REASON_PERIODIC
-					|| reason == UPDATE_REASON_SETTINGS_CHANGED) {
-				List<Mensa> mensaList = new ArrayList<Mensa>();
+			List<Mensa> mensaList = new ArrayList<Mensa>();
 
-				if (sp.getBoolean("pref_key_dashclock_ext_mensa_classic", false)) {
-					mensaList.add(new ClassicMenuLoader()
-							.getMensa(getApplicationContext()));
-				}
-				if (sp.getBoolean("pref_key_dashclock_ext_mensa_choice", false)) {
-					mensaList.add(new ChoiceMenuLoader()
-							.getMensa(getApplicationContext()));
-				}
-				if (sp.getBoolean("pref_key_dashclock_ext_mensa_khg", false)) {
-					mensaList.add(new KHGMenuLoader()
-							.getMensa(getApplicationContext()));
-				}
-				if (sp.getBoolean("pref_key_dashclock_ext_mensa_raab", false)) {
-					mensaList.add(new RaabMenuLoader()
-							.getMensa(getApplicationContext()));
-				}
+			if (sp.getBoolean("pref_key_dashclock_ext_mensa_classic", false)) {
+				mensaList.add(new ClassicMenuLoader()
+						.getMensa(getApplicationContext()));
+			}
+			if (sp.getBoolean("pref_key_dashclock_ext_mensa_choice", false)) {
+				mensaList.add(new ChoiceMenuLoader()
+						.getMensa(getApplicationContext()));
+			}
+			if (sp.getBoolean("pref_key_dashclock_ext_mensa_khg", false)) {
+				mensaList.add(new KHGMenuLoader()
+						.getMensa(getApplicationContext()));
+			}
+			if (sp.getBoolean("pref_key_dashclock_ext_mensa_raab", false)) {
+				mensaList.add(new RaabMenuLoader()
+						.getMensa(getApplicationContext()));
+			}
 
-				String status = "";
-				String body = "";
+			String status = "";
+			String body = "";
 
-				for (Mensa mensa : mensaList) {
-					if (mensa != null && !mensa.isEmpty()) {
-						MensaDay mensaDay = mensa.getDay(now);
-						if (mensaDay != null) {
-							if (!status.isEmpty()) {
-								status += ", ";
-							} else {
-								status += "Mensa: ";
+			for (Mensa mensa : mensaList) {
+				if (mensa != null && !mensa.isEmpty()) {
+					MensaDay mensaDay = mensa.getDay(now);
+					if (mensaDay != null) {
+						if (!status.isEmpty()) {
+							status += ", ";
+						} else {
+							status += "Mensa: ";
+						}
+						status += mensa.getName();
+
+						for (MensaMenu mensaMenu : mensaDay.getMenus()) {
+							if (!body.isEmpty()) {
+								body += "\n";
 							}
-							status += mensa.getName();
-
-							for (MensaMenu mensaMenu : mensaDay.getMenus()) {
-								if (!body.isEmpty()) {
-									body += "\n";
-								}
-								String meal = mensaMenu.getMeal();
-								if (meal.length() >= 55) {
-									meal = meal.substring(0, 52) + "...";
-								}
-								body += "* " + meal;
+							String meal = mensaMenu.getMeal();
+							if (meal.length() >= 55) {
+								meal = meal.substring(0, 52) + "...";
 							}
+							body += "* " + meal;
 						}
 					}
 				}
-
-				publishUpdate(new ExtensionData()
-						.visible(true)
-						.icon(R.drawable.ic_launcher_grey)
-						.status("Mensa")
-						.expandedTitle(status)
-						.expandedBody(body)
-						.clickIntent(
-								new Intent(getApplicationContext(),
-										MainActivity.class)
-										.putExtra(
-												MainActivity.ARG_SHOW_FRAGMENT,
-												MensaFragment.class.getName())
-										.addFlags(
-												Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)));
 			}
+
+			publishUpdate(new ExtensionData()
+					.visible(true)
+					.icon(R.drawable.ic_launcher_grey)
+					.status("Mensa")
+					.expandedTitle(status)
+					.expandedBody(body)
+					.clickIntent(
+							new Intent(getApplicationContext(),
+									MainActivity.class)
+									.putExtra(
+											MainActivity.ARG_SHOW_FRAGMENT,
+											MensaFragment.class.getName())
+									.addFlags(
+											Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)));
 		} else {
 			publishUpdate(new ExtensionData().visible(false));
 		}
