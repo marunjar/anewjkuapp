@@ -32,6 +32,8 @@ public class MensaDashclockExtension extends DashClockExtension {
 
 	@Override
 	protected void onUpdateData(int reason) {
+		boolean showMenu = false;
+
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
 		long mFromTime = sp.getLong("pref_key_dashclock_ext_mensa_from",
@@ -51,6 +53,9 @@ public class MensaDashclockExtension extends DashClockExtension {
 		calendar.set(Calendar.MINUTE, minute);
 		long mNow = calendar.getTimeInMillis();
 
+		String status = "";
+		String body = "";
+		
 		Log.i(TAG, "onUpdateData: " + reason + ", " + mFromTime + " - "
 				+ mToTime + "(" + mNow + ")");
 
@@ -74,11 +79,9 @@ public class MensaDashclockExtension extends DashClockExtension {
 						.getMensa(getApplicationContext()));
 			}
 
-			String status = "";
-			String body = "";
-
 			for (Mensa mensa : mensaList) {
 				if (mensa != null && !mensa.isEmpty()) {
+					// get menu for today
 					MensaDay mensaDay = mensa.getDay(now);
 					if (mensaDay != null) {
 						if (!status.isEmpty()) {
@@ -89,6 +92,9 @@ public class MensaDashclockExtension extends DashClockExtension {
 						status += mensa.getName();
 
 						for (MensaMenu mensaMenu : mensaDay.getMenus()) {
+							// show menu if found
+							showMenu = true;
+							
 							if (!body.isEmpty()) {
 								body += "\n";
 							}
@@ -101,7 +107,9 @@ public class MensaDashclockExtension extends DashClockExtension {
 					}
 				}
 			}
+		}
 
+		if (showMenu) {
 			publishUpdate(new ExtensionData()
 					.visible(true)
 					.icon(R.drawable.ic_launcher_grey)
@@ -110,14 +118,13 @@ public class MensaDashclockExtension extends DashClockExtension {
 					.expandedBody(body)
 					.clickIntent(
 							new Intent(getApplicationContext(),
-									MainActivity.class)
-									.putExtra(
-											MainActivity.ARG_SHOW_FRAGMENT,
-											MensaFragment.class.getName())
-									.addFlags(
-											Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)));
+									MainActivity.class).putExtra(
+									MainActivity.ARG_SHOW_FRAGMENT,
+									MensaFragment.class.getName()).addFlags(
+									Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)));
 		} else {
 			publishUpdate(new ExtensionData().visible(false));
 		}
+
 	}
 }

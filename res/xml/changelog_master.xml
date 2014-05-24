@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="0.15" versioncode="100015">
+       <change>Dashclock Extension: leeres Menü am Wochenende nicht anzeigen</change>
+    </release>
     <release version="0.14" versioncode="100014">
        <change>Mensa optimiert</change>
        <change>neue LVA Liste</change>
