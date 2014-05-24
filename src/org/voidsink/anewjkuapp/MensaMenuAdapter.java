@@ -2,6 +2,7 @@ package org.voidsink.anewjkuapp;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.voidsink.anewjkuapp.base.BaseArrayAdapter;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
@@ -15,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MensaMenuAdapter extends BaseArrayAdapter<MensaItem> {
 
@@ -48,10 +48,47 @@ public class MensaMenuAdapter extends BaseArrayAdapter<MensaItem> {
 		case MensaItem.TYPE_MENU:
 			view = getMenuView(convertView, parent, item);
 			break;
+		case MensaItem.TYPE_INFO:
+			view = getInfoView(convertView, parent, item);
 		default:
 			break;
 		}
 		return view;
+	}
+
+	private View getInfoView(View convertView, ViewGroup parent, MensaItem item) {
+		MensaInfoItem mensaInfoItem = (MensaInfoItem) item;
+		MensaInfoHolder mensaInfoItemHolder = null;
+
+		if (convertView == null) {
+			convertView = inflater.inflate(R.layout.mensa_info_item, parent,
+					false);
+			mensaInfoItemHolder = new MensaInfoHolder();
+			mensaInfoItemHolder.title = (TextView) convertView
+					.findViewById(R.id.mensa_info_item_title);
+			mensaInfoItemHolder.descr = (TextView) convertView
+					.findViewById(R.id.mensa_info_item_descr);
+			mensaInfoItemHolder.chip = (View) convertView
+					.findViewById(R.id.mensa_info_chip);
+
+			convertView.setTag(mensaInfoItemHolder);
+		}
+
+		if (mensaInfoItemHolder == null) {
+			mensaInfoItemHolder = (MensaInfoHolder) convertView.getTag();
+		}
+
+		mensaInfoItemHolder.title.setText(mensaInfoItem.getTitle());
+		String descr = mensaInfoItem.getDescr();
+		if (!descr.isEmpty()) {
+			mensaInfoItemHolder.descr.setVisibility(View.VISIBLE);
+			mensaInfoItemHolder.descr.setText(descr);
+		} else {
+			mensaInfoItemHolder.descr.setVisibility(View.GONE);
+		}
+		mensaInfoItemHolder.chip.setBackgroundColor(CalendarUtils.COLOR_DEFAULT_LVA);
+
+		return convertView;
 	}
 
 	private View getMenuView(View convertView, ViewGroup parent, MensaItem item) {
@@ -160,18 +197,18 @@ public class MensaMenuAdapter extends BaseArrayAdapter<MensaItem> {
 		}
 
 		if (dayItem.isModified()) {
-			dayItemHolder.date.setText(df.format(dayItem.getDate()) + "\n\nEs könnte aber auch was anderes geben.");
+			dayItemHolder.date.setText(df.format(dayItem.getDate())
+					+ "\n\nEs könnte aber auch was anderes geben.");
 		} else {
-			dayItemHolder.date.setText(df.format(dayItem.getDate()));			
+			dayItemHolder.date.setText(df.format(dayItem.getDate()));
 		}
-		
 
 		return convertView;
 	}
 
 	@Override
 	public int getViewTypeCount() {
-		return 3;
+		return 4;
 	}
 
 	@Override
@@ -201,6 +238,12 @@ public class MensaMenuAdapter extends BaseArrayAdapter<MensaItem> {
 		private TextView date;
 	}
 
+	private class MensaInfoHolder {
+		public TextView title;
+		public TextView descr;
+		public View chip;
+	}
+
 	public void addMensa(Mensa mensa) {
 		if (mensa != null && !mensa.isEmpty()) {
 			long now = System.currentTimeMillis();
@@ -219,8 +262,37 @@ public class MensaMenuAdapter extends BaseArrayAdapter<MensaItem> {
 		}
 
 		if (getCount() == 0) {
-			Toast.makeText(getContext(), "kein Speiseplan verfügbar",
-					Toast.LENGTH_SHORT).show();
+			add(new MensaDay(new Date()));
+			add(new MensaInfoItem("kein Speiseplan verfügbar", ""));
 		}
+	}
+
+	public void addInfo(String title, String descr) {
+		add(new MensaInfoItem(title, descr));
+	}
+
+	private class MensaInfoItem implements MensaItem {
+
+		private String title;
+		private String descr;
+
+		public MensaInfoItem(String title, String descr) {
+			this.title = title;
+			this.descr = descr;
+		}
+
+		@Override
+		public int getType() {
+			return MensaItem.TYPE_INFO;
+		}
+
+		public String getTitle() {
+			return title;
+		}
+
+		public String getDescr() {
+			return descr;
+		}
+
 	}
 }

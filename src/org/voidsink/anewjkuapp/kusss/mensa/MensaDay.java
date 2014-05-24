@@ -20,6 +20,11 @@ public class MensaDay implements MensaItem {
 	private List<MensaMenu> menus;
 	private boolean isModified = false;
 
+	public MensaDay(Date date) {
+		this.date = date;
+		this.menus = new ArrayList<MensaMenu>();
+	}
+	
 	public MensaDay(JSONObject jsonDay) {
 		try {
 			this.date = df.parse(jsonDay.getString("date"));

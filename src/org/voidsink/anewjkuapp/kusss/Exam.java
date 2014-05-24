@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.voidsink.anewjkuapp.KusssContentContract;
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 
 public class Exam {

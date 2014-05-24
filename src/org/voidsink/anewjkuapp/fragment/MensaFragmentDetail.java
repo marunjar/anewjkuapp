@@ -6,7 +6,6 @@ import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.kusss.mensa.Mensa;
 import org.voidsink.anewjkuapp.kusss.mensa.MenuLoader;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -40,7 +39,6 @@ public abstract class MensaFragmentDetail extends BaseFragment {
 
 	private class MenuLoadTask extends AsyncTask<String, Void, Void> {
 		private Mensa mensa;
-		private ProgressDialog progressDialog;
 		private Context mContext;
 
 		@Override
@@ -57,10 +55,10 @@ public abstract class MensaFragmentDetail extends BaseFragment {
 			if (mContext == null) {
 				Log.e(TAG, "context is null");
 			}
-			
-			progressDialog = ProgressDialog.show(mContext, mContext
-					.getString(R.string.progress_title), mContext
-					.getString(R.string.progress_load_menu), true);
+			mAdapter.clear();
+			mAdapter.addInfo(getString(R.string.progress_title),
+					getString(R.string.progress_load_menu));
+			mAdapter.notifyDataSetChanged();
 		}
 
 		@Override
@@ -68,7 +66,6 @@ public abstract class MensaFragmentDetail extends BaseFragment {
 			mAdapter.clear();
 			mAdapter.addMensa(mensa);
 			mAdapter.notifyDataSetChanged();
-			progressDialog.dismiss();
 
 			super.onPostExecute(result);
 		}
