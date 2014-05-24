@@ -5,11 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.voidsink.anewjkuapp.KusssContentContract;
-
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 
 public class Exam {
@@ -166,5 +165,13 @@ public class Exam {
 
 	public String getTitle() {
 		return title;
+	}
+
+	public String getKey() {
+		return getKey(this.lvaNr, this.term, this.date.getTime());
+	}
+	
+	public static String getKey(int lvaNr, String term, long date) {
+		return String.format("%d-%s-%d", lvaNr, term, date);
 	}
 }

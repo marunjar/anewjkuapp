@@ -2,7 +2,8 @@
 <changelog>
     <release version="0.15" versioncode="100015">
        <change>Dashclock Extension: leeres Menü am Wochenende nicht anzeigen</change>
-       <change>fix FC mit Notifications</change>
+       <change>Probleme mit Notifications behoben</change>
+       <change>Probleme beim Laden von Prüfungen behoben</change>
     </release>
     <release version="0.14" versioncode="100014">
        <change>Mensa optimiert</change>

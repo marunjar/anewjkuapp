@@ -60,10 +60,12 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 
 	public ImportExamTask(Account account, Context context) {
 		this(account, null, null, null, null, context);
-		this.mProvider = context.getContentResolver().acquireContentProviderClient(KusssContentContract.Exam.CONTENT_URI);
+		this.mProvider = context.getContentResolver()
+				.acquireContentProviderClient(
+						KusssContentContract.Exam.CONTENT_URI);
 		this.mSyncResult = new SyncResult();
 	}
-	
+
 	public ImportExamTask(Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult,
 			Context context) {
@@ -100,10 +102,10 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 					List<Exam> exams = null;
 					if (PreferenceWrapper.getNewExamsByLvaNr(mContext)) {
 						LvaMap lvaMap = new LvaMap(mContext);
-						
+
 						Log.d(TAG, "load exams by lvanr");
-						exams = KusssHandler.handler
-								.getNewExamsByLvaNr(lvaMap.getLVAs());
+						exams = KusssHandler.handler.getNewExamsByLvaNr(lvaMap
+								.getLVAs());
 					} else {
 						Log.d(TAG, "load exams");
 						exams = KusssHandler.handler.getNewExams();
@@ -113,9 +115,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 					}
 					Map<String, Exam> examMap = new HashMap<String, Exam>();
 					for (Exam exam : exams) {
-						examMap.put(
-								String.format("%s-%d", exam.getTerm(),
-										exam.getLvaNr()), exam);
+						examMap.put(exam.getKey(), exam);
 					}
 
 					Log.d(TAG, String.format("got %s exams", exams.size()));
@@ -142,7 +142,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 						// delete exams one day after exam
 						long validUntil = System.currentTimeMillis()
 								+ DateUtils.MILLIS_PER_DAY;
-	
+
 						while (c.moveToNext()) {
 							examId = c.getInt(COLUMN_EXAM_ID);
 							examTerm = c.getString(COLUMN_EXAM_TERM);
@@ -150,29 +150,29 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 							examDate = c.getLong(COLUMN_EXAM_DATE);
 							examTime = c.getString(COLUMN_EXAM_TIME);
 							examLocation = c.getString(COLUMN_EXAM_LOCATION);
-	
-							Exam exam = examMap.get(String.format("%s-%d",
-									examTerm, examLvaNr));
+
+							Exam exam = examMap.remove(Exam.getKey(examLvaNr,
+									examTerm, examDate));
 							if (exam != null) {
-								examMap.remove(String.format("%s-%d", examTerm,
-										examLvaNr));
 								// Check to see if the entry needs to be updated
 								Uri existingUri = examUri.buildUpon()
 										.appendPath(Integer.toString(examId))
 										.build();
 								Log.d(TAG, "Scheduling update: " + existingUri);
-	
+
 								if (!DateUtils.isSameDay(new Date(examDate),
 										exam.getDate())
 										|| !examTime.equals(exam.getTime())
-										|| !examLocation.equals(exam.getLocation())) {
-									mNewExamNotification.addUpdate(String.format(
-											"%s: %s, %s, %s",
-											df.format(exam.getDate()),
-											exam.getTitle(), exam.getTime(),
-											exam.getLocation()));
+										|| !examLocation.equals(exam
+												.getLocation())) {
+									mNewExamNotification.addUpdate(String
+											.format("%s: %s, %s, %s",
+													df.format(exam.getDate()),
+													exam.getTitle(),
+													exam.getTime(),
+													exam.getLocation()));
 								}
-	
+
 								batch.add(ContentProviderOperation
 										.newUpdate(
 												KusssContentContract
@@ -193,47 +193,53 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 										.appendPath(Integer.toString(examId))
 										.build();
 								Log.d(TAG, "Scheduling delete: " + deleteUri);
-	
+
 								batch.add(ContentProviderOperation.newDelete(
-										KusssContentContract.asEventSyncAdapter(
-												deleteUri, mAccount.name,
-												mAccount.type)).build());
+										KusssContentContract
+												.asEventSyncAdapter(deleteUri,
+														mAccount.name,
+														mAccount.type)).build());
 								mSyncResult.stats.numDeletes++;
 							}
 						}
 						c.close();
-	
+
 						for (Exam exam : examMap.values()) {
 							batch.add(ContentProviderOperation
 									.newInsert(
 											KusssContentContract
-													.asEventSyncAdapter(examUri,
+													.asEventSyncAdapter(
+															examUri,
 															mAccount.name,
 															mAccount.type))
-									.withValues(exam.getContentValues()).build());
-							Log.d(TAG, "Scheduling insert: " + exam.getTerm() + " "
-									+ exam.getLvaNr());
-	
+									.withValues(exam.getContentValues())
+									.build());
+							Log.d(TAG, "Scheduling insert: " + exam.getTerm()
+									+ " " + exam.getLvaNr());
+
 							mNewExamNotification.addUpdate(String.format(
-									"%s: %s, %s, %s", df.format(exam.getDate()),
-									exam.getTitle(), exam.getTime(),
-									exam.getLocation()));
-	
+									"%s: %s, %s, %s",
+									df.format(exam.getDate()), exam.getTitle(),
+									exam.getTime(), exam.getLocation()));
+
 							mSyncResult.stats.numInserts++;
 						}
-	
+
 						if (batch.size() > 0) {
 							mSyncNotification
 									.update("Prüfungen werden gespeichert");
-	
+
 							Log.d(TAG, "Applying batch update");
 							mProvider.applyBatch(batch);
 							Log.d(TAG, "Notify resolver");
-							mResolver.notifyChange(
-									KusssContentContract.Exam.CONTENT_CHANGED_URI, null, // No
-																					// local
-																					// observer
-									false); // IMPORTANT: Do not sync to network
+							mResolver
+									.notifyChange(
+											KusssContentContract.Exam.CONTENT_CHANGED_URI,
+											null, // No
+											// local
+											// observer
+											false); // IMPORTANT: Do not sync to
+													// network
 						} else {
 							Log.w(TAG, "No batch operations found! Do nothing");
 						}
