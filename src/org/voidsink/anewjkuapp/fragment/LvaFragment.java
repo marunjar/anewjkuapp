@@ -82,6 +82,7 @@ public class LvaFragment extends IndicatedViewPagerFragment implements
 	}
 
 	private void loadLvas(final Context context) {
+		
 		new AsyncTask<Void, Void, Void>() {
 
 			private ProgressDialog progressDialog;
@@ -92,6 +93,7 @@ public class LvaFragment extends IndicatedViewPagerFragment implements
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
+
 				progressDialog = ProgressDialog.show(context,
 						context.getString(R.string.progress_title),
 						context.getString(R.string.progress_load_lva), true);

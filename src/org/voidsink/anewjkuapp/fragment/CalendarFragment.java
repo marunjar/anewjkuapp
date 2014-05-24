@@ -19,6 +19,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -117,6 +118,7 @@ public class CalendarFragment extends BaseFragment {
 		private ProgressDialog progressDialog;
 		private List<CalendarListItem> mEvents;
 		private Map<String, Integer> mColors;
+		private Context mContext;
 
 		@Override
 		protected Void doInBackground(String... urls) {
@@ -124,7 +126,7 @@ public class CalendarFragment extends BaseFragment {
 
 			// fetch calendar colors
 			this.mColors = new HashMap<String, Integer>();
-			ContentResolver cr = getContext().getContentResolver();
+			ContentResolver cr = mContext.getContentResolver();
 			Cursor c = cr
 					.query(CalendarContractWrapper.Calendars.CONTENT_URI(),
 							new String[] {
@@ -137,16 +139,16 @@ public class CalendarFragment extends BaseFragment {
 			}
 			c.close();
 
-			Account mAccount = AppUtils.getAccount(getContext());
+			Account mAccount = AppUtils.getAccount(mContext);
 			if (mAccount != null) {
-				AccountManager mAm = AccountManager.get(getContext());
+				AccountManager mAm = AccountManager.get(mContext);
 
 				String calIDLva = mAm.getUserData(mAccount,
 						CalendarUtils.ARG_CALENDAR_ID_LVA);
 				String calIDExam = mAm.getUserData(mAccount,
 						CalendarUtils.ARG_CALENDAR_ID_EXAM);
 
-				cr = getContext().getContentResolver();
+				cr = mContext.getContentResolver();
 				c = cr.query(
 						CalendarContractWrapper.Events.CONTENT_URI(),
 						ImportCalendarTask.EVENT_PROJECTION,
@@ -183,7 +185,12 @@ public class CalendarFragment extends BaseFragment {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			progressDialog = ProgressDialog.show(getContext(),
+			mContext = CalendarFragment.this.getContext();
+			if (mContext == null) {
+				Log.e(TAG, "context is null");
+			}
+			
+			progressDialog = ProgressDialog.show(mContext,
 					getString(R.string.progress_title),
 					getString(R.string.progress_load_calendar), true);
 		}

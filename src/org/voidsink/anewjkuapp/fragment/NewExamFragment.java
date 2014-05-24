@@ -16,11 +16,13 @@ import org.voidsink.anewjkuapp.base.BaseFragment;
 import android.accounts.Account;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,6 +32,8 @@ import android.widget.ListView;
 
 public class NewExamFragment extends BaseFragment {
 
+	private static final String TAG = NewExamFragment.class.getSimpleName();
+	
 	private ListView mListView;
 	private ExamListAdapter mAdapter;
 	private ContentObserver mNewExamObserver;
@@ -74,14 +78,15 @@ public class NewExamFragment extends BaseFragment {
 	private class ExamLoadTask extends AsyncTask<String, Void, Void> {
 		private ProgressDialog progressDialog;
 		private List<ExamListItem> mExams;
-
+		private Context mContext;
+		
 		@Override
 		protected Void doInBackground(String... urls) {
-			Account mAccount = AppUtils.getAccount(getContext());
+			Account mAccount = AppUtils.getAccount(mContext);
 			if (mAccount != null) {
-				LvaMap map = new LvaMap(getContext());
+				LvaMap map = new LvaMap(mContext);
 
-				ContentResolver cr = getContext().getContentResolver();
+				ContentResolver cr = mContext.getContentResolver();
 				Cursor c = cr.query(KusssContentContract.Exam.CONTENT_URI,
 						ImportExamTask.EXAM_PROJECTION, null, null,
 						KusssContentContract.Exam.EXAM_COL_DATE + " ASC");
@@ -100,10 +105,14 @@ public class NewExamFragment extends BaseFragment {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
+			mContext = NewExamFragment.this.getContext();
+			if (mContext == null) {
+				Log.e(TAG, "context is null");
+			}
 			mExams = new ArrayList<ExamListItem>();
-			progressDialog = ProgressDialog.show(getContext(),
+			progressDialog = ProgressDialog.show(mContext,
 					getString(R.string.progress_title),
-					getString(R.string.progress_load_exam), true);
+					getString(R.string.progress_load_exam), true); //!!
 		}
 
 		@Override

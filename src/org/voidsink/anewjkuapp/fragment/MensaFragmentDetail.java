@@ -7,8 +7,10 @@ import org.voidsink.anewjkuapp.kusss.mensa.Mensa;
 import org.voidsink.anewjkuapp.kusss.mensa.MenuLoader;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import android.widget.ListView;
 
 public abstract class MensaFragmentDetail extends BaseFragment {
 
+	public static final String TAG = MensaFragmentDetail.class.getSimpleName();
 	private ListView mListView;
 	private MensaMenuAdapter mAdapter;
 
@@ -38,10 +41,11 @@ public abstract class MensaFragmentDetail extends BaseFragment {
 	private class MenuLoadTask extends AsyncTask<String, Void, Void> {
 		private Mensa mensa;
 		private ProgressDialog progressDialog;
+		private Context mContext;
 
 		@Override
 		protected Void doInBackground(String... urls) {
-			mensa = createLoader().getMensa(getContext());
+			mensa = createLoader().getMensa(mContext);
 
 			return null;
 		}
@@ -49,8 +53,13 @@ public abstract class MensaFragmentDetail extends BaseFragment {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			progressDialog = ProgressDialog.show(getContext(), getContext()
-					.getString(R.string.progress_title), getContext()
+			mContext = MensaFragmentDetail.this.getContext();
+			if (mContext == null) {
+				Log.e(TAG, "context is null");
+			}
+			
+			progressDialog = ProgressDialog.show(mContext, mContext
+					.getString(R.string.progress_title), mContext
 					.getString(R.string.progress_load_menu), true);
 		}
 

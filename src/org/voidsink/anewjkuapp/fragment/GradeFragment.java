@@ -13,10 +13,12 @@ import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.database.ContentObserver;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +28,8 @@ import android.widget.ListView;
 
 public class GradeFragment extends BaseFragment {
 
+	public static final String TAG = GradeFragment.class.getSimpleName();
+	
 	private ListView mListView;
 	private GradeListAdapter mAdapter;
 	private ContentObserver mGradeObserver;
@@ -70,11 +74,12 @@ public class GradeFragment extends BaseFragment {
 	private class GradeLoadTask extends AsyncTask<String, Void, Void> {
 		private ProgressDialog progressDialog;
 		private List<ExamGrade> mGrades;
+		private Context mContext;
 
 		@Override
 		protected Void doInBackground(String... urls) {
 			List<ExamGrade> examGrades = KusssContentProvider
-					.getGrades(getContext());
+					.getGrades(mContext);
 			for (ExamGrade examGrade : examGrades) {
 				mGrades.add(examGrade);
 			}
@@ -86,8 +91,13 @@ public class GradeFragment extends BaseFragment {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
+			mContext = GradeFragment.this.getContext();
+			if (mContext == null) {
+				Log.e(TAG, "context is null");
+			}
+			
 			mGrades = new ArrayList<ExamGrade>();
-			progressDialog = ProgressDialog.show(getContext(),
+			progressDialog = ProgressDialog.show(mContext,
 					getString(R.string.progress_title),
 					getString(R.string.progress_load_exam), true);
 		}
