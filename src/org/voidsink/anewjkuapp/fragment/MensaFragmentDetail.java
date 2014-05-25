@@ -56,8 +56,8 @@ public abstract class MensaFragmentDetail extends BaseFragment {
 				Log.e(TAG, "context is null");
 			}
 			mAdapter.clear();
-			mAdapter.addInfo(getString(R.string.progress_title),
-					getString(R.string.progress_load_menu));
+			mAdapter.addInfo(mContext.getString(R.string.progress_title),
+					mContext.getString(R.string.progress_load_menu));
 			mAdapter.notifyDataSetChanged();
 		}
 

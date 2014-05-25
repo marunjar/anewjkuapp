@@ -98,8 +98,8 @@ public class GradeFragment extends BaseFragment {
 			
 			mGrades = new ArrayList<ExamGrade>();
 			progressDialog = ProgressDialog.show(mContext,
-					getString(R.string.progress_title),
-					getString(R.string.progress_load_exam), true);
+					mContext.getString(R.string.progress_title),
+					mContext.getString(R.string.progress_load_exam), true);
 		}
 
 		@Override

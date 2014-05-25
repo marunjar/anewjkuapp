@@ -194,8 +194,8 @@ public class CalendarFragment extends BaseFragment {
 			}
 
 			progressDialog = ProgressDialog.show(mContext,
-					getString(R.string.progress_title),
-					getString(R.string.progress_load_calendar), true);
+					mContext.getString(R.string.progress_title),
+					mContext.getString(R.string.progress_load_calendar), true);
 		}
 
 		@Override
