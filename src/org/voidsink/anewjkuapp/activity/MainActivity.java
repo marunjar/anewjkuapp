@@ -120,15 +120,9 @@ public class MainActivity extends ActionBarActivity implements
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer, mDrawerLayout);
 
 		Intent intent = getIntent();
-		handleIntent(intent);
 
-		if (savedInstanceState != null) {
-			// restore saved fragment
-			attachFragmentByClassName(savedInstanceState
-					.getString(ARG_SHOW_FRAGMENT));
-		} else {
-			attachFragmentByClassName(PreferenceWrapper.getLastFragment(this));
-		}
+		Fragment f = attachFragment(intent, savedInstanceState, true);
+		handleIntent(f, intent);
 
 		if (AppUtils.getAccount(this) == null) {
 			StartCreateAccount(this);
@@ -140,13 +134,31 @@ public class MainActivity extends ActionBarActivity implements
 		}
 	}
 
-	private void handleIntent(Intent intent) {
+	private Fragment attachFragment(Intent intent, Bundle savedInstanceState,
+			boolean attachStored) {
 		if (intent != null && intent.hasExtra(ARG_SHOW_FRAGMENT)) {
 			// show fragment from intent
-			attachFragmentByClassName(intent.getStringExtra(ARG_SHOW_FRAGMENT));
+			return attachFragmentByClassName(intent
+					.getStringExtra(ARG_SHOW_FRAGMENT));
+		} else if (savedInstanceState != null) {
+			// restore saved fragment
+			return attachFragmentByClassName(savedInstanceState
+					.getString(ARG_SHOW_FRAGMENT));
+		} else if (attachStored) {
+			return attachFragmentByClassName(PreferenceWrapper
+					.getLastFragment(this));
+		} else {
+			return getSupportFragmentManager().findFragmentByTag(
+					ARG_SHOW_FRAGMENT);
 		}
-		Fragment f = getSupportFragmentManager().findFragmentByTag(
-				ARG_SHOW_FRAGMENT);
+	}
+
+	private void handleIntent(Fragment f, Intent intent) {
+		if (f == null) {
+			f = getSupportFragmentManager()
+					.findFragmentByTag(ARG_SHOW_FRAGMENT);
+		}
+
 		if (f != null) {
 			// Log.i(TAG, "fragment: " + f.getClass().getSimpleName());
 			if (BaseFragment.class.isInstance(f)) {
@@ -164,28 +176,25 @@ public class MainActivity extends ActionBarActivity implements
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 
-		handleIntent(intent);
-
-		if (intent != null && intent.hasExtra(ARG_SHOW_FRAGMENT)) {
-			// show fragment from intent
-			attachFragmentByClassName(intent.getStringExtra(ARG_SHOW_FRAGMENT));
-		}
+		Fragment f = attachFragment(intent, null, false);
+		handleIntent(f, intent);
 	}
 
 	@SuppressWarnings("unchecked")
-	private void attachFragmentByClassName(final String clazzname) {
+	private Fragment attachFragmentByClassName(final String clazzname) {
 		if (clazzname != null && !clazzname.isEmpty()) {
 			// Log.i(TAG, "attach " + clazzname);
 			try {
 				Class<?> clazz = getClassLoader().loadClass(clazzname);
 				if (Fragment.class.isAssignableFrom(clazz)) {
-					attachFragment((Class<? extends Fragment>) clazz);
+					return attachFragment((Class<? extends Fragment>) clazz);
 				}
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+		return null;
 	}
 
 	@Override
@@ -202,21 +211,23 @@ public class MainActivity extends ActionBarActivity implements
 		}
 	}
 
-	private void attachFragment(Class<? extends Fragment> startFragment) {
+	private Fragment attachFragment(Class<? extends Fragment> startFragment) {
 		if (startFragment != null) {
 			Fragment f = null;
 			try {
 				f = (Fragment) startFragment.newInstance();
 				PreferenceWrapper.setLastFragment(this,
 						startFragment.getCanonicalName());
-				
+
 				getSupportFragmentManager().beginTransaction()
 						.replace(R.id.container, f, ARG_SHOW_FRAGMENT).commit();
+				return f;
 			} catch (Exception e) {
 				Log.w(TAG, "fragment instantiation failed", e);
-				f = null;
+				return null;
 			}
 		}
+		return null;
 	}
 
 	public void restoreActionBar() {
@@ -239,7 +250,7 @@ public class MainActivity extends ActionBarActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Log.i(TAG, "onOptionsItemSelected");
 		Account account = AppUtils.getAccount(this);
-		
+
 		switch (item.getItemId()) {
 		case R.id.action_refresh_exams:
 			Log.d(TAG, "importing exams");

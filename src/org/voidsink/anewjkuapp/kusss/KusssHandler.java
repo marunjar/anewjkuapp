@@ -312,6 +312,7 @@ public class KusssHandler {
 
 		List<Exam> exams = new ArrayList<Exam>();
 		if (lvas == null || lvas.size() == 0) {
+			Log.d(TAG, "no lvas found, reload");
 			lvas = getLvas();
 		}
 		if (lvas.size() > 0) {
