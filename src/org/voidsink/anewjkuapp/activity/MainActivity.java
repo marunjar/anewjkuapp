@@ -110,7 +110,6 @@ public class MainActivity extends ActionBarActivity implements
 
 		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.navigation_drawer);
-		mTitle = getTitle();
 
 		DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
@@ -123,6 +122,9 @@ public class MainActivity extends ActionBarActivity implements
 
 		Fragment f = attachFragment(intent, savedInstanceState, true);
 		handleIntent(f, intent);
+
+		mTitle = getTitleFromFragment(f);
+		restoreActionBar();
 
 		if (AppUtils.getAccount(this) == null) {
 			StartCreateAccount(this);
@@ -204,11 +206,18 @@ public class MainActivity extends ActionBarActivity implements
 			if ((item.getStartFragment() != null)) {
 				attachFragment(item.getStartFragment());
 			}
-			if (item.updateActionBarTitle()) {
-				mTitle = item.getLabel();
-				getSupportActionBar().setTitle(mTitle);
-			}
 		}
+	}
+
+	public String getTitleFromFragment(Fragment f) {
+		if (f == null) {
+			f = getSupportFragmentManager()
+					.findFragmentByTag(ARG_SHOW_FRAGMENT);
+		}
+		if (f != null) {
+			return NavigationDrawerFragment.getLabel(f.getClass());
+		}
+		return getString(R.string.app_name);
 	}
 
 	private Fragment attachFragment(Class<? extends Fragment> startFragment) {
@@ -221,6 +230,10 @@ public class MainActivity extends ActionBarActivity implements
 
 				getSupportFragmentManager().beginTransaction()
 						.replace(R.id.container, f, ARG_SHOW_FRAGMENT).commit();
+
+				mTitle = getTitleFromFragment(f);
+				restoreActionBar();
+
 				return f;
 			} catch (Exception e) {
 				Log.w(TAG, "fragment instantiation failed", e);
@@ -232,17 +245,18 @@ public class MainActivity extends ActionBarActivity implements
 
 	public void restoreActionBar() {
 		ActionBar actionBar = getSupportActionBar();
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		actionBar.setDisplayShowTitleEnabled(true);
-		actionBar.setTitle(mTitle);
+		if (mNavigationDrawerFragment != null
+				&& !mNavigationDrawerFragment.isDrawerOpen()) {
+			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+			actionBar.setDisplayShowTitleEnabled(true);
+			actionBar.setTitle(mTitle);
+		}
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		if (mNavigationDrawerFragment != null
-				&& !mNavigationDrawerFragment.isDrawerOpen()) {
-			restoreActionBar();
-		}
+		restoreActionBar();
+
 		return super.onCreateOptionsMenu(menu);
 	}
 

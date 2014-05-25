@@ -5,6 +5,7 @@ import android.accounts.Account;
 import android.app.Activity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -71,7 +72,23 @@ public class NavigationDrawerFragment extends BaseFragment {
 	private boolean mUserLearnedDrawer;
 
 	private TextView mUser;
-	private DrawerItem[] mDrawerItems;
+	private static DrawerItem[] mDrawerItems = new DrawerItem[] {
+			new DrawerMenuSection("KUSSS"),
+			new DrawerMenuItem("Termine", CalendarFragment.class),
+			new DrawerMenuItem("Prüfungen", NewExamFragment.class),
+			new DrawerMenuItem("Noten", GradeFragment.class),
+			new DrawerMenuItem("LVAs", LvaFragment.class),
+			new DrawerMenuSection("ÖH"),
+			// new DrawerMenuItem("News"),
+			// new DrawerMenuItem("Courier"),
+			new DrawerMenuItem("Info", OehInfoFragment.class),
+			new DrawerMenuItem("Rechte", OehRightsFragment.class),
+			new DrawerMenuSection("Diverses"),
+			new DrawerMenuItem("Mensa", MensaFragment.class),
+			// new DrawerMenuSection("Veranstaltungen"),
+			// new DrawerMenuItem("Veranstaltungen"),
+			new DrawerMenuItem("Campus", MapFragment.class),
+			new DrawerMenuItem("About", AboutFragment.class) };
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -90,26 +107,19 @@ public class NavigationDrawerFragment extends BaseFragment {
 			mFromSavedInstanceState = true;
 		}
 
-		mDrawerItems = new DrawerItem[] {
-				new DrawerMenuSection("KUSSS"),
-				new DrawerMenuItem("Termine", CalendarFragment.class),
-				new DrawerMenuItem("Prüfungen", NewExamFragment.class),
-				new DrawerMenuItem("Noten", GradeFragment.class),
-				new DrawerMenuItem("LVAs", LvaFragment.class),
-				new DrawerMenuSection("ÖH"),
-				// new DrawerMenuItem("News"),
-				// new DrawerMenuItem("Courier"),
-				new DrawerMenuItem("Info", OehInfoFragment.class),
-				new DrawerMenuItem("Rechte", OehRightsFragment.class),
-				new DrawerMenuSection("Diverses"),
-				new DrawerMenuItem("Mensa", MensaFragment.class),
-				// new DrawerMenuSection("Veranstaltungen"),
-				// new DrawerMenuItem("Veranstaltungen"),
-				new DrawerMenuItem("Campus", MapFragment.class),
-				new DrawerMenuItem("About", AboutFragment.class) };
-
 		// Select either the default item (0) or the last selected item.
 		selectItem(mCurrentSelectedPosition);
+	}
+
+	public static String getLabel(Class<? extends Fragment> fragmentClass) {
+		if (fragmentClass != null) {
+			for (DrawerItem item : mDrawerItems) {
+				if (fragmentClass.equals(item.getStartFragment())) {
+					return item.getLabel();
+				}
+			}
+		}
+		return "";
 	}
 
 	@Override

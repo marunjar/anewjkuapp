@@ -4,30 +4,30 @@ import android.support.v4.app.Fragment;
 
 public class DrawerMenuItem implements DrawerItem{
 
-	private CharSequence label;
+	private String label;
 	private int iconResID;
 	private Class<? extends Fragment> startFragment;
 
-	public DrawerMenuItem(CharSequence label, int iconResID, Class<? extends Fragment> startFragment){
-		this.label = label; 
+	public DrawerMenuItem(String label, int iconResID, Class<? extends Fragment> startFragment){
+		this.label = label;
 		this.iconResID = iconResID;
 		this.startFragment = startFragment;
 	}
 
-	public DrawerMenuItem(CharSequence label, int iconResID){
+	public DrawerMenuItem(String label, int iconResID){
 		this(label, iconResID, null); 
 	}
 	
-	public DrawerMenuItem(CharSequence text, Class<? extends Fragment> startFragment){
-		this(text, 0, startFragment);
+	public DrawerMenuItem(String label, Class<? extends Fragment> startFragment){
+		this(label, 0, startFragment);
 	}
 
-	public DrawerMenuItem(CharSequence text){
+	public DrawerMenuItem(String text){
 		this(text, 0);
 	}
 	
 	@Override
-	public CharSequence getLabel() {
+	public String getLabel() {
 		return this.label;
 	}
 	

@@ -7,7 +7,7 @@ public interface DrawerItem {
 	public static final int SECTION_TYPE = 0;
 	public static final int ITEM_TYPE = 1;
 	
-	public CharSequence getLabel();
+	public String getLabel();
 	public int getIconResID();
 	public boolean isSectionHeader();
 	public boolean updateActionBarTitle();

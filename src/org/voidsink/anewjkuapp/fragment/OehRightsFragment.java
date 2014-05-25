@@ -1,16 +1,16 @@
 package org.voidsink.anewjkuapp.fragment;
 
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.base.BaseFragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class OehRightsFragment extends Fragment {
+public class OehRightsFragment extends BaseFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,5 +33,4 @@ public class OehRightsFragment extends Fragment {
 
 		return view;
 	}
-
 }

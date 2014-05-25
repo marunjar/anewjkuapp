@@ -4,14 +4,14 @@ import android.support.v4.app.Fragment;
 
 public class DrawerMenuSection implements DrawerItem{
 
-	private CharSequence label;
+	private String label;
 
-	public DrawerMenuSection(CharSequence label){
+	public DrawerMenuSection(String label){
 		this.label = label;
 	}
 	
 	@Override
-	public CharSequence getLabel() {
+	public String getLabel() {
 		return this.label;
 	}
 	

@@ -242,5 +242,4 @@ public class AppUtils {
 		return accounts[0];
 	}
 	
-	
 }
