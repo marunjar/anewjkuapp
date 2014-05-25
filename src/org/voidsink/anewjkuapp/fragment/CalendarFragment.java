@@ -50,14 +50,11 @@ public class CalendarFragment extends BaseFragment {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_calendar, container,
 				false);
-
+		
 		mListView = (ListView) view.findViewById(R.id.calendar_events);
-		mAdapter = new CalendarEventAdapter(getContext());
-		mListView.setAdapter(mAdapter);
 
-		Button loadMore = (Button) inflater.inflate(
-				R.layout.listview_footer_button, null);
-		mListView.addFooterView(loadMore);
+		Button loadMore = (Button) inflater.inflate(R.layout.listview_footer,
+				mListView, false);
 
 		loadMore.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -66,6 +63,12 @@ public class CalendarFragment extends BaseFragment {
 			}
 		});
 		loadMore.setClickable(true);
+
+		mAdapter = new CalendarEventAdapter(getContext());
+
+		mListView.addFooterView(loadMore);
+		mListView.setAdapter(mAdapter);
+
 		return view;
 	}
 
@@ -189,7 +192,7 @@ public class CalendarFragment extends BaseFragment {
 			if (mContext == null) {
 				Log.e(TAG, "context is null");
 			}
-			
+
 			progressDialog = ProgressDialog.show(mContext,
 					getString(R.string.progress_title),
 					getString(R.string.progress_load_calendar), true);

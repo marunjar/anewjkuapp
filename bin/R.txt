@@ -466,7 +466,7 @@ int layout fragment_tabbed_view_pager 0x7f03002c
 int layout fragment_tabbed_view_pager_with_tabs 0x7f03002d
 int layout grade_list_grade 0x7f03002e
 int layout grade_list_type 0x7f03002f
-int layout listview_footer_button 0x7f030030
+int layout listview_footer 0x7f030030
 int layout lva_list_group 0x7f030031
 int layout lva_list_item 0x7f030032
 int layout mensa_day_item 0x7f030033

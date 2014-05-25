@@ -29,7 +29,7 @@ import android.util.Log;
 
 public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 
-	private static final String TAG = ImportLvaTask.class.getSimpleName();
+	private static final String TAG = ImportExamTask.class.getSimpleName();
 	private static final Object sync_lock = new Object();
 	private static final DateFormat df = SimpleDateFormat.getDateInstance();
 

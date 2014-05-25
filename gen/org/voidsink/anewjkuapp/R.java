@@ -1345,7 +1345,7 @@ containing a value of this type.
         public static final int fragment_tabbed_view_pager_with_tabs=0x7f03002d;
         public static final int grade_list_grade=0x7f03002e;
         public static final int grade_list_type=0x7f03002f;
-        public static final int listview_footer_button=0x7f030030;
+        public static final int listview_footer=0x7f030030;
         public static final int lva_list_group=0x7f030031;
         public static final int lva_list_item=0x7f030032;
         public static final int mensa_day_item=0x7f030033;
