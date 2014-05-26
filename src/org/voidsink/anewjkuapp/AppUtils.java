@@ -184,15 +184,15 @@ public class AppUtils {
 	public static void removeDuplicates(List<LvaWithGrade> mDoneLvas,
 			List<LvaWithGrade> mOpenLvas) {
 
-		Log.i("removeDuplicates", "---------");
-		for (LvaWithGrade lva : mDoneLvas) {
-			Log.i("removeDuplicates", "done: " + lva.getLva().getCode() + " "
-					+ lva.getLva().getTitle());
-		}
-		for (LvaWithGrade lva : mOpenLvas) {
-			Log.i("removeDuplicates", "open: " + lva.getLva().getCode() + " "
-					+ lva.getLva().getTitle());
-		}
+		// Log.i("removeDuplicates", "---------");
+		// for (LvaWithGrade lva : mDoneLvas) {
+		// Log.i("removeDuplicates", "done: " + lva.getLva().getCode() + " "
+		// + lva.getLva().getTitle());
+		// }
+		// for (LvaWithGrade lva : mOpenLvas) {
+		// Log.i("removeDuplicates", "open: " + lva.getLva().getCode() + " "
+		// + lva.getLva().getTitle());
+		// }
 
 		int i = 0;
 		while (i < mDoneLvas.size()) {
@@ -204,7 +204,7 @@ public class AppUtils {
 				if (lva.getCode().equals(nextLva.getCode())
 						&& lva.getTitle().equals(nextLva.getTitle())) {
 					mDoneLvas.remove(j);
-					Log.i("removeDuplicates",
+					Log.d("removeDuplicates",
 							"remove from done " + nextLva.getCode() + " "
 									+ nextLva.getTitle());
 				} else {
@@ -218,7 +218,7 @@ public class AppUtils {
 				if (lva.getCode().equals(nextLva.getCode())
 						&& lva.getTitle().equals(nextLva.getTitle())) {
 					mOpenLvas.remove(j);
-					Log.i("removeDuplicates",
+					Log.d("removeDuplicates",
 							"remove from open " + nextLva.getCode() + " "
 									+ nextLva.getTitle());
 				} else {
@@ -239,7 +239,7 @@ public class AppUtils {
 				if (lva.getCode().equals(nextLva.getCode())
 						&& lva.getTitle().equals(nextLva.getTitle())) {
 					mOpenLvas.remove(j);
-					Log.i("removeDuplicates",
+					Log.d("removeDuplicates",
 							"remove from open " + nextLva.getCode() + " "
 									+ nextLva.getTitle());
 				} else {
