@@ -10,6 +10,12 @@
         android:layout_height="200dp"
         android:padding="3dp" />
 
+    <com.androidplot.xy.XYPlot
+        android:id="@+id/bar_chart"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:padding="3dp" />
+
     <ExpandableListView
         android:id="@+id/stat_lva_lists"
         android:layout_width="match_parent"

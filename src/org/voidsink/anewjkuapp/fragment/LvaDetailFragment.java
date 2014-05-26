@@ -28,6 +28,12 @@ import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import com.androidplot.pie.PieChart;
 import com.androidplot.pie.Segment;
 import com.androidplot.pie.SegmentFormatter;
+import com.androidplot.xy.BarFormatter;
+import com.androidplot.xy.BarRenderer;
+import com.androidplot.xy.BoundaryMode;
+import com.androidplot.xy.SimpleXYSeries;
+import com.androidplot.xy.XYPlot;
+import com.androidplot.xy.XYStepMode;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
 
@@ -41,6 +47,8 @@ public class LvaDetailFragment extends BaseFragment {
 	private List<LvaWithGrade> mOpenLvas;
 	private List<LvaWithGrade> mDoneLvas;
 	private ExpandableListView expListView;
+	
+	Number[] series1Numbers10 = {2, null, 5, 2, 7, 4, 3, 7, 4, 5};
 
 	private LvaListAdapter adapter;
 
@@ -114,20 +122,47 @@ public class LvaDetailFragment extends BaseFragment {
 				this.mOpenLvas);
 		expListView.setAdapter((ExpandableListAdapter) adapter);
 
+		// init bar chart
+		XYPlot barChart = (XYPlot) view.findViewById(R.id.bar_chart);
+		barChart.setRangeTopMin(mTerms.size() * 30);
+		barChart.setRangeBoundaries(0, BoundaryMode.FIXED, mTerms.size() * 30, BoundaryMode.AUTO);
+		barChart.setRangeStep(XYStepMode.SUBDIVIDE, 10);
+		
+		addSerieToBarChart(barChart, getString(R.string.lva_done),
+				AppUtils.getECTS(mDoneLvas), Color.rgb(0, 220, 0));
+		addSerieToBarChart(barChart, getString(R.string.lva_open),
+				AppUtils.getECTS(mOpenLvas), Color.rgb(220, 220, 0));
+		
+		// Setup the BarRenderer with our selected options
+        BarRenderer renderer = ((BarRenderer)barChart.getRenderer(BarRenderer.class));
+        renderer.setBarRenderStyle(BarRenderer.BarRenderStyle.STACKED);
+        renderer.setBarGap(10);
+        renderer.setBarWidthStyle(BarRenderer.BarWidthStyle.VARIABLE_WIDTH);
+		
+		// init pie chart
 		PieChart pieChart = (PieChart) view.findViewById(R.id.pie_chart);
 
-		addSerieToChart(pieChart, getString(R.string.lva_done),
+		addSerieToPieChart(pieChart, getString(R.string.lva_done),
 				AppUtils.getECTS(mDoneLvas), Color.rgb(0, 220, 0));
-		addSerieToChart(pieChart, getString(R.string.lva_open),
+		addSerieToPieChart(pieChart, getString(R.string.lva_open),
 				AppUtils.getECTS(mOpenLvas), Color.rgb(220, 220, 0));
 
 		if (pieChart.getSeriesSet().size() > 0) {
-			pieChart.setVisibility(View.VISIBLE);
+			pieChart.setVisibility(View.GONE);
 		} else {
 			pieChart.setVisibility(View.GONE);
 		}
 
 		return view;
+	}
+
+	private void addSerieToBarChart(XYPlot barChart, String category,
+			double value, int color) {
+		List<Number> values = new ArrayList<Number>();
+		values.add(value);
+		
+		SimpleXYSeries mSeries = new SimpleXYSeries(values, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, category); 
+		barChart.addSeries(mSeries, new BarFormatter(color, Color.rgb(0, 80, 0)));
 	}
 
 	@Override
@@ -136,7 +171,7 @@ public class LvaDetailFragment extends BaseFragment {
 		inflater.inflate(R.menu.lva, menu);
 	}
 
-	private void addSerieToChart(PieChart chart, String category, double value,
+	private void addSerieToPieChart(PieChart chart, String category, double value,
 			int color) {
 		if (value > 0) {
 			EmbossMaskFilter emf = new EmbossMaskFilter(
