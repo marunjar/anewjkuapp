@@ -75,7 +75,7 @@ public class NavigationDrawerFragment extends BaseFragment {
 	private static DrawerItem[] mDrawerItems = new DrawerItem[] {
 			new DrawerMenuSection("KUSSS"),
 			new DrawerMenuItem("Termine", CalendarFragment.class),
-			new DrawerMenuItem("Prüfungen", NewExamFragment.class),
+			new DrawerMenuItem("neue Prüfungen", NewExamFragment.class),
 			new DrawerMenuItem("Noten", GradeFragment.class),
 			new DrawerMenuItem("LVAs", LvaFragment.class),
 			new DrawerMenuSection("ÖH"),
