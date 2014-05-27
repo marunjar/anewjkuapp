@@ -15,6 +15,7 @@ import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.voidsink.anewjkuapp.AppUtils;
@@ -39,8 +40,6 @@ import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYStepMode;
 import com.androidplot.xy.YValueMarker;
-
-import edu.emory.mathcs.backport.java.util.Arrays;
 
 @SuppressLint("ValidFragment")
 public class LvaDetailFragment extends BaseFragment {
@@ -134,10 +133,10 @@ public class LvaDetailFragment extends BaseFragment {
 				String.format("%.2f ECTS", minEcts), // marker label
 				new XPositionMetric( // object instance to set text positioning
 										// on the marker
-						PixelUtils.dpToPix(10), // 5dp offset
+						PixelUtils.dpToPix(5), // 5dp offset
 						XLayoutStyle.ABSOLUTE_FROM_RIGHT), // offset origin
-				Color.rgb(0, 0, 220), // line paint color
-				Color.rgb(0, 0, 220)); // text paint color
+				Color.rgb(220, 0, 0), // line paint color
+				Color.rgb(220, 0, 0)); // text paint color
 
 		ectsMarker.getTextPaint().setTextSize(PixelUtils.dpToPix(12));
 
@@ -170,7 +169,7 @@ public class LvaDetailFragment extends BaseFragment {
 		BarRenderer<?> renderer = ((BarRenderer<?>) barChart
 				.getRenderer(BarRenderer.class));
 		renderer.setBarRenderStyle(BarRenderer.BarRenderStyle.STACKED);
-		renderer.setBarGap(10);
+		renderer.setBarGap(20);
 		renderer.setBarWidthStyle(BarRenderer.BarWidthStyle.VARIABLE_WIDTH);
 
 		// init pie chart
