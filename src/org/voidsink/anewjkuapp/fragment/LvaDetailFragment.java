@@ -134,7 +134,7 @@ public class LvaDetailFragment extends BaseFragment {
 				AppUtils.getECTS(mOpenLvas), Color.rgb(220, 220, 0));
 		
 		// Setup the BarRenderer with our selected options
-        BarRenderer renderer = ((BarRenderer)barChart.getRenderer(BarRenderer.class));
+        BarRenderer<?> renderer = ((BarRenderer<?>)barChart.getRenderer(BarRenderer.class));
         renderer.setBarRenderStyle(BarRenderer.BarRenderStyle.STACKED);
         renderer.setBarGap(10);
         renderer.setBarWidthStyle(BarRenderer.BarWidthStyle.VARIABLE_WIDTH);

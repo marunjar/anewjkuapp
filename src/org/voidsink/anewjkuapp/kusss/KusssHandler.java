@@ -308,6 +308,7 @@ public class KusssHandler {
 		return exams;
 	}
 
+	@SuppressLint("UseSparseArrays")
 	public List<Exam> getNewExamsByLvaNr(List<Lva> lvas) throws IOException {
 
 		List<Exam> exams = new ArrayList<Exam>();
