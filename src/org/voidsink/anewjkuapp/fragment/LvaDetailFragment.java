@@ -2,6 +2,7 @@ package org.voidsink.anewjkuapp.fragment;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.EmbossMaskFilter;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,12 +29,16 @@ import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import com.androidplot.pie.PieChart;
 import com.androidplot.pie.Segment;
 import com.androidplot.pie.SegmentFormatter;
+import com.androidplot.ui.XLayoutStyle;
+import com.androidplot.ui.XPositionMetric;
+import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.BarFormatter;
 import com.androidplot.xy.BarRenderer;
 import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYStepMode;
+import com.androidplot.xy.YValueMarker;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
 
@@ -47,8 +52,6 @@ public class LvaDetailFragment extends BaseFragment {
 	private List<LvaWithGrade> mOpenLvas;
 	private List<LvaWithGrade> mDoneLvas;
 	private ExpandableListView expListView;
-	
-	Number[] series1Numbers10 = {2, null, 5, 2, 7, 4, 3, 7, 4, 5};
 
 	private LvaListAdapter adapter;
 
@@ -116,41 +119,79 @@ public class LvaDetailFragment extends BaseFragment {
 		View view = inflater.inflate(R.layout.fragment_lva_detail, container,
 				false);
 
+		double mDoneEcts = AppUtils.getECTS(mDoneLvas);
+		double mOpenEcts = AppUtils.getECTS(mOpenLvas);
+
 		expListView = (ExpandableListView) view
 				.findViewById(R.id.stat_lva_lists);
 		adapter = new LvaListAdapter(getContext(), this.mDoneLvas,
 				this.mOpenLvas);
 		expListView.setAdapter((ExpandableListAdapter) adapter);
 
+		double minEcts = mTerms.size() * 30;
+
+		YValueMarker ectsMarker = new YValueMarker(minEcts, // y-val to mark
+				String.format("%.2f ECTS", minEcts), // marker label
+				new XPositionMetric( // object instance to set text positioning
+										// on the marker
+						PixelUtils.dpToPix(10), // 5dp offset
+						XLayoutStyle.ABSOLUTE_FROM_RIGHT), // offset origin
+				Color.rgb(0, 0, 220), // line paint color
+				Color.rgb(0, 0, 220)); // text paint color
+
+		ectsMarker.getTextPaint().setTextSize(PixelUtils.dpToPix(12));
+
+		DashPathEffect dpe = new DashPathEffect(new float[] {
+				PixelUtils.dpToPix(2), PixelUtils.dpToPix(2) }, 0);
+
+		ectsMarker.getLinePaint().setPathEffect(dpe);
+
+		// calc range manually
+		double rangeTopMax = mTerms.size() * 30;
+		if (mDoneEcts + mOpenEcts > (rangeTopMax * .9)) {
+			rangeTopMax = (Math.ceil((mDoneEcts + mOpenEcts) * 1.1 / 10) * 10);
+		}
+
 		// init bar chart
 		XYPlot barChart = (XYPlot) view.findViewById(R.id.bar_chart);
 		barChart.setRangeTopMin(mTerms.size() * 30);
-		barChart.setRangeBoundaries(0, BoundaryMode.FIXED, mTerms.size() * 30, BoundaryMode.AUTO);
+		barChart.setRangeBoundaries(0, BoundaryMode.FIXED, rangeTopMax,
+				BoundaryMode.FIXED);
 		barChart.setRangeStep(XYStepMode.SUBDIVIDE, 10);
-		
-		addSerieToBarChart(barChart, getString(R.string.lva_done),
-				AppUtils.getECTS(mDoneLvas), Color.rgb(0, 220, 0));
-		addSerieToBarChart(barChart, getString(R.string.lva_open),
-				AppUtils.getECTS(mOpenLvas), Color.rgb(220, 220, 0));
-		
+
+		addSerieToBarChart(barChart, getString(R.string.lva_done), mDoneEcts,
+				Color.rgb(0, 220, 0));
+		addSerieToBarChart(barChart, getString(R.string.lva_open), mOpenEcts,
+				Color.rgb(220, 220, 0));
+
+		barChart.addMarker(ectsMarker);
+
 		// Setup the BarRenderer with our selected options
-        BarRenderer<?> renderer = ((BarRenderer<?>)barChart.getRenderer(BarRenderer.class));
-        renderer.setBarRenderStyle(BarRenderer.BarRenderStyle.STACKED);
-        renderer.setBarGap(10);
-        renderer.setBarWidthStyle(BarRenderer.BarWidthStyle.VARIABLE_WIDTH);
-		
+		BarRenderer<?> renderer = ((BarRenderer<?>) barChart
+				.getRenderer(BarRenderer.class));
+		renderer.setBarRenderStyle(BarRenderer.BarRenderStyle.STACKED);
+		renderer.setBarGap(10);
+		renderer.setBarWidthStyle(BarRenderer.BarWidthStyle.VARIABLE_WIDTH);
+
 		// init pie chart
 		PieChart pieChart = (PieChart) view.findViewById(R.id.pie_chart);
 
-		addSerieToPieChart(pieChart, getString(R.string.lva_done),
-				AppUtils.getECTS(mDoneLvas), Color.rgb(0, 220, 0));
-		addSerieToPieChart(pieChart, getString(R.string.lva_open),
-				AppUtils.getECTS(mOpenLvas), Color.rgb(220, 220, 0));
+		addSerieToPieChart(pieChart, getString(R.string.lva_done), mDoneEcts,
+				Color.rgb(0, 220, 0));
+		addSerieToPieChart(pieChart, getString(R.string.lva_open), mOpenEcts,
+				Color.rgb(220, 220, 0));
 
 		if (pieChart.getSeriesSet().size() > 0) {
 			pieChart.setVisibility(View.GONE);
 		} else {
 			pieChart.setVisibility(View.GONE);
+		}
+
+		double maxECTS = AppUtils.getECTS(mDoneLvas)
+				+ AppUtils.getECTS(mOpenLvas);
+		int rangeMax = mTerms.size() * 30;
+		if (maxECTS > rangeMax) {
+			rangeMax = (int) Math.ceil((maxECTS / 10)) * 10;
 		}
 
 		return view;
@@ -160,9 +201,11 @@ public class LvaDetailFragment extends BaseFragment {
 			double value, int color) {
 		List<Number> values = new ArrayList<Number>();
 		values.add(value);
-		
-		SimpleXYSeries mSeries = new SimpleXYSeries(values, SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, category); 
-		barChart.addSeries(mSeries, new BarFormatter(color, Color.rgb(0, 80, 0)));
+
+		SimpleXYSeries mSeries = new SimpleXYSeries(values,
+				SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, category);
+		barChart.addSeries(mSeries,
+				new BarFormatter(color, Color.rgb(0, 80, 0)));
 	}
 
 	@Override
@@ -171,8 +214,8 @@ public class LvaDetailFragment extends BaseFragment {
 		inflater.inflate(R.menu.lva, menu);
 	}
 
-	private void addSerieToPieChart(PieChart chart, String category, double value,
-			int color) {
+	private void addSerieToPieChart(PieChart chart, String category,
+			double value, int color) {
 		if (value > 0) {
 			EmbossMaskFilter emf = new EmbossMaskFilter(
 					new float[] { 1, 1, 1 }, 0.4f, 10, 3f);
