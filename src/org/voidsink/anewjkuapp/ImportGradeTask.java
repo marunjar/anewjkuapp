@@ -38,6 +38,10 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 	private Context mContext;
 	private ContentResolver mResolver;
 
+	private boolean isSync;
+	private SyncNotification mUpdateNotification;
+	private GradesChangedNotification mGradeChangeNotification;
+
 	public static final String[] GRADE_PROJECTION = new String[] {
 			KusssContentContract.Grade.GRADE_COL_ID,
 			KusssContentContract.Grade.GRADE_COL_TERM,
@@ -47,7 +51,7 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 			KusssContentContract.Grade.GRADE_COL_TYPE,
 			KusssContentContract.Grade.GRADE_COL_GRADE,
 			KusssContentContract.Grade.GRADE_COL_TITLE,
-			KusssContentContract.Grade.GRADE_COL_CODE};
+			KusssContentContract.Grade.GRADE_COL_CODE };
 
 	// Constants representing column positions from PROJECTION.
 	public static final int COLUMN_GRADE_ID = 0;
@@ -62,10 +66,13 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 
 	public ImportGradeTask(Account account, Context context) {
 		this(account, null, null, null, null, context);
-		this.mProvider = context.getContentResolver().acquireContentProviderClient(KusssContentContract.Exam.CONTENT_URI);
+		this.mProvider = context.getContentResolver()
+				.acquireContentProviderClient(
+						KusssContentContract.Exam.CONTENT_URI);
 		this.mSyncResult = new SyncResult();
+		this.isSync = false;
 	}
-	
+
 	public ImportGradeTask(Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult,
 			Context context) {
@@ -74,21 +81,29 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 		this.mSyncResult = syncResult;
 		this.mResolver = context.getContentResolver();
 		this.mContext = context;
+		this.isSync = true;
+	}
+
+	@Override
+	protected void onPreExecute() {
+		super.onPreExecute();
+
+		Log.d(TAG, "prepare importing grades");
+		
+		if (!isSync) {
+			mUpdateNotification = new SyncNotification(mContext,
+					R.string.notification_sync_lva);
+			mUpdateNotification.show("Import Noten");
+		}
+		mGradeChangeNotification = new GradesChangedNotification(mContext);
 	}
 
 	@Override
 	protected Void doInBackground(Void... params) {
 		Log.d(TAG, "Start importing grades");
 
-		SyncNotification mSyncNotification = new SyncNotification(mContext,
-				R.string.notification_sync_grade);
-		mSyncNotification.show("Import Noten");
-		GradesChangedNotification mGradeChangeNotification = new GradesChangedNotification(
-				mContext);
-		
 		synchronized (sync_lock) {
-			mSyncNotification.update("");
-			mSyncNotification.update("Noten werden geladen");
+			updateNotify("Noten werden geladen");
 
 			try {
 				Log.d(TAG, "setup connection");
@@ -106,14 +121,13 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 					}
 					Map<String, ExamGrade> gradeMap = new HashMap<String, ExamGrade>();
 					for (ExamGrade grade : grades) {
-						gradeMap.put(
-								String.format("%s-%d", grade.getCode(),
-										grade.getDate().getTime()), grade);
+						gradeMap.put(String.format("%s-%d", grade.getCode(),
+								grade.getDate().getTime()), grade);
 					}
 
 					Log.d(TAG, String.format("got %s grades", grades.size()));
 
-					mSyncNotification.update("Noten werden aktualisiert");
+					updateNotify("Noten werden aktualisiert");
 
 					ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
 
@@ -121,111 +135,126 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 					Cursor c = mProvider.query(examUri, GRADE_PROJECTION, null,
 							null, null);
 
-					if (c != null) {
+					if (c == null) {
+						Log.w(TAG, "selection failed");
+					} else {
 						Log.d(TAG, "Found " + c.getCount()
 								+ " local entries. Computing merge solution...");
-					} else {
-						Log.w(TAG, "selection failed");
-					}
 
-					int gradeId;
-					String gradeCode;
-					Date gradeDate;
-					GradeType gradeType;
-					Grade gradeGrade;
-					while (c.moveToNext()) {
-						gradeId = c.getInt(COLUMN_GRADE_ID);
-						gradeCode = c.getString(COLUMN_GRADE_CODE);
-						gradeDate = new Date(c.getLong(COLUMN_GRADE_DATE));
-						gradeType = GradeType.parseGradeType(c
-								.getInt(COLUMN_GRADE_TYPE));
-						gradeGrade = Grade.parseGradeType(c
-								.getInt(COLUMN_GRADE_GRADE));
+						int gradeId;
+						String gradeCode;
+						Date gradeDate;
+						GradeType gradeType;
+						Grade gradeGrade;
+						while (c.moveToNext()) {
+							gradeId = c.getInt(COLUMN_GRADE_ID);
+							gradeCode = c.getString(COLUMN_GRADE_CODE);
+							gradeDate = new Date(c.getLong(COLUMN_GRADE_DATE));
+							gradeType = GradeType.parseGradeType(c
+									.getInt(COLUMN_GRADE_TYPE));
+							gradeGrade = Grade.parseGradeType(c
+									.getInt(COLUMN_GRADE_GRADE));
 
-						ExamGrade grade = gradeMap.get(String.format("%s-%d",
-								gradeCode, gradeDate.getTime()));
-						if (grade != null) {
-							gradeMap.remove(String.format("%s-%d", gradeCode,
-									gradeDate.getTime()));
-							// Check to see if the entry needs to be updated
-							Uri existingUri = examUri.buildUpon()
-									.appendPath(Integer.toString(gradeId))
-									.build();
-							Log.d(TAG, "Scheduling update: " + existingUri);
+							ExamGrade grade = gradeMap.get(String.format(
+									"%s-%d", gradeCode, gradeDate.getTime()));
+							if (grade != null) {
+								gradeMap.remove(String.format("%s-%d",
+										gradeCode, gradeDate.getTime()));
+								// Check to see if the entry needs to be updated
+								Uri existingUri = examUri.buildUpon()
+										.appendPath(Integer.toString(gradeId))
+										.build();
+								Log.d(TAG, "Scheduling update: " + existingUri);
 
-							if (!gradeType.equals(grade.getGradeType())
-									|| !gradeGrade.equals(grade.getGrade())) {
-								mGradeChangeNotification.addUpdate(String
-										.format("%s: %s", grade.getTitle(),
-												mContext.getString(grade
-														.getGrade()
-														.getStringResID())));
+								if (!gradeType.equals(grade.getGradeType())
+										|| !gradeGrade.equals(grade.getGrade())) {
+									mGradeChangeNotification
+											.addUpdate(String.format("%s: %s",
+													grade.getTitle(),
+													mContext.getString(grade
+															.getGrade()
+															.getStringResID())));
+								}
+
+								batch.add(ContentProviderOperation
+										.newUpdate(
+												KusssContentContract
+														.asEventSyncAdapter(
+																existingUri,
+																mAccount.name,
+																mAccount.type))
+										.withValue(
+												KusssContentContract.Grade.GRADE_COL_ID,
+												Integer.toString(gradeId))
+										.withValues(grade.getContentValues())
+										.build());
+								mSyncResult.stats.numUpdates++;
 							}
+						}
+						c.close();
 
+						for (ExamGrade grade : gradeMap.values()) {
 							batch.add(ContentProviderOperation
-									.newUpdate(
+									.newInsert(
 											KusssContentContract
 													.asEventSyncAdapter(
-															existingUri,
+															examUri,
 															mAccount.name,
 															mAccount.type))
-									.withValue(
-											KusssContentContract.Grade.GRADE_COL_ID,
-											Integer.toString(gradeId))
 									.withValues(grade.getContentValues())
 									.build());
-							mSyncResult.stats.numUpdates++;
+							Log.d(TAG, "Scheduling insert: " + grade.getTerm()
+									+ " " + grade.getLvaNr());
+
+							mGradeChangeNotification.addInsert(String.format(
+									"%s: %s", grade.getTitle(), mContext
+											.getString(grade.getGrade()
+													.getStringResID())));
+
+							mSyncResult.stats.numInserts++;
 						}
-					}
-					c.close();
 
-					for (ExamGrade grade : gradeMap.values()) {
-						batch.add(ContentProviderOperation
-								.newInsert(
-										KusssContentContract
-												.asEventSyncAdapter(examUri,
-														mAccount.name,
-														mAccount.type))
-								.withValues(grade.getContentValues()).build());
-						Log.d(TAG, "Scheduling insert: " + grade.getTerm()
-								+ " " + grade.getLvaNr());
+						if (batch.size() > 0) {
+							updateNotify("Noten werden gespeichert");
 
-						mGradeChangeNotification.addInsert(String.format(
-								"%s: %s", grade.getTitle(), mContext
-										.getString(grade.getGrade()
-												.getStringResID())));
-
-						mSyncResult.stats.numInserts++;
-					}
-
-					if (batch.size() > 0) {
-						mSyncNotification.update("Noten werden gespeichert");
-
-						Log.d(TAG, "Applying batch update");
-						mProvider.applyBatch(batch);
-						Log.d(TAG, "Notify resolver");
-						mResolver.notifyChange(
-								KusssContentContract.Grade.CONTENT_CHANGED_URI, null, // No
-																				// local
-																				// observer
-								false); // IMPORTANT: Do not sync to network
-					} else {
-						Log.w(TAG, "No batch operations found! Do nothing");
+							Log.d(TAG, "Applying batch update");
+							mProvider.applyBatch(batch);
+							Log.d(TAG, "Notify resolver");
+							mResolver
+									.notifyChange(
+											KusssContentContract.Grade.CONTENT_CHANGED_URI,
+											null, // No
+											// local
+											// observer
+											false); // IMPORTANT: Do not sync to
+													// network
+						} else {
+							Log.w(TAG, "No batch operations found! Do nothing");
+						}
 					}
 				} else {
 					mSyncResult.stats.numAuthExceptions++;
 				}
 
 			} catch (Exception e) {
-				Log.e(TAG, "import failed: " + e);
-			} finally {
-				mSyncNotification.cancel();
-				mGradeChangeNotification.show();
-				setImportDone(true);
+				Log.e(TAG, "import failed", e);
 			}
 		}
 
+		setImportDone();
+
+		if (mUpdateNotification != null) {
+			mUpdateNotification.cancel();
+		}
+		mGradeChangeNotification.show();
+		
 		return null;
+	}
+
+	private void updateNotify(String string) {
+		if (mUpdateNotification != null) {
+			mUpdateNotification.update(string);
+		}
 	}
 
 }

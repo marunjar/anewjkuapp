@@ -52,6 +52,10 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 
 	private final long mSyncFromNow;
 
+	private boolean isSync;
+	private SyncNotification mUpdateNotification;
+	private CalendarChangedNotification mNotification;
+
 	public static final String[] EVENT_PROJECTION = new String[] {
 			CalendarContractWrapper.Events._ID(), //
 			CalendarContractWrapper.Events.EVENT_LOCATION(), // VEvent.getLocation()
@@ -76,11 +80,13 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 	public static final int COLUMN_EVENT_DELETED = 8;
 	public static final int COLUMN_EVENT_CAL_ID = 9;
 
-	public ImportCalendarTask(Account account, Context context, String getTypeID, CalendarBuilder calendarBuilder) {
+	public ImportCalendarTask(Account account, Context context,
+			String getTypeID, CalendarBuilder calendarBuilder) {
 		this(account, null, null, context.getContentResolver()
 				.acquireContentProviderClient(
 						CalendarContractWrapper.Events.CONTENT_URI()),
 				new SyncResult(), context, getTypeID, calendarBuilder);
+		this.isSync = false;
 	}
 
 	public ImportCalendarTask(Account account, Bundle extras, String authority,
@@ -94,6 +100,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 		this.mGetTypeID = getTypeID;
 		this.mCalendarBuilder = calendarBuilder;
 		this.mSyncFromNow = System.currentTimeMillis();
+		this.isSync = true;
 	}
 
 	public String getCalendarName(String getTypeID) {
@@ -108,19 +115,26 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 	}
 
 	@Override
+	protected void onPreExecute() {
+		super.onPreExecute();
+		Log.d(TAG, "prepare importing calendar");
+		
+		if (!isSync) {
+			mUpdateNotification = new SyncNotification(mContext,
+					R.string.notification_sync_calendar);
+			mUpdateNotification.show(getCalendarName(this.mGetTypeID));
+		}
+		mNotification = new CalendarChangedNotification(mContext,
+				getCalendarName(this.mGetTypeID));
+	}
+
+	@Override
 	protected Void doInBackground(Void... params) {
 		Log.d(TAG, "Start importing calendar");
 
-		SyncNotification mSyncNotification = new SyncNotification(mContext,
-				R.string.notification_sync_calendar);
-		mSyncNotification.show(getCalendarName(this.mGetTypeID));
-		CalendarChangedNotification mNotification = new CalendarChangedNotification(
-				mContext, getCalendarName(this.mGetTypeID));
-
 		synchronized (sync_lock) {
 
-			mSyncNotification.update("");
-			mSyncNotification.update("Kalender wird gelesen");
+			updateNotify("Kalender wird gelesen");
 
 			try {
 
@@ -153,7 +167,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 						Log.d(TAG,
 								String.format("got %s events", events.size()));
 
-						mSyncNotification.update("Termine werden aktualisiert");
+						updateNotify("Termine werden aktualisiert");
 
 						ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
 
@@ -186,19 +200,16 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 
 						Log.d(TAG, "calUri: " + calUri.toString());
 
-						try {
-							Cursor c = mProvider.query(calUri,
-									EVENT_PROJECTION, selection, selectionArgs,
-									null);
+						Cursor c = mProvider.query(calUri, EVENT_PROJECTION,
+								selection, selectionArgs, null);
 
-							if (c != null) {
-								Log.d(TAG,
-										"Found "
-												+ c.getCount()
-												+ " local entries. Computing merge solution...");
-							} else {
-								Log.w(TAG, "selection failed");
-							}
+						if (c == null) {
+							Log.w(TAG, "selection failed");
+						} else {
+							Log.d(TAG,
+									"Found "
+											+ c.getCount()
+											+ " local entries. Computing merge solution...");
 
 							// Find stale data
 							String eventId;
@@ -231,11 +242,12 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 								if (eventKusssId != null) {
 									VEvent match = eventsMap.get(eventKusssId);
 									if (match != null && !eventDeleted) {
-										// Entry exists. Remove from entry map
-										// to
-										// prevent insert later
+										// Entry exists. Remove from entry
+										// map
+										// to prevent insert later
 										eventsMap.remove(eventKusssId);
-										// Check to see if the entry needs to be
+										// Check to see if the entry needs
+										// to be
 										// updated
 										Uri existingUri = calUri.buildUpon()
 												.appendPath(eventId).build();
@@ -296,6 +308,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 															eventDTEnd).build());
 											mSyncResult.stats.numUpdates++;
 										} else {
+											mSyncResult.stats.numSkippedEntries++;
 											// Log.d(TAG, "No action: " +
 											// eventKusssId);
 										}
@@ -311,7 +324,8 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 												|| ((eventKusssId != null)
 														&& (!eventKusssId
 																.isEmpty()) && (eventDTStart > (mSyncFromNow - DateUtils.DAY_IN_MILLIS)))) {
-											// Entry doesn't exist. Remove only
+											// Entry doesn't exist. Remove
+											// only
 											// newer
 											// events from the database.
 											Uri deleteUri = calUri.buildUpon()
@@ -337,6 +351,8 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 																			mAccount.type))
 													.build());
 											mSyncResult.stats.numDeletes++;
+										} else {
+											mSyncResult.stats.numSkippedEntries++;
 										}
 									}
 								} else {
@@ -353,8 +369,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 
 							// Add new items
 							for (VEvent v : eventsMap.values()) {
-								mSyncNotification
-										.update("Termine werden hinzugefügt");
+								updateNotify("Termine werden hinzugefügt");
 
 								mNotification.addInsert(getEventString(v));
 
@@ -436,8 +451,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 							}
 
 							if (batch.size() > 0) {
-								mSyncNotification
-										.update("Termine werden gespeichert");
+								updateNotify("Termine werden gespeichert");
 
 								Log.d(TAG, "Applying batch update");
 								mProvider.applyBatch(batch);
@@ -455,21 +469,30 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 								Log.w(TAG,
 										"No batch operations found! Do nothing");
 							}
-						} catch (Exception e) {
-							Log.e(TAG, "import failed: ", e);
 						}
 					}
 				} else {
 					mSyncResult.stats.numAuthExceptions++;
 				}
-			} finally {
-				mSyncNotification.cancel();
-				mNotification.show();
-				setImportDone(true);
+			} catch (Exception e) {
+				Log.e(TAG, "import calendar failed", e);
 			}
 		}
 
+		setImportDone();
+
+		if (mUpdateNotification != null) {
+			mUpdateNotification.cancel();
+		}
+		mNotification.show();
+		
 		return null;
+	}
+
+	private void updateNotify(String string) {
+		if (mUpdateNotification != null) {
+			mUpdateNotification.update(string);
+		}
 	}
 
 	private String getEventString(VEvent v) {

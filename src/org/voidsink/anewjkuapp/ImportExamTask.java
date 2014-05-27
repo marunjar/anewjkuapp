@@ -39,6 +39,10 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 	private Context mContext;
 	private ContentResolver mResolver;
 
+	private boolean isSync;
+	private SyncNotification mUpdateNotification;
+	private NewExamNotification mNewExamNotification;
+
 	public static final String[] EXAM_PROJECTION = new String[] {
 			KusssContentContract.Exam.EXAM_COL_ID,
 			KusssContentContract.Exam.EXAM_COL_TERM,
@@ -64,6 +68,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 				.acquireContentProviderClient(
 						KusssContentContract.Exam.CONTENT_URI);
 		this.mSyncResult = new SyncResult();
+		this.isSync = false;
 	}
 
 	public ImportExamTask(Account account, Bundle extras, String authority,
@@ -74,21 +79,29 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 		this.mSyncResult = syncResult;
 		this.mResolver = context.getContentResolver();
 		this.mContext = context;
+		this.isSync = true;
+	}
+
+	@Override
+	protected void onPreExecute() {
+		super.onPreExecute();
+		
+		Log.d(TAG, "prepare importing exams");
+
+		if (!isSync) {
+			mUpdateNotification = new SyncNotification(mContext,
+					R.string.notification_sync_exam);
+			mUpdateNotification.show("Prüfungen werden geladen");
+		}
+		mNewExamNotification = new NewExamNotification(mContext);
 	}
 
 	@Override
 	protected Void doInBackground(Void... params) {
 		Log.d(TAG, "Start importing exams");
 
-		NewExamNotification mNewExamNotification = new NewExamNotification(
-				mContext);
-		SyncNotification mSyncNotification = new SyncNotification(mContext,
-				R.string.notification_sync_exam);
-		mSyncNotification.show("Prüfungen werden geladen");
-
 		synchronized (sync_lock) {
-			mSyncNotification.update("");
-			mSyncNotification.update("Prüfungen werden geladen");
+			updateNotify("Prüfungen werden geladen");
 
 			try {
 				Log.d(TAG, "setup connection");
@@ -120,7 +133,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 
 					Log.d(TAG, String.format("got %s exams", exams.size()));
 
-					mSyncNotification.update("Prüfungen werden aktualisiert");
+					updateNotify("Prüfungen werden aktualisiert");
 
 					ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
 
@@ -226,8 +239,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 						}
 
 						if (batch.size() > 0) {
-							mSyncNotification
-									.update("Prüfungen werden gespeichert");
+							updateNotify("Prüfungen werden gespeichert");
 
 							Log.d(TAG, "Applying batch update");
 							mProvider.applyBatch(batch);
@@ -247,17 +259,25 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 				} else {
 					mSyncResult.stats.numAuthExceptions++;
 				}
-
 			} catch (Exception e) {
-				Log.e(TAG, "import failed: " + e);
-			} finally {
-				mSyncNotification.cancel();
-				mNewExamNotification.show();
-				setImportDone(true);
+				Log.e(TAG, "import failed", e);
 			}
 		}
+		
+		setImportDone();
 
+		if (mUpdateNotification != null) {
+			mUpdateNotification.cancel();
+		}
+		mNewExamNotification.show();
+		
 		return null;
+	}
+
+	private void updateNotify(String string) {
+		if (mUpdateNotification != null) {
+			mUpdateNotification.update(string);
+		}
 	}
 
 }

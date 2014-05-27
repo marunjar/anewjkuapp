@@ -34,6 +34,9 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
 	private Context mContext;
 	private ContentResolver mResolver;
 
+	private boolean isSync;
+	private SyncNotification mUpdateNotification;
+
 	public static final String[] LVA_PROJECTION = new String[] {
 			KusssContentContract.Lva.LVA_COL_ID,
 			KusssContentContract.Lva.LVA_COL_TERM,
@@ -63,6 +66,7 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
 				.acquireContentProviderClient(
 						KusssContentContract.Lva.CONTENT_URI);
 		this.mSyncResult = new SyncResult();
+		this.isSync = false;
 	}
 
 	public ImportLvaTask(Account account, Bundle extras, String authority,
@@ -73,19 +77,28 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
 		this.mSyncResult = syncResult;
 		this.mResolver = context.getContentResolver();
 		this.mContext = context;
+		this.isSync = true;
+	}
+
+	@Override
+	protected void onPreExecute() {
+		super.onPreExecute();
+
+		Log.d(TAG, "prepare importing LVA");
+
+		if (!isSync) {
+			mUpdateNotification = new SyncNotification(mContext,
+					R.string.notification_sync_lva);
+			mUpdateNotification.show("LVAs werden geladen");
+		}
 	}
 
 	@Override
 	protected Void doInBackground(Void... params) {
 		Log.d(TAG, "Start importing LVA");
 
-		SyncNotification mSyncNotification = new SyncNotification(mContext,
-				R.string.notification_sync_lva);
-		mSyncNotification.show("LVAs werden geladen");
-
 		synchronized (sync_lock) {
-			mSyncNotification.update("");
-			mSyncNotification.update("LVAs werden geladen");
+			udpateNotify("LVAs werden geladen");
 
 			try {
 				Log.d(TAG, "setup connection");
@@ -108,7 +121,7 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
 
 						Log.d(TAG, String.format("got %s lvas", lvas.size()));
 
-						mSyncNotification.update("LVAs werden aktualisiert");
+						udpateNotify("LVAs werden aktualisiert");
 
 						ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
 
@@ -116,106 +129,134 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
 						Cursor c = mProvider.query(lvaUri, LVA_PROJECTION,
 								null, null, null);
 
-						if (c != null) {
+						if (c == null) {
+							Log.w(TAG, "selection failed");
+						} else {
 							Log.d(TAG,
 									"Found "
 											+ c.getCount()
 											+ " local entries. Computing merge solution...");
-						} else {
-							Log.w(TAG, "selection failed");
-						}
 
-						int lvaId;
-						String lvaTerm;
-						int lvaNr;
+							int lvaId;
+							String lvaTerm;
+							int lvaNr;
 
-						while (c.moveToNext()) {
-							lvaId = c.getInt(COLUMN_LVA_ID);
-							lvaTerm = c.getString(COLUMN_LVA_TERM);
-							lvaNr = c.getInt(COLUMN_LVA_LVANR);
+							while (c.moveToNext()) {
+								lvaId = c.getInt(COLUMN_LVA_ID);
+								lvaTerm = c.getString(COLUMN_LVA_TERM);
+								lvaNr = c.getInt(COLUMN_LVA_LVANR);
 
-							Lva lva = lvaMap.get(Lva.getKey(lvaTerm, lvaNr));
-							if (lva != null) {
-								lvaMap.remove(Lva.getKey(lvaTerm, lvaNr));
-								// Check to see if the entry needs to be updated
-								Uri existingUri = lvaUri.buildUpon()
-										.appendPath(Integer.toString(lvaId))
-										.build();
-								Log.d(TAG, "Scheduling update: " + existingUri);
+								Lva lva = lvaMap
+										.get(Lva.getKey(lvaTerm, lvaNr));
+								if (lva != null) {
+									lvaMap.remove(Lva.getKey(lvaTerm, lvaNr));
+									// Check to see if the entry needs to be
+									// updated
+									Uri existingUri = lvaUri
+											.buildUpon()
+											.appendPath(Integer.toString(lvaId))
+											.build();
+									Log.d(TAG, "Scheduling update: "
+											+ existingUri);
 
+									batch.add(ContentProviderOperation
+											.newUpdate(
+													KusssContentContract
+															.asEventSyncAdapter(
+																	existingUri,
+																	mAccount.name,
+																	mAccount.type))
+											.withValue(
+													KusssContentContract.Lva.LVA_COL_ID,
+													Integer.toString(lvaId))
+											.withValues(lva.getContentValues())
+											.build());
+									mSyncResult.stats.numUpdates++;
+								} else {
+									// delete
+									Log.d(TAG,
+											"delete: "
+													+ Lva.getKey(lvaTerm, lvaNr));
+									// Entry doesn't exist. Remove only
+									// newer
+									// events from the database.
+									Uri deleteUri = lvaUri
+											.buildUpon()
+											.appendPath(Integer.toString(lvaId))
+											.build();
+									Log.d(TAG, "Scheduling delete: "
+											+ deleteUri);
+
+									batch.add(ContentProviderOperation
+											.newDelete(
+													KusssContentContract
+															.asEventSyncAdapter(
+																	deleteUri,
+																	mAccount.name,
+																	mAccount.type))
+											.build());
+									mSyncResult.stats.numDeletes++;
+								}
+							}
+							c.close();
+
+							for (Lva lva : lvaMap.values()) {
 								batch.add(ContentProviderOperation
-										.newUpdate(
+										.newInsert(
 												KusssContentContract
 														.asEventSyncAdapter(
-																existingUri,
+																lvaUri,
 																mAccount.name,
 																mAccount.type))
-										.withValue(
-												KusssContentContract.Lva.LVA_COL_ID,
-												Integer.toString(lvaId))
 										.withValues(lva.getContentValues())
 										.build());
-								mSyncResult.stats.numUpdates++;
-							} else {
-								// delete
-								Log.d(TAG, "delete: " + Lva.getKey(lvaTerm, lvaNr));
-								// Entry doesn't exist. Remove only
-								// newer
-								// events from the database.
-								Uri deleteUri = lvaUri.buildUpon()
-										.appendPath(Integer.toString(lvaId))
-										.build();
-								Log.d(TAG, "Scheduling delete: " + deleteUri);
-
-								batch.add(ContentProviderOperation.newDelete(
-										KusssContentContract
-												.asEventSyncAdapter(deleteUri,
-														mAccount.name,
-														mAccount.type)).build());
-								mSyncResult.stats.numDeletes++;
+								Log.d(TAG,
+										"Scheduling insert: " + lva.getTerm()
+												+ " " + lva.getLvaNr());
+								mSyncResult.stats.numInserts++;
 							}
-						}
-						c.close();
 
-						for (Lva lva : lvaMap.values()) {
-							batch.add(ContentProviderOperation
-									.newInsert(
-											KusssContentContract
-													.asEventSyncAdapter(lvaUri,
-															mAccount.name,
-															mAccount.type))
-									.withValues(lva.getContentValues()).build());
-							Log.d(TAG, "Scheduling insert: " + lva.getTerm()
-									+ " " + lva.getLvaNr());
-							mSyncResult.stats.numInserts++;
-						}
+							if (batch.size() > 0) {
+								udpateNotify("LVAs werden gespeichert");
 
-						if (batch.size() > 0) {
-							mSyncNotification.update("LVAs werden gespeichert");
-
-							Log.d(TAG, "Applying batch update");
-							mProvider.applyBatch(batch);
-							Log.d(TAG, "Notify resolver");
-							mResolver.notifyChange(
-									KusssContentContract.Lva.CONTENT_CHANGED_URI, null, // No
-																				// local
-																				// observer
-									false); // IMPORTANT: Do not sync to network
-						} else {
-							Log.w(TAG, "No batch operations found! Do nothing");
+								Log.d(TAG, "Applying batch update");
+								mProvider.applyBatch(batch);
+								Log.d(TAG, "Notify resolver");
+								mResolver
+										.notifyChange(
+												KusssContentContract.Lva.CONTENT_CHANGED_URI,
+												null, // No
+												// local
+												// observer
+												false); // IMPORTANT: Do not
+														// sync to
+														// network
+							} else {
+								Log.w(TAG,
+										"No batch operations found! Do nothing");
+							}
 						}
 					}
 				} else {
 					mSyncResult.stats.numAuthExceptions++;
 				}
 			} catch (Exception e) {
-				Log.e(TAG, "import failed: " + e);
-			} finally {
-				mSyncNotification.cancel();
-				setImportDone(true);
+				Log.e(TAG, "import failed", e);
 			}
 		}
 
+		setImportDone();
+		
+		if (mUpdateNotification != null) {
+			mUpdateNotification.cancel();
+		}
+		
 		return null;
+	}
+
+	private void udpateNotify(String string) {
+		if (mUpdateNotification != null) {
+			mUpdateNotification.update(string);
+		}
 	}
 }
