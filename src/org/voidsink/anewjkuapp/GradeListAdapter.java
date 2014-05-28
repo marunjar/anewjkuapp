@@ -54,7 +54,8 @@ public class GradeListAdapter extends BaseExpandableListAdapter implements
 
 	private class GradeListTypeHolder {
 		private TextView type;
-		public TextView avgGrade;
+		private TextView avgGrade;
+
 	}
 
 	@Override
@@ -243,12 +244,8 @@ public class GradeListAdapter extends BaseExpandableListAdapter implements
 				.getStringResID()));
 		double avgGrade = AppUtils.getAvgGrade(
 				getGradesByGroupPosition(groupPosition), false);
-		if (avgGrade > 0) {
-			gradeTypeHolder.avgGrade.setVisibility(View.VISIBLE);
-			gradeTypeHolder.avgGrade.setText(String.format("ø %.2f", avgGrade));
-		} else {
-			gradeTypeHolder.avgGrade.setVisibility(View.GONE);
-		}
+		gradeTypeHolder.avgGrade.setText(String.format("ø %.2f", avgGrade));
+
 		return convertView;
 	}
 

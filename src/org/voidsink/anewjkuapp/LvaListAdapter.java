@@ -139,7 +139,7 @@ public class LvaListAdapter extends BaseExpandableListAdapter implements
 		lvaHolder.skz.setText(String.format("[%s]", lva.getLva().getSKZ()));
 		lvaHolder.type.setText(lva.getLva().getLvaType());
 		lvaHolder.ects.setText(String.format("%.2f ECTS", lva.getLva()
-				.getECTS()));
+				.getEcts()));
 		lvaHolder.code.setText(lva.getLva().getCode());
 
 		return convertView;

@@ -98,7 +98,7 @@ public class Lva {
 		this.ects = ects;
 	}
 
-	public double getECTS() {
+	public double getEcts() {
 		return this.ects;
 	}
 
@@ -133,7 +133,7 @@ public class Lva {
 	public ContentValues getContentValues() {
 		ContentValues cv = new ContentValues();
 		cv.put(KusssContentContract.Lva.LVA_COL_TITLE, getTitle());
-		cv.put(KusssContentContract.Lva.LVA_COL_ECTS, getECTS());
+		cv.put(KusssContentContract.Lva.LVA_COL_ECTS, getEcts());
 		cv.put(KusssContentContract.Lva.LVA_COL_LVANR, getLvaNr());
 		cv.put(KusssContentContract.Lva.LVA_COL_SKZ, getSKZ());
 		cv.put(KusssContentContract.Lva.LVA_COL_CODE, getCode());

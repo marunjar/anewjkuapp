@@ -133,11 +133,11 @@ public class AppUtils {
 	public static double getECTS(List<LvaWithGrade> lvas) {
 		double sum = 0;
 		for (LvaWithGrade lva : lvas) {
-			sum += lva.getLva().getECTS();
+			sum += lva.getLva().getEcts();
 		}
 		return sum;
 	}
-
+	
 	public static void sortLVAs(List<Lva> lvas) {
 		// Collections.sort(lvas, new Comparator<Lva>() {
 		//
@@ -320,4 +320,5 @@ public class AppUtils {
 		}
 		return count;
 	}
+
 }
