@@ -45,6 +45,7 @@
     <string name="pref_cat_kusss_main">KUSSS</string>
     <string name="pref_cat_app_main">App</string>
     <string name="pref_cat_app_map">Karte</string>
+    <string name="pref_cat_diagrams">Diagramme</string>
     <string name="pref_kusss_user_title">MatrikelNr</string>
     <string name="pref_kusss_pw_title">Passwort</string>
     <string name="pref_kusss_sync_title">Synchronisieren</string>
@@ -63,6 +64,8 @@
     <string name="pref_app_use_light_theme_summary">Das Ändern dieser Einstellung startet die App neu</string>
     <string name="pref_app_use_light_theme_title">helles Design verwenden</string>
     <string name="pref_app_map_file_title">eigene Kartendatei</string>
+    <string name="pref_diagrams_use_lva_bar_chart_summary">Barchart für offene und erledigte LVAs verwenden</string>
+    <string name="pref_diagrams_use_lva_bar_chart_title">Diagrammtyp für LVAs</string>
     <string name="search_poi_title">Suche</string>
     <string name="search_poi_hint">Hörsaal hier eingeben</string>
     <string name="group_user">User</string>

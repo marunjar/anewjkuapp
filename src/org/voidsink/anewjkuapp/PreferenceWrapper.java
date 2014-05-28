@@ -46,6 +46,9 @@ public final class PreferenceWrapper {
 	private static final String PREF_LAST_VERSION = "pref_key_last_version";
 	public static final int PREF_LAST_VERSION_NONE = -1;
 	
+	public static final String PREF_USE_LVA_BAR_CHART = "pref_key_use_lva_bar_chart";
+	private static final boolean PREF_USE_LVA_BAR_CHART_DEFAULT = false;
+	
 	private PreferenceWrapper() {
 
 	}
@@ -217,5 +220,18 @@ public final class PreferenceWrapper {
 				.getDefaultSharedPreferences(mContext);
 		sp.edit().putInt(PREF_LAST_VERSION, version).commit();
 	}
+
+	public static boolean getUseLvaBarChart(Context mContext) {
+		SharedPreferences sp = PreferenceManager
+				.getDefaultSharedPreferences(mContext);
+		try {
+			return sp.getBoolean(PREF_USE_LVA_BAR_CHART,
+					PREF_USE_LVA_BAR_CHART_DEFAULT);
+		} catch (Exception e) {
+			Log.e(TAG, "Failure", e);
+			return PREF_USE_LVA_BAR_CHART_DEFAULT;
+		}
+	}
+	
 	
 }

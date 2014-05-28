@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.voidsink.anewjkuapp.AppUtils;
 import org.voidsink.anewjkuapp.LvaListAdapter;
+import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
@@ -129,68 +130,82 @@ public class LvaDetailFragment extends BaseFragment {
 
 		double minEcts = mTerms.size() * 30;
 
-		YValueMarker ectsMarker = new YValueMarker(minEcts, // y-val to mark
-				String.format("%.2f ECTS", minEcts), // marker label
-				new XPositionMetric( // object instance to set text positioning
-										// on the marker
-						PixelUtils.dpToPix(5), // 5dp offset
-						XLayoutStyle.ABSOLUTE_FROM_RIGHT), // offset origin
-				Color.rgb(220, 0, 0), // line paint color
-				Color.rgb(220, 0, 0)); // text paint color
-
-		ectsMarker.getTextPaint().setTextSize(PixelUtils.dpToPix(12));
-
-		DashPathEffect dpe = new DashPathEffect(new float[] {
-				PixelUtils.dpToPix(2), PixelUtils.dpToPix(2) }, 0);
-
-		ectsMarker.getLinePaint().setPathEffect(dpe);
-
-		// calc range manually
-		double rangeTopMax = mTerms.size() * 30;
-		if (mDoneEcts + mOpenEcts > (rangeTopMax * .9)) {
-			rangeTopMax = (Math.ceil((mDoneEcts + mOpenEcts) * 1.1 / 10) * 10);
-		}
-
-		// init bar chart
 		XYPlot barChart = (XYPlot) view.findViewById(R.id.bar_chart);
-		barChart.setRangeTopMin(mTerms.size() * 30);
-		barChart.setRangeBoundaries(0, BoundaryMode.FIXED, rangeTopMax,
-				BoundaryMode.FIXED);
-		barChart.setRangeStep(XYStepMode.SUBDIVIDE, 10);
-
-		addSerieToBarChart(barChart, getString(R.string.lva_done), mDoneEcts,
-				Color.rgb(0, 220, 0));
-		addSerieToBarChart(barChart, getString(R.string.lva_open), mOpenEcts,
-				Color.rgb(220, 220, 0));
-
-		barChart.addMarker(ectsMarker);
-
-		// Setup the BarRenderer with our selected options
-		BarRenderer<?> renderer = ((BarRenderer<?>) barChart
-				.getRenderer(BarRenderer.class));
-		renderer.setBarRenderStyle(BarRenderer.BarRenderStyle.STACKED);
-		renderer.setBarGap(20);
-		renderer.setBarWidthStyle(BarRenderer.BarWidthStyle.VARIABLE_WIDTH);
-
-		// init pie chart
 		PieChart pieChart = (PieChart) view.findViewById(R.id.pie_chart);
 
-		addSerieToPieChart(pieChart, getString(R.string.lva_done), mDoneEcts,
-				Color.rgb(0, 220, 0));
-		addSerieToPieChart(pieChart, getString(R.string.lva_open), mOpenEcts,
-				Color.rgb(220, 220, 0));
-
-		if (pieChart.getSeriesSet().size() > 0) {
+		if (PreferenceWrapper.getUseLvaBarChart(getContext())) {
 			pieChart.setVisibility(View.GONE);
+
+			YValueMarker ectsMarker = new YValueMarker(minEcts, // y-val to mark
+					String.format("%.2f ECTS", minEcts), // marker label
+					new XPositionMetric( // object instance to set text
+											// positioning
+											// on the marker
+							PixelUtils.dpToPix(5), // 5dp offset
+							XLayoutStyle.ABSOLUTE_FROM_RIGHT), // offset origin
+					Color.rgb(220, 0, 0), // line paint color
+					Color.rgb(220, 0, 0)); // text paint color
+
+			ectsMarker.getTextPaint().setTextSize(PixelUtils.dpToPix(12));
+
+			DashPathEffect dpe = new DashPathEffect(new float[] {
+					PixelUtils.dpToPix(2), PixelUtils.dpToPix(2) }, 0);
+
+			ectsMarker.getLinePaint().setPathEffect(dpe);
+
+			// calc range manually
+			double rangeTopMax = mTerms.size() * 30;
+			if (mDoneEcts + mOpenEcts > (rangeTopMax * .9)) {
+				rangeTopMax = (Math.ceil((mDoneEcts + mOpenEcts) * 1.1 / 10) * 10);
+			}
+
+			// calc steps
+			double rangeStep = Math.ceil((rangeTopMax / 10) / 10) * 10;
+
+			// init bar chart
+			addSerieToBarChart(barChart, getString(R.string.lva_done),
+					mDoneEcts, Color.rgb(0, 220, 0));
+			addSerieToBarChart(barChart, getString(R.string.lva_open),
+					mOpenEcts, Color.rgb(220, 220, 0));
+
+			barChart.setRangeTopMin(mTerms.size() * 30);
+			barChart.setRangeBoundaries(0, BoundaryMode.FIXED, rangeTopMax,
+					BoundaryMode.FIXED);
+			barChart.setRangeStep(XYStepMode.INCREMENT_BY_VAL, rangeStep);
+
+			// workaround to center ects bar
+			barChart.setDomainBoundaries(0, 2, BoundaryMode.FIXED);
+			barChart.addMarker(ectsMarker);
+
+			// Setup the BarRenderer with our selected options
+			BarRenderer<?> renderer = ((BarRenderer<?>) barChart
+					.getRenderer(BarRenderer.class));
+			if (renderer != null) {
+				renderer.setBarRenderStyle(BarRenderer.BarRenderStyle.STACKED);
+				renderer.setBarWidthStyle(BarRenderer.BarWidthStyle.VARIABLE_WIDTH);
+				renderer.setBarGap(25);
+			}
+
+			if (barChart.getSeriesSet().size() > 0) {
+				barChart.setVisibility(View.VISIBLE);
+			} else {
+				barChart.setVisibility(View.GONE);
+			}
+
 		} else {
-			pieChart.setVisibility(View.GONE);
-		}
+			barChart.setVisibility(View.GONE);
 
-		double maxECTS = AppUtils.getECTS(mDoneLvas)
-				+ AppUtils.getECTS(mOpenLvas);
-		int rangeMax = mTerms.size() * 30;
-		if (maxECTS > rangeMax) {
-			rangeMax = (int) Math.ceil((maxECTS / 10)) * 10;
+			// init pie chart
+			addSerieToPieChart(pieChart, getString(R.string.lva_done),
+					mDoneEcts, Color.rgb(0, 220, 0));
+			addSerieToPieChart(pieChart, getString(R.string.lva_open),
+					mOpenEcts, Color.rgb(220, 220, 0));
+
+			if (pieChart.getSeriesSet().size() > 0) {
+				pieChart.setVisibility(View.VISIBLE);
+			} else {
+				pieChart.setVisibility(View.GONE);
+			}
 		}
 
 		return view;
@@ -198,13 +213,17 @@ public class LvaDetailFragment extends BaseFragment {
 
 	private void addSerieToBarChart(XYPlot barChart, String category,
 			double value, int color) {
-		List<Number> values = new ArrayList<Number>();
-		values.add(value);
+		if (value > 0) {
+			List<Number> values = new ArrayList<Number>();
+			values.add(null); // workaround to center ects bar
+			values.add(value);
+			values.add(null); // workaround to center ects bar
 
-		SimpleXYSeries mSeries = new SimpleXYSeries(values,
-				SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, category);
-		barChart.addSeries(mSeries,
-				new BarFormatter(color, Color.rgb(0, 80, 0)));
+			SimpleXYSeries mSeries = new SimpleXYSeries(values,
+					SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, category);
+			barChart.addSeries(mSeries,
+					new BarFormatter(color, Color.rgb(0, 80, 0)));
+		}
 	}
 
 	@Override
