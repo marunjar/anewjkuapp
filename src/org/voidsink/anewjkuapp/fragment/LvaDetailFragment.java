@@ -3,7 +3,6 @@ package org.voidsink.anewjkuapp.fragment;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
-import android.graphics.EmbossMaskFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,8 +28,6 @@ import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 
 import com.androidplot.pie.PieChart;
-import com.androidplot.pie.Segment;
-import com.androidplot.pie.SegmentFormatter;
 import com.androidplot.ui.XLayoutStyle;
 import com.androidplot.ui.XPositionMetric;
 import com.androidplot.util.PixelUtils;
@@ -51,9 +48,9 @@ public class LvaDetailFragment extends BaseFragment {
 
 	private List<LvaWithGrade> mOpenLvas;
 	private List<LvaWithGrade> mDoneLvas;
-	private ExpandableListView expListView;
+	private ExpandableListView mExpListView;
 
-	private LvaListAdapter adapter;
+	private LvaListAdapter mAdapter;
 
 	public LvaDetailFragment() {
 		this("", new ArrayList<Lva>(), new ArrayList<ExamGrade>());
@@ -122,16 +119,16 @@ public class LvaDetailFragment extends BaseFragment {
 		double mDoneEcts = AppUtils.getECTS(mDoneLvas);
 		double mOpenEcts = AppUtils.getECTS(mOpenLvas);
 
-		expListView = (ExpandableListView) view
-				.findViewById(R.id.stat_lva_lists);
-		adapter = new LvaListAdapter(getContext(), this.mDoneLvas,
+		mExpListView = (ExpandableListView) view
+				.findViewById(R.id.lva_lists);
+		mAdapter = new LvaListAdapter(getContext(), this.mDoneLvas,
 				this.mOpenLvas);
-		expListView.setAdapter((ExpandableListAdapter) adapter);
+		mExpListView.setAdapter((ExpandableListAdapter) mAdapter);
 
 		double minEcts = mTerms.size() * 30;
 
-		XYPlot barChart = (XYPlot) view.findViewById(R.id.bar_chart);
-		PieChart pieChart = (PieChart) view.findViewById(R.id.pie_chart);
+		XYPlot barChart = (XYPlot) view.findViewById(R.id.lva_bar_chart);
+		PieChart pieChart = (PieChart) view.findViewById(R.id.lva_pie_chart);
 
 		if (PreferenceWrapper.getUseLvaBarChart(getContext())) {
 			pieChart.setVisibility(View.GONE);
@@ -196,9 +193,9 @@ public class LvaDetailFragment extends BaseFragment {
 			barChart.setVisibility(View.GONE);
 
 			// init pie chart
-			addSerieToPieChart(pieChart, getString(R.string.lva_done),
+			AppUtils.addSerieToPieChart(pieChart, getString(R.string.lva_done),
 					mDoneEcts, Color.rgb(0, 220, 0));
-			addSerieToPieChart(pieChart, getString(R.string.lva_open),
+			AppUtils.addSerieToPieChart(pieChart, getString(R.string.lva_open),
 					mOpenEcts, Color.rgb(220, 220, 0));
 
 			if (pieChart.getSeriesSet().size() > 0) {
@@ -230,19 +227,5 @@ public class LvaDetailFragment extends BaseFragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.lva, menu);
-	}
-
-	private void addSerieToPieChart(PieChart chart, String category,
-			double value, int color) {
-		if (value > 0) {
-			EmbossMaskFilter emf = new EmbossMaskFilter(
-					new float[] { 1, 1, 1 }, 0.4f, 10, 3f);
-			Segment segment = new Segment(category, value);
-			SegmentFormatter formatter = new SegmentFormatter(color,
-					Color.BLACK, Color.BLACK, Color.DKGRAY);
-			formatter.getFillPaint().setMaskFilter(emf);
-
-			chart.addSegment(segment, formatter);
-		}
 	}
 }

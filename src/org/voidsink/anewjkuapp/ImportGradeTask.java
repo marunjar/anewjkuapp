@@ -51,7 +51,9 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 			KusssContentContract.Grade.GRADE_COL_TYPE,
 			KusssContentContract.Grade.GRADE_COL_GRADE,
 			KusssContentContract.Grade.GRADE_COL_TITLE,
-			KusssContentContract.Grade.GRADE_COL_CODE };
+			KusssContentContract.Grade.GRADE_COL_CODE,
+			KusssContentContract.Grade.GRADE_COL_ECTS,
+			KusssContentContract.Grade.GRADE_COL_SWS};
 
 	// Constants representing column positions from PROJECTION.
 	public static final int COLUMN_GRADE_ID = 0;
@@ -63,6 +65,8 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 	public static final int COLUMN_GRADE_GRADE = 6;
 	public static final int COLUMN_GRADE_TITLE = 7;
 	public static final int COLUMN_GRADE_CODE = 8;
+	public static final int COLUMN_GRADE_ECTS = 9;
+	public static final int COLUMN_GRADE_SWS = 10;
 
 	public ImportGradeTask(Account account, Context context) {
 		this(account, null, null, null, null, context);

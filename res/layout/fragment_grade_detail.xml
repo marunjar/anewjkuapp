@@ -4,10 +4,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <ListView
+    <com.androidplot.pie.PieChart
+        android:id="@+id/grade_pie_chart"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:padding="3dp" />    
+    
+    <ExpandableListView
         android:id="@+id/grade_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-    </ListView>
+    </ExpandableListView>
 
 </LinearLayout>

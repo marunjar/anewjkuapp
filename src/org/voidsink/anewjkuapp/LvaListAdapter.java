@@ -42,6 +42,7 @@ public class LvaListAdapter extends BaseExpandableListAdapter implements
 		AppUtils.sortLVAsWithGrade(this.mOpenLvas);
 	}
 
+	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
 		return 0;
@@ -203,8 +204,6 @@ public class LvaListAdapter extends BaseExpandableListAdapter implements
 					.findViewById(R.id.lva_list2_group_term);
 			groupHolder.ects = (TextView) convertView
 					.findViewById(R.id.lva_list2_group_ects);
-			groupHolder.avgGrade = (TextView) convertView
-					.findViewById(R.id.lva_list2_group_avg_grade);
 			convertView.setTag(groupHolder);
 		}
 
@@ -215,14 +214,6 @@ public class LvaListAdapter extends BaseExpandableListAdapter implements
 		groupHolder.term.setText(getGroupTitle(groupPosition));
 		groupHolder.ects.setText(String.format("%.2f ECTS",
 				AppUtils.getECTS(getLvaList(groupPosition))));
-		double avgGrade = AppUtils.getAvgGrade(getLvaList(groupPosition));
-		if (avgGrade > 0) {
-			groupHolder.avgGrade.setVisibility(View.VISIBLE);
-			groupHolder.avgGrade.setText(String.format("ø %.2f", avgGrade));
-		} else {
-			groupHolder.avgGrade.setVisibility(View.GONE);
-		}
-
 		return convertView;
 	}
 
@@ -240,7 +231,6 @@ public class LvaListAdapter extends BaseExpandableListAdapter implements
 	private class LvaList2GroupHolder {
 		private TextView term;
 		private TextView ects;
-		private TextView avgGrade;
 	}
 
 	private static class LvaList2ItemHolder {

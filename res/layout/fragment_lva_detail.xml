@@ -5,13 +5,13 @@
     android:orientation="vertical" >
 
     <com.androidplot.pie.PieChart
-        android:id="@+id/pie_chart"
+        android:id="@+id/lva_pie_chart"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:padding="3dp" />
 
     <com.androidplot.xy.XYPlot
-        android:id="@+id/bar_chart"
+        android:id="@+id/lva_bar_chart"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         androidPlot.graphWidget.marginBottom="5dp"
@@ -21,7 +21,7 @@
         android:padding="3dp" />
 
     <ExpandableListView
-        android:id="@+id/stat_lva_lists"
+        android:id="@+id/lva_lists"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
     </ExpandableListView>

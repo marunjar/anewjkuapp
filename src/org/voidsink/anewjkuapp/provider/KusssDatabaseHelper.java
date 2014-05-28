@@ -13,7 +13,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 	private static final String TAG = KusssDatabaseHelper.class.getSimpleName();
 
 	private static final String DATABASE_NAME = "kusss.db";
-	private static final int DATABASE_VERSION = 6;
+	private static final int DATABASE_VERSION = 7;
 
 	// Database creation sql statement
 	public static final String DB_CREATE_LVA = "create table if not exists "
@@ -51,10 +51,11 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 			+ KusssContentContract.Grade.GRADE_COL_DATE + " integer not null, "
 			+ KusssContentContract.Grade.GRADE_COL_SKZ + " integer, "
 			+ KusssContentContract.Grade.GRADE_COL_GRADE
-			+ " integer not null, " + KusssContentContract.Grade.GRADE_COL_CODE
-			+ " text not null, " + KusssContentContract.Grade.GRADE_COL_TITLE
-			+ " text, " + KusssContentContract.Grade.GRADE_COL_TYPE
-			+ " integer" + ");";
+			+ " integer not null, " + KusssContentContract.Grade.GRADE_COL_ECTS
+			+ " real, " + KusssContentContract.Grade.GRADE_COL_SWS + " real, "
+			+ KusssContentContract.Grade.GRADE_COL_CODE + " text not null, "
+			+ KusssContentContract.Grade.GRADE_COL_TITLE + " text, "
+			+ KusssContentContract.Grade.GRADE_COL_TYPE + " integer" + ");";
 
 	public static final String DB_CREATE_POI = "create virtual table "
 			+ PoiContentContract.Poi.TABLE_NAME + " using "
@@ -93,7 +94,11 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 		if (oldVersion < 6) {
 			db.execSQL("DROP TABLE IF EXISTS "
 					+ KusssContentContract.Lva.LVA_TABLE_NAME);
-		} 
+		}
+		if (oldVersion < 7) {
+			db.execSQL("DROP TABLE IF EXISTS "
+					+ KusssContentContract.Grade.GRADE_TABLE_NAME);
+		}
 		onCreate(db);
 	}
 

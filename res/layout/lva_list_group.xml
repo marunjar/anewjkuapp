@@ -17,18 +17,6 @@
         android:paddingTop="10dp" />
 
     <TextView
-        android:id="@+id/lva_list2_group_avg_grade"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/lva_list2_group_ects"
-        android:gravity="center_vertical|right"
-        android:paddingBottom="10dp"
-        android:paddingLeft="18dp"
-        android:paddingRight="10dp"
-        android:paddingTop="1dp" />
-
-    <TextView
         android:id="@+id/lva_list2_group_term"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

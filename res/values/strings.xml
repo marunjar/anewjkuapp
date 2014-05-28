@@ -26,6 +26,7 @@
     <string name="grade_type_recognized_exam">Anerkannte Prüfungen</string>
     <string name="grade_type_final_exam">Prüfungen</string>
     <string name="grade_type_unknown">TODO</string>
+    <string name="grade_type_all">alle Beurteilungen</string>
     <string name="grade_unknown">Nicht bewertet</string>
     <string name="notification_sync_running">Daten werden synchronisiert</string>
     <string name="notification_sync_calendar">Termine werden synchronisiert</string>

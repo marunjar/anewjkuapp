@@ -8,6 +8,7 @@
     <release version="0.16" versioncode="100016">
        <change>+ bei den LVAs können optional die ECTS-Punkte als Balkendiagramm angezeigt werden</change>
        <change>+ die Dashclock Extension kann auch immer angezeigt werden</change>
+       <change>* bei den Noten wird auch der Notendurchschnitt angezeigt</change>
        <change>- nach start der App wurde immer "JKU App" als Überschrift angezeigt</change>
        <change>- unter Gingerbread konnten nur Termine für 30 Tage angezeigt werden</change>
        <change>- in der LVA-Liste für alle Semester wurden nicht alle LVAs angezeigt</change>

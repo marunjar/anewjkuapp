@@ -16,7 +16,7 @@ import org.voidsink.anewjkuapp.GradeListItem;
 import org.voidsink.anewjkuapp.ImportGradeTask;
 import org.voidsink.anewjkuapp.KusssContentContract;
 
-public class ExamGrade implements GradeListItem{
+public class ExamGrade implements GradeListItem {
 
 	@SuppressLint("SimpleDateFormat")
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat(
@@ -39,9 +39,12 @@ public class ExamGrade implements GradeListItem{
 	private final GradeType gradeType;
 	private String title;
 	private String code;
+	private double ects;
+	private double sws;
 
-	public ExamGrade(GradeType type, Date date, int lvaNr, String term,
-			Grade grade, int skz, String title, String code) {
+	private ExamGrade(GradeType type, Date date, int lvaNr, String term,
+			Grade grade, int skz, String title, String code, double ects,
+			double sws) {
 		this.gradeType = type;
 		this.date = date;
 		this.lvaNr = lvaNr;
@@ -50,10 +53,12 @@ public class ExamGrade implements GradeListItem{
 		this.skz = skz;
 		this.title = title;
 		this.code = code;
+		this.ects = ects;
+		this.sws = sws;
 	}
 
 	public ExamGrade(GradeType type, Element row) {
-		this(type, null, 0, "", null, 0, "", "");
+		this(type, null, 0, "", null, 0, "", "", 0, 0);
 
 		Elements columns = row.getElementsByTag("td");
 		if (columns.size() >= 7) {
@@ -94,6 +99,13 @@ public class ExamGrade implements GradeListItem{
 
 				setGrade(Grade.parseGrade(columns.get(2).text())); // grade
 
+				String[] ectsSws = columns.get(5).text().replace(",", ".")
+						.split("/");
+				if (ectsSws.length == 2) {
+					setEcts(Double.parseDouble(ectsSws[0]));
+					setSws(Double.parseDouble(ectsSws[1]));
+				}
+
 				setSKZ(Integer.parseInt(columns.get(6).text())); // grade
 
 				setCode(columns.get(3).text());
@@ -102,7 +114,15 @@ public class ExamGrade implements GradeListItem{
 			}
 		}
 	}
-	
+
+	private void setSws(double sws) {
+		this.sws = sws;
+	}
+
+	private void setEcts(double ects) {
+		this.ects = ects;
+	}
+
 	public ExamGrade(Cursor c) {
 		this.lvaNr = c.getInt(ImportGradeTask.COLUMN_GRADE_LVANR);
 		this.term = c.getString(ImportGradeTask.COLUMN_GRADE_TERM);
@@ -114,6 +134,8 @@ public class ExamGrade implements GradeListItem{
 		this.skz = c.getInt(ImportGradeTask.COLUMN_GRADE_SKZ);
 		this.title = c.getString(ImportGradeTask.COLUMN_GRADE_TITLE);
 		this.code = c.getString(ImportGradeTask.COLUMN_GRADE_CODE);
+		this.ects = c.getDouble(ImportGradeTask.COLUMN_GRADE_ECTS);
+		this.sws = c.getDouble(ImportGradeTask.COLUMN_GRADE_SWS);
 	}
 
 	private void setCode(String code) {
@@ -173,11 +195,20 @@ public class ExamGrade implements GradeListItem{
 	}
 
 	public boolean isInitialized() {
-		return this.gradeType != null && this.date != null && this.grade != null;
+		return this.gradeType != null && this.date != null
+				&& this.grade != null;
 	}
 
 	public String getTitle() {
 		return this.title;
+	}
+
+	public double getEcts() {
+		return this.ects;
+	}
+
+	public double getSws() {
+		return this.sws;
 	}
 
 	public ContentValues getContentValues() {
@@ -187,9 +218,12 @@ public class ExamGrade implements GradeListItem{
 		cv.put(KusssContentContract.Grade.GRADE_COL_LVANR, getLvaNr());
 		cv.put(KusssContentContract.Grade.GRADE_COL_SKZ, getSkz());
 		cv.put(KusssContentContract.Grade.GRADE_COL_TERM, getTerm());
-		cv.put(KusssContentContract.Grade.GRADE_COL_TYPE, getGradeType().ordinal());
+		cv.put(KusssContentContract.Grade.GRADE_COL_TYPE, getGradeType()
+				.ordinal());
 		cv.put(KusssContentContract.Grade.GRADE_COL_CODE, getCode());
 		cv.put(KusssContentContract.Grade.GRADE_COL_TITLE, getTitle());
+		cv.put(KusssContentContract.Grade.GRADE_COL_ECTS, getEcts());
+		cv.put(KusssContentContract.Grade.GRADE_COL_SWS, getSws());
 		return cv;
 	}
 

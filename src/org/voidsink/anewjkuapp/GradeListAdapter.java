@@ -2,82 +2,131 @@ package org.voidsink.anewjkuapp;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.base.BaseArrayAdapter;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
+import org.voidsink.anewjkuapp.kusss.GradeType;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
-public class GradeListAdapter extends BaseArrayAdapter<GradeListItem> {
+public class GradeListAdapter extends BaseExpandableListAdapter implements
+		ListAdapter {
 
 	private LayoutInflater inflater;
 	private Context mContext;
 
+	private HashMap<GradeType, List<ExamGrade>> mGrades;
+	private List<ExamGrade> mAllGrades;
+
 	private static final DateFormat df = SimpleDateFormat.getDateInstance();
 
-	public static List<GradeListItem> insertSections(List<GradeListItem> objects) {
-		if (objects != null) {
-			GradeListItem last = null;
-			GradeListItem item = null;
-			GradeListItem insert = null;
-
-			int i = 0;
-			while (i < objects.size()) {
-				last = item;
-				item = objects.get(i);
-				if (last == null) {
-					if (item.isGrade()) {
-						insert = new GradeListType(
-								((ExamGrade) item).getGradeType());
-						objects.add(i, insert);
-						item = insert;
-					}
-				} else {
-					if (last.isGrade() && item.isGrade()) {
-						if (!((ExamGrade) last).getGradeType().equals(
-								((ExamGrade) item).getGradeType())) {
-							insert = new GradeListType(
-									((ExamGrade) item).getGradeType());
-							objects.add(i, insert);
-							item = insert;
-						}
-					}
-				}
-				i++;
-			}
-		}
-
-		return objects;
-	}
-
 	public GradeListAdapter(Context context) {
-		super(context, R.layout.grade_list_grade);
+		super();
 
 		this.mContext = context;
 		this.inflater = LayoutInflater.from(context);
+		this.mGrades = new HashMap<GradeType, List<ExamGrade>>();
+		this.mAllGrades = new ArrayList<ExamGrade>();
+	}
+
+	@Override
+	public boolean isEnabled(int position) {
+		return false;
+	}
+
+	private static class GradeListGradeHolder {
+		public TextView grade;
+		public TextView date;
+		public View chip;
+		public TextView term;
+		private TextView title;
+		private TextView lvaNr;
+		// private TextView skz;
+	}
+
+	private class GradeListTypeHolder {
+		private TextView type;
+		public TextView avgGrade;
+	}
+
+	@Override
+	public int getCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public Object getItem(int position) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public long getItemId(int position) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getItemViewType(int position) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View view = null;
-		GradeListItem item = this.getItem(position);
-		if (item.isGrade()) {
-			view = getGradeView(convertView, parent, item);
-		} else {
-			view = getTypeView(convertView, parent, item);
-		}
-		return view;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	private View getGradeView(View convertView, ViewGroup parent,
-			GradeListItem item) {
-		ExamGrade gradeItem = (ExamGrade) item;
+	@Override
+	public int getViewTypeCount() {
+		return 2;
+	}
+
+	@Override
+	public boolean hasStableIds() {
+		return false;
+	}
+
+	public GradeType getGradeTypeByGroupPosition(int groupPosition) {
+		return this.mGrades.keySet().toArray(new GradeType[] {})[groupPosition];
+	}
+
+	public List<ExamGrade> getGradesByGroupPosition(int groupPosition) {
+		if (groupPosition < this.mGrades.size()) {
+			return this.mGrades.get(getGradeTypeByGroupPosition(groupPosition));
+		}
+		return this.mAllGrades;
+	}
+
+	@Override
+	public Object getChild(int groupPosition, int childPosition) {
+		List<ExamGrade> gradesByType = getGradesByGroupPosition(groupPosition);
+		if (gradesByType == null) {
+			return null;
+		}
+		return gradesByType.get(childPosition);
+	}
+
+	@Override
+	public long getChildId(int groupPosition, int childPosition) {
+		return 0;
+	}
+
+	@Override
+	public View getChildView(int groupPosition, int childPosition,
+			boolean isLastChild, View convertView, ViewGroup parent) {
+
+		ExamGrade gradeItem = (ExamGrade) getChild(groupPosition, childPosition);
 		GradeListGradeHolder gradeItemHolder = null;
 
 		if (convertView == null) {
@@ -122,8 +171,6 @@ public class GradeListAdapter extends BaseArrayAdapter<GradeListItem> {
 			gradeItemHolder.term.setVisibility(View.GONE);
 		}
 
-		// gradeItemHolder.skz.setText(String.format("[%s]",
-		// gradeItem.getSkz()));
 		gradeItemHolder.date.setText(df.format(gradeItem.getDate()));
 		gradeItemHolder.grade.setText(mContext.getString(gradeItem.getGrade()
 				.getStringResID()));
@@ -133,9 +180,41 @@ public class GradeListAdapter extends BaseArrayAdapter<GradeListItem> {
 		return convertView;
 	}
 
-	private View getTypeView(View convertView, ViewGroup parent,
-			GradeListItem item) {
-		GradeListType gradeType = (GradeListType) item;
+	@Override
+	public int getChildrenCount(int groupPosition) {
+		List<ExamGrade> gradesByType = getGradesByGroupPosition(groupPosition);
+		if (gradesByType == null) {
+			return 0;
+		}
+		return gradesByType.size();
+	}
+
+	@Override
+	public Object getGroup(int groupPosition) {
+		return getGradesByGroupPosition(groupPosition);
+	}
+
+	@Override
+	public int getGroupCount() {
+		int count = this.mGrades.size();
+		if (count > 1) {
+			count++;
+		}
+		return count++;
+	}
+
+	@Override
+	public long getGroupId(int groupPosition) {
+		return 0;
+	}
+
+	@Override
+	public View getGroupView(int groupPosition, boolean isExpanded,
+			View convertView, ViewGroup parent) {
+		GradeType gradeType = GradeType.ALL;
+		if (groupPosition < this.mGrades.size()) {
+			gradeType = getGradeTypeByGroupPosition(groupPosition);
+		}
 		GradeListTypeHolder gradeTypeHolder = null;
 
 		if (convertView == null) {
@@ -144,7 +223,16 @@ public class GradeListAdapter extends BaseArrayAdapter<GradeListItem> {
 			gradeTypeHolder = new GradeListTypeHolder();
 			gradeTypeHolder.type = (TextView) convertView
 					.findViewById(R.id.grade_list_type_title);
+			gradeTypeHolder.avgGrade = (TextView) convertView
+					.findViewById(R.id.grade_list_type_avg_grade);
+
 			convertView.setTag(gradeTypeHolder);
+		}
+
+		if (getChildrenCount(groupPosition) > 0) {
+			convertView.setVisibility(View.VISIBLE);
+		} else {
+			convertView.setVisibility(View.GONE);
 		}
 
 		if (gradeTypeHolder == null) {
@@ -152,38 +240,44 @@ public class GradeListAdapter extends BaseArrayAdapter<GradeListItem> {
 		}
 
 		gradeTypeHolder.type.setText(mContext.getString(gradeType
-				.getGradeType().getStringResID()));
-
+				.getStringResID()));
+		double avgGrade = AppUtils.getAvgGrade(
+				getGradesByGroupPosition(groupPosition), false);
+		if (avgGrade > 0) {
+			gradeTypeHolder.avgGrade.setVisibility(View.VISIBLE);
+			gradeTypeHolder.avgGrade.setText(String.format("ø %.2f", avgGrade));
+		} else {
+			gradeTypeHolder.avgGrade.setVisibility(View.GONE);
+		}
 		return convertView;
 	}
 
 	@Override
-	public int getViewTypeCount() {
-		return 2;
-	}
-
-	@Override
-	public int getItemViewType(int position) {
-		return this.getItem(position).getType();
-	}
-
-	@Override
-	public boolean isEnabled(int position) {
+	public boolean isChildSelectable(int groupPosition, int childPosition) {
 		return false;
 	}
 
-	private static class GradeListGradeHolder {
-		public TextView grade;
-		public TextView date;
-		public View chip;
-		public TextView term;
-		private TextView title;
-		private TextView lvaNr;
-		// private TextView skz;
+	public void clear() {
+		this.mGrades.clear();
+		this.notifyDataSetInvalidated();
 	}
 
-	private class GradeListTypeHolder {
-		private TextView type;
+	public void addAll(List<ExamGrade> listItems) {
+		for (ExamGrade listItem : listItems) {
+			add(listItem);
+		}
+		this.notifyDataSetChanged();
+	}
+
+	public void add(ExamGrade grade) {
+		List<ExamGrade> gradesByType = this.mGrades.get(grade.getGradeType());
+		if (gradesByType == null) {
+			gradesByType = new ArrayList<ExamGrade>();
+			this.mGrades.put(grade.getGradeType(), gradesByType);
+		}
+		gradesByType.add(grade);
+
+		this.mAllGrades.add(grade);
 	}
 
 }

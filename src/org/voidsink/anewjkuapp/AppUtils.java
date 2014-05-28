@@ -7,18 +7,26 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 import org.voidsink.anewjkuapp.fragment.MapFragment;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
+import org.voidsink.anewjkuapp.kusss.Grade;
 import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
+
+import com.androidplot.pie.PieChart;
+import com.androidplot.pie.Segment;
+import com.androidplot.pie.SegmentFormatter;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.EmbossMaskFilter;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -250,14 +258,20 @@ public class AppUtils {
 		}
 	}
 
-	public static double getAvgGrade(List<LvaWithGrade> lvas) {
+	public static double getAvgGrade(List<ExamGrade> grades,
+			boolean ectsWeighting) {
 		double sum = 0;
-		int count = 0;
-		for (LvaWithGrade lva : lvas) {
-			ExamGrade grade = lva.getGrade();
-			if (grade != null) {
-				sum += grade.getGrade().getValue();
-				count++;
+		double count = 0;
+
+		if (grades != null) {
+			for (ExamGrade grade : grades) {
+				if (!ectsWeighting) {
+					sum += grade.getGrade().getValue();
+					count++;
+				} else {
+					sum += grade.getEcts() * grade.getGrade().getValue();
+					count += grade.getEcts();
+				}
 			}
 		}
 
@@ -278,4 +292,32 @@ public class AppUtils {
 		return accounts[0];
 	}
 
+	public static void addSerieToPieChart(PieChart chart, String category,
+			double value, int color) {
+		if (value > 0) {
+			EmbossMaskFilter emf = new EmbossMaskFilter(
+					new float[] { 1, 1, 1 }, 0.4f, 10, 3f);
+			Segment segment = new Segment(category, value);
+			SegmentFormatter formatter = new SegmentFormatter(color,
+					Color.BLACK, Color.BLACK, Color.DKGRAY);
+			formatter.getFillPaint().setMaskFilter(emf);
+
+			chart.addSegment(segment, formatter);
+		}
+	}
+
+	public static double getGradeCount(ArrayList<ExamGrade> grades,
+			Grade grade, boolean ectsWeighting) {
+		double count = 0;
+		for (ExamGrade examGrade : grades) {
+			if (examGrade.getGrade().equals(grade)) {
+				if (!ectsWeighting) {
+					count++;
+				} else {
+					count += examGrade.getEcts();
+				}
+			}
+		}
+		return count;
+	}
 }

@@ -1,129 +1,137 @@
 package org.voidsink.anewjkuapp.fragment;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.voidsink.anewjkuapp.AppUtils;
-import org.voidsink.anewjkuapp.GradeListAdapter;
-import org.voidsink.anewjkuapp.GradeListItem;
+import org.voidsink.anewjkuapp.GradeDetailPageAdapter;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.base.BaseFragment;
+import org.voidsink.anewjkuapp.base.BaseContentObserver;
+import org.voidsink.anewjkuapp.base.ContentObserverListener;
+import org.voidsink.anewjkuapp.base.IndicatedViewPagerFragment;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 
+import edu.emory.mathcs.backport.java.util.Collections;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.database.ContentObserver;
+import android.content.UriMatcher;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
-public class GradeFragment extends BaseFragment {
+public class GradeFragment extends IndicatedViewPagerFragment implements
+		ContentObserverListener {
 
-	public static final String TAG = GradeFragment.class.getSimpleName();
-	
-	private ListView mListView;
-	private GradeListAdapter mAdapter;
-	private ContentObserver mGradeObserver;
+	private static final String TAG = GradeFragment.class.getSimpleName();
+	private BaseContentObserver mGradeObserver;
+
+	@Override
+	protected PagerAdapter createPagerAdapter(FragmentManager fm) {
+		return new GradeDetailPageAdapter(fm, getActivity());
+	}
+
+	@Override
+	protected boolean useTabHost() {
+		return false;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_grade, container, false);
+		View v = super.onCreateView(inflater, container, savedInstanceState);
 
-		mListView = (ListView) view.findViewById(R.id.grade_list);
-		mAdapter = new GradeListAdapter(getContext());
-		mListView.setAdapter(mAdapter);
+		loadGrades(getActivity());
 
-		new GradeLoadTask().execute();
-
-		return view;
+		return v;
 	}
 
 	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.grade, menu);
-	}
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-	@Override
-	public void onStart() {
-		super.onStart();
+		UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+		uriMatcher.addURI(KusssContentContract.AUTHORITY,
+				KusssContentContract.Grade.PATH_CONTENT_CHANGED, 0);
 
-		mGradeObserver = new GradeContentObserver(new Handler());
+		mGradeObserver = new BaseContentObserver(uriMatcher, this);
 		getActivity().getContentResolver().registerContentObserver(
-				KusssContentContract.Grade.CONTENT_CHANGED_URI, false, mGradeObserver);
+				KusssContentContract.Grade.CONTENT_CHANGED_URI, false,
+				mGradeObserver);
 	}
 
 	@Override
-	public void onStop() {
+	public void onDestroy() {
+		super.onDestroy();
+
 		getActivity().getContentResolver().unregisterContentObserver(
 				mGradeObserver);
-
-		super.onStop();
 	}
 
-	private class GradeLoadTask extends AsyncTask<String, Void, Void> {
-		private ProgressDialog progressDialog;
-		private List<ExamGrade> mGrades;
-		private Context mContext;
+	private void loadGrades(final Context context) {
 
-		@Override
-		protected Void doInBackground(String... urls) {
-			List<ExamGrade> examGrades = KusssContentProvider
-					.getGrades(mContext);
-			for (ExamGrade examGrade : examGrades) {
-				mGrades.add(examGrade);
+		new AsyncTask<Void, Void, Void>() {
+
+			private ProgressDialog progressDialog;
+			private List<ExamGrade> grades;
+			private ArrayList<String> terms;
+
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+
+				progressDialog = ProgressDialog.show(context,
+						context.getString(R.string.progress_title),
+						context.getString(R.string.progress_load_grade), true);
 			}
-			examGrades = null;
 
-			return null;
-		}
+			@Override
+			protected Void doInBackground(Void... params) {
+				this.grades = KusssContentProvider.getGrades(context);
+				this.terms = new ArrayList<String>();
+				for (ExamGrade grade : this.grades) {
+					if (!grade.getTerm().isEmpty() && this.terms.indexOf(grade.getTerm()) < 0) {
+						this.terms.add(grade.getTerm());
+					}
+				}
+				
+				Collections.sort(this.terms, new Comparator<String>() {
 
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			mContext = GradeFragment.this.getContext();
-			if (mContext == null) {
-				Log.e(TAG, "context is null");
+					@Override
+					public int compare(String lhs, String rhs) {
+						return lhs.compareTo(rhs) * -1;
+					}
+				});
+				AppUtils.sortGrades(grades);
+
+				return null;
 			}
-			
-			mGrades = new ArrayList<ExamGrade>();
-			progressDialog = ProgressDialog.show(mContext,
-					mContext.getString(R.string.progress_title),
-					mContext.getString(R.string.progress_load_exam), true);
-		}
 
-		@Override
-		protected void onPostExecute(Void result) {
-			AppUtils.sortGrades(mGrades);
-			List<GradeListItem> listItems = new ArrayList<GradeListItem>(
-					mGrades);
-			mAdapter.clear();
-			mAdapter.addAll(GradeListAdapter.insertSections(listItems));
-			progressDialog.dismiss();
-			super.onPostExecute(result);
-		}
+			@Override
+			protected void onPostExecute(Void result) {
+				progressDialog.dismiss();
+
+				Log.i(TAG, "loadGrades " + this.terms);
+
+				((GradeDetailPageAdapter) getPagerAdapter()).setData(
+						this.grades, this.terms);
+
+				super.onPostExecute(result);
+			}
+		}.execute();
 	}
 
-	private class GradeContentObserver extends ContentObserver {
-
-		public GradeContentObserver(Handler handler) {
-			super(handler);
-		}
-
-		@Override
-		public void onChange(boolean selfChange) {
-			super.onChange(selfChange);
-			new GradeLoadTask().execute();
-		}
+	@Override
+	public void onContentChanged(boolean selfChange) {
+		Log.i(TAG, "onContentChanged(" + selfChange + ")");
+		loadGrades(getActivity());
 	}
+
 }

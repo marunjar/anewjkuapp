@@ -73,7 +73,8 @@ public class KusssContentContract {
 		public static final String GRADE_COL_TYPE = "type";
 		public static final String GRADE_COL_TITLE = "title";
 		public static final String GRADE_COL_CODE = "code";
-
+		public static final String GRADE_COL_ECTS = "ects";
+		public static final String GRADE_COL_SWS = "sws";
 	}
 
 	public static Uri asEventSyncAdapter(Uri uri, String account,
