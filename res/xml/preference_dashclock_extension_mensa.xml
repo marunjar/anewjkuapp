@@ -2,14 +2,22 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory android:title="aktiv" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:disableDependentsState="true"
+            android:key="pref_key_dashclock_ext_mensa_always"
+            android:title="immer anzeigen" />
+
         <org.voidsink.anewjkuapp.base.TimePreference
             android:defaultValue="32400000"
+            android:dependency="pref_key_dashclock_ext_mensa_always"
             android:key="pref_key_dashclock_ext_mensa_from"
-            android:title="Von" />
+            android:title="von" />
         <org.voidsink.anewjkuapp.base.TimePreference
             android:defaultValue="46800000"
+            android:dependency="pref_key_dashclock_ext_mensa_always"
             android:key="pref_key_dashclock_ext_mensa_to"
-            android:title="Bis" />
+            android:title="bis" />
     </PreferenceCategory>
     <PreferenceCategory android:title="Mensa" >
         <CheckBoxPreference

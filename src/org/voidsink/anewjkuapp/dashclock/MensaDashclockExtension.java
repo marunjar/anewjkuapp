@@ -32,13 +32,25 @@ public class MensaDashclockExtension extends DashClockExtension {
 
 	@Override
 	protected void onUpdateData(int reason) {
-		boolean showMenu = false;
+		boolean mShowMenu = false;
 
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
-		long mFromTime = sp.getLong("pref_key_dashclock_ext_mensa_from",
-				32400000);
-		long mToTime = sp.getLong("pref_key_dashclock_ext_mensa_to", 46800000);
+		long mFromTime, mToTime;
+		boolean mShowAlays;
+		try {
+			mFromTime = sp.getLong("pref_key_dashclock_ext_mensa_from",
+					32400000);
+			mToTime = sp.getLong("pref_key_dashclock_ext_mensa_to", 46800000);
+
+			mShowAlays = sp.getBoolean("pref_key_dashclock_ext_mensa_always",
+					false);
+		} catch (Exception e) {
+			Log.e(TAG, "load preferences faile", e);
+			mFromTime = 32400000;
+			mToTime = 46800000;
+			mShowAlays = true;
+		}
 
 		Date now = new Date();
 
@@ -55,11 +67,11 @@ public class MensaDashclockExtension extends DashClockExtension {
 
 		String status = "";
 		String body = "";
-		
+
 		Log.i(TAG, "onUpdateData: " + reason + ", " + mFromTime + " - "
 				+ mToTime + "(" + mNow + ")");
 
-		if (mNow >= mFromTime && mNow <= mToTime) {
+		if (mShowAlays || (mNow >= mFromTime && mNow <= mToTime)) {
 			List<Mensa> mensaList = new ArrayList<Mensa>();
 
 			if (sp.getBoolean("pref_key_dashclock_ext_mensa_classic", false)) {
@@ -93,8 +105,8 @@ public class MensaDashclockExtension extends DashClockExtension {
 
 						for (MensaMenu mensaMenu : mensaDay.getMenus()) {
 							// show menu if found
-							showMenu = true;
-							
+							mShowMenu = true;
+
 							if (!body.isEmpty()) {
 								body += "\n";
 							}
@@ -109,7 +121,7 @@ public class MensaDashclockExtension extends DashClockExtension {
 			}
 		}
 
-		if (showMenu) {
+		if (mShowMenu || mShowAlays) {
 			publishUpdate(new ExtensionData()
 					.visible(true)
 					.icon(R.drawable.ic_launcher_grey)
