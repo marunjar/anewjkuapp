@@ -1,4 +1,4 @@
-package org.voidsink.anewjkuapp.kusss.mensa;
+package org.voidsink.anewjkuapp.mensa;
 
 public class ClassicMenuLoader extends JSONMenuLoader {
 

@@ -1,7 +1,7 @@
 package org.voidsink.anewjkuapp.fragment;
 
-import org.voidsink.anewjkuapp.kusss.mensa.MenuLoader;
-import org.voidsink.anewjkuapp.kusss.mensa.RaabMenuLoader;
+import org.voidsink.anewjkuapp.mensa.MenuLoader;
+import org.voidsink.anewjkuapp.mensa.RaabMenuLoader;
 
 public class MensaRaabFragment extends MensaFragmentDetail {
 

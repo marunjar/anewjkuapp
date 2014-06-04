@@ -1,7 +1,7 @@
 package org.voidsink.anewjkuapp.fragment;
 
-import org.voidsink.anewjkuapp.kusss.mensa.ChoiceMenuLoader;
-import org.voidsink.anewjkuapp.kusss.mensa.MenuLoader;
+import org.voidsink.anewjkuapp.mensa.ChoiceMenuLoader;
+import org.voidsink.anewjkuapp.mensa.MenuLoader;
 
 public class MensaChoiceFragment extends MensaFragmentDetail {
 

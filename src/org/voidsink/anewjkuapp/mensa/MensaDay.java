@@ -1,4 +1,4 @@
-package org.voidsink.anewjkuapp.kusss.mensa;
+package org.voidsink.anewjkuapp.mensa;
 
 import android.annotation.SuppressLint;
 import java.text.ParseException;

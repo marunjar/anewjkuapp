@@ -3,8 +3,8 @@ package org.voidsink.anewjkuapp.fragment;
 import org.voidsink.anewjkuapp.MensaMenuAdapter;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
-import org.voidsink.anewjkuapp.kusss.mensa.Mensa;
-import org.voidsink.anewjkuapp.kusss.mensa.MenuLoader;
+import org.voidsink.anewjkuapp.mensa.Mensa;
+import org.voidsink.anewjkuapp.mensa.MenuLoader;
 
 import android.content.Context;
 import android.os.AsyncTask;

@@ -6,9 +6,9 @@ import java.util.Date;
 
 import org.voidsink.anewjkuapp.base.BaseArrayAdapter;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
-import org.voidsink.anewjkuapp.kusss.mensa.Mensa;
-import org.voidsink.anewjkuapp.kusss.mensa.MensaMenu;
-import org.voidsink.anewjkuapp.kusss.mensa.MensaDay;
+import org.voidsink.anewjkuapp.mensa.Mensa;
+import org.voidsink.anewjkuapp.mensa.MensaDay;
+import org.voidsink.anewjkuapp.mensa.MensaMenu;
 
 import android.content.Context;
 import android.text.format.DateUtils;
