@@ -79,10 +79,8 @@
     <string name="settings_app_summary">Einstellungen für App</string>
     <string name="drawer_menu_item_icon">Icon</string>
     <string name="about_app_summary">Das ist der Versuch eine neue und aktuellere JKU-, KUSSS- bzw. OEH- App zu erstellen.</string>
-    <string name="about_me_title">Über mich</string>
-    <string name="about_me_summary">Paul Pretsch\n<a href="mailto:paul.pretsch@aon.at">paul.pretsch@aon.at</a></string>
-    <string name="used_lib_title">verwendete Bibliotheken</string>
-    <string name="used_lib_summary"><a href="http://www.mapsforge.org">MapsForge</a>\n\n<a href="http://ical4j.sourceforge.net">ICal4j</a>\n\n<a href="http://jsoup.org/">jSoup</a>\n\n<a href="https://github.com/cketti/ckChangeLog">ckChangeLog</a>\n\n<a href="http://androidplot.com/">Androidplot</a></string>
+    <string name="about_libraries_title">verwendete Bibliotheken</string>
+    <string name="about_credits_title">Credits</string>
     <string name="oeh_info_main_title">Deine ÖH</string>
     <string name="oeh_info_main_summary">Die Österreichische Hochschülerinnen- und Hochschülerschaft ist die gesetzliche Vertretung aller Studierenden. Sie gliedert sich bundesweit in die ÖH-Bundesvertretung (<a href="http://www.oeh.ac.at/">http://www.oeh.ac.at/</a>), in die Universitätsvertretungen an den einzelnen Universitäten, wie beispielsweise die HochschülerInnenschaft an der Johannes Kepler Universität Linz (<a href="http://oeh.jku.at/">http://oeh.jku.at</a>).(</string>
     <string name="oeh_info_jku_title">Deine ÖH an der JKU</string>

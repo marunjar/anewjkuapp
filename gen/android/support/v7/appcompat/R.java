@@ -346,19 +346,19 @@ public final class R {
 		public static final int support_simple_spinner_dropdown_item = 0x7f030037;
 	}
 	public static final class string {
-		public static final int abc_action_bar_home_description = 0x7f060006;
-		public static final int abc_action_bar_up_description = 0x7f060007;
-		public static final int abc_action_menu_overflow_description = 0x7f060008;
-		public static final int abc_action_mode_done = 0x7f060005;
-		public static final int abc_activity_chooser_view_see_all = 0x7f06000f;
-		public static final int abc_activitychooserview_choose_application = 0x7f06000e;
-		public static final int abc_searchview_description_clear = 0x7f06000b;
-		public static final int abc_searchview_description_query = 0x7f06000a;
-		public static final int abc_searchview_description_search = 0x7f060009;
-		public static final int abc_searchview_description_submit = 0x7f06000c;
-		public static final int abc_searchview_description_voice = 0x7f06000d;
-		public static final int abc_shareactionprovider_share_with = 0x7f060011;
-		public static final int abc_shareactionprovider_share_with_application = 0x7f060010;
+		public static final int abc_action_bar_home_description = 0x7f06000b;
+		public static final int abc_action_bar_up_description = 0x7f06000c;
+		public static final int abc_action_menu_overflow_description = 0x7f06000d;
+		public static final int abc_action_mode_done = 0x7f06000a;
+		public static final int abc_activity_chooser_view_see_all = 0x7f060014;
+		public static final int abc_activitychooserview_choose_application = 0x7f060013;
+		public static final int abc_searchview_description_clear = 0x7f060010;
+		public static final int abc_searchview_description_query = 0x7f06000f;
+		public static final int abc_searchview_description_search = 0x7f06000e;
+		public static final int abc_searchview_description_submit = 0x7f060011;
+		public static final int abc_searchview_description_voice = 0x7f060012;
+		public static final int abc_shareactionprovider_share_with = 0x7f060016;
+		public static final int abc_shareactionprovider_share_with_application = 0x7f060015;
 	}
 	public static final class style {
 		public static final int TextAppearance_AppCompat_Base_CompactMenu_Dialog = 0x7f0c0063;

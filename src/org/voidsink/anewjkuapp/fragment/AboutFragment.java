@@ -2,15 +2,13 @@ package org.voidsink.anewjkuapp.fragment;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
+import org.voidsink.library.contributors.Contributors;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
 
 public class AboutFragment extends BaseFragment {
 
@@ -19,27 +17,25 @@ public class AboutFragment extends BaseFragment {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_about, container, false);
 
-		((TextView) view.findViewById(R.id.about_me))
+		((Button) view.findViewById(R.id.about_credits))
 				.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						// send me an eMail
-						Intent emailIntent = new Intent(Intent.ACTION_SENDTO,
-								Uri.fromParts("mailto", "paul.pretsch@aon.at",
-										null));
-						emailIntent.putExtra(
-								android.content.Intent.EXTRA_SUBJECT,
-								getString(R.string.app_name));
-						emailIntent.putExtra(android.content.Intent.EXTRA_TEXT,
-								"Hallo,\n\n...");
-
-						startActivity(Intent.createChooser(emailIntent,
-								"Send email..."));
+						Contributors contributors = new Contributors(
+								getContext());
+						contributors.getDialog(R.xml.credits).show();
 					}
 				});
 
-		((TextView) view.findViewById(R.id.used_lib))
-				.setMovementMethod(LinkMovementMethod.getInstance());
+		((Button) view.findViewById(R.id.about_libraries))
+				.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Contributors contributors = new Contributors(
+								getContext());
+						contributors.getDialog(R.xml.libraries).show();
+					}
+				});
 
 		return view;
 	}

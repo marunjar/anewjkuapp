@@ -14,7 +14,7 @@
         android:id="@+id/about_content_scroller"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/about_changelog"
+        android:layout_above="@+id/about_credits"
         android:layout_alignParentTop="true" >
 
         <LinearLayout
@@ -23,66 +23,49 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/about_app_header"
+                style="?android:attr/listSeparatorTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="@string/app_name"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:padding="10dp"
+                android:text="@string/app_name">
+            </TextView>
 
             <TextView
-                android:id="@+id/about_app"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:text="@string/about_app_summary"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-            <TextView
-                android:id="@+id/about_me_header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="@string/about_me_title"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <TextView
-                android:id="@+id/about_me"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:autoLink="email"
-                android:linksClickable="false"
-                android:padding="5dp"
-                android:text="@string/about_me_summary"
-                android:textAppearance="?android:attr/textAppearanceSmall" >
+                android:textAppearance="?android:attr/textAppearanceSmall">
             </TextView>
-            <TextView
-                android:id="@+id/used_lib_header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="@string/used_lib_title"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <TextView
-                android:id="@+id/used_lib"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="@string/used_lib_summary"
-                android:textAppearance="?android:attr/textAppearanceSmall" >
-            </TextView>
-            </LinearLayout>
+		</LinearLayout>
     </ScrollView>
+
+    <Button
+        android:id="@id/about_credits"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/about_changelog"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:text="@string/about_credits_title" />
 
     <Button
         android:id="@id/about_changelog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_marginTop="10dp"
+        android:layout_above="@+id/about_libraries"
         android:onClick="onClickChangeLog"
         android:padding="10dp"
         android:text="@string/action_changelog" />
 
+	<Button
+        android:id="@id/about_libraries"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:text="@string/about_libraries_title" />
+    
 </RelativeLayout>
