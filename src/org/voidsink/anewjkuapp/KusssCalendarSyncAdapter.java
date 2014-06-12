@@ -72,15 +72,12 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 			return;
 		}
 
-		final AccountManager am = AccountManager.get(getContext());
-		// Lets give another try to authenticate the user
-		final String password = am.getPassword(account);
-
 		Log.d(TAG, "starting sync of account: " + account.name);
 
-		if (!KusssHandler.handler.isAvailable(account.name, password)) {
-			KusssNotificationBuilder.showErrorNotification(mContext,
-					R.string.notification_error_account_not_available, null);
+		if (!KusssHandler.getInstance().isAvailable(
+				AppUtils.getAccountAuthToken(mContext, account),
+				AppUtils.getAccountName(mContext, account),
+				AppUtils.getAccountPassword(mContext, account))) {
 			syncResult.stats.numAuthExceptions++;
 			return;
 		}

@@ -103,14 +103,14 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
 			try {
 				Log.d(TAG, "setup connection");
 
-				if (KusssHandler.handler
-						.isAvailable(
-								this.mAccount.name,
-								AccountManager.get(mContext).getPassword(
-										this.mAccount))) {
+				if (KusssHandler.getInstance().isAvailable(
+						AppUtils.getAccountAuthToken(mContext, mAccount),
+						AppUtils.getAccountName(mContext, mAccount),
+						AppUtils.getAccountPassword(mContext, mAccount))) {
+
 					Log.d(TAG, "load lvas");
 
-					List<Lva> lvas = KusssHandler.handler.getLvas();
+					List<Lva> lvas = KusssHandler.getInstance().getLvas();
 					if (lvas == null) {
 						mSyncResult.stats.numParseExceptions++;
 					} else {

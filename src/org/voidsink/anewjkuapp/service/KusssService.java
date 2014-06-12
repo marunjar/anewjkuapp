@@ -1,7 +1,5 @@
 package org.voidsink.anewjkuapp.service;
 
-import org.voidsink.anewjkuapp.kusss.KusssHandler;
-
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -11,7 +9,6 @@ import android.util.Log;
 public class KusssService extends Service {
 
 	private final IBinder mBinder = new KusssServiceBinder();
-	public KusssHandler mKusssHandler;
 	
 	public class KusssServiceBinder extends Binder {
 		public KusssService getService() {
@@ -19,11 +16,6 @@ public class KusssService extends Service {
 		}
 	}
 	
-	@Override
-	public void onCreate() {
-		this.mKusssHandler = new KusssHandler();
-	}
-
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.i(this.getClass().getCanonicalName(), "Received start id "

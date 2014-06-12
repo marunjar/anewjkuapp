@@ -112,14 +112,14 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 			try {
 				Log.d(TAG, "setup connection");
 
-				if (KusssHandler.handler
-						.isAvailable(
-								this.mAccount.name,
-								AccountManager.get(mContext).getPassword(
-										this.mAccount))) {
+				if (KusssHandler.getInstance().isAvailable(
+						AppUtils.getAccountAuthToken(mContext, mAccount),
+						AppUtils.getAccountName(mContext, mAccount),
+						AppUtils.getAccountPassword(mContext, mAccount))) {
+
 					Log.d(TAG, "load grades");
 
-					List<ExamGrade> grades = KusssHandler.handler.getGrades();
+					List<ExamGrade> grades = KusssHandler.getInstance().getGrades();
 					if (grades == null) {
 						mSyncResult.stats.numParseExceptions++;
 					}

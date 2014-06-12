@@ -118,7 +118,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 	protected void onPreExecute() {
 		super.onPreExecute();
 		Log.d(TAG, "prepare importing calendar");
-		
+
 		if (!isSync) {
 			mUpdateNotification = new SyncNotification(mContext,
 					R.string.notification_sync_calendar);
@@ -140,22 +140,22 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 
 				Log.d(TAG, "setup connection");
 
-				if (KusssHandler.handler
-						.isAvailable(
-								this.mAccount.name,
-								AccountManager.get(mContext).getPassword(
-										this.mAccount))) {
+				if (KusssHandler.getInstance().isAvailable(
+						AppUtils.getAccountAuthToken(mContext, mAccount),
+						AppUtils.getAccountName(mContext, mAccount),
+						AppUtils.getAccountPassword(mContext, mAccount))) {
+
 					Log.d(TAG, "loading calendar");
 
 					Calendar iCal = null;
 					// {{ Load calendar events from resource
 					switch (this.mGetTypeID) {
 					case CalendarUtils.ARG_CALENDAR_ID_EXAM:
-						iCal = KusssHandler.handler
+						iCal = KusssHandler.getInstance()
 								.getExamIcal(mCalendarBuilder);
 						break;
 					case CalendarUtils.ARG_CALENDAR_ID_LVA:
-						iCal = KusssHandler.handler
+						iCal = KusssHandler.getInstance()
 								.getLVAIcal(mCalendarBuilder);
 						break;
 					}
@@ -485,7 +485,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 			mUpdateNotification.cancel();
 		}
 		mNotification.show();
-		
+
 		return null;
 	}
 

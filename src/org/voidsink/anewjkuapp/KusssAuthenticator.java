@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 
 public class KusssAuthenticator extends AbstractAccountAuthenticator {
 
@@ -26,14 +27,18 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
 	public static final String ACCOUNT_TYPE = "org.voidsink.anewjkuapp.account";
 
 	public static final String AUTHTOKEN_TYPE_READ_ONLY = "Read only";
-	public static final String AUTHTOKEN_TYPE_READ_ONLY_LABEL = "Read only access to an Udinic account";
+	public static final String AUTHTOKEN_TYPE_READ_ONLY_LABEL = "Read only access to a KUSSS account";
 
-	public static final String AUTHTOKEN_TYPE_FULL_ACCESS = "Full access";
-	public static final String AUTHTOKEN_TYPE_FULL_ACCESS_LABEL = "Full access to an Udinic account";
+	// public static final String AUTHTOKEN_TYPE_FULL_ACCESS = "Full access";
+	// public static final String AUTHTOKEN_TYPE_FULL_ACCESS_LABEL =
+	// "Full access to a KUSSS account";
 
 	public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
+	public final static String ARG_AUTH_TYPE = "AUTH_TYPE";
 	public final static String ARG_ACCOUNT_NAME = "ACCOUNT_NAME";
-	public final static String ARG_NEW_ACCOUNT = "IS_ADDING_ACCOUNT";
+	public final static String ARG_IS_ADDING_NEW_ACCOUNT = "IS_ADDING_ACCOUNT";
+
+	private static final String TAG = KusssAuthenticator.class.getSimpleName();
 
 	private Context mContext = null;
 
@@ -50,7 +55,8 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
 		final Intent intent = new Intent(mContext,
 				KusssAuthenticatorActivity.class);
 		intent.putExtra(ARG_ACCOUNT_TYPE, accountType);
-		intent.putExtra(ARG_NEW_ACCOUNT, true);
+		intent.putExtra(ARG_AUTH_TYPE, authTokenType);
+		intent.putExtra(ARG_IS_ADDING_NEW_ACCOUNT, true);
 		intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE,
 				response);
 		final Bundle bundle = new Bundle();
@@ -76,8 +82,7 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
 			throws NetworkErrorException {
 		// If the caller requested an authToken type we don't support, then
 		// return an error
-		if (!authTokenType.equals(AUTHTOKEN_TYPE_READ_ONLY)
-				&& !authTokenType.equals(AUTHTOKEN_TYPE_FULL_ACCESS)) {
+		if (!authTokenType.equals(AUTHTOKEN_TYPE_READ_ONLY)) {
 			final Bundle result = new Bundle();
 			result.putString(AccountManager.KEY_ERROR_MESSAGE,
 					"invalid authTokenType");
@@ -90,20 +95,28 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
 
 		String authToken = am.peekAuthToken(account, authTokenType);
 
-		// Lets give another try to authenticate the user
-		final String password = am.getPassword(account);
-		if (password != null) {
-			try {
-				if (KusssHandler.handler.login(account.name, password)) {
-					authToken = account.name;
+		Log.d(TAG, "authToken=" + authToken);
+
+		if (TextUtils.isEmpty(authToken)
+				|| !KusssHandler.getInstance().isLoggedIn(authToken)) {
+			// Lets give another try to authenticate the user
+			final String password = am.getPassword(account);
+			if (password != null) {
+				try {
+					authToken = KusssHandler.getInstance().login(account.name,
+							password);
+				} catch (Exception e) {
+					e.printStackTrace();
+					authToken = null;
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 
 		// If we get an authToken - we return it
 		if (!TextUtils.isEmpty(authToken)) {
+			// set new auth token (SessionID)
+			AccountManager.get(mContext).setAuthToken(account, authTokenType, authToken);	
+			
 			final Bundle result = new Bundle();
 			result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
 			result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
@@ -127,9 +140,11 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
 
 	@Override
 	public String getAuthTokenLabel(String authTokenType) {
-		if (AUTHTOKEN_TYPE_FULL_ACCESS.equals(authTokenType))
-			return AUTHTOKEN_TYPE_FULL_ACCESS_LABEL;
-		else if (AUTHTOKEN_TYPE_READ_ONLY.equals(authTokenType))
+		/*
+		 * if (AUTHTOKEN_TYPE_FULL_ACCESS.equals(authTokenType)) return
+		 * AUTHTOKEN_TYPE_FULL_ACCESS_LABEL; else
+		 */
+		if (AUTHTOKEN_TYPE_READ_ONLY.equals(authTokenType))
 			return AUTHTOKEN_TYPE_READ_ONLY_LABEL;
 		else
 			return authTokenType + " (Label)";
@@ -151,7 +166,7 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
 		final Intent intent = new Intent(mContext,
 				KusssAuthenticatorActivity.class);
 		intent.putExtra(ARG_ACCOUNT_TYPE, account.type);
-		intent.putExtra(ARG_NEW_ACCOUNT, false);
+		intent.putExtra(ARG_IS_ADDING_NEW_ACCOUNT, false);
 		intent.putExtra(ARG_ACCOUNT_NAME, account.name);
 		intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE,
 				response);
@@ -159,13 +174,13 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
 		bundle.putParcelable(AccountManager.KEY_INTENT, intent);
 		return bundle;
 	}
-	
+
 	@Override
 	public Bundle getAccountRemovalAllowed(
 			AccountAuthenticatorResponse response, Account account)
 			throws NetworkErrorException {
 		final Bundle result = super.getAccountRemovalAllowed(response, account);
-		
+
 		if (result.getBoolean(AccountManager.KEY_BOOLEAN_RESULT)) {
 			KusssDatabaseHelper.drop(mContext);
 		}
@@ -195,11 +210,13 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
 			String accountType) {
 		return uri
 				.buildUpon()
-				.appendQueryParameter(CalendarContractWrapper.CALLER_IS_SYNCADAPTER(),
-						"true")
-				.appendQueryParameter(CalendarContractWrapper.Calendars.ACCOUNT_NAME(),
+				.appendQueryParameter(
+						CalendarContractWrapper.CALLER_IS_SYNCADAPTER(), "true")
+				.appendQueryParameter(
+						CalendarContractWrapper.Calendars.ACCOUNT_NAME(),
 						account)
-				.appendQueryParameter(CalendarContractWrapper.Calendars.ACCOUNT_TYPE(),
+				.appendQueryParameter(
+						CalendarContractWrapper.Calendars.ACCOUNT_TYPE(),
 						accountType).build();
 	}
 
@@ -211,11 +228,12 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
 			String accountType) {
 		return uri
 				.buildUpon()
-				.appendQueryParameter(CalendarContractWrapper.CALLER_IS_SYNCADAPTER(),
-						"true")
-				.appendQueryParameter(CalendarContractWrapper.Events.ACCOUNT_NAME(),
-						account)
-				.appendQueryParameter(CalendarContractWrapper.Events.ACCOUNT_TYPE(),
+				.appendQueryParameter(
+						CalendarContractWrapper.CALLER_IS_SYNCADAPTER(), "true")
+				.appendQueryParameter(
+						CalendarContractWrapper.Events.ACCOUNT_NAME(), account)
+				.appendQueryParameter(
+						CalendarContractWrapper.Events.ACCOUNT_TYPE(),
 						accountType).build();
 	}
 

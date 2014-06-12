@@ -106,22 +106,22 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 			try {
 				Log.d(TAG, "setup connection");
 
-				if (KusssHandler.handler
-						.isAvailable(
-								this.mAccount.name,
-								AccountManager.get(mContext).getPassword(
-										this.mAccount))) {
+				if (KusssHandler.getInstance().isAvailable(
+						AppUtils.getAccountAuthToken(mContext, mAccount),
+						AppUtils.getAccountName(mContext, mAccount),
+						AppUtils.getAccountPassword(mContext, mAccount))) {
+
 
 					List<Exam> exams = null;
 					if (PreferenceWrapper.getNewExamsByLvaNr(mContext)) {
 						LvaMap lvaMap = new LvaMap(mContext);
 
 						Log.d(TAG, "load exams by lvanr");
-						exams = KusssHandler.handler.getNewExamsByLvaNr(lvaMap
+						exams = KusssHandler.getInstance().getNewExamsByLvaNr(lvaMap
 								.getLVAs());
 					} else {
 						Log.d(TAG, "load exams");
-						exams = KusssHandler.handler.getNewExams();
+						exams = KusssHandler.getInstance().getNewExams();
 					}
 					if (exams == null) {
 						mSyncResult.stats.numParseExceptions++;

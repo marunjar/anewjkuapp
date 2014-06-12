@@ -5,7 +5,10 @@ import java.io.OutputStreamWriter;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
+import java.net.HttpCookie;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
@@ -54,12 +57,38 @@ public class KusssHandler {
 
 	private CookieManager mCookies;
 
-	public KusssHandler() {
+	private static KusssHandler handler = null;
+
+	public static synchronized KusssHandler getInstance() {
+		if (handler == null) {
+			handler = new KusssHandler();
+		}
+		return handler;
+	}
+
+	private KusssHandler() {
 		this.mCookies = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
 		CookieHandler.setDefault(mCookies);
 	}
 
-	public Boolean login(String user, String password) {
+	public String getSessionIDFromCookie() {
+		try {
+			List<HttpCookie> cookies = mCookies.getCookieStore().get(
+					new URI("https://www.kusss.jku.at/"));
+
+			for (HttpCookie cookie : cookies) {
+				if (cookie.getName().equals("JSESSIONID")) {
+					return cookie.getValue();
+				}
+			}
+			return null;
+		} catch (URISyntaxException e) {
+			Log.e(TAG, "getSessionIDFromCookie", e);
+			return null;
+		}
+	}
+
+	public synchronized String login(String user, String password) {
 		try {
 			if ((user.length() > 0) && (user.charAt(0) != 'k')) {
 				user = "k" + user;
@@ -67,10 +96,13 @@ public class KusssHandler {
 			Jsoup.connect(URL_LOGIN).data("j_username", user)
 					.data("j_password", password).get();
 
-			return isLoggedIn();
+			if (isLoggedIn(getSessionIDFromCookie())) {
+				return getSessionIDFromCookie();
+			}
+			return null;
 		} catch (Exception e) {
 			Log.e(TAG, "login", e);
-			return false;
+			return null;
 		}
 	}
 
@@ -91,26 +123,32 @@ public class KusssHandler {
 		wr.flush();
 	}
 
-	public boolean logout() {
+	public synchronized boolean logout() {
 		try {
 			Jsoup.connect(URL_LOGOUT).get();
 
-			return !isLoggedIn();
+			return !isLoggedIn(null);
 		} catch (Exception e) {
 			Log.e(TAG, "logout", e);
 			return true;
 		}
 	}
 
-	public boolean isLoggedIn() {
+	public synchronized boolean isLoggedIn(String sessionId) {
 		try {
+			String actSessionId = getSessionIDFromCookie();
+			if (actSessionId == null || sessionId == null
+					|| !sessionId.equals(actSessionId)) {
+				Log.d(TAG, "not logged in, wrong sessionID");
+				return false;
+			}
+
 			Document doc = Jsoup.connect(URL_START_PAGE).get();
 
 			Elements notLoggedIn = doc.select(SELECT_NOT_LOGGED_IN);
 			if (notLoggedIn.size() > 0) {
 				return false;
 			}
-
 		} catch (IOException e) {
 			Log.e(TAG, "isLoggedIn", e);
 			return false;
@@ -118,9 +156,10 @@ public class KusssHandler {
 		return true;
 	}
 
-	public boolean isAvailable(String user, String password) {
-		if (!isLoggedIn()) {
-			return login(user, password);
+	public synchronized boolean isAvailable(String sessionId, String user,
+			String password) {
+		if (!isLoggedIn(sessionId)) {
+			return login(user, password) != null;
 		}
 		return true;
 	}
@@ -308,7 +347,6 @@ public class KusssHandler {
 		return exams;
 	}
 
-	@SuppressLint("UseSparseArrays")
 	public List<Exam> getNewExamsByLvaNr(List<Lva> lvas) throws IOException {
 
 		List<Exam> exams = new ArrayList<Exam>();
@@ -398,6 +436,4 @@ public class KusssHandler {
 		}
 		return exams;
 	}
-
-	public static KusssHandler handler = new KusssHandler();
 }

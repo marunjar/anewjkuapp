@@ -41,7 +41,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 	public final static String CONTENT_LVA = "lva";
 
 	private AccountManager mAccountManager;
-
+	private String mAuthTokenType;
 	private boolean mIsNewAccount;
 	private Button mSubmit;
 
@@ -69,7 +69,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 			accountName = mAccount.name;
 
 			if (mIntent != null) {
-				mIntent.removeExtra(KusssAuthenticator.ARG_NEW_ACCOUNT);
+				mIntent.removeExtra(KusssAuthenticator.ARG_IS_ADDING_NEW_ACCOUNT);
 				mIntent.putExtra(KusssAuthenticator.ARG_ACCOUNT_NAME,
 						mAccount.name);
 				mIntent.putExtra(KusssAuthenticator.ARG_ACCOUNT_TYPE,
@@ -79,8 +79,11 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 			accountName = getIntent().getStringExtra(
 					KusssAuthenticator.ARG_ACCOUNT_NAME);
 			mIsNewAccount = mIntent.getBooleanExtra(
-					KusssAuthenticator.ARG_NEW_ACCOUNT, false);
+					KusssAuthenticator.ARG_IS_ADDING_NEW_ACCOUNT, false);
 		}
+
+		if (mAuthTokenType == null)
+			mAuthTokenType = KusssAuthenticator.AUTHTOKEN_TYPE_READ_ONLY;
 
 		if (!mIsNewAccount) {
 			if (accountName != null) {
@@ -136,9 +139,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 				String authtoken = null;
 				Bundle data = new Bundle();
 				try {
-					if (KusssHandler.handler.login(userName, userPass)) {
-						authtoken = userName;
-					}
+					authtoken = KusssHandler.getInstance().login(userName, userPass);
 
 					data.putString(AccountManager.KEY_ACCOUNT_NAME, userName);
 					data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
@@ -192,14 +193,20 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 
 		final Account account = new Account(accountName, accountType);
 
-		if (getIntent().getBooleanExtra(KusssAuthenticator.ARG_NEW_ACCOUNT,
-				false)) {
+		if (getIntent().getBooleanExtra(
+				KusssAuthenticator.ARG_IS_ADDING_NEW_ACCOUNT, false)) {
+
+			String authtoken = intent
+					.getStringExtra(AccountManager.KEY_AUTHTOKEN);
+			String authtokenType = mAuthTokenType;
+
 			// Creating the account on the device and setting the auth token we
 			// got
 			// (Not setting the auth token will cause another call to the server
 			// to authenticate the user)
 			mAccountManager
 					.addAccountExplicitly(account, accountPassword, null);
+			mAccountManager.setAuthToken(account, authtokenType, authtoken);
 			mAccountManager.setPassword(account, accountPassword);
 			// Create Calendars
 			Uri cal = CalendarUtils.createCalendar(this, intent, "JKU LVAs",

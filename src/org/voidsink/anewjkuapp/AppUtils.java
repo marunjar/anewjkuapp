@@ -10,23 +10,26 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
 import org.voidsink.anewjkuapp.fragment.MapFragment;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Grade;
 import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
-
 import com.androidplot.pie.PieChart;
 import com.androidplot.pie.Segment;
 import com.androidplot.pie.SegmentFormatter;
-
 import edu.emory.mathcs.backport.java.util.Collections;
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.EmbossMaskFilter;
+import android.os.Build;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -137,7 +140,7 @@ public class AppUtils {
 		}
 		return sum;
 	}
-	
+
 	public static void sortLVAs(List<Lva> lvas) {
 		// Collections.sort(lvas, new Comparator<Lva>() {
 		//
@@ -290,6 +293,37 @@ public class AppUtils {
 			return null;
 		}
 		return accounts[0];
+	}
+
+	public static String getAccountName(Context context, Account account) {
+		return account.name;
+	}
+
+	public static String getAccountPassword(Context context, Account account) {
+		return AccountManager.get(context).getPassword(account);
+	}
+
+	@SuppressLint("NewApi")
+	public static String getAccountAuthToken(Context context, Account account) {
+		AccountManager am = AccountManager.get(context);
+		AccountManagerFuture<Bundle> response = null;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+			response = am.getAuthToken(account,
+					KusssAuthenticator.AUTHTOKEN_TYPE_READ_ONLY, null, true,
+					null, null);
+		} else {
+			response = am.getAuthToken(account,
+					KusssAuthenticator.AUTHTOKEN_TYPE_READ_ONLY, true, null,
+					null);
+		}
+
+		try {
+			return response.getResult().getString(AccountManager.KEY_AUTHTOKEN);
+		} catch (OperationCanceledException | AuthenticatorException
+				| IOException e) {
+			Log.e(TAG, "getAccountAuthToken", e);
+			return null;
+		}
 	}
 
 	public static void addSerieToPieChart(PieChart chart, String category,

@@ -68,13 +68,12 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
 			return;
 		}
 
-		final AccountManager am = AccountManager.get(getContext());
-		// Lets give another try to authenticate the user
-		final String password = am.getPassword(account);
-
 		Log.d(TAG, "starting sync of account: " + account.name);
 
-		if (!KusssHandler.handler.isAvailable(account.name, password)) {
+		if (!KusssHandler.getInstance().isAvailable(
+				AppUtils.getAccountAuthToken(mContext, account),
+				AppUtils.getAccountName(mContext, account),
+				AppUtils.getAccountPassword(mContext, account))) {
 			KusssNotificationBuilder.showErrorNotification(mContext,
 					R.string.notification_error_account_not_available, null);
 			syncResult.stats.numAuthExceptions++;
@@ -140,7 +139,6 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
 		}
 	}
 
-	
 	@Override
 	public void onSyncCanceled() {
 		Log.d(TAG, "Canceled Sync");
