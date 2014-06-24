@@ -132,7 +132,6 @@ public class ImportPoiTask extends BaseAsyncTask<Void, Void, Void> {
 					// TODO
 					while (c.moveToNext()) {
 						poiId = c.getInt(COLUMN_POI_ID);
-						System.out.println(Integer.toString(poiId));
 						poiName = c.getString(COLUMN_POI_NAME);
 						poiIsDefault = KusssDatabaseHelper.toBool(c
 								.getInt(COLUMN_POI_IS_DEFAULT));
@@ -146,7 +145,7 @@ public class ImportPoiTask extends BaseAsyncTask<Void, Void, Void> {
 								Uri existingUri = poiUri.buildUpon()
 										.appendPath(Integer.toString(poiId))
 										.build();
-								Log.d(TAG, "Scheduling update: " + existingUri);
+								Log.d(TAG, String.format("Scheduling update: %s (%s)", poiName, existingUri));
 
 								batch.add(ContentProviderOperation
 										.newUpdate(existingUri)
@@ -170,7 +169,7 @@ public class ImportPoiTask extends BaseAsyncTask<Void, Void, Void> {
 								Uri deleteUri = poiUri.buildUpon()
 										.appendPath(Integer.toString(poiId))
 										.build();
-								Log.d(TAG, "Scheduling delete: " + deleteUri);
+								Log.d(TAG, String.format("Scheduling delete: %s (%s)", poiName, deleteUri));
 
 								batch.add(ContentProviderOperation.newDelete(
 										deleteUri)

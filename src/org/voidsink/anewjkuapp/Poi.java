@@ -1,5 +1,7 @@
 package org.voidsink.anewjkuapp;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -47,7 +49,8 @@ public class Poi {
 	public void parse(Element wpt) {
 		NodeList descriptions = wpt.getElementsByTagName("desc");
 		if (descriptions.getLength() == 1) {
-			mDescr = ((Element) descriptions.item(0)).getTextContent();
+			Document doc = Jsoup.parse(((Element) descriptions.item(0)).getTextContent());
+			mDescr = doc.text();
 		}
 	}
 
