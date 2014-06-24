@@ -7,7 +7,6 @@ import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.notification.KusssNotificationBuilder;
 
 import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.annotation.TargetApi;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
@@ -85,11 +84,11 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 		try {
 			Looper.prepare();
 
-			Log.d(TAG, "importing: " + CalendarUtils.ARG_CALENDAR_ID_EXAM);
+			Log.d(TAG, "importing: " + CalendarUtils.ARG_CALENDAR_EXAM);
 
 			ImportCalendarTask task = new ImportCalendarTask(account, extras,
 					authority, provider, syncResult, getContext(),
-					CalendarUtils.ARG_CALENDAR_ID_EXAM, mCalendarBuilder);
+					CalendarUtils.ARG_CALENDAR_EXAM, mCalendarBuilder);
 			task.execute();
 			while (!task.isDone() && !mSyncCancled) {
 				try {
@@ -101,11 +100,11 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 				}
 			}
 
-			Log.d(TAG, "importing: " + CalendarUtils.ARG_CALENDAR_ID_LVA);
+			Log.d(TAG, "importing: " + CalendarUtils.ARG_CALENDAR_LVA);
 
 			task = new ImportCalendarTask(account, extras, authority, provider,
 					syncResult, getContext(),
-					CalendarUtils.ARG_CALENDAR_ID_LVA, mCalendarBuilder);
+					CalendarUtils.ARG_CALENDAR_LVA, mCalendarBuilder);
 
 			task.execute();
 			while (!task.isDone() && !mSyncCancled) {

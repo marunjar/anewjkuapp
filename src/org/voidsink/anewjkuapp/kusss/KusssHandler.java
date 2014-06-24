@@ -101,7 +101,7 @@ public class KusssHandler {
 			}
 			return null;
 		} catch (Exception e) {
-			Log.e(TAG, "login", e);
+			Log.w(TAG, "login failed", e);
 			return null;
 		}
 	}
@@ -129,7 +129,7 @@ public class KusssHandler {
 
 			return !isLoggedIn(null);
 		} catch (Exception e) {
-			Log.e(TAG, "logout", e);
+			Log.w(TAG, "logout failed", e);
 			return true;
 		}
 	}
@@ -347,6 +347,7 @@ public class KusssHandler {
 		return exams;
 	}
 
+	@SuppressLint("UseSparseArrays")
 	public List<Exam> getNewExamsByLvaNr(List<Lva> lvas) throws IOException {
 
 		List<Exam> exams = new ArrayList<Exam>();

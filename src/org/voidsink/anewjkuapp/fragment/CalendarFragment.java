@@ -16,7 +16,6 @@ import org.voidsink.anewjkuapp.calendar.CalendarListItem;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 
 import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -144,13 +143,14 @@ public class CalendarFragment extends BaseFragment {
 
 			Account mAccount = AppUtils.getAccount(mContext);
 			if (mAccount != null) {
-				AccountManager mAm = AccountManager.get(mContext);
+				String calIDLva = CalendarUtils.getCalIDByName(mContext, mAccount, CalendarUtils.ARG_CALENDAR_LVA);
+				String calIDExam = CalendarUtils.getCalIDByName(mContext, mAccount, CalendarUtils.ARG_CALENDAR_EXAM);
 
-				String calIDLva = mAm.getUserData(mAccount,
-						CalendarUtils.ARG_CALENDAR_ID_LVA);
-				String calIDExam = mAm.getUserData(mAccount,
-						CalendarUtils.ARG_CALENDAR_ID_EXAM);
-
+				if (calIDLva == null || calIDExam == null) {
+					Log.w(TAG, "no events loaded, calendars not found");
+					return null;
+				}
+				
 				cr = mContext.getContentResolver();
 				c = cr.query(
 						CalendarContractWrapper.Events.CONTENT_URI(),

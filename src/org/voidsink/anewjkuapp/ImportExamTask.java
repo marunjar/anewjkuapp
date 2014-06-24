@@ -16,7 +16,6 @@ import org.voidsink.anewjkuapp.notification.NewExamNotification;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
 
 import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;

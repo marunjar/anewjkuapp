@@ -11,7 +11,6 @@ import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
 
 import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;

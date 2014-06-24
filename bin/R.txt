@@ -501,6 +501,8 @@ int string action_settings 0x7f060022
 int string action_settings_summary 0x7f060023
 int string action_snap_to_location 0x7f060024
 int string app_name 0x7f060018
+int string calendar_exam 0x7f060092
+int string calendar_lva 0x7f060093
 int string changelog_full_title 0x7f060005
 int string changelog_ok_button 0x7f060007
 int string changelog_show_full 0x7f060008

@@ -1,11 +1,16 @@
 package org.voidsink.anewjkuapp.calendar;
 
-import org.voidsink.anewjkuapp.KusssAuthenticator;
+import java.util.HashMap;
+import java.util.Map;
 
-import android.accounts.AccountManager;
+import org.voidsink.anewjkuapp.KusssAuthenticator;
+import org.voidsink.anewjkuapp.R;
+
+import android.accounts.Account;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -18,20 +23,32 @@ public final class CalendarUtils {
 
 	private static final String TAG = CalendarUtils.class.getSimpleName();
 
-	public static final int COLOR_DEFAULT_EXAM = Color.rgb(240, 149, 0); 
+	public static final int COLOR_DEFAULT_EXAM = Color.rgb(240, 149, 0);
 	public static final int COLOR_DEFAULT_LVA = Color.rgb(43, 127, 194);
 
-	public static final String ARG_CALENDAR_ID_EXAM = "ARG_EXAM_CALENDAR_ID";
-	public static final String ARG_CALENDAR_ID_LVA = "ARG_LVA_CALENDAR_ID";
+	public static final String ARG_CALENDAR_EXAM = "ARG_EXAM_CALENDAR";
+	public static final String ARG_CALENDAR_LVA = "ARG_LVA_CALENDAR";
 
-	public static Uri createCalendar(Context context, Intent intent,
+	// Constants representing column positions from PROJECTION.
+	public static final String[] CALENDAR_PROJECTION = new String[] {
+			CalendarContractWrapper.Calendars._ID(),
+			CalendarContractWrapper.Calendars.NAME(),
+			CalendarContractWrapper.Calendars.ACCOUNT_NAME(),
+			CalendarContractWrapper.Calendars.ACCOUNT_TYPE() };
+
+	public static final int COLUMN_CAL_ID = 0;
+	public static final int COLUMN_CAL_NAME = 1;
+	public static final int COLUMN_CAL_ACCOUNT_NAME = 2;
+	public static final int COLUMN_CAL_ACCOUNT_TYPE = 3;
+
+	public static Uri createCalendar(Context context, Account account,
 			String name, int color) {
 		Log.d(TAG, "create calendar: " + name);
 
-		String accountName = intent
-				.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-		String accountType = intent
-				.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE);
+		String accountName = account.name;
+		String accountType = account.type;
+
+		String displayName = getCalendarName(context, name);
 
 		Uri target = KusssAuthenticator.asCalendarSyncAdapter(
 				CalendarContractWrapper.Calendars.CONTENT_URI(), accountName,
@@ -46,7 +63,7 @@ public final class CalendarUtils {
 				accountType);
 		values.put(CalendarContractWrapper.Calendars.NAME(), name);
 		values.put(CalendarContractWrapper.Calendars.CALENDAR_DISPLAY_NAME(),
-				name);
+				displayName);
 		values.put(CalendarContractWrapper.Calendars.CALENDAR_COLOR(), color);
 		// read only, CAL_ACCESS_OWNER() will be editable but is it useful?
 		values.put(CalendarContractWrapper.Calendars.CALENDAR_ACCESS_LEVEL(),
@@ -70,4 +87,75 @@ public final class CalendarUtils {
 		return newCalendar;
 	}
 
+	private static boolean createCalendarIfNecessary(Context context,
+			Account account, String name, int color) {
+		String calId = getCalIDByName(context, account, name);
+		if (calId == null) {
+			createCalendar(context, account, name, color);
+			if (getCalIDByName(context, account, name) != null) {
+				Log.d(TAG, String.format("calendar '%s' created", name));
+			} else {
+				Log.d(TAG, String.format("can't create calendar '%s'", name));
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public static boolean createCalendarsIfNecessary(Context context,
+			Account account) {
+		boolean calendarCreated = true;
+		if (!createCalendarIfNecessary(context, account, ARG_CALENDAR_EXAM,
+				COLOR_DEFAULT_EXAM)) {
+			calendarCreated = false;
+		}
+		if (!createCalendarIfNecessary(context, account, ARG_CALENDAR_LVA,
+				COLOR_DEFAULT_LVA)) {
+			calendarCreated = false;
+		}
+
+		return calendarCreated;
+	}
+
+	private static Map<String, String> getCalIDs(Context context,
+			Account account) {
+		// get map with calendar ids and names for specific account
+		Map<String, String> ids = new HashMap<String, String>();
+
+		ContentResolver cr = context.getContentResolver();
+		// todo: add selection
+		Cursor c = cr.query(CalendarContractWrapper.Calendars.CONTENT_URI(),
+				CALENDAR_PROJECTION, null, null, null);
+		while (c.moveToNext()) {
+			if (account.name.equals(c.getString(COLUMN_CAL_ACCOUNT_NAME))
+					&& account.type
+							.equals(c.getString(COLUMN_CAL_ACCOUNT_TYPE))) {
+				ids.put(c.getString(COLUMN_CAL_NAME),
+						c.getString(COLUMN_CAL_ID));
+			}
+		}
+		c.close();
+
+		return ids;
+	}
+
+	public static String getCalIDByName(Context context, Account account,
+			String name) {
+		String id = getCalIDs(context, account).get(name);
+		if (id == null) {
+			Log.w(TAG, String.format("no id for '%s' found", name));
+		}
+		return id;
+	}
+
+	public static String getCalendarName(Context context, String name) {
+		switch (name) {
+		case CalendarUtils.ARG_CALENDAR_EXAM:
+			return context.getString(R.string.calendar_exam);
+		case CalendarUtils.ARG_CALENDAR_LVA:
+			return context.getString(R.string.calendar_lva);
+		default:
+			return "Kalender";
+		}
+	}
 }

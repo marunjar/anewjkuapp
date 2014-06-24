@@ -15,7 +15,6 @@ import android.accounts.AccountManager;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -193,6 +192,8 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 
 		final Account account = new Account(accountName, accountType);
 
+		CalendarUtils.createCalendarsIfNecessary(this, account);
+		
 		if (getIntent().getBooleanExtra(
 				KusssAuthenticator.ARG_IS_ADDING_NEW_ACCOUNT, false)) {
 
@@ -208,22 +209,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 					.addAccountExplicitly(account, accountPassword, null);
 			mAccountManager.setAuthToken(account, authtokenType, authtoken);
 			mAccountManager.setPassword(account, accountPassword);
-			// Create Calendars
-			Uri cal = CalendarUtils.createCalendar(this, intent, "JKU LVAs",
-					CalendarUtils.COLOR_DEFAULT_LVA);
-			if (cal != null) {
-				mAccountManager.setUserData(account,
-						CalendarUtils.ARG_CALENDAR_ID_LVA, cal
-								.getLastPathSegment().toString());
-			}
-			cal = CalendarUtils.createCalendar(this, intent, "JKU Exams",
-					CalendarUtils.COLOR_DEFAULT_EXAM);
-			if (cal != null) {
-				mAccountManager.setUserData(account,
-						CalendarUtils.ARG_CALENDAR_ID_EXAM, cal
-								.getLastPathSegment().toString());
-			}
-
+			
 			// Turn on periodic syncing
 			ContentResolver.addPeriodicSync(account,
 					CalendarContractWrapper.AUTHORITY(), new Bundle(),

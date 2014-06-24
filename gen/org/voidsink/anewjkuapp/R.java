@@ -1411,6 +1411,8 @@ containing a value of this type.
         public static final int action_settings_summary=0x7f060023;
         public static final int action_snap_to_location=0x7f060024;
         public static final int app_name=0x7f060018;
+        public static final int calendar_exam=0x7f060092;
+        public static final int calendar_lva=0x7f060093;
         public static final int changelog_full_title=0x7f060005;
         public static final int changelog_ok_button=0x7f060007;
         public static final int changelog_show_full=0x7f060008;

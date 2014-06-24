@@ -21,7 +21,6 @@ import org.voidsink.anewjkuapp.notification.CalendarChangedNotification;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
 
 import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderOperation.Builder;
@@ -47,7 +46,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 	private Account mAccount;
 	private SyncResult mSyncResult;
 	private Context mContext;
-	private String mGetTypeID;
+	private String mCalendarName;
 	private ContentResolver mResolver;
 
 	private final long mSyncFromNow;
@@ -91,27 +90,16 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 
 	public ImportCalendarTask(Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult,
-			Context context, String getTypeID, CalendarBuilder calendarBuilder) {
+			Context context, String calendarName, CalendarBuilder calendarBuilder) {
 		this.mAccount = account;
 		this.mProvider = provider;
 		this.mResolver = context.getContentResolver();
 		this.mSyncResult = syncResult;
 		this.mContext = context;
-		this.mGetTypeID = getTypeID;
+		this.mCalendarName = calendarName;
 		this.mCalendarBuilder = calendarBuilder;
 		this.mSyncFromNow = System.currentTimeMillis();
 		this.isSync = true;
-	}
-
-	public String getCalendarName(String getTypeID) {
-		switch (getTypeID) {
-		case CalendarUtils.ARG_CALENDAR_ID_EXAM:
-			return "JKU Exams";
-		case CalendarUtils.ARG_CALENDAR_ID_LVA:
-			return "JKU LVAs";
-		default:
-			return "Kalender";
-		}
 	}
 
 	@Override
@@ -122,10 +110,11 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 		if (!isSync) {
 			mUpdateNotification = new SyncNotification(mContext,
 					R.string.notification_sync_calendar);
-			mUpdateNotification.show(getCalendarName(this.mGetTypeID));
+			mUpdateNotification.show(CalendarUtils.getCalendarName(mContext,
+					this.mCalendarName));
 		}
 		mNotification = new CalendarChangedNotification(mContext,
-				getCalendarName(this.mGetTypeID));
+				CalendarUtils.getCalendarName(mContext, this.mCalendarName));
 	}
 
 	@Override
@@ -149,14 +138,14 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 
 					Calendar iCal = null;
 					// {{ Load calendar events from resource
-					switch (this.mGetTypeID) {
-					case CalendarUtils.ARG_CALENDAR_ID_EXAM:
-						iCal = KusssHandler.getInstance()
-								.getExamIcal(mCalendarBuilder);
+					switch (this.mCalendarName) {
+					case CalendarUtils.ARG_CALENDAR_EXAM:
+						iCal = KusssHandler.getInstance().getExamIcal(
+								mCalendarBuilder);
 						break;
-					case CalendarUtils.ARG_CALENDAR_ID_LVA:
-						iCal = KusssHandler.getInstance()
-								.getLVAIcal(mCalendarBuilder);
+					case CalendarUtils.ARG_CALENDAR_LVA:
+						iCal = KusssHandler.getInstance().getLVAIcal(
+								mCalendarBuilder);
 						break;
 					}
 					if (iCal == null) {
@@ -182,8 +171,11 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 							}
 						}
 
-						String calendarId = AccountManager.get(mContext)
-								.getUserData(mAccount, mGetTypeID);
+						String calendarId = CalendarUtils.getCalIDByName(mContext, mAccount, mCalendarName);
+
+						if (calendarId == null) {
+							return null;
+						}
 
 						Log.d(TAG, "Fetching local entries for merge with:"
 								+ calendarId);
@@ -419,8 +411,8 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 												TimeZone.getDefault().getID());
 
 								if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-									if (mGetTypeID
-											.equals(CalendarUtils.ARG_CALENDAR_ID_EXAM)) {
+									if (mCalendarName
+											.equals(CalendarUtils.ARG_CALENDAR_EXAM)) {
 										builder.withValue(
 												CalendarContractWrapper.Events
 														.AVAILABILITY(),

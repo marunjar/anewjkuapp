@@ -123,4 +123,6 @@
     <string name="lva_open">offene LVAs</string>
     <string name="lva_all">alle LVAs</string>
     <string name="lva_all_terms">alle Semester</string>
+    <string name="calendar_exam">JKU Prüfungen</string>
+    <string name="calendar_lva">JKU LVAs</string>
 </resources>

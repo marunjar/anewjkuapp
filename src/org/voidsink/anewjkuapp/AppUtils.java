@@ -10,14 +10,17 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
 import org.voidsink.anewjkuapp.fragment.MapFragment;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Grade;
 import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
+
 import com.androidplot.pie.PieChart;
 import com.androidplot.pie.Segment;
 import com.androidplot.pie.SegmentFormatter;
+
 import edu.emory.mathcs.backport.java.util.Collections;
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -46,19 +49,49 @@ public class AppUtils {
 				|| mLastVersion == PreferenceWrapper.PREF_LAST_VERSION_NONE) {
 			boolean errorOccured = false;
 
-			if (!initPreferences(context)) {
-				errorOccured = true;
-			}
-			if (!importDefaultPois(context)) {
-				errorOccured = true;
-			}
-			if (!copyDefaultMap(context)) {
+			try {
+				if (!initPreferences(context)) {
+					errorOccured = true;
+				}
+				if (!importDefaultPois(context)) {
+					errorOccured = true;
+				}
+				if (!copyDefaultMap(context)) {
+					errorOccured = true;
+				}
+				if (shouldRemoveOldAccount(mLastVersion, mCurrentVersion)) {
+					if (!removeAccount(context)) {
+						errorOccured = true;
+					}
+				}
+
+			} catch (Exception e) {
+				Log.e(TAG, "doOnNewVersion failed", e);
 				errorOccured = true;
 			}
 			if (!errorOccured) {
 				PreferenceWrapper.setLastVersion(context, mCurrentVersion);
 			}
 		}
+	}
+
+	private static boolean removeAccount(Context context) {
+		Account account = getAccount(context);
+		if (account != null) {
+			AccountManager.get(context).removeAccount(account, null, null);
+			Log.d(TAG, "account removed");
+		}
+		return true;
+	}
+
+	private static boolean shouldRemoveOldAccount(int lastVersion,
+			int currentVersion) {
+		// calendar names changed with 100017, remove account for avoiding
+		// corrupted data
+		if (lastVersion < 100017 && currentVersion >= 100017) {
+			return true;
+		}
+		return false;
 	}
 
 	private static boolean initPreferences(Context context) {

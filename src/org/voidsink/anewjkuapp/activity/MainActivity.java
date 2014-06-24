@@ -277,10 +277,10 @@ public class MainActivity extends ActionBarActivity implements
 		case R.id.action_refresh_calendar:
 			Log.d(TAG, "importing calendars");
 			new ImportCalendarTask(account, this,
-					CalendarUtils.ARG_CALENDAR_ID_EXAM, new CalendarBuilder())
+					CalendarUtils.ARG_CALENDAR_EXAM, new CalendarBuilder())
 					.execute();
 			new ImportCalendarTask(account, this,
-					CalendarUtils.ARG_CALENDAR_ID_LVA, new CalendarBuilder())
+					CalendarUtils.ARG_CALENDAR_LVA, new CalendarBuilder())
 					.execute();
 			return true;
 		case R.id.action_refresh_lvas:
