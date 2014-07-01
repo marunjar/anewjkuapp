@@ -18,6 +18,7 @@
 	<classpathentry kind="lib" path="libs/mapsforge-map-reader-0.4.3.jar"/>
 	<classpathentry kind="lib" path="libs/svg-android-0.4.3.jar"/>
 	<classpathentry kind="lib" path="libs/androidplot-core-0.6.1.jar"/>
+	<classpathentry kind="lib" path="libs/google-play-services.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="output" path="bin/classes"/>

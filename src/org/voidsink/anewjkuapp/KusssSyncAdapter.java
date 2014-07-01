@@ -69,7 +69,7 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
 
 		Log.d(TAG, "starting sync of account: " + account.name);
 
-		if (!KusssHandler.getInstance().isAvailable(
+		if (!KusssHandler.getInstance().isAvailable(mContext,
 				AppUtils.getAccountAuthToken(mContext, account),
 				AppUtils.getAccountName(mContext, account),
 				AppUtils.getAccountPassword(mContext, account))) {
@@ -131,6 +131,7 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
 
 			Log.d(TAG, "importing finished");
 		} catch (Exception e) {
+			Analytics.sendException(mContext, e, true);
 			KusssNotificationBuilder.showErrorNotification(mContext,
 					R.string.notification_error, e);
 		} finally {

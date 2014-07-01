@@ -23,8 +23,10 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.voidsink.anewjkuapp.Analytics;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.text.format.DateUtils;
 import android.util.Log;
 import net.fortuna.ical4j.data.CalendarBuilder;
@@ -88,7 +90,7 @@ public class KusssHandler {
 		}
 	}
 
-	public synchronized String login(String user, String password) {
+	public synchronized String login(Context c, String user, String password) {
 		try {
 			if ((user.length() > 0) && (user.charAt(0) != 'k')) {
 				user = "k" + user;
@@ -96,12 +98,13 @@ public class KusssHandler {
 			Jsoup.connect(URL_LOGIN).data("j_username", user)
 					.data("j_password", password).get();
 
-			if (isLoggedIn(getSessionIDFromCookie())) {
+			if (isLoggedIn(c, getSessionIDFromCookie())) {
 				return getSessionIDFromCookie();
 			}
 			return null;
 		} catch (Exception e) {
 			Log.w(TAG, "login failed", e);
+			Analytics.sendException(c, e, false);
 			return null;
 		}
 	}
@@ -123,18 +126,19 @@ public class KusssHandler {
 		wr.flush();
 	}
 
-	public synchronized boolean logout() {
+	public synchronized boolean logout(Context c) {
 		try {
 			Jsoup.connect(URL_LOGOUT).get();
 
-			return !isLoggedIn(null);
+			return !isLoggedIn(c, null);
 		} catch (Exception e) {
 			Log.w(TAG, "logout failed", e);
+			Analytics.sendException(c, e, false);
 			return true;
 		}
 	}
 
-	public synchronized boolean isLoggedIn(String sessionId) {
+	public synchronized boolean isLoggedIn(Context c, String sessionId) {
 		try {
 			String actSessionId = getSessionIDFromCookie();
 			if (actSessionId == null || sessionId == null
@@ -151,20 +155,21 @@ public class KusssHandler {
 			}
 		} catch (IOException e) {
 			Log.e(TAG, "isLoggedIn", e);
+			Analytics.sendException(c, e, false);
 			return false;
 		}
 		return true;
 	}
 
-	public synchronized boolean isAvailable(String sessionId, String user,
+	public synchronized boolean isAvailable(Context c, String sessionId, String user,
 			String password) {
-		if (!isLoggedIn(sessionId)) {
-			return login(user, password) != null;
+		if (!isLoggedIn(c, sessionId)) {
+			return login(c, user, password) != null;
 		}
 		return true;
 	}
 
-	public Calendar getLVAIcal(CalendarBuilder mCalendarBuilder) {
+	public Calendar getLVAIcal(Context c, CalendarBuilder mCalendarBuilder) {
 
 		Calendar iCal = null;
 
@@ -180,13 +185,14 @@ public class KusssHandler {
 			iCal = mCalendarBuilder.build(conn.getInputStream());
 		} catch (Exception e) {
 			Log.e(TAG, "getLVAIcal", e);
+			Analytics.sendException(c, e, true);
 			iCal = null;
 		}
 
 		return iCal;
 	}
 
-	public Calendar getExamIcal(CalendarBuilder mCalendarBuilder) {
+	public Calendar getExamIcal(Context c, CalendarBuilder mCalendarBuilder) {
 		Calendar iCal = null;
 
 		try {
@@ -200,13 +206,14 @@ public class KusssHandler {
 			iCal = mCalendarBuilder.build(conn.getInputStream());
 		} catch (Exception e) {
 			Log.e(TAG, "getExamIcal", e);
+			Analytics.sendException(c, e, true);
 			iCal = null;
 		}
 
 		return iCal;
 	}
 
-	public Map<String, String> getTerms() {
+	public Map<String, String> getTerms(Context c) {
 		Map<String, String> terms = new HashMap<String, String>();
 		try {
 			Document doc = Jsoup.connect(URL_GET_TERMS).get();
@@ -220,32 +227,34 @@ public class KusssHandler {
 			}
 		} catch (Exception e) {
 			Log.e(TAG, "getTerms", e);
+			Analytics.sendException(c, e, true);
 			return null;
 		}
 		return terms;
 	}
 
-	public boolean selectTerm(String term) {
+	public boolean selectTerm(Context c, String term) {
 		try {
 			Jsoup.connect(URL_SELECT_TERM).data("term", term)
 					.data("previousQueryString", "")
 					.data("reloadAction", "listmystudentlvas.action").post();
 		} catch (IOException e) {
 			Log.e(TAG, "selectTerm", e);
+			Analytics.sendException(c, e, true);
 			return false;
 		}
 		Log.d(TAG, term + " selected");
 		return true;
 	}
 
-	public List<Lva> getLvas() {
+	public List<Lva> getLvas(Context c) {
 		List<Lva> lvas = new ArrayList<Lva>();
 		try {
-			List<String> terms = new ArrayList<>(getTerms().keySet());
+			List<String> terms = new ArrayList<>(getTerms(c).keySet());
 			if (terms != null) {
 				Collections.sort(terms);
 				for (String term : terms) {
-					if (selectTerm(term)) {
+					if (selectTerm(c, term)) {
 						Document doc = Jsoup.connect(URL_MY_LVAS).get();
 
 						if (isSelected(doc, term)) {
@@ -263,6 +272,7 @@ public class KusssHandler {
 			}
 		} catch (Exception e) {
 			Log.e(TAG, "getLvas", e);
+			Analytics.sendException(c, e, true);
 			return null;
 		}
 		return lvas;
@@ -285,7 +295,7 @@ public class KusssHandler {
 		return false;
 	}
 
-	public List<ExamGrade> getGrades() {
+	public List<ExamGrade> getGrades(Context c) {
 		List<ExamGrade> grades = new ArrayList<ExamGrade>();
 		try {
 			Document doc = Jsoup.connect(URL_MY_GRADES).data("months", "0")
@@ -310,13 +320,14 @@ public class KusssHandler {
 			}
 		} catch (IOException e) {
 			Log.e(TAG, "getGrades", e);
+			Analytics.sendException(c, e, true);
 			return null;
 		}
 		Log.d(TAG, grades.size() + " grades found");
 		return grades;
 	}
 
-	public List<Exam> getNewExams() {
+	public List<Exam> getNewExams(Context c) {
 		List<Exam> exams = new ArrayList<Exam>();
 		try {
 			Document doc = Jsoup.connect(URL_GET_EXAMS).data("search", "true")
@@ -342,21 +353,22 @@ public class KusssHandler {
 			}
 		} catch (IOException e) {
 			Log.e(TAG, "getNewExams", e);
+			Analytics.sendException(c, e, true);
 			return null;
 		}
 		return exams;
 	}
 
 	@SuppressLint("UseSparseArrays")
-	public List<Exam> getNewExamsByLvaNr(List<Lva> lvas) throws IOException {
+	public List<Exam> getNewExamsByLvaNr(Context c, List<Lva> lvas) throws IOException {
 
 		List<Exam> exams = new ArrayList<Exam>();
 		if (lvas == null || lvas.size() == 0) {
 			Log.d(TAG, "no lvas found, reload");
-			lvas = getLvas();
+			lvas = getLvas(c);
 		}
 		if (lvas.size() > 0) {
-			List<ExamGrade> grades = getGrades();
+			List<ExamGrade> grades = getGrades(c);
 
 			Map<Integer, ExamGrade> gradeCache = new HashMap<Integer, ExamGrade>();
 			for (ExamGrade grade : grades) {
@@ -384,7 +396,7 @@ public class KusssHandler {
 					}
 				}
 				if (grade == null) {
-					List<Exam> newExams = getNewExamsByLvaNr(lva.getLvaNr());
+					List<Exam> newExams = getNewExamsByLvaNr(c, lva.getLvaNr());
 					for (Exam newExam : newExams) {
 						if (newExam != null) {
 							exams.add(newExam);
@@ -396,7 +408,7 @@ public class KusssHandler {
 		return exams;
 	}
 
-	private List<Exam> getNewExamsByLvaNr(int lvaNr) {
+	private List<Exam> getNewExamsByLvaNr(Context c, int lvaNr) {
 		List<Exam> exams = new ArrayList<Exam>();
 		try {
 			Log.d(TAG, "getNewExamsByLvaNr: " + lvaNr);
@@ -433,6 +445,7 @@ public class KusssHandler {
 			}
 		} catch (IOException e) {
 			Log.e(TAG, "getNewExamsByLvaNr", e);
+			Analytics.sendException(c, e, true);
 			exams = null;
 		}
 		return exams;

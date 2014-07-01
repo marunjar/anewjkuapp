@@ -102,14 +102,14 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
 			try {
 				Log.d(TAG, "setup connection");
 
-				if (KusssHandler.getInstance().isAvailable(
+				if (KusssHandler.getInstance().isAvailable(mContext, 
 						AppUtils.getAccountAuthToken(mContext, mAccount),
 						AppUtils.getAccountName(mContext, mAccount),
 						AppUtils.getAccountPassword(mContext, mAccount))) {
 
 					Log.d(TAG, "load lvas");
 
-					List<Lva> lvas = KusssHandler.getInstance().getLvas();
+					List<Lva> lvas = KusssHandler.getInstance().getLvas(mContext);
 					if (lvas == null) {
 						mSyncResult.stats.numParseExceptions++;
 					} else {
@@ -240,6 +240,7 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
 					mSyncResult.stats.numAuthExceptions++;
 				}
 			} catch (Exception e) {
+				Analytics.sendException(mContext, e, true);
 				Log.e(TAG, "import failed", e);
 			}
 		}

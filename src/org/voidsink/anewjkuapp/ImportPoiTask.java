@@ -109,7 +109,8 @@ public class ImportPoiTask extends BaseAsyncTask<Void, Void, Void> {
 			} catch (ParserConfigurationException | SAXException | IOException
 					| XPathExpressionException e) {
 				poiMap.clear();
-				e.printStackTrace();
+				Log.e(TAG, "parse failed", e);
+				Analytics.sendException(mContext, e, true);
 			}
 
 			if (!poiMap.isEmpty()) {
@@ -217,10 +218,8 @@ public class ImportPoiTask extends BaseAsyncTask<Void, Void, Void> {
 					Log.w(TAG, "selection failed");
 				}
 			}
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		} catch (OperationApplicationException e) {
-			e.printStackTrace();
+		} catch (RemoteException | OperationApplicationException e) {
+			Analytics.sendException(mContext, e, true);
 		} finally {
 			mNotification.show();
 		}

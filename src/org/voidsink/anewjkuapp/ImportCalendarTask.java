@@ -90,7 +90,8 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 
 	public ImportCalendarTask(Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult,
-			Context context, String calendarName, CalendarBuilder calendarBuilder) {
+			Context context, String calendarName,
+			CalendarBuilder calendarBuilder) {
 		this.mAccount = account;
 		this.mProvider = provider;
 		this.mResolver = context.getContentResolver();
@@ -129,7 +130,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 
 				Log.d(TAG, "setup connection");
 
-				if (KusssHandler.getInstance().isAvailable(
+				if (KusssHandler.getInstance().isAvailable(mContext,
 						AppUtils.getAccountAuthToken(mContext, mAccount),
 						AppUtils.getAccountName(mContext, mAccount),
 						AppUtils.getAccountPassword(mContext, mAccount))) {
@@ -140,11 +141,11 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 					// {{ Load calendar events from resource
 					switch (this.mCalendarName) {
 					case CalendarUtils.ARG_CALENDAR_EXAM:
-						iCal = KusssHandler.getInstance().getExamIcal(
+						iCal = KusssHandler.getInstance().getExamIcal(mContext,
 								mCalendarBuilder);
 						break;
 					case CalendarUtils.ARG_CALENDAR_LVA:
-						iCal = KusssHandler.getInstance().getLVAIcal(
+						iCal = KusssHandler.getInstance().getLVAIcal(mContext,
 								mCalendarBuilder);
 						break;
 					}
@@ -171,7 +172,8 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 							}
 						}
 
-						String calendarId = CalendarUtils.getCalIDByName(mContext, mAccount, mCalendarName);
+						String calendarId = CalendarUtils.getCalIDByName(
+								mContext, mAccount, mCalendarName);
 
 						if (calendarId == null) {
 							return null;
@@ -467,6 +469,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 					mSyncResult.stats.numAuthExceptions++;
 				}
 			} catch (Exception e) {
+				Analytics.sendException(mContext, e, true);
 				Log.e(TAG, "import calendar failed", e);
 			}
 		}

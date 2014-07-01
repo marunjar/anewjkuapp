@@ -8,11 +8,11 @@ package de.cketti.library.changelog;
 
 public final class R {
 	public static final class string {
-		public static final int changelog_full_title = 0x7f060005;
-		public static final int changelog_ok_button = 0x7f060007;
-		public static final int changelog_show_full = 0x7f060008;
-		public static final int changelog_title = 0x7f060006;
-		public static final int changelog_version_format = 0x7f060009;
+		public static final int changelog_full_title = 0x7f060025;
+		public static final int changelog_ok_button = 0x7f060027;
+		public static final int changelog_show_full = 0x7f060028;
+		public static final int changelog_title = 0x7f060026;
+		public static final int changelog_version_format = 0x7f060029;
 	}
 	public static final class xml {
 		public static final int changelog = 0x7f050001;

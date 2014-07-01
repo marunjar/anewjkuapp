@@ -24,6 +24,7 @@ import android.widget.TextView;
 import net.fortuna.ical4j.data.CalendarBuilder;
 
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
+import org.voidsink.anewjkuapp.Analytics;
 import org.voidsink.anewjkuapp.AppUtils;
 import org.voidsink.anewjkuapp.DrawerItem;
 import org.voidsink.anewjkuapp.ImportCalendarTask;
@@ -268,14 +269,17 @@ public class MainActivity extends ActionBarActivity implements
 		switch (item.getItemId()) {
 		case R.id.action_refresh_exams:
 			Log.d(TAG, "importing exams");
+			Analytics.eventReloadExams(this);
 			new ImportExamTask(account, this).execute();
 			return true;
 		case R.id.action_refresh_grades:
 			Log.d(TAG, "importing grades");
+			Analytics.eventReloadGrades(this);
 			new ImportGradeTask(account, MainActivity.this).execute();
 			return true;
 		case R.id.action_refresh_calendar:
 			Log.d(TAG, "importing calendars");
+			Analytics.eventReloadEvents(this);
 			new ImportCalendarTask(account, this,
 					CalendarUtils.ARG_CALENDAR_EXAM, new CalendarBuilder())
 					.execute();
@@ -285,6 +289,7 @@ public class MainActivity extends ActionBarActivity implements
 			return true;
 		case R.id.action_refresh_lvas:
 			Log.d(TAG, "importing lvas");
+			Analytics.eventReloadLvas(this);
 			new ImportLvaTask(account, MainActivity.this).execute();
 			List<Lva> lvas = KusssContentProvider.getLvas(this);
 			if (lvas != null && lvas.size() == 0) {

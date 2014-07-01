@@ -98,12 +98,12 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
 		Log.d(TAG, "authToken=" + authToken);
 
 		if (TextUtils.isEmpty(authToken)
-				|| !KusssHandler.getInstance().isLoggedIn(authToken)) {
+				|| !KusssHandler.getInstance().isLoggedIn(mContext, authToken)) {
 			// Lets give another try to authenticate the user
 			final String password = am.getPassword(account);
 			if (password != null) {
 				try {
-					authToken = KusssHandler.getInstance().login(account.name,
+					authToken = KusssHandler.getInstance().login(mContext, account.name,
 							password);
 				} catch (Exception e) {
 					e.printStackTrace();

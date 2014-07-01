@@ -84,7 +84,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-		
+
 		Log.d(TAG, "prepare importing exams");
 
 		if (!isSync) {
@@ -105,22 +105,22 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 			try {
 				Log.d(TAG, "setup connection");
 
-				if (KusssHandler.getInstance().isAvailable(
+				if (KusssHandler.getInstance().isAvailable(mContext,
 						AppUtils.getAccountAuthToken(mContext, mAccount),
 						AppUtils.getAccountName(mContext, mAccount),
 						AppUtils.getAccountPassword(mContext, mAccount))) {
-
 
 					List<Exam> exams = null;
 					if (PreferenceWrapper.getNewExamsByLvaNr(mContext)) {
 						LvaMap lvaMap = new LvaMap(mContext);
 
 						Log.d(TAG, "load exams by lvanr");
-						exams = KusssHandler.getInstance().getNewExamsByLvaNr(lvaMap
-								.getLVAs());
+						exams = KusssHandler.getInstance().getNewExamsByLvaNr(
+								mContext, lvaMap.getLVAs());
 					} else {
 						Log.d(TAG, "load exams");
-						exams = KusssHandler.getInstance().getNewExams();
+						exams = KusssHandler.getInstance()
+								.getNewExams(mContext);
 					}
 					if (exams == null) {
 						mSyncResult.stats.numParseExceptions++;
@@ -259,17 +259,18 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 					mSyncResult.stats.numAuthExceptions++;
 				}
 			} catch (Exception e) {
+				Analytics.sendException(mContext, e, true);
 				Log.e(TAG, "import failed", e);
 			}
 		}
-		
+
 		setImportDone();
 
 		if (mUpdateNotification != null) {
 			mUpdateNotification.cancel();
 		}
 		mNewExamNotification.show();
-		
+
 		return null;
 	}
 

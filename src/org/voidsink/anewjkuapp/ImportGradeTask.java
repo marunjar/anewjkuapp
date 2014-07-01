@@ -52,7 +52,7 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 			KusssContentContract.Grade.GRADE_COL_TITLE,
 			KusssContentContract.Grade.GRADE_COL_CODE,
 			KusssContentContract.Grade.GRADE_COL_ECTS,
-			KusssContentContract.Grade.GRADE_COL_SWS};
+			KusssContentContract.Grade.GRADE_COL_SWS };
 
 	// Constants representing column positions from PROJECTION.
 	public static final int COLUMN_GRADE_ID = 0;
@@ -92,7 +92,7 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 		super.onPreExecute();
 
 		Log.d(TAG, "prepare importing grades");
-		
+
 		if (!isSync) {
 			mUpdateNotification = new SyncNotification(mContext,
 					R.string.notification_sync_lva);
@@ -111,14 +111,15 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 			try {
 				Log.d(TAG, "setup connection");
 
-				if (KusssHandler.getInstance().isAvailable(
+				if (KusssHandler.getInstance().isAvailable(mContext,
 						AppUtils.getAccountAuthToken(mContext, mAccount),
 						AppUtils.getAccountName(mContext, mAccount),
 						AppUtils.getAccountPassword(mContext, mAccount))) {
 
 					Log.d(TAG, "load grades");
 
-					List<ExamGrade> grades = KusssHandler.getInstance().getGrades();
+					List<ExamGrade> grades = KusssHandler.getInstance()
+							.getGrades(mContext);
 					if (grades == null) {
 						mSyncResult.stats.numParseExceptions++;
 					}
@@ -240,6 +241,7 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 				}
 
 			} catch (Exception e) {
+				Analytics.sendException(mContext, e, true);
 				Log.e(TAG, "import failed", e);
 			}
 		}
@@ -250,7 +252,7 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 			mUpdateNotification.cancel();
 		}
 		mGradeChangeNotification.show();
-		
+
 		return null;
 	}
 

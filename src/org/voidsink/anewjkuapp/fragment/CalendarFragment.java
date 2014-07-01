@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.voidsink.anewjkuapp.Analytics;
 import org.voidsink.anewjkuapp.AppUtils;
 import org.voidsink.anewjkuapp.ImportCalendarTask;
 import org.voidsink.anewjkuapp.R;
@@ -90,6 +91,9 @@ public class CalendarFragment extends BaseFragment {
 
 	private void loadMoreData() {
 		then += 31 * DateUtils.DAY_IN_MILLIS;
+		
+		Analytics.eventLoadMoreEvents(getContext(), then - now);
+		
 		loadData();
 	}
 

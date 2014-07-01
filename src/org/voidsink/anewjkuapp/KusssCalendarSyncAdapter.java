@@ -73,7 +73,7 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 
 		Log.d(TAG, "starting sync of account: " + account.name);
 
-		if (!KusssHandler.getInstance().isAvailable(
+		if (!KusssHandler.getInstance().isAvailable(mContext, 
 				AppUtils.getAccountAuthToken(mContext, account),
 				AppUtils.getAccountName(mContext, account),
 				AppUtils.getAccountPassword(mContext, account))) {
@@ -117,6 +117,7 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 				}
 			}
 		} catch (Exception e) {
+			Analytics.sendException(mContext, e, true);
 			Log.e(TAG, "onPerformSync", e);
 			KusssNotificationBuilder.showErrorNotification(mContext,
 					R.string.notification_error, e);
