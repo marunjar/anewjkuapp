@@ -39,7 +39,7 @@ public class GradeDetailFragment extends BaseFragment {
 	public GradeDetailFragment(String term, List<ExamGrade> grades) {
 		this.mGrades = new ArrayList<ExamGrade>();
 		if (term != null) {
-			if (mGrades != null) {
+			if (grades != null) {
 				for (ExamGrade grade : grades) {
 					if (grade.getTerm().equals(term)) {
 						this.mGrades.add(grade);
@@ -47,7 +47,7 @@ public class GradeDetailFragment extends BaseFragment {
 				}
 			}
 		} else {
-			if (mGrades != null) {
+			if (grades != null) {
 				this.mGrades.addAll(grades);
 			}
 		}
