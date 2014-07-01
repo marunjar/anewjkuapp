@@ -7,13 +7,13 @@
     <com.androidplot.pie.PieChart
         android:id="@+id/lva_pie_chart"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="170dp"
         android:padding="3dp" />
 
     <com.androidplot.xy.XYPlot
         android:id="@+id/lva_bar_chart"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="170dp"
         androidPlot.graphWidget.marginBottom="5dp"
         androidPlot.graphWidget.marginLeft="5dp"
         androidPlot.graphWidget.marginRight="5dp"
