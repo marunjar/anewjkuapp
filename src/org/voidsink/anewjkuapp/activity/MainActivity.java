@@ -41,6 +41,8 @@ import org.voidsink.anewjkuapp.fragment.*;
 import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
+
 import de.cketti.library.changelog.ChangeLog;
 
 public class MainActivity extends ActionBarActivity implements
@@ -338,4 +340,21 @@ public class MainActivity extends ActionBarActivity implements
 			return rootView;
 		}
 	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+
+		GoogleAnalytics.getInstance(getApplicationContext())
+				.reportActivityStart(this);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+
+		GoogleAnalytics.getInstance(getApplicationContext())
+				.reportActivityStop(this);
+	}
+
 }

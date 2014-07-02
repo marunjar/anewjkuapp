@@ -5,8 +5,8 @@ import java.util.HashMap;
 
 import com.google.android.gms.analytics.ExceptionReporter;
 import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.analytics.Logger.LogLevel;
 
 import android.app.Application;
 import android.util.Log;
@@ -24,11 +24,10 @@ public class GlobalStats extends Application {
 		super.onCreate();
 
 		GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
-		analytics.enableAutoActivityReports(this);
 		if (BuildConfig.DEBUG) {
-			analytics.setDryRun(true);
+//			analytics.setDryRun(true);
 			analytics.setAppOptOut(false);
-			analytics.getLogger().setLogLevel(Logger.LogLevel.VERBOSE);
+			analytics.getLogger().setLogLevel(LogLevel.VERBOSE);
 			Log.i(TAG, "debug enabled");
 		} else {
 			analytics.setAppOptOut(false); // TODO: get option from shared preferences
