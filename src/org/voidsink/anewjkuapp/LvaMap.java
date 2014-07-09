@@ -35,11 +35,11 @@ public class LvaMap {
 
 	}
 
-	public Lva getExactLVA(String term, int lvaNr) {
+	public Lva getExactLVA(String term, String lvaNr) {
 		return this.map.get(Lva.getKey(term, lvaNr));
 	}
 
-	public Lva getLVA(String term, int lvaNr) {
+	public Lva getLVA(String term, String lvaNr) {
 		Lva lva = this.map.get(Lva.getKey(term, lvaNr));
 		if (lva != null) {
 			return lva;
@@ -47,7 +47,7 @@ public class LvaMap {
 
 		List<Lva> lvas = new ArrayList<Lva>();
 		for (Lva tmp : this.map.values()) {
-			if (lvaNr == tmp.getLvaNr()) {
+			if (lvaNr.equals(tmp.getLvaNr())) {
 				lvas.add(tmp);
 			}
 		}

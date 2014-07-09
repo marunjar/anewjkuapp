@@ -57,6 +57,11 @@ public class KusssHandler {
 	// "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > table > tbody > tr > td > form > table > tbody > tr:has(td)";
 	private static final String SELECT_NEW_EXAMS = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > div.sidetable > form > table > tbody > tr:has(td)";
 
+	
+	public static final String PATTERN_LVA_NR = "\\d{3}\\.\\d{2}\\w{1}";
+	public static final String PATTERN_TERM = "\\d{4}[swSW]";
+	
+	
 	private CookieManager mCookies;
 
 	private static KusssHandler handler = null;
@@ -370,9 +375,9 @@ public class KusssHandler {
 		if (lvas.size() > 0) {
 			List<ExamGrade> grades = getGrades(c);
 
-			Map<Integer, ExamGrade> gradeCache = new HashMap<Integer, ExamGrade>();
+			Map<String, ExamGrade> gradeCache = new HashMap<String, ExamGrade>();
 			for (ExamGrade grade : grades) {
-				if (grade.getLvaNr() > 0) {
+				if (!grade.getLvaNr().isEmpty()) {
 					ExamGrade existing = gradeCache.get(grade.getLvaNr());
 					if (existing != null) {
 						Log.d(TAG,
@@ -408,7 +413,7 @@ public class KusssHandler {
 		return exams;
 	}
 
-	private List<Exam> getNewExamsByLvaNr(Context c, int lvaNr) {
+	private List<Exam> getNewExamsByLvaNr(Context c, String lvaNr) {
 		List<Exam> exams = new ArrayList<Exam>();
 		try {
 			Log.d(TAG, "getNewExamsByLvaNr: " + lvaNr);
@@ -421,7 +426,7 @@ public class KusssHandler {
 					.data("searchDateTo",
 							df.format(new Date(System.currentTimeMillis()
 									+ DateUtils.YEAR_IN_MILLIS)))
-					.data("searchLvaNr", Integer.toString(lvaNr))
+					.data("searchLvaNr", lvaNr)
 					.data("searchLvaTitle", "").data("searchCourseClass", "")
 					.get();
 

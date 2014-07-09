@@ -97,7 +97,7 @@ public class ExamListAdapter extends BaseArrayAdapter<ExamListItem> {
 		} else {
 			eventItemHolder.info.setVisibility(View.GONE);
 		}
-		eventItemHolder.lvaNr.setText(Integer.toString(eventItem.getLvaNr()));
+		eventItemHolder.lvaNr.setText(eventItem.getLvaNr());
 		eventItemHolder.term.setText(eventItem.getTerm());
 		eventItemHolder.skz.setText(String.format("[%s]", eventItem.getSkz()));
 		eventItemHolder.date.setText(df.format(eventItem.getDate()));

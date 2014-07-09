@@ -14,13 +14,16 @@ public class Exam {
 
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat(
 			"dd.MM.yyyy");
-	private final Pattern lvaNrTermPattern = Pattern
-			.compile("\\(\\d{6}\\,\\d{4}[swSW]\\)");
-	private final Pattern lvaNrPattern = Pattern.compile("\\d{6}");
-	private final Pattern termPattern = Pattern.compile("\\d{4}[swSW]");
+	private final Pattern lvaNrTermPattern = Pattern.compile("\\("
+			+ KusssHandler.PATTERN_LVA_NR + "," + KusssHandler.PATTERN_TERM
+			+ "\\)");
+	private final Pattern lvaNrPattern = Pattern
+			.compile(KusssHandler.PATTERN_LVA_NR);
+	private final Pattern termPattern = Pattern
+			.compile(KusssHandler.PATTERN_TERM);
 	private final Pattern timePattern = Pattern.compile("\\d{2}\\:\\d{2}");
 
-	private int lvaNr = 0;
+	private String lvaNr = "";
 	private String term = "";
 	private Date date = null;
 	private String time = "";
@@ -43,7 +46,7 @@ public class Exam {
 
 					Matcher lvaNrMatcher = lvaNrPattern.matcher(lvaNrTerm); // lvaNr
 					if (lvaNrMatcher.find()) {
-						setLvaNr(Integer.parseInt(lvaNrMatcher.group()));
+						setLvaNr(lvaNrMatcher.group());
 					}
 
 					Matcher termMatcher = termPattern.matcher(lvaNrTerm); // term
@@ -66,7 +69,7 @@ public class Exam {
 		this.title = title;
 	}
 
-	private void setLvaNr(int lvaNr) {
+	private void setLvaNr(String lvaNr) {
 		this.lvaNr = lvaNr;
 	}
 
@@ -103,7 +106,8 @@ public class Exam {
 	}
 
 	public boolean isInitialized() {
-		return this.lvaNr > 0 && !this.term.isEmpty() && this.date != null;
+		return !this.lvaNr.isEmpty() && !this.term.isEmpty()
+				&& this.date != null;
 	}
 
 	public void addAdditionalInfo(Element row) {
@@ -138,7 +142,7 @@ public class Exam {
 		return this.description;
 	}
 
-	public int getLvaNr() {
+	public String getLvaNr() {
 		return this.lvaNr;
 	}
 
@@ -169,8 +173,8 @@ public class Exam {
 	public String getKey() {
 		return getKey(this.lvaNr, this.term, this.date.getTime());
 	}
-	
-	public static String getKey(int lvaNr, String term, long date) {
-		return String.format("%d-%s-%d", lvaNr, term, date);
+
+	public static String getKey(String lvaNr, String term, long date) {
+		return String.format("%s-%s-%d", lvaNr, term, date);
 	}
 }

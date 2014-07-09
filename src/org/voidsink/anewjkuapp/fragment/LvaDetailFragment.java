@@ -99,7 +99,7 @@ public class LvaDetailFragment extends BaseFragment {
 		if (finalGrade == null) {
 			Log.d(TAG, "findByLvaNr: " + lva.getLvaNr() + "/" + lva.getTitle());
 			for (ExamGrade grade : grades) {
-				if (grade.getLvaNr() == lva.getLvaNr()) {
+				if (grade.getLvaNr().equals(lva.getLvaNr())) {
 					if (finalGrade == null || finalGrade.getGrade() == Grade.G5) {
 						finalGrade = grade;
 					}

@@ -8,7 +8,7 @@ import android.database.Cursor;
 
 public class ExamListExam implements ExamListItem {
 
-	private int lvaNr;
+	private String lvaNr;
 	private String info;
 	private String title;
 	private String description;
@@ -19,7 +19,7 @@ public class ExamListExam implements ExamListItem {
 	private String location;
 
 	public ExamListExam(Cursor c, LvaMap map) {
-		this.lvaNr = c.getInt(ImportExamTask.COLUMN_EXAM_LVANR);
+		this.lvaNr = c.getString(ImportExamTask.COLUMN_EXAM_LVANR);
 		this.info = c.getString(ImportExamTask.COLUMN_EXAM_INFO);
 		this.description = c.getString(ImportExamTask.COLUMN_EXAM_DESCRIPTION);
 		this.term = c.getString(ImportExamTask.COLUMN_EXAM_TERM);
@@ -60,7 +60,7 @@ public class ExamListExam implements ExamListItem {
 		return this.info;
 	}
 
-	public int getLvaNr() {
+	public String getLvaNr() {
 		return this.lvaNr;
 	}
 

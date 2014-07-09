@@ -138,12 +138,12 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
 
 							int lvaId;
 							String lvaTerm;
-							int lvaNr;
+							String lvaNr;
 
 							while (c.moveToNext()) {
 								lvaId = c.getInt(COLUMN_LVA_ID);
 								lvaTerm = c.getString(COLUMN_LVA_TERM);
-								lvaNr = c.getInt(COLUMN_LVA_LVANR);
+								lvaNr = c.getString(COLUMN_LVA_LVANR);
 
 								Lva lva = lvaMap
 										.get(Lva.getKey(lvaTerm, lvaNr));

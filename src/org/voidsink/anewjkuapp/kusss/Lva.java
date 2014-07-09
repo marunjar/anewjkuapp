@@ -11,10 +11,10 @@ import android.database.Cursor;
 
 public class Lva {
 
-	private final Pattern lvaNrPattern = Pattern.compile("\\d{3}\\.\\d{3}");
-
+	private final Pattern lvaNrPattern = Pattern.compile(KusssHandler.PATTERN_LVA_NR);
+	
 	private String term;
-	private int lvaNr;
+	private String lvaNr;
 	private String title;
 	private int skz;
 	private String teacher;
@@ -23,13 +23,13 @@ public class Lva {
 	private String lvaType;
 	private String code;
 
-	public Lva(String term, int lvaNr) {
+	public Lva(String term, String lvaNr) {
 		this.term = term;
 		this.lvaNr = lvaNr;
 	}
 
 	public Lva(String term, Element row) {
-		this(term, 0);
+		this(term, "");
 
 		if (row.childNodeSize() >= 11) {
 			try {
@@ -37,7 +37,7 @@ public class Lva {
 						.getElementsByClass("assignment-active").size() == 1;
 				String lvaNrText = row.child(6).text();
 				if (active && lvaNrPattern.matcher(lvaNrText).matches()) {
-					this.lvaNr = Integer.parseInt(lvaNrText.replace(".", ""));
+					this.lvaNr = lvaNrText.toUpperCase();
 					setTitle(row.child(5).text());
 					setLvaType(row.child(4).text()); // type (UE, ...)
 					setTeacher(row.child(7).text()); // Leiter
@@ -60,7 +60,7 @@ public class Lva {
 
 	public Lva(Cursor c) {
 		this.term = c.getString(ImportLvaTask.COLUMN_LVA_TERM);
-		this.lvaNr = c.getInt(ImportLvaTask.COLUMN_LVA_LVANR);
+		this.lvaNr = c.getString(ImportLvaTask.COLUMN_LVA_LVANR);
 		this.title = c.getString(ImportLvaTask.COLUMN_LVA_TITLE);
 		this.skz = c.getInt(ImportLvaTask.COLUMN_LVA_SKZ);
 		this.teacher = c.getString(ImportLvaTask.COLUMN_LVA_TEACHER);
@@ -122,12 +122,12 @@ public class Lva {
 		return this.term;
 	}
 
-	public int getLvaNr() {
+	public String getLvaNr() {
 		return this.lvaNr;
 	}
 
 	public boolean isInitialized() {
-		return !term.isEmpty() && lvaNr > 0;
+		return !term.isEmpty() && !lvaNr.isEmpty();
 	}
 
 	public ContentValues getContentValues() {
@@ -148,7 +148,7 @@ public class Lva {
 		return getKey(this.term, this.lvaNr);
 	}
 
-	public static String getKey(String term, int lvaNr) {
+	public static String getKey(String term, String lvaNr) {
 		return term + "-" + lvaNr;
 	}
 

@@ -22,19 +22,16 @@ public class ExamGrade implements GradeListItem {
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat(
 			"dd.MM.yyyy");
 
-	// private final Pattern lvaNrTermPattern = Pattern
-	// .compile("\\(\\d{6}\\,\\d{4}[swSW]\\)");
-
 	private final Pattern lvaNrTermPattern = Pattern.compile("(\\(.*?\\))");
 
-	private final Pattern lvaNrPattern = Pattern.compile("\\d{6}");
+	private final Pattern lvaNrPattern = Pattern.compile(KusssHandler.PATTERN_LVA_NR);
 
-	private final Pattern termPattern = Pattern.compile("\\d{4}[swSW]");
+	private final Pattern termPattern = Pattern.compile(KusssHandler.PATTERN_TERM);
 
 	private int skz;
 	private Grade grade;
 	private String term;
-	private int lvaNr;
+	private String lvaNr;
 	private Date date;
 	private final GradeType gradeType;
 	private String title;
@@ -42,7 +39,7 @@ public class ExamGrade implements GradeListItem {
 	private double ects;
 	private double sws;
 
-	private ExamGrade(GradeType type, Date date, int lvaNr, String term,
+	private ExamGrade(GradeType type, Date date, String lvaNr, String term,
 			Grade grade, int skz, String title, String code, double ects,
 			double sws) {
 		this.gradeType = type;
@@ -58,7 +55,7 @@ public class ExamGrade implements GradeListItem {
 	}
 
 	public ExamGrade(GradeType type, Element row) {
-		this(type, null, 0, "", null, 0, "", "", 0, 0);
+		this(type, null, "", "", null, 0, "", "", 0, 0);
 
 		Elements columns = row.getElementsByTag("td");
 		if (columns.size() >= 7) {
@@ -70,7 +67,7 @@ public class ExamGrade implements GradeListItem {
 
 					Matcher lvaNrMatcher = lvaNrPattern.matcher(lvaNrTerm); // lvaNr
 					if (lvaNrMatcher.find()) {
-						setLvaNr(Integer.parseInt(lvaNrMatcher.group()));
+						setLvaNr(lvaNrMatcher.group());
 					}
 
 					Matcher termMatcher = termPattern.matcher(lvaNrTerm); // term
@@ -124,7 +121,7 @@ public class ExamGrade implements GradeListItem {
 	}
 
 	public ExamGrade(Cursor c) {
-		this.lvaNr = c.getInt(ImportGradeTask.COLUMN_GRADE_LVANR);
+		this.lvaNr = c.getString(ImportGradeTask.COLUMN_GRADE_LVANR);
 		this.term = c.getString(ImportGradeTask.COLUMN_GRADE_TERM);
 		this.date = new Date(c.getLong(ImportGradeTask.COLUMN_GRADE_DATE));
 		this.gradeType = GradeType.parseGradeType(c
@@ -158,7 +155,7 @@ public class ExamGrade implements GradeListItem {
 		this.term = term;
 	}
 
-	private void setLvaNr(int lvaNr) {
+	private void setLvaNr(String lvaNr) {
 		this.lvaNr = lvaNr;
 	}
 
@@ -174,7 +171,7 @@ public class ExamGrade implements GradeListItem {
 		return this.date;
 	}
 
-	public int getLvaNr() {
+	public String getLvaNr() {
 		return this.lvaNr;
 	}
 

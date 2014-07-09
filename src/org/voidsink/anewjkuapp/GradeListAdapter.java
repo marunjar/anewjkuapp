@@ -157,9 +157,9 @@ public class GradeListAdapter extends BaseExpandableListAdapter implements
 		}
 
 		gradeItemHolder.title.setText(gradeItem.getTitle());
-		if (gradeItem.getLvaNr() > 0) {
+		if (!gradeItem.getLvaNr().isEmpty()) {
 			gradeItemHolder.lvaNr
-					.setText(Integer.toString(gradeItem.getLvaNr()));
+					.setText(gradeItem.getLvaNr());
 			gradeItemHolder.lvaNr.setVisibility(View.VISIBLE);
 		} else {
 			gradeItemHolder.lvaNr.setVisibility(View.GONE);

@@ -147,7 +147,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 								+ " local entries. Computing merge solution...");
 						int examId;
 						String examTerm;
-						int examLvaNr;
+						String examLvaNr;
 						long examDate;
 						String examTime;
 						String examLocation;
@@ -158,7 +158,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 						while (c.moveToNext()) {
 							examId = c.getInt(COLUMN_EXAM_ID);
 							examTerm = c.getString(COLUMN_EXAM_TERM);
-							examLvaNr = c.getInt(COLUMN_EXAM_LVANR);
+							examLvaNr = c.getString(COLUMN_EXAM_LVANR);
 							examDate = c.getLong(COLUMN_EXAM_DATE);
 							examTime = c.getString(COLUMN_EXAM_TIME);
 							examLocation = c.getString(COLUMN_EXAM_LOCATION);

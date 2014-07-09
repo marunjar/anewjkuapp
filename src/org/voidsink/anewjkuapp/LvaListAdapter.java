@@ -134,7 +134,7 @@ public class LvaListAdapter extends BaseExpandableListAdapter implements
 			lvaHolder.chip.setBackgroundColor(grade.getGrade().getColor());
 		}
 
-		lvaHolder.lvaNr.setText(Integer.toString(lva.getLva().getLvaNr()));
+		lvaHolder.lvaNr.setText(lva.getLva().getLvaNr());
 		lvaHolder.title.setText(lva.getLva().getTitle());
 		lvaHolder.skz.setText(String.format("[%s]", lva.getLva().getSKZ()));
 		lvaHolder.type.setText(lva.getLva().getLvaType());

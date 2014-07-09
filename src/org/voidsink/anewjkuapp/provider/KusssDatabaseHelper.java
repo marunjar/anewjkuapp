@@ -13,7 +13,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 	private static final String TAG = KusssDatabaseHelper.class.getSimpleName();
 
 	private static final String DATABASE_NAME = "kusss.db";
-	private static final int DATABASE_VERSION = 7;
+	private static final int DATABASE_VERSION = 9;
 
 	// Database creation sql statement
 	public static final String DB_CREATE_LVA = "create table if not exists "
@@ -21,8 +21,8 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 			+ KusssContentContract.Lva.LVA_COL_ID
 			+ " integer primary key autoincrement not null, "
 			+ KusssContentContract.Lva.LVA_COL_TERM + " text not null, "
-			+ KusssContentContract.Lva.LVA_COL_LVANR + " integer not null, "
-			+ KusssContentContract.Lva.LVA_COL_CODE + " string not null, "
+			+ KusssContentContract.Lva.LVA_COL_LVANR + " text not null, "
+			+ KusssContentContract.Lva.LVA_COL_CODE + " text not null, "
 			+ KusssContentContract.Lva.LVA_COL_TITLE + " text not null, "
 			+ KusssContentContract.Lva.LVA_COL_TYPE + " integer not null, "
 			+ KusssContentContract.Lva.LVA_COL_TEACHER + " text, "
@@ -35,7 +35,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 			+ KusssContentContract.Exam.EXAM_COL_ID
 			+ " integer primary key autoincrement not null, "
 			+ KusssContentContract.Exam.EXAM_COL_TERM + " text not null, "
-			+ KusssContentContract.Exam.EXAM_COL_LVANR + " integer not null, "
+			+ KusssContentContract.Exam.EXAM_COL_LVANR + " text not null, "
 			+ KusssContentContract.Exam.EXAM_COL_DATE + " integer not null, "
 			+ KusssContentContract.Exam.EXAM_COL_TIME + " text not null, "
 			+ KusssContentContract.Exam.EXAM_COL_LOCATION + " text, "
@@ -47,7 +47,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 			+ KusssContentContract.Grade.GRADE_COL_ID
 			+ " integer primary key autoincrement not null, "
 			+ KusssContentContract.Grade.GRADE_COL_TERM + " text, "
-			+ KusssContentContract.Grade.GRADE_COL_LVANR + " integer, "
+			+ KusssContentContract.Grade.GRADE_COL_LVANR + " text, "
 			+ KusssContentContract.Grade.GRADE_COL_DATE + " integer not null, "
 			+ KusssContentContract.Grade.GRADE_COL_SKZ + " integer, "
 			+ KusssContentContract.Grade.GRADE_COL_GRADE
@@ -91,13 +91,13 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
 				+ newVersion + ", which will destroy most of all old data");
-		if (oldVersion < 6) {
-			db.execSQL("DROP TABLE IF EXISTS "
-					+ KusssContentContract.Lva.LVA_TABLE_NAME);
-		}
-		if (oldVersion < 7) {
+		if (oldVersion < 9) {
 			db.execSQL("DROP TABLE IF EXISTS "
 					+ KusssContentContract.Grade.GRADE_TABLE_NAME);
+			db.execSQL("DROP TABLE IF EXISTS "
+					+ KusssContentContract.Exam.EXAM_TABLE_NAME);
+			db.execSQL("DROP TABLE IF EXISTS "
+					+ KusssContentContract.Lva.LVA_TABLE_NAME);
 		}
 		onCreate(db);
 	}
