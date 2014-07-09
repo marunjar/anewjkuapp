@@ -37,7 +37,7 @@ public class Lva {
 						.getElementsByClass("assignment-active").size() == 1;
 				String lvaNrText = row.child(6).text();
 				if (active && lvaNrPattern.matcher(lvaNrText).matches()) {
-					this.lvaNr = lvaNrText.toUpperCase();
+					this.lvaNr = lvaNrText.toUpperCase().replace(".", "");
 					setTitle(row.child(5).text());
 					setLvaType(row.child(4).text()); // type (UE, ...)
 					setTeacher(row.child(7).text()); // Leiter
