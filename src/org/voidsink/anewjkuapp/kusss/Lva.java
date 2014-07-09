@@ -11,7 +11,7 @@ import android.database.Cursor;
 
 public class Lva {
 
-	private final Pattern lvaNrPattern = Pattern.compile(KusssHandler.PATTERN_LVA_NR);
+	private final Pattern lvaNrPattern = Pattern.compile(KusssHandler.PATTERN_LVA_NR_WITH_DOT);
 	
 	private String term;
 	private String lvaNr;

@@ -24,7 +24,7 @@ public class ExamGrade implements GradeListItem {
 
 	private final Pattern lvaNrTermPattern = Pattern.compile("(\\(.*?\\))");
 
-	private final Pattern lvaNrPattern = Pattern.compile(KusssHandler.PATTERN_LVA_NR);
+	private final Pattern lvaNrPattern = Pattern.compile(KusssHandler.PATTERN_LVA_NR_WITH_DOT);
 
 	private final Pattern termPattern = Pattern.compile(KusssHandler.PATTERN_TERM);
 

@@ -58,9 +58,9 @@ public class KusssHandler {
 	private static final String SELECT_NEW_EXAMS = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > div.sidetable > form > table > tbody > tr:has(td)";
 
 	
-	public static final String PATTERN_LVA_NR = "\\d{3}\\.\\d{2}\\w{1}";
+	public static final String PATTERN_LVA_NR_WITH_DOT = "\\d{3}\\.\\d{2}\\w{1}";
+	public static final String PATTERN_LVA_NR = "\\d{3}\\d{2}\\w{1}";
 	public static final String PATTERN_TERM = "\\d{4}[swSW]";
-	
 	
 	private CookieManager mCookies;
 
