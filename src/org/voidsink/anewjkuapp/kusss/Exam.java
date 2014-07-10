@@ -8,6 +8,8 @@ import java.util.regex.Pattern;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.voidsink.anewjkuapp.KusssContentContract;
+import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
+
 import android.content.ContentValues;
 
 public class Exam {
@@ -31,8 +33,9 @@ public class Exam {
 	private String description = "";
 	private String info = "";
 	private String title = "";
+	private boolean isRegistered = false;
 
-	public Exam(Element row) {
+	public Exam(Element row, boolean isRegistered) {
 		Elements columns = row.getElementsByTag("td");
 		// allow only exams that can be selected
 		if (columns.size() >= 5 && columns.get(0).select("input").size() == 1) {
@@ -57,12 +60,18 @@ public class Exam {
 					setDate(dateFormat.parse(columns.get(2).text())); // date
 
 					setTimeLocation(columns.get(3).text());
+					
+					setRegistered(isRegistered);
 				}
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
 
 		}
+	}
+
+	private void setRegistered(boolean isRegistered) {
+		this.isRegistered = isRegistered;
 	}
 
 	private void setTitle(String title) {
@@ -163,7 +172,14 @@ public class Exam {
 		cv.put(KusssContentContract.Exam.EXAM_COL_LVANR, getLvaNr());
 		cv.put(KusssContentContract.Exam.EXAM_COL_TERM, getTerm());
 		cv.put(KusssContentContract.Exam.EXAM_COL_TIME, getTime());
+		cv.put(KusssContentContract.Exam.EXAM_COL_IS_REGISTERED,
+				KusssDatabaseHelper.toInt(isRegistered()));
+		cv.put(KusssContentContract.Exam.EXAM_COL_TITLE, getTitle());
 		return cv;
+	}
+
+	public boolean isRegistered() {
+		return isRegistered;
 	}
 
 	public String getTitle() {

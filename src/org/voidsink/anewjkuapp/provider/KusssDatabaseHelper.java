@@ -40,7 +40,9 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 			+ KusssContentContract.Exam.EXAM_COL_TIME + " text not null, "
 			+ KusssContentContract.Exam.EXAM_COL_LOCATION + " text, "
 			+ KusssContentContract.Exam.EXAM_COL_DESCRIPTION + " text, "
-			+ KusssContentContract.Exam.EXAM_COL_INFO + " text" + ");";
+			+ KusssContentContract.Exam.EXAM_COL_INFO + " text, "
+			+ KusssContentContract.Exam.EXAM_COL_IS_REGISTERED + " integer, "
+			+ KusssContentContract.Exam.EXAM_COL_TITLE + " text" + ");";
 
 	public static final String DB_CREATE_GRADE = "create table if not exists "
 			+ KusssContentContract.Grade.GRADE_TABLE_NAME + "("
@@ -63,9 +65,8 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 			+ PoiContentContract.Poi.COL_NAME + " text primary key not null, "
 			+ PoiContentContract.Poi.COL_LAT + " real not null, "
 			+ PoiContentContract.Poi.COL_LON + " real not null, "
-			+ PoiContentContract.Poi.COL_IS_DEFAULT + " integer, " +
-
-			PoiContentContract.Poi.COL_ADR_CITY + " text, "
+			+ PoiContentContract.Poi.COL_IS_DEFAULT + " integer, "
+			+ PoiContentContract.Poi.COL_ADR_CITY + " text, "
 			+ PoiContentContract.Poi.COL_ADR_COUNTRY + " text, "
 			+ PoiContentContract.Poi.COL_ADR_POSTAL_CODE + " integer, "
 			+ PoiContentContract.Poi.COL_ADR_STATE + " text, "

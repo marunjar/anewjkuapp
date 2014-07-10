@@ -3,6 +3,7 @@ package org.voidsink.anewjkuapp;
 import java.util.Date;
 
 import org.voidsink.anewjkuapp.kusss.Lva;
+import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
 
 import android.database.Cursor;
 
@@ -17,6 +18,7 @@ public class ExamListExam implements ExamListItem {
 	private Date date;
 	private String time;
 	private String location;
+	private boolean isRegistered;
 
 	public ExamListExam(Cursor c, LvaMap map) {
 		this.lvaNr = c.getString(ImportExamTask.COLUMN_EXAM_LVANR);
@@ -26,10 +28,14 @@ public class ExamListExam implements ExamListItem {
 		this.date = new Date(c.getLong(ImportExamTask.COLUMN_EXAM_DATE));
 		this.time = c.getString(ImportExamTask.COLUMN_EXAM_TIME);
 		this.location = c.getString(ImportExamTask.COLUMN_EXAM_LOCATION);
+		this.isRegistered = KusssDatabaseHelper.toBool(c.getInt(ImportExamTask.COLUMN_EXAM_IS_REGISTERED));
 		Lva lva = map.getLVA(this.term, this.lvaNr);
 		if (lva != null) {
 			this.title = lva.getTitle();
 			this.skz = lva.getSKZ();
+		} else {
+			// fallback
+			this.title = c.getString(ImportExamTask.COLUMN_EXAM_TITLE);
 		}
 	}
 
@@ -40,7 +46,7 @@ public class ExamListExam implements ExamListItem {
 
 	@Override
 	public boolean mark() {
-		return !this.info.isEmpty();
+		return isRegistered();
 	}
 
 	@Override
@@ -84,4 +90,8 @@ public class ExamListExam implements ExamListItem {
 		return this.location;
 	}
 
+	public boolean isRegistered() {
+		return this.isRegistered;
+	}
+	
 }

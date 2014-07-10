@@ -50,7 +50,9 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 			KusssContentContract.Exam.EXAM_COL_TIME,
 			KusssContentContract.Exam.EXAM_COL_LOCATION,
 			KusssContentContract.Exam.EXAM_COL_DESCRIPTION,
-			KusssContentContract.Exam.EXAM_COL_INFO };
+			KusssContentContract.Exam.EXAM_COL_INFO,
+			KusssContentContract.Exam.EXAM_COL_IS_REGISTERED,
+			KusssContentContract.Exam.EXAM_COL_TITLE };
 
 	public static final int COLUMN_EXAM_ID = 0;
 	public static final int COLUMN_EXAM_TERM = 1;
@@ -60,6 +62,8 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 	public static final int COLUMN_EXAM_LOCATION = 5;
 	public static final int COLUMN_EXAM_DESCRIPTION = 6;
 	public static final int COLUMN_EXAM_INFO = 7;
+	public static final int COLUMN_EXAM_IS_REGISTERED = 8;
+	public static final int COLUMN_EXAM_TITLE = 9;
 
 	public ImportExamTask(Account account, Context context) {
 		this(account, null, null, null, null, context);

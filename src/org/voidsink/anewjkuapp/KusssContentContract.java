@@ -53,6 +53,8 @@ public class KusssContentContract {
 		public static final String EXAM_COL_LOCATION = "location";
 		public static final String EXAM_COL_DESCRIPTION = "description";
 		public static final String EXAM_COL_INFO = "info";
+		public static final String EXAM_COL_IS_REGISTERED = "registered";
+		public static final String EXAM_COL_TITLE = "title";
 	}
 
 	public static class Grade {

@@ -343,7 +343,7 @@ public class KusssHandler {
 			int i = 0;
 			while (i < rows.size()) {
 				Element row = rows.get(i);
-				Exam exam = new Exam(row);
+				Exam exam = new Exam(row, false);
 				i++;
 
 				if (exam.isInitialized()) {
@@ -435,7 +435,7 @@ public class KusssHandler {
 			int i = 0;
 			while (i < rows.size()) {
 				Element row = rows.get(i);
-				Exam exam = new Exam(row);
+				Exam exam = new Exam(row, false);
 				i++;
 
 				if (exam.isInitialized()) {
