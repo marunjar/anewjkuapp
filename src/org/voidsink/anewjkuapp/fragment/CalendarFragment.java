@@ -147,32 +147,59 @@ public class CalendarFragment extends BaseFragment {
 
 			Account mAccount = AppUtils.getAccount(mContext);
 			if (mAccount != null) {
-				String calIDLva = CalendarUtils.getCalIDByName(mContext, mAccount, CalendarUtils.ARG_CALENDAR_LVA);
-				String calIDExam = CalendarUtils.getCalIDByName(mContext, mAccount, CalendarUtils.ARG_CALENDAR_EXAM);
+				String calIDLva = CalendarUtils.getCalIDByName(mContext,
+						mAccount, CalendarUtils.ARG_CALENDAR_LVA);
+				String calIDExam = CalendarUtils.getCalIDByName(mContext,
+						mAccount, CalendarUtils.ARG_CALENDAR_EXAM);
 
 				if (calIDLva == null || calIDExam == null) {
 					Log.w(TAG, "no events loaded, calendars not found");
 					return null;
 				}
 				
+				// load events
+				boolean eventsFound = false;
 				cr = mContext.getContentResolver();
+				do {
 				c = cr.query(
 						CalendarContractWrapper.Events.CONTENT_URI(),
 						ImportCalendarTask.EVENT_PROJECTION,
-						"(" + CalendarContractWrapper.Events.CALENDAR_ID()
+							"("
+									+ CalendarContractWrapper.Events
+											.CALENDAR_ID()
 								+ " = ? or "
-								+ CalendarContractWrapper.Events.CALENDAR_ID()
-								+ " = ? ) and "
+									+ CalendarContractWrapper.Events
+											.CALENDAR_ID() + " = ? ) and "
 								+ CalendarContractWrapper.Events.DTEND()
 								+ " >= ? and "
 								+ CalendarContractWrapper.Events.DTSTART()
 								+ " <= ? and "
 								+ CalendarContractWrapper.Events.DELETED()
-								+ " != 1", new String[] { calIDExam, calIDLva,
+									+ " != 1",
+							new String[] { calIDExam, calIDLva,
 								Long.toString(now), Long.toString(then) },
 						CalendarContractWrapper.Events.DTSTART() + " ASC");
 
 				if (c != null) {
+						// check if c is empty
+						eventsFound = c.moveToNext(); 
+						if (!eventsFound) {
+							// if empty then increase "then" for max 1 year
+							if (then - now < DateUtils.YEAR_IN_MILLIS) {
+								then += 31 * DateUtils.DAY_IN_MILLIS;
+							} else {
+								eventsFound = true;
+							}
+						}
+						// restore cursor position
+						c.moveToPrevious();
+						if (!eventsFound) {
+							// close cursor before loading next events
+							c.close();
+						}
+					}
+				} while (c != null && !eventsFound);
+				if (c != null && !c.isClosed()) {
 					while (c.moveToNext()) {
 						mEvents.add(new CalendarListEvent(
 								mColors.get(c
