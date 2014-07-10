@@ -11,14 +11,15 @@ import android.database.Cursor;
 
 public class Lva {
 
-	private final Pattern lvaNrPattern = Pattern.compile(KusssHandler.PATTERN_LVA_NR_WITH_DOT);
-	
+	private static final Pattern lvaNrPattern = Pattern
+			.compile(KusssHandler.PATTERN_LVA_NR_WITH_DOT);
+
 	private String term;
 	private String lvaNr;
 	private String title;
 	private int skz;
 	private String teacher;
-//	private double sws;
+	// private double sws;
 	private double ects;
 	private String lvaType;
 	private String code;
@@ -64,7 +65,7 @@ public class Lva {
 		this.title = c.getString(ImportLvaTask.COLUMN_LVA_TITLE);
 		this.skz = c.getInt(ImportLvaTask.COLUMN_LVA_SKZ);
 		this.teacher = c.getString(ImportLvaTask.COLUMN_LVA_TEACHER);
-//		this.sws = c.getDouble(ImportLvaTask.COLUMN_LVA_SWS);
+		// this.sws = c.getDouble(ImportLvaTask.COLUMN_LVA_SWS);
 		this.ects = c.getDouble(ImportLvaTask.COLUMN_LVA_ECTS);
 		this.lvaType = c.getString(ImportLvaTask.COLUMN_LVA_TYPE);
 		this.code = c.getString(ImportLvaTask.COLUMN_LVA_CODE);
@@ -86,13 +87,13 @@ public class Lva {
 		return this.teacher;
 	}
 
-//	private void setSWS(double sws) {
-//		this.sws = sws;
-//	}
+	// private void setSWS(double sws) {
+	// this.sws = sws;
+	// }
 
-//	public double getSWS() {
-//		return this.sws;
-//	}
+	// public double getSWS() {
+	// return this.sws;
+	// }
 
 	private void setECTS(double ects) {
 		this.ects = ects;

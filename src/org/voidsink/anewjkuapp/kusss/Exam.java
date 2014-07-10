@@ -7,23 +7,29 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.voidsink.anewjkuapp.Analytics;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
 
 import android.content.ContentValues;
+import android.content.Context;
+import android.util.Log;
 
 public class Exam {
 
-	private final SimpleDateFormat dateFormat = new SimpleDateFormat(
+	private static final String TAG = Exam.class.getSimpleName();
+
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
 			"dd.MM.yyyy");
-	private final Pattern lvaNrTermPattern = Pattern.compile("\\("
+	private static final Pattern lvaNrTermPattern = Pattern.compile("\\("
 			+ KusssHandler.PATTERN_LVA_NR + "," + KusssHandler.PATTERN_TERM
 			+ "\\)");
-	private final Pattern lvaNrPattern = Pattern
+	private static final Pattern lvaNrPattern = Pattern
 			.compile(KusssHandler.PATTERN_LVA_NR);
-	private final Pattern termPattern = Pattern
+	private static final Pattern termPattern = Pattern
 			.compile(KusssHandler.PATTERN_TERM);
-	private final Pattern timePattern = Pattern.compile("\\d{2}\\:\\d{2}");
+	private static final Pattern timePattern = Pattern
+			.compile("\\d{2}\\:\\d{2}");
 
 	private String lvaNr = "";
 	private String term = "";
@@ -35,38 +41,75 @@ public class Exam {
 	private String title = "";
 	private boolean isRegistered = false;
 
-	public Exam(Element row, boolean isRegistered) {
+	public Exam(Context c, Element row, boolean isNewExam) {
 		Elements columns = row.getElementsByTag("td");
-		// allow only exams that can be selected
-		if (columns.size() >= 5 && columns.get(0).select("input").size() == 1) {
-			try {
-				Matcher lvaNrTermMatcher = lvaNrTermPattern.matcher(columns
-						.get(1).text()); // (lvaNr,term)
-				if (lvaNrTermMatcher.find()) {
-					String lvaNrTerm = lvaNrTermMatcher.group();
-					setTitle(columns.get(1).text()
-							.substring(0, lvaNrTermMatcher.start()));
+		if (isNewExam) {
+			// allow only exams that can be selected
+			if (columns.size() >= 5
+					&& columns.get(0).select("input").size() == 1) {
+				try {
+					Matcher lvaNrTermMatcher = lvaNrTermPattern.matcher(columns
+							.get(1).text()); // (lvaNr,term)
+					if (lvaNrTermMatcher.find()) {
+						String lvaNrTerm = lvaNrTermMatcher.group();
+						setTitle(columns.get(1).text()
+								.substring(0, lvaNrTermMatcher.start()));
 
-					Matcher lvaNrMatcher = lvaNrPattern.matcher(lvaNrTerm); // lvaNr
-					if (lvaNrMatcher.find()) {
-						setLvaNr(lvaNrMatcher.group());
+						Matcher lvaNrMatcher = lvaNrPattern.matcher(lvaNrTerm); // lvaNr
+						if (lvaNrMatcher.find()) {
+							setLvaNr(lvaNrMatcher.group());
+						}
+
+						Matcher termMatcher = termPattern.matcher(lvaNrTerm); // term
+						if (termMatcher.find()) {
+							setTerm(termMatcher.group());
+						}
+
+						setDate(dateFormat.parse(columns.get(2).text())); // date
+
+						setTimeLocation(columns.get(3).text());
+
+						setRegistered(false);
 					}
-
-					Matcher termMatcher = termPattern.matcher(lvaNrTerm); // term
-					if (termMatcher.find()) {
-						setTerm(termMatcher.group());
-					}
-
-					setDate(dateFormat.parse(columns.get(2).text())); // date
-
-					setTimeLocation(columns.get(3).text());
-					
-					setRegistered(isRegistered);
+				} catch (ParseException e) {
+					Log.e(TAG, "Exam ctor", e);
+					Analytics.sendException(null, e, false);
 				}
-			} catch (ParseException e) {
-				e.printStackTrace();
 			}
+		} else {
+			if (columns.size() >= 5
+					&& columns.get(4).select("input").size() == 1) {
+				try {
+					Matcher lvaNrTermMatcher = lvaNrTermPattern.matcher(columns
+							.get(0).text()); // (lvaNr,term)
+					if (lvaNrTermMatcher.find()) {
+						String lvaNrTerm = lvaNrTermMatcher.group();
+						setTitle(columns.get(0).text()
+								.substring(0, lvaNrTermMatcher.start()));
 
+						Matcher lvaNrMatcher = lvaNrPattern.matcher(lvaNrTerm); // lvaNr
+						if (lvaNrMatcher.find()) {
+							setLvaNr(lvaNrMatcher.group());
+						}
+
+						Matcher termMatcher = termPattern.matcher(lvaNrTerm); // term
+						if (termMatcher.find()) {
+							setTerm(termMatcher.group());
+						}
+
+						setDate(dateFormat.parse(columns.get(1).text())); // date
+
+						setTimeLocation(columns.get(2).text());
+
+						setRegistered(columns.get(0)
+								.getElementsByClass("assignment-inactive")
+								.size() == 0);
+					}
+				} catch (ParseException e) {
+					Log.e(TAG, "Exam ctor", e);
+					Analytics.sendException(c, e, false);
+				}
+			}
 		}
 	}
 

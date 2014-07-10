@@ -47,7 +47,8 @@ public class KusssHandler {
 	private static final String URL_START_PAGE = "https://www.kusss.jku.at/kusss/studentwelcome.action";
 	private static final String URL_LOGOUT = "https://www.kusss.jku.at/kusss/logout.action";
 	private static final String URL_LOGIN = "https://www.kusss.jku.at/kusss/login.action";
-	private static final String URL_GET_EXAMS = "https://www.kusss.jku.at/kusss/szsearchexam.action";
+	private static final String URL_GET_NEW_EXAMS = "https://www.kusss.jku.at/kusss/szsearchexam.action";
+	private static final String URL_GET_EXAMS = "https://www.kusss.jku.at/kusss/szexaminationlist.action";
 	private static final String URL_SELECT_TERM = "https://www.kusss.jku.at/kusss/select-term.action";
 
 	private static final String SELECT_MY_LVAS = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > table > tbody > tr:has(td)";
@@ -56,12 +57,12 @@ public class KusssHandler {
 	// private static final String SELECT_ACTUAL_EXAMS =
 	// "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > table > tbody > tr > td > form > table > tbody > tr:has(td)";
 	private static final String SELECT_NEW_EXAMS = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > div.sidetable > form > table > tbody > tr:has(td)";
+	private static final String SELECT_EXAMS = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > table > tbody > tr > td > form > table > tbody > tr:has(td)";
 
-	
 	public static final String PATTERN_LVA_NR_WITH_DOT = "\\d{3}\\.\\d{2}\\w{1}";
 	public static final String PATTERN_LVA_NR = "\\d{3}\\d{2}\\w{1}";
 	public static final String PATTERN_TERM = "\\d{4}[swSW]";
-	
+
 	private CookieManager mCookies;
 
 	private static KusssHandler handler = null;
@@ -166,8 +167,8 @@ public class KusssHandler {
 		return true;
 	}
 
-	public synchronized boolean isAvailable(Context c, String sessionId, String user,
-			String password) {
+	public synchronized boolean isAvailable(Context c, String sessionId,
+			String user, String password) {
 		if (!isLoggedIn(c, sessionId)) {
 			return login(c, user, password) != null;
 		}
@@ -335,15 +336,15 @@ public class KusssHandler {
 	public List<Exam> getNewExams(Context c) {
 		List<Exam> exams = new ArrayList<Exam>();
 		try {
-			Document doc = Jsoup.connect(URL_GET_EXAMS).data("search", "true")
-					.data("searchType", "mylvas").get();
+			Document doc = Jsoup.connect(URL_GET_NEW_EXAMS)
+					.data("search", "true").data("searchType", "mylvas").get();
 
 			Elements rows = doc.select(SELECT_NEW_EXAMS);
 
 			int i = 0;
 			while (i < rows.size()) {
 				Element row = rows.get(i);
-				Exam exam = new Exam(row, false);
+				Exam exam = new Exam(c, row, true);
 				i++;
 
 				if (exam.isInitialized()) {
@@ -356,7 +357,10 @@ public class KusssHandler {
 					exams.add(exam);
 				}
 			}
-		} catch (IOException e) {
+
+			// add registered exams
+			loadExams(c, exams);
+		} catch (Exception e) {
 			Log.e(TAG, "getNewExams", e);
 			Analytics.sendException(c, e, true);
 			return null;
@@ -365,50 +369,61 @@ public class KusssHandler {
 	}
 
 	@SuppressLint("UseSparseArrays")
-	public List<Exam> getNewExamsByLvaNr(Context c, List<Lva> lvas) throws IOException {
+	public List<Exam> getNewExamsByLvaNr(Context c, List<Lva> lvas)
+			throws IOException {
 
 		List<Exam> exams = new ArrayList<Exam>();
-		if (lvas == null || lvas.size() == 0) {
-			Log.d(TAG, "no lvas found, reload");
-			lvas = getLvas(c);
-		}
-		if (lvas.size() > 0) {
-			List<ExamGrade> grades = getGrades(c);
-
-			Map<String, ExamGrade> gradeCache = new HashMap<String, ExamGrade>();
-			for (ExamGrade grade : grades) {
-				if (!grade.getLvaNr().isEmpty()) {
-					ExamGrade existing = gradeCache.get(grade.getLvaNr());
-					if (existing != null) {
-						Log.d(TAG,
-								existing.getTitle() + " --> "
-										+ grade.getTitle());
-					}
-					gradeCache.put(grade.getLvaNr(), grade);
-				}
+		try {
+			if (lvas == null || lvas.size() == 0) {
+				Log.d(TAG, "no lvas found, reload");
+				lvas = getLvas(c);
 			}
+			if (lvas.size() > 0) {
+				List<ExamGrade> grades = getGrades(c);
 
-			for (Lva lva : lvas) {
-				ExamGrade grade = gradeCache.get(lva.getLvaNr());
-				if (grade != null) {
-					if ((grade.getGrade() == Grade.G5)
-							|| (grade.getDate().getTime() > (System
-									.currentTimeMillis() - (182 * DateUtils.DAY_IN_MILLIS)))) {
-						Log.d(TAG,
-								"positive in last 6 Months: "
-										+ grade.getTitle());
-						grade = null;
+				Map<String, ExamGrade> gradeCache = new HashMap<String, ExamGrade>();
+				for (ExamGrade grade : grades) {
+					if (!grade.getLvaNr().isEmpty()) {
+						ExamGrade existing = gradeCache.get(grade.getLvaNr());
+						if (existing != null) {
+							Log.d(TAG,
+									existing.getTitle() + " --> "
+											+ grade.getTitle());
+						}
+						gradeCache.put(grade.getLvaNr(), grade);
 					}
 				}
-				if (grade == null) {
-					List<Exam> newExams = getNewExamsByLvaNr(c, lva.getLvaNr());
-					for (Exam newExam : newExams) {
-						if (newExam != null) {
-							exams.add(newExam);
+
+				for (Lva lva : lvas) {
+					ExamGrade grade = gradeCache.get(lva.getLvaNr());
+					if (grade != null) {
+						if ((grade.getGrade() == Grade.G5)
+								|| (grade.getDate().getTime() > (System
+										.currentTimeMillis() - (182 * DateUtils.DAY_IN_MILLIS)))) {
+							Log.d(TAG,
+									"positive in last 6 Months: "
+											+ grade.getTitle());
+							grade = null;
+						}
+					}
+					if (grade == null) {
+						List<Exam> newExams = getNewExamsByLvaNr(c,
+								lva.getLvaNr());
+						for (Exam newExam : newExams) {
+							if (newExam != null) {
+								exams.add(newExam);
+							}
 						}
 					}
 				}
 			}
+
+			// add registered exams
+			loadExams(c, exams);
+		} catch (Exception e) {
+			Log.e(TAG, "getNewExamsByLvaNr", e);
+			Analytics.sendException(c, e, true);
+			return null;
 		}
 		return exams;
 	}
@@ -418,7 +433,7 @@ public class KusssHandler {
 		try {
 			Log.d(TAG, "getNewExamsByLvaNr: " + lvaNr);
 			Document doc = Jsoup
-					.connect(URL_GET_EXAMS)
+					.connect(URL_GET_NEW_EXAMS)
 					.data("search", "true")
 					.data("searchType", "specific")
 					.data("searchDateFrom",
@@ -426,16 +441,15 @@ public class KusssHandler {
 					.data("searchDateTo",
 							df.format(new Date(System.currentTimeMillis()
 									+ DateUtils.YEAR_IN_MILLIS)))
-					.data("searchLvaNr", lvaNr)
-					.data("searchLvaTitle", "").data("searchCourseClass", "")
-					.get();
+					.data("searchLvaNr", lvaNr).data("searchLvaTitle", "")
+					.data("searchCourseClass", "").get();
 
 			Elements rows = doc.select(SELECT_NEW_EXAMS);
 
 			int i = 0;
 			while (i < rows.size()) {
 				Element row = rows.get(i);
-				Exam exam = new Exam(row, false);
+				Exam exam = new Exam(c, row, true);
 				i++;
 
 				if (exam.isInitialized()) {
@@ -454,5 +468,30 @@ public class KusssHandler {
 			exams = null;
 		}
 		return exams;
+	}
+
+	private void loadExams(Context c, List<Exam> exams) throws IOException {
+		Log.d(TAG, "loadExams");
+
+		Document doc = Jsoup.connect(URL_GET_EXAMS).get();
+
+		Elements rows = doc.select(SELECT_EXAMS);
+
+		int i = 0;
+		while (i < rows.size()) {
+			Element row = rows.get(i);
+			Exam exam = new Exam(c, row, false);
+			i++;
+
+			if (exam.isInitialized()) {
+				while (i < rows.size()
+						&& rows.get(i).attr("class").equals(row.attr("class"))) {
+					exam.addAdditionalInfo(rows.get(i));
+					i++;
+				}
+				exams.add(exam);
+			}
+		}
+
 	}
 }

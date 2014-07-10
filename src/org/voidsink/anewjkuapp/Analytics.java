@@ -7,6 +7,7 @@ import com.google.android.gms.analytics.StandardExceptionParser;
 import com.google.android.gms.analytics.Tracker;
 
 import android.content.Context;
+import android.util.Log;
 
 public class Analytics {
 
@@ -19,14 +20,20 @@ public class Analytics {
 
 	private static final String GA_EVENT_CATEGORY_UI = "ui_action";
 
+	private static final String TAG = Analytics.class.getSimpleName();
+
 	// private static final String GA_EVENT_CATEGORY_SERVICE = "service_action";
 
 	private static GlobalStats getGlobalStats(Context c) {
+		if (c == null)
+			return null;
+
 		if (c instanceof GlobalStats) {
 			return (GlobalStats) c;
 		} else if (c.getApplicationContext() instanceof GlobalStats) {
 			return (GlobalStats) c.getApplicationContext();
 		}
+
 		return null;
 	}
 
@@ -125,23 +132,22 @@ public class Analytics {
 	// {{ Exceptions
 
 	public static void sendException(Context c, Exception e, boolean fatal) {
-		Tracker t = getAppTracker(c);
-		if (t != null && e != null) {
-			System.out.println("1: " + e.getClass().getSimpleName());
-			System.out.println("2: "
-					+ new StandardExceptionParser(c, null).getDescription(
-							Thread.currentThread().getName(), e));
+		try {
+			Tracker t = getAppTracker(c);
+			if (t != null && e != null) {
+				t.send(new HitBuilders.ExceptionBuilder()
+						.setFatal(fatal)
+						.setCustomDimension(GA_DIM_EXCEPTION,
+								e.getClass().getSimpleName())
+						.setDescription(
+								new StandardExceptionParser(c, null)
+										.getDescription(Thread.currentThread()
+												.getName(), e)
 
-			t.send(new HitBuilders.ExceptionBuilder()
-					.setFatal(fatal)
-					.setCustomDimension(GA_DIM_EXCEPTION,
-							e.getClass().getSimpleName())
-					.setDescription(
-							new StandardExceptionParser(c, null)
-									.getDescription(Thread.currentThread()
-											.getName(), e)
-
-					).build());
+						).build());
+			}
+		} catch (Exception e2) {
+			Log.e(TAG, "sendException", e2);
 		}
 	}
 

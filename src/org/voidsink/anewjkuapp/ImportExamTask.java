@@ -131,7 +131,10 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 					}
 					Map<String, Exam> examMap = new HashMap<String, Exam>();
 					for (Exam exam : exams) {
-						examMap.put(exam.getKey(), exam);
+						Exam old = examMap.put(exam.getKey(), exam);
+						if (old != null) {
+							Log.w(TAG, "exam alread loaded: " + old.getKey());
+						}
 					}
 
 					Log.d(TAG, String.format("got %s exams", exams.size()));
