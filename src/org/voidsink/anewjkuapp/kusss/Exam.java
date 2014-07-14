@@ -21,9 +21,8 @@ public class Exam {
 
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
 			"dd.MM.yyyy");
-	private static final Pattern lvaNrTermPattern = Pattern.compile("\\("
-			+ KusssHandler.PATTERN_LVA_NR + "," + KusssHandler.PATTERN_TERM
-			+ "\\)");
+	private static final Pattern lvaNrTermPattern = Pattern
+			.compile("(\\(.*?\\))");
 	private static final Pattern lvaNrPattern = Pattern
 			.compile(KusssHandler.PATTERN_LVA_NR);
 	private static final Pattern termPattern = Pattern
