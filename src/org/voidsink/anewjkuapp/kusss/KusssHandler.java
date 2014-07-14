@@ -62,6 +62,10 @@ public class KusssHandler {
 	public static final String PATTERN_LVA_NR_WITH_DOT = "\\d{3}\\.\\w{3}";
 	public static final String PATTERN_LVA_NR = "\\d{3}\\w{3}";
 	public static final String PATTERN_TERM = "\\d{4}[swSW]";
+	public static final String PATTERN_LVA_NR_COMMA_TERM = "\\("
+			+ PATTERN_LVA_NR + "," + PATTERN_TERM + "\\)";
+	public static final String PATTERN_LVA_NR_SLASH_TERM = "\\("
+			+ PATTERN_LVA_NR + "\\/" + PATTERN_TERM + "\\)";
 
 	private CookieManager mCookies;
 

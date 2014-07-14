@@ -23,11 +23,9 @@ public class ExamGrade implements GradeListItem {
 			"dd.MM.yyyy");
 
 	private static final Pattern lvaNrTermPattern = Pattern
-			.compile("(\\(.*?\\))");
-
+			.compile(KusssHandler.PATTERN_LVA_NR_COMMA_TERM);
 	private static final Pattern lvaNrPattern = Pattern
 			.compile(KusssHandler.PATTERN_LVA_NR);
-
 	private static final Pattern termPattern = Pattern
 			.compile(KusssHandler.PATTERN_TERM);
 
@@ -91,7 +89,7 @@ public class ExamGrade implements GradeListItem {
 					title = tmp;
 				}
 
-				title = title + " " + columns.get(4).text(); // title + lvaType
+				title = title.trim() + " " + columns.get(4).text().trim(); // title + lvaType
 
 				setTitle(title); // title
 
