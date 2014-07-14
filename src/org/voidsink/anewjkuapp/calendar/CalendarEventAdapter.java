@@ -86,6 +86,8 @@ public class CalendarEventAdapter extends BaseArrayAdapter<CalendarListItem> {
 					.findViewById(R.id.calendar_list_item_chip);
 			eventItemHolder.title = (TextView) convertView
 					.findViewById(R.id.calendar_list_item_title);
+			eventItemHolder.descr = (TextView) convertView
+					.findViewById(R.id.calendar_list_item_descr);
 			eventItemHolder.time = (TextView) convertView
 					.findViewById(R.id.calendar_list_item_time);
 			eventItemHolder.location = (TextView) convertView
@@ -100,8 +102,27 @@ public class CalendarEventAdapter extends BaseArrayAdapter<CalendarListItem> {
 
 		eventItemHolder.chip.setBackgroundColor(eventItem.getColor());
 		eventItemHolder.title.setText(eventItem.getTitle());
-		eventItemHolder.time.setText(eventItem.getTime());
-		eventItemHolder.location.setText(eventItem.getLocation());
+
+		if (eventItem.getDescr().isEmpty()) {
+			eventItemHolder.descr.setVisibility(View.GONE);
+		} else {
+			eventItemHolder.descr.setVisibility(View.VISIBLE);
+			eventItemHolder.descr.setText(eventItem.getDescr());
+		}
+
+		if (eventItem.getTime().isEmpty()) {
+			eventItemHolder.time.setVisibility(View.GONE);
+		} else {
+			eventItemHolder.time.setVisibility(View.VISIBLE);
+			eventItemHolder.time.setText(eventItem.getTime());
+		}
+
+		if (eventItem.getLocation().isEmpty()) {
+			eventItemHolder.location.setVisibility(View.GONE);
+		} else {
+			eventItemHolder.location.setVisibility(View.VISIBLE);
+			eventItemHolder.location.setText(eventItem.getLocation());
+		}
 
 		return convertView;
 	}
@@ -146,6 +167,7 @@ public class CalendarEventAdapter extends BaseArrayAdapter<CalendarListItem> {
 
 	private static class CalendarListEventHolder {
 		private TextView title;
+		private TextView descr;
 		private View chip;
 		private TextView time;
 		private TextView location;

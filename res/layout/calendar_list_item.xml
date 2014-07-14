@@ -24,10 +24,19 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/calendar_list_item_descr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_below="@id/calendar_list_item_title"
+            android:padding="3dp"
+            android:textAppearance="?android:attr/textAppearanceSmall" />        
+        
+        <TextView
             android:id="@+id/calendar_list_item_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/calendar_list_item_title"
+            android:layout_below="@id/calendar_list_item_descr"
             android:gravity="center_vertical"
             android:padding="3dp"
             android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -36,7 +45,7 @@
             android:id="@+id/calendar_list_item_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/calendar_list_item_title"
+            android:layout_below="@id/calendar_list_item_descr"
             android:layout_toRightOf="@id/calendar_list_item_time"
             android:gravity="center_vertical"
             android:padding="3dp"

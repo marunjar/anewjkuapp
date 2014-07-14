@@ -205,6 +205,7 @@ public class CalendarFragment extends BaseFragment {
 								mColors.get(c
 										.getString(ImportCalendarTask.COLUMN_EVENT_CAL_ID)),
 								c.getString(ImportCalendarTask.COLUMN_EVENT_TITLE),
+								c.getString(ImportCalendarTask.COLUMN_EVENT_DESCRIPTION),
 								c.getString(ImportCalendarTask.COLUMN_EVENT_LOCATION),
 								c.getLong(ImportCalendarTask.COLUMN_EVENT_DTSTART),
 								c.getLong(ImportCalendarTask.COLUMN_EVENT_DTEND)));

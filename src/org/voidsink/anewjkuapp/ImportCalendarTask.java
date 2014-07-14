@@ -6,12 +6,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.property.Summary;
 
 import org.voidsink.anewjkuapp.base.BaseAsyncTask;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
@@ -31,6 +35,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
 
@@ -41,6 +46,11 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 	private static final Object sync_lock = new Object();
 
 	private final CalendarBuilder mCalendarBuilder;
+
+	private static final Pattern lvaNrTermPattern = Pattern
+			.compile(KusssHandler.PATTERN_LVA_NR_SLASH_TERM);
+	private static final Pattern lvaLeiterPattern = Pattern
+			.compile("Lva-LeiterIn:\\s+");
 
 	private ContentProviderClient mProvider;
 	private Account mAccount;
@@ -165,10 +175,57 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 						Map<String, VEvent> eventsMap = new HashMap<String, VEvent>();
 						for (Object e : events) {
 							if (VEvent.class.isInstance(e)) {
-								String uid = ((VEvent) e).getUid().getValue();
+								VEvent ev = ((VEvent) e);
+
+								// modify event: move lvanr/term and teacher to
+								// description
+								String summary = ev.getSummary().getValue()
+										.trim();
+								String description = ev.getDescription()
+										.getValue().trim();
+
+								Matcher lvaNrTermMatcher = lvaNrTermPattern
+										.matcher(summary); // (lvaNr/term)
+								if (lvaNrTermMatcher.find()) {
+									if (!description.isEmpty()) {
+										description += System
+												.getProperty("line.separator");
+										description += System
+												.getProperty("line.separator");
+									}
+									description += summary
+											.substring(lvaNrTermMatcher.start());
+									summary = summary.substring(0,
+											lvaNrTermMatcher.start());
+								} else {
+									Matcher lvaLeiterMatcher = lvaLeiterPattern
+											.matcher(summary);
+									if (lvaLeiterMatcher.find()) {
+										if (!description.isEmpty()) {
+											description += System
+													.getProperty("line.separator");
+											description += System
+													.getProperty("line.separator");
+										}
+										description += summary
+												.substring(lvaLeiterMatcher
+														.start());
+										summary = summary.substring(0,
+												lvaLeiterMatcher.start());
+									}
+								}
+								summary = summary.trim();
+								description = description.trim();
+
+								ev.getProperty(Property.SUMMARY).setValue(
+										summary);
+								ev.getProperty(Property.DESCRIPTION).setValue(
+										description);
+
+								String uid = ev.getUid().getValue();
 								// Log.d(TAG, "uid hashed: " + uid);
 								// compense DST
-								eventsMap.put(uid, (VEvent) e);
+								eventsMap.put(uid, ev);
 							}
 						}
 
@@ -237,8 +294,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 									VEvent match = eventsMap.get(eventKusssId);
 									if (match != null && !eventDeleted) {
 										// Entry exists. Remove from entry
-										// map
-										// to prevent insert later
+										// map to prevent insert later
 										eventsMap.remove(eventKusssId);
 										// Check to see if the entry needs
 										// to be
@@ -319,9 +375,8 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 														&& (!eventKusssId
 																.isEmpty()) && (eventDTStart > (mSyncFromNow - DateUtils.DAY_IN_MILLIS)))) {
 											// Entry doesn't exist. Remove
-											// only
-											// newer
-											// events from the database.
+											// only newer events from the
+											// database.
 											Uri deleteUri = calUri.buildUpon()
 													.appendPath(eventId)
 													.build();

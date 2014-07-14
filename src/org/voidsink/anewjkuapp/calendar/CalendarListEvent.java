@@ -10,15 +10,17 @@ public class CalendarListEvent implements CalendarListItem {
 
 	private int mColor;
 	private String mTitle;
+	private String mDescr;
 	private String mTime;
 	private String mLocation;
 	private long mDtStart;
 	private long mDtEnd;
-
-	public CalendarListEvent(int color, String title,
+	
+	public CalendarListEvent(int color, String title, String descr,
 			String location, long dtStart, long dtEnd) {
 		this.mColor = color;
 		this.mTitle = title;
+		this.mDescr = descr;
 		this.mLocation = location;
 		this.mDtStart = dtStart;
 		this.mDtEnd = dtEnd;
@@ -68,6 +70,10 @@ public class CalendarListEvent implements CalendarListItem {
 
 	public long getDtEnd() {
 		return mDtEnd;
+	}
+
+	public String getDescr() {
+		return mDescr;
 	}
 	
 	
