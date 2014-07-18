@@ -42,8 +42,7 @@ public class GradeDetailFragment extends BaseFragment {
 			ExamGrade g = grades.get(i);
 			// check only grades for same lva and term
 			if (g.getCode().equals(grade.getCode())
-					&& g.getLvaNr() == grade.getLvaNr()
-					&& g.getTerm().equals(grade.getTerm())) {
+					&& g.getLvaNr().equals(grade.getLvaNr())) {
 				// keep only recent (best and newest) grade
 				if (g.getDate().before(grade.getDate())) {
 					// remove last grade
@@ -52,8 +51,9 @@ public class GradeDetailFragment extends BaseFragment {
 					// break without adding
 					return;
 				}
+			} else {
+				i++;
 			}
-			i++;
 		}
 		// finally add grade
 		grades.add(grade);

@@ -190,8 +190,6 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 									if (!description.isEmpty()) {
 										description += System
 												.getProperty("line.separator");
-										description += System
-												.getProperty("line.separator");
 									}
 									description += summary
 											.substring(lvaNrTermMatcher.start());
@@ -202,8 +200,6 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 											.matcher(summary);
 									if (lvaLeiterMatcher.find()) {
 										if (!description.isEmpty()) {
-											description += System
-													.getProperty("line.separator");
 											description += System
 													.getProperty("line.separator");
 										}

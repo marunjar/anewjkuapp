@@ -175,17 +175,17 @@ public class AppUtils {
 	}
 
 	public static void sortLVAs(List<Lva> lvas) {
-		// Collections.sort(lvas, new Comparator<Lva>() {
-		//
-		// @Override
-		// public int compare(Lva lhs, Lva rhs) {
-		// int value = lhs.getTitle().compareTo(rhs.getTitle());
-		// if (value == 0) {
-		// value = lhs.getTerm().compareTo(rhs.getTerm());
-		// }
-		// return value;
-		// }
-		// });
+		Collections.sort(lvas, new Comparator<Lva>() {
+
+			@Override
+			public int compare(Lva lhs, Lva rhs) {
+				int value = lhs.getTitle().compareTo(rhs.getTitle());
+				if (value == 0) {
+					value = lhs.getTerm().compareTo(rhs.getTerm());
+				}
+				return value;
+			}
+ });
 	}
 
 	public static void sortLVAsWithGrade(List<LvaWithGrade> lvas) {
@@ -212,10 +212,10 @@ public class AppUtils {
 			public int compare(ExamGrade lhs, ExamGrade rhs) {
 				int value = lhs.getGradeType().compareTo(rhs.getGradeType());
 				if (value == 0) {
-					value = lhs.getDate().compareTo(rhs.getDate());
+					value = rhs.getDate().compareTo(lhs.getDate());
 				}
 				if (value == 0) {
-					value = lhs.getTerm().compareTo(rhs.getTerm());
+					value = rhs.getTerm().compareTo(lhs.getTerm());
 				}
 				if (value == 0) {
 					value = lhs.getTitle().compareTo(rhs.getTitle());

@@ -113,7 +113,7 @@ public class LvaFragment extends IndicatedViewPagerFragment implements
 
 					@Override
 					public int compare(String lhs, String rhs) {
-						return lhs.compareTo(rhs) * -1;
+						return rhs.compareTo(lhs);
 					}
 				});
 				AppUtils.sortLVAs(this.lvas);
