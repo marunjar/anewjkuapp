@@ -1,5 +1,6 @@
 package org.voidsink.anewjkuapp.provider;
 
+import org.voidsink.anewjkuapp.Analytics;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.PoiContentContract;
 
@@ -73,8 +74,11 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 			+ PoiContentContract.Poi.COL_ADR_STREET + " text, "
 			+ PoiContentContract.Poi.COL_DESCR + " text " + ");";
 
+	private Context mContext = null;
+
 	public KusssDatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		this.mContext = context;
 	}
 
 	@Override
@@ -115,4 +119,19 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 		return (bool) ? 1 : 0;
 	}
 
+	public void dropUserData() {
+		try {
+			SQLiteDatabase db = this.getWritableDatabase();
+
+			db.execSQL("DROP TABLE IF EXISTS "
+					+ KusssContentContract.Grade.GRADE_TABLE_NAME);
+			db.execSQL("DROP TABLE IF EXISTS "
+					+ KusssContentContract.Exam.EXAM_TABLE_NAME);
+			db.execSQL("DROP TABLE IF EXISTS "
+					+ KusssContentContract.Lva.LVA_TABLE_NAME);
+		} catch (Exception e) {
+			Analytics.sendException(mContext, e, true);
+			Log.e(TAG, "import calendar failed", e);
+		}
+	}
 }

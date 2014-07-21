@@ -619,4 +619,16 @@
 	<name><![CDATA[Repräsentationsraum UC 6]]></name>
 	<desc><![CDATA[UC 105, Repräsentationsraum, 1. OG]]></desc>
 </wpt>
+<wpt lat="48.337021" lon="14.317833">
+	<time>2014-07-11T09:00:07Z</time>
+	<name><![CDATA[Zulassungsservice]]></name>
+	<desc><![CDATA[1. OG]]></desc>
+	<sym>z-favorites</sym>
+</wpt>
+<wpt lat="48.337050" lon="14.317534">
+	<time>2014-07-11T09:10:11Z</time>
+	<name><![CDATA[Prüfungs- und Anerkennungsservice]]></name>
+	<desc><![CDATA[1. OG]]></desc>
+	<sym>z-favorites</sym>
+</wpt>
 </gpx>

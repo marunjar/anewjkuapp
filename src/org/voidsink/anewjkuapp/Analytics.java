@@ -1,6 +1,6 @@
 package org.voidsink.anewjkuapp;
 
-import org.voidsink.anewjkuapp.GlobalStats.TrackerName;
+import org.voidsink.anewjkuapp.Globals.TrackerName;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.StandardExceptionParser;
@@ -24,21 +24,21 @@ public class Analytics {
 
 	// private static final String GA_EVENT_CATEGORY_SERVICE = "service_action";
 
-	private static GlobalStats getGlobalStats(Context c) {
+	private static Globals getGlobalStats(Context c) {
 		if (c == null)
 			return null;
 
-		if (c instanceof GlobalStats) {
-			return (GlobalStats) c;
-		} else if (c.getApplicationContext() instanceof GlobalStats) {
-			return (GlobalStats) c.getApplicationContext();
+		if (c instanceof Globals) {
+			return (Globals) c;
+		} else if (c.getApplicationContext() instanceof Globals) {
+			return (Globals) c.getApplicationContext();
 		}
 
 		return null;
 	}
 
 	private static Tracker getAppTracker(Context c) {
-		GlobalStats gs = getGlobalStats(c);
+		Globals gs = getGlobalStats(c);
 		if (gs != null) {
 			return gs.getTracker(TrackerName.APP_TRACKER);
 		}

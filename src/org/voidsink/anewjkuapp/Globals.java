@@ -3,6 +3,8 @@ package org.voidsink.anewjkuapp;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.HashMap;
 
+import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
+
 import com.google.android.gms.analytics.ExceptionReporter;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
@@ -11,13 +13,13 @@ import com.google.android.gms.analytics.Logger.LogLevel;
 import android.app.Application;
 import android.util.Log;
 
-public class GlobalStats extends Application {
+public class Globals extends Application {
 
 	public enum TrackerName {
 		APP_TRACKER
 	}
 
-	private static final String TAG = GlobalStats.class.getSimpleName();
+	private static final String TAG = Globals.class.getSimpleName();
 	
 	@Override
 	public void onCreate() {
@@ -58,4 +60,5 @@ public class GlobalStats extends Application {
 		}
 		return mTrackers.get(trackerId);
 	}
+
 }

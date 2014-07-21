@@ -160,6 +160,13 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 					if (iCal == null) {
 						mSyncResult.stats.numParseExceptions++;
 					} else {
+						// calc date for notifiying only future changes
+						// max update interval is 1 week
+						long notifyFrom = new Date().getTime()
+								- DateUtils.WEEK_IN_MILLIS;
+						String lineSeparator = System
+								.getProperty("line.separator");
+
 						List<?> events = iCal.getComponents(Component.VEVENT);
 
 						Log.d(TAG,
@@ -169,14 +176,13 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 
 						ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
 
-						// Build hash table of incoming entries
+						// modify event: move lvanr/term and teacher to
+						// description
 						Map<String, VEvent> eventsMap = new HashMap<String, VEvent>();
 						for (Object e : events) {
 							if (VEvent.class.isInstance(e)) {
 								VEvent ev = ((VEvent) e);
 
-								// modify event: move lvanr/term and teacher to
-								// description
 								String summary = ev.getSummary().getValue()
 										.trim();
 								String description = ev.getDescription()
@@ -186,8 +192,8 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 										.matcher(summary); // (lvaNr/term)
 								if (lvaNrTermMatcher.find()) {
 									if (!description.isEmpty()) {
-										description += System
-												.getProperty("line.separator");
+										description += lineSeparator;
+										description += lineSeparator;
 									}
 									description += summary
 											.substring(lvaNrTermMatcher.start());
@@ -198,8 +204,8 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 											.matcher(summary);
 									if (lvaLeiterMatcher.find()) {
 										if (!description.isEmpty()) {
-											description += System
-													.getProperty("line.separator");
+											description += lineSeparator;
+											description += lineSeparator;
 										}
 										description += summary
 												.substring(lvaLeiterMatcher
@@ -215,6 +221,13 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 										summary);
 								ev.getProperty(Property.DESCRIPTION).setValue(
 										description);
+							}
+						}
+
+						// Build hash table of incoming entries
+						for (Object e : events) {
+							if (VEvent.class.isInstance(e)) {
+								VEvent ev = ((VEvent) e);
 
 								String uid = ev.getUid().getValue();
 								// Log.d(TAG, "uid hashed: " + uid);
@@ -314,8 +327,13 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 													+ eventDirty);
 
 											if (mNotification != null) {
-												mNotification
-														.addUpdate(getEventString(match));
+												// notify only future changes
+												if (match.getStartDate()
+														.getDate().getTime() > notifyFrom) {
+													mNotification
+															.addUpdate(getEventString(match));
+
+												}
 											}
 
 											batch.add(ContentProviderOperation
@@ -378,11 +396,15 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 													+ deleteUri);
 
 											if (!eventDeleted) {
-												mNotification
-														.addDelete(getEventString(
-																eventDTStart,
-																eventDTEnd,
-																eventTitle));
+												// notify only future changes
+												if (match.getStartDate()
+														.getDate().getTime() > notifyFrom) {
+													mNotification
+															.addDelete(getEventString(
+																	eventDTStart,
+																	eventDTEnd,
+																	eventTitle));
+												}
 											}
 
 											batch.add(ContentProviderOperation
@@ -414,7 +436,10 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 							for (VEvent v : eventsMap.values()) {
 								updateNotify("Termine werden hinzugefügt");
 
-								mNotification.addInsert(getEventString(v));
+								// notify only future changes
+								if (v.getStartDate().getDate().getTime() > notifyFrom) {
+									mNotification.addInsert(getEventString(v));
+								}
 
 								Builder builder = ContentProviderOperation
 										.newInsert(
