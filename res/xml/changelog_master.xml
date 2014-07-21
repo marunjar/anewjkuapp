@@ -5,6 +5,16 @@
 		    - fixed
 		    * changed -->
 	    
+	<release version="0.17" versioncode="100017">
+	   <change>- nach der Ersten Anmeldung fehlten Kalender</change>
+	   <change>- es wurden doppelte Noten angezeigt</change>
+	   <change>- Sprachkurse wurden nicht richtig erkannt</change>
+	   <change>- bei den Prüfungen wurden aktuelle Anmeldungen nicht angezeigt</change>
+	   <change>* Zugriffe auf KUSSS verbessert</change>
+	   <change>* es wird in einem größeren Zeitraum nach Terminen gesucht</change>
+	   <change>* LVA-Nr und LVA-Leiter werden in der Beschreibung und nicht mehr im Title von Terminen angezeigt</change>
+	   <change>+ fehlende Orte zum Campusplan hinzugefügt</change>
+	</release>
     <release version="0.16" versioncode="100016">
        <change>* bei den LVAs können optional die ECTS-Punkte als Balkendiagramm angezeigt werden</change>
        <change>* die Dashclock Extension kann auch immer angezeigt werden</change>
