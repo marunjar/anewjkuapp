@@ -339,7 +339,7 @@ public class MapFragment extends BaseFragment implements
 
 		this.mapView = (MapView) rootView.findViewById(R.id.mapView);
 		this.mapView.setClickable(true);
-		this.mapView.getFpsCounter().setVisible(true);
+		//this.mapView.getFpsCounter().setVisible(true);
 		this.mapView.getMapScaleBar().setVisible(true);
 
 		this.mLayerManager = this.mapView.getLayerManager();
