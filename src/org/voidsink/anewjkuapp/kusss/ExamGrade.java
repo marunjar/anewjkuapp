@@ -72,7 +72,7 @@ public class ExamGrade implements GradeListItem {
 					}
 
 					Matcher termMatcher = termPattern.matcher(lvaNrTerm); // term
-					if (termMatcher.find()) {
+					if (termMatcher.find(lvaNrMatcher.end())) {
 						setTerm(termMatcher.group());
 					}
 

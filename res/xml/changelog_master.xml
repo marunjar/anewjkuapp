@@ -5,7 +5,10 @@
 		    - fixed
 		    * changed -->
 	    
-	<release version="0.17" versioncode="100017">
+	<release version="0.18" versioncode="100018">
+		<change>- Semester wurde bei Sprachkursen nicht richtig ausgelesen</change>
+	</release>
+    <release version="0.17" versioncode="100017">
 	   <change>- nach der Ersten Anmeldung fehlten Kalender</change>
 	   <change>- es wurden doppelte Noten angezeigt</change>
 	   <change>- Sprachkurse wurden nicht richtig erkannt</change>

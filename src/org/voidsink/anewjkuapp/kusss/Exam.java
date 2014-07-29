@@ -60,7 +60,7 @@ public class Exam {
 						}
 
 						Matcher termMatcher = termPattern.matcher(lvaNrTerm); // term
-						if (termMatcher.find()) {
+						if (termMatcher.find(lvaNrMatcher.end())) {
 							setTerm(termMatcher.group());
 						}
 
@@ -92,7 +92,7 @@ public class Exam {
 						}
 
 						Matcher termMatcher = termPattern.matcher(lvaNrTerm); // term
-						if (termMatcher.find()) {
+						if (termMatcher.find(lvaNrMatcher.end())) {
 							setTerm(termMatcher.group());
 						}
 
