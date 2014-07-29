@@ -27,7 +27,7 @@ public class Globals extends Application {
 
 		GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
 		if (BuildConfig.DEBUG) {
-			analytics.setDryRun(true);
+			//analytics.setDryRun(true);
 			analytics.setAppOptOut(false);
 			analytics.getLogger().setLogLevel(LogLevel.VERBOSE);
 			Log.i(TAG, "debug enabled");

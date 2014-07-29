@@ -382,7 +382,7 @@ public class KusssHandler {
 				Log.d(TAG, "no lvas found, reload");
 				lvas = getLvas(c);
 			}
-			if (lvas.size() > 0) {
+			if (lvas != null && lvas.size() > 0) {
 				List<ExamGrade> grades = getGrades(c);
 
 				Map<String, ExamGrade> gradeCache = new HashMap<String, ExamGrade>();
