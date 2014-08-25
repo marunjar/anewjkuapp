@@ -1178,7 +1178,7 @@ containing a value of this type.
         public static final int abc_split_action_bar_is_narrow=0x7f0b0002;
     }
     public static final class color {
-        public static final int abc_search_url_text_holo=0x7f07001a;
+        public static final int abc_search_url_text_holo=0x7f07001d;
         public static final int abc_search_url_text_normal=0x7f070017;
         public static final int abc_search_url_text_pressed=0x7f070019;
         public static final int abc_search_url_text_selected=0x7f070018;
@@ -1194,8 +1194,11 @@ containing a value of this type.
         public static final int common_signin_btn_light_text_disabled=0x7f070006;
         public static final int common_signin_btn_light_text_focused=0x7f070007;
         public static final int common_signin_btn_light_text_pressed=0x7f070005;
-        public static final int common_signin_btn_text_dark=0x7f07001b;
-        public static final int common_signin_btn_text_light=0x7f07001c;
+        public static final int common_signin_btn_text_dark=0x7f07001e;
+        public static final int common_signin_btn_text_light=0x7f07001f;
+        public static final int selection_state_activated=0x7f07001c;
+        public static final int selection_state_pressed=0x7f07001a;
+        public static final int selection_state_selected=0x7f07001b;
         public static final int wallet_bright_foreground_disabled_holo_light=0x7f07000f;
         /** 
          Wallet colors to support consistent Wallet fragment holo dark UI in client application
@@ -1214,8 +1217,8 @@ containing a value of this type.
         public static final int wallet_hint_foreground_holo_light=0x7f070011;
         public static final int wallet_holo_blue_light=0x7f070015;
         public static final int wallet_link_text_light=0x7f070016;
-        public static final int wallet_primary_text_holo_light=0x7f07001d;
-        public static final int wallet_secondary_text_holo_dark=0x7f07001e;
+        public static final int wallet_primary_text_holo_light=0x7f070020;
+        public static final int wallet_secondary_text_holo_dark=0x7f070021;
     }
     public static final class dimen {
         /**  Default height of an action bar. 
@@ -1482,8 +1485,9 @@ containing a value of this type.
         public static final int ic_plusone_standard_off_client=0x7f02007d;
         public static final int ic_plusone_tall_off_client=0x7f02007e;
         public static final int ic_stat_notify_kusss=0x7f02007f;
-        public static final int powered_by_google_dark=0x7f020080;
-        public static final int powered_by_google_light=0x7f020081;
+        public static final int list_item_selector=0x7f020080;
+        public static final int powered_by_google_dark=0x7f020081;
+        public static final int powered_by_google_light=0x7f020082;
     }
     public static final class id {
         public static final int about_changelog=0x7f080069;
@@ -2048,7 +2052,7 @@ containing a value of this type.
             backward-compatibility can go here.
         
 
-        Base application theme for API 11+. This theme completely replaces
+        Base application theme for API 10+. This theme completely replaces
         AppBaseTheme from res/values/styles.xml on API 11+ devices.
     
  API 11 theme customizations can go here. 

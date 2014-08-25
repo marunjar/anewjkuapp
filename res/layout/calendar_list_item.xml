@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="fill_vertical"
     android:orientation="horizontal"
-    android:paddingRight="10dp" >
+    android:paddingRight="10dp"
+    tools:ignore="NewApi" >
 
     <View
         android:id="@+id/calendar_list_item_chip"
@@ -27,11 +29,11 @@
             android:id="@+id/calendar_list_item_descr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
             android:layout_below="@id/calendar_list_item_title"
+            android:gravity="center_vertical"
             android:padding="3dp"
-            android:textAppearance="?android:attr/textAppearanceSmall" />        
-        
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
         <TextView
             android:id="@+id/calendar_list_item_time"
             android:layout_width="wrap_content"

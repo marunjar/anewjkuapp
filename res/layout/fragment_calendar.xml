@@ -7,7 +7,10 @@
     <ListView
         android:id="@+id/calendar_events"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:choiceMode="singleChoice"
+        android:clickable="true"
+        android:listSelector="@drawable/list_item_selector" >
     </ListView>
 
 </LinearLayout>
