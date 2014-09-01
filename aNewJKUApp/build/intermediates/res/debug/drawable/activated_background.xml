@@ -4,4 +4,4 @@
     <item android:drawable="@color/abc_search_url_text_selected" android:state_activated="true"/>
     <item android:drawable="@android:color/transparent"/>
 
-</selector><!-- From: file:/C:/Users/paul/AndroidStudioProjects/anewjkuapp/aNewJKUApp/src/main/res/drawable/activated_background.xml -->
+</selector><!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/src/main/res/drawable/activated_background.xml -->

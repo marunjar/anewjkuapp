@@ -2,9 +2,9 @@
 <merger version="2" >
 
     <dataSet config="main" >
-        <source path="C:\Users\paul\AndroidStudioProjects\anewjkuapp\aNewJKUApp\src\androidTest\res" />
-        <source path="C:\Users\paul\AndroidStudioProjects\anewjkuapp\aNewJKUApp\build\generated\res\rs\test\debug" />
-        <source path="C:\Users\paul\AndroidStudioProjects\anewjkuapp\aNewJKUApp\build\generated\res\generated\test\debug" />
+        <source path="D:\GitHub\anewjkuapp\aNewJKUApp\src\androidTest\res" />
+        <source path="D:\GitHub\anewjkuapp\aNewJKUApp\build\generated\res\rs\test\debug" />
+        <source path="D:\GitHub\anewjkuapp\aNewJKUApp\build\generated\res\generated\test\debug" />
     </dataSet>
 
 </merger>

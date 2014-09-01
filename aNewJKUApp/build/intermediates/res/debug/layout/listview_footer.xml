@@ -6,4 +6,4 @@
     android:layout_marginTop="10dp"
     android:padding="10dp"
     android:text="@string/listview_footer_button" />
-<!-- From: file:/C:/Users/paul/AndroidStudioProjects/anewjkuapp/aNewJKUApp/src/main/res/layout/listview_footer.xml -->
+<!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/src/main/res/layout/listview_footer.xml -->

@@ -2,9 +2,9 @@
 <merger version="2" >
 
     <dataSet config="main" >
-        <source path="C:\Users\paul\AndroidStudioProjects\anewjkuapp\voidsinkContributors\src\main\res" >
+        <source path="D:\GitHub\anewjkuapp\voidsinkContributors\src\main\res" >
             <file
-                path="C:\Users\paul\AndroidStudioProjects\anewjkuapp\voidsinkContributors\src\main\res\values\strings.xml"
+                path="D:\GitHub\anewjkuapp\voidsinkContributors\src\main\res\values\strings.xml"
                 qualifiers="" >
                 <string name="contributor_email_text" >"Hallo,\n\n..."
                 </string>
@@ -19,15 +19,15 @@
             </file>
             <file
                 name="contributors"
-                path="C:\Users\paul\AndroidStudioProjects\anewjkuapp\voidsinkContributors\src\main\res\xml\contributors.xml"
+                path="D:\GitHub\anewjkuapp\voidsinkContributors\src\main\res\xml\contributors.xml"
                 qualifiers=""
                 type="xml" />
         </source>
-        <source path="C:\Users\paul\AndroidStudioProjects\anewjkuapp\voidsinkContributors\build\generated\res\rs\release" />
-        <source path="C:\Users\paul\AndroidStudioProjects\anewjkuapp\voidsinkContributors\build\generated\res\generated\release" />
+        <source path="D:\GitHub\anewjkuapp\voidsinkContributors\build\generated\res\rs\release" />
+        <source path="D:\GitHub\anewjkuapp\voidsinkContributors\build\generated\res\generated\release" />
     </dataSet>
     <dataSet config="release" >
-        <source path="C:\Users\paul\AndroidStudioProjects\anewjkuapp\voidsinkContributors\src\release\res" />
+        <source path="D:\GitHub\anewjkuapp\voidsinkContributors\src\release\res" />
     </dataSet>
 
 </merger>

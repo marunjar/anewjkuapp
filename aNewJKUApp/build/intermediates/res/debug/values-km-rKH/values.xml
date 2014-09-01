@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
 
-    <!-- From: file:/C:/Users/paul/AndroidStudioProjects/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.android.support/appcompat-v7/20.0.0/res/values-km-rKH/values.xml -->
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.android.support/appcompat-v7/20.0.0/res/values-km-rKH/values.xml -->
     <eat-comment />
 
     <string name="abc_action_bar_home_description" msgid="4600421777120114993">"រកមើល​ទៅ​ដើម"</string>
@@ -17,7 +17,7 @@
     <string name="abc_searchview_description_voice" msgid="893419373245838918">"ការស្វែងរក​សំឡេង"</string>
     <string name="abc_shareactionprovider_share_with" msgid="3421042268587513524">"ចែករំលែក​ជាមួយ"</string>
     <string name="abc_shareactionprovider_share_with_application" msgid="7165123711973476752">"ចែករំលែក​ជាមួយ %s"</string>
-    <!-- From: file:/C:/Users/paul/AndroidStudioProjects/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.google.android.gms/play-services/5.2.08/res/values-km-rKH/auth_strings.xml -->
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.google.android.gms/play-services/5.2.08/res/values-km-rKH/auth_strings.xml -->
     <eat-comment />
 
     <string name="auth_client_needs_enabling_title" msgid="3983201110833868073">"កម្មវិធី​ទាមទារ​​បើក​សេវាកម្ម​ឃ្លាំង​កម្មវិធី។"</string>
@@ -26,7 +26,7 @@
     <string name="auth_client_play_services_err_notification_msg" msgid="3635065018897986478">"កំហុស​សេវា​កម្ម​កម្សាន្ត Google"</string>
     <string name="auth_client_requested_by_msg" msgid="6304135633531965756">"បាន​ស្នើ​ដោយ <ns1:g id="APP_NAME">%1$s</ns1:g>"</string>
     <string name="auth_client_using_bad_version_title" msgid="2534454398764507874">"កម្មវិធី​​​ព្យាយាម​ប្រើ​កំណែ​មិនល្អ​របស់​សេវា​កម្ម​ឃ្លាំ​កម្មវិធី។"</string>
-    <!-- From: file:/C:/Users/paul/AndroidStudioProjects/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.google.android.gms/play-services/5.2.08/res/values-km-rKH/common_strings.xml -->
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.google.android.gms/play-services/5.2.08/res/values-km-rKH/common_strings.xml -->
     <eat-comment />
 
     <string name="common_google_play_services_enable_button" msgid="4181637455539816337">"បើក​សេវាកម្ម​កម្សាន្ត Google"</string>
