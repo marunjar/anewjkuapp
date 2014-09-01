@@ -12,4 +12,4 @@
         <intent android:action="org.voidsink.anewjkuapp.prefs.MAIN" />
     </PreferenceScreen>
 
-</PreferenceScreen><!-- From: file:/C:/Users/paul/AndroidStudioProjects/anewjkuapp/aNewJKUApp/src/main/res/xml/preference_sync.xml -->
+</PreferenceScreen><!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/src/main/res/xml/preference_sync.xml -->

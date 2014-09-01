@@ -9,7 +9,7 @@ android {
     buildToolsVersion "20.0.0"
     defaultConfig {
         applicationId "org.voidsink.anewjkuapp"
-        minSdkVersion 10
+        minSdkVersion 14
         targetSdkVersion 19
     }
     buildTypes {

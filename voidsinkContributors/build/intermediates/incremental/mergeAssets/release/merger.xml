@@ -2,10 +2,10 @@
 <merger version="2" >
 
     <dataSet config="main" >
-        <source path="C:\Users\paul\AndroidStudioProjects\anewjkuapp\voidsinkContributors\src\main\assets" />
+        <source path="D:\GitHub\anewjkuapp\voidsinkContributors\src\main\assets" />
     </dataSet>
     <dataSet config="release" >
-        <source path="C:\Users\paul\AndroidStudioProjects\anewjkuapp\voidsinkContributors\src\release\assets" />
+        <source path="D:\GitHub\anewjkuapp\voidsinkContributors\src\release\assets" />
     </dataSet>
 
 </merger>

@@ -1769,8 +1769,6 @@ containing a value of this type.
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         
- API 11 theme customizations can go here. 
- API 11 theme customizations can go here. 
  API 14 theme customizations can go here. 
          */
         public static final int AppBaseTheme=0x7f0d0000;
@@ -1779,8 +1777,6 @@ containing a value of this type.
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         
- API 11 theme customizations can go here. 
- API 11 theme customizations can go here. 
  API 14 theme customizations can go here. 
          */
         public static final int AppBaseTheme_Light=0x7f0d0001;
@@ -1845,13 +1841,12 @@ containing a value of this type.
         public static final int Theme_Base_AppCompat_Dialog_FixedSize=0x7f0d0038;
         public static final int Theme_Base_AppCompat_Dialog_Light_FixedSize=0x7f0d0039;
         public static final int Theme_Base_AppCompat_DialogWhenLarge=0x7f0d003a;
-        public static final int Theme_Base_AppCompat_DialogWhenLarge_Base=0x7f0d0094;
+        public static final int Theme_Base_AppCompat_DialogWhenLarge_Base=0x7f0d0093;
         public static final int Theme_Base_AppCompat_Light=0x7f0d003b;
         public static final int Theme_Base_AppCompat_Light_DarkActionBar=0x7f0d003c;
         public static final int Theme_Base_AppCompat_Light_DialogWhenLarge=0x7f0d003d;
-        public static final int Theme_Base_AppCompat_Light_DialogWhenLarge_Base=0x7f0d0095;
+        public static final int Theme_Base_AppCompat_Light_DialogWhenLarge_Base=0x7f0d0094;
         public static final int Theme_Base_Light=0x7f0d003e;
-        public static final int Theme_Dialog=0x7f0d0093;
         public static final int Theme_IAPTheme=0x7f0d003f;
         public static final int WalletFragmentDefaultButtonTextAppearance=0x7f0d0040;
         public static final int WalletFragmentDefaultDetailsHeaderTextAppearance=0x7f0d0041;

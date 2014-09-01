@@ -166,7 +166,7 @@ public class MapFragment extends BaseFragment implements
 			finishSearch(pois.get(0));
 		} else {
 			AlertDialog.Builder poiSelector = new AlertDialog.Builder(
-					new ContextThemeWrapper(getContext(), R.style.Theme_Dialog));
+					new ContextThemeWrapper(getContext(), R.style.AppTheme));
 
 			poiSelector.setIcon(R.drawable.ic_launcher);
 
