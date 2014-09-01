@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="backport-util-concurrent-3.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/aNewJKUApp/libs/backport-util-concurrent-3.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="2" >
+
+    <dataSet config="debug" >
+        <source path="C:\Users\paul\AndroidStudioProjects\anewjkuapp\voidsinkContributors\build\intermediates\bundles\debug\res" >
+            <file
+                path="C:\Users\paul\AndroidStudioProjects\anewjkuapp\voidsinkContributors\build\intermediates\bundles\debug\res\values\values.xml"
+                qualifiers="" >
+                <string name="contributor_email_text" >"Hallo,\n\n..."
+                </string>
+                <string name="contributor_title" >Dank an:
+                </string>
+                <string name="contributor_ok_button" >OK
+                </string>
+                <string name="contributor_send_email" >"eMail senden..."
+                </string>
+                <string name="contributor_email_subject" >foo
+                </string>
+            </file>
+            <file
+                name="contributors"
+                path="C:\Users\paul\AndroidStudioProjects\anewjkuapp\voidsinkContributors\build\intermediates\bundles\debug\res\xml\contributors.xml"
+                qualifiers=""
+                type="xml" />
+        </source>
+    </dataSet>
+    <dataSet config="main" >
+        <source path="C:\Users\paul\AndroidStudioProjects\anewjkuapp\voidsinkContributors\src\androidTest\res" />
+        <source path="C:\Users\paul\AndroidStudioProjects\anewjkuapp\voidsinkContributors\build\generated\res\rs\test\debug" />
+        <source path="C:\Users\paul\AndroidStudioProjects\anewjkuapp\voidsinkContributors\build\generated\res\generated\test\debug" />
+    </dataSet>
+
+</merger>
