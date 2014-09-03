@@ -5,4 +5,4 @@
     android:searchSuggestIntentData="content://org.voidsink.anewjkuapp.provider.poi/poi"
     android:searchSuggestIntentAction="android.intent.action.VIEW" >
 
-</searchable><!-- From: file:/C:/Users/paul/AndroidStudioProjects/anewjkuapp/aNewJKUApp/src/main/res/xml/searchable.xml -->
+</searchable><!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/src/main/res/xml/searchable.xml -->

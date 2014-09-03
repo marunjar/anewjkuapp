@@ -16,6 +16,9 @@ local.properties
 .settings/
 .loadpath
 
+.idea/
+build/
+
 # External tool builders
 .externalToolBuilders/
 

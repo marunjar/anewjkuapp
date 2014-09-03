@@ -1,48 +1,42 @@
 package org.voidsink.anewjkuapp.fragment;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
-import org.voidsink.anewjkuapp.AppUtils;
-import org.voidsink.anewjkuapp.KusssContentContract;
-import org.voidsink.anewjkuapp.LvaDetailPageAdapter;
-import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.base.BaseContentObserver;
-import org.voidsink.anewjkuapp.base.ContentObserverListener;
-import org.voidsink.anewjkuapp.base.IndicatedViewPagerFragment;
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
-import org.voidsink.anewjkuapp.kusss.Lva;
-import org.voidsink.anewjkuapp.provider.KusssContentProvider;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class LvaFragment extends IndicatedViewPagerFragment implements
+import org.voidsink.anewjkuapp.AppUtils;
+import org.voidsink.anewjkuapp.KusssContentContract;
+import org.voidsink.anewjkuapp.LvaTabItem;
+import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.base.BaseContentObserver;
+import org.voidsink.anewjkuapp.base.ContentObserverListener;
+import org.voidsink.anewjkuapp.base.SlidingTabItem;
+import org.voidsink.anewjkuapp.base.SlidingTabsFragment;
+import org.voidsink.anewjkuapp.kusss.ExamGrade;
+import org.voidsink.anewjkuapp.kusss.Lva;
+import org.voidsink.anewjkuapp.provider.KusssContentProvider;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+import edu.emory.mathcs.backport.java.util.Collections;
+
+public class LvaFragment2 extends SlidingTabsFragment implements
 		ContentObserverListener {
 
-	private static final String TAG = LvaFragment.class.getSimpleName();
+	private static final String TAG = LvaFragment2.class.getSimpleName();
 	private BaseContentObserver mLvaObserver;
 
-	@Override
-	protected PagerAdapter createPagerAdapter(FragmentManager fm) {
-		return new LvaDetailPageAdapter(fm, getActivity());
-	}
-
-	@Override
-	protected boolean useTabHost() {
-		return false;
-	}
+    private List<Lva> mLvas = new ArrayList<Lva>();
+    private List<ExamGrade> mGrades = new ArrayList<ExamGrade>();
+    private ArrayList<String> mTerms = new ArrayList<String>();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,7 +67,16 @@ public class LvaFragment extends IndicatedViewPagerFragment implements
 				mLvaObserver);
 	}
 
-	@Override
+    @Override
+    protected void fillTabs(List<SlidingTabItem> mTabs) {
+        mTabs.add(new LvaTabItem("alle Semester", this.mTerms, this.mLvas, this.mGrades));
+
+        for (String term: mTerms) {
+            mTabs.add(new LvaTabItem(term, this.mLvas, this.mGrades));
+        }
+    }
+
+    @Override
 	public void onDestroy() {
 		super.onDestroy();
 
@@ -127,8 +130,11 @@ public class LvaFragment extends IndicatedViewPagerFragment implements
 
 				// Log.i(TAG, "loadLvas" + this.terms);
 
-				((LvaDetailPageAdapter) getPagerAdapter()).setData(this.lvas,
-						this.grades, this.terms);
+                mLvas = this.lvas;
+                mGrades = this.grades;
+                mTerms = this.terms;
+
+                updateData();
 
 				super.onPostExecute(result);
 			}

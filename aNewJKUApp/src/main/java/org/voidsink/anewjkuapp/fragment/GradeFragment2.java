@@ -1,47 +1,40 @@
 package org.voidsink.anewjkuapp.fragment;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
-import org.voidsink.anewjkuapp.AppUtils;
-import org.voidsink.anewjkuapp.GradeDetailPageAdapter;
-import org.voidsink.anewjkuapp.KusssContentContract;
-import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.base.BaseContentObserver;
-import org.voidsink.anewjkuapp.base.ContentObserverListener;
-import org.voidsink.anewjkuapp.base.IndicatedViewPagerFragment;
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
-import org.voidsink.anewjkuapp.provider.KusssContentProvider;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class GradeFragment extends IndicatedViewPagerFragment implements
+import org.voidsink.anewjkuapp.AppUtils;
+import org.voidsink.anewjkuapp.GradeTabItem;
+import org.voidsink.anewjkuapp.KusssContentContract;
+import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.base.BaseContentObserver;
+import org.voidsink.anewjkuapp.base.ContentObserverListener;
+import org.voidsink.anewjkuapp.base.SlidingTabItem;
+import org.voidsink.anewjkuapp.base.SlidingTabsFragment;
+import org.voidsink.anewjkuapp.kusss.ExamGrade;
+import org.voidsink.anewjkuapp.provider.KusssContentProvider;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+import edu.emory.mathcs.backport.java.util.Collections;
+
+public class GradeFragment2 extends SlidingTabsFragment implements
 		ContentObserverListener {
 
-	private static final String TAG = GradeFragment.class.getSimpleName();
+	private static final String TAG = GradeFragment2.class.getSimpleName();
 	private BaseContentObserver mGradeObserver;
 
-	@Override
-	protected PagerAdapter createPagerAdapter(FragmentManager fm) {
-		return new GradeDetailPageAdapter(fm, getActivity());
-	}
-
-	@Override
-	protected boolean useTabHost() {
-		return false;
-	}
+    private List<ExamGrade> mGrades = new ArrayList<ExamGrade>();
+    private List<String> mTerms = new ArrayList<String>();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,7 +60,16 @@ public class GradeFragment extends IndicatedViewPagerFragment implements
 				mGradeObserver);
 	}
 
-	@Override
+    @Override
+    protected void fillTabs(List<SlidingTabItem> mTabs) {
+        mTabs.add(new GradeTabItem("alle Semester", null, this.mGrades));
+
+        for (String term: mTerms) {
+            mTabs.add(new GradeTabItem(term, term, this.mGrades));
+        }
+    }
+
+    @Override
 	public void onDestroy() {
 		super.onDestroy();
 
@@ -81,7 +83,7 @@ public class GradeFragment extends IndicatedViewPagerFragment implements
 
 			private ProgressDialog progressDialog;
 			private List<ExamGrade> grades;
-			private ArrayList<String> terms;
+			private List<String> terms;
 
 			@Override
 			protected void onPreExecute() {
@@ -120,8 +122,10 @@ public class GradeFragment extends IndicatedViewPagerFragment implements
 
 				Log.i(TAG, "loadGrades " + this.terms);
 
-				((GradeDetailPageAdapter) getPagerAdapter()).setData(
-						this.grades, this.terms);
+                mGrades = this.grades;
+                mTerms = this.terms;
+
+                updateData();
 
 				super.onPostExecute(result);
 			}

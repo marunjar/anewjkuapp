@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- From: file:/C:/Users/paul/AndroidStudioProjects/anewjkuapp/aNewJKUApp/src/main/res/values-v10/styles.xml -->
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/src/main/res/values-v10/styles.xml -->
     <eat-comment />
 
     <style name="AppBaseTheme" parent="@style/Theme.AppCompat">
