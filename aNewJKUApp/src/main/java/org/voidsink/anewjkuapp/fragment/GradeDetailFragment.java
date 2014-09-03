@@ -36,7 +36,7 @@ public class GradeDetailFragment extends BaseFragment {
 		this(null);
 	}
 
-	private void addIfRecent(List<ExamGrade> grades, ExamGrade grade) {
+    private void addIfRecent(List<ExamGrade> grades, ExamGrade grade) {
 		int i = 0;
 		while (i < grades.size()) {
 			ExamGrade g = grades.get(i);
