@@ -17,6 +17,9 @@ local.properties
 .loadpath
 
 .idea/
+/.idea
+*/.idea/
+
 /build
 */build/
 build/
