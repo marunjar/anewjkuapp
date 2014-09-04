@@ -17,6 +17,8 @@ local.properties
 .loadpath
 
 .idea/
+/build
+*/build/
 build/
 
 # External tool builders
