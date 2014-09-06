@@ -9,6 +9,7 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.view.CalendarCardListView;
 
 import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -60,7 +61,14 @@ public class CalendarCardArrayAdapter extends CardArrayAdapter implements Sticky
     public long getHeaderId(int position) {
         Card card = getItem(position);
         if (card instanceof CalendarCard) {
-            return ((CalendarCard) card).getDtStart();
+
+            Calendar cal = Calendar.getInstance(); // locale-specific
+            cal.setTimeInMillis(((CalendarCard) card).getDtStart());
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            return cal.getTimeInMillis();
         }
         return 0;
     }
