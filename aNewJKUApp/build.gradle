@@ -40,6 +40,7 @@ dependencies {
     compile 'com.github.japgolly.android:svg-android:2.0.5'
     compile 'com.google.android.gms:play-services:+'
     compile 'com.android.support:appcompat-v7:20.0.0'
+    compile 'com.github.gabrielemariotti.cards:library:1.9.0'
     compile files('libs/androidplot-core-0.6.1.jar')
     compile files('libs/backport-util-concurrent-3.1.jar')
     compile files('libs/commons-codec-1.8.jar')
