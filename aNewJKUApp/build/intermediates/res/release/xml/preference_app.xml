@@ -22,4 +22,4 @@
             android:title="@string/pref_diagrams_use_lva_bar_chart_title" />
     </PreferenceCategory>
     
-</PreferenceScreen><!-- From: file:/C:/Users/paul/AndroidStudioProjects/anewjkuapp/aNewJKUApp/src/main/res/xml/preference_app.xml -->
+</PreferenceScreen><!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/src/main/res/xml/preference_app.xml -->

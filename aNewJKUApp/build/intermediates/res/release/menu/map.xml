@@ -16,4 +16,4 @@
         android:icon="@drawable/ic_menu_mylocation"
         android:checkable="true"
         app:showAsAction="always"/>
-</menu><!-- From: file:/C:/Users/paul/AndroidStudioProjects/anewjkuapp/aNewJKUApp/src/main/res/menu/map.xml -->
+</menu><!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/src/main/res/menu/map.xml -->

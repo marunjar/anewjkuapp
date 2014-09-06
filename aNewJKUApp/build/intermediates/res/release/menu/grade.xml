@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="org.voidsink.anewjkuapp.fragment.GradeFragment" >
+    tools:context="org.voidsink.anewjkuapp.fragment.GradeFragment2" >
 
     <item
         android:id="@+id/action_refresh_grades"
@@ -9,4 +9,4 @@
         android:title="@string/action_refresh"
         app:showAsAction="ifRoom"/>
 
-</menu><!-- From: file:/C:/Users/paul/AndroidStudioProjects/anewjkuapp/aNewJKUApp/src/main/res/menu/grade.xml -->
+</menu><!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/src/main/res/menu/grade.xml -->
