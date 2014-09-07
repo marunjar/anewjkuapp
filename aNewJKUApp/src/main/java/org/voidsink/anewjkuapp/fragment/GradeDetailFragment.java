@@ -1,17 +1,5 @@
 package org.voidsink.anewjkuapp.fragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.voidsink.anewjkuapp.AppUtils;
-import org.voidsink.anewjkuapp.GradeListAdapter;
-import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.base.BaseFragment;
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
-import org.voidsink.anewjkuapp.kusss.Grade;
-
-import com.androidplot.pie.PieChart;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,22 +7,32 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListAdapter;
-import android.widget.ExpandableListView;
+
+import com.androidplot.pie.PieChart;
+
+import org.voidsink.anewjkuapp.AppUtils;
+import org.voidsink.anewjkuapp.GradeCard;
+import org.voidsink.anewjkuapp.GradeCardArrayAdapter;
+import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.base.BaseFragment;
+import org.voidsink.anewjkuapp.kusss.ExamGrade;
+import org.voidsink.anewjkuapp.kusss.Grade;
+import org.voidsink.anewjkuapp.view.GradeCardListView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import it.gmariotti.cardslib.library.internal.Card;
 
 @SuppressLint("ValidFragment")
 public class GradeDetailFragment extends BaseFragment {
 
 	public static final String TAG = GradeDetailFragment.class.getSimpleName();
 
-	private ExpandableListView mListView;
-	private GradeListAdapter mAdapter;
+	private GradeCardListView mListView;
+	private GradeCardArrayAdapter mAdapter;
 
-	private ArrayList<ExamGrade> mGrades;
-
-	public GradeDetailFragment() {
-		this(null);
-	}
+	private List<ExamGrade> mGrades;
 
     private void addIfRecent(List<ExamGrade> grades, ExamGrade grade) {
 		int i = 0;
@@ -60,7 +58,7 @@ public class GradeDetailFragment extends BaseFragment {
 	}
 
 	public GradeDetailFragment(String term, List<ExamGrade> grades) {
-		this.mGrades = new ArrayList<ExamGrade>();
+        this.mGrades = new ArrayList<ExamGrade>();
 		if (grades != null) {
 			for (ExamGrade grade : grades) {
 				if (term == null || grade.getTerm().equals(term)) {
@@ -68,6 +66,7 @@ public class GradeDetailFragment extends BaseFragment {
 				}
 			}
 		}
+        AppUtils.sortGrades(this.mGrades);
 	}
 
 	public GradeDetailFragment(List<ExamGrade> grades) {
@@ -77,17 +76,17 @@ public class GradeDetailFragment extends BaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_grade_detail, container,
+		View view = inflater.inflate(R.layout.fragment_card_grade_detail, container,
 				false);
 
-		mListView = (ExpandableListView) view.findViewById(R.id.grade_list);
-		mAdapter = new GradeListAdapter(getContext());
-		mAdapter.addAll(this.mGrades);
-		mListView.setAdapter((ExpandableListAdapter) mAdapter);
+		mListView = (GradeCardListView) view.findViewById(R.id.grade_card_list);
 
-		if (mAdapter.getGroupCount() == 1) {
-			mListView.expandGroup(0);
-		}
+        List<Card> gradeCards = new ArrayList<>();
+        for (ExamGrade g : this.mGrades) {
+            gradeCards.add(new GradeCard(getContext(), g));
+        }
+        mAdapter = new GradeCardArrayAdapter(getContext(), gradeCards);
+		mListView.setAdapter(mAdapter);
 
 		PieChart pieChart = (PieChart) view.findViewById(R.id.grade_pie_chart);
 

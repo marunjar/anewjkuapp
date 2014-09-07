@@ -23,6 +23,6 @@
     <org.voidsink.anewjkuapp.view.LvaCardListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/lva_card_lvas">
+        android:id="@+id/lva_card_list">
     </org.voidsink.anewjkuapp.view.LvaCardListView>
 </LinearLayout>

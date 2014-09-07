@@ -428,7 +428,7 @@ public class AppUtils {
 		}
 	}
 
-	public static double getGradeCount(ArrayList<ExamGrade> grades,
+	public static double getGradeCount(List<ExamGrade> grades,
 			Grade grade, boolean ectsWeighting) {
 		double count = 0;
 		for (ExamGrade examGrade : grades) {

@@ -7965,16 +7965,16 @@ false
                     msgid="3588849162933574182" >"Več možnosti"
                 </string>
                 <string
-                    name="abc_shareactionprovider_share_with"
-                    msgid="3421042268587513524" >"Deljenje z"
+                    name="abc_action_mode_done"
+                    msgid="4076576682505996667" >"Končano"
                 </string>
                 <string
                     name="abc_activity_chooser_view_see_all"
                     msgid="7468859129482906941" >"Pokaži vse"
                 </string>
                 <string
-                    name="abc_action_mode_done"
-                    msgid="4076576682505996667" >"Končano"
+                    name="abc_shareactionprovider_share_with"
+                    msgid="3421042268587513524" >"Deljenje z"
                 </string>
                 <string
                     name="abc_action_bar_home_description"
@@ -7993,12 +7993,12 @@ false
                     msgid="8264924765203268293" >"Iskanje"
                 </string>
                 <string
-                    name="abc_searchview_description_submit"
-                    msgid="8928215447528550784" >"Pošiljanje poizvedbe"
-                </string>
-                <string
                     name="abc_searchview_description_query"
                     msgid="2550479030709304392" >"Iskalna poizvedba"
+                </string>
+                <string
+                    name="abc_searchview_description_submit"
+                    msgid="8928215447528550784" >"Pošiljanje poizvedbe"
                 </string>
                 <string
                     name="abc_searchview_description_voice"
@@ -10995,12 +10995,12 @@ normal
                 path="D:\GitHub\anewjkuapp\aNewJKUApp\build\intermediates\exploded-aar\com.google.android.gms\play-services\5.2.08\res\values-be\common_strings.xml"
                 qualifiers="be" >
                 <string
-                    name="common_google_play_services_unsupported_text"
-                    msgid="3542578567569488671" >"Службы Google Play, да якiх прывязаны некаторыя прыкладаннi, не падтрымлiваюцца на вашай прыладзе. Па дапамогу звярнiцеся да вытворцы."
-                </string>
-                <string
                     name="common_google_play_services_unknown_issue"
                     msgid="4762332809710093730" >"Невядомая праблема са службамі Google Play."
+                </string>
+                <string
+                    name="common_google_play_services_unsupported_text"
+                    msgid="3542578567569488671" >"Службы Google Play, да якiх прывязаны некаторыя прыкладаннi, не падтрымлiваюцца на вашай прыладзе. Па дапамогу звярнiцеся да вытворцы."
                 </string>
                 <string
                     name="common_google_play_services_update_title"
@@ -11174,6 +11174,14 @@ normal
                     msgid="2429381841831957106" >"Вход с Google"
                 </string>
                 <string
+                    name="common_google_play_services_network_error_text"
+                    msgid="9038847255613537209" >"За свързване с услугите за Google Play се изисква връзка за данни."
+                </string>
+                <string
+                    name="common_google_play_services_notification_needs_update_title"
+                    msgid="1388129345631079938" >"Приложение изисква актуализирането на услугите за Google Play."
+                </string>
+                <string
                     name="common_google_play_services_error_notification_requested_by_msg"
                     msgid="2443362625939284971" >"Заявено от 
 <ns1:g id="APP_NAME" >
@@ -11183,14 +11191,6 @@ normal
                 <string
                     name="common_google_play_services_unsupported_date_text"
                     msgid="4725396522367789365" >"Изглежда, че датата на устройството е неправилна. Моля, проверете я."
-                </string>
-                <string
-                    name="common_google_play_services_network_error_text"
-                    msgid="9038847255613537209" >"За свързване с услугите за Google Play се изисква връзка за данни."
-                </string>
-                <string
-                    name="common_google_play_services_notification_needs_update_title"
-                    msgid="1388129345631079938" >"Приложение изисква актуализирането на услугите за Google Play."
                 </string>
             </file>
             <file
@@ -14278,16 +14278,16 @@ normal
                     msgid="1852570676146674985" >"Google Play Services-ის შეცდომა"
                 </string>
                 <string
-                    name="common_google_play_services_install_text_tablet"
-                    msgid="1589957570365247855" >"ეს აპი ვერ გაეშვება Google Play სერვისების გარეშე, რაც თქვენს ტელეფონზე ვერ იძებნება."
+                    name="common_google_play_services_invalid_account_title"
+                    msgid="1066672360770936753" >"ანგარიში არასწორია"
                 </string>
                 <string
                     name="common_google_play_services_notification_needs_installation_title"
                     msgid="8120534356798772974" >"აპლიკაცია საჭიროება Google Play Services-ის ინსტალაციას."
                 </string>
                 <string
-                    name="common_google_play_services_invalid_account_title"
-                    msgid="1066672360770936753" >"ანგარიში არასწორია"
+                    name="common_google_play_services_install_text_tablet"
+                    msgid="1589957570365247855" >"ეს აპი ვერ გაეშვება Google Play სერვისების გარეშე, რაც თქვენს ტელეფონზე ვერ იძებნება."
                 </string>
                 <string
                     name="common_signin_button_text_long"
@@ -14314,20 +14314,20 @@ normal
                     msgid="448354684997260580" >"ეს აპი ვერ გაეშვება, თუ Google Play სერვისებს არ განაახლებთ."
                 </string>
                 <string
-                    name="common_google_play_services_network_error_title"
-                    msgid="3827284619958211114" >"ქსელის შეცდომა"
-                </string>
-                <string
                     name="common_google_play_services_update_title"
                     msgid="6006316683626838685" >"Google Play სერვისების განახლება"
                 </string>
                 <string
-                    name="common_google_play_services_invalid_account_text"
-                    msgid="4983316348021735578" >"მითითებული ანგარიში ამ მოწყობილობაზე არ არსებობს. გთხოვთ, აირჩიოთ სხვა ანგარიში."
+                    name="common_google_play_services_network_error_title"
+                    msgid="3827284619958211114" >"ქსელის შეცდომა"
                 </string>
                 <string
                     name="common_google_play_services_notification_needs_update_title"
                     msgid="1388129345631079938" >"აპლიკაცია საჭიროებს Google Play Services-ის განახლებას."
+                </string>
+                <string
+                    name="common_google_play_services_invalid_account_text"
+                    msgid="4983316348021735578" >"მითითებული ანგარიში ამ მოწყობილობაზე არ არსებობს. გთხოვთ, აირჩიოთ სხვა ანგარიში."
                 </string>
                 <string
                     name="common_google_play_services_error_notification_requested_by_msg"
@@ -17594,24 +17594,24 @@ normal
                     msgid="3827284619958211114" >"Помилка мережі"
                 </string>
                 <string
-                    name="common_google_play_services_enable_title"
-                    msgid="529078775174559253" >"Увімкнути Google Play Послуги"
-                </string>
-                <string
                     name="common_google_play_services_update_button"
                     msgid="8932944190611227642" >"Оновити"
+                </string>
+                <string
+                    name="common_google_play_services_enable_title"
+                    msgid="529078775174559253" >"Увімкнути Google Play Послуги"
                 </string>
                 <string
                     name="common_google_play_services_notification_needs_installation_title"
                     msgid="8120534356798772974" >"Щоб додаток працював, потрібно встановити сервіси Google Play."
                 </string>
                 <string
-                    name="common_google_play_services_needs_enabling_title"
-                    msgid="2583358409598976717" >"Щоб додаток працював, потрібно ввімкнути сервіси Google Play."
-                </string>
-                <string
                     name="common_google_play_services_update_title"
                     msgid="6006316683626838685" >"Оновити Google Play Послуги"
+                </string>
+                <string
+                    name="common_google_play_services_needs_enabling_title"
+                    msgid="2583358409598976717" >"Щоб додаток працював, потрібно ввімкнути сервіси Google Play."
                 </string>
                 <string
                     name="common_google_play_services_notification_ticker"
@@ -17630,15 +17630,15 @@ normal
                     msgid="1589957570365247855" >"Ця програма не запуститься без Google Play Послуг, яких немає на вашому планшетному ПК."
                 </string>
                 <string
-                    name="common_google_play_services_unknown_issue"
-                    msgid="4762332809710093730" >"Google Play Послуги – невідома проблема."
-                </string>
-                <string
                     name="common_google_play_services_error_notification_requested_by_msg"
                     msgid="2443362625939284971" >"Запит від додатка 
 <ns1:g id="APP_NAME" >
 %1$s
                     </ns1:g>"
+                </string>
+                <string
+                    name="common_google_play_services_unknown_issue"
+                    msgid="4762332809710093730" >"Google Play Послуги – невідома проблема."
                 </string>
                 <string
                     name="common_signin_button_text_long"
@@ -17996,12 +17996,12 @@ normal
                 path="D:\GitHub\anewjkuapp\aNewJKUApp\build\intermediates\exploded-aar\com.google.android.gms\play-services\5.2.08\res\values-zh-rHK\common_strings.xml"
                 qualifiers="zh-rHK" >
                 <string
-                    name="common_google_play_services_install_title"
-                    msgid="26645092511305524" >"取得 Google Play 服務"
-                </string>
-                <string
                     name="common_google_play_services_update_button"
                     msgid="8932944190611227642" >"更新"
+                </string>
+                <string
+                    name="common_google_play_services_install_title"
+                    msgid="26645092511305524" >"取得 Google Play 服務"
                 </string>
                 <string
                     name="common_google_play_services_unsupported_date_text"
@@ -18016,12 +18016,12 @@ normal
                     msgid="6006316683626838685" >"更新 Google Play 服務"
                 </string>
                 <string
-                    name="common_google_play_services_enable_title"
-                    msgid="529078775174559253" >"啟用 Google Play 服務"
-                </string>
-                <string
                     name="common_google_play_services_unknown_issue"
                     msgid="4762332809710093730" >"Google Play 服務出現不明問題。"
+                </string>
+                <string
+                    name="common_google_play_services_enable_title"
+                    msgid="529078775174559253" >"啟用 Google Play 服務"
                 </string>
                 <string
                     name="common_google_play_services_enable_text"
@@ -18079,12 +18079,12 @@ normal
                     msgid="1589957570365247855" >"您的平板電腦未安裝 Google Play 服務，安裝後才能執行這個應用程式。"
                 </string>
                 <string
-                    name="common_google_play_services_notification_ticker"
-                    msgid="1852570676146674985" >"Google Play 服務錯誤"
-                </string>
-                <string
                     name="common_google_play_services_notification_needs_update_title"
                     msgid="1388129345631079938" >"必須更新「Google Play 服務」，才能使用應用程式。"
+                </string>
+                <string
+                    name="common_google_play_services_notification_ticker"
+                    msgid="1852570676146674985" >"Google Play 服務錯誤"
                 </string>
                 <string
                     name="common_google_play_services_notification_needs_installation_title"
@@ -18799,11 +18799,6 @@ normal
                 qualifiers=""
                 type="layout" />
             <file
-                name="calendar_list_section"
-                path="D:\GitHub\anewjkuapp\aNewJKUApp\src\main\res\layout\calendar_list_section.xml"
-                qualifiers=""
-                type="layout" />
-            <file
                 name="drawer_menu_item"
                 path="D:\GitHub\anewjkuapp\aNewJKUApp\src\main\res\layout\drawer_menu_item.xml"
                 qualifiers=""
@@ -18841,11 +18836,6 @@ normal
             <file
                 name="fragment_exam"
                 path="D:\GitHub\anewjkuapp\aNewJKUApp\src\main\res\layout\fragment_exam.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="fragment_grade_detail"
-                path="D:\GitHub\anewjkuapp\aNewJKUApp\src\main\res\layout\fragment_grade_detail.xml"
                 qualifiers=""
                 type="layout" />
             <file
@@ -18906,11 +18896,6 @@ normal
             <file
                 name="grade_list_grade"
                 path="D:\GitHub\anewjkuapp\aNewJKUApp\src\main\res\layout\grade_list_grade.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="grade_list_type"
-                path="D:\GitHub\anewjkuapp\aNewJKUApp\src\main\res\layout\grade_list_type.xml"
                 qualifiers=""
                 type="layout" />
             <file
@@ -19469,6 +19454,21 @@ match_parent
             <file
                 name="lva_card_header"
                 path="D:\GitHub\anewjkuapp\aNewJKUApp\src\main\res\layout\lva_card_header.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="grade_card_header"
+                path="D:\GitHub\anewjkuapp\aNewJKUApp\src\main\res\layout\grade_card_header.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="grade_card_popup_menu"
+                path="D:\GitHub\anewjkuapp\aNewJKUApp\src\main\res\menu\grade_card_popup_menu.xml"
+                qualifiers=""
+                type="menu" />
+            <file
+                name="fragment_card_grade_detail"
+                path="D:\GitHub\anewjkuapp\aNewJKUApp\src\main\res\layout\fragment_card_grade_detail.xml"
                 qualifiers=""
                 type="layout" />
         </source>

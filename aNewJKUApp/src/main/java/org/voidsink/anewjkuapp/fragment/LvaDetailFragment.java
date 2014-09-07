@@ -115,7 +115,7 @@ public class LvaDetailFragment extends BaseFragment {
 		View view = inflater.inflate(R.layout.fragment_card_lva_detail, container,
 				false);
 
-        mListView = (LvaCardListView) view.findViewById(R.id.lva_card_lvas);
+        mListView = (LvaCardListView) view.findViewById(R.id.lva_card_list);
 
 		double mDoneEcts = AppUtils.getECTS(LvaState.OPEN, mLvas);
 		double mOpenEcts = AppUtils.getECTS(LvaState.DONE, mLvas);

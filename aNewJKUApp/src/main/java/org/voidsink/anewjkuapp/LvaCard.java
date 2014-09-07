@@ -68,10 +68,10 @@ public class LvaCard extends Card {
     }
 
     public LvaCard(Context context, int innerLayout) {
-        super(new ContextThemeWrapper(context, R.style.AppTheme), innerLayout);
+        super(context, innerLayout);
 
         // init header
-        CardHeader header = new CardHeader(new ContextThemeWrapper(context, R.style.AppTheme));
+        CardHeader header = new CardHeader(context);
 
         header.setPopupMenu(R.menu.lva_card_popup_menu, new CardHeader.OnClickCardHeaderPopupMenuListener(){
             @Override
