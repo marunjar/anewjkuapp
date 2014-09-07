@@ -117,8 +117,8 @@ public class LvaDetailFragment extends BaseFragment {
 
         mListView = (LvaCardListView) view.findViewById(R.id.lva_card_list);
 
-		double mDoneEcts = AppUtils.getECTS(LvaState.OPEN, mLvas);
-		double mOpenEcts = AppUtils.getECTS(LvaState.DONE, mLvas);
+        double mOpenEcts = AppUtils.getECTS(LvaState.OPEN, mLvas);
+		double mDoneEcts = AppUtils.getECTS(LvaState.DONE, mLvas);
 
 		mAdapter = new LvaCardArrayAdapter(getContext(), mLvaCards);
         mListView.setAdapter(mAdapter);

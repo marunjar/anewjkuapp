@@ -5,8 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.view.GradeCardListView;
 
+import java.text.Format;
+import java.util.ArrayList;
 import java.util.List;
 
 import it.gmariotti.cardslib.library.internal.Card;
@@ -45,6 +48,16 @@ public class GradeCardArrayAdapter extends CardArrayAdapter implements StickyLis
         if (card instanceof GradeCard) {
             Card headerCard = new Card(getContext());
             String header = getContext().getString(((GradeCard) card).getGrade().getGradeType().getStringResID());
+
+            List<ExamGrade> grades = new ArrayList<>();
+            for (int i = 0; i < getCount(); i++) {
+                Card c = getItem(i);
+                if (c instanceof GradeCard) {
+                    grades.add(((GradeCard) c).getGrade());
+                }
+            }
+            header += String.format(" (ø %.2f)", AppUtils.getAvgGrade(grades, false, ((GradeCard) card).getGrade().getGradeType()));
+
             headerCard.setTitle(header);
             cardView.setCard(headerCard);
         }

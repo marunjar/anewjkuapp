@@ -14,6 +14,7 @@ import java.util.List;
 import org.voidsink.anewjkuapp.fragment.MapFragment;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Grade;
+import org.voidsink.anewjkuapp.kusss.GradeType;
 import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.kusss.LvaState;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
@@ -350,19 +351,21 @@ public class AppUtils {
 	}
 
 	public static double getAvgGrade(List<ExamGrade> grades,
-			boolean ectsWeighting) {
+			boolean ectsWeighting, GradeType type) {
 		double sum = 0;
 		double count = 0;
 
 		if (grades != null) {
 			for (ExamGrade grade : grades) {
-				if (!ectsWeighting) {
-					sum += grade.getGrade().getValue();
-					count++;
-				} else {
-					sum += grade.getEcts() * grade.getGrade().getValue();
-					count += grade.getEcts();
-				}
+                if (type == GradeType.ALL || type == grade.getGradeType()) {
+                    if (!ectsWeighting) {
+                        sum += grade.getGrade().getValue();
+                        count++;
+                    } else {
+                        sum += grade.getEcts() * grade.getGrade().getValue();
+                        count += grade.getEcts();
+                    }
+                }
 			}
 		}
 
