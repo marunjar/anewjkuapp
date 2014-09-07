@@ -5,8 +5,8 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_marginRight">8dp</item>
         <item name="android:background">#ff339bff</item>
-    </style> 
-    
+    </style>
+
     <!--
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
@@ -32,10 +32,8 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
-
     <style name="AppTheme.Light" parent="AppBaseTheme.Light">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
-    
-    
+
 </resources>

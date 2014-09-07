@@ -125,4 +125,7 @@
     <string name="lva_all_terms">alle Semester</string>
     <string name="calendar_exam">JKU Prüfungen</string>
     <string name="calendar_lva">JKU LVAs</string>
+    <string name="about_force_logout">Ausloggen</string>
+    <string name="menu_show_in_calendar">in Kalender anzeigen</string>
+    <string name="menu_show_on_map">auf Karte anzeigen</string>
 </resources>

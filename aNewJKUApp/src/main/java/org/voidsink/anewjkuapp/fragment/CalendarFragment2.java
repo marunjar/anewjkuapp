@@ -10,11 +10,11 @@ import org.voidsink.anewjkuapp.AppUtils;
 import org.voidsink.anewjkuapp.ImportCalendarTask;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
+import org.voidsink.anewjkuapp.calendar.CalendarCard;
+import org.voidsink.anewjkuapp.calendar.CalendarCardArrayAdapter;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
-import org.voidsink.anewjkuapp.calendar.CalendarEventAdapter;
-import org.voidsink.anewjkuapp.calendar.CalendarListEvent;
-import org.voidsink.anewjkuapp.calendar.CalendarListItem;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
+import org.voidsink.anewjkuapp.view.CalendarCardListView;
 
 import android.accounts.Account;
 import android.app.ProgressDialog;
@@ -33,28 +33,29 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListView;
 
-public class CalendarFragment extends BaseFragment {
+import it.gmariotti.cardslib.library.internal.Card;
 
-	private static final String TAG = CalendarFragment.class.getSimpleName();
+public class CalendarFragment2 extends BaseFragment {
 
-	private ListView mListView;
-	private CalendarEventAdapter mAdapter;
+	private static final String TAG = CalendarFragment2.class.getSimpleName();
+
+	private CalendarCardListView mListView;
+	private CalendarCardArrayAdapter mAdapter;
 	private ContentObserver mCalendarObserver;
+    private List<Card> mCards = new ArrayList<>();
 
 	long now = 0, then = 0;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_calendar, container,
+		View view = inflater.inflate(R.layout.fragment_card_calendar, container,
 				false);
 		
-		mListView = (ListView) view.findViewById(R.id.calendar_events);
+		mListView = (CalendarCardListView) view.findViewById(R.id.calendar_card_events);
 
-		Button loadMore = (Button) inflater.inflate(R.layout.listview_footer,
-				mListView, false);
+		Button loadMore = (Button) view.findViewById(R.id.calendar_card_load);
 
 		loadMore.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -64,9 +65,9 @@ public class CalendarFragment extends BaseFragment {
 		});
 		loadMore.setClickable(true);
 
-		mAdapter = new CalendarEventAdapter(getContext());
+		mAdapter = new CalendarCardArrayAdapter(getContext(), mCards);
 
-		mListView.addFooterView(loadMore);
+//		mListView.addFooterView(loadMore);
 		mListView.setAdapter(mAdapter);
 
 		return view;
@@ -122,13 +123,13 @@ public class CalendarFragment extends BaseFragment {
 
 	private class CalendarLoadTask extends AsyncTask<String, Void, Void> {
 		private ProgressDialog progressDialog;
-		private List<CalendarListItem> mEvents;
+		private List<Card> mCards;
 		private Map<String, Integer> mColors;
 		private Context mContext;
 
 		@Override
 		protected Void doInBackground(String... urls) {
-			mEvents = new ArrayList<CalendarListItem>();
+            mCards = new ArrayList<Card>();
 
 			// fetch calendar colors
 			this.mColors = new HashMap<String, Integer>();
@@ -148,7 +149,7 @@ public class CalendarFragment extends BaseFragment {
 			Account mAccount = AppUtils.getAccount(mContext);
 			if (mAccount != null) {
 				String calIDLva = CalendarUtils.getCalIDByName(mContext,
-						mAccount, CalendarUtils.ARG_CALENDAR_LVA);
+                        mAccount, CalendarUtils.ARG_CALENDAR_LVA);
 				String calIDExam = CalendarUtils.getCalIDByName(mContext,
 						mAccount, CalendarUtils.ARG_CALENDAR_EXAM);
 
@@ -201,7 +202,8 @@ public class CalendarFragment extends BaseFragment {
 				} while (c != null && !eventsFound);
 				if (c != null && !c.isClosed()) {
 					while (c.moveToNext()) {
-						mEvents.add(new CalendarListEvent(
+						mCards.add(new CalendarCard(mContext,
+                                c.getLong(ImportCalendarTask.COLUMN_EVENT_ID),
 								mColors.get(c
 										.getString(ImportCalendarTask.COLUMN_EVENT_CAL_ID)),
 								c.getString(ImportCalendarTask.COLUMN_EVENT_TITLE),
@@ -220,7 +222,7 @@ public class CalendarFragment extends BaseFragment {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			mContext = CalendarFragment.this.getContext();
+			mContext = CalendarFragment2.this.getContext();
 			if (mContext == null) {
 				Log.e(TAG, "context is null");
 			}
@@ -233,7 +235,7 @@ public class CalendarFragment extends BaseFragment {
 		@Override
 		protected void onPostExecute(Void result) {
 			mAdapter.clear();
-			mAdapter.addAll(CalendarEventAdapter.insertSections(mEvents));
+			mAdapter.addAll(mCards);
 			progressDialog.dismiss();
 			super.onPostExecute(result);
 		}

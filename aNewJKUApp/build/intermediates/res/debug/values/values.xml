@@ -94,6 +94,24 @@
     <color name="abc_search_url_text_normal">#7fa87f</color>
     <color name="abc_search_url_text_pressed">@android:color/black</color>
     <color name="abc_search_url_text_selected">@android:color/black</color>
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.github.gabrielemariotti.cards/library/1.9.0/res/values/values.xml -->
+    <eat-comment />
+
+    <color name="card_activated">#CFE9F3</color>
+    <color name="card_activated_kitkat">#ADE1F4</color>
+    <color name="card_background">#FFF</color>
+    <color name="card_backgroundExpand">#515254</color>
+    <color name="card_background_header">#FFF</color>
+    <color name="card_base_cardwithlist_background_list_color">#10000000</color>
+    <color name="card_base_cardwithlist_divider_color">#E5E5E5</color>
+    <color name="card_expand_title_color">#B3B2B2</color>
+    <color name="card_foreground_activated">#99CFE9F3</color>
+    <color name="card_foreground_activated_kitkat">#99ADE1F4</color>
+    <color name="card_pressed">#7E0099CC</color>
+    <color name="card_pressed_kitkat">#10000000</color>
+    <color name="card_section_container_color">@android:color/transparent</color>
+    <color name="card_section_title_color">@android:color/black</color>
+    <color name="card_text_color_header">#000</color>
     <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.google.android.gms/play-services/5.2.08/res/values/common_colors.xml -->
     <eat-comment />
 
@@ -281,6 +299,17 @@
         <!-- Present the text in ALL CAPS. This may use a small-caps form when available. -->
         <attr name="textAllCaps" format="reference|boolean" />
     </declare-styleable>
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.github.gabrielemariotti.cards/library/1.9.0/res/values/values.xml -->
+    <eat-comment />
+
+    <declare-styleable name="ForegroundLinearLayout">
+        <attr name="android:foreground" />
+        <attr name="android:foregroundInsidePadding" />
+        <attr name="android:foregroundGravity" />
+    </declare-styleable>
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.android.support/appcompat-v7/20.0.0/res/values/values.xml -->
+    <eat-comment />
+
     <declare-styleable name="LinearLayoutICS">
 
         <!-- Drawable to use as a vertical divider between buttons. -->
@@ -550,6 +579,43 @@
         -->
         <attr name="disableChildrenWhenDisabled" format="boolean" />
     </declare-styleable>
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/se.emilsjolander/stickylistheaders/2.5.0/res/values/values.xml -->
+    <eat-comment />
+
+    <declare-styleable name="StickyListHeadersListView">
+
+        <!-- View attributes -->
+        <attr name="android:clipToPadding" />
+        <attr name="android:scrollbars" />
+        <attr name="android:overScrollMode" />
+        <attr name="android:padding" />
+        <attr name="android:paddingLeft" />
+        <attr name="android:paddingTop" />
+        <attr name="android:paddingRight" />
+        <attr name="android:paddingBottom" />
+
+        <!-- ListView attributes -->
+        <attr name="android:fadingEdgeLength" />
+        <attr name="android:requiresFadingEdge" />
+        <attr name="android:cacheColorHint" />
+        <attr name="android:choiceMode" />
+        <attr name="android:drawSelectorOnTop" />
+        <attr name="android:fastScrollEnabled" />
+        <attr name="android:fastScrollAlwaysVisible" />
+        <attr name="android:listSelector" />
+        <attr name="android:scrollingCache" />
+        <attr name="android:scrollbarStyle" />
+        <attr name="android:divider" />
+        <attr name="android:dividerHeight" />
+        <attr name="android:transcriptMode" />
+
+        <!-- StickyListHeaders attributes -->
+        <attr name="hasStickyHeaders" format="boolean" />
+        <attr name="isDrawingListUnderStickyHeader" format="boolean" />
+    </declare-styleable>
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.android.support/appcompat-v7/20.0.0/res/values/values.xml -->
+    <eat-comment />
+
     <declare-styleable name="Theme">
 
         <!-- Default ActionBar dropdown style. -->
@@ -664,6 +730,31 @@
             <enum name="monochrome" value="2" />
         </attr>
     </declare-styleable>
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.github.gabrielemariotti.cards/library/1.9.0/res/values/values.xml -->
+    <eat-comment />
+
+    <declare-styleable name="card_listItem">
+
+        <!-- Height of divider used in the list -->
+        <attr name="card_list_item_dividerHeight" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="card_options">
+
+        <!-- Layout to build a card. Default value is  @layout/card_base_layout -->
+        <attr name="card_layout_resourceID" format="reference" />
+
+        <!-- Layout to build a shadow. Default value is @layout/base_shadow_layout -->
+        <attr name="card_shadow_layout_resourceID" format="reference" />
+
+        <!-- Layout to build a Header. Default value is @layout/base_header_layout -->
+        <attr name="card_header_layout_resourceID" format="reference" />
+
+        <!-- Layout to build a Thumbnail. Default value is @layout/base_thumbnail_layout -->
+        <attr name="card_thumbnail_layout_resourceID" format="reference" />
+
+        <!-- Layout used by card in a ListView. Default value is  @layout/list_card_layout -->
+        <attr name="list_card_layout_resourceID" format="reference" />
+    </declare-styleable>
     <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.android.support/appcompat-v7/20.0.0/res/values/values.xml -->
     <eat-comment />
 
@@ -689,6 +780,62 @@
 
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.github.gabrielemariotti.cards/library/1.9.0/res/values/values.xml -->
+    <eat-comment />
+
+    <dimen name="card_background_default_radius">2dip</dimen>
+    <dimen name="card_base_cardwithlist_dividerHeight">1dp</dimen>
+    <dimen name="card_base_cardwithlist_layout_leftmargin">0dp</dimen>
+    <dimen name="card_base_cardwithlist_layout_rightmargin">0dp</dimen>
+    <dimen name="card_base_cardwithlist_list_margin_left">0dp</dimen>
+    <dimen name="card_base_cardwithlist_list_margin_top">10dp</dimen>
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/src/main/res/values/dimens.xml -->
+    <eat-comment />
+
+    <dimen name="card_base_empty_height">10dp</dimen>
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.github.gabrielemariotti.cards/library/1.9.0/res/values/values.xml -->
+    <eat-comment />
+
+    <dimen name="card_content_outer_view_margin_bottom">0dp</dimen>
+    <dimen name="card_content_outer_view_margin_left">0dp</dimen>
+    <dimen name="card_content_outer_view_margin_right">0dp</dimen>
+    <dimen name="card_content_outer_view_margin_top">0dp</dimen>
+    <dimen name="card_expand_layout_padding">2dp</dimen>
+    <dimen name="card_expand_simple_title_paddingLeft">10dp</dimen>
+    <dimen name="card_expand_simple_title_paddingRight">10dp</dimen>
+    <dimen name="card_expand_simple_title_text_size">14sp</dimen>
+    <dimen name="card_header_button_margin_right">2dp</dimen>
+    <dimen name="card_header_button_overflow_margin_right">3dp</dimen>
+    <dimen name="card_header_button_padding_bottom">0dp</dimen>
+    <dimen name="card_header_button_padding_left">10dp</dimen>
+    <dimen name="card_header_button_padding_right">0dp</dimen>
+    <dimen name="card_header_button_padding_top">0dp</dimen>
+    <dimen name="card_header_outer_view_margin_bottom">0dp</dimen>
+    <dimen name="card_header_outer_view_margin_left">0dp</dimen>
+    <dimen name="card_header_outer_view_margin_right">0dp</dimen>
+    <dimen name="card_header_outer_view_margin_top">0dp</dimen>
+    <dimen name="card_header_simple_title_margin_bottom">0dp</dimen>
+    <dimen name="card_header_simple_title_margin_left">10dp</dimen>
+    <dimen name="card_header_simple_title_margin_right">20dp</dimen>
+    <dimen name="card_header_simple_title_margin_top">5dp</dimen>
+    <dimen name="card_header_simple_title_text_size">20sp</dimen>
+    <dimen name="card_main_layout_view_margin_bottom">0dp</dimen>
+    <dimen name="card_main_layout_view_margin_left">0dp</dimen>
+    <dimen name="card_main_layout_view_margin_right">0dp</dimen>
+    <dimen name="card_main_layout_view_margin_top">0dp</dimen>
+    <dimen name="card_main_simple_title_margin_left">5dp</dimen>
+    <dimen name="card_main_simple_title_margin_top">0dp</dimen>
+    <dimen name="card_section_container_padding_left">15dp</dimen>
+    <dimen name="card_section_container_padding_right">15dp</dimen>
+    <dimen name="card_section_title">18sp</dimen>
+    <dimen name="card_section_title_margin_top">10dp</dimen>
+    <dimen name="card_shadow_height">3dp</dimen>
+    <dimen name="card_shadow_view_margin_bottom">0dp</dimen>
+    <dimen name="card_shadow_view_margin_left">@dimen/card_background_default_radius</dimen>
+    <dimen name="card_shadow_view_margin_right">@dimen/card_background_default_radius</dimen>
+    <dimen name="card_shadow_view_margin_top">0dp</dimen>
+    <dimen name="card_thumbnail_height">72dp</dimen>
+    <dimen name="card_thumbnail_width">72dp</dimen>
     <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.android.support/appcompat-v7/20.0.0/res/values/values.xml -->
     <eat-comment />
 
@@ -696,6 +843,17 @@
     <item name="dialog_fixed_height_minor" type="dimen">100%</item>
     <item name="dialog_fixed_width_major" type="dimen">320dp</item>
     <item name="dialog_fixed_width_minor" type="dimen">320dp</item>
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.github.gabrielemariotti.cards/library/1.9.0/res/values/values.xml -->
+    <eat-comment />
+
+    <dimen name="grid_card_padding_bottom">2dp</dimen>
+    <dimen name="grid_card_padding_left">2dp</dimen>
+    <dimen name="grid_card_padding_right">2dp</dimen>
+    <dimen name="grid_card_padding_top">2dp</dimen>
+    <dimen name="list_card_padding_bottom">6dp</dimen>
+    <dimen name="list_card_padding_left">8dp</dimen>
+    <dimen name="list_card_padding_right">8dp</dimen>
+    <dimen name="list_card_padding_top">2dp</dimen>
     <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/src/main/res/values/dimens.xml -->
     <eat-comment />
 
@@ -718,6 +876,20 @@
     <eat-comment />
 
     <integer name="google_play_services_version">5208000</integer>
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.github.gabrielemariotti.cards/library/1.9.0/res/values/values.xml -->
+    <eat-comment />
+
+    <integer name="list_card_swipe_distance_divisor">2</integer>
+    <integer name="list_card_undobar_hide_delay">5000</integer>
+
+    <plurals name="card_selected_items">
+        <item quantity="one">1 item selected</item>
+        <item quantity="other">%d items selected</item>
+    </plurals>
+    <plurals name="list_card_undo_items">
+        <item quantity="one">1 card removed</item>
+        <item quantity="other">%d cards removed</item>
+    </plurals>
     <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.android.support/appcompat-v7/20.0.0/res/values/values.xml -->
     <eat-comment />
 
@@ -739,6 +911,7 @@
 
     <string name="about_app_summary">Das ist der Versuch eine neue und aktuellere JKU-, KUSSS- bzw. OEH- App zu erstellen.</string>
     <string name="about_credits_title">Credits</string>
+    <string name="about_force_logout">Ausloggen</string>
     <string name="about_libraries_title">verwendete Bibliotheken</string>
     <string name="action_changelog">Change Log</string>
     <string name="action_refresh">Aktualisieren</string>
@@ -748,6 +921,11 @@
     <string name="app_name">JKU App</string>
     <string name="calendar_exam">JKU Prüfungen</string>
     <string name="calendar_lva">JKU LVAs</string>
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.github.gabrielemariotti.cards/library/1.9.0/res/values/values.xml -->
+    <eat-comment />
+
+    <string name="card_empty_cardwithlist_text">No data....</string>
+    <string name="card_progressbar_cardwithlist_text">Loading data...</string>
     <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/de.cketti.library.changelog/ckchangelog/1.2.0/res/values/values.xml -->
     <eat-comment />
 
@@ -755,14 +933,14 @@
     <string name="changelog_ok_button">OK</string>
     <string name="changelog_show_full">More…</string>
     <string name="changelog_title">What\'s New</string>
-    <string name="changelog_version_format">Version <ns1:g id="version_name">%s</ns1:g></string>
+    <string name="changelog_version_format">Version  <ns1:g id="version_name">%s</ns1:g></string>
     <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.google.android.gms/play-services/5.2.08/res/values/common_strings.xml -->
     <eat-comment />
 
     <string name="common_google_play_services_enable_button" msgid="2523291102206661146">Enable Google Play services</string>
     <string name="common_google_play_services_enable_text" msgid="227660514972886228">This app won\'t work unless you enable Google Play services.</string>
     <string name="common_google_play_services_enable_title" msgid="5122002158466380389">Enable Google Play services</string>
-    <string name="common_google_play_services_error_notification_requested_by_msg">Requested by <ns1:g id="app_name">%1$s</ns1:g></string>
+    <string name="common_google_play_services_error_notification_requested_by_msg">Requested by  <ns1:g id="app_name">%1$s</ns1:g></string>
     <string name="common_google_play_services_install_button" msgid="7153882981874058840">Get Google Play services</string>
     <string name="common_google_play_services_install_text_phone" msgid="2122112764540849864">This app won\'t run without Google Play services, which are missing from your phone.</string>
     <string name="common_google_play_services_install_text_tablet" msgid="7351599665250191022">This app won\'t run without Google Play services, which are missing from your tablet.</string>
@@ -819,11 +997,20 @@
     <string name="group_user">User</string>
     <string name="kusss_provider_name">KUSSS</string>
     <string name="kusss_service_title">KUSSS Service</string>
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.github.gabrielemariotti.cards/library/1.9.0/res/values/values.xml -->
+    <eat-comment />
+
+    <string name="list_card_undo_title">Undo</string>
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/src/main/res/values/strings.xml -->
+    <eat-comment />
+
     <string name="listview_footer_button">Mehr...</string>
     <string name="lva_all">alle LVAs</string>
     <string name="lva_all_terms">alle Semester</string>
     <string name="lva_done">abgeschlossene LVAs</string>
     <string name="lva_open">offene LVAs</string>
+    <string name="menu_show_in_calendar">in Kalender anzeigen</string>
+    <string name="menu_show_on_map">auf Karte anzeigen</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="notification_error">"JKU App" Fehler</string>
@@ -842,11 +1029,11 @@
     <string name="notification_sync_grade">Noten werden synchronisiert</string>
     <string name="notification_sync_lva">LVAs werden synchronisiert</string>
     <string name="notification_sync_running">Daten werden synchronisiert</string>
-    <string name="oeh_info_contact_summary">Wenn du Fragen und Anregungen hast, kannst du dich jederzeit unter <a href="mailto:oeh@oeh.jku.at">oeh@oeh.jku.at</a> an uns wenden!</string>
+    <string name="oeh_info_contact_summary">Wenn du Fragen und Anregungen hast, kannst du dich jederzeit unter  <a href="mailto:oeh@oeh.jku.at">oeh@oeh.jku.at</a> an uns wenden!</string>
     <string name="oeh_info_contact_title">Kontakt</string>
     <string name="oeh_info_jku_summary">An der Johannes Kepler Universität besteht die ÖH aus der Universitätsvertretung, den zugeordneten Referaten, wie beispielsweise dem ÖH Sozialreferat, den Fakultätsvertretungen und den Studienvertretungen. Unsere Aufgabenfelder sind Beratung, Information, Service und Vertretung. In diesem Sinne stehen wir dir bei Problemen im Studium mit Rat und Tat zur Seite, informieren dich über aktuelle Ereignisse an der Universität und vertreten die Studierenden in den Gremien der Universität.</string>
     <string name="oeh_info_jku_title">Deine ÖH an der JKU</string>
-    <string name="oeh_info_main_summary">Die Österreichische Hochschülerinnen- und Hochschülerschaft ist die gesetzliche Vertretung aller Studierenden. Sie gliedert sich bundesweit in die ÖH-Bundesvertretung (<a href="http://www.oeh.ac.at/">http://www.oeh.ac.at/</a>), in die Universitätsvertretungen an den einzelnen Universitäten, wie beispielsweise die HochschülerInnenschaft an der Johannes Kepler Universität Linz (<a href="http://oeh.jku.at/">http://oeh.jku.at</a>).(</string>
+    <string name="oeh_info_main_summary">Die Österreichische Hochschülerinnen- und Hochschülerschaft ist die gesetzliche Vertretung aller Studierenden. Sie gliedert sich bundesweit in die ÖH-Bundesvertretung ( <a href="http://www.oeh.ac.at/">http://www.oeh.ac.at/</a>), in die Universitätsvertretungen an den einzelnen Universitäten, wie beispielsweise die HochschülerInnenschaft an der Johannes Kepler Universität Linz ( <a href="http://oeh.jku.at/">http://oeh.jku.at</a>).(</string>
     <string name="oeh_info_main_title">Deine ÖH</string>
     <string name="oeh_rights_1_summary">Studierende an der JKU haben bestimmte Rechte und Pflichten. Das Studienrecht ist im Universitätsgesetz (UG 2002) und in der Satzung der JKU (Studienrecht) geregelt.</string>
     <string name="oeh_rights_1_title">Deine Rechte und Pflichten</string>
@@ -858,7 +1045,7 @@
     <string name="oeh_rights_4_title">Ist die Festlegung einer höheren Mindestpunktezahl als 50% bei Klausuren zulässig?</string>
     <string name="oeh_rights_5_summary">Bei allen Prüfungen hast du 4 Wiederholungen, d.h. insgesamt 5 Antritte. Prüfungstechnisch gibt es zwei unterschiedliche Kursformen. Einerseits solche mit "immanentem Prüfungscharakter", d.h. die Note setzt sich aus mehreren Leistungsprüfungen wie z.B. Hausübungen zusammen. Hier kannst du ab der dritten Wiederholung eine kommissionelle Prüfung verlangen; dein Antrag muss vom Vizerektor für Lehre genehmigt werden. Bei allen anderen LVAs und Fachprüfungen muss ab der dritten Wiederholung eine kommissionelle Prüfung abgehalten werden. Kommissionelle Prüfungen sind vom Modus her meist gleich, werden aber von mehreren ProfessorInnen beurteilt. Bei positiven Prüfungen ist eine Wiederholung innerhalb von 6 Monaten möglich, wenn du eine bessere Note haben willst.</string>
     <string name="oeh_rights_5_title">Wie oft darf ich eine LVA wiederholen?</string>
-    <string name="oeh_rights_6_summary"><a href="http://www.jku.at/content/e262/e239/e3257">Detaillierte Informationen zum Studienrecht der JKU</a>\n\n<a href="http://www.ris.bka.gv.at/GeltendeFassung.wxe?Abfrage=Bundesnormen&amp;Gesetzesnummer=20002128">Das Universitätsgesetz</a></string>
+    <string name="oeh_rights_6_summary"><a href="http://www.jku.at/content/e262/e239/e3257">Detaillierte Informationen zum Studienrecht der JKU</a>\n\n <a href="http://www.ris.bka.gv.at/GeltendeFassung.wxe?Abfrage=Bundesnormen&amp;Gesetzesnummer=20002128">Das Universitätsgesetz</a></string>
     <string name="oeh_rights_6_title">Links</string>
     <string name="poi_provider_name">POIs</string>
     <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.google.android.gms/play-services/5.2.08/res/values/common_strings.xml -->
@@ -1711,6 +1898,169 @@
     <style name="Widget.AppCompat.ProgressBar.Horizontal" parent="Widget.AppCompat.Base.ProgressBar.Horizontal" />
 
     <style name="Widget.AppCompat.Spinner.DropDown.ActionBar" parent="Widget.AppCompat.Base.Spinner" />
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.github.gabrielemariotti.cards/library/1.9.0/res/values/values.xml -->
+    <eat-comment />
+
+    <style name="card" />
+
+    <style name="card.base_simple_title">
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_gravity">left|center_vertical</item>
+        <item name="android:layout_marginLeft">@dimen/card_main_simple_title_margin_left</item>
+        <item name="android:layout_marginTop">@dimen/card_main_simple_title_margin_top</item>
+    </style>
+
+    <style name="card.content_outer_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:minHeight">@dimen/card_base_empty_height</item>
+        <item name="android:layout_marginTop">@dimen/card_content_outer_view_margin_top</item>
+        <item name="android:layout_marginBottom">@dimen/card_content_outer_view_margin_bottom</item>
+        <item name="android:layout_marginLeft">@dimen/card_content_outer_view_margin_left</item>
+        <item name="android:layout_marginRight">@dimen/card_content_outer_view_margin_right</item>
+    </style>
+
+    <style name="card.expand_simple_title">
+        <item name="android:layout_gravity">left|center_vertical</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">@dimen/card_expand_simple_title_text_size</item>
+        <item name="android:paddingLeft">@dimen/card_expand_simple_title_paddingLeft</item>
+        <item name="android:paddingRight">@dimen/card_expand_simple_title_paddingRight</item>
+        <item name="android:textColor">@color/card_expand_title_color</item>
+    </style>
+
+    <style name="card.header_button_base">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:paddingLeft">@dimen/card_header_button_padding_left</item>
+        <item name="android:focusable">false</item>
+        <item name="android:focusableInTouchMode">false</item>
+        <item name="android:clickable">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginRight">@dimen/card_header_button_margin_right</item>
+    </style>
+
+    <style name="card.header_button_base.expand">
+        <item name="android:background">@drawable/card_menu_button_expand</item>
+    </style>
+
+    <style name="card.header_button_base.other" />
+
+    <style name="card.header_button_base.overflow">
+        <item name="android:background">@drawable/card_menu_button_rounded_overflow</item>
+        <item name="android:layout_marginRight">@dimen/card_header_button_overflow_margin_right</item>
+    </style>
+
+    <style name="card.header_button_frame" />
+
+    <style name="card.header_compound_view" />
+
+    <style name="card.header_outer_layout">
+        <item name="android:layout_marginTop">@dimen/card_header_outer_view_margin_top</item>
+        <item name="android:layout_marginBottom">@dimen/card_header_outer_view_margin_bottom</item>
+        <item name="android:layout_marginLeft">@dimen/card_header_outer_view_margin_left</item>
+        <item name="android:layout_marginRight">@dimen/card_header_outer_view_margin_right</item>
+    </style>
+
+    <style name="card.header_simple_title">
+        <item name="android:textSize">@dimen/card_header_simple_title_text_size</item>
+        <item name="android:textColor">@color/card_text_color_header</item>
+        <item name="android:layout_gravity">left|center_vertical</item>
+        <item name="android:layout_marginLeft">@dimen/card_header_simple_title_margin_left</item>
+        <item name="android:layout_marginTop">@dimen/card_header_simple_title_margin_top</item>
+        <item name="android:layout_marginRight">@dimen/card_header_simple_title_margin_right</item>
+        <item name="android:layout_marginBottom">@dimen/card_header_simple_title_margin_bottom</item>
+    </style>
+
+    <style name="card.main_contentExpand">
+        <item name="android:background">@color/card_backgroundExpand</item>
+        <item name="android:padding">@dimen/card_expand_layout_padding</item>
+    </style>
+
+    <style name="card.main_layout">
+        <item name="android:background">@drawable/card_selector</item>
+        <item name="android:layout_marginTop">@dimen/card_main_layout_view_margin_top</item>
+        <item name="android:layout_marginBottom">@dimen/card_main_layout_view_margin_bottom</item>
+        <item name="android:layout_marginLeft">@dimen/card_main_layout_view_margin_left</item>
+        <item name="android:layout_marginRight">@dimen/card_main_layout_view_margin_right</item>
+    </style>
+
+    <style name="card.main_layout.kitkat">
+        <item name="android:background">@drawable/card_kitkat_selector</item>
+    </style>
+
+    <style name="card.main_layout_foreground">
+        <item name="android:background">@drawable/card_background</item>
+        <item name="android:foreground">@drawable/card_foreground_selector</item>
+        <item name="android:layout_marginTop">@dimen/card_main_layout_view_margin_top</item>
+        <item name="android:layout_marginBottom">@dimen/card_main_layout_view_margin_bottom</item>
+        <item name="android:layout_marginLeft">@dimen/card_main_layout_view_margin_left</item>
+        <item name="android:layout_marginRight">@dimen/card_main_layout_view_margin_right</item>
+    </style>
+
+    <style name="card.main_layout_foreground.kitkat">
+        <item name="android:foreground">@drawable/card_foreground_kitkat_selector</item>
+    </style>
+
+    <style name="card.shadow_image">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/card_shadow_height</item>
+        <item name="android:src">@drawable/card_shadow</item>
+        <item name="android:layout_below">@+id/card_main_content_layout</item>
+    </style>
+
+    <style name="card.shadow_outer_layout">
+        <item name="android:layout_marginTop">@dimen/card_shadow_view_margin_top</item>
+        <item name="android:layout_marginBottom">@dimen/card_shadow_view_margin_bottom</item>
+        <item name="android:layout_marginLeft">@dimen/card_shadow_view_margin_left</item>
+        <item name="android:layout_marginRight">@dimen/card_shadow_view_margin_right</item>
+    </style>
+
+    <style name="card.thumbnail_compound_view" />
+
+    <style name="card_section_container">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">@dimen/card_section_container_padding_left</item>
+        <item name="android:paddingRight">@dimen/card_section_container_padding_right</item>
+        <item name="android:background">@color/card_section_container_color</item>
+    </style>
+
+    <style name="card_section_title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:textSize">@dimen/card_section_title</item>
+        <item name="android:textColor">@color/card_section_title_color</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:layout_marginTop">@dimen/card_section_title_margin_top</item>
+        <item name="android:layout_marginBottom">@dimen/card_section_title_margin_top</item>
+    </style>
+
+    <style name="card_thumbnail_image">
+        <item name="android:layout_width">@dimen/card_thumbnail_width</item>
+        <item name="android:layout_height">@dimen/card_thumbnail_height</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+
+    <style name="card_thumbnail_outer_layout">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="cardwithlist">
+        <item name="android:layout_marginTop">@dimen/card_base_cardwithlist_list_margin_top</item>
+        <item name="android:layout_marginLeft">@dimen/card_base_cardwithlist_list_margin_left</item>
+        <item name="android:divider">@color/card_base_cardwithlist_divider_color</item>
+        <item name="android:showDividers">middle|beginning</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/card_base_cardwithlist_background_list_color</item>
+    </style>
     <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/src/main/res/values/styles.xml -->
     <eat-comment />
 
@@ -1719,6 +2069,67 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_marginRight">8dp</item>
         <item name="android:background">#ff339bff</item>
+    </style>
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.github.gabrielemariotti.cards/library/1.9.0/res/values/values.xml -->
+    <eat-comment />
+
+    <style name="grid_card">
+        <item name="android:paddingLeft">@dimen/grid_card_padding_left</item>
+        <item name="android:paddingRight">@dimen/grid_card_padding_right</item>
+        <item name="android:paddingBottom">@dimen/grid_card_padding_bottom</item>
+        <item name="android:paddingTop">@dimen/grid_card_padding_top</item>
+    </style>
+
+    <style name="list_card">
+        <item name="android:paddingLeft">@dimen/list_card_padding_left</item>
+        <item name="android:paddingRight">@dimen/list_card_padding_right</item>
+        <item name="android:paddingBottom">@dimen/list_card_padding_bottom</item>
+        <item name="android:paddingTop">@dimen/list_card_padding_top</item>
+    </style>
+
+    <style name="list_card.base" />
+
+    <style name="list_card.thumbnail" />
+
+    <style name="list_card_UndoBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:background">@drawable/undobar</item>
+        <item name="android:clickable">true</item>
+        <item name="android:showDividers">middle</item>
+        <item name="android:divider">@drawable/undobar_divider</item>
+        <item name="android:dividerPadding">10dp</item>
+    </style>
+
+    <style name="list_card_UndoBarButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:background">@drawable/card_undo</item>
+        <item name="android:drawableLeft">@drawable/ic_undobar_undo</item>
+        <item name="android:drawablePadding">12dp</item>
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#fff</item>
+        <item name="android:text">@string/list_card_undo_title</item>
+    </style>
+
+    <style name="list_card_UndoBarMessage">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_marginRight">16dp</item>
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+        <item name="android:textColor">#fff</item>
     </style>
 
 </resources>

@@ -145,15 +145,18 @@ public final class PreferenceWrapper {
 	}
 
 	public static boolean getUseLightDesign(Context mContext) {
-		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(mContext);
-		try {
-			return sp.getBoolean(PREF_USE_LIGHT_THEME,
-					PREF_USE_LIGHT_THEME_DEFAULT);
-		} catch (Exception e) {
-			Log.e(TAG, "Failure", e);
-			return PREF_USE_LIGHT_THEME_DEFAULT;
-		}
+        return true;
+
+        // TODO: activate theming: dark design temporary disabled, problems with cards
+//		SharedPreferences sp = PreferenceManager
+//				.getDefaultSharedPreferences(mContext);
+//		try {
+//			return sp.getBoolean(PREF_USE_LIGHT_THEME,
+//					PREF_USE_LIGHT_THEME_DEFAULT);
+//		} catch (Exception e) {
+//			Log.e(TAG, "Failure", e);
+//			return PREF_USE_LIGHT_THEME_DEFAULT;
+//		}
 	}
 
 	public static File getMapFile(Context mContext) {

@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -106,7 +107,7 @@ public class KusssHandler {
 				user = "k" + user;
 			}
 			Jsoup.connect(URL_LOGIN).data("j_username", user)
-					.data("j_password", password).get();
+					.data("j_password", password).method(Connection.Method.POST).execute();
 
 			if (isLoggedIn(c, getSessionIDFromCookie())) {
 				return getSessionIDFromCookie();
