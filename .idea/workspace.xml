@@ -1820,7 +1820,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/fragment/MapFragment.java" />
         <option value="$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/base/SlidingTabLayout.java" />
         <option value="$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/base/SlidingTabItem.java" />
         <option value="$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/fragment/LvaFragment2.java" />
@@ -1846,7 +1845,6 @@
         <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/layout/fragment_about.xml" />
         <option value="$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/fragment/AboutFragment.java" />
         <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/menu/calendar_card_popup_menu.xml" />
-        <option value="$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/PreferenceWrapper.java" />
         <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/layout/calendar_list_item.xml" />
         <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/values/dimens.xml" />
         <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/layout/card_background_dark.xml" />
@@ -1871,6 +1869,8 @@
         <option value="$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/fragment/NavigationDrawerFragment.java" />
         <option value="$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/notification/CalendarChangedNotification.java" />
         <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/menu/calendar.xml" />
+        <option value="$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/PreferenceWrapper.java" />
+        <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/xml/preference_app.xml" />
       </list>
     </option>
   </component>
@@ -2029,6 +2029,36 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="anewjkuapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="anewjkuapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="aNewJKUApp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="xml" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -2447,14 +2477,14 @@
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32765958" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2957447" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32765958" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32765958" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287234" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31475225" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31475225" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32978722" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -2708,14 +2738,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/PreferenceWrapper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1989" max-vertical-offset="3893">
-          <caret line="147" column="20" selection-start-line="147" selection-start-column="20" selection-end-line="147" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/res/layout/calendar_list_item.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-8.814815" vertical-offset="0" max-vertical-offset="1054">
@@ -2885,6 +2907,30 @@
         <state vertical-scroll-proportion="0.74561405" vertical-offset="0" max-vertical-offset="1207">
           <caret line="58" column="0" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/PreferenceWrapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5066225" vertical-offset="1989" max-vertical-offset="3944">
+          <caret line="149" column="86" selection-start-line="149" selection-start-column="8" selection-end-line="149" selection-end-column="86" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/res/xml/preference_app.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.28145695" vertical-offset="0" max-vertical-offset="604">
+          <caret line="10" column="34" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
+          <folding>
+            <element signature="e#428#470#0" expanded="true" />
+            <element signature="e#497#537#0" expanded="true" />
+            <element signature="e#640#666#0" expanded="true" />
+            <element signature="e#826#859#0" expanded="true" />
+            <element signature="e#927#954#0" expanded="true" />
+            <element signature="e#1107#1156#0" expanded="true" />
+            <element signature="e#1183#1230#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
