@@ -789,7 +789,13 @@
     <dimen name="card_base_cardwithlist_layout_rightmargin">0dp</dimen>
     <dimen name="card_base_cardwithlist_list_margin_left">0dp</dimen>
     <dimen name="card_base_cardwithlist_list_margin_top">10dp</dimen>
-    <dimen name="card_base_empty_height">96dp</dimen>
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/src/main/res/values/dimens.xml -->
+    <eat-comment />
+
+    <dimen name="card_base_empty_height">10dp</dimen>
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.github.gabrielemariotti.cards/library/1.9.0/res/values/values.xml -->
+    <eat-comment />
+
     <dimen name="card_content_outer_view_margin_bottom">0dp</dimen>
     <dimen name="card_content_outer_view_margin_left">0dp</dimen>
     <dimen name="card_content_outer_view_margin_right">0dp</dimen>
@@ -905,6 +911,7 @@
 
     <string name="about_app_summary">Das ist der Versuch eine neue und aktuellere JKU-, KUSSS- bzw. OEH- App zu erstellen.</string>
     <string name="about_credits_title">Credits</string>
+    <string name="about_force_logout">Ausloggen</string>
     <string name="about_libraries_title">verwendete Bibliotheken</string>
     <string name="action_changelog">Change Log</string>
     <string name="action_refresh">Aktualisieren</string>
@@ -926,14 +933,14 @@
     <string name="changelog_ok_button">OK</string>
     <string name="changelog_show_full">More…</string>
     <string name="changelog_title">What\'s New</string>
-    <string name="changelog_version_format">Version <ns1:g id="version_name">%s</ns1:g></string>
+    <string name="changelog_version_format">Version  <ns1:g id="version_name">%s</ns1:g></string>
     <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.google.android.gms/play-services/5.2.08/res/values/common_strings.xml -->
     <eat-comment />
 
     <string name="common_google_play_services_enable_button" msgid="2523291102206661146">Enable Google Play services</string>
     <string name="common_google_play_services_enable_text" msgid="227660514972886228">This app won\'t work unless you enable Google Play services.</string>
     <string name="common_google_play_services_enable_title" msgid="5122002158466380389">Enable Google Play services</string>
-    <string name="common_google_play_services_error_notification_requested_by_msg">Requested by <ns1:g id="app_name">%1$s</ns1:g></string>
+    <string name="common_google_play_services_error_notification_requested_by_msg">Requested by  <ns1:g id="app_name">%1$s</ns1:g></string>
     <string name="common_google_play_services_install_button" msgid="7153882981874058840">Get Google Play services</string>
     <string name="common_google_play_services_install_text_phone" msgid="2122112764540849864">This app won\'t run without Google Play services, which are missing from your phone.</string>
     <string name="common_google_play_services_install_text_tablet" msgid="7351599665250191022">This app won\'t run without Google Play services, which are missing from your tablet.</string>
@@ -1002,6 +1009,8 @@
     <string name="lva_all_terms">alle Semester</string>
     <string name="lva_done">abgeschlossene LVAs</string>
     <string name="lva_open">offene LVAs</string>
+    <string name="menu_show_in_calendar">in Kalender anzeigen</string>
+    <string name="menu_show_on_map">auf Karte anzeigen</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="notification_error">"JKU App" Fehler</string>
@@ -1020,11 +1029,11 @@
     <string name="notification_sync_grade">Noten werden synchronisiert</string>
     <string name="notification_sync_lva">LVAs werden synchronisiert</string>
     <string name="notification_sync_running">Daten werden synchronisiert</string>
-    <string name="oeh_info_contact_summary">Wenn du Fragen und Anregungen hast, kannst du dich jederzeit unter <a href="mailto:oeh@oeh.jku.at">oeh@oeh.jku.at</a> an uns wenden!</string>
+    <string name="oeh_info_contact_summary">Wenn du Fragen und Anregungen hast, kannst du dich jederzeit unter  <a href="mailto:oeh@oeh.jku.at">oeh@oeh.jku.at</a> an uns wenden!</string>
     <string name="oeh_info_contact_title">Kontakt</string>
     <string name="oeh_info_jku_summary">An der Johannes Kepler Universität besteht die ÖH aus der Universitätsvertretung, den zugeordneten Referaten, wie beispielsweise dem ÖH Sozialreferat, den Fakultätsvertretungen und den Studienvertretungen. Unsere Aufgabenfelder sind Beratung, Information, Service und Vertretung. In diesem Sinne stehen wir dir bei Problemen im Studium mit Rat und Tat zur Seite, informieren dich über aktuelle Ereignisse an der Universität und vertreten die Studierenden in den Gremien der Universität.</string>
     <string name="oeh_info_jku_title">Deine ÖH an der JKU</string>
-    <string name="oeh_info_main_summary">Die Österreichische Hochschülerinnen- und Hochschülerschaft ist die gesetzliche Vertretung aller Studierenden. Sie gliedert sich bundesweit in die ÖH-Bundesvertretung (<a href="http://www.oeh.ac.at/">http://www.oeh.ac.at/</a>), in die Universitätsvertretungen an den einzelnen Universitäten, wie beispielsweise die HochschülerInnenschaft an der Johannes Kepler Universität Linz (<a href="http://oeh.jku.at/">http://oeh.jku.at</a>).(</string>
+    <string name="oeh_info_main_summary">Die Österreichische Hochschülerinnen- und Hochschülerschaft ist die gesetzliche Vertretung aller Studierenden. Sie gliedert sich bundesweit in die ÖH-Bundesvertretung ( <a href="http://www.oeh.ac.at/">http://www.oeh.ac.at/</a>), in die Universitätsvertretungen an den einzelnen Universitäten, wie beispielsweise die HochschülerInnenschaft an der Johannes Kepler Universität Linz ( <a href="http://oeh.jku.at/">http://oeh.jku.at</a>).(</string>
     <string name="oeh_info_main_title">Deine ÖH</string>
     <string name="oeh_rights_1_summary">Studierende an der JKU haben bestimmte Rechte und Pflichten. Das Studienrecht ist im Universitätsgesetz (UG 2002) und in der Satzung der JKU (Studienrecht) geregelt.</string>
     <string name="oeh_rights_1_title">Deine Rechte und Pflichten</string>
@@ -1036,7 +1045,7 @@
     <string name="oeh_rights_4_title">Ist die Festlegung einer höheren Mindestpunktezahl als 50% bei Klausuren zulässig?</string>
     <string name="oeh_rights_5_summary">Bei allen Prüfungen hast du 4 Wiederholungen, d.h. insgesamt 5 Antritte. Prüfungstechnisch gibt es zwei unterschiedliche Kursformen. Einerseits solche mit "immanentem Prüfungscharakter", d.h. die Note setzt sich aus mehreren Leistungsprüfungen wie z.B. Hausübungen zusammen. Hier kannst du ab der dritten Wiederholung eine kommissionelle Prüfung verlangen; dein Antrag muss vom Vizerektor für Lehre genehmigt werden. Bei allen anderen LVAs und Fachprüfungen muss ab der dritten Wiederholung eine kommissionelle Prüfung abgehalten werden. Kommissionelle Prüfungen sind vom Modus her meist gleich, werden aber von mehreren ProfessorInnen beurteilt. Bei positiven Prüfungen ist eine Wiederholung innerhalb von 6 Monaten möglich, wenn du eine bessere Note haben willst.</string>
     <string name="oeh_rights_5_title">Wie oft darf ich eine LVA wiederholen?</string>
-    <string name="oeh_rights_6_summary"><a href="http://www.jku.at/content/e262/e239/e3257">Detaillierte Informationen zum Studienrecht der JKU</a>\n\n<a href="http://www.ris.bka.gv.at/GeltendeFassung.wxe?Abfrage=Bundesnormen&amp;Gesetzesnummer=20002128">Das Universitätsgesetz</a></string>
+    <string name="oeh_rights_6_summary"><a href="http://www.jku.at/content/e262/e239/e3257">Detaillierte Informationen zum Studienrecht der JKU</a>\n\n <a href="http://www.ris.bka.gv.at/GeltendeFassung.wxe?Abfrage=Bundesnormen&amp;Gesetzesnummer=20002128">Das Universitätsgesetz</a></string>
     <string name="oeh_rights_6_title">Links</string>
     <string name="poi_provider_name">POIs</string>
     <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.google.android.gms/play-services/5.2.08/res/values/common_strings.xml -->

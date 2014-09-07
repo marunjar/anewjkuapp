@@ -1,9 +1,15 @@
 package org.voidsink.anewjkuapp.calendar;
 
+import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.view.ContextThemeWrapper;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.voidsink.anewjkuapp.R;
@@ -13,12 +19,15 @@ import java.util.BitSet;
 import java.util.Date;
 
 import it.gmariotti.cardslib.library.internal.Card;
+import it.gmariotti.cardslib.library.internal.CardHeader;
+import it.gmariotti.cardslib.library.internal.base.BaseCard;
 
 /**
  * Created by paul on 06.09.2014.
  */
 public class CalendarCard extends Card {
 
+    private long mEventId = 0;
     private int mColor;
     private String mDescr;
     private String mTime;
@@ -26,10 +35,11 @@ public class CalendarCard extends Card {
     private long mDtStart;
     private long mDtEnd;
 
-    public CalendarCard(Context c, int color, String title, String descr,
+    public CalendarCard(final Context c, long eventId, int color, String title, String descr,
                         String location, long dtStart, long dtEnd) {
         this(c);
 
+        this.mEventId = eventId;
         this.mColor = color;
         this.mTitle = title;
         this.mDescr = descr;
@@ -48,6 +58,11 @@ public class CalendarCard extends Card {
 
         this.mTime = String.format("%s - %s", dfStart.format(mDtStart),
                 dfEnd.format(mDtEnd));
+
+        CardHeader header = getCardHeader();
+        if (header != null) {
+            header.setTitle(getTitle());
+        }
     }
 
     @Override
@@ -65,7 +80,11 @@ public class CalendarCard extends Card {
                 .findViewById(R.id.calendar_list_item_location);
 
         chip.setBackgroundColor(getColor());
-        title.setText(getTitle());
+        if (getCardHeader() != null) {
+            title.setVisibility(View.GONE); //--> shown in cardHeader
+        } else{
+            title.setText(getTitle());
+        }
 
         if (getDescr().isEmpty()) {
             descr.setVisibility(View.GONE);
@@ -94,7 +113,30 @@ public class CalendarCard extends Card {
     }
 
     public CalendarCard(Context context, int innerLayout) {
-        super(context, innerLayout);
+        super(new ContextThemeWrapper(context, R.style.AppTheme), innerLayout);
+
+        // init header
+        CardHeader header = new CardHeader(new ContextThemeWrapper(context, R.style.AppTheme));
+
+        header.setPopupMenu(R.menu.calendar_card_popup_menu, new CardHeader.OnClickCardHeaderPopupMenuListener(){
+            @Override
+            public void onMenuItemClick(BaseCard card, MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.show_in_calendar: {
+                        Uri uri = ContentUris.withAppendedId(CalendarContractWrapper.Events.CONTENT_URI(), mEventId);
+                        Intent intent = new Intent(Intent.ACTION_VIEW)
+                                .setData(uri);
+                        mContext.startActivity(intent);
+                    }
+                    case R.id.show_on_map: {
+                        Toast.makeText(mContext, "Click on " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                    }
+                    default: Toast.makeText(mContext, "Click on " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        addCardHeader(header);
     }
 
     public String getLocation() {

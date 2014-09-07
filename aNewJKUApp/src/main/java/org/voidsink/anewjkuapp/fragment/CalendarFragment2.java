@@ -13,9 +13,6 @@ import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.calendar.CalendarCard;
 import org.voidsink.anewjkuapp.calendar.CalendarCardArrayAdapter;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
-import org.voidsink.anewjkuapp.calendar.CalendarEventAdapter;
-import org.voidsink.anewjkuapp.calendar.CalendarListEvent;
-import org.voidsink.anewjkuapp.calendar.CalendarListItem;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.view.CalendarCardListView;
 
@@ -36,7 +33,6 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListView;
 
 import it.gmariotti.cardslib.library.internal.Card;
 
@@ -153,7 +149,7 @@ public class CalendarFragment2 extends BaseFragment {
 			Account mAccount = AppUtils.getAccount(mContext);
 			if (mAccount != null) {
 				String calIDLva = CalendarUtils.getCalIDByName(mContext,
-						mAccount, CalendarUtils.ARG_CALENDAR_LVA);
+                        mAccount, CalendarUtils.ARG_CALENDAR_LVA);
 				String calIDExam = CalendarUtils.getCalIDByName(mContext,
 						mAccount, CalendarUtils.ARG_CALENDAR_EXAM);
 
@@ -207,6 +203,7 @@ public class CalendarFragment2 extends BaseFragment {
 				if (c != null && !c.isClosed()) {
 					while (c.moveToNext()) {
 						mCards.add(new CalendarCard(mContext,
+                                c.getLong(ImportCalendarTask.COLUMN_EVENT_ID),
 								mColors.get(c
 										.getString(ImportCalendarTask.COLUMN_EVENT_CAL_ID)),
 								c.getString(ImportCalendarTask.COLUMN_EVENT_TITLE),

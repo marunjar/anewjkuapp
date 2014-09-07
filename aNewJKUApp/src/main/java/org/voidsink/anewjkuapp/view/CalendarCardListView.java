@@ -138,7 +138,7 @@ public class CalendarCardListView extends StickyListHeadersListView {
         super.setAdapter(adapter);
 
         //Set Layout used by items
-//        adapter.setRowLayoutId(list_card_layout_resourceID);
+//        adapter.setRowLayoutId(R.layout.card_layout);
 
         adapter.setCardListView(this);
         mAdapter = adapter;
