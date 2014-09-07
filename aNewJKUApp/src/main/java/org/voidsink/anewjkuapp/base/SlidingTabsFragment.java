@@ -119,7 +119,7 @@ public abstract class SlidingTabsFragment extends BaseFragment {
     // END_INCLUDE (fragment_onviewcreated)
 
     public void notifyDataSetChanged() {
-        Log.i(LOG_TAG, "notifyDataSetChanged");
+//        Log.i(LOG_TAG, "notifyDataSetChanged");
         if (mViewPager.getAdapter() != null) {
             mViewPager.setAdapter(new SlidingFragmentPagerAdapter(getChildFragmentManager()));
             mViewPager.getAdapter().notifyDataSetChanged();
@@ -156,14 +156,14 @@ public abstract class SlidingTabsFragment extends BaseFragment {
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             Object o = super.instantiateItem(container, position);
-            Log.i(LOG_TAG, "instantiateItem() [position: " + position + "]");
+//            Log.i(LOG_TAG, "instantiateItem() [position: " + position + "]");
             return o;
         }
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             super.destroyItem(container, position, object);
-            Log.i(LOG_TAG, "destroyItem() [position: " + position + "]");
+//            Log.i(LOG_TAG, "destroyItem() [position: " + position + "]");
         }
 
         @Override

@@ -128,4 +128,7 @@
     <string name="about_force_logout">Ausloggen</string>
     <string name="menu_show_in_calendar">in Kalender anzeigen</string>
     <string name="menu_show_on_map">auf Karte anzeigen</string>
+    <string name="lva_state_open">Offen</string>
+    <string name="lva_state_done">Abgeschlossen</string>
+    <string name="lva_state_all">alle</string>
 </resources>

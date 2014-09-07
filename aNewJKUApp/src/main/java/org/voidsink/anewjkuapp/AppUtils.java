@@ -15,6 +15,7 @@ import org.voidsink.anewjkuapp.fragment.MapFragment;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Grade;
 import org.voidsink.anewjkuapp.kusss.Lva;
+import org.voidsink.anewjkuapp.kusss.LvaState;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 
 import com.androidplot.pie.PieChart;
@@ -166,10 +167,12 @@ public class AppUtils {
 		return true;
 	}
 
-	public static double getECTS(List<LvaWithGrade> lvas) {
+	public static double getECTS(LvaState state, List<LvaWithGrade> lvas) {
 		double sum = 0;
 		for (LvaWithGrade lva : lvas) {
-			sum += lva.getLva().getEcts();
+            if (state == LvaState.ALL || state == lva.getState()) {
+                sum += lva.getLva().getEcts();
+            }
 		}
 		return sum;
 	}
@@ -193,8 +196,11 @@ public class AppUtils {
 
 			@Override
 			public int compare(LvaWithGrade lhs, LvaWithGrade rhs) {
-				int value = lhs.getLva().getTitle()
-						.compareTo(rhs.getLva().getTitle());
+                int value = lhs.getState().compareTo(rhs.getState());
+                if (value == 0) {
+                    value = lhs.getLva().getTitle()
+                            .compareTo(rhs.getLva().getTitle());
+                }
 				if (value == 0) {
 					value = lhs.getLva().getTerm()
 							.compareTo(rhs.getLva().getTerm());
@@ -224,6 +230,55 @@ public class AppUtils {
 			}
 		});
 	}
+
+    public static void removeDuplicates(List<LvaWithGrade> mLvas) {
+        // remove done duplicates
+        int i = 0;
+        while (i < mLvas.size()) {
+            if (mLvas.get(i).getState() == LvaState.DONE) {
+                Lva lva = mLvas.get(i).getLva();
+                int j = i + 1;
+
+                while (j < mLvas.size()) {
+                    Lva nextLva = mLvas.get(j).getLva();
+                    if (lva.getCode().equals(nextLva.getCode())
+                            && lva.getTitle().equals(nextLva.getTitle())) {
+                        mLvas.remove(j);
+                        Log.d("removeDuplicates",
+                                "remove from done " + nextLva.getCode() + " "
+                                        + nextLva.getTitle());
+                    } else {
+                        j++;
+                    }
+                }
+            }
+            i++;
+        }
+
+        // remove all other duplicates
+        i = 0;
+        while (i < mLvas.size()) {
+            if (mLvas.get(i).getState() != LvaState.DONE) {
+                Lva lva = mLvas.get(i).getLva();
+                int j = i + 1;
+
+                while (j < mLvas.size()) {
+                    Lva nextLva = mLvas.get(j).getLva();
+                    if (lva.getCode().equals(nextLva.getCode())
+                            && lva.getTitle().equals(nextLva.getTitle())) {
+                        mLvas.remove(j);
+                        Log.d("removeDuplicates",
+                                "remove from other " + nextLva.getCode() + " "
+                                        + nextLva.getTitle());
+                    } else {
+                        j++;
+                    }
+                }
+            }
+            i++;
+        }
+
+    }
 
 	public static void removeDuplicates(List<LvaWithGrade> mDoneLvas,
 			List<LvaWithGrade> mOpenLvas) {

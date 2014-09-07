@@ -10,22 +10,23 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListAdapter;
-import android.widget.ExpandableListView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.voidsink.anewjkuapp.AppUtils;
-import org.voidsink.anewjkuapp.LvaListAdapter;
+import org.voidsink.anewjkuapp.LvaCard;
+import org.voidsink.anewjkuapp.LvaCardArrayAdapter;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Grade;
 import org.voidsink.anewjkuapp.kusss.Lva;
+import org.voidsink.anewjkuapp.kusss.LvaState;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
+import org.voidsink.anewjkuapp.view.LvaCardListView;
 
 import com.androidplot.pie.PieChart;
 import com.androidplot.ui.XLayoutStyle;
@@ -39,18 +40,19 @@ import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYStepMode;
 import com.androidplot.xy.YValueMarker;
 
+import it.gmariotti.cardslib.library.internal.Card;
+
 @SuppressLint("ValidFragment")
 public class LvaDetailFragment extends BaseFragment {
 
 	private static final String TAG = LvaDetailFragment.class.getSimpleName();
 
 	private List<String> mTerms;
+    private LvaCardListView mListView;
+    private LvaCardArrayAdapter mAdapter;
 
-	private List<LvaWithGrade> mOpenLvas;
-	private List<LvaWithGrade> mDoneLvas;
-	private ExpandableListView mExpListView;
-
-	private LvaListAdapter mAdapter;
+    private List<LvaWithGrade> mLvas = new ArrayList<>();
+    private List<Card> mLvaCards = new ArrayList<>();
 
 	public LvaDetailFragment() {
 		this("", new ArrayList<Lva>(), new ArrayList<ExamGrade>());
@@ -60,26 +62,23 @@ public class LvaDetailFragment extends BaseFragment {
 			List<ExamGrade> grades) {
 		this.mTerms = terms;
 
-		this.mOpenLvas = new ArrayList<LvaWithGrade>();
-		this.mDoneLvas = new ArrayList<LvaWithGrade>();
+		this.mLvas = new ArrayList<LvaWithGrade>();
 
 		// Log.i(TAG, this.mTerms.toString());
 		for (Lva lva : lvas) {
 			if (mTerms.contains(lva.getTerm())) {
 				ExamGrade grade = findGrade(grades, lva);
-				if (grade == null || grade.getGrade() == Grade.G5) {
-					this.mOpenLvas.add(new LvaWithGrade(lva, grade));
-					// Log.i(TAG, "open: " + lva.getKey() + " - " +
-					// lva.getECTS());
-				} else {
-					this.mDoneLvas.add(new LvaWithGrade(lva, grade));
-					// Log.i(TAG, "done: " + lva.getKey() + " - " +
-					// lva.getECTS());
-				}
+                mLvas.add(new LvaWithGrade(lva, grade));
 			}
 		}
-		// remove duplicates
-		AppUtils.removeDuplicates(this.mDoneLvas, this.mOpenLvas);
+
+        AppUtils.removeDuplicates(mLvas);
+
+        AppUtils.sortLVAsWithGrade(mLvas);
+
+        for (LvaWithGrade g : mLvas) {
+            mLvaCards.add(new LvaCard(getContext(), g));
+        }
 	}
 
 	public LvaDetailFragment(String term, List<Lva> lvas, List<ExamGrade> grades) {
@@ -113,17 +112,16 @@ public class LvaDetailFragment extends BaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_lva_detail, container,
+		View view = inflater.inflate(R.layout.fragment_card_lva_detail, container,
 				false);
 
-		double mDoneEcts = AppUtils.getECTS(mDoneLvas);
-		double mOpenEcts = AppUtils.getECTS(mOpenLvas);
+        mListView = (LvaCardListView) view.findViewById(R.id.lva_card_lvas);
 
-		mExpListView = (ExpandableListView) view
-				.findViewById(R.id.lva_lists);
-		mAdapter = new LvaListAdapter(getContext(), this.mDoneLvas,
-				this.mOpenLvas);
-		mExpListView.setAdapter((ExpandableListAdapter) mAdapter);
+		double mDoneEcts = AppUtils.getECTS(LvaState.OPEN, mLvas);
+		double mOpenEcts = AppUtils.getECTS(LvaState.DONE, mLvas);
+
+		mAdapter = new LvaCardArrayAdapter(getContext(), mLvaCards);
+        mListView.setAdapter(mAdapter);
 
 		double minEcts = mTerms.size() * 30;
 
