@@ -4,7 +4,10 @@
 		    + added
 		    - fixed
 		    * changed -->
-	    
+
+    <release version="0.19" versioncode="100019">
+        <change>- Zugriffsverletzung beim Aktualisieren der Kalender</change>
+    </release>
 	<release version="0.18" versioncode="100018">
 	   <change>- Semester wurde bei Sprachkursen nicht richtig ausgelesen</change>
 	</release>
