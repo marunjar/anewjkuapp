@@ -122,19 +122,19 @@ public final class R {
 		public static final int selectionDetails = 0x7f09001d;
 		public static final int strict_sandbox = 0x7f09001b;
 		public static final int terrain = 0x7f09000e;
-		public static final int text1 = 0x7f090085;
+		public static final int text1 = 0x7f090089;
 		public static final int wrap_content = 0x7f09001f;
 	}
 	public static final class integer {
 		public static final int google_play_services_version = 0x7f0b0001;
 	}
 	public static final class string {
-		public static final int auth_client_needs_enabling_title = 0x7f0d00b5;
-		public static final int auth_client_needs_installation_title = 0x7f0d00b6;
-		public static final int auth_client_needs_update_title = 0x7f0d00b7;
-		public static final int auth_client_play_services_err_notification_msg = 0x7f0d00b8;
-		public static final int auth_client_requested_by_msg = 0x7f0d00b9;
-		public static final int auth_client_using_bad_version_title = 0x7f0d00ba;
+		public static final int auth_client_needs_enabling_title = 0x7f0d00b8;
+		public static final int auth_client_needs_installation_title = 0x7f0d00b9;
+		public static final int auth_client_needs_update_title = 0x7f0d00ba;
+		public static final int auth_client_play_services_err_notification_msg = 0x7f0d00bb;
+		public static final int auth_client_requested_by_msg = 0x7f0d00bc;
+		public static final int auth_client_using_bad_version_title = 0x7f0d00bd;
 		public static final int common_google_play_services_enable_button = 0x7f0d0020;
 		public static final int common_google_play_services_enable_text = 0x7f0d0021;
 		public static final int common_google_play_services_enable_title = 0x7f0d0022;
@@ -160,8 +160,8 @@ public final class R {
 		public static final int common_google_play_services_update_title = 0x7f0d0036;
 		public static final int common_signin_button_text = 0x7f0d0037;
 		public static final int common_signin_button_text_long = 0x7f0d0038;
-		public static final int pre_release_do_not_ship = 0x7f0d0083;
-		public static final int wallet_buy_button_place_holder = 0x7f0d00b4;
+		public static final int pre_release_do_not_ship = 0x7f0d0086;
+		public static final int wallet_buy_button_place_holder = 0x7f0d00b7;
 	}
 	public static final class style {
 		public static final int Theme_IAPTheme = 0x7f0e003f;

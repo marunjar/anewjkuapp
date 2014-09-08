@@ -10,10 +10,10 @@
         android:layout_height="170dp"
         android:padding="3dp" />    
     
-    <ExpandableListView
-        android:id="@+id/grade_list"
+    <org.voidsink.anewjkuapp.view.GradeCardListView
+        android:id="@+id/grade_card_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-    </ExpandableListView>
+    </org.voidsink.anewjkuapp.view.GradeCardListView>
 
 </LinearLayout>

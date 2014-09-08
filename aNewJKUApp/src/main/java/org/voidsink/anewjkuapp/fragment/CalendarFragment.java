@@ -36,9 +36,9 @@ import android.widget.Button;
 
 import it.gmariotti.cardslib.library.internal.Card;
 
-public class CalendarFragment2 extends BaseFragment {
+public class CalendarFragment extends BaseFragment {
 
-	private static final String TAG = CalendarFragment2.class.getSimpleName();
+	private static final String TAG = CalendarFragment.class.getSimpleName();
 
 	private CalendarCardListView mListView;
 	private CalendarCardArrayAdapter mAdapter;
@@ -222,7 +222,7 @@ public class CalendarFragment2 extends BaseFragment {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			mContext = CalendarFragment2.this.getContext();
+			mContext = CalendarFragment.this.getContext();
 			if (mContext == null) {
 				Log.e(TAG, "context is null");
 			}

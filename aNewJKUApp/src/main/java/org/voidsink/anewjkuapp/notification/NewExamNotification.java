@@ -6,7 +6,7 @@ import java.util.List;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
-import org.voidsink.anewjkuapp.fragment.NewExamFragment;
+import org.voidsink.anewjkuapp.fragment.ExamFragment;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -43,7 +43,7 @@ public class NewExamNotification {
 				&& (mInserts.size() > 0 || mUpdates.size() > 0)) {
 			PendingIntent pendingIntent = PendingIntent
 					.getActivity(mContext, NOTIFICATION_NEW_EXAM, new Intent(mContext,
-							MainActivity.class).putExtra(MainActivity.ARG_SHOW_FRAGMENT, NewExamFragment.class.getName())
+							MainActivity.class).putExtra(MainActivity.ARG_SHOW_FRAGMENT, ExamFragment.class.getName())
 							.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
 
 			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(

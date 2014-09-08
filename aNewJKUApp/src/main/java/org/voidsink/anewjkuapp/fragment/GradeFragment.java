@@ -27,10 +27,10 @@ import java.util.List;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 
-public class GradeFragment2 extends SlidingTabsFragment implements
+public class GradeFragment extends SlidingTabsFragment implements
 		ContentObserverListener {
 
-	private static final String TAG = GradeFragment2.class.getSimpleName();
+	private static final String TAG = GradeFragment.class.getSimpleName();
 	private BaseContentObserver mGradeObserver;
 
     private List<ExamGrade> mGrades = new ArrayList<ExamGrade>();

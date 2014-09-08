@@ -6,11 +6,8 @@ import android.support.v4.app.Fragment;
 import org.voidsink.anewjkuapp.base.SlidingTabItem;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.fragment.GradeDetailFragment;
-import org.voidsink.anewjkuapp.fragment.LvaDetailFragment;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
-import org.voidsink.anewjkuapp.kusss.Lva;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

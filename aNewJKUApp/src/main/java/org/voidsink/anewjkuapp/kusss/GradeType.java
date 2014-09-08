@@ -5,7 +5,7 @@ import org.voidsink.anewjkuapp.R;
 import android.annotation.SuppressLint;
 
 public enum GradeType {
-	INTERIM_COURSE_ASSESSMENT, FINAL_COURSE_ASSESSMENT, RECOGNIZED_COURSE_CERTIFICATE, RECOGNIZED_EXAM, RECOGNIZED_ASSEMENT, FINAL_EXAM, ALL;
+	INTERIM_COURSE_ASSESSMENT, FINAL_COURSE_ASSESSMENT, RECOGNIZED_COURSE_CERTIFICATE, RECOGNIZED_EXAM, RECOGNIZED_ASSESSMENT, FINAL_EXAM, ALL;
 
 	public int getStringResID() {
 		switch (this) {
@@ -17,7 +17,7 @@ public enum GradeType {
 			return R.string.grade_type_recognized_cc;
 		case RECOGNIZED_EXAM:
 			return R.string.grade_type_recognized_exam;
-		case RECOGNIZED_ASSEMENT:
+		case RECOGNIZED_ASSESSMENT:
 			return R.string.grade_type_recognized_a;
 		case FINAL_EXAM:
 			return R.string.grade_type_final_exam;
@@ -42,7 +42,7 @@ public enum GradeType {
 			return RECOGNIZED_COURSE_CERTIFICATE;
 		} else if (text.equals("anerkannte beurteilungen")
 				|| text.equals("recognized assessments")) {
-			return RECOGNIZED_ASSEMENT;
+			return RECOGNIZED_ASSESSMENT;
 		} else if (text.equals("prüfungen")
 				|| text.equals("exams")) {
 			return RECOGNIZED_EXAM;

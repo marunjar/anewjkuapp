@@ -12,11 +12,10 @@ import java.util.regex.Pattern;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.voidsink.anewjkuapp.GradeListItem;
 import org.voidsink.anewjkuapp.ImportGradeTask;
 import org.voidsink.anewjkuapp.KusssContentContract;
 
-public class ExamGrade implements GradeListItem {
+public class ExamGrade {
 
 	@SuppressLint("SimpleDateFormat")
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
@@ -225,13 +224,4 @@ public class ExamGrade implements GradeListItem {
 		return cv;
 	}
 
-	@Override
-	public boolean isGrade() {
-		return true;
-	}
-
-	@Override
-	public int getType() {
-		return GradeListItem.TYPE_GRADE;
-	}
 }

@@ -1009,6 +1009,9 @@
     <string name="lva_all_terms">alle Semester</string>
     <string name="lva_done">abgeschlossene LVAs</string>
     <string name="lva_open">offene LVAs</string>
+    <string name="lva_state_all">alle</string>
+    <string name="lva_state_done">Abgeschlossen</string>
+    <string name="lva_state_open">Offen</string>
     <string name="menu_show_in_calendar">in Kalender anzeigen</string>
     <string name="menu_show_on_map">auf Karte anzeigen</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -2017,6 +2020,19 @@
     </style>
 
     <style name="card.thumbnail_compound_view" />
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/src/main/res/values/styles.xml -->
+    <eat-comment />
+
+    <style name="card_expand">
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">#FFF</item>
+    </style>
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.github.gabrielemariotti.cards/library/1.9.0/res/values/values.xml -->
+    <eat-comment />
 
     <style name="card_section_container">
         <item name="android:layout_width">match_parent</item>

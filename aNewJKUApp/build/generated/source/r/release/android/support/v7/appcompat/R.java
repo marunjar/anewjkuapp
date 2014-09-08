@@ -136,7 +136,7 @@ public final class R {
 		public static final int abc_split_action_bar_is_narrow = 0x7f070005;
 	}
 	public static final class color {
-		public static final int abc_search_url_text_holo = 0x7f080033;
+		public static final int abc_search_url_text_holo = 0x7f080029;
 		public static final int abc_search_url_text_normal = 0x7f080000;
 		public static final int abc_search_url_text_pressed = 0x7f080001;
 		public static final int abc_search_url_text_selected = 0x7f080002;
@@ -343,7 +343,7 @@ public final class R {
 		public static final int abc_search_dropdown_item_icons_2line = 0x7f030015;
 		public static final int abc_search_view = 0x7f030016;
 		public static final int abc_simple_decor = 0x7f030017;
-		public static final int support_simple_spinner_dropdown_item = 0x7f03004e;
+		public static final int support_simple_spinner_dropdown_item = 0x7f030050;
 	}
 	public static final class string {
 		public static final int abc_action_bar_home_description = 0x7f0d0000;
@@ -414,13 +414,13 @@ public final class R {
 		public static final int Theme_Base = 0x7f0e0036;
 		public static final int Theme_Base_AppCompat = 0x7f0e0037;
 		public static final int Theme_Base_AppCompat_DialogWhenLarge = 0x7f0e003a;
-		public static final int Theme_Base_AppCompat_DialogWhenLarge_Base = 0x7f0e00b5;
+		public static final int Theme_Base_AppCompat_DialogWhenLarge_Base = 0x7f0e00b4;
 		public static final int Theme_Base_AppCompat_Dialog_FixedSize = 0x7f0e0038;
 		public static final int Theme_Base_AppCompat_Dialog_Light_FixedSize = 0x7f0e0039;
 		public static final int Theme_Base_AppCompat_Light = 0x7f0e003b;
 		public static final int Theme_Base_AppCompat_Light_DarkActionBar = 0x7f0e003c;
 		public static final int Theme_Base_AppCompat_Light_DialogWhenLarge = 0x7f0e003d;
-		public static final int Theme_Base_AppCompat_Light_DialogWhenLarge_Base = 0x7f0e00b6;
+		public static final int Theme_Base_AppCompat_Light_DialogWhenLarge_Base = 0x7f0e00b5;
 		public static final int Theme_Base_Light = 0x7f0e003e;
 		public static final int Widget_AppCompat_ActionBar = 0x7f0e0044;
 		public static final int Widget_AppCompat_ActionBar_Solid = 0x7f0e0045;

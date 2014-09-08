@@ -74,9 +74,9 @@ public class NavigationDrawerFragment extends BaseFragment {
 	private TextView mUser;
 	private static DrawerItem[] mDrawerItems = new DrawerItem[] {
 			new DrawerMenuSection("KUSSS"),
-            new DrawerMenuItem("Termine", CalendarFragment2.class),
-            new DrawerMenuItem("Prüfungen", NewExamFragment.class),
-			new DrawerMenuItem("Noten", GradeFragment2.class),
+            new DrawerMenuItem("Termine", CalendarFragment.class),
+            new DrawerMenuItem("Prüfungen", ExamFragment.class),
+			new DrawerMenuItem("Noten", GradeFragment.class),
 			new DrawerMenuItem("LVAs", LvaFragment2.class),
 			new DrawerMenuSection("ÖH"),
 			// new DrawerMenuItem("News"),
