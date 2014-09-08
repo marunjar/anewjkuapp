@@ -397,8 +397,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 
 											if (!eventDeleted) {
 												// notify only future changes
-												if (match.getStartDate()
-														.getDate().getTime() > notifyFrom) {
+												if (eventDTStart > notifyFrom) {
 													mNotification
 															.addDelete(getEventString(
 																	eventDTStart,
