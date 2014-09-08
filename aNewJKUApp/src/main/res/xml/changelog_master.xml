@@ -4,7 +4,11 @@
 		    + added
 		    - fixed
 		    * changed -->
-	    
+    <release version="0.19" versioncode="140019">
+        <change>- Zugriffsverletzung beim Aktualisieren der Kalender</change>
+        <change>* Unterstützung für alle Android Versionen vor ICS entfernt</change>
+        <change>* neues Layout</change>
+    </release>
 	<release version="0.18" versioncode="140018">
 	   <change>- Semester wurde bei Sprachkursen nicht richtig ausgelesen</change>
 	</release>
