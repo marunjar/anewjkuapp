@@ -2020,6 +2020,19 @@
     </style>
 
     <style name="card.thumbnail_compound_view" />
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/src/main/res/values/styles.xml -->
+    <eat-comment />
+
+    <style name="card_expand">
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">#FFF</item>
+    </style>
+    <!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/build/intermediates/exploded-aar/com.github.gabrielemariotti.cards/library/1.9.0/res/values/values.xml -->
+    <eat-comment />
 
     <style name="card_section_container">
         <item name="android:layout_width">match_parent</item>

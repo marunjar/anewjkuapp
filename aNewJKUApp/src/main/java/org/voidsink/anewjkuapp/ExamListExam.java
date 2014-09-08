@@ -7,7 +7,7 @@ import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
 
 import android.database.Cursor;
 
-public class ExamListExam implements ExamListItem {
+public class ExamListExam {
 
 	private String lvaNr;
 	private String info;
@@ -39,19 +39,8 @@ public class ExamListExam implements ExamListItem {
 		}
 	}
 
-	@Override
-	public int getType() {
-		return EXAM_TYPE;
-	}
-
-	@Override
 	public boolean mark() {
 		return isRegistered();
-	}
-
-	@Override
-	public boolean isExam() {
-		return true;
 	}
 
 	public String getTitle() {

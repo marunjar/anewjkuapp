@@ -26,7 +26,7 @@
   </component>
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/aNewJKUApp/build.gradle" line="27" mnemonic="7" />
-    <bookmark url="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/base/SlidingTabsFragment.java" line="123" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/ExamCard.java" line="81" mnemonic="1" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ecd448d8-3b16-4f8e-9deb-d9d36a1fe35f" name="Default" comment="" />
@@ -51,47 +51,62 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="GradeCardArrayAdapter.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/GradeCardArrayAdapter.java">
+      <file leaf-file-name="ExamFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/fragment/ExamFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="671" max-vertical-offset="1445">
-              <caret line="51" column="0" selection-start-line="51" selection-start-column="0" selection-end-line="58" selection-end-column="132" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#983#984#0" expanded="true" />
-                <element signature="e#1020#1021#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LvaCardArrayAdapter.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/LvaCardArrayAdapter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="637" max-vertical-offset="1411">
-              <caret line="49" column="29" selection-start-line="49" selection-start-column="29" selection-end-line="49" selection-end-column="29" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LvaFragment2.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/fragment/LvaFragment2.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="408" max-vertical-offset="2108">
-              <caret line="89" column="0" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="153" max-vertical-offset="1989">
+              <caret line="56" column="0" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LvaDetailFragment.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/fragment/LvaDetailFragment.java">
+      <file leaf-file-name="ExamCard.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/ExamCard.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.22516556" vertical-offset="1173" max-vertical-offset="3281">
-              <caret line="119" column="8" selection-start-line="119" selection-start-column="8" selection-end-line="119" selection-end-column="8" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1623" max-vertical-offset="2227">
+              <caret line="122" column="54" selection-start-line="122" selection-start-column="54" selection-end-line="122" selection-end-column="54" />
+              <folding>
+                <element signature="e#3207#3208#0" expanded="true" />
+                <element signature="e#3261#3262#0" expanded="true" />
+                <element signature="e#4590#4591#0" expanded="true" />
+                <element signature="e#4618#4619#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="exam_card_expand_section.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/res/layout/exam_card_expand_section.xml">
+          <provider editor-type-id="android-designer">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-7.5555553" vertical-offset="0" max-vertical-offset="357">
+              <caret line="12" column="45" selection-start-line="12" selection-start-column="45" selection-end-line="12" selection-end-column="45" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="styles.xml" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/res/values/styles.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.2963576" vertical-offset="314" max-vertical-offset="918">
+              <caret line="29" column="31" selection-start-line="29" selection-start-column="31" selection-end-line="29" selection-end-column="31" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="exam_list_item.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/res/layout/exam_list_item.xml">
+          <provider editor-type-id="android-designer">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-6.259259" vertical-offset="630" max-vertical-offset="1445">
+              <caret line="47" column="39" selection-start-line="47" selection-start-column="39" selection-end-line="47" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -1867,15 +1882,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/menu/calendar_card_popup_menu.xml" />
-        <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/layout/calendar_list_item.xml" />
-        <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/values/dimens.xml" />
-        <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/layout/card_background_dark.xml" />
-        <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/drawable/card_foreground_selector_dark.xml" />
-        <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/drawable/activated_foreground_card_dark.xml" />
-        <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/drawable/card_selector_dark.xml" />
-        <option value="$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/calendar/CalendarCard.java" />
-        <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/drawable/activated_background_card_dark.xml" />
         <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/drawable/pressed_background_card_dark.xml" />
         <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/layout/card_layout.xml" />
         <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/values/colors.xml" />
@@ -1885,7 +1891,6 @@
         <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/drawable/card_selector_themed.xml" />
         <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/drawable/pressed_background_card_themed.xml" />
         <option value="$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/view/CalendarCardListView.java" />
-        <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/values/styles.xml" />
         <option value="$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/fragment/CalendarFragment2.java" />
         <option value="$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/calendar/CalendarUtils.java" />
         <option value="$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/fragment/NavigationDrawerFragment.java" />
@@ -1918,6 +1923,16 @@
         <option value="$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/GradeCardArrayAdapter.java" />
         <option value="$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/LvaCardArrayAdapter.java" />
         <option value="$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/fragment/LvaDetailFragment.java" />
+        <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/layout/exam_card_header.xml" />
+        <option value="$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/ExamListExam.java" />
+        <option value="$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/view/ExamCardListView.java" />
+        <option value="$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/ExamCardArrayAdapter.java" />
+        <option value="$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/fragment/ExamFragment.java" />
+        <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/layout/fragment_card_exam.xml" />
+        <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/layout/exam_list_item.xml" />
+        <option value="$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/ExamCard.java" />
+        <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/layout/exam_card_expand_section.xml" />
+        <option value="$PROJECT_DIR$/aNewJKUApp/src/main/res/values/styles.xml" />
       </list>
     </option>
   </component>
@@ -2131,6 +2146,36 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="values" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="anewjkuapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="anewjkuapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="aNewJKUApp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="menu" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -2225,7 +2270,75 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="view" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="anewjkuapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="anewjkuapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="aNewJKUApp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="anewjkuapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="fragment" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="anewjkuapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="anewjkuapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="aNewJKUApp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="anewjkuapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="calendar" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -2258,15 +2371,15 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="org.voidsink.anewjkuapp" />
       <recent name="org.voidsink.anewjkuapp.view" />
+      <recent name="org.voidsink.anewjkuapp" />
       <recent name="org.voidsink.anewjkuapp.fragment" />
       <recent name="org.voidsink.anewjkuapp.kusss" />
       <recent name="org.voidsink.anewjkuapp.calendar" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\GitHub\anewjkuapp\aNewJKUApp\src\main\res\layout" />
       <recent name="D:\GitHub\anewjkuapp\aNewJKUApp\src\main\res\menu" />
+      <recent name="D:\GitHub\anewjkuapp\aNewJKUApp\src\main\res\layout" />
       <recent name="D:\GitHub\anewjkuapp\aNewJKUApp\src\main\res\values" />
       <recent name="D:\GitHub\anewjkuapp\aNewJKUApp\src\main\res\drawable" />
       <recent name="D:\GitHub\anewjkuapp\aNewJKUApp\src\main\java\org\voidsink\anewjkuapp\base" />
@@ -2592,101 +2705,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://P:/android-sdk/platforms/android-19/android.jar!/android/view/LayoutInflater.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.80497134" vertical-offset="480" max-vertical-offset="1003">
-          <caret line="54" column="0" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/aNewJKUApp/build/intermediates/exploded-aar/com.github.gabrielemariotti.cards/library/1.9.0/classes.jar!/it/gmariotti/cardslib/library/internal/CardArrayAdapter.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.037736" vertical-offset="145" max-vertical-offset="731">
-          <caret line="18" column="36" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2278">
-          <caret line="11" column="30" selection-start-line="11" selection-start-column="30" selection-end-line="11" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/res/values/styles.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="765">
-          <caret line="15" column="18" selection-start-line="15" selection-start-column="18" selection-end-line="15" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/calendar/CalendarUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="511" max-vertical-offset="2601">
-          <caret line="69" column="67" selection-start-line="69" selection-start-column="67" selection-end-line="69" selection-end-column="67" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/notification/CalendarChangedNotification.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.1491228" vertical-offset="0" max-vertical-offset="1904">
-          <caret line="8" column="46" selection-start-line="8" selection-start-column="46" selection-end-line="8" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/res/menu/calendar.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.20504385" vertical-offset="0" max-vertical-offset="912">
-          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/calendar/CalendarCard.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.31469297" vertical-offset="903" max-vertical-offset="2652">
-          <caret line="70" column="26" selection-start-line="70" selection-start-column="26" selection-end-line="70" selection-end-column="26" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/calendar/CalendarCardArrayAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.74561405" vertical-offset="0" max-vertical-offset="1207">
-          <caret line="58" column="0" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/PreferenceWrapper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5066225" vertical-offset="1989" max-vertical-offset="3944">
-          <caret line="149" column="86" selection-start-line="149" selection-start-column="8" selection-end-line="149" selection-end-column="86" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/res/xml/preference_app.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.28145695" vertical-offset="0" max-vertical-offset="604">
-          <caret line="10" column="34" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
-          <folding>
-            <element signature="e#428#470#0" expanded="false" />
-            <element signature="e#497#537#0" expanded="false" />
-            <element signature="e#640#666#0" expanded="false" />
-            <element signature="e#826#859#0" expanded="false" />
-            <element signature="e#927#954#0" expanded="false" />
-            <element signature="e#1107#1156#0" expanded="false" />
-            <element signature="e#1183#1230#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/res/menu/lva_card_popup_menu.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.11258278" vertical-offset="0" max-vertical-offset="604">
@@ -2771,8 +2789,8 @@
         <state vertical-scroll-proportion="-0.014900662" vertical-offset="383" max-vertical-offset="3026">
           <caret line="37" column="7" selection-start-line="37" selection-start-column="7" selection-end-line="37" selection-end-column="7" />
           <folding>
-            <element signature="e#5740#5741#0" expanded="true" />
-            <element signature="e#5800#5801#0" expanded="true" />
+            <element signature="e#5740#5741#0" expanded="false" />
+            <element signature="e#5800#5801#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2819,7 +2837,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="2027" max-vertical-offset="2618">
           <caret line="138" column="32" selection-start-line="138" selection-start-column="32" selection-end-line="138" selection-end-column="32" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2883,26 +2901,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/ExamListAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33222592" vertical-offset="123" max-vertical-offset="2142">
-          <caret line="30" column="8" selection-start-line="30" selection-start-column="8" selection-end-line="30" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/MensaItem.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33887044" vertical-offset="0" max-vertical-offset="602">
           <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/ExamListItem.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.056478404" vertical-offset="0" max-vertical-offset="602">
-          <caret line="2" column="17" selection-start-line="2" selection-start-column="17" selection-end-line="2" selection-end-column="17" />
           <folding />
         </state>
       </provider>
@@ -3017,9 +3019,35 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/fragment/LvaDetailFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.28145695" vertical-offset="1173" max-vertical-offset="3281">
+          <caret line="121" column="0" selection-start-line="121" selection-start-column="0" selection-end-line="121" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/fragment/LvaFragment2.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.0976821" vertical-offset="408" max-vertical-offset="2108">
+          <caret line="89" column="0" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/LvaCardArrayAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.26821193" vertical-offset="637" max-vertical-offset="1411">
+          <caret line="49" column="29" selection-start-line="49" selection-start-column="29" selection-end-line="49" selection-end-column="29" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/GradeCardArrayAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="671" max-vertical-offset="1445">
+        <state vertical-scroll-proportion="0.3245033" vertical-offset="671" max-vertical-offset="1445">
           <caret line="51" column="0" selection-start-line="51" selection-start-column="0" selection-end-line="58" selection-end-column="132" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -3029,28 +3057,123 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/LvaCardArrayAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="637" max-vertical-offset="1411">
-          <caret line="49" column="29" selection-start-line="49" selection-start-column="29" selection-end-line="49" selection-end-column="29" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
+    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/res/layout/exam_card_header.xml">
+      <provider editor-type-id="android-designer">
+        <state />
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/fragment/LvaFragment2.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="408" max-vertical-offset="2108">
-          <caret line="89" column="0" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.17677642" vertical-offset="0" max-vertical-offset="577">
+          <caret line="6" column="29" selection-start-line="6" selection-start-column="29" selection-end-line="6" selection-end-column="29" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/fragment/LvaDetailFragment.java">
+    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/res/menu/exam_card_popup_menu.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.22516556" vertical-offset="1173" max-vertical-offset="3281">
-          <caret line="119" column="8" selection-start-line="119" selection-start-column="8" selection-end-line="119" selection-end-column="8" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="604">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/ExamListExam.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.49671054" vertical-offset="40" max-vertical-offset="1105">
+          <caret line="34" column="23" selection-start-line="34" selection-start-column="23" selection-end-line="34" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/calendar/CalendarCardArrayAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8322368" vertical-offset="295" max-vertical-offset="1207">
+          <caret line="80" column="31" selection-start-line="80" selection-start-column="16" selection-end-line="80" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aNewJKUApp/build/generated/source/r/debug/org/voidsink/anewjkuapp/R.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.35217902" vertical-offset="29417" max-vertical-offset="83963">
+          <caret line="1753" column="32" selection-start-line="1753" selection-start-column="32" selection-end-line="1753" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/ExamCardArrayAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.31688598" vertical-offset="0" max-vertical-offset="1105">
+          <caret line="36" column="11" selection-start-line="36" selection-start-column="11" selection-end-line="36" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/view/ExamCardListView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.2246941" vertical-offset="1447" max-vertical-offset="2346">
+          <caret line="112" column="14" selection-start-line="112" selection-start-column="14" selection-end-line="112" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/res/layout/fragment_card_exam.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33398822" vertical-offset="0" max-vertical-offset="509">
+          <caret line="10" column="51" selection-start-line="10" selection-start-column="51" selection-end-line="10" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/res/layout/exam_list_item.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.259259" vertical-offset="630" max-vertical-offset="1445">
+          <caret line="47" column="39" selection-start-line="47" selection-start-column="39" selection-end-line="47" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/fragment/ExamFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="153" max-vertical-offset="1989">
+          <caret line="56" column="0" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/java/org/voidsink/anewjkuapp/ExamCard.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1623" max-vertical-offset="2227">
+          <caret line="122" column="54" selection-start-line="122" selection-start-column="54" selection-end-line="122" selection-end-column="54" />
+          <folding>
+            <element signature="e#3207#3208#0" expanded="true" />
+            <element signature="e#3261#3262#0" expanded="true" />
+            <element signature="e#4590#4591#0" expanded="true" />
+            <element signature="e#4618#4619#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/res/layout/exam_card_expand_section.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-7.5555553" vertical-offset="0" max-vertical-offset="357">
+          <caret line="12" column="45" selection-start-line="12" selection-start-column="45" selection-end-line="12" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/aNewJKUApp/src/main/res/values/styles.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.2963576" vertical-offset="314" max-vertical-offset="918">
+          <caret line="29" column="31" selection-start-line="29" selection-start-column="31" selection-end-line="29" selection-end-column="31" />
           <folding />
         </state>
       </provider>

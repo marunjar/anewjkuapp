@@ -12,34 +12,17 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/exam_list_item_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="3dp"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textStyle="bold" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/exam_list_item_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:padding="3dp"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-            <TextView
                 android:id="@+id/exam_list_item_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/exam_list_item_date"
                 android:gravity="center_vertical"
                 android:padding="3dp"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -53,21 +36,6 @@
                 android:padding="3dp"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </RelativeLayout>
-
-        <TextView
-            android:id="@+id/exam_list_item_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="3dp"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        <TextView
-            android:id="@+id/exam_list_item_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="3dp"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textStyle="bold" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -99,6 +67,14 @@
                 android:padding="3dp"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/exam_list_item_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="3dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </LinearLayout><!-- From: file:/D:/GitHub/anewjkuapp/aNewJKUApp/src/main/res/layout/exam_list_item.xml -->

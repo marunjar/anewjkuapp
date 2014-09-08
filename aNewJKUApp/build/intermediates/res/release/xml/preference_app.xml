@@ -2,11 +2,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory android:title="@string/pref_cat_app_main" >
+        <!-- TODO: activate theming: dark design temporary disabled, problems with cards -->
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="pref_key_use_light_theme"
             android:summary="@string/pref_app_use_light_theme_summary"
-            android:title="@string/pref_app_use_light_theme_title" />
+            android:title="@string/pref_app_use_light_theme_title"
+            android:enabled="false"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_cat_app_map" >
         <org.voidsink.anewjkuapp.base.MapFilePreference
