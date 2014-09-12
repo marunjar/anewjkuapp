@@ -137,13 +137,12 @@ public class Analytics {
 			if (t != null && e != null) {
 				t.send(new HitBuilders.ExceptionBuilder()
 						.setFatal(fatal)
-						.setCustomDimension(GA_DIM_EXCEPTION,
-								e.getClass().getSimpleName())
+//						.setCustomDimension(GA_DIM_EXCEPTION,
+//								e.getClass().getSimpleName())
 						.setDescription(
 								new StandardExceptionParser(c, null)
 										.getDescription(Thread.currentThread()
 												.getName(), e)
-
 						).build());
 			}
 		} catch (Exception e2) {
