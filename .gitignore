@@ -24,6 +24,7 @@ local.properties
 .idea/
 .gradle/
 build/
+*/build/
 
 # External tool builders
 .externalToolBuilders/
