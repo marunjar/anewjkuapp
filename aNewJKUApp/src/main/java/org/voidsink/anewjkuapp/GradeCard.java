@@ -49,14 +49,14 @@ public class GradeCard extends Card {
                 .findViewById(R.id.grade_list_grade_lvanr);
         TextView term = (TextView) view
                 .findViewById(R.id.grade_list_grade_term);
-        // skz = (TextView) convertView
-        // .findViewById(R.id.grade_list_grade_skz);
         TextView date = (TextView) view
                 .findViewById(R.id.grade_list_grade_date);
         TextView grade = (TextView) view
                 .findViewById(R.id.grade_list_grade_grade);
-        View chip = (View) view
-                .findViewById(R.id.grade_list_grade_chip);
+
+        TextView chipGrade = (TextView) view.findViewById(R.id.grade_chip_grade);
+        TextView chipInfo = (TextView) view.findViewById(R.id.grade_chip_info);
+        View chipBack = view.findViewById(R.id.grade_chip_background);
 
         title.setVisibility(View.GONE);
         if (!mGrade.getLvaNr().isEmpty()) {
@@ -73,10 +73,14 @@ public class GradeCard extends Card {
             term.setVisibility(View.GONE);
         }
 
+        chipGrade.setText(String.format("%d", mGrade.getGrade().getValue()));
+        chipInfo.setText(String.format("%.2f ECTS", mGrade.getEcts()));
+
         date.setText(df.format(mGrade.getDate()));
         grade.setText(mContext.getString(mGrade.getGrade()
                 .getStringResID()));
-        chip.setBackgroundColor(mGrade.getGrade().getColor());
+
+        chipBack.setBackgroundColor(mGrade.getGrade().getColor());
     }
 
     public GradeCard(Context context) {

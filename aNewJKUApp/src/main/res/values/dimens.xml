@@ -17,4 +17,8 @@
     <!-- set card dimension -->
     <dimen name="card_base_empty_height">10dp</dimen>
 
+    <!-- dimension for grade chip -->
+    <dimen name="grade_chip_info_size">12sp</dimen>
+    <dimen name="grade_chip_grade_size">28sp</dimen>
+
 </resources>

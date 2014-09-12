@@ -38,29 +38,28 @@ public class LvaCard extends Card {
 
     @Override
     public void setupInnerViewElements(ViewGroup parent, View view) {
-        TextView lvaNr = (TextView) view
-                .findViewById(R.id.lva_list2_item_lvanr);
-        TextView skz = (TextView) view
-                .findViewById(R.id.lva_list2_item_skz);
-        View chip = (View) view
-                .findViewById(R.id.lva_list2_chip);
-        TextView ects = (TextView) view
-                .findViewById(R.id.lva_list2_item_ects);
-        TextView code = (TextView) view
-                .findViewById(R.id.lva_list2_item_code);
+        TextView lvaNr = (TextView) view.findViewById(R.id.lva_list2_item_lvanr);
+        TextView skz = (TextView) view.findViewById(R.id.lva_list2_item_skz);
+        TextView code = (TextView) view.findViewById(R.id.lva_list2_item_code);
 
-        ExamGrade grade = this.lva.getGrade();
-        if (grade == null) {
-            chip.setBackgroundColor(CalendarUtils.COLOR_DEFAULT_LVA);
-        } else {
-            chip.setBackgroundColor(grade.getGrade().getColor());
-        }
+        View chipBack = view.findViewById(R.id.grade_chip_background);
+        TextView chipEcts = (TextView) view.findViewById(R.id.grade_chip_info);
+        TextView chipGrade = (TextView) view.findViewById(R.id.grade_chip_grade);
 
         lvaNr.setText(lva.getLva().getLvaNr());
         skz.setText(String.format("[%s]", lva.getLva().getSKZ()));
-        ects.setText(String.format("%.2f ECTS", lva.getLva()
-                .getEcts()));
         code.setText(lva.getLva().getCode());
+
+        ExamGrade grade = this.lva.getGrade();
+        if (grade == null) {
+            chipBack.setBackgroundColor(CalendarUtils.COLOR_DEFAULT_LVA);
+            chipGrade.setText("?");
+        } else {
+            chipBack.setBackgroundColor(grade.getGrade().getColor());
+            chipGrade.setText(String.format("%d", grade.getGrade().getValue()));
+        }
+        chipEcts.setText(String.format("%.2f ECTS", lva.getLva()
+                .getEcts()));
     }
 
     public LvaCard(Context context) {
