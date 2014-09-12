@@ -43,7 +43,6 @@ public class CalendarFragment extends BaseFragment {
 	private CalendarCardListView mListView;
 	private CalendarCardArrayAdapter mAdapter;
 	private ContentObserver mCalendarObserver;
-    private List<Card> mCards = new ArrayList<>();
 
 	long now = 0, then = 0;
 
@@ -65,7 +64,7 @@ public class CalendarFragment extends BaseFragment {
 		});
 		loadMore.setClickable(true);
 
-		mAdapter = new CalendarCardArrayAdapter(getContext(), mCards);
+		mAdapter = new CalendarCardArrayAdapter(getContext(), new ArrayList<Card>());
 
 //		mListView.addFooterView(loadMore);
 		mListView.setAdapter(mAdapter);

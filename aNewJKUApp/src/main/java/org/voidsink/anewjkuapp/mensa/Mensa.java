@@ -5,9 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.time.DateUtils;
-import org.voidsink.anewjkuapp.MensaItem;
 
-public class Mensa implements MensaItem {
+public class Mensa {
 
 	private String name;
 	private List<MensaDay> days;
@@ -33,11 +32,6 @@ public class Mensa implements MensaItem {
 
 	public String getName() {
 		return this.name;
-	}
-
-	@Override
-	public int getType() {
-		return TYPE_MENSA;
 	}
 
 	public MensaDay getDay(Date now) {

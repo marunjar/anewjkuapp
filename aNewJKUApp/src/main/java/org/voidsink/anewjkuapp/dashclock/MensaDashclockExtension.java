@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
-import org.voidsink.anewjkuapp.fragment.MensaFragment2;
+import org.voidsink.anewjkuapp.fragment.MensaFragment;
 import org.voidsink.anewjkuapp.mensa.ChoiceMenuLoader;
 import org.voidsink.anewjkuapp.mensa.ClassicMenuLoader;
 import org.voidsink.anewjkuapp.mensa.KHGMenuLoader;
@@ -132,7 +132,7 @@ public class MensaDashclockExtension extends DashClockExtension {
 							new Intent(getApplicationContext(),
 									MainActivity.class).putExtra(
 									MainActivity.ARG_SHOW_FRAGMENT,
-									MensaFragment2.class.getName()).addFlags(
+									MensaFragment.class.getName()).addFlags(
 									Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)));
 		} else {
 			publishUpdate(new ExtensionData().visible(false));

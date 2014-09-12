@@ -11,8 +11,7 @@ import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 
 import java.util.List;
 
-public class MensaFragment2 extends SlidingTabsFragment {
-
+public class MensaFragment extends SlidingTabsFragment {
 
     @Override
     protected void fillTabs(List<SlidingTabItem> mTabs) {

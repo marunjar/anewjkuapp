@@ -84,7 +84,7 @@ public class NavigationDrawerFragment extends BaseFragment {
 			new DrawerMenuItem("Info", OehInfoFragment.class),
 			new DrawerMenuItem("Rechte", OehRightsFragment.class),
 			new DrawerMenuSection("Diverses"),
-			new DrawerMenuItem("Mensa", MensaFragment2.class),
+			new DrawerMenuItem("Mensa", MensaFragment.class),
 			// new DrawerMenuSection("Veranstaltungen"),
 			// new DrawerMenuItem("Veranstaltungen"),
 			new DrawerMenuItem("Campus", MapFragment.class),

@@ -2,9 +2,8 @@ package org.voidsink.anewjkuapp.mensa;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.voidsink.anewjkuapp.MensaItem;
 
-public class MensaMenu implements MensaItem {
+public class MensaMenu {
 
 	private String name;
 	private String soup;
@@ -65,8 +64,4 @@ public class MensaMenu implements MensaItem {
 		return this.oehBonus;
 	}
 
-	@Override
-	public int getType() {
-		return TYPE_MENU;
-	}
 }

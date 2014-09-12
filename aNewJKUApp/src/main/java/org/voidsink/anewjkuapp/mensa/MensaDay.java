@@ -8,9 +8,8 @@ import java.util.Date;
 import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.voidsink.anewjkuapp.MensaItem;
 
-public class MensaDay implements MensaItem {
+public class MensaDay {
 
 	@SuppressLint("SimpleDateFormat")
 	private static final SimpleDateFormat df = new SimpleDateFormat(
@@ -48,11 +47,6 @@ public class MensaDay implements MensaItem {
 
 	public Date getDate() {
 		return this.date;
-	}
-
-	@Override
-	public int getType() {
-		return TYPE_DAY;
 	}
 
 	public void setDate(Date date) {
