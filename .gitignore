@@ -16,12 +16,13 @@ local.properties
 .settings/
 .loadpath
 
-.idea/
-/.idea
-*/.idea/
 
-/build
-*/build/
+#################
+## IntelliJ
+#################
+
+.idea/
+.gradle/
 build/
 
 # External tool builders
