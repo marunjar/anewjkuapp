@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import org.voidsink.anewjkuapp.calendar.CalendarCard;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
+import org.voidsink.anewjkuapp.view.DateHeaderCard;
 import org.voidsink.anewjkuapp.view.ExamCardListView;
 import org.voidsink.anewjkuapp.view.GradeCardListView;
 
@@ -50,9 +51,7 @@ public class ExamCardArrayAdapter extends CardArrayAdapter implements StickyList
         CardView cardView= (CardView)view.findViewById(R.id.grade_card_header_id);
         Card card = getItem(position);
         if (card instanceof ExamCard) {
-            Card headerCard = new Card(getContext());
-            String header = DateFormat.getDateInstance().format(new Date(((ExamCard) card).getExam().getDate().getTime()));
-            headerCard.setTitle(header);
+            Card headerCard = new DateHeaderCard(getContext(), ((ExamCard) card).getExam().getDate());
             cardView.setCard(headerCard);
         }
         return view;

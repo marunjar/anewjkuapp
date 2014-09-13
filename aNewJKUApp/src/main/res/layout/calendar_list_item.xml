@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:gravity="fill_vertical"
     android:orientation="horizontal"
-    android:paddingRight="10dp" >
+    android:padding="@dimen/card_content_padding">
 
     <View
         android:id="@+id/calendar_list_item_chip"

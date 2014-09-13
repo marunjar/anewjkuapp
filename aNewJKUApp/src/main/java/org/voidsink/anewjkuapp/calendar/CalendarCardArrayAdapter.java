@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.view.CalendarCardListView;
+import org.voidsink.anewjkuapp.view.DateHeaderCard;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -48,10 +49,7 @@ public class CalendarCardArrayAdapter extends CardArrayAdapter implements Sticky
         CardView cardView= (CardView)view.findViewById(R.id.calendar_card_header_id);
         Card card = getItem(position);
         if (card instanceof CalendarCard) {
-            String header = DateFormat.getDateInstance().format(new Date(((CalendarCard) card).getDtStart()));
-
-            Card headerCard = new Card(getContext());
-            headerCard.setTitle(header);
+            Card headerCard = new DateHeaderCard(getContext(), new Date(((CalendarCard) card).getDtStart()));
             cardView.setCard(headerCard);
         }
         return view;

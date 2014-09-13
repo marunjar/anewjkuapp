@@ -9,6 +9,7 @@ import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.view.LvaCardListView;
+import org.voidsink.anewjkuapp.view.LvaHeaderCard;
 
 import java.text.Format;
 import java.util.ArrayList;
@@ -48,19 +49,7 @@ public class LvaCardArrayAdapter extends CardArrayAdapter implements StickyListH
         CardView cardView= (CardView)view.findViewById(R.id.lva_card_header_id);
         Card card = getItem(position);
         if (card instanceof LvaCard) {
-            Card headerCard = new Card(getContext());
-            String header = getContext().getString(((LvaCard) card).getLva().getState().getStringResID());
-
-            List<LvaWithGrade> lvas = new ArrayList<>();
-            for (int i = 0; i < getCount(); i++) {
-                Card c = getItem(i);
-                if (c instanceof LvaCard) {
-                    lvas.add(((LvaCard) c).getLva());
-                }
-            }
-            header += String.format(" (%.2f ECTS)", AppUtils.getECTS(((LvaCard) card).getLva().getState(), lvas));
-
-            headerCard.setTitle(header);
+            Card headerCard = new LvaHeaderCard(getContext(), ((LvaCard) card).getLva().getState());
             cardView.setCard(headerCard);
         }
         return view;

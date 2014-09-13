@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.view.GradeCardListView;
+import org.voidsink.anewjkuapp.view.GradeHeaderCard;
 
 import java.text.Format;
 import java.util.ArrayList;
@@ -46,19 +47,7 @@ public class GradeCardArrayAdapter extends CardArrayAdapter implements StickyLis
         CardView cardView= (CardView)view.findViewById(R.id.grade_card_header_id);
         Card card = getItem(position);
         if (card instanceof GradeCard) {
-            Card headerCard = new Card(getContext());
-            String header = getContext().getString(((GradeCard) card).getGrade().getGradeType().getStringResID());
-
-            List<ExamGrade> grades = new ArrayList<>();
-            for (int i = 0; i < getCount(); i++) {
-                Card c = getItem(i);
-                if (c instanceof GradeCard) {
-                    grades.add(((GradeCard) c).getGrade());
-                }
-            }
-            header += String.format(" (ø %.2f)", AppUtils.getAvgGrade(grades, false, ((GradeCard) card).getGrade().getGradeType()));
-
-            headerCard.setTitle(header);
+            Card headerCard = new GradeHeaderCard(getContext(), ((GradeCard) card).getGrade().getGradeType());
             cardView.setCard(headerCard);
         }
         return view;

@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.voidsink.anewjkuapp.calendar.CalendarCard;
+import org.voidsink.anewjkuapp.view.DateHeaderCard;
 import org.voidsink.anewjkuapp.view.ExamCardListView;
 import org.voidsink.anewjkuapp.view.MenuCardListView;
 
@@ -47,9 +49,7 @@ public class MenuCardArrayAdapter extends CardArrayAdapter implements StickyList
         CardView cardView= (CardView)view.findViewById(R.id.menu_card_header_id);
         Card card = getItem(position);
         if (card instanceof MenuCard) {
-            Card headerCard = new Card(getContext());
-            String header = DateFormat.getDateInstance().format(new Date(((MenuCard) card).getDay().getDate().getTime()));
-            headerCard.setTitle(header);
+            Card headerCard = new DateHeaderCard(getContext(), ((MenuCard) card).getDay().getDate());
             cardView.setCard(headerCard);
         }
         return view;

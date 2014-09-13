@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="fill_vertical"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:padding="@dimen/card_content_padding">
 
     <include layout="@layout/grade_chip"/>
 
