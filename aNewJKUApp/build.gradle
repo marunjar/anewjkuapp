@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-
 android {
     signingConfigs {
         config {
@@ -20,23 +19,22 @@ android {
             applicationVariants.all { variant ->
                 appendVersionNameVersionCode(variant, defaultConfig)
             }
+
         }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
-
     packagingOptions {
-        //exclude 'META-INF/DEPENDENCIES'
-        //exclude 'META-INF/NOTICE'
-        //exclude 'META-INF/LICENSE'
+//exclude 'META-INF/DEPENDENCIES'
+//exclude 'META-INF/NOTICE'
+//exclude 'META-INF/LICENSE'
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
-        //exclude 'META-INF/ASL2.0'
+//exclude 'META-INF/ASL2.0'
     }
 }
-
 dependencies {
     compile 'de.cketti.library.changelog:ckchangelog:1.2.0'
     compile project(':voidsinkContributors')
@@ -46,7 +44,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:20.0.0'
     compile 'com.github.gabrielemariotti.cards:library:1.9.0'
     compile 'se.emilsjolander:stickylistheaders:2.5.0'
-//    compile 'org.apache.commons:commons-lang3:3.3.2'
     compile files('libs/androidplot-core-0.6.1.jar')
     compile files('libs/backport-util-concurrent-3.1.jar')
     compile files('libs/commons-codec-1.8.jar')
@@ -63,15 +60,17 @@ dependencies {
     compile files('libs/mapsforge-map-reader-0.4.3.jar')
 }
 
+
+
 def appendVersionNameVersionCode(variant, defaultConfig) {
     if(variant.zipAlign) {
         def file = variant.outputFile
-        def fileName = file.name.replace(".apk", "-" + manifestVersionName() + "-" + getDate() - ".apk")
+        def fileName = file.name.replace(".apk", "-" + manifestVersionName() + ".apk")
         variant.outputFile = new File(file.parent, fileName)
     }
 
     def file = variant.packageApplication.outputFile
-    def fileName = file.name.replace(".apk", "-" + manifestVersionName() + "-" + getDate() - ".apk")
+    def fileName = file.name.replace(".apk", "-" + manifestVersionName() + ".apk")
     variant.packageApplication.outputFile = new File(file.parent, fileName)
 }
 
@@ -80,10 +79,4 @@ def manifestVersionName() {
     def ns = new groovy.xml.Namespace("http://schemas.android.com/apk/res/android", "android")
     def xml = new XmlParser().parse(manifestFile)
     return xml.attributes()[ns.versionName].toString()
-}
-
-def getDate() {
-    def date = new Date()
-    def formattedDate = date.format('yyyyMMddHHmmss')
-    return formattedDate
 }
