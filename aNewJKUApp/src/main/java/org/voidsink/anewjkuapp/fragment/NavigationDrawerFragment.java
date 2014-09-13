@@ -1,9 +1,8 @@
 package org.voidsink.anewjkuapp.fragment;
 
-import android.support.v7.app.ActionBarActivity;
 import android.accounts.Account;
 import android.app.Activity;
-import android.support.v7.app.ActionBar;
+import android.app.ActionBar;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -362,7 +361,7 @@ public class NavigationDrawerFragment extends BaseFragment {
 	}
 
 	private ActionBar getActionBar() {
-		return ((ActionBarActivity) getActivity()).getSupportActionBar();
+		return getActivity().getActionBar();
 	}
 
 	/**

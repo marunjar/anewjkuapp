@@ -1,5 +1,4 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="org.voidsink.anewjkuapp.fragment.MapFragment" >
 
@@ -8,12 +7,12 @@
         android:icon="@drawable/ic_menu_search"
         android:queryHint="@string/search_poi_hint"
         android:title="@string/search_poi_title"
-        app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="ifRoom|collapseActionView"/>
+        android:actionViewClass="android.widget.SearchView"
+        android:showAsAction="ifRoom|collapseActionView"/>
     <item
         android:id="@+id/action_snap_to_location"
         android:title="@string/action_snap_to_location"
         android:icon="@drawable/ic_menu_mylocation"
         android:checkable="true"
-        app:showAsAction="always"/>
+        android:showAsAction="always"/>
 </menu>

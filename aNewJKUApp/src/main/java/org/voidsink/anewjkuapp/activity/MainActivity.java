@@ -4,14 +4,14 @@ import java.util.List;
 
 import android.accounts.Account;
 import android.annotation.TargetApi;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
+import android.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -45,7 +45,7 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 
 import de.cketti.library.changelog.ChangeLog;
 
-public class MainActivity extends ActionBarActivity implements
+public class MainActivity extends FragmentActivity implements
 		NavigationDrawerFragment.NavigationDrawerCallbacks {
 
 	public static final String ARG_SHOW_FRAGMENT = "show_fragment";
@@ -248,7 +248,7 @@ public class MainActivity extends ActionBarActivity implements
 	}
 
 	public void restoreActionBar() {
-		ActionBar actionBar = getSupportActionBar();
+		ActionBar actionBar = getActionBar();
 		if (mNavigationDrawerFragment != null
 				&& !mNavigationDrawerFragment.isDrawerOpen()) {
 			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
