@@ -131,7 +131,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 					+ KusssContentContract.Lva.LVA_TABLE_NAME);
 		} catch (Exception e) {
 			Analytics.sendException(mContext, e, true);
-			Log.e(TAG, "import calendar failed", e);
+			Log.e(TAG, "dropUserData", e);
 		}
 	}
 }
