@@ -131,4 +131,5 @@
     <string name="lva_state_open">Offen</string>
     <string name="lva_state_done">Abgeschlossen</string>
     <string name="lva_state_all">alle</string>
+    <string name="map_place_not_found">Ort \'%s\' nicht gefunden</string>
 </resources>

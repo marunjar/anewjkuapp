@@ -1,6 +1,7 @@
 package org.voidsink.anewjkuapp;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,7 +53,7 @@ public class LvaCard extends Card {
 
         ExamGrade grade = this.lva.getGrade();
         if (grade == null) {
-            chipBack.setBackgroundColor(CalendarUtils.COLOR_DEFAULT_LVA);
+            chipBack.setBackgroundColor(Color.GRAY);
             chipGrade.setText("?");
         } else {
             chipBack.setBackgroundColor(grade.getGrade().getColor());
@@ -72,14 +73,14 @@ public class LvaCard extends Card {
         // init header
         CardHeader header = new CardHeader(context);
 
-        header.setPopupMenu(R.menu.lva_card_popup_menu, new CardHeader.OnClickCardHeaderPopupMenuListener(){
-            @Override
-            public void onMenuItemClick(BaseCard card, MenuItem item) {
-                switch (item.getItemId()) {
-                    default: Toast.makeText(mContext, "Click on " + item.getTitle(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+//        header.setPopupMenu(R.menu.lva_card_popup_menu, new CardHeader.OnClickCardHeaderPopupMenuListener(){
+//            @Override
+//            public void onMenuItemClick(BaseCard card, MenuItem item) {
+//                switch (item.getItemId()) {
+//                    default: Toast.makeText(mContext, "Click on " + item.getTitle(), Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
 
         addCardHeader(header);
     }

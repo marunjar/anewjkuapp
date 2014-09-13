@@ -3,9 +3,11 @@ package org.voidsink.anewjkuapp.base;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.SettingsActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Menu;
@@ -15,8 +17,9 @@ import android.view.MenuItem;
 public class BaseFragment extends Fragment {
 
 	private static final String TAG = BaseFragment.class.getSimpleName();
+    private Intent mPendingIntent = null;
 
-	@Override
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -68,7 +71,29 @@ public class BaseFragment extends Fragment {
 		super.onDestroyOptionsMenu();
 	}
 
-	public void handleIntent(Intent intent) {
-
+	public final void handleIntent(Intent intent) {
+        if (getContext() == null) {
+            this.mPendingIntent = intent;
+        } else {
+            handlePendingIntent(intent);
+            this.mPendingIntent = null;
+        }
 	}
+
+    public void handlePendingIntent(Intent intent) {
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (mPendingIntent != null) {
+            if (getContext() != null) {
+                handlePendingIntent(mPendingIntent);
+            } else {
+                Log.w(TAG, "context not set, can't call handlePendingIntent");
+            }
+            this.mPendingIntent = null;
+        }
+    }
 }

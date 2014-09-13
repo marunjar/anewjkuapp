@@ -49,10 +49,11 @@ public class MainActivity extends ActionBarActivity implements
 		NavigationDrawerFragment.NavigationDrawerCallbacks {
 
 	public static final String ARG_SHOW_FRAGMENT = "show_fragment";
+    public static final String ARG_EXACT_LOCATION = "exact_location";
 
 	private static final String TAG = MainActivity.class.getSimpleName();
 
-	/**
+    /**
 	 * Fragment managing the behaviors, interactions and presentation of the
 	 * navigation drawer.
 	 */

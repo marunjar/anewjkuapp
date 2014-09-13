@@ -47,6 +47,7 @@ import org.voidsink.anewjkuapp.PoiAdapter;
 import org.voidsink.anewjkuapp.PoiContentContract;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 
 import android.app.AlertDialog;
@@ -74,11 +75,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-/**
- * A fragment representing a single Item detail screen. This fragment is either
- * contained in a {@link ItemListActivity} in two-pane mode (on tablets) or a
- * {@link ItemDetailActivity} on handsets.
- */
 public class MapFragment extends BaseFragment implements
 		SearchView.OnQueryTextListener {
 	LocationOverlay mMyLocationOverlay;
@@ -122,28 +118,30 @@ public class MapFragment extends BaseFragment implements
 	}
 
 	@Override
-	public void handleIntent(Intent intent) {
-		super.handleIntent(intent);
+	public void handlePendingIntent(Intent intent) {
+		super.handlePendingIntent(intent);
 		if (intent != null) {
 			if (Intent.ACTION_VIEW.equals(intent.getAction())) {
 				if (intent.getData() != null) {
 					finishSearch(intent.getData());
 				} else {
 					String query = intent.getStringExtra(SearchManager.QUERY);
-					doSearch(query);
+                    boolean isExactLocation = intent.getBooleanExtra(MainActivity.ARG_EXACT_LOCATION, false);
+					doSearch(query, isExactLocation);
 				}
 			} else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 				if (intent.getData() != null) {
 					finishSearch(intent.getData());
 				} else {
 					String query = intent.getStringExtra(SearchManager.QUERY);
-					doSearch(query);
+                    boolean isExactLocation = intent.getBooleanExtra(MainActivity.ARG_EXACT_LOCATION, false);
+					doSearch(query, isExactLocation);
 				}
 			}
 		}
 	}
 
-	private void doSearch(String query) {
+	private void doSearch(String query, boolean isExactLocation) {
 		Log.i(TAG, "query: " + query);
 
 		List<Poi> pois = new ArrayList<Poi>();
@@ -155,41 +153,44 @@ public class MapFragment extends BaseFragment implements
 		Cursor c = cr.query(searchUri, ImportPoiTask.POI_PROJECTION, null,
 				null, null);
 		while (c.moveToNext()) {
-			pois.add(new Poi(c));
+            Poi p = new Poi(c);
+            if (!isExactLocation || p.getName().equalsIgnoreCase(query)) {
+                pois.add(p);
+            }
 		}
 		c.close();
 
 		if (pois.size() == 0) {
-			Toast.makeText(getContext(), "Ziel nicht gefunden", Toast.LENGTH_SHORT)
+			Toast.makeText(getContext(), String.format(getContext().getString(R.string.map_place_not_found), query), Toast.LENGTH_LONG)
 					.show();
 		} else if (pois.size() == 1) {
 			finishSearch(pois.get(0));
 		} else {
-			AlertDialog.Builder poiSelector = new AlertDialog.Builder(
-					new ContextThemeWrapper(getContext(), R.style.AppTheme));
+            AlertDialog.Builder poiSelector = new AlertDialog.Builder(
+                    new ContextThemeWrapper(getContext(), R.style.AppTheme));
 
-			poiSelector.setIcon(R.drawable.ic_launcher);
+            poiSelector.setIcon(R.drawable.ic_launcher);
 
-			final PoiAdapter arrayAdapter = new PoiAdapter(getContext());
-			arrayAdapter.addAll(pois);
+            final PoiAdapter arrayAdapter = new PoiAdapter(getContext());
+            arrayAdapter.addAll(pois);
 
-			poiSelector.setNegativeButton(android.R.string.cancel,
-					new DialogInterface.OnClickListener() {
+            poiSelector.setNegativeButton(android.R.string.cancel,
+                    new DialogInterface.OnClickListener() {
 
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.dismiss();
-						}
-					});
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
 
-			poiSelector.setAdapter(arrayAdapter,
-					new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							finishSearch(arrayAdapter.getItem(which));
-						}
-					});
-			poiSelector.show();
+            poiSelector.setAdapter(arrayAdapter,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finishSearch(arrayAdapter.getItem(which));
+                        }
+                    });
+            poiSelector.show();
 		}
 	}
 
@@ -218,7 +219,9 @@ public class MapFragment extends BaseFragment implements
 
 			break;
 		}
-		mSearchView.setQuery("", false);
+        if (mSearchView != null) {
+            mSearchView.setQuery("", false);
+        }
 	}
 
 	@Override

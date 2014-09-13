@@ -1,5 +1,6 @@
 package org.voidsink.anewjkuapp.calendar;
 
+import android.app.SearchManager;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,9 @@ import android.widget.Toast;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.activity.MainActivity;
+import org.voidsink.anewjkuapp.fragment.CalendarFragment;
+import org.voidsink.anewjkuapp.fragment.MapFragment;
 
 import java.text.DateFormat;
 import java.util.BitSet;
@@ -127,11 +131,23 @@ public class CalendarCard extends Card {
                         Intent intent = new Intent(Intent.ACTION_VIEW)
                                 .setData(uri);
                         mContext.startActivity(intent);
+                        break;
                     }
                     case R.id.show_on_map: {
-                        Toast.makeText(mContext, "Click on " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(mContext, MainActivity.class).putExtra(
+                                MainActivity.ARG_SHOW_FRAGMENT,
+                                MapFragment.class.getName()).setAction(
+                                Intent.ACTION_SEARCH).addFlags(
+                                Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        if (card instanceof CalendarCard) {
+                            intent.putExtra(SearchManager.QUERY, ((CalendarCard) card).getLocation());
+                            intent.putExtra(MainActivity.ARG_EXACT_LOCATION, true);
+                        } else {
+                            intent.putExtra(SearchManager.QUERY, "Uniteich");
+                        }
+                        mContext.startActivity(intent);
+                        break;
                     }
-                    default: Toast.makeText(mContext, "Click on " + item.getTitle(), Toast.LENGTH_SHORT).show();
                 }
             }
         });

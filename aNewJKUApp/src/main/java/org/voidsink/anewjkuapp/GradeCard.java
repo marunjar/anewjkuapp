@@ -93,15 +93,15 @@ public class GradeCard extends Card {
         // init header
         CardHeader header = new CardHeader(context);
 
-        header.setPopupMenu(R.menu.grade_card_popup_menu, new CardHeader.OnClickCardHeaderPopupMenuListener() {
-            @Override
-            public void onMenuItemClick(BaseCard card, MenuItem item) {
-                switch (item.getItemId()) {
-                    default:
-                        Toast.makeText(mContext, "Click on " + item.getTitle(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+//        header.setPopupMenu(R.menu.grade_card_popup_menu, new CardHeader.OnClickCardHeaderPopupMenuListener() {
+//            @Override
+//            public void onMenuItemClick(BaseCard card, MenuItem item) {
+//                switch (item.getItemId()) {
+//                    default:
+//                        Toast.makeText(mContext, "Click on " + item.getTitle(), Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
 
         addCardHeader(header);
     }
