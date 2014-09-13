@@ -28,6 +28,8 @@ import org.voidsink.anewjkuapp.Analytics;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.text.format.DateUtils;
 import android.util.Log;
 import net.fortuna.ical4j.data.CalendarBuilder;
@@ -499,4 +501,10 @@ public class KusssHandler {
 		}
 
 	}
+
+    public void showExamInBrowser(Context c, String lvaNr) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(URL_GET_EXAMS));
+        c.startActivity(intent);
+        // TODO: create activity with webview that uses stored credentials to login and open page with search for lvanr
+    }
 }

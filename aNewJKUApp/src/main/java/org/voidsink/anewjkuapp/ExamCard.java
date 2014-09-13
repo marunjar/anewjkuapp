@@ -8,7 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
+import org.voidsink.anewjkuapp.kusss.KusssHandler;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -38,9 +38,9 @@ public class ExamCard extends Card {
         CardHeader header = getCardHeader();
         if (header != null) {
             header.setTitle(getTitle());
-            if (!mExam.getDescription().isEmpty()) {
-                header.setButtonExpandVisible(true);
-            }
+//            if (!mExam.getDescription().isEmpty()) {
+//                header.setButtonExpandVisible(true);
+//            }
         }
 
         if (!mExam.getDescription().isEmpty()) {
@@ -49,11 +49,13 @@ public class ExamCard extends Card {
         }
 
         //Add a viewToClickExpand to enable click on whole card
-        ViewToClickToExpand viewToClickToExpand =
-                ViewToClickToExpand.builder()
-                        .highlightView(false)
-                        .setupCardElement(ViewToClickToExpand.CardElementUI.CARD);
-        setViewToClickToExpand(viewToClickToExpand);
+        if (!mExam.getDescription().isEmpty()) {
+            ViewToClickToExpand viewToClickToExpand =
+                    ViewToClickToExpand.builder()
+                            .highlightView(false)
+                            .setupCardElement(ViewToClickToExpand.CardElementUI.CARD);
+            setViewToClickToExpand(viewToClickToExpand);
+        }
     }
 
     @Override
@@ -102,15 +104,19 @@ public class ExamCard extends Card {
         // init header
         CardHeader header = new CardHeader(context);
 
-//        header.setPopupMenu(R.menu.exam_card_popup_menu, new CardHeader.OnClickCardHeaderPopupMenuListener() {
-//            @Override
-//            public void onMenuItemClick(BaseCard card, MenuItem item) {
-//                switch (item.getItemId()) {
-//                    default:
-//                        Toast.makeText(mContext, "Click on " + item.getTitle(), Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
+        header.setPopupMenu(R.menu.exam_card_popup_menu, new CardHeader.OnClickCardHeaderPopupMenuListener() {
+            @Override
+            public void onMenuItemClick(BaseCard card, MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_exam_register: {
+                        KusssHandler.getInstance().showExamInBrowser(getContext(), ((ExamCard) card).getExam().getLvaNr());
+                        break;
+                    }
+                    default:
+                        Toast.makeText(mContext, "Click on " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         addCardHeader(header);
     }
