@@ -62,7 +62,7 @@ public class GradeFragment extends SlidingTabsFragment implements
 
     @Override
     protected void fillTabs(List<SlidingTabItem> mTabs) {
-        mTabs.add(new GradeTabItem("alle Semester", null, this.mGrades));
+        mTabs.add(new GradeTabItem(getString(R.string.all_terms), this.mTerms, this.mGrades));
 
         for (String term: mTerms) {
             mTabs.add(new GradeTabItem(term, term, this.mGrades));

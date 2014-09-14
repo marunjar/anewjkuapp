@@ -446,4 +446,81 @@ public class AppUtils {
 		return count;
 	}
 
+    public static List<LvaWithGrade> getLvasWithGrades(List<String> terms, List<Lva> lvas, List<ExamGrade> grades) {
+        List<LvaWithGrade> result = new ArrayList<LvaWithGrade>();
+
+        for (Lva lva : lvas) {
+            if (terms.contains(lva.getTerm())) {
+                ExamGrade grade = findGrade(grades, lva);
+                result.add(new LvaWithGrade(lva, grade));
+            }
+        }
+
+        AppUtils.removeDuplicates(result);
+
+        AppUtils.sortLVAsWithGrade(result);
+
+        return result;
+    }
+
+    private static ExamGrade findGrade(List<ExamGrade> grades, Lva lva) {
+        ExamGrade finalGrade = null;
+
+        for (ExamGrade grade : grades) {
+            if (grade.getCode().equals(lva.getCode())) {
+                if (finalGrade == null || finalGrade.getGrade() == Grade.G5) {
+                    finalGrade = grade;
+                }
+            }
+        }
+        if (finalGrade == null) {
+            Log.d(TAG, "findByLvaNr: " + lva.getLvaNr() + "/" + lva.getTitle());
+            for (ExamGrade grade : grades) {
+                if (grade.getLvaNr().equals(lva.getLvaNr())) {
+                    if (finalGrade == null || finalGrade.getGrade() == Grade.G5) {
+                        finalGrade = grade;
+                    }
+                }
+            }
+        }
+
+        return finalGrade;
+    }
+
+    private static void addIfRecent(List<ExamGrade> grades, ExamGrade grade) {
+        int i = 0;
+        while (i < grades.size()) {
+            ExamGrade g = grades.get(i);
+            // check only grades for same lva and term
+            if (g.getCode().equals(grade.getCode())
+                    && g.getLvaNr().equals(grade.getLvaNr())) {
+                // keep only recent (best and newest) grade
+                if (g.getDate().before(grade.getDate())) {
+                    // remove last grade
+                    grades.remove(i);
+                } else {
+                    // break without adding
+                    return;
+                }
+            } else {
+                i++;
+            }
+        }
+        // finally add grade
+        grades.add(grade);
+    }
+
+    public static List<ExamGrade> filterGrades(List<String> terms, List<ExamGrade> grades) {
+        List<ExamGrade> result = new ArrayList<ExamGrade>();
+        if (grades != null) {
+            for (ExamGrade grade : grades) {
+                if (terms == null || (terms.indexOf(grade.getTerm()) >= 0)) {
+                    addIfRecent(result, grade);
+                }
+            }
+        }
+        AppUtils.sortGrades(result);
+
+        return result;
+    }
 }

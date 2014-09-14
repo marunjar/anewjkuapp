@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent">
 
     <com.androidplot.pie.PieChart
         android:id="@+id/stat_card_lva_diagram_pie"
@@ -19,11 +20,5 @@
         androidPlot.graphWidget.marginRight="5dp"
         androidPlot.graphWidget.marginTop="5dp"
         android:padding="3dp" />
-
-    <ExpandableListView
-        android:id="@+id/lva_lists"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ExpandableListView>
 
 </LinearLayout>

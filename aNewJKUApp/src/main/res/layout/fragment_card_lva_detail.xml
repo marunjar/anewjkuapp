@@ -4,22 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.androidplot.pie.PieChart
-        android:id="@+id/lva_pie_chart"
-        android:layout_width="match_parent"
-        android:layout_height="170dp"
-        android:padding="3dp" />
-
-    <com.androidplot.xy.XYPlot
-        android:id="@+id/lva_bar_chart"
-        android:layout_width="match_parent"
-        android:layout_height="170dp"
-        androidPlot.graphWidget.marginBottom="5dp"
-        androidPlot.graphWidget.marginLeft="5dp"
-        androidPlot.graphWidget.marginRight="5dp"
-        androidPlot.graphWidget.marginTop="5dp"
-        android:padding="3dp" />
-
     <org.voidsink.anewjkuapp.view.LvaCardListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

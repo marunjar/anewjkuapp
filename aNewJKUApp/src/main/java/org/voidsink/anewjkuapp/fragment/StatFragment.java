@@ -14,6 +14,7 @@ import org.voidsink.anewjkuapp.AppUtils;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.LvaTabItem;
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.StatTabItem;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.base.SlidingTabItem;
@@ -28,11 +29,11 @@ import java.util.List;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 
-public class LvaFragment2 extends SlidingTabsFragment implements
+public class StatFragment extends SlidingTabsFragment implements
 		ContentObserverListener {
 
-	private static final String TAG = LvaFragment2.class.getSimpleName();
-	private BaseContentObserver mLvaObserver;
+	private static final String TAG = StatFragment.class.getSimpleName();
+	private BaseContentObserver mDataObserver;
 
     private List<Lva> mLvas = new ArrayList<Lva>();
     private List<ExamGrade> mGrades = new ArrayList<ExamGrade>();
@@ -43,7 +44,7 @@ public class LvaFragment2 extends SlidingTabsFragment implements
 			Bundle savedInstanceState) {
 		View v = super.onCreateView(inflater, container, savedInstanceState);
 
-		loadLvas(getActivity());
+		loadData(getActivity());
 
 		return v;
 	}
@@ -58,21 +59,21 @@ public class LvaFragment2 extends SlidingTabsFragment implements
 		uriMatcher.addURI(KusssContentContract.AUTHORITY,
 				KusssContentContract.Grade.PATH_CONTENT_CHANGED, 1);
 
-		mLvaObserver = new BaseContentObserver(uriMatcher, this);
+		mDataObserver = new BaseContentObserver(uriMatcher, this);
 		getActivity().getContentResolver().registerContentObserver(
 				KusssContentContract.Lva.CONTENT_CHANGED_URI, false,
-				mLvaObserver);
+                mDataObserver);
 		getActivity().getContentResolver().registerContentObserver(
 				KusssContentContract.Grade.CONTENT_CHANGED_URI, false,
-				mLvaObserver);
+                mDataObserver);
 	}
 
     @Override
     protected void fillTabs(List<SlidingTabItem> mTabs) {
-        mTabs.add(new LvaTabItem(getString(R.string.all_terms), this.mTerms, this.mLvas, this.mGrades));
+        mTabs.add(new StatTabItem(getString(R.string.all_terms), this.mTerms, this.mLvas, this.mGrades));
 
         for (String term: mTerms) {
-            mTabs.add(new LvaTabItem(term, this.mLvas, this.mGrades));
+            mTabs.add(new StatTabItem(term, this.mLvas, this.mGrades));
         }
     }
 
@@ -81,10 +82,10 @@ public class LvaFragment2 extends SlidingTabsFragment implements
 		super.onDestroy();
 
 		getActivity().getContentResolver().unregisterContentObserver(
-				mLvaObserver);
+                mDataObserver);
 	}
 
-	private void loadLvas(final Context context) {
+	private void loadData(final Context context) {
 		
 		new AsyncTask<Void, Void, Void>() {
 
@@ -128,8 +129,6 @@ public class LvaFragment2 extends SlidingTabsFragment implements
 			protected void onPostExecute(Void result) {
 				progressDialog.dismiss();
 
-				// Log.i(TAG, "loadLvas" + this.terms);
-
                 mLvas = this.lvas;
                 mGrades = this.grades;
                 mTerms = this.terms;
@@ -144,7 +143,6 @@ public class LvaFragment2 extends SlidingTabsFragment implements
 	@Override
 	public void onContentChanged(boolean selfChange) {
 		Log.i(TAG, "onContentChanged(" + selfChange + ")");
-		loadLvas(getActivity());
+		loadData(getActivity());
 	}
-
 }

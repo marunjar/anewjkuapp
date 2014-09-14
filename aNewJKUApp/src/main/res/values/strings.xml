@@ -122,7 +122,7 @@
     <string name="lva_done">abgeschlossene LVAs</string>
     <string name="lva_open">offene LVAs</string>
     <string name="lva_all">alle LVAs</string>
-    <string name="lva_all_terms">alle Semester</string>
+    <string name="all_terms">alle Semester</string>
     <string name="calendar_exam">JKU Prüfungen</string>
     <string name="calendar_lva">JKU LVAs</string>
     <string name="about_force_logout">Ausloggen</string>
@@ -130,7 +130,8 @@
     <string name="menu_show_on_map">auf Karte anzeigen</string>
     <string name="lva_state_open">Offen</string>
     <string name="lva_state_done">Abgeschlossen</string>
-    <string name="lva_state_all">alle</string>
+    <string name="lva_state_all">Gesamt</string>
     <string name="map_place_not_found">Ort \'%s\' nicht gefunden</string>
     <string name="menu_exam_register">in Kusss anzeigen</string>
+    <string name="grade_type_none_available">keine Noten verfügbar</string>
 </resources>

@@ -8,6 +8,7 @@ import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.fragment.GradeDetailFragment;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -15,19 +16,24 @@ import java.util.List;
  */
 public class GradeTabItem extends SlidingTabItem {
 
-    private final String mTerm;
+    private final List<String> mTerms;
     private final List<ExamGrade> mGrades;
 
-    public GradeTabItem(String title, String term, List<ExamGrade> grades) {
-        super(title, GradeDetailFragment.class, (term == null ? CalendarUtils.COLOR_DEFAULT_EXAM : CalendarUtils.COLOR_DEFAULT_LVA), Color.GRAY);
+    public GradeTabItem(String title, List<String> terms, List<ExamGrade> grades) {
+        super(title, GradeDetailFragment.class, (terms.size() <= 1 ? CalendarUtils.COLOR_DEFAULT_EXAM : CalendarUtils.COLOR_DEFAULT_LVA), Color.GRAY);
 
-        this.mTerm = term;
+        this.mTerms = terms;
         this.mGrades = grades;
+    }
+
+    public GradeTabItem(String title, String term, List<ExamGrade> grades) {
+        this(title, Arrays.asList(new String[]{term}), grades);
+
     }
 
     @Override
     public Fragment createFragment() {
-        return new GradeDetailFragment(this.mTerm, this.mGrades);
+        return new GradeDetailFragment(this.mTerms, this.mGrades);
     }
 
 
