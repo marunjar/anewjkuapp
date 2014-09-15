@@ -14,12 +14,12 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/grade_list_grade_title"
-            android:layout_width="match_parent"
+            android:id="@+id/grade_list_grade_date"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:padding="3dp"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textStyle="bold" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
             android:id="@+id/grade_list_grade_grade"
@@ -34,25 +34,13 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/grade_list_grade_date"
+                android:id="@+id/grade_list_grade_term"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
                 android:gravity="center_vertical"
                 android:padding="3dp"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
-            <TextView
-                android:id="@+id/grade_list_grade_skz"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/grade_list_grade_date"
-                android:gravity="center_vertical"
-                android:padding="3dp"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-            </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
 
             <TextView
                 android:id="@+id/grade_list_grade_lvanr"
@@ -60,15 +48,16 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:padding="3dp"
+                android:layout_toRightOf="@id/grade_list_grade_term"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/grade_list_grade_term"
+                android:id="@+id/grade_list_grade_skz"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/grade_list_grade_lvanr"
                 android:gravity="center_vertical"
                 android:padding="3dp"
+                android:layout_toLeftOf="@id/grade_list_grade_term"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </RelativeLayout>
     </LinearLayout>
