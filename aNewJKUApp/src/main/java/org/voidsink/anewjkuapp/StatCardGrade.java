@@ -25,6 +25,9 @@ import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Grade;
 import org.voidsink.anewjkuapp.kusss.GradeType;
 
+import java.text.FieldPosition;
+import java.text.NumberFormat;
+import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -235,16 +238,41 @@ public class StatCardGrade extends CardWithList {
 
 
                 SimpleXYSeries mSeries = new SimpleXYSeries(values,
-                        SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "grade");
+                        SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Noten");
                 barChart.addSeries(mSeries,
                         new GradeBarFormatter(Color.LTGRAY, Color.GRAY));
 
-                barChart.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 10);
-                barChart.setRangeBoundaries(0, BoundaryMode.FIXED, 15, BoundaryMode.GROW);
+                barChart.getLegendWidget().setVisible(false);
+
+                barChart.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 5);
+                barChart.setRangeBoundaries(0, BoundaryMode.FIXED, 20, BoundaryMode.GROW);
 
                 // workaround to center ects bar
-                barChart.setDomainBoundaries(0.5, 5.5, BoundaryMode.FIXED);
+                barChart.setDomainBoundaries(0, 6, BoundaryMode.FIXED);
                 barChart.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
+
+                barChart.setDomainValueFormat(new NumberFormat() {
+
+                    @Override
+                    public StringBuffer format(double v, StringBuffer stringBuffer, FieldPosition fieldPosition) {
+                        int grade = (int) v;
+                        if (grade >= 1 && grade <= 5) {
+                            return new StringBuffer(getContext().getString(Grade.parseGradeType(grade - 1).getStringResID()));
+                        } else {
+                            return new StringBuffer("");
+                        }
+                    }
+
+                    @Override
+                    public StringBuffer format(long l, StringBuffer stringBuffer, FieldPosition fieldPosition) {
+                        throw new UnsupportedOperationException("not implemented");
+                    }
+
+                    @Override
+                    public Number parse(String s, ParsePosition parsePosition) {
+                        throw new UnsupportedOperationException("not implemented");
+                    }
+                });
 
                 // Setup the BarRenderer with our selected options
                 GradeBarRenderer renderer = (GradeBarRenderer) barChart
