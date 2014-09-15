@@ -42,10 +42,18 @@ public class LvaCard extends Card {
         TextView lvaNr = (TextView) view.findViewById(R.id.lva_list2_item_lvanr);
         TextView skz = (TextView) view.findViewById(R.id.lva_list2_item_skz);
         TextView code = (TextView) view.findViewById(R.id.lva_list2_item_code);
+        TextView teacher = (TextView) view.findViewById(R.id.lva_list2_item_teacher);
 
         View chipBack = view.findViewById(R.id.grade_chip_background);
         TextView chipEcts = (TextView) view.findViewById(R.id.grade_chip_info);
         TextView chipGrade = (TextView) view.findViewById(R.id.grade_chip_grade);
+
+        if (!lva.getLva().getTeacher().isEmpty()) {
+            teacher.setText(lva.getLva().getTeacher());
+            teacher.setVisibility(View.VISIBLE);
+        } else {
+            teacher.setVisibility(View.GONE);
+        }
 
         lvaNr.setText(lva.getLva().getLvaNr());
         skz.setText(String.format("[%s]", lva.getLva().getSKZ()));
