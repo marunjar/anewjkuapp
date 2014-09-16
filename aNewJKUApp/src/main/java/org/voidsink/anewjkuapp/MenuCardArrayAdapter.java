@@ -4,20 +4,16 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-import org.voidsink.anewjkuapp.calendar.CalendarCard;
-import org.voidsink.anewjkuapp.view.DateHeaderCard;
-import org.voidsink.anewjkuapp.view.ExamCardListView;
 import org.voidsink.anewjkuapp.view.MenuCardListView;
 
 import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
-import it.gmariotti.cardslib.library.view.CardView;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
@@ -40,17 +36,13 @@ public class MenuCardArrayAdapter extends CardArrayAdapter implements StickyList
     @Override
     public View getHeaderView(int position, View convertView, ViewGroup viewGroup) {
 
-        // Build your custom HeaderView
-        //In this case I will use a Card, but you can use any view
-
         LayoutInflater mInflater = LayoutInflater.from(getContext());
-        View view = mInflater.inflate(R.layout.menu_card_header, null);
+        View view = mInflater.inflate(R.layout.menu_card_header, viewGroup, false);
 
-        CardView cardView= (CardView)view.findViewById(R.id.menu_card_header_id);
         Card card = getItem(position);
         if (card instanceof MenuCard) {
-            Card headerCard = new DateHeaderCard(getContext(), ((MenuCard) card).getDay().getDate());
-            cardView.setCard(headerCard);
+            final TextView tvHeaderTitle = (TextView) view;
+            tvHeaderTitle.setText(DateFormat.getDateInstance().format(((MenuCard) card).getDay().getDate()));
         }
         return view;
     }
@@ -73,4 +65,5 @@ public class MenuCardArrayAdapter extends CardArrayAdapter implements StickyList
 
     public void setMenuListView(MenuCardListView menuCardListView) {
         this.mMenuListView = menuCardListView;
-    }}
+    }
+}

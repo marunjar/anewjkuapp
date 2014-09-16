@@ -3,26 +3,62 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="start"
-    android:background="#222222"
+    android:background="@android:color/white"
     android:divider="@android:color/transparent"
     android:dividerHeight="0dp"
-    android:orientation="vertical"
-    android:padding="5dp" >
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/drawer_user"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textStyle="bold" />
+        android:layout_height="72dip"
+        android:background="@drawable/drawer_image"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/drawer_menu_item_icon"
+            android:layout_width="40dip"
+            android:layout_height="40dip"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:contentDescription="@string/drawer_menu_item_icon"
+            android:scaleType="fitXY"
+            android:src="@drawable/person_image_empty" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/drawer_user"
+                style="@style/Text.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                style="@style/Text.Body2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Matrikelnummer"
+                android:drawablePadding="@dimen/activity_horizontal_margin"
+                android:gravity="center_vertical"
+                android:textColor="@color/text_secondary_inverse" />
+        </LinearLayout>
+
+    </LinearLayout>
 
     <ListView
         android:id="@+id/drawer_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingTop="8dip"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:scrollbarStyle="outsideOverlay" />
 
 </LinearLayout>

@@ -53,10 +53,11 @@ dependencies {
     compile 'org.mapsforge:mapsforge-map-awt:0.4.3'
     compile 'org.mapsforge:mapsforge-map-reader:0.4.3'
     compile 'com.androidplot:androidplot-core:0.6.1'
+    compile 'uk.co.chrisjenx:calligraphy:1.0.+'
 }
 
 def appendVersionNameVersionCode(variant, defaultConfig) {
-    if(variant.zipAlign) {
+    if (variant.zipAlign) {
         def file = variant.outputFile
         def fileName = file.name.replace(".apk", "-" + manifestVersionName() + ".apk")
         variant.outputFile = new File(file.parent, fileName)
