@@ -97,24 +97,37 @@ public abstract class SlidingTabsFragment extends BaseFragment {
         mSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
         mSlidingTabLayout.setViewPager(mViewPager);
 
-        // BEGIN_INCLUDE (tab_colorizer)
-        // Set a TabColorizer to customize the indicator and divider colors. Here we just retrieve
-        // the tab at the position, and return it's set color
-        mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+        SlidingTabLayout.TabColorizer tc = createTabColorizer();
 
-            @Override
-            public int getIndicatorColor(int position) {
-                return mTabs.get(position).getIndicatorColor();
-            }
+        if (tc != null) {
+            // BEGIN_INCLUDE (tab_colorizer)
+            // Set a TabColorizer to customize the indicator and divider colors. Here we just retrieve
+            // the tab at the position, and return it's set color
+            mSlidingTabLayout.setCustomTabColorizer(tc);
 
-            @Override
-            public int getDividerColor(int position) {
-                return mTabs.get(position).getDividerColor();
-            }
-
-        });
+//            mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+//
+//                @Override
+//                public int getIndicatorColor(int position) {
+//                    return mTabs.get(position).getIndicatorColor();
+//                }
+//
+//                @Override
+//                public int getDividerColor(int position) {
+//                    return mTabs.get(position).getDividerColor();
+//                }
+//
+//            });
+        }
         // END_INCLUDE (tab_colorizer)
         // END_INCLUDE (setup_slidingtablayout)
+    }
+
+    /**
+     * use this to create your own TabColorizer
+     **/
+    protected SlidingTabLayout.TabColorizer createTabColorizer() {
+        return null;
     }
     // END_INCLUDE (fragment_onviewcreated)
 

@@ -93,6 +93,7 @@
     <orderEntry type="library" exported="" name="ckchangelog-1.2.0" level="project" />
     <orderEntry type="library" exported="" name="dashclock-api-2.0.0" level="project" />
     <orderEntry type="library" exported="" name="mapsforge-map-android-0.4.3" level="project" />
+    <orderEntry type="library" exported="" name="calligraphy-1.0.0" level="project" />
     <orderEntry type="library" exported="" name="mapsforge-map-awt-0.4.3" level="project" />
     <orderEntry type="library" exported="" name="mapsforge-core-0.4.3" level="project" />
     <orderEntry type="library" exported="" name="androidplot-core-0.6.1" level="project" />
