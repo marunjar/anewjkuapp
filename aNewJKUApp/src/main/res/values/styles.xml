@@ -16,6 +16,23 @@
         <item name="android:textColor">#FFF</item>
     </style>
 
+    <style name="oeh_text_title" parent="Text.Body2">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:textSize">@dimen/text_size_subhead</item>
+        <item name="android:layout_marginTop">@dimen/activity_horizontal_margin</item>
+        <item name="android:textColor">@color/accent</item>
+    </style>
+
+    <style name="oeh_text_content" parent="Text.Body1">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
     <!-- Material Text Styles -->
     <style name="Text">
         <item name="fontPath">fonts/Roboto-Regular.ttf</item>
