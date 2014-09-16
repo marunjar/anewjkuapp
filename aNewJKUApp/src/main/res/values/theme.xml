@@ -32,9 +32,9 @@
     </style>
 
     <style name="ActionBar.Solid.Apptheme" parent="@android:style/Widget.Holo.ActionBar.Solid">
-        <item name="android:background">@drawable/ab_solid_apptheme</item>
-        <item name="android:backgroundStacked">@drawable/ab_stacked_solid_apptheme</item>
-        <item name="android:backgroundSplit">@drawable/ab_bottom_solid_apptheme</item>
+        <item name="android:background">@color/primary</item>
+        <item name="android:backgroundStacked">@color/primary</item>
+        <item name="android:backgroundSplit">@color/primary</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Apptheme</item>
         <item name="android:titleTextStyle">@style/AppTheme.ActionBar.TitleTextStyle</item>
     </style>
