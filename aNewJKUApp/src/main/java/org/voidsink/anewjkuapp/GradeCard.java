@@ -43,8 +43,6 @@ public class GradeCard extends Card {
 
     @Override
     public void setupInnerViewElements(ViewGroup parent, View view) {
-        TextView title = (TextView) view
-                .findViewById(R.id.grade_list_grade_title);
         TextView lvaNr = (TextView) view
                 .findViewById(R.id.grade_list_grade_lvanr);
         TextView term = (TextView) view
@@ -53,12 +51,13 @@ public class GradeCard extends Card {
                 .findViewById(R.id.grade_list_grade_date);
         TextView grade = (TextView) view
                 .findViewById(R.id.grade_list_grade_grade);
+        TextView skz = (TextView) view
+                .findViewById(R.id.grade_list_grade_skz);
 
         TextView chipGrade = (TextView) view.findViewById(R.id.grade_chip_grade);
         TextView chipInfo = (TextView) view.findViewById(R.id.grade_chip_info);
         View chipBack = view.findViewById(R.id.grade_chip_background);
 
-        title.setVisibility(View.GONE);
         if (!mGrade.getLvaNr().isEmpty()) {
             lvaNr.setText(mGrade.getLvaNr());
             lvaNr.setVisibility(View.VISIBLE);
