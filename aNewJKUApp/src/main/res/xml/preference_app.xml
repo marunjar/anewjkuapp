@@ -23,5 +23,12 @@
             android:summary="@string/pref_diagrams_use_lva_bar_chart_summary"
             android:title="@string/pref_diagrams_use_lva_bar_chart_title" />
     </PreferenceCategory>
-    
+    <PreferenceCategory android:title="@string/pref_cat_mensa" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_key_group_menu_by_day"
+            android:summary="@string/pref_mensa_group_menu_by_day_summary"
+            android:title="@string/pref_mensa_group_menu_by_day_title" />
+    </PreferenceCategory>
+
 </PreferenceScreen>
