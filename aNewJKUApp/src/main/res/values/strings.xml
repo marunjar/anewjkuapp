@@ -134,4 +134,8 @@
     <string name="map_place_not_found">Ort \'%s\' nicht gefunden</string>
     <string name="menu_exam_register">in Kusss anzeigen</string>
     <string name="grade_type_none_available">keine Noten verfügbar</string>
+    <string name="pref_cat_mensa">Mensa</string>
+    <string name="pref_mensa_group_menu_by_day_title">Gruppierung</string>
+    <string name="pref_mensa_group_menu_by_day_summary">Menüs in eigenen Tabs je Tag anzeigen (benötigt Neustart)</string>
+    <string name="menu_not_available">kein Speiseplan verfügbar</string>
 </resources>

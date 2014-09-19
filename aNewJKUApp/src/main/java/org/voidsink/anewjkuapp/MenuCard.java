@@ -14,6 +14,7 @@ import android.widget.Toast;
 import org.apache.commons.lang.time.DateUtils;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
+import org.voidsink.anewjkuapp.mensa.Mensa;
 import org.voidsink.anewjkuapp.mensa.MensaDay;
 import org.voidsink.anewjkuapp.mensa.MensaMenu;
 
@@ -27,24 +28,37 @@ import it.gmariotti.cardslib.library.internal.base.BaseCard;
 /**
  * Created by paul on 06.09.2014.
  */
-public class MenuCard extends Card {
+public class MenuCard extends MenuBaseCard {
 
 
-    private MensaDay mDay = null;
-    private MensaMenu mMenu = null;
+    public MenuCard(final Context c, Mensa mensa, MensaDay day, MensaMenu menu) {
+        super(c, mensa, day, menu);
 
-    public MenuCard(final Context c, MensaDay day, MensaMenu menu) {
-        this(c);
-
+        this.mMensa = mensa;
         this.mDay = day;
         this.mMenu = menu;
 
-        this.setTitle(mMenu.getName());
+        if (mMenu != null && !mMenu.getName().isEmpty()) {
+            // init header
+            CardHeader header = new CardHeader(new ContextThemeWrapper(c, R.style.AppTheme));
 
-        CardHeader header = getCardHeader();
-        if (header != null) {
-            header.setTitle(getTitle());
+//        header.setPopupMenu(R.menu.menu_card_popup_menu, new CardHeader.OnClickCardHeaderPopupMenuListener(){
+//            @Override
+//            public void onMenuItemClick(BaseCard card, MenuItem item) {
+//                switch (item.getItemId()) {
+//                    default: Toast.makeText(mContext, "Click on " + item.getTitle(), Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+
+            header.setTitle(mMenu.getName());
+            addCardHeader(header);
         }
+    }
+
+    @Override
+    protected int getInnerLayoutResId() {
+        return R.layout.mensa_menu_item;
     }
 
     @Override
@@ -62,7 +76,7 @@ public class MenuCard extends Card {
 //            name.setText(menuName);
 //            name.setVisibility(View.VISIBLE);
 //        } else {
-            name.setVisibility(View.GONE);
+        name.setVisibility(View.GONE);
 //        }
         String menuSoup = mMenu.getSoup();
         if (menuSoup != null && !menuSoup.isEmpty()) {
@@ -92,34 +106,4 @@ public class MenuCard extends Card {
         chip.setVisibility(View.GONE);
     }
 
-    public MenuCard(Context context) {
-        this(context, R.layout.mensa_menu_item);
-    }
-
-    public MenuCard(Context context, int innerLayout) {
-        super(new ContextThemeWrapper(context, R.style.AppTheme), innerLayout);
-
-        // init header
-        CardHeader header = new CardHeader(new ContextThemeWrapper(context, R.style.AppTheme));
-
-//        header.setPopupMenu(R.menu.menu_card_popup_menu, new CardHeader.OnClickCardHeaderPopupMenuListener(){
-//            @Override
-//            public void onMenuItemClick(BaseCard card, MenuItem item) {
-//                switch (item.getItemId()) {
-//                    default: Toast.makeText(mContext, "Click on " + item.getTitle(), Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
-
-        addCardHeader(header);
-    }
-
-
-    public MensaDay getDay() {
-        return mDay;
-    }
-
-    public MensaMenu getMenu() {
-        return mMenu;
-    }
 }

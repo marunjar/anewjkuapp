@@ -1,5 +1,22 @@
 package org.voidsink.anewjkuapp.kusss;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.text.format.DateUtils;
+import android.util.Log;
+
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.model.Calendar;
+
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.voidsink.anewjkuapp.Analytics;
+
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.CookieHandler;
@@ -19,488 +36,467 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import org.voidsink.anewjkuapp.Analytics;
-
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.text.format.DateUtils;
-import android.util.Log;
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.model.Calendar;
-
 public class KusssHandler {
 
-	@SuppressLint("SimpleDateFormat")
-	private static final SimpleDateFormat df = new SimpleDateFormat(
-			"dd.MM.yyyy");
+    public static final String PATTERN_LVA_NR_WITH_DOT = "\\d{3}\\.\\w{3}";
+    public static final String PATTERN_LVA_NR = "\\d{3}\\w{3}";
+    public static final String PATTERN_TERM = "\\d{4}[swSW]";
+    public static final String PATTERN_LVA_NR_COMMA_TERM = "\\("
+            + PATTERN_LVA_NR + "," + PATTERN_TERM + "\\)";
+    public static final String PATTERN_LVA_NR_SLASH_TERM = "\\("
+            + PATTERN_LVA_NR + "\\/" + PATTERN_TERM + "\\)";
+    @SuppressLint("SimpleDateFormat")
+    private static final SimpleDateFormat df = new SimpleDateFormat(
+            "dd.MM.yyyy");
+    private static final String TAG = KusssHandler.class.getSimpleName();
+    private static final String URL_MY_LVAS = "https://www.kusss.jku.at/kusss/assignment-results.action";
+    private static final String URL_GET_TERMS = "https://www.kusss.jku.at/kusss/listmystudentlvas.action";
+    private static final String URL_GET_ICAL = "https://www.kusss.jku.at/kusss/ical-multi-sz.action";
+    private static final String URL_MY_GRADES = "https://www.kusss.jku.at/kusss/gradeinfo.action";
+    private static final String URL_START_PAGE = "https://www.kusss.jku.at/kusss/studentwelcome.action";
+    private static final String URL_LOGOUT = "https://www.kusss.jku.at/kusss/logout.action";
+    private static final String URL_LOGIN = "https://www.kusss.jku.at/kusss/login.action";
+    private static final String URL_GET_NEW_EXAMS = "https://www.kusss.jku.at/kusss/szsearchexam.action";
+    private static final String URL_GET_EXAMS = "https://www.kusss.jku.at/kusss/szexaminationlist.action";
+    private static final String URL_SELECT_TERM = "https://www.kusss.jku.at/kusss/select-term.action";
+    private static final String SELECT_MY_LVAS = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > table > tbody > tr:has(td)";
+    private static final String SELECT_MY_GRADES = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > *";
+    private static final String SELECT_NOT_LOGGED_IN = "body > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > h4";
+    // private static final String SELECT_ACTUAL_EXAMS =
+    // "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > table > tbody > tr > td > form > table > tbody > tr:has(td)";
+    private static final String SELECT_NEW_EXAMS = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > div.sidetable > form > table > tbody > tr:has(td)";
+    private static final String SELECT_EXAMS = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > table > tbody > tr > td > form > table > tbody > tr:has(td)";
+    private static KusssHandler handler = null;
+    private CookieManager mCookies;
 
-	private static final String TAG = KusssHandler.class.getSimpleName();
+    private KusssHandler() {
+        this.mCookies = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
+        CookieHandler.setDefault(mCookies);
+    }
 
-	private static final String URL_MY_LVAS = "https://www.kusss.jku.at/kusss/assignment-results.action";
-	private static final String URL_GET_TERMS = "https://www.kusss.jku.at/kusss/listmystudentlvas.action";
-	private static final String URL_GET_ICAL = "https://www.kusss.jku.at/kusss/ical-multi-sz.action";
-	private static final String URL_MY_GRADES = "https://www.kusss.jku.at/kusss/gradeinfo.action";
-	private static final String URL_START_PAGE = "https://www.kusss.jku.at/kusss/studentwelcome.action";
-	private static final String URL_LOGOUT = "https://www.kusss.jku.at/kusss/logout.action";
-	private static final String URL_LOGIN = "https://www.kusss.jku.at/kusss/login.action";
-	private static final String URL_GET_NEW_EXAMS = "https://www.kusss.jku.at/kusss/szsearchexam.action";
-	private static final String URL_GET_EXAMS = "https://www.kusss.jku.at/kusss/szexaminationlist.action";
-	private static final String URL_SELECT_TERM = "https://www.kusss.jku.at/kusss/select-term.action";
+    public static synchronized KusssHandler getInstance() {
+        if (handler == null) {
+            handler = new KusssHandler();
+        }
+        return handler;
+    }
 
-	private static final String SELECT_MY_LVAS = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > table > tbody > tr:has(td)";
-	private static final String SELECT_MY_GRADES = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > *";
-	private static final String SELECT_NOT_LOGGED_IN = "body > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > h4";
-	// private static final String SELECT_ACTUAL_EXAMS =
-	// "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > table > tbody > tr > td > form > table > tbody > tr:has(td)";
-	private static final String SELECT_NEW_EXAMS = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > div.sidetable > form > table > tbody > tr:has(td)";
-	private static final String SELECT_EXAMS = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > table > tbody > tr > td > form > table > tbody > tr:has(td)";
+    public String getSessionIDFromCookie() {
+        try {
+            List<HttpCookie> cookies = mCookies.getCookieStore().get(
+                    new URI("https://www.kusss.jku.at/"));
 
-	public static final String PATTERN_LVA_NR_WITH_DOT = "\\d{3}\\.\\w{3}";
-	public static final String PATTERN_LVA_NR = "\\d{3}\\w{3}";
-	public static final String PATTERN_TERM = "\\d{4}[swSW]";
-	public static final String PATTERN_LVA_NR_COMMA_TERM = "\\("
-			+ PATTERN_LVA_NR + "," + PATTERN_TERM + "\\)";
-	public static final String PATTERN_LVA_NR_SLASH_TERM = "\\("
-			+ PATTERN_LVA_NR + "\\/" + PATTERN_TERM + "\\)";
+            for (HttpCookie cookie : cookies) {
+                if (cookie.getName().equals("JSESSIONID")) {
+                    return cookie.getValue();
+                }
+            }
+            return null;
+        } catch (URISyntaxException e) {
+            Log.e(TAG, "getSessionIDFromCookie", e);
+            return null;
+        }
+    }
 
-	private CookieManager mCookies;
+    public synchronized String login(Context c, String user, String password) {
+        try {
+            if ((user.length() > 0) && (user.charAt(0) != 'k')) {
+                user = "k" + user;
+            }
+            Jsoup.connect(URL_LOGIN).data("j_username", user)
+                    .data("j_password", password).method(Connection.Method.POST).execute();
 
-	private static KusssHandler handler = null;
+            if (isLoggedIn(c, getSessionIDFromCookie())) {
+                return getSessionIDFromCookie();
+            }
+            return null;
+        } catch (Exception e) {
+            Log.w(TAG, "login failed", e);
+            Analytics.sendException(c, e, false);
+            return null;
+        }
+    }
 
-	public static synchronized KusssHandler getInstance() {
-		if (handler == null) {
-			handler = new KusssHandler();
-		}
-		return handler;
-	}
+    private void writeParams(URLConnection conn, String[] keys, String[] values)
+            throws IOException {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < keys.length; i++) {
+            builder.append(keys[i]);
+            builder.append("=");
+            builder.append(values[i]);
+            if (i < keys.length - 1) {
+                builder.append("&");
+            }
+        }
 
-	private KusssHandler() {
-		this.mCookies = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
-		CookieHandler.setDefault(mCookies);
-	}
+        OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+        wr.write(builder.toString());
+        wr.flush();
+    }
 
-	public String getSessionIDFromCookie() {
-		try {
-			List<HttpCookie> cookies = mCookies.getCookieStore().get(
-					new URI("https://www.kusss.jku.at/"));
+    public synchronized boolean logout(Context c) {
+        try {
+            Jsoup.connect(URL_LOGOUT).get();
 
-			for (HttpCookie cookie : cookies) {
-				if (cookie.getName().equals("JSESSIONID")) {
-					return cookie.getValue();
-				}
-			}
-			return null;
-		} catch (URISyntaxException e) {
-			Log.e(TAG, "getSessionIDFromCookie", e);
-			return null;
-		}
-	}
+            return !isLoggedIn(c, null);
+        } catch (Exception e) {
+            Log.w(TAG, "logout failed", e);
+            Analytics.sendException(c, e, false);
+            return true;
+        }
+    }
 
-	public synchronized String login(Context c, String user, String password) {
-		try {
-			if ((user.length() > 0) && (user.charAt(0) != 'k')) {
-				user = "k" + user;
-			}
-			Jsoup.connect(URL_LOGIN).data("j_username", user)
-					.data("j_password", password).method(Connection.Method.POST).execute();
+    public synchronized boolean isLoggedIn(Context c, String sessionId) {
+        try {
+            String actSessionId = getSessionIDFromCookie();
+            if (actSessionId == null || sessionId == null
+                    || !sessionId.equals(actSessionId)) {
+                Log.d(TAG, "not logged in, wrong sessionID");
+                return false;
+            }
 
-			if (isLoggedIn(c, getSessionIDFromCookie())) {
-				return getSessionIDFromCookie();
-			}
-			return null;
-		} catch (Exception e) {
-			Log.w(TAG, "login failed", e);
-			Analytics.sendException(c, e, false);
-			return null;
-		}
-	}
+            Document doc = Jsoup.connect(URL_START_PAGE).get();
 
-	private void writeParams(URLConnection conn, String[] keys, String[] values)
-			throws IOException {
-		StringBuilder builder = new StringBuilder();
-		for (int i = 0; i < keys.length; i++) {
-			builder.append(keys[i]);
-			builder.append("=");
-			builder.append(values[i]);
-			if (i < keys.length - 1) {
-				builder.append("&");
-			}
-		}
+            Elements notLoggedIn = doc.select(SELECT_NOT_LOGGED_IN);
+            if (notLoggedIn.size() > 0) {
+                return false;
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "isLoggedIn", e);
+            Analytics.sendException(c, e, false);
+            return false;
+        }
+        return true;
+    }
 
-		OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-		wr.write(builder.toString());
-		wr.flush();
-	}
+    public synchronized boolean isAvailable(Context c, String sessionId,
+                                            String user, String password) {
+        if (!isLoggedIn(c, sessionId)) {
+            return login(c, user, password) != null;
+        }
+        return true;
+    }
 
-	public synchronized boolean logout(Context c) {
-		try {
-			Jsoup.connect(URL_LOGOUT).get();
+    public Calendar getLVAIcal(Context c, CalendarBuilder mCalendarBuilder) {
 
-			return !isLoggedIn(c, null);
-		} catch (Exception e) {
-			Log.w(TAG, "logout failed", e);
-			Analytics.sendException(c, e, false);
-			return true;
-		}
-	}
+        Calendar iCal = null;
 
-	public synchronized boolean isLoggedIn(Context c, String sessionId) {
-		try {
-			String actSessionId = getSessionIDFromCookie();
-			if (actSessionId == null || sessionId == null
-					|| !sessionId.equals(actSessionId)) {
-				Log.d(TAG, "not logged in, wrong sessionID");
-				return false;
-			}
+        try {
 
-			Document doc = Jsoup.connect(URL_START_PAGE).get();
+            URL url = new URL(URL_GET_ICAL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
 
-			Elements notLoggedIn = doc.select(SELECT_NOT_LOGGED_IN);
-			if (notLoggedIn.size() > 0) {
-				return false;
-			}
-		} catch (IOException e) {
-			Log.e(TAG, "isLoggedIn", e);
-			Analytics.sendException(c, e, false);
-			return false;
-		}
-		return true;
-	}
+            writeParams(conn, new String[]{"selectAll"},
+                    new String[]{"ical.category.mycourses"});
 
-	public synchronized boolean isAvailable(Context c, String sessionId,
-			String user, String password) {
-		if (!isLoggedIn(c, sessionId)) {
-			return login(c, user, password) != null;
-		}
-		return true;
-	}
+            iCal = mCalendarBuilder.build(conn.getInputStream());
+        } catch (Exception e) {
+            Log.e(TAG, "getLVAIcal", e);
+            Analytics.sendException(c, e, true);
+            iCal = null;
+        }
 
-	public Calendar getLVAIcal(Context c, CalendarBuilder mCalendarBuilder) {
+        return iCal;
+    }
 
-		Calendar iCal = null;
+    public Calendar getExamIcal(Context c, CalendarBuilder mCalendarBuilder) {
+        Calendar iCal = null;
 
-		try {
+        try {
+            URL url = new URL(URL_GET_ICAL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
 
-			URL url = new URL(URL_GET_ICAL);
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setDoOutput(true);
+            writeParams(conn, new String[]{"selectAll"},
+                    new String[]{"ical.category.examregs"});
 
-			writeParams(conn, new String[] { "selectAll" },
-					new String[] { "ical.category.mycourses" });
+            iCal = mCalendarBuilder.build(conn.getInputStream());
+        } catch (Exception e) {
+            Log.e(TAG, "getExamIcal", e);
+            Analytics.sendException(c, e, true);
+            iCal = null;
+        }
 
-			iCal = mCalendarBuilder.build(conn.getInputStream());
-		} catch (Exception e) {
-			Log.e(TAG, "getLVAIcal", e);
-			Analytics.sendException(c, e, true);
-			iCal = null;
-		}
+        return iCal;
+    }
 
-		return iCal;
-	}
+    public Map<String, String> getTerms(Context c) {
+        Map<String, String> terms = new HashMap<String, String>();
+        try {
+            Document doc = Jsoup.connect(URL_GET_TERMS).get();
+            Element termDropdown = doc.getElementById("term");
+            Elements termDropdownEntries = termDropdown
+                    .getElementsByClass("dropdownentry");
 
-	public Calendar getExamIcal(Context c, CalendarBuilder mCalendarBuilder) {
-		Calendar iCal = null;
+            for (Element termDropdownEntry : termDropdownEntries) {
+                terms.put(termDropdownEntry.attr("value"),
+                        termDropdownEntry.text());
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "getTerms", e);
+            Analytics.sendException(c, e, true);
+            return null;
+        }
+        return terms;
+    }
 
-		try {
-			URL url = new URL(URL_GET_ICAL);
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setDoOutput(true);
+    public boolean selectTerm(Context c, String term) {
+        try {
+            Jsoup.connect(URL_SELECT_TERM).data("term", term)
+                    .data("previousQueryString", "")
+                    .data("reloadAction", "listmystudentlvas.action").post();
+        } catch (IOException e) {
+            Log.e(TAG, "selectTerm", e);
+            Analytics.sendException(c, e, true);
+            return false;
+        }
+        Log.d(TAG, term + " selected");
+        return true;
+    }
 
-			writeParams(conn, new String[] { "selectAll" },
-					new String[] { "ical.category.examregs" });
+    public List<Lva> getLvas(Context c) {
+        List<Lva> lvas = new ArrayList<Lva>();
+        try {
+            Map<String, String> termsHelper = getTerms(c);
+            if (termsHelper != null) {
+                List<String> terms = new ArrayList<>(termsHelper.keySet());
+                Collections.sort(terms);
+                for (String term : terms) {
+                    if (selectTerm(c, term)) {
+                        Document doc = Jsoup.connect(URL_MY_LVAS).get();
 
-			iCal = mCalendarBuilder.build(conn.getInputStream());
-		} catch (Exception e) {
-			Log.e(TAG, "getExamIcal", e);
-			Analytics.sendException(c, e, true);
-			iCal = null;
-		}
+                        if (isSelected(doc, term)) {
+                            // .select("body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > table > tbody > tr");
+                            Elements rows = doc.select(SELECT_MY_LVAS);
+                            for (Element row : rows) {
+                                Lva lva = new Lva(term, row);
+                                if (lva.isInitialized()) {
+                                    lvas.add(lva);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "getLvas", e);
+            Analytics.sendException(c, e, true);
+            return null;
+        }
+        return lvas;
+    }
 
-		return iCal;
-	}
+    private boolean isSelected(Document doc, String term) {
+        try {
+            Elements terms = doc.getElementById("term").getElementsByAttribute(
+                    "selected");
 
-	public Map<String, String> getTerms(Context c) {
-		Map<String, String> terms = new HashMap<String, String>();
-		try {
-			Document doc = Jsoup.connect(URL_GET_TERMS).get();
-			Element termDropdown = doc.getElementById("term");
-			Elements termDropdownEntries = termDropdown
-					.getElementsByClass("dropdownentry");
+            for (Element termEntry : terms) {
+                if (termEntry.attr("value").equals(term)) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "isSelected", e);
+            return false;
+        }
+        return false;
+    }
 
-			for (Element termDropdownEntry : termDropdownEntries) {
-				terms.put(termDropdownEntry.attr("value"),
-						termDropdownEntry.text());
-			}
-		} catch (Exception e) {
-			Log.e(TAG, "getTerms", e);
-			Analytics.sendException(c, e, true);
-			return null;
-		}
-		return terms;
-	}
+    public List<ExamGrade> getGrades(Context c) {
+        List<ExamGrade> grades = new ArrayList<ExamGrade>();
+        try {
+            Document doc = Jsoup.connect(URL_MY_GRADES).data("months", "0")
+                    .get();
 
-	public boolean selectTerm(Context c, String term) {
-		try {
-			Jsoup.connect(URL_SELECT_TERM).data("term", term)
-					.data("previousQueryString", "")
-					.data("reloadAction", "listmystudentlvas.action").post();
-		} catch (IOException e) {
-			Log.e(TAG, "selectTerm", e);
-			Analytics.sendException(c, e, true);
-			return false;
-		}
-		Log.d(TAG, term + " selected");
-		return true;
-	}
+            Elements rows = doc.select(SELECT_MY_GRADES);
 
-	public List<Lva> getLvas(Context c) {
-		List<Lva> lvas = new ArrayList<Lva>();
-		try {
-			List<String> terms = new ArrayList<>(getTerms(c).keySet());
-			if (terms != null) {
-				Collections.sort(terms);
-				for (String term : terms) {
-					if (selectTerm(c, term)) {
-						Document doc = Jsoup.connect(URL_MY_LVAS).get();
+            GradeType type = null;
+            for (Element row : rows) {
+                if (row.tag().toString().equals("h3")) {
+                    type = GradeType.parseGradeType(row.text());
+                } else if (row.tag().toString().equals("table")) {
+                    Elements gradeRows = row
+                            .select("tbody > tr[class]:has(td)");
+                    for (Element gradeRow : gradeRows) {
+                        ExamGrade grade = new ExamGrade(type, gradeRow);
+                        if (grade.isInitialized()) {
+                            grades.add(grade);
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "getGrades", e);
+            Analytics.sendException(c, e, true);
+            return null;
+        }
+        Log.d(TAG, grades.size() + " grades found");
+        return grades;
+    }
 
-						if (isSelected(doc, term)) {
-							// .select("body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > table > tbody > tr");
-							Elements rows = doc.select(SELECT_MY_LVAS);
-							for (Element row : rows) {
-								Lva lva = new Lva(term, row);
-								if (lva.isInitialized()) {
-									lvas.add(lva);
-								}
-							}
-						}
-					}
-				}
-			}
-		} catch (Exception e) {
-			Log.e(TAG, "getLvas", e);
-			Analytics.sendException(c, e, true);
-			return null;
-		}
-		return lvas;
-	}
+    public List<Exam> getNewExams(Context c) {
+        List<Exam> exams = new ArrayList<Exam>();
+        try {
+            Document doc = Jsoup.connect(URL_GET_NEW_EXAMS)
+                    .data("search", "true").data("searchType", "mylvas").get();
 
-	private boolean isSelected(Document doc, String term) {
-		try {
-			Elements terms = doc.getElementById("term").getElementsByAttribute(
-					"selected");
+            Elements rows = doc.select(SELECT_NEW_EXAMS);
 
-			for (Element termEntry : terms) {
-				if (termEntry.attr("value").equals(term)) {
-					return true;
-				}
-			}
-		} catch (Exception e) {
-			Log.e(TAG, "isSelected", e);
-			return false;
-		}
-		return false;
-	}
+            int i = 0;
+            while (i < rows.size()) {
+                Element row = rows.get(i);
+                Exam exam = new Exam(c, row, true);
+                i++;
 
-	public List<ExamGrade> getGrades(Context c) {
-		List<ExamGrade> grades = new ArrayList<ExamGrade>();
-		try {
-			Document doc = Jsoup.connect(URL_MY_GRADES).data("months", "0")
-					.get();
+                if (exam.isInitialized()) {
+                    while (i < rows.size()
+                            && rows.get(i).attr("class")
+                            .equals(row.attr("class"))) {
+                        exam.addAdditionalInfo(rows.get(i));
+                        i++;
+                    }
+                    exams.add(exam);
+                }
+            }
 
-			Elements rows = doc.select(SELECT_MY_GRADES);
+            // add registered exams
+            loadExams(c, exams);
+        } catch (Exception e) {
+            Log.e(TAG, "getNewExams", e);
+            Analytics.sendException(c, e, true);
+            return null;
+        }
+        return exams;
+    }
 
-			GradeType type = null;
-			for (Element row : rows) {
-				if (row.tag().toString().equals("h3")) {
-					type = GradeType.parseGradeType(row.text());
-				} else if (row.tag().toString().equals("table")) {
-					Elements gradeRows = row
-							.select("tbody > tr[class]:has(td)");
-					for (Element gradeRow : gradeRows) {
-						ExamGrade grade = new ExamGrade(type, gradeRow);
-						if (grade.isInitialized()) {
-							grades.add(grade);
-						}
-					}
-				}
-			}
-		} catch (IOException e) {
-			Log.e(TAG, "getGrades", e);
-			Analytics.sendException(c, e, true);
-			return null;
-		}
-		Log.d(TAG, grades.size() + " grades found");
-		return grades;
-	}
+    @SuppressLint("UseSparseArrays")
+    public List<Exam> getNewExamsByLvaNr(Context c, List<Lva> lvas)
+            throws IOException {
 
-	public List<Exam> getNewExams(Context c) {
-		List<Exam> exams = new ArrayList<Exam>();
-		try {
-			Document doc = Jsoup.connect(URL_GET_NEW_EXAMS)
-					.data("search", "true").data("searchType", "mylvas").get();
+        List<Exam> exams = new ArrayList<Exam>();
+        try {
+            if (lvas == null || lvas.size() == 0) {
+                Log.d(TAG, "no lvas found, reload");
+                lvas = getLvas(c);
+            }
+            if (lvas != null && lvas.size() > 0) {
+                List<ExamGrade> grades = getGrades(c);
 
-			Elements rows = doc.select(SELECT_NEW_EXAMS);
+                Map<String, ExamGrade> gradeCache = new HashMap<String, ExamGrade>();
+                for (ExamGrade grade : grades) {
+                    if (!grade.getLvaNr().isEmpty()) {
+                        ExamGrade existing = gradeCache.get(grade.getLvaNr());
+                        if (existing != null) {
+                            Log.d(TAG,
+                                    existing.getTitle() + " --> "
+                                            + grade.getTitle());
+                        }
+                        gradeCache.put(grade.getLvaNr(), grade);
+                    }
+                }
 
-			int i = 0;
-			while (i < rows.size()) {
-				Element row = rows.get(i);
-				Exam exam = new Exam(c, row, true);
-				i++;
+                for (Lva lva : lvas) {
+                    ExamGrade grade = gradeCache.get(lva.getLvaNr());
+                    if (grade != null) {
+                        if ((grade.getGrade() == Grade.G5)
+                                || (grade.getDate().getTime() > (System
+                                .currentTimeMillis() - (182 * DateUtils.DAY_IN_MILLIS)))) {
+                            Log.d(TAG,
+                                    "positive in last 6 Months: "
+                                            + grade.getTitle());
+                            grade = null;
+                        }
+                    }
+                    if (grade == null) {
+                        List<Exam> newExams = getNewExamsByLvaNr(c,
+                                lva.getLvaNr());
+                        for (Exam newExam : newExams) {
+                            if (newExam != null) {
+                                exams.add(newExam);
+                            }
+                        }
+                    }
+                }
+            }
 
-				if (exam.isInitialized()) {
-					while (i < rows.size()
-							&& rows.get(i).attr("class")
-									.equals(row.attr("class"))) {
-						exam.addAdditionalInfo(rows.get(i));
-						i++;
-					}
-					exams.add(exam);
-				}
-			}
+            // add registered exams
+            loadExams(c, exams);
+        } catch (Exception e) {
+            Log.e(TAG, "getNewExamsByLvaNr", e);
+            Analytics.sendException(c, e, true);
+            return null;
+        }
+        return exams;
+    }
 
-			// add registered exams
-			loadExams(c, exams);
-		} catch (Exception e) {
-			Log.e(TAG, "getNewExams", e);
-			Analytics.sendException(c, e, true);
-			return null;
-		}
-		return exams;
-	}
+    private List<Exam> getNewExamsByLvaNr(Context c, String lvaNr) {
+        List<Exam> exams = new ArrayList<Exam>();
+        try {
+            Log.d(TAG, "getNewExamsByLvaNr: " + lvaNr);
+            Document doc = Jsoup
+                    .connect(URL_GET_NEW_EXAMS)
+                    .data("search", "true")
+                    .data("searchType", "specific")
+                    .data("searchDateFrom",
+                            df.format(new Date(System.currentTimeMillis())))
+                    .data("searchDateTo",
+                            df.format(new Date(System.currentTimeMillis()
+                                    + DateUtils.YEAR_IN_MILLIS)))
+                    .data("searchLvaNr", lvaNr).data("searchLvaTitle", "")
+                    .data("searchCourseClass", "").get();
 
-	@SuppressLint("UseSparseArrays")
-	public List<Exam> getNewExamsByLvaNr(Context c, List<Lva> lvas)
-			throws IOException {
+            Elements rows = doc.select(SELECT_NEW_EXAMS);
 
-		List<Exam> exams = new ArrayList<Exam>();
-		try {
-			if (lvas == null || lvas.size() == 0) {
-				Log.d(TAG, "no lvas found, reload");
-				lvas = getLvas(c);
-			}
-			if (lvas != null && lvas.size() > 0) {
-				List<ExamGrade> grades = getGrades(c);
+            int i = 0;
+            while (i < rows.size()) {
+                Element row = rows.get(i);
+                Exam exam = new Exam(c, row, true);
+                i++;
 
-				Map<String, ExamGrade> gradeCache = new HashMap<String, ExamGrade>();
-				for (ExamGrade grade : grades) {
-					if (!grade.getLvaNr().isEmpty()) {
-						ExamGrade existing = gradeCache.get(grade.getLvaNr());
-						if (existing != null) {
-							Log.d(TAG,
-									existing.getTitle() + " --> "
-											+ grade.getTitle());
-						}
-						gradeCache.put(grade.getLvaNr(), grade);
-					}
-				}
+                if (exam.isInitialized()) {
+                    while (i < rows.size()
+                            && rows.get(i).attr("class")
+                            .equals(row.attr("class"))) {
+                        exam.addAdditionalInfo(rows.get(i));
+                        i++;
+                    }
+                    exams.add(exam);
+                }
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "getNewExamsByLvaNr", e);
+            Analytics.sendException(c, e, true);
+            exams = null;
+        }
+        return exams;
+    }
 
-				for (Lva lva : lvas) {
-					ExamGrade grade = gradeCache.get(lva.getLvaNr());
-					if (grade != null) {
-						if ((grade.getGrade() == Grade.G5)
-								|| (grade.getDate().getTime() > (System
-										.currentTimeMillis() - (182 * DateUtils.DAY_IN_MILLIS)))) {
-							Log.d(TAG,
-									"positive in last 6 Months: "
-											+ grade.getTitle());
-							grade = null;
-						}
-					}
-					if (grade == null) {
-						List<Exam> newExams = getNewExamsByLvaNr(c,
-								lva.getLvaNr());
-						for (Exam newExam : newExams) {
-							if (newExam != null) {
-								exams.add(newExam);
-							}
-						}
-					}
-				}
-			}
+    private void loadExams(Context c, List<Exam> exams) throws IOException {
+        Log.d(TAG, "loadExams");
 
-			// add registered exams
-			loadExams(c, exams);
-		} catch (Exception e) {
-			Log.e(TAG, "getNewExamsByLvaNr", e);
-			Analytics.sendException(c, e, true);
-			return null;
-		}
-		return exams;
-	}
+        Document doc = Jsoup.connect(URL_GET_EXAMS).get();
 
-	private List<Exam> getNewExamsByLvaNr(Context c, String lvaNr) {
-		List<Exam> exams = new ArrayList<Exam>();
-		try {
-			Log.d(TAG, "getNewExamsByLvaNr: " + lvaNr);
-			Document doc = Jsoup
-					.connect(URL_GET_NEW_EXAMS)
-					.data("search", "true")
-					.data("searchType", "specific")
-					.data("searchDateFrom",
-							df.format(new Date(System.currentTimeMillis())))
-					.data("searchDateTo",
-							df.format(new Date(System.currentTimeMillis()
-									+ DateUtils.YEAR_IN_MILLIS)))
-					.data("searchLvaNr", lvaNr).data("searchLvaTitle", "")
-					.data("searchCourseClass", "").get();
+        Elements rows = doc.select(SELECT_EXAMS);
 
-			Elements rows = doc.select(SELECT_NEW_EXAMS);
+        int i = 0;
+        while (i < rows.size()) {
+            Element row = rows.get(i);
+            Exam exam = new Exam(c, row, false);
+            i++;
 
-			int i = 0;
-			while (i < rows.size()) {
-				Element row = rows.get(i);
-				Exam exam = new Exam(c, row, true);
-				i++;
+            if (exam.isInitialized()) {
+                while (i < rows.size()
+                        && rows.get(i).attr("class").equals(row.attr("class"))) {
+                    exam.addAdditionalInfo(rows.get(i));
+                    i++;
+                }
+                exams.add(exam);
+            }
+        }
 
-				if (exam.isInitialized()) {
-					while (i < rows.size()
-							&& rows.get(i).attr("class")
-									.equals(row.attr("class"))) {
-						exam.addAdditionalInfo(rows.get(i));
-						i++;
-					}
-					exams.add(exam);
-				}
-			}
-		} catch (IOException e) {
-			Log.e(TAG, "getNewExamsByLvaNr", e);
-			Analytics.sendException(c, e, true);
-			exams = null;
-		}
-		return exams;
-	}
-
-	private void loadExams(Context c, List<Exam> exams) throws IOException {
-		Log.d(TAG, "loadExams");
-
-		Document doc = Jsoup.connect(URL_GET_EXAMS).get();
-
-		Elements rows = doc.select(SELECT_EXAMS);
-
-		int i = 0;
-		while (i < rows.size()) {
-			Element row = rows.get(i);
-			Exam exam = new Exam(c, row, false);
-			i++;
-
-			if (exam.isInitialized()) {
-				while (i < rows.size()
-						&& rows.get(i).attr("class").equals(row.attr("class"))) {
-					exam.addAdditionalInfo(rows.get(i));
-					i++;
-				}
-				exams.add(exam);
-			}
-		}
-
-	}
+    }
 
     public void showExamInBrowser(Context c, String lvaNr) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(URL_GET_EXAMS));
