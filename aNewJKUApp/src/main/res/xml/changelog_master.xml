@@ -4,6 +4,13 @@
 		    + added
 		    - fixed
 		    * changed -->
+    <release version="0.21" versioncode="140021">
+        <change>+ Termine: Ort am Campus anzeigen lassen</change>
+        <change>+ Mensa: Menüs optional nach Tagen gruppieren</change>
+        <change>+ Stats: LVAs, Noten</change>
+        <change>- Zugriffsverletzung beim Laden von LVAs und Prüfungen</change>
+        <change>* neues Layout</change>
+    </release>
     <release version="0.19" versioncode="140019">
         <change>- Zugriffsverletzung beim Aktualisieren der Kalender</change>
         <change>* Unterstützung für alle Android Versionen vor ICS entfernt</change>

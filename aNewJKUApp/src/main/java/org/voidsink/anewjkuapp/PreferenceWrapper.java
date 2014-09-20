@@ -38,7 +38,7 @@ public final class PreferenceWrapper {
 	public static final String PREF_MAP_FILE_DEFAULT = "";
 
 	private static final String PREF_LAST_FRAGMENT = "pref_key_last_fragment";
-	private static final String PREF_LAST_FRAGMENT_DEFAULT = "";
+	public static final String PREF_LAST_FRAGMENT_DEFAULT = "";
 
 	public static final String PREF_GET_NEW_EXAMS = "pref_key_get_exams_from_lva";
 	private static final boolean PREF_GET_NEW_EXAMS_DEFAULT = false;
@@ -48,7 +48,10 @@ public final class PreferenceWrapper {
 	
 	public static final String PREF_USE_LVA_BAR_CHART = "pref_key_use_lva_bar_chart";
 	private static final boolean PREF_USE_LVA_BAR_CHART_DEFAULT = false;
-	
+
+    public static final String PREF_MENSA_GROUP_MENU_BY_DAY  = "pref_key_group_menu_by_day";
+    private static final boolean PREF_MENSA_GROUP_MENU_BY_DAY_DEFAULT = false;
+
 	private PreferenceWrapper() {
 
 	}
@@ -235,6 +238,18 @@ public final class PreferenceWrapper {
 			return PREF_USE_LVA_BAR_CHART_DEFAULT;
 		}
 	}
-	
-	
+
+    public static boolean getGroupMenuByDay(Context mContext) {
+        SharedPreferences sp = PreferenceManager
+                .getDefaultSharedPreferences(mContext);
+        try {
+            return sp.getBoolean(PREF_MENSA_GROUP_MENU_BY_DAY,
+                    PREF_MENSA_GROUP_MENU_BY_DAY_DEFAULT);
+        } catch (Exception e) {
+            Log.e(TAG, "Failure", e);
+            return PREF_MENSA_GROUP_MENU_BY_DAY_DEFAULT;
+        }
+    }
+
+
 }

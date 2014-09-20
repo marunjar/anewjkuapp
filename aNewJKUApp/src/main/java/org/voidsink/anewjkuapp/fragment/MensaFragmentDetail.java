@@ -36,7 +36,7 @@ public abstract class MensaFragmentDetail extends BaseFragment {
 				false);
 
 		mListView = (MenuCardListView) view.findViewById(R.id.menu_card_list);
-		mAdapter = new MenuCardArrayAdapter(getContext(), new ArrayList<Card>());
+		mAdapter = new MenuCardArrayAdapter(getContext(), new ArrayList<Card>(), true);
 		mListView.setAdapter(mAdapter);
 
 		new MenuLoadTask().execute();
@@ -57,7 +57,7 @@ public abstract class MensaFragmentDetail extends BaseFragment {
 
             for (MensaDay day : mensa.getDays()) {
                 for (MensaMenu menu : day.getMenus()) {
-                    mMenus.add(new MenuCard(mContext, day, menu));
+                    mMenus.add(new MenuCard(mContext, mensa, day, menu));
                 }
             }
 
