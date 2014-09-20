@@ -4,7 +4,7 @@
 		    + added
 		    - fixed
 		    * changed -->
-    <release version="0.20" versioncode="140020">
+    <release version="0.21" versioncode="140021">
         <change>+ Termine: Ort am Campus anzeigen lassen</change>
         <change>+ Mensa: Menüs optional nach Tagen gruppieren</change>
         <change>+ Stats: LVAs, Noten</change>
