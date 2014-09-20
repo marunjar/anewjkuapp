@@ -16,6 +16,10 @@ android {
         release {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+
+            applicationVariants.all { variant ->
+                appendVersionNameVersionCode(variant, defaultConfig)
+            }
         }
     }
     compileOptions {
@@ -54,4 +58,21 @@ dependencies {
     compile files('libs/mapsforge-map-android-0.4.3.jar')
     compile files('libs/mapsforge-map-awt-0.4.3.jar')
     compile files('libs/mapsforge-map-reader-0.4.3.jar')
+}
+
+def appendVersionNameVersionCode(variant, defaultConfig) {
+    if(variant.zipAlign) {
+        def file = variant.outputFile
+        def fileName = file.name.replace(".apk", "-" + manifestVersionName() + "-GB.apk")
+        variant.outputFile = new File(file.parent, fileName)
+    }
+    def file = variant.packageApplication.outputFile
+    def fileName = file.name.replace(".apk", "-" + manifestVersionName() + "-GB.apk")
+    variant.packageApplication.outputFile = new File(file.parent, fileName)
+}
+def manifestVersionName() {
+    def manifestFile = file(project.projectDir.absolutePath + '/src/main/AndroidManifest.xml')
+    def ns = new groovy.xml.Namespace("http://schemas.android.com/apk/res/android", "android")
+    def xml = new XmlParser().parse(manifestFile)
+    return xml.attributes()[ns.versionName].toString()
 }
