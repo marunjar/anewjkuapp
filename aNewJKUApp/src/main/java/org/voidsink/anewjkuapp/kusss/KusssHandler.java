@@ -28,6 +28,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -103,11 +104,14 @@ public class KusssHandler {
             if ((user.length() > 0) && (user.charAt(0) != 'k')) {
                 user = "k" + user;
             }
-            Jsoup.connect(URL_LOGIN).data("j_username", user)
+            Connection.Response r = Jsoup.connect(URL_LOGIN).data("j_username", user)
                     .data("j_password", password).method(Connection.Method.POST).execute();
 
-            if (isLoggedIn(c, getSessionIDFromCookie())) {
-                return getSessionIDFromCookie();
+            if (r != null) {
+                Log.d(TAG, String.format("%d: %s", r.statusCode(), r.statusMessage()));
+                if (isLoggedIn(c, getSessionIDFromCookie())) {
+                    return getSessionIDFromCookie();
+                }
             }
             return null;
         } catch (Exception e) {
@@ -412,9 +416,11 @@ public class KusssHandler {
                     if (grade == null) {
                         List<Exam> newExams = getNewExamsByLvaNr(c,
                                 lva.getLvaNr());
-                        for (Exam newExam : newExams) {
-                            if (newExam != null) {
-                                exams.add(newExam);
+                        if (newExams != null) {
+                            for (Exam newExam : newExams) {
+                                if (newExam != null) {
+                                    exams.add(newExam);
+                                }
                             }
                         }
                     }
