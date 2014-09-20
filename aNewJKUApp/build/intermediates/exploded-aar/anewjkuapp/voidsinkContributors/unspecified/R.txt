@@ -1,6 +1,0 @@
-int string contributor_email_subject 0x7f030000
-int string contributor_email_text 0x7f030001
-int string contributor_ok_button 0x7f030002
-int string contributor_send_email 0x7f030003
-int string contributor_title 0x7f030004
-int xml contributors 0x7f020000
