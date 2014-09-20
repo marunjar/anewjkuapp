@@ -94,6 +94,7 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 				try {
 					Thread.sleep(600);
 				} catch (Exception e) {
+                    Analytics.sendException(mContext, e, false);
 				}
 				if (mSyncCancled) {
 					task.cancel(true);
@@ -111,6 +112,7 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 				try {
 					Thread.sleep(600);
 				} catch (Exception e) {
+                    Analytics.sendException(mContext, e, false);
 				}
 				if (mSyncCancled) {
 					task.cancel(true);

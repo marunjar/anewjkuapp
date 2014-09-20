@@ -91,6 +91,7 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
 				try {
 					Thread.sleep(600);
 				} catch (Exception e) {
+                    Analytics.sendException(mContext, e, false);
 				}
 				if (mSyncCancled) {
 					lvaTask.cancel(true);
@@ -107,6 +108,7 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
 				try {
 					Thread.sleep(600);
 				} catch (Exception e) {
+                    Analytics.sendException(mContext, e, false);
 				}
 				if (mSyncCancled) {
 					examTask.cancel(true);
@@ -123,6 +125,7 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
 				try {
 					Thread.sleep(600);
 				} catch (Exception e) {
+                    Analytics.sendException(mContext, e, false);
 				}
 				if (mSyncCancled) {
 					gradeTask.cancel(true);

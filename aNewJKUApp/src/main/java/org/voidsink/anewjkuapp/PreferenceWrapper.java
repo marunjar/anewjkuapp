@@ -38,7 +38,7 @@ public final class PreferenceWrapper {
 	public static final String PREF_MAP_FILE_DEFAULT = "";
 
 	private static final String PREF_LAST_FRAGMENT = "pref_key_last_fragment";
-	private static final String PREF_LAST_FRAGMENT_DEFAULT = "";
+	public static final String PREF_LAST_FRAGMENT_DEFAULT = "";
 
 	public static final String PREF_GET_NEW_EXAMS = "pref_key_get_exams_from_lva";
 	private static final boolean PREF_GET_NEW_EXAMS_DEFAULT = false;
