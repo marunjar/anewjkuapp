@@ -67,6 +67,7 @@ public class AppUtils {
 
 			} catch (Exception e) {
 				Log.e(TAG, "doOnNewVersion failed", e);
+                Analytics.sendException(context, e, false);
 				errorOccured = true;
 			}
 			if (!errorOccured) {

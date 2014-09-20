@@ -195,8 +195,9 @@ public class MainActivity extends ActionBarActivity implements
 					return attachFragment((Class<? extends Fragment>) clazz);
 				}
 			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+                Log.w(TAG, "fragment instantiation failed", e);
+                Analytics.sendException(this, e, false);
+                PreferenceWrapper.setLastFragment(this, PreferenceWrapper.PREF_LAST_FRAGMENT_DEFAULT);
 			}
 		}
 		return null;
@@ -240,6 +241,8 @@ public class MainActivity extends ActionBarActivity implements
 				return f;
 			} catch (Exception e) {
 				Log.w(TAG, "fragment instantiation failed", e);
+                Analytics.sendException(this, e, false);
+                PreferenceWrapper.setLastFragment(this, PreferenceWrapper.PREF_LAST_FRAGMENT_DEFAULT);
 				return null;
 			}
 		}
