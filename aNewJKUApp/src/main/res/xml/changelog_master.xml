@@ -4,7 +4,7 @@
 		    + added
 		    - fixed
 		    * changed -->
-    <release version="0.20" versioncode="100020">
+    <release version="0.21" versioncode="100021">
         <change>- Zugriffsverletzung beim Laden von LVAs und Prüfungen</change>
     </release>
     <release version="0.19" versioncode="100019">
