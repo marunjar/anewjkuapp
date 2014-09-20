@@ -22,14 +22,14 @@ public class MensaFragment extends SlidingTabsFragment {
             cal.setTime(new Date());
             cal.add(Calendar.DATE, -1); // correct date for loop
             // add days until next friday
-            while (cal.get(Calendar.DAY_OF_WEEK) != Calendar.FRIDAY)  {
+            do {
                 // increment day
                 cal.add(Calendar.DATE, 1);
                 // do not add weekend (no menu)
                 if (cal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && cal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
                     mTabs.add(new MensaDayTabItem(cal.getTime(), CalendarUtils.COLOR_DEFAULT_LVA, Color.GRAY));
                 }
-            }
+            } while (cal.get(Calendar.DAY_OF_WEEK) != Calendar.FRIDAY);
         } else {
             mTabs.add(new SlidingTabItem("Classic", MensaClassicFragment.class, CalendarUtils.COLOR_DEFAULT_LVA, Color.GRAY));
             mTabs.add(new SlidingTabItem("Choice", MensaChoiceFragment.class, CalendarUtils.COLOR_DEFAULT_EXAM, Color.GRAY));
