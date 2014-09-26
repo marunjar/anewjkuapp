@@ -20,15 +20,18 @@ public class MensaFragment extends SlidingTabsFragment {
         if (PreferenceWrapper.getGroupMenuByDay(getContext())) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(new Date());
-            cal.add(Calendar.DATE, -1); // correct date for loop
+            // jump to next day if later than 4pm
+            if (cal.get(Calendar.HOUR_OF_DAY) >= 16) {
+                cal.add(Calendar.DATE, 1);
+            }
             // add days until next friday
             do {
-                // increment day
-                cal.add(Calendar.DATE, 1);
                 // do not add weekend (no menu)
                 if (cal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && cal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
                     mTabs.add(new MensaDayTabItem(cal.getTime(), CalendarUtils.COLOR_DEFAULT_LVA, Color.GRAY));
                 }
+                // increment day
+                cal.add(Calendar.DATE, 1);
             } while (cal.get(Calendar.DAY_OF_WEEK) != Calendar.FRIDAY);
         } else {
             mTabs.add(new SlidingTabItem("Classic", MensaClassicFragment.class, CalendarUtils.COLOR_DEFAULT_LVA, Color.GRAY));
