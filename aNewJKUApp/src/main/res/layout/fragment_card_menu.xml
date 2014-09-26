@@ -7,8 +7,6 @@
     <org.voidsink.anewjkuapp.view.MenuCardListView
         android:layout_width="match_parent"
         android:paddingBottom="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_vertical_margin"
         android:paddingTop="8dip"
         android:clipToPadding="false"
         android:scrollbarStyle="outsideOverlay"
