@@ -73,7 +73,7 @@ public class CalendarCard extends Card {
     public void setupInnerViewElements(ViewGroup parent, View view) {
 
         View chip = parent
-                .findViewById(R.id.calendar_list_item_chip);
+                .findViewById(R.id.empty_chip_background);
         TextView title = (TextView) parent
                 .findViewById(R.id.calendar_list_item_title);
         TextView descr = (TextView) parent

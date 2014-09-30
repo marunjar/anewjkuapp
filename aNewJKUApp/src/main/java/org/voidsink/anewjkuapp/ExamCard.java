@@ -73,7 +73,7 @@ public class ExamCard extends Card {
         TextView location = (TextView) view
                 .findViewById(R.id.exam_list_item_location);
         View chip = view
-                .findViewById(R.id.exam_list_item_chip);
+                .findViewById(R.id.empty_chip_background);
 
         if (mExam.mark()) {
             chip.setBackgroundColor(CalendarUtils.COLOR_DEFAULT_EXAM);

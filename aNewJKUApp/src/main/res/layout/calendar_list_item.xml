@@ -6,9 +6,7 @@
     android:orientation="horizontal"
     android:padding="@dimen/card_content_padding">
 
-    <View
-        android:id="@+id/calendar_list_item_chip"
-        style="@style/chip" />
+    <include layout="@layout/empty_chip"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

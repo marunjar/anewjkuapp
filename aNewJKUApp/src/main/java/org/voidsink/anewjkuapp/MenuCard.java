@@ -68,7 +68,7 @@ public class MenuCard extends MenuBaseCard {
         TextView meal = (TextView) view.findViewById(R.id.mensa_menu_item_meal);
         TextView price = (TextView) view.findViewById(R.id.mensa_menu_item_price);
         TextView oehBonus = (TextView) view.findViewById(R.id.mensa_menu_item_oeh_bonus);
-        View chip = view.findViewById(R.id.mensa_menu_chip);
+        View chip = view.findViewById(R.id.empty_chip_background);
 
 //
 //        String menuName = mMenu.getName();
