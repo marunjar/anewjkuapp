@@ -388,15 +388,19 @@ public class AppUtils {
 	}
 
 	public static String getAccountName(Context context, Account account) {
+        if (account == null) {return null;}
 		return account.name;
 	}
 
 	public static String getAccountPassword(Context context, Account account) {
+        if (account == null) {return null;}
 		return AccountManager.get(context).getPassword(account);
 	}
 
 	@SuppressLint("NewApi")
 	public static String getAccountAuthToken(Context context, Account account) {
+        if (account == null) {return null;}
+
 		AccountManager am = AccountManager.get(context);
 		AccountManagerFuture<Bundle> response = null;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {

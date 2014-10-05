@@ -28,7 +28,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -100,6 +99,7 @@ public class KusssHandler {
     }
 
     public synchronized String login(Context c, String user, String password) {
+        if (user == null || password == null) {return null;}
         try {
             if ((user.length() > 0) && (user.charAt(0) != 'k')) {
                 user = "k" + user;
@@ -140,7 +140,11 @@ public class KusssHandler {
 
     public synchronized boolean logout(Context c) {
         try {
-            Jsoup.connect(URL_LOGOUT).get();
+            Connection.Response r = Jsoup.connect(URL_LOGOUT).method(Connection.Method.GET).execute();
+
+            if (r == null) {
+                return false;
+            }
 
             return !isLoggedIn(c, null);
         } catch (Exception e) {
@@ -247,12 +251,16 @@ public class KusssHandler {
 
     public boolean selectTerm(Context c, String term) {
         try {
-            Jsoup.connect(URL_SELECT_TERM).data("term", term)
+            Connection.Response r = Jsoup.connect(URL_SELECT_TERM).method(Connection.Method.POST)
+                    .data("term", term)
                     .data("previousQueryString", "")
-                    .data("reloadAction", "listmystudentlvas.action").post();
+                    .data("reloadAction", "").execute();
+
+            if (r == null) {return false;}
+
         } catch (IOException e) {
             Log.e(TAG, "selectTerm", e);
-            Analytics.sendException(c, e, true);
+            Analytics.sendException(c, e, false);
             return false;
         }
         Log.d(TAG, term + " selected");
