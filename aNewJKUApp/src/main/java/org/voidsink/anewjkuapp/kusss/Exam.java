@@ -66,7 +66,7 @@ public class Exam {
 
 						setDate(dateFormat.parse(columns.get(2).text())); // date
 
-						setTimeLocation(columns.get(3).text());
+						setTimeLocation(c, columns.get(3).text());
 
 						setRegistered(false);
 					}
@@ -98,7 +98,7 @@ public class Exam {
 
 						setDate(dateFormat.parse(columns.get(1).text())); // date
 
-						setTimeLocation(columns.get(2).text());
+						setTimeLocation(c, columns.get(2).text());
 
 						setRegistered(columns.get(0)
 								.getElementsByClass("assignment-inactive")
@@ -132,20 +132,28 @@ public class Exam {
 		this.date = date;
 	}
 
-	private void setTimeLocation(String timeLocation) {
+	private void setTimeLocation(Context c, String timeLocation) {
 		String[] splitted = timeLocation.split("\\/");
 
-		Matcher timeMatcher = timePattern.matcher(splitted[0]);
-		String time = "";
-		while (timeMatcher.find()) {
-			if (!time.isEmpty()) {
-				time += " - ";
-			}
-			time += timeMatcher.group();
-		}
+        String time = "";
+        String location = "";
+
+        try {
+            Matcher timeMatcher = timePattern.matcher(splitted[0]);
+            while (timeMatcher.find()) {
+                if (!time.isEmpty()) {
+                    time += " - ";
+                }
+                time += timeMatcher.group();
+            }
+            location = splitted[1];
+        } catch (Exception e) {
+            Log.e(TAG, "cant parse string", e);
+            Analytics.sendException(c, e, false);
+        }
 
 		this.time = time;
-		this.location = splitted[1];
+		this.location = location;
 	}
 
 	private void setDescription(String description) {
