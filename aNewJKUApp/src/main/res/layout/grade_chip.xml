@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="wrap_content"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/grade_chip_background"
     android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:background="@color/color_chip_grade_back_default"
+    android:gravity="center_vertical"
     android:minHeight="60dp"
     android:minWidth="60dp"
-    android:layout_margin="8dp"
-    android:padding="3dp"
-    android:gravity="center_vertical"
-    android:id="@+id/grade_chip_background"
-    android:background="@color/color_chip_grade_back_default"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="3dp">
 
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:textStyle="bold"
         android:id="@+id/grade_chip_grade"
-        android:textColor="@color/color_chip_grade_text"
-        android:padding="2dp"
-        android:textSize="@dimen/grade_chip_grade_size"/>
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:id="@+id/grade_chip_info"
         android:gravity="center"
         android:padding="2dp"
         android:textColor="@color/color_chip_grade_text"
-        android:textSize="@dimen/grade_chip_info_size"/>
+        android:textSize="@dimen/grade_chip_grade_size"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/grade_chip_info"
+        fontPath="fonts/Roboto-Light.ttf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="2dp"
+        android:textColor="@color/color_chip_grade_text"
+        android:textSize="@dimen/grade_chip_info_size" />
 </LinearLayout>

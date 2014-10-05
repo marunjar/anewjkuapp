@@ -9,6 +9,7 @@ import org.voidsink.anewjkuapp.base.SlidingTabItem;
 import org.voidsink.anewjkuapp.base.SlidingTabsFragment;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +32,7 @@ public class MensaFragment extends SlidingTabsFragment {
             do {
                 // do not add weekend (no menu)
                 if (cal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && cal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
-                    mTabs.add(new MensaDayTabItem(cal.getTime(), CalendarUtils.COLOR_DEFAULT_LVA, Color.GRAY));
+                    mTabs.add(new MensaDayTabItem(getTabTitle(cal), cal.getTime(), CalendarUtils.COLOR_DEFAULT_LVA, Color.GRAY));
                 }
                 // increment day
                 cal.add(Calendar.DATE, 1);
@@ -42,5 +43,15 @@ public class MensaFragment extends SlidingTabsFragment {
             mTabs.add(new SlidingTabItem("KHG", MensaKHGFragment.class, indicatorColor, dividerColor));
             mTabs.add(new SlidingTabItem("Raab", MensaRaabFragment.class, indicatorColor, dividerColor));
         }
+    }
+
+    private String getTabTitle(final Calendar cal) {
+        final Calendar now = Calendar.getInstance();
+        if (now.get(Calendar.DATE) == cal.get(Calendar.DATE)) {
+            return "Today";
+        } else if (cal.get(Calendar.DATE) - now.get(Calendar.DATE) == 1) {
+            return "Tomorrow";
+        }
+        return new SimpleDateFormat("EEEE").format(cal.getTime());
     }
 }

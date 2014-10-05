@@ -2,20 +2,15 @@ package org.voidsink.anewjkuapp;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.view.ContextThemeWrapper;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
-import it.gmariotti.cardslib.library.internal.base.BaseCard;
 
 /**
  * Created by paul on 06.09.2014.
@@ -44,9 +39,9 @@ public class LvaCard extends Card {
         TextView code = (TextView) view.findViewById(R.id.lva_list2_item_code);
         TextView teacher = (TextView) view.findViewById(R.id.lva_list2_item_teacher);
 
-        View chipBack = view.findViewById(R.id.grade_chip_background);
-        TextView chipEcts = (TextView) view.findViewById(R.id.grade_chip_info);
-        TextView chipGrade = (TextView) view.findViewById(R.id.grade_chip_grade);
+        ViewGroup chipBack = (ViewGroup) view.findViewById(R.id.grade_chip);
+        TextView chipEcts = (TextView) chipBack.findViewById(R.id.grade_chip_info);
+        TextView chipGrade = (TextView) chipBack.findViewById(R.id.grade_chip_grade);
 
         if (!lva.getLva().getTeacher().isEmpty()) {
             teacher.setText(lva.getLva().getTeacher());
