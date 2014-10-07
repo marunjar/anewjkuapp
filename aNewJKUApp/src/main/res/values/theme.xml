@@ -12,10 +12,8 @@
         <item name="android:actionDropDownStyle">@style/DropDownNav.Apptheme</item>
         <item name="android:actionBarStyle">@style/ActionBar.Solid.Apptheme</item>
         <item name="android:actionModeBackground">@drawable/cab_background_top_apptheme</item>
-        <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_apptheme
-        </item>
-        <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Apptheme
-        </item>
+        <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_apptheme</item>
+        <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Apptheme</item>
         <item name="android:actionOverflowButtonStyle">@style/AppTheme.ActionButton.Overflow</item>
         <item name="android:textColor">@android:color/black</item>
     </style>

@@ -4,11 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.view.GradeCardListView;
 import org.voidsink.anewjkuapp.view.GradeHeaderCard;
 
+import java.text.DateFormat;
 import java.text.Format;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,20 +39,16 @@ public class GradeCardArrayAdapter extends CardArrayAdapter implements StickyLis
 
     @Override
     public View getHeaderView(int position, View convertView, ViewGroup viewGroup) {
-
         // Build your custom HeaderView
-        //In this case I will use a Card, but you can use any view
-
         LayoutInflater mInflater = LayoutInflater.from(getContext());
-        View view = mInflater.inflate(R.layout.grade_card_header, null);
+        final TextView tvHeaderTitle = (TextView) mInflater.inflate(R.layout.grade_card_header, null);
 
-        CardView cardView= (CardView)view.findViewById(R.id.grade_card_header_id);
         Card card = getItem(position);
         if (card instanceof GradeCard) {
-            Card headerCard = new GradeHeaderCard(getContext(), ((GradeCard) card).getGrade().getGradeType());
-            cardView.setCard(headerCard);
+            tvHeaderTitle.setText(getContext().getString(((GradeCard) card).getGrade().getGradeType().getStringResID()));
+
         }
-        return view;
+        return tvHeaderTitle;
     }
 
     @Override

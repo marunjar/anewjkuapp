@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Lva;
@@ -39,20 +40,15 @@ public class LvaCardArrayAdapter extends CardArrayAdapter implements StickyListH
 
     @Override
     public View getHeaderView(int position, View convertView, ViewGroup viewGroup) {
-
         // Build your custom HeaderView
-        //In this case I will use a Card, but you can use any view
-
         LayoutInflater mInflater = LayoutInflater.from(getContext());
-        View view = mInflater.inflate(R.layout.lva_card_header, null);
+        final TextView tvHeaderTitle = (TextView) mInflater.inflate(R.layout.lva_card_header, null);
 
-        CardView cardView= (CardView)view.findViewById(R.id.lva_card_header_id);
         Card card = getItem(position);
         if (card instanceof LvaCard) {
-            Card headerCard = new LvaHeaderCard(getContext(), ((LvaCard) card).getLva().getState());
-            cardView.setCard(headerCard);
+            tvHeaderTitle.setText(getContext().getString(((LvaCard) card).getLva().getState().getStringResID()));
         }
-        return view;
+        return tvHeaderTitle;
     }
 
     @Override
