@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.view.CalendarCardListView;
-import org.voidsink.anewjkuapp.view.DateHeaderCard;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -17,7 +16,6 @@ import java.util.List;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
-import it.gmariotti.cardslib.library.view.CardView;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**

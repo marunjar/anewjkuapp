@@ -6,19 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
-import org.voidsink.anewjkuapp.kusss.Lva;
-import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.view.LvaCardListView;
-import org.voidsink.anewjkuapp.view.LvaHeaderCard;
 
-import java.text.Format;
-import java.util.ArrayList;
 import java.util.List;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
-import it.gmariotti.cardslib.library.view.CardView;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**

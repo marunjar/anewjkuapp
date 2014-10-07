@@ -6,21 +6,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.voidsink.anewjkuapp.calendar.CalendarCard;
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
-import org.voidsink.anewjkuapp.view.DateHeaderCard;
 import org.voidsink.anewjkuapp.view.ExamCardListView;
-import org.voidsink.anewjkuapp.view.GradeCardListView;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
-import it.gmariotti.cardslib.library.view.CardView;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
