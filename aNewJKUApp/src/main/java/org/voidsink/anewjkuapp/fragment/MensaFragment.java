@@ -36,7 +36,7 @@ public class MensaFragment extends SlidingTabsFragment {
                 }
                 // increment day
                 cal.add(Calendar.DATE, 1);
-            } while (cal.get(Calendar.DAY_OF_WEEK) != Calendar.FRIDAY);
+            } while (cal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY);
         } else {
             mTabs.add(new SlidingTabItem("Classic", MensaClassicFragment.class, indicatorColor, dividerColor));
             mTabs.add(new SlidingTabItem("Choice", MensaChoiceFragment.class, indicatorColor, dividerColor));
@@ -48,9 +48,9 @@ public class MensaFragment extends SlidingTabsFragment {
     private String getTabTitle(final Calendar cal) {
         final Calendar now = Calendar.getInstance();
         if (now.get(Calendar.DATE) == cal.get(Calendar.DATE)) {
-            return "Today";
+            return getResources().getString(R.string.today);
         } else if (cal.get(Calendar.DATE) - now.get(Calendar.DATE) == 1) {
-            return "Tomorrow";
+            return getResources().getString(R.string.tomorrow);
         }
         return new SimpleDateFormat("EEEE").format(cal.getTime());
     }
