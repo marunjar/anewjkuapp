@@ -54,9 +54,9 @@ public class GradeCard extends Card {
         TextView skz = (TextView) view
                 .findViewById(R.id.grade_list_grade_skz);
 
-        TextView chipGrade = (TextView) view.findViewById(R.id.grade_chip_grade);
+        View chipBack = view.findViewById(R.id.grade_chip);
         TextView chipInfo = (TextView) view.findViewById(R.id.grade_chip_info);
-        View chipBack = view.findViewById(R.id.grade_chip_background);
+        TextView chipGrade = (TextView) view.findViewById(R.id.grade_chip_grade);
 
         if (!mGrade.getLvaNr().isEmpty()) {
             lvaNr.setText(mGrade.getLvaNr());
@@ -70,6 +70,13 @@ public class GradeCard extends Card {
             term.setVisibility(View.VISIBLE);
         } else {
             term.setVisibility(View.GONE);
+        }
+
+        if (mGrade.getSkz() > 0) {
+            skz.setText(String.format("[%d]", mGrade.getSkz()));
+            skz.setVisibility(View.VISIBLE);
+        } else {
+            skz.setVisibility(View.GONE);
         }
 
         chipGrade.setText(String.format("%d", mGrade.getGrade().getValue()));
