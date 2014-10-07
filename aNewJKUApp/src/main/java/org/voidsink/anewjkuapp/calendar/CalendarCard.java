@@ -51,10 +51,10 @@ public class CalendarCard extends Card {
         Date mDtStart = new Date(dtStart);
         Date mDtEnd = new Date(dtEnd);
 
-        final SimpleDateFormat dfStart = new SimpleDateFormat("hh:mm");
+        final SimpleDateFormat dfStart = new SimpleDateFormat("HH:mm");
         SimpleDateFormat dfEnd = dfStart;
         if (!DateUtils.isSameDay(mDtStart, mDtEnd)) {
-            dfEnd = new SimpleDateFormat("dd.MM hh:mm");
+            dfEnd = new SimpleDateFormat("dd.MM HH:mm");
         }
 
         this.mTime = String.format("%s - %s", dfStart.format(mDtStart),
