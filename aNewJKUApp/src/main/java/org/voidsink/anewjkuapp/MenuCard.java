@@ -1,29 +1,17 @@
 package org.voidsink.anewjkuapp;
 
-import android.content.ContentUris;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.view.ContextThemeWrapper;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.apache.commons.lang.time.DateUtils;
-import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.mensa.Mensa;
 import org.voidsink.anewjkuapp.mensa.MensaDay;
 import org.voidsink.anewjkuapp.mensa.MensaMenu;
 
-import java.text.DateFormat;
-import java.util.Date;
-
-import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
-import it.gmariotti.cardslib.library.internal.base.BaseCard;
 
 /**
  * Created by paul on 06.09.2014.

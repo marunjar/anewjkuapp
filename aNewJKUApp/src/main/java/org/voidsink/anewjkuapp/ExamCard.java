@@ -24,8 +24,6 @@ import it.gmariotti.cardslib.library.internal.base.BaseCard;
  */
 public class ExamCard extends Card {
 
-    private static final DateFormat df = SimpleDateFormat.getDateInstance();
-
     private ExamListExam mExam;
 
     public ExamCard(Context c, ExamListExam exam) {

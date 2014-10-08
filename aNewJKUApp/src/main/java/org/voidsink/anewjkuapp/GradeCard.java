@@ -1,30 +1,21 @@
 package org.voidsink.anewjkuapp;
 
 import android.content.Context;
-import android.view.ContextThemeWrapper;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
-import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
-import it.gmariotti.cardslib.library.internal.base.BaseCard;
 
 /**
  * Created by paul on 06.09.2014.
  */
 public class GradeCard extends Card {
-
-    private static final DateFormat df = SimpleDateFormat.getDateInstance();
 
     private ExamGrade mGrade;
 
@@ -81,6 +72,8 @@ public class GradeCard extends Card {
 
         chipGrade.setText(String.format("%d", mGrade.getGrade().getValue()));
         chipInfo.setText(String.format("%.2f ECTS", mGrade.getEcts()));
+
+        final DateFormat df = DateFormat.getDateInstance();
 
         date.setText(df.format(mGrade.getDate()));
         grade.setText(mContext.getString(mGrade.getGrade()
