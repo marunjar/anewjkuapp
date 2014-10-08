@@ -38,12 +38,12 @@ public class AboutFragment extends BaseFragment {
 					}
 				});
 
-        view.findViewById(R.id.force_logout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                KusssHandler.getInstance().logout(getContext());
-            }
-        });
+//        view.findViewById(R.id.force_logout).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                KusssHandler.getInstance().logout(getContext());
+//            }
+//        });
 
 		return view;
 	}

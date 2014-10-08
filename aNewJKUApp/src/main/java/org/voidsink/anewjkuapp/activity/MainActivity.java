@@ -280,6 +280,12 @@ public class MainActivity extends FragmentActivity implements
         Account account = AppUtils.getAccount(this);
 
         switch (item.getItemId()) {
+            case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            case R.id.action_about:
+                startActivity(new Intent(this, AboutActivity.class));
+                return true;
             case R.id.action_refresh_exams:
                 Log.d(TAG, "importing exams");
                 Analytics.eventReloadExams(this);

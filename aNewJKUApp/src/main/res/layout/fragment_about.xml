@@ -40,6 +40,7 @@
 		</LinearLayout>
     </ScrollView>
 
+    <!--
     <Button
         android:id="@id/force_logout"
         android:layout_width="match_parent"
@@ -48,9 +49,10 @@
         android:layout_marginTop="10dp"
         android:padding="10dp"
         android:text="@string/about_force_logout" />
+    -->
 
     <Button
-        android:id="@id/about_credits"
+        android:id="@+id/about_credits"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/about_changelog"

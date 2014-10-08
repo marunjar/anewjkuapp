@@ -71,6 +71,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activity.AboutActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
             android:name=".activity.KusssAuthenticatorActivity"
             android:permission="android.permission.MANAGE_ACCOUNTS"
             android:screenOrientation="portrait">
