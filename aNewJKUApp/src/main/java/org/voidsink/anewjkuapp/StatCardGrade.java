@@ -2,16 +2,12 @@ package org.voidsink.anewjkuapp;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.DashPathEffect;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.androidplot.pie.PieChart;
 import com.androidplot.ui.SeriesRenderer;
-import com.androidplot.ui.XLayoutStyle;
-import com.androidplot.ui.XPositionMetric;
-import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.BarFormatter;
 import com.androidplot.xy.BarRenderer;
 import com.androidplot.xy.BoundaryMode;
@@ -19,8 +15,8 @@ import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.XYStepMode;
-import com.androidplot.xy.YValueMarker;
 
+import org.voidsink.anewjkuapp.base.ThemedCardWithList;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Grade;
 import org.voidsink.anewjkuapp.kusss.GradeType;
@@ -34,12 +30,11 @@ import java.util.List;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardExpand;
 import it.gmariotti.cardslib.library.internal.CardHeader;
-import it.gmariotti.cardslib.library.prototypes.CardWithList;
 
 /**
  * Created by paul on 14.09.2014.
  */
-public class StatCardGrade extends CardWithList {
+public class StatCardGrade extends ThemedCardWithList {
 
     final boolean mEctsWeighting;
     final List<ExamGrade> mGrades;
@@ -187,19 +182,26 @@ public class StatCardGrade extends CardWithList {
         /**
          * Implementing this method to allow us to inject our
          * special selection formatter.
-         * @param index index of the point being rendered.
+         *
+         * @param index  index of the point being rendered.
          * @param series XYSeries to which the point being rendered belongs.
          * @return
          */
         @Override
         public GradeBarFormatter getFormatter(int index, XYSeries series) {
             switch (index) {
-                case 1: return new GradeBarFormatter(Grade.G1.getColor(), Color.GRAY);
-                case 2: return new GradeBarFormatter(Grade.G2.getColor(), Color.GRAY);
-                case 3: return new GradeBarFormatter(Grade.G3.getColor(), Color.GRAY);
-                case 4: return new GradeBarFormatter(Grade.G4.getColor(), Color.GRAY);
-                case 5: return new GradeBarFormatter(Grade.G5.getColor(), Color.GRAY);
-                default: return getFormatter(series);
+                case 1:
+                    return new GradeBarFormatter(Grade.G1.getColor(), Color.GRAY);
+                case 2:
+                    return new GradeBarFormatter(Grade.G2.getColor(), Color.GRAY);
+                case 3:
+                    return new GradeBarFormatter(Grade.G3.getColor(), Color.GRAY);
+                case 4:
+                    return new GradeBarFormatter(Grade.G4.getColor(), Color.GRAY);
+                case 5:
+                    return new GradeBarFormatter(Grade.G5.getColor(), Color.GRAY);
+                default:
+                    return getFormatter(series);
             }
         }
     }

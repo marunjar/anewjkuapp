@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import de.cketti.library.changelog.ChangeLog;
+
 public class AboutFragment extends BaseFragment {
 
 	@Override
@@ -37,6 +39,14 @@ public class AboutFragment extends BaseFragment {
 						contributors.getDialog(R.xml.libraries).show();
 					}
 				});
+
+        (view.findViewById(R.id.about_changelog))
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new ChangeLog(getActivity()).getFullLogDialog().show();
+                    }
+                });
 
 //        view.findViewById(R.id.force_logout).setOnClickListener(new View.OnClickListener() {
 //            @Override

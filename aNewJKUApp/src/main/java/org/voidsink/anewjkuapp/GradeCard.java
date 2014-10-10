@@ -5,17 +5,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.voidsink.anewjkuapp.base.ThemedCard;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 
 import java.text.DateFormat;
 
-import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
 
 /**
  * Created by paul on 06.09.2014.
  */
-public class GradeCard extends Card {
+public class GradeCard extends ThemedCard {
 
     private ExamGrade mGrade;
 

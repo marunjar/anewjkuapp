@@ -22,27 +22,27 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textStyle">italic</item>
-        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
         <item name="android:padding">8dp</item>
     </style>
 
     <!-- Material Text Styles -->
     <style name="Text">
         <item name="fontPath">fonts/Roboto-Regular.ttf</item>
-        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
     <style name="Text.Body1" parent="@style/Text">
         <item name="android:lineSpacingMultiplier">1.1</item>
         <item name="android:textSize">@dimen/text_size_body</item>
         <item name="fontPath">fonts/Roboto-Medium.ttf</item>
-        <item name="android:textColor">@color/text_body</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
     <style name="Text.Body2" parent="@style/Text">
         <item name="android:lineSpacingMultiplier">1.1</item>
         <item name="android:textSize">@dimen/text_size_body</item>
-        <item name="android:textColor">@color/text_body</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
     <style name="Text.Title" parent="@style/Text">
@@ -54,6 +54,17 @@
         <item name="android:textSize">@dimen/text_size_button</item>
         <item name="fontPath">fonts/Roboto-Medium.ttf</item>
         <item name="android:textAllCaps">true</item>
+    </style>
+
+    <!-- for themed cards-->
+    <style name="card.header_simple_title">
+        <item name="android:textSize">@dimen/card_header_simple_title_text_size</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:layout_gravity">left|center_vertical</item>
+        <item name="android:layout_marginLeft">@dimen/card_header_simple_title_margin_left</item>
+        <item name="android:layout_marginTop">@dimen/card_header_simple_title_margin_top</item>
+        <item name="android:layout_marginRight">@dimen/card_header_simple_title_margin_right</item>
+        <item name="android:layout_marginBottom">@dimen/card_header_simple_title_margin_bottom</item>
     </style>
 
 </resources>

@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -36,6 +35,7 @@ import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
+import org.voidsink.anewjkuapp.base.ThemedActivity;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.fragment.NavigationDrawerFragment;
@@ -47,7 +47,7 @@ import java.util.List;
 import de.cketti.library.changelog.ChangeLog;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class MainActivity extends FragmentActivity implements
+public class MainActivity extends ThemedActivity implements
         NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     public static final String ARG_SHOW_FRAGMENT = "show_fragment";
@@ -101,12 +101,6 @@ public class MainActivity extends FragmentActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (PreferenceWrapper.getUseLightDesign(this)) {
-            this.setTheme(R.style.AppTheme_Light);
-        } else {
-            this.setTheme(R.style.AppTheme);
-        }
-
         super.onCreate(savedInstanceState);
 
         // do things if new version was installed
@@ -318,10 +312,6 @@ public class MainActivity extends FragmentActivity implements
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    public void onClickChangeLog(View v) {
-        new ChangeLog(this).getFullLogDialog().show();
     }
 
     /**

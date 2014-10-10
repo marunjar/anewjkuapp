@@ -69,7 +69,9 @@ public class CalendarFragment extends BaseFragment {
 //		mListView.addFooterView(loadMore);
 		mListView.setAdapter(mAdapter);
 
-		return view;
+        loadData();
+
+        return view;
 	}
 
 	@Override
@@ -79,8 +81,6 @@ public class CalendarFragment extends BaseFragment {
 		// init range
 		now = System.currentTimeMillis();
 		then = now + 14 * DateUtils.DAY_IN_MILLIS;
-
-		loadData();
 	}
 
 	@Override

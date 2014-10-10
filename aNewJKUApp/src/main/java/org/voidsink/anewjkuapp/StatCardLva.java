@@ -19,6 +19,7 @@ import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYStepMode;
 import com.androidplot.xy.YValueMarker;
 
+import org.voidsink.anewjkuapp.base.ThemedCardWithList;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.kusss.LvaState;
@@ -30,12 +31,11 @@ import java.util.List;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardExpand;
 import it.gmariotti.cardslib.library.internal.CardHeader;
-import it.gmariotti.cardslib.library.prototypes.CardWithList;
 
 /**
  * Created by paul on 14.09.2014.
  */
-public class StatCardLva extends CardWithList {
+public class StatCardLva extends ThemedCardWithList {
 
     private final List<LvaWithGrade> mLvas;
     private final List<String> mTerms;
@@ -171,8 +171,8 @@ public class StatCardLva extends CardWithList {
 
                 ectsMarker.getTextPaint().setTextSize(PixelUtils.dpToPix(12));
 
-                DashPathEffect dpe = new DashPathEffect(new float[] {
-                        PixelUtils.dpToPix(2), PixelUtils.dpToPix(2) }, 0);
+                DashPathEffect dpe = new DashPathEffect(new float[]{
+                        PixelUtils.dpToPix(2), PixelUtils.dpToPix(2)}, 0);
 
                 ectsMarker.getLinePaint().setPathEffect(dpe);
 

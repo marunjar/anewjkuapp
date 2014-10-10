@@ -7,13 +7,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.voidsink.anewjkuapp.base.ThemedCard;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
-import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardExpand;
 import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.internal.ViewToClickToExpand;
@@ -22,7 +19,7 @@ import it.gmariotti.cardslib.library.internal.base.BaseCard;
 /**
  * Created by paul on 06.09.2014.
  */
-public class ExamCard extends Card {
+public class ExamCard extends ThemedCard {
 
     private ExamListExam mExam;
 

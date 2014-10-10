@@ -30,6 +30,7 @@ import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.EmbossMaskFilter;
@@ -527,5 +528,13 @@ public class AppUtils {
         AppUtils.sortGrades(result);
 
         return result;
+    }
+
+    public static void applyTheme(Activity activity) {
+        if (PreferenceWrapper.getUseLightDesign(activity)) {
+            activity.setTheme(R.style.AppTheme_Light);
+        } else {
+            activity.setTheme(R.style.AppTheme);
+        }
     }
 }

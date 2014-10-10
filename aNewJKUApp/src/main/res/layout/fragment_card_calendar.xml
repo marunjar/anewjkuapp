@@ -33,7 +33,7 @@
             android:layout_height="48dp"
             android:background="@drawable/selectable_background_apptheme"
             style="@style/Text.Button"
-            android:textColor="@color/text_secondary"
+            android:textColor="?android:attr/textColorSecondary"
             android:text="@string/listview_footer_button" />
     </LinearLayout>
 

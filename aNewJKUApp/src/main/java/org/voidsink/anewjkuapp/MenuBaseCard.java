@@ -1,21 +1,16 @@
 package org.voidsink.anewjkuapp;
 
 import android.content.Context;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
-import org.voidsink.anewjkuapp.calendar.CalendarUtils;
+import org.voidsink.anewjkuapp.base.ThemedCard;
 import org.voidsink.anewjkuapp.mensa.Mensa;
 import org.voidsink.anewjkuapp.mensa.MensaDay;
 import org.voidsink.anewjkuapp.mensa.MensaMenu;
 
-import it.gmariotti.cardslib.library.internal.Card;
-
 /**
  * Created by paul on 18.09.2014.
  */
-public abstract class MenuBaseCard extends Card {
+public abstract class MenuBaseCard extends ThemedCard {
     protected Mensa mMensa;
     protected MensaDay mDay = null;
     protected MensaMenu mMenu = null;

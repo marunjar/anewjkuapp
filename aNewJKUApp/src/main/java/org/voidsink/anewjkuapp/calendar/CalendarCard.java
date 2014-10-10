@@ -14,19 +14,19 @@ import android.widget.TextView;
 import org.apache.commons.lang.time.DateUtils;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
+import org.voidsink.anewjkuapp.base.ThemedCard;
 import org.voidsink.anewjkuapp.fragment.MapFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.internal.base.BaseCard;
 
 /**
  * Created by paul on 06.09.2014.
  */
-public class CalendarCard extends Card {
+public class CalendarCard extends ThemedCard {
 
     private long mEventId = 0;
     private int mColor;

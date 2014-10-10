@@ -10,6 +10,6 @@
         android:layout_height="match_parent"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:gravity="center_vertical"
-        android:textColor="@color/text_secondary" />
+        android:textColor="?android:attr/textColorSecondary" />
 
 </RelativeLayout>

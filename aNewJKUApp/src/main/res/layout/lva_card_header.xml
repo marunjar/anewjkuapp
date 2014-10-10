@@ -9,5 +9,5 @@
     android:paddingLeft="@dimen/list_card_padding_left"
     android:paddingRight="@dimen/list_card_padding_right"
     android:paddingTop="@dimen/list_card_padding_top"
-    android:textColor="@color/text_secondary"
+    android:textColor="?android:attr/textColorSecondary"
     android:textSize="@dimen/text_size_subhead" />

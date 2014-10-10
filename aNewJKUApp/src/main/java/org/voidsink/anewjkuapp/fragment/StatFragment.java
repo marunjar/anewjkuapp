@@ -44,7 +44,7 @@ public class StatFragment extends SlidingTabsFragment implements
 			Bundle savedInstanceState) {
 		View v = super.onCreateView(inflater, container, savedInstanceState);
 
-		loadData(getActivity());
+		loadData(getContext());
 
 		return v;
 	}

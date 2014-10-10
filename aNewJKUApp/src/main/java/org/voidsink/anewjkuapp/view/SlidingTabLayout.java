@@ -17,6 +17,7 @@
 package org.voidsink.anewjkuapp.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -176,7 +177,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
         textView.setGravity(Gravity.CENTER);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, TAB_VIEW_TEXT_SIZE_SP);
         CalligraphyUtils.applyFontToTextView(getContext(), textView, "fonts/Roboto-Light.ttf");
-        textView.setTextColor(getResources().getColor(R.color.text_primary_inverse));
+        textView.setTextColor(Color.WHITE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             // If we're running on Honeycomb or newer, then we can use the Theme's
