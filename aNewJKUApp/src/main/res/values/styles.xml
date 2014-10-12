@@ -67,4 +67,17 @@
         <item name="android:layout_marginBottom">@dimen/card_header_simple_title_margin_bottom</item>
     </style>
 
+    <!-- Button Overflow in Header for themed cards-->
+    <attr name="themed_card_menu_button_overflow" format="reference"/>
+    <style name="card.header_button_base.overflow" >
+        <item name="android:background">?attr/themed_card_menu_button_overflow</item>
+        <item name="android:layout_marginRight">@dimen/card_header_button_overflow_margin_right</item>
+    </style>
+
+    <!-- Button to Expand/Collapse in Header for themed cards-->
+    <attr name="themed_card_menu_button_expand" format="reference"/>
+    <style name="card.header_button_base.expand">
+        <item name="android:background">?attr/themed_card_menu_button_expand</item>
+    </style>
+
 </resources>

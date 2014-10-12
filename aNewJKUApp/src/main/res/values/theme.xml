@@ -14,6 +14,8 @@
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_apptheme</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Apptheme</item>
         <item name="android:actionOverflowButtonStyle">@style/AppTheme.ActionButton.Overflow</item>
+        <item name="themed_card_menu_button_overflow">@drawable/card_menu_button_rounded_overflow</item>
+        <item name="themed_card_menu_button_expand">@drawable/card_menu_button_expand</item>
     </style>
 
     <style name="AppTheme" parent="@android:style/Theme.Holo">
@@ -26,6 +28,8 @@
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_apptheme</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Apptheme</item>
         <item name="android:actionOverflowButtonStyle">@style/AppTheme.ActionButton.Overflow</item>
+        <item name="themed_card_menu_button_overflow">@drawable/card_menu_button_rounded_overflow_holo</item>
+        <item name="themed_card_menu_button_expand">@drawable/card_menu_button_expand_holo</item>
     </style>
 
     <style name="AppTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
