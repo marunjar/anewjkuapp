@@ -149,7 +149,7 @@ public class Exam {
             location = splitted[1];
         } catch (Exception e) {
             Log.e(TAG, "cant parse string", e);
-            Analytics.sendException(c, e, false);
+            Analytics.sendException(c, e, false, timeLocation);
         }
 
 		this.time = time;
