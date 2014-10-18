@@ -1,10 +1,8 @@
 <resources>
 
-    <style name="card_expand">
-        <item name="android:paddingLeft">10dp</item>
-        <item name="android:paddingRight">10dp</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+    <style name="card_expand" parent="Text.Body2">
+        <item name="android:paddingLeft">@dimen/card_content_padding</item>
+        <item name="android:paddingRight">@dimen/card_content_padding</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textColor">#FFF</item>
     </style>
