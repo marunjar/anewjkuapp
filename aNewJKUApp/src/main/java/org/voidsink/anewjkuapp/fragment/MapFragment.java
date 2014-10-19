@@ -15,9 +15,30 @@
  */
 package org.voidsink.anewjkuapp.fragment;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import android.app.AlertDialog;
+import android.app.SearchManager;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.util.Log;
+import android.view.ContextThemeWrapper;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.SearchView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.mapsforge.core.graphics.Bitmap;
 import org.mapsforge.core.model.BoundingBox;
@@ -26,10 +47,10 @@ import org.mapsforge.core.model.LatLong;
 import org.mapsforge.core.model.MapPosition;
 import org.mapsforge.core.util.LatLongUtils;
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
+import org.mapsforge.map.android.graphics.AndroidResourceBitmap;
 import org.mapsforge.map.android.util.AndroidUtil;
 import org.mapsforge.map.android.view.MapView;
 import org.mapsforge.map.layer.LayerManager;
-import org.mapsforge.map.layer.Layers;
 import org.mapsforge.map.layer.cache.TileCache;
 import org.mapsforge.map.layer.overlay.Marker;
 import org.mapsforge.map.layer.renderer.TileRendererLayer;
@@ -50,122 +71,101 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 
-import android.app.AlertDialog;
-import android.app.SearchManager;
-import android.content.ContentResolver;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
-import android.widget.SearchView;
-import android.util.Log;
-import android.view.ContextThemeWrapper;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapFragment extends BaseFragment implements
-		SearchView.OnQueryTextListener {
-	LocationOverlay mMyLocationOverlay;
-	Marker goalLocationOverlay;
+        SearchView.OnQueryTextListener {
+    LocationOverlay mMyLocationOverlay;
+    Marker goalLocationOverlay;
 
-	/**
-	 * The fragment argument representing the item ID that this fragment
-	 * represents.
-	 */
-	public static final String MAP_FILE_NAME = "campus.map";
+    /**
+     * The fragment argument representing the item ID that this fragment
+     * represents.
+     */
+    public static final String MAP_FILE_NAME = "campus.map";
 
-	private static final String TAG = MapFragment.class.getSimpleName();
-	private static final byte MAX_ZOOM_LEVEL = 19;
-	private static final byte MIN_ZOOM_LEVEL = 15;
-	private static final byte DEFAULT_ZOOM_LEVEL = 17;
+    private static final String TAG = MapFragment.class.getSimpleName();
+    private static final byte MAX_ZOOM_LEVEL = 19;
+    private static final byte MIN_ZOOM_LEVEL = 15;
+    private static final byte DEFAULT_ZOOM_LEVEL = 17;
 
-	/**
-	 * The dummy content this fragment is presenting.
-	 */
-	private MapView mapView;
-	private TileCache tileCache;
+    /**
+     * The dummy content this fragment is presenting.
+     */
+    private MapView mapView;
+    private TileCache tileCache;
 
-	private MapViewPosition mapViewPosition;
+    private MapViewPosition mapViewPosition;
 
-	private LayerManager mLayerManager;
+    private LayerManager mLayerManager;
 
-	private SearchView mSearchView;
+    private SearchView mSearchView;
 
-	/**
-	 * Mandatory empty constructor for the fragment manager to instantiate the
-	 * fragment (e.g. upon screen orientation changes).
-	 */
-	public MapFragment() {
-		super();
-	}
+    /**
+     * Mandatory empty constructor for the fragment manager to instantiate the
+     * fragment (e.g. upon screen orientation changes).
+     */
+    public MapFragment() {
+        super();
+    }
 
-	@Override
-	public void onPause() {
-		mMyLocationOverlay.disableMyLocation();
-		super.onPause();
-	}
+    @Override
+    public void onPause() {
+        mMyLocationOverlay.disableMyLocation();
+        super.onPause();
+    }
 
-	@Override
-	public void handlePendingIntent(Intent intent) {
-		super.handlePendingIntent(intent);
-		if (intent != null) {
-			if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-				if (intent.getData() != null) {
-					finishSearch(intent.getData());
-				} else {
-					String query = intent.getStringExtra(SearchManager.QUERY);
+    @Override
+    public void handlePendingIntent(Intent intent) {
+        super.handlePendingIntent(intent);
+        if (intent != null) {
+            if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+                if (intent.getData() != null) {
+                    finishSearch(intent.getData());
+                } else {
+                    String query = intent.getStringExtra(SearchManager.QUERY);
                     boolean isExactLocation = intent.getBooleanExtra(MainActivity.ARG_EXACT_LOCATION, false);
-					doSearch(query, isExactLocation);
-				}
-			} else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-				if (intent.getData() != null) {
-					finishSearch(intent.getData());
-				} else {
-					String query = intent.getStringExtra(SearchManager.QUERY);
+                    doSearch(query, isExactLocation);
+                }
+            } else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+                if (intent.getData() != null) {
+                    finishSearch(intent.getData());
+                } else {
+                    String query = intent.getStringExtra(SearchManager.QUERY);
                     boolean isExactLocation = intent.getBooleanExtra(MainActivity.ARG_EXACT_LOCATION, false);
-					doSearch(query, isExactLocation);
-				}
-			}
-		}
-	}
+                    doSearch(query, isExactLocation);
+                }
+            }
+        }
+    }
 
-	private void doSearch(String query, boolean isExactLocation) {
-		Log.i(TAG, "query: " + query);
+    private void doSearch(String query, boolean isExactLocation) {
+        Log.i(TAG, "query: " + query);
 
-		List<Poi> pois = new ArrayList<Poi>();
+        List<Poi> pois = new ArrayList<Poi>();
 
-		ContentResolver cr = getContext().getContentResolver();
-		Uri searchUri = PoiContentContract.CONTENT_URI.buildUpon()
-				.appendPath(SearchManager.SUGGEST_URI_PATH_QUERY)
-				.appendEncodedPath(query).build();
-		Cursor c = cr.query(searchUri, ImportPoiTask.POI_PROJECTION, null,
-				null, null);
-		while (c.moveToNext()) {
+        ContentResolver cr = getContext().getContentResolver();
+        Uri searchUri = PoiContentContract.CONTENT_URI.buildUpon()
+                .appendPath(SearchManager.SUGGEST_URI_PATH_QUERY)
+                .appendEncodedPath(query).build();
+        Cursor c = cr.query(searchUri, ImportPoiTask.POI_PROJECTION, null,
+                null, null);
+        while (c.moveToNext()) {
             Poi p = new Poi(c);
             if (!isExactLocation || p.getName().equalsIgnoreCase(query)) {
                 pois.add(p);
             }
-		}
-		c.close();
+        }
+        c.close();
 
-		if (pois.size() == 0) {
-			Toast.makeText(getContext(), String.format(getContext().getString(R.string.map_place_not_found), query), Toast.LENGTH_LONG)
-					.show();
-		} else if (pois.size() == 1) {
-			finishSearch(pois.get(0));
-		} else {
+        if (pois.size() == 0) {
+            Toast.makeText(getContext(), String.format(getContext().getString(R.string.map_place_not_found), query), Toast.LENGTH_LONG)
+                    .show();
+        } else if (pois.size() == 1) {
+            finishSearch(pois.get(0));
+        } else {
             AlertDialog.Builder poiSelector = new AlertDialog.Builder(
                     new ContextThemeWrapper(getContext(), R.style.AppTheme));
 
@@ -191,282 +191,274 @@ public class MapFragment extends BaseFragment implements
                         }
                     });
             poiSelector.show();
-		}
-	}
+        }
+    }
 
-	private void finishSearch(Poi poi) {
-		if (poi != null) {
-			finishSearch(PoiContentContract.Poi.CONTENT_URI.buildUpon()
-					.appendEncodedPath(Integer.toString(poi.getId())).build());
-		}
-	}
+    private void finishSearch(Poi poi) {
+        if (poi != null) {
+            finishSearch(PoiContentContract.Poi.CONTENT_URI.buildUpon()
+                    .appendEncodedPath(Integer.toString(poi.getId())).build());
+        }
+    }
 
-	private void finishSearch(Uri uri) {
-		Log.i(TAG, "finish search: " + uri.toString());
+    private void finishSearch(Uri uri) {
+        Log.i(TAG, "finish search: " + uri.toString());
 
-		// jump to point with given Uri
-		ContentResolver cr = getActivity().getContentResolver();
+        // jump to point with given Uri
+        ContentResolver cr = getActivity().getContentResolver();
 
-		Cursor c = cr
-				.query(uri, ImportPoiTask.POI_PROJECTION, null, null, null);
-		while (c.moveToNext()) {
+        Cursor c = cr
+                .query(uri, ImportPoiTask.POI_PROJECTION, null, null, null);
+        while (c.moveToNext()) {
 
-			String name = c.getString(ImportPoiTask.COLUMN_POI_NAME);
-			double lon = c.getDouble(ImportPoiTask.COLUMN_POI_LON);
-			double lat = c.getDouble(ImportPoiTask.COLUMN_POI_LAT);
+            String name = c.getString(ImportPoiTask.COLUMN_POI_NAME);
+            double lon = c.getDouble(ImportPoiTask.COLUMN_POI_LON);
+            double lat = c.getDouble(ImportPoiTask.COLUMN_POI_LAT);
 
-			setNewGoal(new LatLong(lat, lon), name);
+            setNewGoal(new LatLong(lat, lon), name);
 
-			break;
-		}
+            break;
+        }
         if (mSearchView != null) {
             mSearchView.setQuery("", false);
         }
-	}
+    }
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		this.mMyLocationOverlay.enableMyLocation(false);
-	}
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.mMyLocationOverlay.enableMyLocation(false);
+    }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
-	private void setNewGoal(LatLong latLong, String name) {
-		if (latLong != null) {
-			this.mMyLocationOverlay.setSnapToLocationEnabled(false);
+    private void setNewGoal(LatLong latLong, String name) {
+        if (latLong != null) {
+            this.mMyLocationOverlay.setSnapToLocationEnabled(false);
 
-			// generate Bubble image
-			TextView bubbleView = new TextView(this.getContext());
-			MapUtils.setBackground(bubbleView,
-					getResources().getDrawable(R.drawable.balloon_overlay));
-			bubbleView.setGravity(Gravity.CENTER);
-			bubbleView.setMaxEms(20);
-			bubbleView.setTextSize(15);
-			bubbleView.setTextColor(Color.BLACK);
-			bubbleView.setText(name);
-			Bitmap bubble = MapUtils.viewToBitmap(getContext(), bubbleView);
-			bubble.incrementRefCount();
+            // generate Bubble image
+            TextView bubbleView = new TextView(this.getContext());
+            MapUtils.setBackground(bubbleView,
+                    getResources().getDrawable(R.drawable.balloon_overlay));
+            bubbleView.setGravity(Gravity.CENTER);
+            bubbleView.setMaxEms(20);
+            bubbleView.setTextSize(15);
+            bubbleView.setTextColor(Color.BLACK);
+            bubbleView.setText(name);
+            Bitmap bubble = MapUtils.viewToBitmap(getContext(), bubbleView);
+            bubble.incrementRefCount();
 
-			// set new goal
-			this.goalLocationOverlay.setLatLong(latLong);
-			this.goalLocationOverlay.setBitmap(bubble);
-			this.goalLocationOverlay.setHorizontalOffset(0);
-			this.goalLocationOverlay.setVerticalOffset(-bubble.getHeight() / 2);
+            // set new goal
+            this.goalLocationOverlay.setLatLong(latLong);
+            this.goalLocationOverlay.setBitmap(bubble);
+            this.goalLocationOverlay.setHorizontalOffset(0);
+            this.goalLocationOverlay.setVerticalOffset(-bubble.getHeight() / 2);
 
-			if (this.mMyLocationOverlay.getLastLocation() != null) {
-				LatLong mLocation = LocationOverlay
-						.locationToLatLong(this.mMyLocationOverlay
-								.getLastLocation());
+            if (this.mMyLocationOverlay.getLastLocation() != null) {
+                LatLong mLocation = LocationOverlay
+                        .locationToLatLong(this.mMyLocationOverlay
+                                .getLastLocation());
 
-				// zoom to bounds
-				BoundingBox bb = new BoundingBox(Math.min(latLong.latitude,
-						mLocation.latitude), Math.min(latLong.longitude,
-						mLocation.longitude), Math.max(latLong.latitude,
-						mLocation.latitude), Math.max(latLong.longitude,
-						mLocation.longitude));
-				Dimension dimension = this.mapView.getModel().mapViewDimension
-						.getDimension();
-				this.mapView.getModel().mapViewPosition
-						.setMapPosition(new MapPosition(latLong, LatLongUtils
-								.zoomForBounds(dimension, bb, this.mapView
-										.getModel().displayModel.getTileSize())));
-			} else {
-				this.mapViewPosition.setCenter(latLong);
-			}
-		} else {
-			this.goalLocationOverlay.setLatLong(null);
-			this.mMyLocationOverlay.setSnapToLocationEnabled(true);
-		}
-		this.goalLocationOverlay.requestRedraw();
-		this.mMyLocationOverlay.requestRedraw();
-	}
+                // zoom to bounds
+                BoundingBox bb = new BoundingBox(Math.min(latLong.latitude,
+                        mLocation.latitude), Math.min(latLong.longitude,
+                        mLocation.longitude), Math.max(latLong.latitude,
+                        mLocation.latitude), Math.max(latLong.longitude,
+                        mLocation.longitude));
+                Dimension dimension = this.mapView.getModel().mapViewDimension
+                        .getDimension();
+                this.mapView.getModel().mapViewPosition
+                        .setMapPosition(new MapPosition(latLong, LatLongUtils
+                                .zoomForBounds(dimension, bb, this.mapView
+                                        .getModel().displayModel.getTileSize())));
+            } else {
+                this.mapViewPosition.setCenter(latLong);
+            }
+        } else {
+            this.goalLocationOverlay.setLatLong(null);
+            this.mMyLocationOverlay.setSnapToLocationEnabled(true);
+        }
+        this.goalLocationOverlay.requestRedraw();
+        this.mMyLocationOverlay.requestRedraw();
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.action_snap_to_location:
-			item.setChecked(!item.isChecked());
-			this.mMyLocationOverlay.setSnapToLocationEnabled(item.isChecked());
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_snap_to_location:
+                item.setChecked(!item.isChecked());
+                this.mMyLocationOverlay.setSnapToLocationEnabled(item.isChecked());
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.map, menu);
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.map, menu);
 
-		MenuItem searchItem = menu.findItem(R.id.action_search_poi);
-		mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-		setupSearchView(searchItem);
+        MenuItem searchItem = menu.findItem(R.id.action_search_poi);
+        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        setupSearchView(searchItem);
 
-		if (mMyLocationOverlay != null) {
-			MenuItem snapToLocationItem = menu
-					.findItem(R.id.action_snap_to_location);
-			mMyLocationOverlay.setSnapToLocationItem(snapToLocationItem);
-		}
-	}
+        if (mMyLocationOverlay != null) {
+            MenuItem snapToLocationItem = menu
+                    .findItem(R.id.action_snap_to_location);
+            mMyLocationOverlay.setSnapToLocationItem(snapToLocationItem);
+        }
+    }
 
-	private void setupSearchView(MenuItem searchItem) {
+    private void setupSearchView(MenuItem searchItem) {
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getActivity()
+                .getSystemService(Context.SEARCH_SERVICE);
+        // Assumes current activity is the searchable activity
+        mSearchView.setSearchableInfo(searchManager
+                .getSearchableInfo(getActivity().getComponentName()));
 
-		// if (false /*isAlwaysExpanded()*/) {
-		// mSearchView.setIconifiedByDefault(false);
-		// } else {
-		// searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
-		// | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-		// }
+        mSearchView.setOnQueryTextListener(this);
+    }
 
-		// Get the SearchView and set the searchable configuration
-		SearchManager searchManager = (SearchManager) getActivity()
-				.getSystemService(Context.SEARCH_SERVICE);
-		// Assumes current activity is the searchable activity
-		mSearchView.setSearchableInfo(searchManager
-				.getSearchableInfo(getActivity().getComponentName()));
-		// mSearchView.setIconifiedByDefault(false); // Do not iconify the
-		// widget; expand it by default
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_map, container,
+                false);
 
-		mSearchView.setOnQueryTextListener(this);
-	}
+        this.mapView = (MapView) rootView.findViewById(R.id.mapView);
+        this.mapView.setClickable(true);
+        //this.mapView.getFpsCounter().setVisible(true);
+        this.mapView.getMapScaleBar().setVisible(true);
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_map, container,
-				false);
+        this.mLayerManager = this.mapView.getLayerManager();
 
-		this.mapView = (MapView) rootView.findViewById(R.id.mapView);
-		this.mapView.setClickable(true);
-		//this.mapView.getFpsCounter().setVisible(true);
-		this.mapView.getMapScaleBar().setVisible(true);
+        this.mapViewPosition = this.mapView.getModel().mapViewPosition;
 
-		this.mLayerManager = this.mapView.getLayerManager();
-		Layers layers = mLayerManager.getLayers();
+        initializePosition(this.mapViewPosition);
 
-		this.mapViewPosition = this.mapView.getModel().mapViewPosition;
+        this.tileCache = AndroidUtil.createTileCache(this.getActivity(),
+                "mapFragment",
+                this.mapView.getModel().displayModel.getTileSize(), 1.0f, this.mapView.getModel().frameBufferModel.getOverdrawFactor());
+        this.mLayerManager.getLayers().add(createTileRendererLayer(this.tileCache, mapViewPosition,
+                getMapFile(), InternalRenderTheme.OSMARENDER, false));
 
-		initializePosition(this.mapViewPosition);
+        // overlay with a marker to show the goal position
+        Drawable drawable = getResources().getDrawable(
+                R.drawable.ic_marker_goal_position);
+        Bitmap bitmap = AndroidGraphicFactory.convertToBitmap(drawable);
+        this.goalLocationOverlay = new Marker(null, bitmap, 0, 0);
+        this.mLayerManager.getLayers().add(this.goalLocationOverlay);
 
-		this.tileCache = AndroidUtil.createTileCache(this.getActivity(),
-				"fragments",
-				this.mapView.getModel().displayModel.getTileSize(), 1.0f, 1.5);
-		layers.add(createTileRendererLayer(this.tileCache, mapViewPosition,
-				getMapFile(), InternalRenderTheme.OSMARENDER, false));
+        // overlay with a marker to show the actual position
+        drawable = getResources()
+                .getDrawable(R.drawable.ic_marker_own_position);
+        bitmap = AndroidGraphicFactory.convertToBitmap(drawable);
 
-		// overlay with a marker to show the goal position
-		Drawable drawable = getResources().getDrawable(
-				R.drawable.ic_marker_goal_position);
-		Bitmap bitmap = AndroidGraphicFactory.convertToBitmap(drawable);
-		this.goalLocationOverlay = new Marker(null, bitmap, 0, 0);
-		this.mLayerManager.getLayers().add(this.goalLocationOverlay);
+        this.mMyLocationOverlay = new LocationOverlay(this.getActivity(),
+                this.mapViewPosition, bitmap);
+        this.mMyLocationOverlay.setSnapToLocationEnabled(false);
+        this.mLayerManager.getLayers().add(this.mMyLocationOverlay);
 
-		// overlay with a marker to show the actual position
-		drawable = getResources()
-				.getDrawable(R.drawable.ic_marker_own_position);
-		bitmap = AndroidGraphicFactory.convertToBitmap(drawable);
+        return rootView;
+    }
 
-		this.mMyLocationOverlay = new LocationOverlay(this.getActivity(),
-				this.mapViewPosition, bitmap);
-		this.mMyLocationOverlay.setSnapToLocationEnabled(false);
-		this.mLayerManager.getLayers().add(this.mMyLocationOverlay);
+    private TileRendererLayer createTileRendererLayer(TileCache tileCache,
+                                                      MapViewPosition mapViewPosition, File mapFile,
+                                                      XmlRenderTheme renderTheme, boolean hasAlpha) {
+        TileRendererLayer tileRendererLayer = new TileRendererLayer(tileCache,
+                mapViewPosition, hasAlpha, AndroidGraphicFactory.INSTANCE);
+        tileRendererLayer.setMapFile(mapFile);
+        tileRendererLayer.setXmlRenderTheme(renderTheme);
+        tileRendererLayer.setTextScale(1.5f);
 
-		return rootView;
-	}
+        return tileRendererLayer;
+    }
 
-	private TileRendererLayer createTileRendererLayer(TileCache tileCache,
-			MapViewPosition mapViewPosition, File mapFile,
-			XmlRenderTheme renderTheme, boolean hasAlpha) {
-		TileRendererLayer tileRendererLayer = new TileRendererLayer(tileCache,
-				mapViewPosition, hasAlpha, AndroidGraphicFactory.INSTANCE);
-		tileRendererLayer.setMapFile(mapFile);
-		tileRendererLayer.setXmlRenderTheme(renderTheme);
-		tileRendererLayer.setTextScale(1.5f);
+    protected MapViewPosition initializePosition(MapViewPosition mvp) {
+        LatLong center = mvp.getCenter();
 
-		return tileRendererLayer;
-	}
+        if (center.equals(new LatLong(0, 0))) {
+            mvp.setMapPosition(this.getInitialPosition());
+        }
+        mvp.setZoomLevelMax((byte) MAX_ZOOM_LEVEL);
+        mvp.setZoomLevelMin((byte) MIN_ZOOM_LEVEL);// full campus fits to screen
+        return mvp;
+    }
 
-	protected MapViewPosition initializePosition(MapViewPosition mvp) {
-		LatLong center = mvp.getCenter();
+    protected MapPosition getInitialPosition() {
+        File mapFile = getMapFile();
+        MapDatabase mapDatabase = new MapDatabase();
+        final FileOpenResult result = mapDatabase.openFile(mapFile);
+        if (result.isSuccess()) {
+            LatLong uniteich = new LatLong(48.33706, 14.31960);
+            final MapFileInfo mapFileInfo = mapDatabase.getMapFileInfo();
+            if (mapFileInfo != null) {
+                if (mapFileInfo.boundingBox.contains(uniteich)) {
+                    // Insel im Uniteich
+                    return new MapPosition(uniteich, (byte) DEFAULT_ZOOM_LEVEL);
+                } else if (mapFileInfo.startPosition != null) {
+                    // given start position, zoom in range
+                    return new MapPosition(mapFileInfo.startPosition,
+                            (byte) Math.max(
+                                    Math.min(mapFileInfo.startZoomLevel,
+                                            MAX_ZOOM_LEVEL), MIN_ZOOM_LEVEL));
+                } else {
+                    // center of the map
+                    return new MapPosition(
+                            mapFileInfo.boundingBox.getCenterPoint(),
+                            (byte) DEFAULT_ZOOM_LEVEL);
+                }
+            } else {
+                // Insel im Uniteich
+                return new MapPosition(uniteich, (byte) DEFAULT_ZOOM_LEVEL);
+            }
+        }
+        throw new IllegalArgumentException("Invalid Map File "
+                + mapFile.toString());
+    }
 
-		if (center.equals(new LatLong(0, 0))) {
-			mvp.setMapPosition(this.getInitialPosition());
-		}
-		mvp.setZoomLevelMax((byte) MAX_ZOOM_LEVEL);
-		mvp.setZoomLevelMin((byte) MIN_ZOOM_LEVEL);// full campus fits to screen
-		return mvp;
-	}
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (this.tileCache != null) {
+            this.tileCache.destroy();
+        }
+        if (this.mapView != null) {
+            this.mapView.getModel().mapViewPosition.destroy();
+            this.mapView.destroy();
+        }
 
-	protected MapPosition getInitialPosition() {
-		File mapFile = getMapFile();
-		MapDatabase mapDatabase = new MapDatabase();
-		final FileOpenResult result = mapDatabase.openFile(mapFile);
-		if (result.isSuccess()) {
-			LatLong uniteich = new LatLong(48.33706, 14.31960);
-			final MapFileInfo mapFileInfo = mapDatabase.getMapFileInfo();
-			if (mapFileInfo != null) {
-				if (mapFileInfo.boundingBox.contains(uniteich)) {
-					// Insel im Uniteich
-					return new MapPosition(uniteich, (byte) DEFAULT_ZOOM_LEVEL);
-				} else if (mapFileInfo.startPosition != null) {
-					// given start position, zoom in range
-					return new MapPosition(mapFileInfo.startPosition,
-							(byte) Math.max(
-									Math.min(mapFileInfo.startZoomLevel,
-											MAX_ZOOM_LEVEL), MIN_ZOOM_LEVEL));
-				} else {
-					// center of the map
-					return new MapPosition(
-							mapFileInfo.boundingBox.getCenterPoint(),
-							(byte) DEFAULT_ZOOM_LEVEL);
-				}
-			} else {
-				// Insel im Uniteich
-				return new MapPosition(uniteich, (byte) DEFAULT_ZOOM_LEVEL);
-			}
-		}
-		throw new IllegalArgumentException("Invalid Map File "
-				+ mapFile.toString());
-	}
+        AndroidResourceBitmap.clearResourceBitmaps();
+    }
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		if (this.mapView != null) {
-			this.mapView.destroy();
-		}
-		if (this.tileCache != null) {
-			this.tileCache.destroy();
-		}
-		org.mapsforge.map.android.graphics.AndroidResourceBitmap
-				.clearResourceBitmaps();
-	}
+    protected File getMapFile() {
+        File mapFile = PreferenceWrapper.getMapFile(getContext());
+        if (mapFile == null || !mapFile.exists() || !mapFile.canRead()) {
+            mapFile = new File(getActivity().getFilesDir(), MAP_FILE_NAME);
+            Log.i(TAG, "use internal map: " + mapFile.toString());
+        } else {
+            Log.i(TAG, "use external map: " + mapFile.toString());
+        }
+        return mapFile;
+    }
 
-	protected File getMapFile() {
-		File mapFile = PreferenceWrapper.getMapFile(getContext());
-		if (mapFile == null || !mapFile.exists() || !mapFile.canRead()) {
-			mapFile = new File(getActivity().getFilesDir(), MAP_FILE_NAME);
-			Log.i(TAG, "use internal map: " + mapFile.toString());
-		} else {
-			Log.i(TAG, "use external map: " + mapFile.toString());
-		}
-		return mapFile;
-	}
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        // Log.i(TAG, newText);
+        return false;
+    }
 
-	@Override
-	public boolean onQueryTextChange(String newText) {
-		// Log.i(TAG, newText);
-		return false;
-	}
+    @Override
+    public boolean onQueryTextSubmit(String newText) {
+        // Toast.makeText(mContext, newText + " submitted", Toast.LENGTH_SHORT)
+        // .show();
+        return false;
+    }
 
-	@Override
-	public boolean onQueryTextSubmit(String newText) {
-		// Toast.makeText(mContext, newText + " submitted", Toast.LENGTH_SHORT)
-		// .show();
-		return false;
-	}
+
 }
