@@ -7,7 +7,7 @@
     <color name="color_highlight">#F09500</color>
     <color name="color_default">#2B7FC2</color>
     <color name="color_chip_grade_back_default">@color/color_default</color>
-    <color name="color_chip_grade_text">#F0F0F0</color>
+    <color name="color_chip_grade_text">#fff</color>
 
     <!-- for themed cards-->
     <color name="card_background_holo">#ff282828</color>
