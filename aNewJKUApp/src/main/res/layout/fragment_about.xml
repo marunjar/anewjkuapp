@@ -14,7 +14,6 @@
         android:id="@+id/about_content_scroller"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/force_logout"
         android:layout_alignParentTop="true" >
 
         <LinearLayout

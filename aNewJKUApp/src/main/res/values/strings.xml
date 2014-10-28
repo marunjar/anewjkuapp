@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="default_chip_color">#ff2b7fc2</string>
+    <string name="default_chip_color" translatable="false" >#ff2b7fc2</string>
     <string name="app_name">JKU App</string>
     <string name="title_oeh_news">ÖH News</string>
     <string name="title_oeh_linz">ÖH Linz</string>
