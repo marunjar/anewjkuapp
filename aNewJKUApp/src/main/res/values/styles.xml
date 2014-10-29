@@ -77,4 +77,13 @@
         <item name="android:background">?attr/themed_card_menu_button_expand</item>
     </style>
 
+
+    <attr name="themed_plot_background_color" format="reference"/>
+    <style name="plotStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">180dp</item>
+        <item name="android:padding">3dp</item>
+        <!--<item name="androidPlot.graphWidget.background">?attr/plot_background_color</item>-->
+    </style>
+
 </resources>

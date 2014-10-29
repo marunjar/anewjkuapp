@@ -427,10 +427,10 @@ public class AppUtils {
 			double value, int color) {
 		if (value > 0) {
 			EmbossMaskFilter emf = new EmbossMaskFilter(
-					new float[] { 1, 1, 1 }, 0.4f, 10, 3f);
+					new float[] { 1, 1, 1 }, 0.7f, 11.5f, 2f);
 			Segment segment = new Segment(category, value);
 			SegmentFormatter formatter = new SegmentFormatter(color,
-					Color.BLACK, Color.BLACK, Color.DKGRAY);
+                    Color.TRANSPARENT, Color.TRANSPARENT, Color.DKGRAY);
 			formatter.getFillPaint().setMaskFilter(emf);
 
 			chart.addSegment(segment, formatter);
