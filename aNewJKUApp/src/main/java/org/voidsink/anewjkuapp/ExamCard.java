@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.voidsink.anewjkuapp.base.ThemedCard;
+import org.voidsink.anewjkuapp.base.ThemedCardExpand;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 
@@ -116,7 +117,7 @@ public class ExamCard extends ThemedCard {
         addCardHeader(header);
     }
 
-    class ExamCardExpand extends CardExpand {
+    class ExamCardExpand extends ThemedCardExpand {
 
         String mDescription;
 
@@ -127,7 +128,6 @@ public class ExamCard extends ThemedCard {
 
         @Override
         public void setupInnerViewElements(ViewGroup parent, View view) {
-
             TextView descr = (TextView) view.findViewById(R.id.exam_list_item_description);
 
             if (!mDescription.isEmpty()) {

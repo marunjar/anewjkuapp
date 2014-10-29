@@ -19,6 +19,7 @@ import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYStepMode;
 import com.androidplot.xy.YValueMarker;
 
+import org.voidsink.anewjkuapp.base.ThemedCardExpand;
 import org.voidsink.anewjkuapp.base.ThemedCardWithList;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Lva;
@@ -134,7 +135,7 @@ public class StatCardLva extends ThemedCardWithList {
         return R.layout.stat_card_lva_list_entry;
     }
 
-    private class LvaDiagramCardExpand extends CardExpand {
+    private class LvaDiagramCardExpand extends ThemedCardExpand {
 
         private final List<String> mTerms;
         private final List<LvaWithGrade> mLvas;

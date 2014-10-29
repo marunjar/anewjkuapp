@@ -16,6 +16,7 @@ import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.XYStepMode;
 
+import org.voidsink.anewjkuapp.base.ThemedCardExpand;
 import org.voidsink.anewjkuapp.base.ThemedCardWithList;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Grade;
@@ -211,7 +212,7 @@ public class StatCardGrade extends ThemedCardWithList {
         return R.layout.stat_card_grade_list_entry;
     }
 
-    private class GradeDiagramCardExpand extends CardExpand {
+    private class GradeDiagramCardExpand extends ThemedCardExpand {
 
         private final List<ExamGrade> mGrades;
         private final boolean mEctsWeighting;
