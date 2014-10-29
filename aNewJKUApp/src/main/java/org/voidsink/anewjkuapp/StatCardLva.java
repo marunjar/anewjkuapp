@@ -51,7 +51,7 @@ public class StatCardLva extends ThemedCardWithList {
         CardHeader header = new CardHeader(getContext());
         header.setTitle("LVAs");
         //Set visible the expand/collapse button
-        header.setButtonExpandVisible(true);
+        header.setButtonExpandVisible(this.mLvas.size() > 0);
 
         //Add Header to card
         addCardHeader(header);

@@ -10,7 +10,7 @@
     <color name="color_chip_grade_text">#fff</color>
 
     <!-- for themed cards-->
-    <color name="card_background_holo">#ff282828</color>
+    <color name="card_background_holo">#ff272d33</color>
     <color name="fullTransparent">#00000000</color>
 
     <!-- Material Design -->
