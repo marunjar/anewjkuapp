@@ -1,6 +1,7 @@
 package org.voidsink.anewjkuapp.activity;
 
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -20,6 +22,8 @@ import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 
 import java.util.List;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class SettingsActivity extends PreferenceActivity implements
         OnSharedPreferenceChangeListener {
@@ -51,6 +55,14 @@ public class SettingsActivity extends PreferenceActivity implements
         // });
     }
 
+    private void initActionBar() {
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(getString(R.string.action_settings));
+        }
+    }
+
     protected boolean findMapFile() {
         // TODO Auto-generated method stub
         Toast.makeText(getApplication(), "TODO", Toast.LENGTH_SHORT).show();
@@ -61,6 +73,8 @@ public class SettingsActivity extends PreferenceActivity implements
     @Override
     public View onCreateView(View parent, String name, Context context,
                              AttributeSet attrs) {
+        initActionBar();
+
         return super.onCreateView(parent, name, context, attrs);
     }
 
@@ -163,4 +177,19 @@ public class SettingsActivity extends PreferenceActivity implements
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(new CalligraphyContextWrapper(newBase));
+    }
 }

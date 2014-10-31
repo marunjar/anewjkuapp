@@ -3,13 +3,16 @@ package org.voidsink.anewjkuapp.activity;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
+import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -22,6 +25,8 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 
@@ -48,6 +53,8 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
         AppUtils.applyTheme(this);
 
         super.onCreate(savedInstanceState);
+
+        initActionBar();
 
         setContentView(R.layout.activity_login);
 
@@ -94,6 +101,13 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
                 submit();
             }
         });
+    }
+
+    private void initActionBar() {
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -238,4 +252,16 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
         finish();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (AppUtils.handleUpNavigation(this, item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(new CalligraphyContextWrapper(newBase));
+    }
 }

@@ -45,7 +45,6 @@ import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import java.util.List;
 
 import de.cketti.library.changelog.ChangeLog;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends ThemedActivity implements
         NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -63,7 +62,7 @@ public class MainActivity extends ThemedActivity implements
 
     /**
      * Used to store the last screen title. For use in
-     * {@link #restoreActionBar()}.
+     * {@link #initActionBar()}.
      */
     private CharSequence mTitle;
 
@@ -92,11 +91,6 @@ public class MainActivity extends ThemedActivity implements
         }
 
         // Log.i(TAG, "onSaveInstanceState");
-    }
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(new CalligraphyContextWrapper(newBase));
     }
 
     @Override
@@ -129,7 +123,6 @@ public class MainActivity extends ThemedActivity implements
         handleIntent(f, intent);
 
         mTitle = getTitleFromFragment(f);
-        restoreActionBar();
 
         if (AppUtils.getAccount(this) == null) {
             StartCreateAccount(this);
@@ -238,7 +231,7 @@ public class MainActivity extends ThemedActivity implements
                         .replace(R.id.container, f, ARG_SHOW_FRAGMENT).commit();
 
                 mTitle = getTitleFromFragment(f);
-                restoreActionBar();
+                initActionBar();
 
                 return f;
             } catch (Exception e) {
@@ -251,19 +244,24 @@ public class MainActivity extends ThemedActivity implements
         return null;
     }
 
-    public void restoreActionBar() {
+    @Override
+    public void initActionBar() {
+        super.initActionBar();
+
         ActionBar actionBar = getActionBar();
-        if (mNavigationDrawerFragment != null
-                && !mNavigationDrawerFragment.isDrawerOpen()) {
+        if (actionBar != null &&
+                mNavigationDrawerFragment != null &&
+                !mNavigationDrawerFragment.isDrawerOpen()) {
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
             actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(mTitle);
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        restoreActionBar();
+        initActionBar();
 
         return super.onCreateOptionsMenu(menu);
     }
