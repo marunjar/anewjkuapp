@@ -38,17 +38,14 @@ public class LvaFragment2 extends SlidingTabsFragment implements
     private List<ExamGrade> mGrades = new ArrayList<ExamGrade>();
     private ArrayList<String> mTerms = new ArrayList<String>();
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View v = super.onCreateView(inflater, container, savedInstanceState);
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-		loadLvas(getActivity());
+        loadLvas(getContext());
+    }
 
-		return v;
-	}
-
-	@Override
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 

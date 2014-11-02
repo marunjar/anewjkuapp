@@ -2,16 +2,20 @@ package org.voidsink.anewjkuapp.activity;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Process;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -22,11 +26,14 @@ import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 
 import java.util.List;
+import java.util.Random;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class SettingsActivity extends PreferenceActivity implements
         OnSharedPreferenceChangeListener {
+
+    private boolean mThemeChanged = false;
 
     @SuppressWarnings("deprecation")
     @Override
@@ -40,9 +47,6 @@ public class SettingsActivity extends PreferenceActivity implements
             addPreferencesFromResource(R.xml.preference_app);
         }
 
-        PreferenceManager.getDefaultSharedPreferences(this)
-                .registerOnSharedPreferenceChangeListener(this);
-
         // Preference mPrefMapFile =
         // findPreference(PreferenceWrapper.PREF_MAP_FILE);
         // mPrefMapFile.setOnPreferenceClickListener(new
@@ -53,6 +57,14 @@ public class SettingsActivity extends PreferenceActivity implements
         // return findMapFile();
         // }
         // });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(this);
     }
 
     private void initActionBar() {
@@ -98,14 +110,32 @@ public class SettingsActivity extends PreferenceActivity implements
                 PreferenceWrapper.applySyncInterval(this);
                 break;
             case PreferenceWrapper.PREF_USE_LIGHT_THEME:
-                Intent i = new Intent(this, MainActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(i);
+                mThemeChanged = true;
                 break;
             default:
                 break;
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        Log.i(getClass().getSimpleName(), "1");
+
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(this);
+
+        Log.i(getClass().getSimpleName(), "2");
+
+        if (mThemeChanged) {
+            AlarmManager alm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+            alm.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0));
+
+            Process.killProcess(Process.myPid());
+        }
+
+        Log.i(getClass().getSimpleName(), "3");
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)

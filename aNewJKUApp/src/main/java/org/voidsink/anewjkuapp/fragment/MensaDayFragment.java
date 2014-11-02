@@ -3,6 +3,7 @@ package org.voidsink.anewjkuapp.fragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,12 +52,17 @@ public class MensaDayFragment extends BaseFragment {
         mAdapter = new MenuCardArrayAdapter(getContext(), new ArrayList<Card>(), false);
         mListView.setAdapter(mAdapter);
 
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         new MenuLoadTask(new ClassicMenuLoader(), 0).execute();
         new MenuLoadTask(new ChoiceMenuLoader(), 1).execute();
         new MenuLoadTask(new KHGMenuLoader(), 2).execute();
         new MenuLoadTask(new RaabMenuLoader(), 3).execute();
-
-        return view;
     }
 
     public MensaDayFragment() {
