@@ -75,7 +75,7 @@ public class MensaDayFragment extends BaseFragment {
         this.mDate = mDate;
     }
 
-    private void setMensa(Mensa mensa, int index) {
+    private synchronized void setMensa(Mensa mensa, int index) {
         while (index >= mMensen.size()) {
             mMensen.add(null);
         }
@@ -87,6 +87,7 @@ public class MensaDayFragment extends BaseFragment {
         private Context mContext;
         private MenuLoader mLoader;
         private int mIndex;
+        private Mensa mMensa;
 
         public MenuLoadTask(MenuLoader loader, int index) {
             super();
@@ -97,7 +98,7 @@ public class MensaDayFragment extends BaseFragment {
 
         @Override
         protected Void doInBackground(String... urls) {
-            setMensa(mLoader.getMensa(mContext), mIndex);
+            mMensa = mLoader.getMensa(mContext);
 
             return null;
         }
@@ -105,6 +106,9 @@ public class MensaDayFragment extends BaseFragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
+            mMensa = null;
+
             mContext = MensaDayFragment.this.getContext();
             if (mContext == null) {
                 Log.e(TAG, "context is null");
@@ -115,6 +119,8 @@ public class MensaDayFragment extends BaseFragment {
 
         @Override
         protected void onPostExecute(Void result) {
+            setMensa(mMensa, mIndex);
+
             List<Card> menus = new ArrayList<Card>();
             int noMenuCount = 0;
 
