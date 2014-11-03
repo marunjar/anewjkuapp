@@ -22,6 +22,7 @@ import com.androidplot.xy.YValueMarker;
 import org.voidsink.anewjkuapp.base.ThemedCardExpand;
 import org.voidsink.anewjkuapp.base.ThemedCardWithList;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
+import org.voidsink.anewjkuapp.kusss.Grade;
 import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.kusss.LvaState;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
@@ -188,9 +189,9 @@ public class StatCardLva extends ThemedCardWithList {
 
                 // init bar chart
                 addSerieToBarChart(barChart, getContext().getString(R.string.lva_done),
-                        mDoneEcts, Color.rgb(0, 220, 0));
+                        mDoneEcts, Grade.G1.getColor());
                 addSerieToBarChart(barChart, getContext().getString(R.string.lva_open),
-                        mOpenEcts, Color.rgb(220, 220, 0));
+                        mOpenEcts, Grade.G3.getColor());
 
                 barChart.setRangeTopMin(this.mTerms.size() * 30);
                 barChart.setRangeBoundaries(0, BoundaryMode.FIXED, rangeTopMax,
@@ -220,9 +221,9 @@ public class StatCardLva extends ThemedCardWithList {
 
                 // init pie chart
                 AppUtils.addSerieToPieChart(pieChart, getContext().getString(R.string.lva_done),
-                        mDoneEcts, Color.rgb(0, 220, 0));
+                        mDoneEcts, Grade.G1.getColor());
                 AppUtils.addSerieToPieChart(pieChart, getContext().getString(R.string.lva_open),
-                        mOpenEcts, Color.rgb(220, 220, 0));
+                        mOpenEcts, Grade.G3.getColor());
 
                 double missingECTS = minEcts - (mDoneEcts + mOpenEcts);
                 if (missingECTS > 0) {
