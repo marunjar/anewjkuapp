@@ -1,63 +1,48 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp" >
+    android:clipToPadding="false"
+    android:padding="@dimen/activity_vertical_margin"
+    android:scrollbarStyle="outsideOverlay">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/oeh_info_main_title"
+            style="@style/Text.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/oeh_info_main_title"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textColor="@color/accent"
+            android:padding="8dp"
+            android:text="@string/oeh_info_main_title" />
 
         <TextView
             android:id="@+id/oeh_info_main_summary"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/oeh_info_main_summary"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            style="@style/oeh_text_content"
+            android:text="@string/oeh_info_main_summary" />
 
         <TextView
             android:id="@+id/oeh_info_jku_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/oeh_info_jku_title"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            style="@style/oeh_text_title"
+            android:text="@string/oeh_info_jku_title" />
 
         <TextView
             android:id="@+id/oeh_info_jku_summary"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/oeh_info_jku_summary"
-            android:textAppearance="?android:attr/textAppearanceSmall" >
-        </TextView>
+            style="@style/oeh_text_content"
+            android:text="@string/oeh_info_jku_summary" />
 
         <TextView
             android:id="@+id/oeh_info_contact_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/oeh_info_contact_title"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            style="@style/oeh_text_title"
+            android:text="@string/oeh_info_contact_title" />
 
         <TextView
             android:id="@+id/oeh_info_contact_summary"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/oeh_info_contact_summary"
-            android:textAppearance="?android:attr/textAppearanceSmall" >
-        </TextView>
+            style="@style/oeh_text_content"
+            android:text="@string/oeh_info_contact_summary" />
     </LinearLayout>
 
 </ScrollView>

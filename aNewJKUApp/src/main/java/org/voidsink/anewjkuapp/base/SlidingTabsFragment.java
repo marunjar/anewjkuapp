@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,19 +44,13 @@ public abstract class SlidingTabsFragment extends BaseFragment {
      */
     private List<SlidingTabItem> mTabs = new ArrayList<SlidingTabItem>();
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        fillTabs(mTabs);
-    }
-
     public void updateData() {
-        mTabs.clear();
-        fillTabs(mTabs);
-        notifyDataSetChanged();
+        if (isAdded()) {
+            mTabs.clear();
+            fillTabs(mTabs);
+            notifyDataSetChanged();
+        }
     }
-
 
     protected abstract void fillTabs(List<SlidingTabItem> mTabs);
 
@@ -68,15 +61,17 @@ public abstract class SlidingTabsFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        updateData();
 
         return LayoutInflater.from(new ContextThemeWrapper(getContext(), R.style.AppTheme)).inflate(R.layout.fragment_sliding_tabs, container, false);
     }
 
     // BEGIN_INCLUDE (fragment_onviewcreated)
+
     /**
      * This is called after the {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)} has finished.
      * Here we can pick out the {@link View}s we need to configure from the content view.
-     *
+     * <p/>
      * We set the {@link ViewPager}'s adapter to be an instance of
      * {@link org.voidsink.anewjkuapp.base.SlidingTabsFragment.SlidingFragmentPagerAdapter}. The {@link SlidingTabLayout} is then given the
      * {@link ViewPager} so that it can populate itself.
@@ -97,35 +92,50 @@ public abstract class SlidingTabsFragment extends BaseFragment {
         mSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
         mSlidingTabLayout.setViewPager(mViewPager);
 
-        // BEGIN_INCLUDE (tab_colorizer)
-        // Set a TabColorizer to customize the indicator and divider colors. Here we just retrieve
-        // the tab at the position, and return it's set color
-        mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+        SlidingTabLayout.TabColorizer tc = createTabColorizer();
 
-            @Override
-            public int getIndicatorColor(int position) {
-                return mTabs.get(position).getIndicatorColor();
-            }
+        if (tc != null) {
+            // BEGIN_INCLUDE (tab_colorizer)
+            // Set a TabColorizer to customize the indicator and divider colors. Here we just retrieve
+            // the tab at the position, and return it's set color
+            mSlidingTabLayout.setCustomTabColorizer(tc);
 
-            @Override
-            public int getDividerColor(int position) {
-                return mTabs.get(position).getDividerColor();
-            }
-
-        });
+//            mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+//
+//                @Override
+//                public int getIndicatorColor(int position) {
+//                    return mTabs.get(position).getIndicatorColor();
+//                }
+//
+//                @Override
+//                public int getDividerColor(int position) {
+//                    return mTabs.get(position).getDividerColor();
+//                }
+//
+//            });
+        }
         // END_INCLUDE (tab_colorizer)
         // END_INCLUDE (setup_slidingtablayout)
+    }
+
+    /**
+     * use this to create your own TabColorizer
+     */
+    protected SlidingTabLayout.TabColorizer createTabColorizer() {
+        return null;
     }
     // END_INCLUDE (fragment_onviewcreated)
 
     public void notifyDataSetChanged() {
+        if (mViewPager != null) {
 //        Log.i(LOG_TAG, "notifyDataSetChanged");
-        if (mViewPager.getAdapter() != null) {
-            mViewPager.setAdapter(new SlidingFragmentPagerAdapter(getChildFragmentManager()));
-            mViewPager.getAdapter().notifyDataSetChanged();
-        }
-        if (mSlidingTabLayout != null) {
-            mSlidingTabLayout.setViewPager(mViewPager);
+            if (mViewPager.getAdapter() != null) {
+                mViewPager.setAdapter(new SlidingFragmentPagerAdapter(getChildFragmentManager()));
+                mViewPager.getAdapter().notifyDataSetChanged();
+            }
+            if (mSlidingTabLayout != null) {
+                mSlidingTabLayout.setViewPager(mViewPager);
+            }
         }
     }
 
@@ -133,7 +143,7 @@ public abstract class SlidingTabsFragment extends BaseFragment {
      * The {@link android.support.v4.app.FragmentPagerAdapter} used to display pages in this sample. The individual pages
      * are instances of {@link Fragment}. Each page is
      * created by the relevant {@link SlidingTabItem} for the requested position.
-     * <p>
+     * <p/>
      * The important section of this class is the {@link #getPageTitle(int)} method which controls
      * what is displayed in the {@link SlidingTabLayout}.
      */
@@ -145,7 +155,7 @@ public abstract class SlidingTabsFragment extends BaseFragment {
 
         /**
          * Return the {@link android.support.v4.app.Fragment} to be displayed at {@code position}.
-         * <p>
+         * <p/>
          * Here we return the value returned from {@link SlidingTabItem#createFragment()}.
          */
         @Override
@@ -177,10 +187,11 @@ public abstract class SlidingTabsFragment extends BaseFragment {
         }
 
         // BEGIN_INCLUDE (pageradapter_getpagetitle)
+
         /**
          * Return the title of the item at {@code position}. This is important as what this method
          * returns is what is displayed in the {@link SlidingTabLayout}.
-         * <p>
+         * <p/>
          * Here we return the value returned from {@link SlidingTabItem#getTitle()}.
          */
         @Override

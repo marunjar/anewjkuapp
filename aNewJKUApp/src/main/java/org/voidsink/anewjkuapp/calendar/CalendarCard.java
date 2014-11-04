@@ -10,26 +10,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
-import org.voidsink.anewjkuapp.fragment.CalendarFragment;
+import org.voidsink.anewjkuapp.base.ThemedCard;
 import org.voidsink.anewjkuapp.fragment.MapFragment;
 
-import java.text.DateFormat;
-import java.util.BitSet;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.internal.base.BaseCard;
 
 /**
  * Created by paul on 06.09.2014.
  */
-public class CalendarCard extends Card {
+public class CalendarCard extends ThemedCard {
 
     private long mEventId = 0;
     private int mColor;
@@ -54,10 +51,10 @@ public class CalendarCard extends Card {
         Date mDtStart = new Date(dtStart);
         Date mDtEnd = new Date(dtEnd);
 
-        DateFormat dfStart = DateFormat.getTimeInstance();
-        DateFormat dfEnd = DateFormat.getTimeInstance();
+        final SimpleDateFormat dfStart = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat dfEnd = dfStart;
         if (!DateUtils.isSameDay(mDtStart, mDtEnd)) {
-            dfEnd = DateFormat.getDateTimeInstance();
+            dfEnd = new SimpleDateFormat("dd.MM HH:mm");
         }
 
         this.mTime = String.format("%s - %s", dfStart.format(mDtStart),
@@ -71,9 +68,6 @@ public class CalendarCard extends Card {
 
     @Override
     public void setupInnerViewElements(ViewGroup parent, View view) {
-
-        View chip = parent
-                .findViewById(R.id.calendar_list_item_chip);
         TextView title = (TextView) parent
                 .findViewById(R.id.calendar_list_item_title);
         TextView descr = (TextView) parent
@@ -83,10 +77,9 @@ public class CalendarCard extends Card {
         TextView location = (TextView) parent
                 .findViewById(R.id.calendar_list_item_location);
 
-        chip.setBackgroundColor(getColor());
         if (getCardHeader() != null) {
             title.setVisibility(View.GONE); //--> shown in cardHeader
-        } else{
+        } else {
             title.setText(getTitle());
         }
 
@@ -122,7 +115,7 @@ public class CalendarCard extends Card {
         // init header
         CardHeader header = new CardHeader(new ContextThemeWrapper(context, R.style.AppTheme));
 
-        header.setPopupMenu(R.menu.calendar_card_popup_menu, new CardHeader.OnClickCardHeaderPopupMenuListener(){
+        header.setPopupMenu(R.menu.calendar_card_popup_menu, new CardHeader.OnClickCardHeaderPopupMenuListener() {
             @Override
             public void onMenuItemClick(BaseCard card, MenuItem item) {
                 switch (item.getItemId()) {

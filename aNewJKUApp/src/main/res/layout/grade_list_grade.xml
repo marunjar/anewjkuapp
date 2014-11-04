@@ -1,65 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="fill_vertical"
-    android:orientation="horizontal"
-    android:padding="@dimen/card_content_padding" >
+    android:padding="@dimen/card_content_padding">
 
-    <include layout="@layout/grade_chip"/>
+    <TextView
+        android:id="@+id/grade_list_grade_grade"
+        style="@style/Text.Body1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/grade_chip"
+        android:layout_toStartOf="@id/grade_chip"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/grade_list_grade_date"
+        style="@style/Text.Body2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/grade_list_grade_grade"
+        android:gravity="center_vertical"
+        android:layout_toLeftOf="@id/grade_chip"
+        android:layout_toStartOf="@id/grade_chip"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/grade_chip"
+        android:layout_toLeftOf="@id/grade_chip"
+        android:layout_toStartOf="@id/grade_chip"
+        android:layout_below="@id/grade_list_grade_date"
+        android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/grade_list_grade_date"
+            android:id="@+id/grade_list_grade_term"
+            style="@style/Text.Body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="3dp"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:layout_marginRight="@dimen/separator_top_bottom_margin"
+            android:gravity="center_vertical"/>
 
         <TextView
-            android:id="@+id/grade_list_grade_grade"
-            android:layout_width="match_parent"
+            android:id="@+id/grade_list_grade_lvanr"
+            style="@style/Text.Body2"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="3dp"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textStyle="bold" />
+            android:layout_marginRight="@dimen/separator_top_bottom_margin"
+            android:gravity="center_vertical"/>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                android:id="@+id/grade_list_grade_term"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:gravity="center_vertical"
-                android:padding="3dp"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-            <TextView
-                android:id="@+id/grade_list_grade_lvanr"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:padding="3dp"
-                android:layout_toRightOf="@id/grade_list_grade_term"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-            <TextView
-                android:id="@+id/grade_list_grade_skz"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:padding="3dp"
-                android:layout_toLeftOf="@id/grade_list_grade_term"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-        </RelativeLayout>
+        <TextView
+            android:id="@+id/grade_list_grade_skz"
+            style="@style/Text.Body2"
+            fontPath="fonts/Roboto-Light.ttf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/separator_top_bottom_margin"
+            android:gravity="center_vertical"/>
     </LinearLayout>
 
-</LinearLayout>
+    <include
+        android:id="@id/grade_chip"
+        layout="@layout/grade_chip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+</RelativeLayout>

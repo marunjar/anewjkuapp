@@ -4,18 +4,18 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.voidsink.anewjkuapp.mensa.Mensa;
 import org.voidsink.anewjkuapp.mensa.MensaDay;
-import org.voidsink.anewjkuapp.view.DateHeaderCard;
 import org.voidsink.anewjkuapp.view.MenuCardListView;
 
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.List;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
-import it.gmariotti.cardslib.library.view.CardView;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
@@ -41,37 +41,24 @@ public class MenuCardArrayAdapter extends CardArrayAdapter implements StickyList
     @Override
     public View getHeaderView(int position, View convertView, ViewGroup viewGroup) {
 
-        // Build your custom HeaderView
-        //In this case I will use a Card, but you can use any view
+        LayoutInflater mInflater = LayoutInflater.from(getContext());
+        View view = mInflater.inflate(R.layout.menu_card_header, viewGroup, false);
 
-        Card headerCard = null;
         Card card = getItem(position);
         if (card instanceof MenuBaseCard) {
+            final TextView tvHeaderTitle = (TextView) view;
             if (mUseDateHeader) {
                 MensaDay day = ((MenuBaseCard) card).getDay();
                 if (day != null) {
-                    headerCard = new DateHeaderCard(getContext(), day.getDate());
+                    tvHeaderTitle.setText(DateFormat.getDateInstance().format(day.getDate()));
                 }
             } else {
                 Mensa mensa = ((MenuBaseCard) card).getMensa();
                 if (mensa != null) {
-                    headerCard = new Card(getContext());
-                    headerCard.setTitle(mensa.getName());
+                    tvHeaderTitle.setText(mensa.getName());
                 }
             }
         }
-
-        // create empty card
-        if (headerCard == null) {
-            headerCard = new Card(getContext());
-        }
-
-        LayoutInflater mInflater = LayoutInflater.from(getContext());
-        View view = mInflater.inflate(R.layout.menu_card_header, null);
-
-        CardView cardView = (CardView)view.findViewById(R.id.menu_card_header_id);
-        cardView.setCard(headerCard);
-
         return view;
     }
 
@@ -102,4 +89,5 @@ public class MenuCardArrayAdapter extends CardArrayAdapter implements StickyList
 
     public void setMenuListView(MenuCardListView menuCardListView) {
         this.mMenuListView = menuCardListView;
-    }}
+    }
+}

@@ -82,13 +82,12 @@ public class MenuCardListView extends StickyListHeadersListView {
      * @param defStyle
      */
     protected void init(AttributeSet attrs, int defStyle) {
-
         //Init attrs
         initAttrs(attrs, defStyle);
-
         //Set divider to 0dp
         setDividerHeight(0);
-
+        // disable drawing list under list header
+        setDrawingListUnderStickyHeader(false);
     }
 
 

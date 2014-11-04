@@ -1,244 +1,267 @@
 package org.voidsink.anewjkuapp.activity;
 
-import org.voidsink.anewjkuapp.AppUtils;
-import org.voidsink.anewjkuapp.KusssAuthenticator;
-import org.voidsink.anewjkuapp.KusssContentContract;
-import org.voidsink.anewjkuapp.PreferenceWrapper;
-import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
-import org.voidsink.anewjkuapp.calendar.CalendarUtils;
-import org.voidsink.anewjkuapp.kusss.KusssHandler;
-
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
+import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.voidsink.anewjkuapp.AppUtils;
+import org.voidsink.anewjkuapp.KusssAuthenticator;
+import org.voidsink.anewjkuapp.KusssContentContract;
+import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
+import org.voidsink.anewjkuapp.calendar.CalendarUtils;
+import org.voidsink.anewjkuapp.kusss.KusssHandler;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 
-	public static final String KEY_ERROR_MESSAGE = "ERR_MSG";
+    public static final String KEY_ERROR_MESSAGE = "ERR_MSG";
 
-	public final static String PARAM_USER_PASS = "USER_PASS";
+    public final static String PARAM_USER_PASS = "USER_PASS";
 
-	private static final long SYNC_FREQUENCY = 60 * 60 * 23; // 23 hour (in
-																// Seconds)
-	private final int REQ_SIGNUP = 1;
+    private static final long SYNC_FREQUENCY = 60 * 60 * 23; // 23 hour (in
+    // Seconds)
+    private final int REQ_SIGNUP = 1;
 
-	private final String TAG = this.getClass().getSimpleName();
+    private final String TAG = this.getClass().getSimpleName();
 
-	public final static String CONTENT_EXAM = "exam";
-	public final static String CONTENT_LVA = "lva";
+    public final static String CONTENT_EXAM = "exam";
+    public final static String CONTENT_LVA = "lva";
 
-	private AccountManager mAccountManager;
-	private String mAuthTokenType;
-	private boolean mIsNewAccount;
-	private Button mSubmit;
+    private AccountManager mAccountManager;
+    private String mAuthTokenType;
+    private boolean mIsNewAccount;
+    private Button mSubmit;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		if (PreferenceWrapper.getUseLightDesign(this)) {
-			this.setTheme(R.style.AppTheme_Light);
-		} else {
-			this.setTheme(R.style.AppTheme);
-		}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        AppUtils.applyTheme(this);
 
-		super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_login);
+        initActionBar();
 
-		mAccountManager = AccountManager.get(this);
+        setContentView(R.layout.activity_login);
 
-		Intent mIntent = getIntent();
+        mAccountManager = AccountManager.get(this);
 
-		String accountName = null;
+        Intent mIntent = getIntent();
 
-		mIsNewAccount = false;
-		Account mAccount = AppUtils.getAccount(this);
-		if (mAccount != null) {
-			accountName = mAccount.name;
+        String accountName = null;
 
-			if (mIntent != null) {
-				mIntent.removeExtra(KusssAuthenticator.ARG_IS_ADDING_NEW_ACCOUNT);
-				mIntent.putExtra(KusssAuthenticator.ARG_ACCOUNT_NAME,
-						mAccount.name);
-				mIntent.putExtra(KusssAuthenticator.ARG_ACCOUNT_TYPE,
-						mAccount.type);
-			}
-		} else if (mIntent != null) {
-			accountName = getIntent().getStringExtra(
-					KusssAuthenticator.ARG_ACCOUNT_NAME);
-			mIsNewAccount = mIntent.getBooleanExtra(
-					KusssAuthenticator.ARG_IS_ADDING_NEW_ACCOUNT, false);
-		}
+        mIsNewAccount = false;
+        Account mAccount = AppUtils.getAccount(this);
+        if (mAccount != null) {
+            accountName = mAccount.name;
 
-		if (mAuthTokenType == null)
-			mAuthTokenType = KusssAuthenticator.AUTHTOKEN_TYPE_READ_ONLY;
+            if (mIntent != null) {
+                mIntent.removeExtra(KusssAuthenticator.ARG_IS_ADDING_NEW_ACCOUNT);
+                mIntent.putExtra(KusssAuthenticator.ARG_ACCOUNT_NAME,
+                        mAccount.name);
+                mIntent.putExtra(KusssAuthenticator.ARG_ACCOUNT_TYPE,
+                        mAccount.type);
+            }
+        } else if (mIntent != null) {
+            accountName = getIntent().getStringExtra(
+                    KusssAuthenticator.ARG_ACCOUNT_NAME);
+            mIsNewAccount = mIntent.getBooleanExtra(
+                    KusssAuthenticator.ARG_IS_ADDING_NEW_ACCOUNT, false);
+        }
 
-		if (!mIsNewAccount) {
-			if (accountName != null) {
-				((TextView) findViewById(R.id.accountName))
-						.setText(accountName);
-				((TextView) findViewById(R.id.accountName)).setEnabled(false);
-			}
-		}
+        if (mAuthTokenType == null)
+            mAuthTokenType = KusssAuthenticator.AUTHTOKEN_TYPE_READ_ONLY;
 
-		mSubmit = (Button) findViewById(R.id.submit);
-		mSubmit.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				submit();
-			}
-		});
-	}
+        if (!mIsNewAccount) {
+            if (accountName != null) {
+                ((TextView) findViewById(R.id.accountName))
+                        .setText(accountName);
+                ((TextView) findViewById(R.id.accountName)).setEnabled(false);
+            }
+        }
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mSubmit = (Button) findViewById(R.id.submit);
+        mSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submit();
+            }
+        });
+    }
 
-		// The sign up activity returned that the user has successfully created
-		// an account
-		if (requestCode == REQ_SIGNUP && resultCode == RESULT_OK) {
-			finishLogin(data);
-		} else
-			super.onActivityResult(requestCode, resultCode, data);
-	}
+    private void initActionBar() {
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
 
-	public void submit() {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-		final String userName = ((TextView) findViewById(R.id.accountName))
-				.getText().toString();
-		final String userPass = ((TextView) findViewById(R.id.accountPassword))
-				.getText().toString();
+        // The sign up activity returned that the user has successfully created
+        // an account
+        if (requestCode == REQ_SIGNUP && resultCode == RESULT_OK) {
+            finishLogin(data);
+        } else
+            super.onActivityResult(requestCode, resultCode, data);
+    }
 
-		final String accountType = getIntent().getStringExtra(
-				KusssAuthenticator.ARG_ACCOUNT_TYPE);
+    public void submit() {
 
-		new AsyncTask<String, Void, Intent>() {
-			private ProgressDialog progressDialog;
+        final String userName = ((TextView) findViewById(R.id.accountName))
+                .getText().toString();
+        final String userPass = ((TextView) findViewById(R.id.accountPassword))
+                .getText().toString();
 
-			@Override
-			protected void onPreExecute() {
-				progressDialog = ProgressDialog.show(
-						KusssAuthenticatorActivity.this,
-						getString(R.string.progress_title),
-						getString(R.string.progress_login), true);
-			};
+        final String accountType = getIntent().getStringExtra(
+                KusssAuthenticator.ARG_ACCOUNT_TYPE);
 
-			@Override
-			protected Intent doInBackground(String... params) {
-				String authtoken = null;
-				Bundle data = new Bundle();
-				try {
-					authtoken = KusssHandler.getInstance().login(KusssAuthenticatorActivity.this, userName, userPass);
+        new AsyncTask<String, Void, Intent>() {
+            private ProgressDialog progressDialog;
 
-					data.putString(AccountManager.KEY_ACCOUNT_NAME, userName);
-					data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
-					data.putString(AccountManager.KEY_AUTHTOKEN, authtoken);
-					data.putString(PARAM_USER_PASS, userPass);
+            @Override
+            protected void onPreExecute() {
+                progressDialog = ProgressDialog.show(
+                        KusssAuthenticatorActivity.this,
+                        getString(R.string.progress_title),
+                        getString(R.string.progress_login), true);
+            }
 
-				} catch (Exception e) {
-					data.putString(KEY_ERROR_MESSAGE, e.getMessage());
-				}
+            ;
 
-				final Intent res = new Intent();
-				res.putExtras(data);
-				return res;
-			}
+            @Override
+            protected Intent doInBackground(String... params) {
+                String authtoken = null;
+                Bundle data = new Bundle();
+                try {
+                    authtoken = KusssHandler.getInstance().login(KusssAuthenticatorActivity.this, userName, userPass);
 
-			@Override
-			protected void onPostExecute(Intent intent) {
-				progressDialog.dismiss();
+                    data.putString(AccountManager.KEY_ACCOUNT_NAME, userName);
+                    data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
+                    data.putString(AccountManager.KEY_AUTHTOKEN, authtoken);
+                    data.putString(PARAM_USER_PASS, userPass);
 
-				if (intent.hasExtra(KEY_ERROR_MESSAGE)) {
-					Toast.makeText(getBaseContext(),
-							intent.getStringExtra(KEY_ERROR_MESSAGE),
-							Toast.LENGTH_SHORT).show();
-				} else if (intent.hasExtra(AccountManager.KEY_AUTHTOKEN)) {
-					String authToken = intent
-							.getStringExtra(AccountManager.KEY_AUTHTOKEN);
-					if ((authToken != null) && !TextUtils.isEmpty(authToken)) {
-						finishLogin(intent);
-					} else {
-						Toast.makeText(getBaseContext(),
-								"Login failed, wrong Password",
-								Toast.LENGTH_SHORT).show();
-					}
-				} else {
-					Toast.makeText(getBaseContext(),
-							"Login failed, AuthToken missing",
-							Toast.LENGTH_SHORT).show();
-				}
-			}
-		}.execute();
-	}
+                } catch (Exception e) {
+                    data.putString(KEY_ERROR_MESSAGE, e.getMessage());
+                }
 
-	private void finishLogin(Intent intent) {
-		String accountName = intent
-				.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-		String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
-		String accountType = intent
-				.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE);
+                final Intent res = new Intent();
+                res.putExtras(data);
+                return res;
+            }
 
-		Log.i(TAG, "finish login to " + accountName);
+            @Override
+            protected void onPostExecute(Intent intent) {
+                progressDialog.dismiss();
 
-		final Account account = new Account(accountName, accountType);
+                if (intent.hasExtra(KEY_ERROR_MESSAGE)) {
+                    Toast.makeText(getBaseContext(),
+                            intent.getStringExtra(KEY_ERROR_MESSAGE),
+                            Toast.LENGTH_SHORT).show();
+                } else if (intent.hasExtra(AccountManager.KEY_AUTHTOKEN)) {
+                    String authToken = intent
+                            .getStringExtra(AccountManager.KEY_AUTHTOKEN);
+                    if ((authToken != null) && !TextUtils.isEmpty(authToken)) {
+                        finishLogin(intent);
+                    } else {
+                        Toast.makeText(getBaseContext(),
+                                "Login failed, wrong Password",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getBaseContext(),
+                            "Login failed, AuthToken missing",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        }.execute();
+    }
 
-		CalendarUtils.createCalendarsIfNecessary(this, account);
-		
-		if (getIntent().getBooleanExtra(
-				KusssAuthenticator.ARG_IS_ADDING_NEW_ACCOUNT, false)) {
+    private void finishLogin(Intent intent) {
+        String accountName = intent
+                .getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+        String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
+        String accountType = intent
+                .getStringExtra(AccountManager.KEY_ACCOUNT_TYPE);
 
-			String authtoken = intent
-					.getStringExtra(AccountManager.KEY_AUTHTOKEN);
-			String authtokenType = mAuthTokenType;
+        Log.i(TAG, "finish login to " + accountName);
 
-			// Creating the account on the device and setting the auth token we
-			// got
-			// (Not setting the auth token will cause another call to the server
-			// to authenticate the user)
-			mAccountManager
-					.addAccountExplicitly(account, accountPassword, null);
-			mAccountManager.setAuthToken(account, authtokenType, authtoken);
-			mAccountManager.setPassword(account, accountPassword);
-			
-			// Turn on periodic syncing
-			ContentResolver.addPeriodicSync(account,
-					CalendarContractWrapper.AUTHORITY(), new Bundle(),
-					SYNC_FREQUENCY);
-			ContentResolver.addPeriodicSync(account,
-					KusssContentContract.AUTHORITY, new Bundle(),
-					SYNC_FREQUENCY);
-			// Inform the system that this account supports sync
-			ContentResolver.setIsSyncable(account,
-					CalendarContractWrapper.AUTHORITY(), 1);
-			ContentResolver.setIsSyncable(account,
-					KusssContentContract.AUTHORITY, 1);
-			// Inform the system that this account is eligible for auto sync
-			// when the network is up
-			ContentResolver.setSyncAutomatically(account,
-					CalendarContractWrapper.AUTHORITY(), true);
-			ContentResolver.setSyncAutomatically(account,
-					KusssContentContract.AUTHORITY, true);
-			// Recommend a schedule for automatic synchronization. The system
-			// may modify this based
-			// on other scheduled syncs and network utilization.
-		} else {
-			mAccountManager.setPassword(account, accountPassword);
-			// updateCalendar();
-		}
+        final Account account = new Account(accountName, accountType);
 
-		setAccountAuthenticatorResult(intent.getExtras());
-		setResult(RESULT_OK, intent);
-		finish();
-	}
+        CalendarUtils.createCalendarsIfNecessary(this, account);
 
+        if (getIntent().getBooleanExtra(
+                KusssAuthenticator.ARG_IS_ADDING_NEW_ACCOUNT, false)) {
+
+            String authtoken = intent
+                    .getStringExtra(AccountManager.KEY_AUTHTOKEN);
+            String authtokenType = mAuthTokenType;
+
+            // Creating the account on the device and setting the auth token we
+            // got
+            // (Not setting the auth token will cause another call to the server
+            // to authenticate the user)
+            mAccountManager
+                    .addAccountExplicitly(account, accountPassword, null);
+            mAccountManager.setAuthToken(account, authtokenType, authtoken);
+            mAccountManager.setPassword(account, accountPassword);
+
+            // Turn on periodic syncing
+            ContentResolver.addPeriodicSync(account,
+                    CalendarContractWrapper.AUTHORITY(), new Bundle(),
+                    SYNC_FREQUENCY);
+            ContentResolver.addPeriodicSync(account,
+                    KusssContentContract.AUTHORITY, new Bundle(),
+                    SYNC_FREQUENCY);
+            // Inform the system that this account supports sync
+            ContentResolver.setIsSyncable(account,
+                    CalendarContractWrapper.AUTHORITY(), 1);
+            ContentResolver.setIsSyncable(account,
+                    KusssContentContract.AUTHORITY, 1);
+            // Inform the system that this account is eligible for auto sync
+            // when the network is up
+            ContentResolver.setSyncAutomatically(account,
+                    CalendarContractWrapper.AUTHORITY(), true);
+            ContentResolver.setSyncAutomatically(account,
+                    KusssContentContract.AUTHORITY, true);
+            // Recommend a schedule for automatic synchronization. The system
+            // may modify this based
+            // on other scheduled syncs and network utilization.
+        } else {
+            mAccountManager.setPassword(account, accountPassword);
+            // updateCalendar();
+        }
+
+        setAccountAuthenticatorResult(intent.getExtras());
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (AppUtils.handleUpNavigation(this, item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(new CalligraphyContextWrapper(newBase));
+    }
 }

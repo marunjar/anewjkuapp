@@ -6,9 +6,7 @@
     android:orientation="horizontal"
     android:padding="@dimen/card_content_padding" >
 
-    <View
-        android:id="@+id/exam_list_item_chip"
-        style="@style/chip" />
+    <include layout="@layout/empty_chip"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,20 +19,23 @@
 
             <TextView
                 android:id="@+id/exam_list_item_time"
+                style="@style/Text.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:padding="3dp"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:layout_marginRight="@dimen/separator_top_bottom_margin"
+                android:layout_marginEnd="@dimen/separator_top_bottom_margin"/>
 
             <TextView
                 android:id="@+id/exam_list_item_location"
+                style="@style/Text.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/exam_list_item_time"
+                android:layout_toEndOf="@id/exam_list_item_time"
                 android:gravity="center_vertical"
-                android:padding="3dp"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:layout_marginRight="@dimen/separator_top_bottom_margin"
+                android:layout_marginEnd="@dimen/separator_top_bottom_margin"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -43,38 +44,45 @@
 
             <TextView
                 android:id="@+id/exam_list_item_lvanr"
+                style="@style/Text.Body2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:padding="3dp"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:layout_marginRight="@dimen/separator_top_bottom_margin"
+                android:layout_marginEnd="@dimen/separator_top_bottom_margin"/>
 
             <TextView
                 android:id="@+id/exam_list_item_term"
+                style="@style/Text.Body2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/exam_list_item_lvanr"
+                android:layout_toEndOf="@id/exam_list_item_lvanr"
                 android:gravity="center_vertical"
-                android:padding="3dp"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:layout_marginRight="@dimen/separator_top_bottom_margin"
+                android:layout_marginEnd="@dimen/separator_top_bottom_margin"/>
 
             <TextView
                 android:id="@+id/exam_list_item_skz"
+                style="@style/Text.Body2"
+                fontPath="fonts/Roboto-Light.ttf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/exam_list_item_term"
+                android:layout_toEndOf="@id/exam_list_item_term"
                 android:gravity="center_vertical"
-                android:padding="3dp"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:layout_marginRight="@dimen/separator_top_bottom_margin"
+                android:layout_marginEnd="@dimen/separator_top_bottom_margin"/>
         </RelativeLayout>
 
         <TextView
             android:id="@+id/exam_list_item_info"
+            style="@style/Text.Body2"
+            fontPath="fonts/Roboto-Light.ttf"
+            android:textColor="@color/accent"
+            android:textStyle="bold"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="3dp"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
 </LinearLayout>

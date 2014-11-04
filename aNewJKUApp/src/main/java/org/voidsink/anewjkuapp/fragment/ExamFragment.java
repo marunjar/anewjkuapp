@@ -23,6 +23,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -50,12 +51,17 @@ public class ExamFragment extends BaseFragment {
 		mAdapter = new ExamCardArrayAdapter(getContext(), new ArrayList<Card>());
 		mListView.setAdapter(mAdapter);
 
-		new ExamLoadTask().execute();
-
 		return view;
 	}
 
-	@Override
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        new ExamLoadTask().execute();
+    }
+
+    @Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.exam, menu);

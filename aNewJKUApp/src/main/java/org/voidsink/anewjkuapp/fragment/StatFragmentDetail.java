@@ -20,10 +20,6 @@ import java.util.List;
 
 import it.gmariotti.cardslib.library.view.CardView;
 
-/**
- * Created by paul on 14.09.2014.
- */
-
 @SuppressLint("ValidFragment")
 public class StatFragmentDetail extends BaseFragment {
 
@@ -56,13 +52,6 @@ public class StatFragmentDetail extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_stats, container, false);
 
-        return mView;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
         CardView cv = (CardView) mView.findViewById(R.id.stat_card_lva);
         mStatCardLva = new StatCardLva(getContext(), this.mTerms, this.mLvas, this.mGrades);
         mStatCardLva.init();
@@ -77,5 +66,7 @@ public class StatFragmentDetail extends BaseFragment {
         mStatCardGradeWeighted = new StatCardGrade(getContext(), this.mTerms, this.mGrades, true);
         mStatCardGradeWeighted.init();
         cv.setCard(mStatCardGradeWeighted);
+
+        return mView;
     }
 }

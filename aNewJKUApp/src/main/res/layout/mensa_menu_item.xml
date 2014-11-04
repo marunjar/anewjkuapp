@@ -2,65 +2,65 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="fill_vertical"
     android:orientation="horizontal"
-    android:padding="@dimen/card_content_padding" >
+    android:padding="@dimen/card_content_padding">
 
-    <View
-        android:id="@+id/mensa_menu_chip"
-        style="@style/chip" />
+    <include layout="@layout/empty_chip"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/mensa_menu_item_name"
+            style="@style/Text.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:padding="3dp"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textStyle="bold" />
+            android:padding="8dp" />
 
         <TextView
             android:id="@+id/mensa_menu_item_soup"
+            style="@style/Text.Body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:padding="3dp"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:padding="4dp" />
 
         <TextView
             android:id="@+id/mensa_menu_item_meal"
+            style="@style/Text.Body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:padding="3dp"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:padding="4dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/mensa_menu_item_price"
+                style="@style/Text.Body2"
+                fontPath="fonts/Roboto-Light.ttf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:padding="3dp"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:padding="4dp"
+                android:textColor="@color/accent"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/mensa_menu_item_oeh_bonus"
+                style="@style/Text.Body2"
+                fontPath="fonts/Roboto-Light.ttf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/mensa_menu_item_price"
                 android:gravity="center_vertical"
-                android:padding="3dp"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:padding="4dp"
+                android:textColor="?android:attr/textColorSecondary" />
         </RelativeLayout>
     </LinearLayout>
 
