@@ -124,7 +124,7 @@ public class MensaDashclockExtension extends DashClockExtension {
 		if (mShowMenu || mShowAlays) {
 			publishUpdate(new ExtensionData()
 					.visible(true)
-					.icon(R.drawable.ic_launcher_grey)
+					.icon(R.drawable.ic_food)
 					.status("Mensa")
 					.expandedTitle(status)
 					.expandedBody(body)
