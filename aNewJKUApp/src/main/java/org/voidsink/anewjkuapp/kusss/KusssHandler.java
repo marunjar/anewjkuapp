@@ -102,14 +102,16 @@ public class KusssHandler {
             if ((user.length() > 0) && (user.charAt(0) != 'k')) {
                 user = "k" + user;
             }
-            Connection.Response r = Jsoup.connect(URL_LOGIN).data("j_username", user)
-                    .data("j_password", password).method(Connection.Method.POST).execute();
 
-            if (r != null) {
-                Log.d(TAG, String.format("%d: %s", r.statusCode(), r.statusMessage()));
-                if (isLoggedIn(c, getSessionIDFromCookie())) {
-                    return getSessionIDFromCookie();
-                }
+            Document doc = Jsoup.connect(URL_LOGIN).data("j_username", user)
+                    .data("j_password", password).post();
+
+            //TODO: check document for successful login message
+
+            String sessionId = getSessionIDFromCookie();
+
+            if (isLoggedIn(c, sessionId)) {
+                return sessionId;
             }
             return null;
         } catch (Exception e) {
@@ -247,29 +249,23 @@ public class KusssHandler {
         return terms;
     }
 
-    public boolean selectTerm(Context c, String term) {
-        try {
-            Connection.Response r = Jsoup.connect(URL_SELECT_TERM).method(Connection.Method.POST)
-                    .data("term", term)
-                    .data("previousQueryString", "")
-                    .data("reloadAction", "").execute();
+    public boolean selectTerm(Context c, String term) throws IOException{
+        Document doc = Jsoup.connect(URL_SELECT_TERM)
+                .data("term", term)
+                .data("previousQueryString", "")
+                .data("reloadAction", "coursecatalogue-start.action").post();
 
-            if (r == null) {
-                return false;
-            }
-
-        } catch (IOException e) {
-            Log.e(TAG, "selectTerm", e);
-            Analytics.sendException(c, e, false);
-            return false;
-        }
-        Log.d(TAG, term + " selected");
+        //TODO: check document for successful selection of term
+//            if (!isSelected(doc, term)) {
+//                throw new IOException(String.format("selection of term failed: %s", term));
+//            }
         return true;
     }
 
     public List<Lva> getLvas(Context c) {
         List<Lva> lvas = new ArrayList<>();
         try {
+            Log.d(TAG, "getLvas");
             Map<String, String> termsHelper = getTerms(c);
             if (termsHelper != null) {
                 List<String> terms = new ArrayList<>(termsHelper.keySet());
@@ -287,7 +283,13 @@ public class KusssHandler {
                                     lvas.add(lva);
                                 }
                             }
+                        } else {
+                            // break if selection is not equal previously selected term
+                            throw new IOException(String.format("term not selected: %s", term));
                         }
+                    } else {
+                        // break if selection failed
+                        throw new IOException(String.format("cannot select term: %s", term));
                     }
                 }
             }
