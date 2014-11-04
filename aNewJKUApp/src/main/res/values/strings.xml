@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="default_chip_color">#ff2b7fc2</string>
+    <string name="default_chip_color" translatable="false" >#ff2b7fc2</string>
     <string name="app_name">JKU App</string>
     <string name="title_oeh_news">ÖH News</string>
     <string name="title_oeh_linz">ÖH Linz</string>
@@ -62,7 +62,7 @@
     <string name="pref_cat_kusss_exam">Prüfungen</string>
     <string name="pref_kusss_exam_sync_summary">LVA-Prüfungen synchronisieren</string>
     <string name="pref_kusss_exam_notify_summary">Benachrichtigen wenn neue LVA-Prüfungen zu den eigenen LVAs verfügbar sind</string>
-    <string name="pref_app_use_light_theme_summary">Das Ändern dieser Einstellung startet die App neu</string>
+    <string name="pref_app_use_light_theme_summary">Das Ändern dieser Einstellung startet die App beim Verlassen der Einstellungen neu</string>
     <string name="pref_app_use_light_theme_title">helles Design verwenden</string>
     <string name="pref_app_map_file_title">eigene Kartendatei</string>
     <string name="pref_diagrams_use_lva_bar_chart_summary">Barchart für offene und erledigte LVAs verwenden</string>
@@ -114,7 +114,7 @@
     <string name="progress_load_calendar">Termine werden geladen...</string>
     <string name="progress_load_map_files">Karten werden geladen...</string>
     <string name="progress_login">Einloggen...</string>
-    <string name="listview_footer_button">Mehr...</string>
+    <string name="listview_footer_button">Mehr anzeigen</string>
     <string name="pref_kusss_exam_get_from_lva_title">Prüfungen nach LVA-Nr laden</string>
     <string name="pref_kusss_exam_get_from_lva_summary">findet Prüfungen zu LVAs auch aus früheren Semestern, ist dafür aber langsamer ...</string>
     <string name="extension_mensa_title">Mensa</string>
@@ -138,4 +138,7 @@
     <string name="pref_mensa_group_menu_by_day_title">Gruppierung</string>
     <string name="pref_mensa_group_menu_by_day_summary">Menüs in eigenen Tabs je Tag anzeigen (benötigt Neustart)</string>
     <string name="menu_not_available">kein Speiseplan verfügbar</string>
+    <string name="today">Heute</string>
+    <string name="tomorrow">Morgen</string>
+    <string name="action_about">About</string>
 </resources>

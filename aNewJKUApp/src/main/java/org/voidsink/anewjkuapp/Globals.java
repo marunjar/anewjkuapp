@@ -1,64 +1,66 @@
 package org.voidsink.anewjkuapp;
 
-import java.lang.Thread.UncaughtExceptionHandler;
-import java.util.HashMap;
-
-import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
-
-import com.google.android.gms.analytics.ExceptionReporter;
-import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.Tracker;
-import com.google.android.gms.analytics.Logger.LogLevel;
-
 import android.app.Application;
 import android.util.Log;
 
+import com.google.android.gms.analytics.ExceptionReporter;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Logger.LogLevel;
+import com.google.android.gms.analytics.Tracker;
+
+import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.HashMap;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+
 public class Globals extends Application {
 
-	public enum TrackerName {
-		APP_TRACKER
-	}
+    public enum TrackerName {
+        APP_TRACKER
+    }
 
-	private static final String TAG = Globals.class.getSimpleName();
-	
-	@Override
-	public void onCreate() {
-		super.onCreate();
+    private static final String TAG = Globals.class.getSimpleName();
 
-		GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
-		if (BuildConfig.DEBUG) {
-			//analytics.setDryRun(true);
-			analytics.setAppOptOut(false);
-			analytics.getLogger().setLogLevel(LogLevel.VERBOSE);
-			Log.i(TAG, "debug enabled");
-		} else {
-			analytics.setAppOptOut(false); // TODO: get option from shared preferences
-			Log.i(TAG, "debug disabled");
-		}
-	}
-	
-	private static String PROPERTY_ID = "UA-51633871-1";
+    @Override
+    public void onCreate() {
+        super.onCreate();
 
-	HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
+        CalligraphyConfig.initDefault("fonts/Roboto-Regular.ttf", R.attr.fontPath);
 
-	synchronized Tracker getTracker(TrackerName trackerId) {
-		if (!mTrackers.containsKey(trackerId)) {
+        GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+        if (BuildConfig.DEBUG) {
+            //analytics.setDryRun(true);
+            analytics.setAppOptOut(false);
+            analytics.getLogger().setLogLevel(LogLevel.VERBOSE);
+            Log.i(TAG, "debug enabled");
+        } else {
+            analytics.setAppOptOut(false); // TODO: get option from shared preferences
+            Log.i(TAG, "debug disabled");
+        }
+    }
 
-			GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
-			switch (trackerId) {
-			case APP_TRACKER:
-				Tracker t = analytics.newTracker(PROPERTY_ID);
-				mTrackers.put(trackerId, t);
+    private static String PROPERTY_ID = "UA-51633871-1";
 
-				UncaughtExceptionHandler myHandler = new ExceptionReporter(t,
-						Thread.getDefaultUncaughtExceptionHandler(), this);
-				// Make myHandler the new default uncaught exception handler.
-				Thread.setDefaultUncaughtExceptionHandler(myHandler);
-				
-				break;
-			}
-		}
-		return mTrackers.get(trackerId);
-	}
+    HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
+
+    synchronized Tracker getTracker(TrackerName trackerId) {
+        if (!mTrackers.containsKey(trackerId)) {
+
+            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+            switch (trackerId) {
+                case APP_TRACKER:
+                    Tracker t = analytics.newTracker(PROPERTY_ID);
+                    mTrackers.put(trackerId, t);
+
+                    UncaughtExceptionHandler myHandler = new ExceptionReporter(t,
+                            Thread.getDefaultUncaughtExceptionHandler(), this);
+                    // Make myHandler the new default uncaught exception handler.
+                    Thread.setDefaultUncaughtExceptionHandler(myHandler);
+
+                    break;
+            }
+        }
+        return mTrackers.get(trackerId);
+    }
 
 }

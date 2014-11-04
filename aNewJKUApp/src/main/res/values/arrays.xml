@@ -7,7 +7,7 @@
         <item name="7d">Wöchentlich</item>
     </array>
     
-    <string-array name="pref_kusss_sync_interval_values">
+    <string-array name="pref_kusss_sync_interval_values" translatable="false" >
         <item name="1h">1</item>
         <item name="1d">25</item>
         <item name="3.5d">85</item>

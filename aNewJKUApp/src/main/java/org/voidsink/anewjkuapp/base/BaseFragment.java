@@ -38,9 +38,6 @@ public class BaseFragment extends Fragment {
 		switch (item.getItemId()) {
 		case R.id.action_refresh_calendar:
 			return onRefreshSelected(item);
-		case R.id.action_settings:
-			startActivity(new Intent(getContext(), SettingsActivity.class));
-			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}

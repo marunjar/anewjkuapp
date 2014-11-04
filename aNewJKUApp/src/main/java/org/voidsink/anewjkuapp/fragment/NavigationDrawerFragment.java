@@ -77,18 +77,17 @@ public class NavigationDrawerFragment extends BaseFragment {
             new DrawerMenuItem("Prüfungen", ExamFragment.class),
 			new DrawerMenuItem("Noten", GradeFragment.class),
 			new DrawerMenuItem("LVAs", LvaFragment2.class),
-            new DrawerMenuItem("Stats", StatFragment.class),
-			new DrawerMenuSection("ÖH"),
-			// new DrawerMenuItem("News"),
-			// new DrawerMenuItem("Courier"),
-			new DrawerMenuItem("Info", OehInfoFragment.class),
-			new DrawerMenuItem("Rechte", OehRightsFragment.class),
-			new DrawerMenuSection("Diverses"),
+            new DrawerMenuItem("Statistik", StatFragment.class),
+			new DrawerMenuSection("Campus"),
 			new DrawerMenuItem("Mensa", MensaFragment.class),
 			// new DrawerMenuSection("Veranstaltungen"),
 			// new DrawerMenuItem("Veranstaltungen"),
-			new DrawerMenuItem("Campus", MapFragment.class),
-			new DrawerMenuItem("About", AboutFragment.class) };
+			new DrawerMenuItem("Karte", MapFragment.class),
+			// new DrawerMenuItem("News"),
+			// new DrawerMenuItem("Courier"),
+			new DrawerMenuSection("ÖH"),
+			new DrawerMenuItem("Info", OehInfoFragment.class),
+			new DrawerMenuItem("Rechte", OehRightsFragment.class)};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

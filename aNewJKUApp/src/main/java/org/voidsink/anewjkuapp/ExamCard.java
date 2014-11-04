@@ -7,13 +7,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.voidsink.anewjkuapp.base.ThemedCard;
+import org.voidsink.anewjkuapp.base.ThemedCardExpand;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
-import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardExpand;
 import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.internal.ViewToClickToExpand;
@@ -22,9 +20,7 @@ import it.gmariotti.cardslib.library.internal.base.BaseCard;
 /**
  * Created by paul on 06.09.2014.
  */
-public class ExamCard extends Card {
-
-    private static final DateFormat df = SimpleDateFormat.getDateInstance();
+public class ExamCard extends ThemedCard {
 
     private ExamListExam mExam;
 
@@ -73,7 +69,7 @@ public class ExamCard extends Card {
         TextView location = (TextView) view
                 .findViewById(R.id.exam_list_item_location);
         View chip = view
-                .findViewById(R.id.exam_list_item_chip);
+                .findViewById(R.id.empty_chip_background);
 
         if (mExam.mark()) {
             chip.setBackgroundColor(CalendarUtils.COLOR_DEFAULT_EXAM);
@@ -121,7 +117,7 @@ public class ExamCard extends Card {
         addCardHeader(header);
     }
 
-    class ExamCardExpand extends CardExpand {
+    class ExamCardExpand extends ThemedCardExpand {
 
         String mDescription;
 
@@ -132,7 +128,6 @@ public class ExamCard extends Card {
 
         @Override
         public void setupInnerViewElements(ViewGroup parent, View view) {
-
             TextView descr = (TextView) view.findViewById(R.id.exam_list_item_description);
 
             if (!mDescription.isEmpty()) {

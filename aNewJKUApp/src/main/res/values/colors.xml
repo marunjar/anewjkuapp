@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="primary">#0F60BD</color>
+    <color name="accent">#EE8C2B</color>
+
     <color name="color_highlight">#F09500</color>
     <color name="color_default">#2B7FC2</color>
     <color name="color_chip_grade_back_default">@color/color_default</color>
-    <color name="color_chip_grade_text">#FFF</color>
+    <color name="color_chip_grade_text">#fff</color>
 
+    <!-- for themed cards-->
+    <color name="card_background_holo">#ff272d33</color>
+    <color name="fullTransparent">#00000000</color>
+
+    <!-- Material Design -->
+    <color name="text_hint">#40000000</color>
+    <color name="divider">#1A000000</color>
+    <color name="icon">#8C000000</color>
 </resources>

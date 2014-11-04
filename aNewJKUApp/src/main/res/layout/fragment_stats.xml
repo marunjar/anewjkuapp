@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ScrollView
         android:id="@+id/stat_scrollview"
+        android:scrollbarStyle="outsideOverlay"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -20,12 +24,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"
-                android:layout_marginTop="12dp"/>
+                android:layout_marginTop="12dp" />
 
             <!-- Empty view-->
             <View
                 android:layout_width="match_parent"
-                android:layout_height="15dp"/>
+                android:layout_height="15dp" />
 
             <it.gmariotti.cardslib.library.view.CardView
                 android:id="@+id/stat_card_grade"
@@ -33,12 +37,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"
-                android:layout_marginTop="12dp"/>
+                android:layout_marginTop="12dp" />
 
             <!-- Empty view-->
             <View
                 android:layout_width="match_parent"
-                android:layout_height="15dp"/>
+                android:layout_height="15dp" />
 
             <it.gmariotti.cardslib.library.view.CardView
                 android:id="@+id/stat_card_grade_weighted"
@@ -46,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"
-                android:layout_marginTop="12dp"/>
+                android:layout_marginTop="12dp" />
 
         </LinearLayout>
 

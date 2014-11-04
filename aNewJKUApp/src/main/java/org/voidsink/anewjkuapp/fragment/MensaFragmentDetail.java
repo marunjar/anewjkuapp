@@ -3,6 +3,7 @@ package org.voidsink.anewjkuapp.fragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,12 +40,17 @@ public abstract class MensaFragmentDetail extends BaseFragment {
 		mAdapter = new MenuCardArrayAdapter(getContext(), new ArrayList<Card>(), true);
 		mListView.setAdapter(mAdapter);
 
-		new MenuLoadTask().execute();
-
 		return view;
 	}
 
-	private class MenuLoadTask extends AsyncTask<String, Void, Void> {
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        new MenuLoadTask().execute();
+    }
+
+    private class MenuLoadTask extends AsyncTask<String, Void, Void> {
 		private Mensa mensa;
         private List<Card> mMenus;
 		private Context mContext;

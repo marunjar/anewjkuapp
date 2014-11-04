@@ -1,6 +1,5 @@
 package org.voidsink.anewjkuapp.kusss;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -45,9 +44,6 @@ public class KusssHandler {
             + PATTERN_LVA_NR + "," + PATTERN_TERM + "\\)";
     public static final String PATTERN_LVA_NR_SLASH_TERM = "\\("
             + PATTERN_LVA_NR + "\\/" + PATTERN_TERM + "\\)";
-    @SuppressLint("SimpleDateFormat")
-    private static final SimpleDateFormat df = new SimpleDateFormat(
-            "dd.MM.yyyy");
     private static final String TAG = KusssHandler.class.getSimpleName();
     private static final String URL_MY_LVAS = "https://www.kusss.jku.at/kusss/assignment-results.action";
     private static final String URL_GET_TERMS = "https://www.kusss.jku.at/kusss/listmystudentlvas.action";
@@ -234,7 +230,7 @@ public class KusssHandler {
     }
 
     public Map<String, String> getTerms(Context c) {
-        Map<String, String> terms = new HashMap<String, String>();
+        Map<String, String> terms = new HashMap<>();
         try {
             Document doc = Jsoup.connect(URL_GET_TERMS).get();
             Element termDropdown = doc.getElementById("term");
@@ -267,7 +263,7 @@ public class KusssHandler {
     }
 
     public List<Lva> getLvas(Context c) {
-        List<Lva> lvas = new ArrayList<Lva>();
+        List<Lva> lvas = new ArrayList<>();
         try {
             Log.d(TAG, "getLvas");
             Map<String, String> termsHelper = getTerms(c);
@@ -323,7 +319,7 @@ public class KusssHandler {
     }
 
     public List<ExamGrade> getGrades(Context c) {
-        List<ExamGrade> grades = new ArrayList<ExamGrade>();
+        List<ExamGrade> grades = new ArrayList<>();
         try {
             Document doc = Jsoup.connect(URL_MY_GRADES).data("months", "0")
                     .get();
@@ -355,7 +351,7 @@ public class KusssHandler {
     }
 
     public List<Exam> getNewExams(Context c) {
-        List<Exam> exams = new ArrayList<Exam>();
+        List<Exam> exams = new ArrayList<>();
         try {
             Document doc = Jsoup.connect(URL_GET_NEW_EXAMS)
                     .data("search", "true").data("searchType", "mylvas").get();
@@ -389,11 +385,10 @@ public class KusssHandler {
         return exams;
     }
 
-    @SuppressLint("UseSparseArrays")
     public List<Exam> getNewExamsByLvaNr(Context c, List<Lva> lvas)
             throws IOException {
 
-        List<Exam> exams = new ArrayList<Exam>();
+        List<Exam> exams = new ArrayList<>();
         try {
             if (lvas == null || lvas.size() == 0) {
                 Log.d(TAG, "no lvas found, reload");
@@ -402,7 +397,7 @@ public class KusssHandler {
             if (lvas != null && lvas.size() > 0) {
                 List<ExamGrade> grades = getGrades(c);
 
-                Map<String, ExamGrade> gradeCache = new HashMap<String, ExamGrade>();
+                Map<String, ExamGrade> gradeCache = new HashMap<>();
                 for (ExamGrade grade : grades) {
                     if (!grade.getLvaNr().isEmpty()) {
                         ExamGrade existing = gradeCache.get(grade.getLvaNr());
@@ -452,8 +447,10 @@ public class KusssHandler {
     }
 
     private List<Exam> getNewExamsByLvaNr(Context c, String lvaNr) {
-        List<Exam> exams = new ArrayList<Exam>();
+        List<Exam> exams = new ArrayList<>();
         try {
+            final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+
             Log.d(TAG, "getNewExamsByLvaNr: " + lvaNr);
             Document doc = Jsoup
                     .connect(URL_GET_NEW_EXAMS)

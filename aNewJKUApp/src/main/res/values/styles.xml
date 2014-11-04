@@ -1,48 +1,89 @@
 <resources>
 
-    <style name="chip">
-        <item name="android:layout_width">8dp</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_marginRight">8dp</item>
-        <item name="android:background">#ff339bff</item>
+    <style name="card_expand" parent="Text.Body2">
+        <item name="android:paddingLeft">@dimen/card_content_padding</item>
+        <item name="android:paddingRight">@dimen/card_content_padding</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
-    <!--
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    -->
-    <style name="AppBaseTheme" parent="android:Theme.Holo">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
-    </style>
-
-    <style name="AppBaseTheme.Light" parent="android:Theme.Holo.Light">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
-    </style>
-    
-    <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-    </style>
-
-    <style name="AppTheme.Light" parent="AppBaseTheme.Light">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-    </style>
-
-    <style name="card_expand">
-        <item name="android:paddingLeft">10dp</item>
-        <item name="android:paddingRight">10dp</item>
+    <style name="oeh_text_title" parent="Text.Body2">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">#FFF</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:textSize">@dimen/text_size_subhead</item>
+        <item name="android:layout_marginTop">@dimen/activity_horizontal_margin</item>
+        <item name="android:textColor">@color/accent</item>
+    </style>
+
+    <style name="oeh_text_content" parent="Text.Body1">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
+    <!-- Material Text Styles -->
+    <style name="Text">
+        <item name="fontPath">fonts/Roboto-Regular.ttf</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
+    <style name="Text.Body1" parent="@style/Text">
+        <item name="android:lineSpacingMultiplier">1.1</item>
+        <item name="android:textSize">@dimen/text_size_body</item>
+        <item name="fontPath">fonts/Roboto-Medium.ttf</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
+    <style name="Text.Body2" parent="@style/Text">
+        <item name="android:lineSpacingMultiplier">1.1</item>
+        <item name="android:textSize">@dimen/text_size_body</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
+    <style name="Text.Title" parent="@style/Text">
+        <item name="android:textSize">@dimen/text_size_title</item>
+        <item name="fontPath">fonts/Roboto-Medium.ttf</item>
+    </style>
+
+    <style name="Text.Button" parent="@style/Text">
+        <item name="android:textSize">@dimen/text_size_button</item>
+        <item name="fontPath">fonts/Roboto-Medium.ttf</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <!-- for themed cards-->
+    <style name="card.header_simple_title">
+        <item name="android:textSize">@dimen/card_header_simple_title_text_size</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:layout_gravity">left|center_vertical</item>
+        <item name="android:layout_marginLeft">@dimen/card_header_simple_title_margin_left</item>
+        <item name="android:layout_marginTop">@dimen/card_header_simple_title_margin_top</item>
+        <item name="android:layout_marginRight">@dimen/card_header_simple_title_margin_right</item>
+        <item name="android:layout_marginBottom">@dimen/card_header_simple_title_margin_bottom</item>
+    </style>
+
+    <!-- Button Overflow in Header for themed cards-->
+    <attr name="themed_card_menu_button_overflow" format="reference"/>
+    <style name="card.header_button_base.overflow" >
+        <item name="android:background">?attr/themed_card_menu_button_overflow</item>
+        <item name="android:layout_marginRight">@dimen/card_header_button_overflow_margin_right</item>
+    </style>
+
+    <!-- Button to Expand/Collapse in Header for themed cards-->
+    <attr name="themed_card_menu_button_expand" format="reference"/>
+    <style name="card.header_button_base.expand">
+        <item name="android:background">?attr/themed_card_menu_button_expand</item>
+    </style>
+
+
+    <attr name="themed_plot_background_color" format="reference"/>
+    <style name="plotStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">180dp</item>
+        <item name="android:padding">3dp</item>
+        <!--<item name="androidPlot.graphWidget.background">?attr/plot_background_color</item>-->
     </style>
 
 </resources>

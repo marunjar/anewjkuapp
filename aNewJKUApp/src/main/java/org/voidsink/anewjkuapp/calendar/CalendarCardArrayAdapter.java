@@ -4,10 +4,10 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.view.CalendarCardListView;
-import org.voidsink.anewjkuapp.view.DateHeaderCard;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -16,7 +16,6 @@ import java.util.List;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
-import it.gmariotti.cardslib.library.view.CardView;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
@@ -39,20 +38,15 @@ public class CalendarCardArrayAdapter extends CardArrayAdapter implements Sticky
 
     @Override
     public View getHeaderView(int position, View convertView, ViewGroup viewGroup) {
-
         // Build your custom HeaderView
-        //In this case I will use a Card, but you can use any view
-
         LayoutInflater mInflater = LayoutInflater.from(getContext());
-        View view = mInflater.inflate(R.layout.calendar_card_header, null);
+        final TextView tvHeaderTitle = (TextView) mInflater.inflate(R.layout.calendar_card_header, null);
 
-        CardView cardView= (CardView)view.findViewById(R.id.calendar_card_header_id);
         Card card = getItem(position);
         if (card instanceof CalendarCard) {
-            Card headerCard = new DateHeaderCard(getContext(), new Date(((CalendarCard) card).getDtStart()));
-            cardView.setCard(headerCard);
+            tvHeaderTitle.setText(DateFormat.getDateInstance().format(new Date(((CalendarCard) card).getDtStart())));
         }
-        return view;
+        return tvHeaderTitle;
     }
 
     @Override

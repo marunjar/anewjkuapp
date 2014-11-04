@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     style="@style/card.main_layout"
+    android:background="@color/fullTransparent"
     android:padding="@dimen/card_content_padding">
 
     <TextView

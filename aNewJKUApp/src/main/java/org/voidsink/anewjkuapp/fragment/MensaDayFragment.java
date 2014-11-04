@@ -3,6 +3,7 @@ package org.voidsink.anewjkuapp.fragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,12 +52,17 @@ public class MensaDayFragment extends BaseFragment {
         mAdapter = new MenuCardArrayAdapter(getContext(), new ArrayList<Card>(), false);
         mListView.setAdapter(mAdapter);
 
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         new MenuLoadTask(new ClassicMenuLoader(), 0).execute();
         new MenuLoadTask(new ChoiceMenuLoader(), 1).execute();
         new MenuLoadTask(new KHGMenuLoader(), 2).execute();
         new MenuLoadTask(new RaabMenuLoader(), 3).execute();
-
-        return view;
     }
 
     public MensaDayFragment() {
@@ -69,7 +75,7 @@ public class MensaDayFragment extends BaseFragment {
         this.mDate = mDate;
     }
 
-    private void setMensa(Mensa mensa, int index) {
+    private synchronized void setMensa(Mensa mensa, int index) {
         while (index >= mMensen.size()) {
             mMensen.add(null);
         }
@@ -81,6 +87,7 @@ public class MensaDayFragment extends BaseFragment {
         private Context mContext;
         private MenuLoader mLoader;
         private int mIndex;
+        private Mensa mMensa;
 
         public MenuLoadTask(MenuLoader loader, int index) {
             super();
@@ -91,7 +98,7 @@ public class MensaDayFragment extends BaseFragment {
 
         @Override
         protected Void doInBackground(String... urls) {
-            setMensa(mLoader.getMensa(mContext), mIndex);
+            mMensa = mLoader.getMensa(mContext);
 
             return null;
         }
@@ -99,6 +106,9 @@ public class MensaDayFragment extends BaseFragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
+            mMensa = null;
+
             mContext = MensaDayFragment.this.getContext();
             if (mContext == null) {
                 Log.e(TAG, "context is null");
@@ -109,6 +119,8 @@ public class MensaDayFragment extends BaseFragment {
 
         @Override
         protected void onPostExecute(Void result) {
+            setMensa(mMensa, mIndex);
+
             List<Card> menus = new ArrayList<Card>();
             int noMenuCount = 0;
 

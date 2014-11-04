@@ -1,109 +1,78 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp" >
+    android:clipToPadding="false"
+    android:padding="@dimen/activity_horizontal_margin"
+    android:scrollbarStyle="outsideOverlay">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/oeh_rights_1_title"
+            style="@style/Text.Title"
             android:layout_width="match_parent"
+            android:textColor="@color/accent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/oeh_rights_1_title"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:padding="8dp"
+            android:text="@string/oeh_rights_1_title" />
 
         <TextView
             android:id="@+id/oeh_rights_1_summary"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/oeh_rights_1_summary"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            style="@style/oeh_text_content"
+            android:text="@string/oeh_rights_1_summary" />
 
         <TextView
             android:id="@+id/oeh_rights_2_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/oeh_rights_2_title"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            style="@style/oeh_text_title"
+            android:text="@string/oeh_rights_2_title"/>
 
         <TextView
             android:id="@+id/oeh_rights_2_summary"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/oeh_rights_2_summary"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            style="@style/oeh_text_content"
+            android:text="@string/oeh_rights_2_summary" />
 
         <TextView
             android:id="@+id/oeh_rights_3_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/oeh_rights_3_title"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            style="@style/oeh_text_title"
+            android:text="@string/oeh_rights_3_title" />
 
         <TextView
             android:id="@+id/oeh_rights_3_summary"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/oeh_rights_3_summary"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            style="@style/oeh_text_content"
+            android:text="@string/oeh_rights_3_summary" />
 
         <TextView
             android:id="@+id/oeh_rights_4_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/oeh_rights_4_title"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            style="@style/oeh_text_title"
+            android:text="@string/oeh_rights_4_title" />
 
         <TextView
             android:id="@+id/oeh_rights_4_summary"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/oeh_rights_4_summary"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            style="@style/oeh_text_content"
+            android:text="@string/oeh_rights_4_summary" />
 
         <TextView
             android:id="@+id/oeh_rights_5_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/oeh_rights_5_title"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            style="@style/oeh_text_title"
+            android:text="@string/oeh_rights_5_title" />
 
         <TextView
             android:id="@+id/oeh_rights_5_summary"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/oeh_rights_5_summary"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            style="@style/oeh_text_content"
+            android:text="@string/oeh_rights_5_summary" />
 
         <TextView
             android:id="@+id/oeh_rights_6_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/oeh_rights_6_title"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            style="@style/oeh_text_title"
+            android:text="@string/oeh_rights_6_title"/>
 
         <TextView
             android:id="@+id/oeh_rights_6_summary"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/oeh_rights_6_summary"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            style="@style/oeh_text_content"
+            android:text="@string/oeh_rights_6_summary" />
     </LinearLayout>
 
 </ScrollView>
