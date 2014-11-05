@@ -2,8 +2,7 @@ package org.voidsink.anewjkuapp.fragment;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
-import org.voidsink.anewjkuapp.kusss.KusssHandler;
-import org.voidsink.anewjkuapp.service.KusssService;
+import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.library.contributors.Contributors;
 
 import android.os.Bundle;
@@ -57,4 +56,9 @@ public class AboutFragment extends BaseFragment {
 
 		return view;
 	}
+
+    @Override
+    protected String getScreenName() {
+        return Consts.SCREEN_ABOUT;
+    }
 }

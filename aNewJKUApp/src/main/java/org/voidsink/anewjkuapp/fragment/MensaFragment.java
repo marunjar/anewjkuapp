@@ -8,6 +8,7 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.SlidingTabItem;
 import org.voidsink.anewjkuapp.base.SlidingTabsFragment;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -53,5 +54,10 @@ public class MensaFragment extends SlidingTabsFragment {
             return getResources().getString(R.string.tomorrow);
         }
         return new SimpleDateFormat("EEEE").format(cal.getTime());
+    }
+
+    @Override
+    protected String getScreenName() {
+        return Consts.SCREEN_MENSA;
     }
 }

@@ -12,6 +12,7 @@ import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.LvaMap;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
+import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.anewjkuapp.view.ExamCardListView;
 
 import android.accounts.Account;
@@ -146,4 +147,8 @@ public class ExamFragment extends BaseFragment {
 		}
 	}
 
+    @Override
+    protected String getScreenName() {
+        return Consts.SCREEN_EXAMS;
+    }
 }

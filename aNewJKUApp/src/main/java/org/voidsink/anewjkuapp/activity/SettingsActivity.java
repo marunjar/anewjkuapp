@@ -20,10 +20,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import org.voidsink.anewjkuapp.Analytics;
 import org.voidsink.anewjkuapp.AppUtils;
 import org.voidsink.anewjkuapp.ImportExamTask;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.List;
 import java.util.Random;
@@ -62,6 +64,8 @@ public class SettingsActivity extends PreferenceActivity implements
     @Override
     protected void onStart() {
         super.onStart();
+
+        Analytics.sendScreen(this, Consts.SCREEN_SETTINGS);
 
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
@@ -222,4 +226,5 @@ public class SettingsActivity extends PreferenceActivity implements
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(new CalligraphyContextWrapper(newBase));
     }
+
 }

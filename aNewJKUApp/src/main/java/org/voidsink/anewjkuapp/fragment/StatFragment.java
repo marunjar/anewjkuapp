@@ -22,6 +22,7 @@ import org.voidsink.anewjkuapp.base.SlidingTabsFragment;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -142,4 +143,9 @@ public class StatFragment extends SlidingTabsFragment implements
 		Log.i(TAG, "onContentChanged(" + selfChange + ")");
 		loadData(getActivity());
 	}
+
+    @Override
+    protected String getScreenName() {
+        return Consts.SCREEN_STAT;
+    }
 }

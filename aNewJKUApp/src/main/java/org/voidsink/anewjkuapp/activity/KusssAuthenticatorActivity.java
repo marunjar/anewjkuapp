@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.voidsink.anewjkuapp.Analytics;
 import org.voidsink.anewjkuapp.AppUtils;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.KusssContentContract;
@@ -25,6 +26,7 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -263,5 +265,12 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(new CalligraphyContextWrapper(newBase));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Analytics.sendScreen(this, Consts.SCREEN_LOGIN);
     }
 }

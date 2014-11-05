@@ -14,6 +14,7 @@ import org.voidsink.anewjkuapp.calendar.CalendarCard;
 import org.voidsink.anewjkuapp.calendar.CalendarCardArrayAdapter;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
+import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.anewjkuapp.view.CalendarCardListView;
 
 import android.accounts.Account;
@@ -259,4 +260,9 @@ public class CalendarFragment extends BaseFragment {
 			loadData();
 		}
 	}
+
+    @Override
+    protected String getScreenName() {
+        return Consts.SCREEN_CALENDAR;
+    }
 }

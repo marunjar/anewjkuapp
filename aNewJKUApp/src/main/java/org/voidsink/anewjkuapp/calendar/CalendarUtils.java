@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import android.accounts.Account;
 import android.content.ContentResolver;
@@ -23,8 +24,8 @@ public final class CalendarUtils {
 
 	private static final String TAG = CalendarUtils.class.getSimpleName();
 
-	public static final int COLOR_DEFAULT_EXAM = Color.rgb(240, 149, 0);
-	public static final int COLOR_DEFAULT_LVA = Color.rgb(43, 127, 194);
+	public static final int COLOR_DEFAULT_EXAM = Consts.COLOR_DEFAULT_EXAM;
+	public static final int COLOR_DEFAULT_LVA = Consts.COLOR_DEFAULT_LVA;
 
 	public static final String ARG_CALENDAR_EXAM = "ARG_EXAM_CALENDAR";
 	public static final String ARG_CALENDAR_LVA = "ARG_LVA_CALENDAR";

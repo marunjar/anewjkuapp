@@ -168,11 +168,6 @@ public class MainActivity extends ThemedActivity implements
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
@@ -347,18 +342,9 @@ public class MainActivity extends ThemedActivity implements
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        GoogleAnalytics.getInstance(getApplicationContext())
-                .reportActivityStart(this);
-    }
-
-    @Override
     protected void onStop() {
         super.onStop();
 
-        GoogleAnalytics.getInstance(getApplicationContext())
-                .reportActivityStop(this);
+        Analytics.clearScreen(this);
     }
 }

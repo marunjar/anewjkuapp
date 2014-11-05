@@ -11,6 +11,9 @@ import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
+
+import org.voidsink.anewjkuapp.Analytics;
 import org.voidsink.anewjkuapp.AppUtils;
 import org.voidsink.anewjkuapp.R;
 
@@ -38,5 +41,22 @@ public class ThemedActivity extends FragmentActivity {
     }
 
     protected void initActionBar() {
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        final String screenName = getScreenName();
+        if (screenName != null && !screenName.isEmpty()) {
+            Analytics.sendScreen(this, screenName);
+        }
+    }
+
+    /*
+     * returns screen name for logging activity
+     */
+    protected String getScreenName() {
+        return null;
     }
 }

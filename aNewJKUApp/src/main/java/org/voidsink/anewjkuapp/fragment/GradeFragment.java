@@ -20,6 +20,7 @@ import org.voidsink.anewjkuapp.base.SlidingTabItem;
 import org.voidsink.anewjkuapp.base.SlidingTabsFragment;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -135,4 +136,8 @@ public class GradeFragment extends SlidingTabsFragment implements
 		loadGrades(getActivity());
 	}
 
+    @Override
+    protected String getScreenName() {
+        return Consts.SCREEN_GRADES;
+    }
 }
