@@ -1,6 +1,6 @@
 package org.voidsink.anewjkuapp.dashclock;
 
-import org.voidsink.anewjkuapp.Analytics;
+import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.utils.Consts;
 

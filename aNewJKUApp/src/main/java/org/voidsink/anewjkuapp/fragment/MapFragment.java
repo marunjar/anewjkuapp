@@ -62,7 +62,7 @@ import org.mapsforge.map.rendertheme.InternalRenderTheme;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
 import org.voidsink.anewjkuapp.ImportPoiTask;
 import org.voidsink.anewjkuapp.LocationOverlay;
-import org.voidsink.anewjkuapp.MapUtils;
+import org.voidsink.anewjkuapp.utils.MapUtils;
 import org.voidsink.anewjkuapp.Poi;
 import org.voidsink.anewjkuapp.PoiAdapter;
 import org.voidsink.anewjkuapp.PoiContentContract;

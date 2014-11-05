@@ -5,6 +5,8 @@ import net.fortuna.ical4j.data.CalendarBuilder;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.notification.KusssNotificationBuilder;
+import org.voidsink.anewjkuapp.utils.Analytics;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import android.accounts.Account;
 import android.annotation.TargetApi;

@@ -1,4 +1,4 @@
-package org.voidsink.anewjkuapp;
+package org.voidsink.anewjkuapp.utils;
 
 import android.content.Context;
 import android.util.Log;
@@ -6,6 +6,8 @@ import android.util.Log;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
+import org.voidsink.anewjkuapp.BuildConfig;
+import org.voidsink.anewjkuapp.Globals;
 import org.voidsink.anewjkuapp.Globals.TrackerName;
 
 public class Analytics {

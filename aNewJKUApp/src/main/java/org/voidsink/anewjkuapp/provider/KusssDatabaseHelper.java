@@ -1,6 +1,6 @@
 package org.voidsink.anewjkuapp.provider;
 
-import org.voidsink.anewjkuapp.Analytics;
+import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.PoiContentContract;
 

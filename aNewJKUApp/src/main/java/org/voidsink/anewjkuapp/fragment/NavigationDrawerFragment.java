@@ -22,7 +22,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.voidsink.anewjkuapp.AppUtils;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.DrawerAdapter;
 import org.voidsink.anewjkuapp.DrawerItem;
 import org.voidsink.anewjkuapp.DrawerMenuItem;

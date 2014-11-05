@@ -1,4 +1,4 @@
-package org.voidsink.anewjkuapp;
+package org.voidsink.anewjkuapp.utils;
 
 import org.mapsforge.core.graphics.Bitmap;
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;

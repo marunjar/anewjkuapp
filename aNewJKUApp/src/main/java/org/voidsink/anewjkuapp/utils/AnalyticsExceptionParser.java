@@ -1,4 +1,4 @@
-package org.voidsink.anewjkuapp;
+package org.voidsink.anewjkuapp.utils;
 
 import android.content.Context;
 

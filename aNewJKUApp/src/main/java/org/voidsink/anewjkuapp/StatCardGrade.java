@@ -21,6 +21,7 @@ import org.voidsink.anewjkuapp.base.ThemedCardWithList;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Grade;
 import org.voidsink.anewjkuapp.kusss.GradeType;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import java.text.FieldPosition;
 import java.text.NumberFormat;

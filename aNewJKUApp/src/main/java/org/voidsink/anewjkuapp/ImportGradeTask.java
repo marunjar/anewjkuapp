@@ -13,6 +13,8 @@ import org.voidsink.anewjkuapp.kusss.GradeType;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.notification.GradesChangedNotification;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
+import org.voidsink.anewjkuapp.utils.Analytics;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import android.accounts.Account;
 import android.content.ContentProviderClient;
