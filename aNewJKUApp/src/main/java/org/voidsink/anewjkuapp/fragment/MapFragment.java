@@ -77,20 +77,18 @@ import java.util.List;
 
 public class MapFragment extends BaseFragment implements
         SearchView.OnQueryTextListener {
-    LocationOverlay mMyLocationOverlay;
-    Marker goalLocationOverlay;
-
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
     public static final String MAP_FILE_NAME = "campus.map";
-
     private static final String TAG = MapFragment.class.getSimpleName();
     private static final byte MAX_ZOOM_LEVEL = 19;
-    private static final byte MIN_ZOOM_LEVEL = 15;
+    private static final byte MIN_ZOOM_LEVEL = 14; // full campus fits to screen at zoom level 15
     private static final byte DEFAULT_ZOOM_LEVEL = 17;
 
+    LocationOverlay mMyLocationOverlay;
+    Marker goalLocationOverlay;
     /**
      * The dummy content this fragment is presenting.
      */
@@ -98,8 +96,6 @@ public class MapFragment extends BaseFragment implements
     private TileCache tileCache;
 
     private MapViewPosition mapViewPosition;
-
-    private LayerManager mLayerManager;
 
     private SearchView mSearchView;
 
@@ -144,7 +140,7 @@ public class MapFragment extends BaseFragment implements
     private void doSearch(String query, boolean isExactLocation) {
         Log.i(TAG, "query: " + query);
 
-        List<Poi> pois = new ArrayList<Poi>();
+        List<Poi> pois = new ArrayList<>();
 
         ContentResolver cr = getContext().getContentResolver();
         Uri searchUri = PoiContentContract.CONTENT_URI.buildUpon()
@@ -209,15 +205,12 @@ public class MapFragment extends BaseFragment implements
 
         Cursor c = cr
                 .query(uri, ImportPoiTask.POI_PROJECTION, null, null, null);
-        while (c.moveToNext()) {
-
+        if (c.moveToNext()) {
             String name = c.getString(ImportPoiTask.COLUMN_POI_NAME);
             double lon = c.getDouble(ImportPoiTask.COLUMN_POI_LON);
             double lat = c.getDouble(ImportPoiTask.COLUMN_POI_LAT);
 
             setNewGoal(new LatLong(lat, lon), name);
-
-            break;
         }
         if (mSearchView != null) {
             mSearchView.setQuery("", false);
@@ -239,23 +232,34 @@ public class MapFragment extends BaseFragment implements
         if (latLong != null) {
             this.mMyLocationOverlay.setSnapToLocationEnabled(false);
 
-            // generate Bubble image
-            TextView bubbleView = new TextView(this.getContext());
-            MapUtils.setBackground(bubbleView,
-                    getResources().getDrawable(R.drawable.balloon_overlay));
-            bubbleView.setGravity(Gravity.CENTER);
-            bubbleView.setMaxEms(20);
-            bubbleView.setTextSize(15);
-            bubbleView.setTextColor(Color.BLACK);
-            bubbleView.setText(name);
-            Bitmap bubble = MapUtils.viewToBitmap(getContext(), bubbleView);
-            bubble.incrementRefCount();
+            if (!name.isEmpty()) {
+                // generate Bubble image
+                TextView bubbleView = new TextView(this.getContext());
+                MapUtils.setBackground(bubbleView,
+                        getResources().getDrawable(R.drawable.balloon_overlay));
+                bubbleView.setGravity(Gravity.CENTER);
+                bubbleView.setMaxEms(20);
+                bubbleView.setTextSize(15);
+                bubbleView.setTextColor(Color.BLACK);
+                bubbleView.setText(name);
+                Bitmap bubble = MapUtils.viewToBitmap(getContext(), bubbleView);
+                bubble.incrementRefCount();
 
-            // set new goal
-            this.goalLocationOverlay.setLatLong(latLong);
-            this.goalLocationOverlay.setBitmap(bubble);
-            this.goalLocationOverlay.setHorizontalOffset(0);
-            this.goalLocationOverlay.setVerticalOffset(-bubble.getHeight() / 2);
+                // set new goal
+                this.goalLocationOverlay.setLatLong(latLong);
+                this.goalLocationOverlay.setBitmap(bubble);
+                this.goalLocationOverlay.setHorizontalOffset(0);
+                this.goalLocationOverlay.setVerticalOffset(-bubble.getHeight() / 2);
+            } else {
+                Drawable d = getResources().getDrawable(R.drawable.ic_marker_goal_position);
+                Bitmap b = AndroidGraphicFactory.convertToBitmap(d);
+
+                // set new goal
+                this.goalLocationOverlay.setLatLong(latLong);
+                this.goalLocationOverlay.setBitmap(b);
+                this.goalLocationOverlay.setHorizontalOffset(0);
+                this.goalLocationOverlay.setVerticalOffset(0);
+            }
 
             if (this.mMyLocationOverlay.getLastLocation() != null) {
                 LatLong mLocation = LocationOverlay
@@ -335,7 +339,7 @@ public class MapFragment extends BaseFragment implements
         //this.mapView.getFpsCounter().setVisible(true);
         this.mapView.getMapScaleBar().setVisible(true);
 
-        this.mLayerManager = this.mapView.getLayerManager();
+        final LayerManager mLayerManager = this.mapView.getLayerManager();
 
         this.mapViewPosition = this.mapView.getModel().mapViewPosition;
 
@@ -344,25 +348,22 @@ public class MapFragment extends BaseFragment implements
         this.tileCache = AndroidUtil.createTileCache(this.getActivity(),
                 "mapFragment",
                 this.mapView.getModel().displayModel.getTileSize(), 1.0f, this.mapView.getModel().frameBufferModel.getOverdrawFactor());
-        this.mLayerManager.getLayers().add(createTileRendererLayer(this.tileCache, mapViewPosition,
+        mLayerManager.getLayers().add(createTileRendererLayer(this.tileCache, mapViewPosition,
                 getMapFile(), InternalRenderTheme.OSMARENDER, false));
 
         // overlay with a marker to show the goal position
-        Drawable drawable = getResources().getDrawable(
-                R.drawable.ic_marker_goal_position);
-        Bitmap bitmap = AndroidGraphicFactory.convertToBitmap(drawable);
-        this.goalLocationOverlay = new Marker(null, bitmap, 0, 0);
-        this.mLayerManager.getLayers().add(this.goalLocationOverlay);
+        this.goalLocationOverlay = new Marker(null, null, 0, 0);
+        mLayerManager.getLayers().add(this.goalLocationOverlay);
 
         // overlay with a marker to show the actual position
-        drawable = getResources()
-                .getDrawable(R.drawable.ic_marker_own_position);
-        bitmap = AndroidGraphicFactory.convertToBitmap(drawable);
+        //TODO: find a way to colorize and use R.drawable.ic_marker_position instead of R.drawable.ic_marker_own_position
+        Drawable drawable = getContext().getResources().getDrawable(R.drawable.ic_marker_own_position);
+        Bitmap bitmap = AndroidGraphicFactory.convertToBitmap(drawable);
 
         this.mMyLocationOverlay = new LocationOverlay(this.getActivity(),
                 this.mapViewPosition, bitmap);
         this.mMyLocationOverlay.setSnapToLocationEnabled(false);
-        this.mLayerManager.getLayers().add(this.mMyLocationOverlay);
+        mLayerManager.getLayers().add(this.mMyLocationOverlay);
 
         return rootView;
     }
@@ -385,8 +386,8 @@ public class MapFragment extends BaseFragment implements
         if (center.equals(new LatLong(0, 0))) {
             mvp.setMapPosition(this.getInitialPosition());
         }
-        mvp.setZoomLevelMax((byte) MAX_ZOOM_LEVEL);
-        mvp.setZoomLevelMin((byte) MIN_ZOOM_LEVEL);// full campus fits to screen
+        mvp.setZoomLevelMax(MAX_ZOOM_LEVEL);
+        mvp.setZoomLevelMin(MIN_ZOOM_LEVEL);
         return mvp;
     }
 
@@ -400,7 +401,7 @@ public class MapFragment extends BaseFragment implements
             if (mapFileInfo != null) {
                 if (mapFileInfo.boundingBox.contains(uniteich)) {
                     // Insel im Uniteich
-                    return new MapPosition(uniteich, (byte) DEFAULT_ZOOM_LEVEL);
+                    return new MapPosition(uniteich, DEFAULT_ZOOM_LEVEL);
                 } else if (mapFileInfo.startPosition != null) {
                     // given start position, zoom in range
                     return new MapPosition(mapFileInfo.startPosition,
@@ -411,11 +412,11 @@ public class MapFragment extends BaseFragment implements
                     // center of the map
                     return new MapPosition(
                             mapFileInfo.boundingBox.getCenterPoint(),
-                            (byte) DEFAULT_ZOOM_LEVEL);
+                            DEFAULT_ZOOM_LEVEL);
                 }
             } else {
                 // Insel im Uniteich
-                return new MapPosition(uniteich, (byte) DEFAULT_ZOOM_LEVEL);
+                return new MapPosition(uniteich, DEFAULT_ZOOM_LEVEL);
             }
         }
         throw new IllegalArgumentException("Invalid Map File "
