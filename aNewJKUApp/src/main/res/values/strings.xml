@@ -1,24 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="default_chip_color" translatable="false" >#ff2b7fc2</string>
     <string name="app_name">JKU App</string>
+
+    <string name="title_kusss">KUSSS</string>
+    <string name="title_calendar">Stundenplan</string>
+    <string name="title_exams">Prüfugen</string>
+    <string name="title_grades">Noten</string>
+    <string name="title_lvas">LVAs</string>
+    <string name="title_stats">Statistik</string>
+    <string name="title_campus">Campus</string>
+    <string name="title_mensa">Mensa</string>
+    <string name="title_map">Karte</string>
+    <string name="title_oeh">ÖH</string>
+    <string name="title_oeh_info">Info</string>
+    <string name="title_oeh_rights">Rechte</string>
     <string name="title_oeh_news">ÖH News</string>
     <string name="title_oeh_linz">ÖH Linz</string>
-    <string name="title_kusss">KUSSS</string>
-    <string name="title_mensa">Mensa</string>
-    <string name="title_events">Veranstaltungen</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_about">About</string>
+    <string name="action_settings">Einstellungen</string>
     <string name="action_refresh">Aktualisieren</string>
     <string name="action_changelog">Change Log</string>
-    <string name="action_settings">Einstellungen</string>
     <string name="action_settings_summary">Einstellungen von KUSSS, Benachrichtigungen, &#8230;</string>
-    <string name="action_snap_to_location">TODO: snap to location</string>
+    <string name="action_snap_to_location">Karte zur aktuellen GPS-Position bewegen</string>
+
     <string name="grade_1">Sehr gut</string>
     <string name="grade_2">Gut</string>
     <string name="grade_3">Befriedigend</string>
     <string name="grade_4">Genügend</string>
     <string name="grade_5">Nicht genügend</string>
+    <string name="grade_unknown">Nicht bewertet</string>
+
     <string name="grade_type_interim_ca">Vorläufige Lehrveranstaltungsbeurteilungen</string>
     <string name="grade_type_final_ca">Lehrveranstaltungsbeurteilungen</string>
     <string name="grade_type_recognized_cc">Sonstige Beurteilungen</string>
@@ -27,7 +42,8 @@
     <string name="grade_type_final_exam">Prüfungen</string>
     <string name="grade_type_unknown">TODO</string>
     <string name="grade_type_all">alle Beurteilungen</string>
-    <string name="grade_unknown">Nicht bewertet</string>
+    <string name="grade_type_none_available">keine Noten verfügbar</string>
+
     <string name="notification_sync_running">Daten werden synchronisiert</string>
     <string name="notification_sync_calendar">Termine werden synchronisiert</string>
     <string name="notification_sync_exam">Prüfungen werden synchronisiert</string>
@@ -41,17 +57,18 @@
     <string name="notification_grades_changed" formatted="false">%d neue Note(n) verfügbar</string>
     <string name="notification_poi_changed_title">neue Orte verfügbar</string>
     <string name="notification_poi_changed" formatted="false">%d neue Orte verfügbar</string>
+    <string name="notification_error">"JKU App" Fehler</string>
+    <string name="notification_error_account_is_null">kein Account vorhanden</string>
+    <string name="notification_error_account_not_available">Account konnte nicht validiert werden</string>
+
     <string name="pref_cat_sync_settings">Einstellungen bearbeiten</string>
     <string name="pref_cat_update_password">Passwort aktualisieren</string>
     <string name="pref_cat_kusss_main">KUSSS</string>
-    <string name="pref_cat_app_main">App</string>
-    <string name="pref_cat_app_map">Karte</string>
-    <string name="pref_cat_diagrams">Diagramme</string>
     <string name="pref_kusss_user_title">MatrikelNr</string>
     <string name="pref_kusss_pw_title">Passwort</string>
     <string name="pref_kusss_sync_title">Synchronisieren</string>
-    <string name="pref_kusss_sync_interval_title">Intervall</string>
     <string name="pref_kusss_sync_interval_summary">Intervall in dem die Daten synchronisiert werden</string>
+    <string name="pref_kusss_sync_interval_title">Intervall</string>
     <string name="pref_kusss_notify_title">Benachrichtigen</string>
     <string name="pref_cat_kusss_calendar">Stundenplan</string>
     <string name="pref_kusss_calendar_sync_summary">Alle LVA-Termine vom aktuellen Semester synchronisieren</string>
@@ -62,25 +79,34 @@
     <string name="pref_cat_kusss_exam">Prüfungen</string>
     <string name="pref_kusss_exam_sync_summary">LVA-Prüfungen synchronisieren</string>
     <string name="pref_kusss_exam_notify_summary">Benachrichtigen wenn neue LVA-Prüfungen zu den eigenen LVAs verfügbar sind</string>
-    <string name="pref_app_use_light_theme_summary">Das Ändern dieser Einstellung startet die App beim Verlassen der Einstellungen neu</string>
+    <string name="pref_kusss_exam_get_from_lva_title">Prüfungen nach LVA-Nr laden</string>
+    <string name="pref_kusss_exam_get_from_lva_summary">findet Prüfungen zu LVAs auch aus früheren Semestern, ist dafür aber langsamer ...</string>
+    <string name="pref_cat_app_main">App</string>
     <string name="pref_app_use_light_theme_title">helles Design verwenden</string>
+    <string name="pref_app_use_light_theme_summary">Das Ändern dieser Einstellung startet die App beim Verlassen der Einstellungen neu</string>
+    <string name="pref_cat_app_map">Karte</string>
     <string name="pref_app_map_file_title">eigene Kartendatei</string>
+    <string name="pref_cat_diagrams">Diagramme</string>
     <string name="pref_diagrams_use_lva_bar_chart_summary">Barchart für offene und erledigte LVAs verwenden</string>
     <string name="pref_diagrams_use_lva_bar_chart_title">Diagrammtyp für LVAs</string>
-    <string name="search_poi_title">Suche</string>
-    <string name="search_poi_hint">Hörsaal hier eingeben</string>
+    <string name="pref_cat_mensa">Mensa</string>
+    <string name="pref_mensa_group_menu_by_day_title">Gruppierung</string>
+    <string name="pref_mensa_group_menu_by_day_summary">Menüs in eigenen Tabs je Tag anzeigen (benötigt Neustart)</string>
+
     <string name="group_user">User</string>
     <string name="group_oeh">ÖH</string>
     <string name="group_kusss">KUSSS</string>
     <string name="group_other">Sonstiges</string>
+
     <string name="settings_kusss_title">KUSSS</string>
     <string name="settings_kusss_summary">Einstellungen für KUSSS</string>
     <string name="settings_app_title">App</string>
     <string name="settings_app_summary">Einstellungen für App</string>
-    <string name="drawer_menu_item_icon">Icon</string>
+
     <string name="about_app_summary">Das ist der Versuch eine neue und aktuellere JKU-, KUSSS- bzw. OEH- App zu erstellen.</string>
     <string name="about_libraries_title">verwendete Bibliotheken</string>
     <string name="about_credits_title">Credits</string>
+
     <string name="oeh_info_main_title">Deine ÖH</string>
     <string name="oeh_info_main_summary">Die Österreichische Hochschülerinnen- und Hochschülerschaft ist die gesetzliche Vertretung aller Studierenden. Sie gliedert sich bundesweit in die ÖH-Bundesvertretung (<a href="http://www.oeh.ac.at/">http://www.oeh.ac.at/</a>), in die Universitätsvertretungen an den einzelnen Universitäten, wie beispielsweise die HochschülerInnenschaft an der Johannes Kepler Universität Linz (<a href="http://oeh.jku.at/">http://oeh.jku.at</a>).(</string>
     <string name="oeh_info_jku_title">Deine ÖH an der JKU</string>
@@ -99,13 +125,11 @@
     <string name="oeh_rights_5_summary">Bei allen Prüfungen hast du 4 Wiederholungen, d.h. insgesamt 5 Antritte. Prüfungstechnisch gibt es zwei unterschiedliche Kursformen. Einerseits solche mit "immanentem Prüfungscharakter", d.h. die Note setzt sich aus mehreren Leistungsprüfungen wie z.B. Hausübungen zusammen. Hier kannst du ab der dritten Wiederholung eine kommissionelle Prüfung verlangen; dein Antrag muss vom Vizerektor für Lehre genehmigt werden. Bei allen anderen LVAs und Fachprüfungen muss ab der dritten Wiederholung eine kommissionelle Prüfung abgehalten werden. Kommissionelle Prüfungen sind vom Modus her meist gleich, werden aber von mehreren ProfessorInnen beurteilt. Bei positiven Prüfungen ist eine Wiederholung innerhalb von 6 Monaten möglich, wenn du eine bessere Note haben willst.</string>
     <string name="oeh_rights_6_title">Links</string>
     <string name="oeh_rights_6_summary"><a href="http://www.jku.at/content/e262/e239/e3257">Detaillierte Informationen zum Studienrecht der JKU</a>\n\n<a href="http://www.ris.bka.gv.at/GeltendeFassung.wxe?Abfrage=Bundesnormen&amp;Gesetzesnummer=20002128">Das Universitätsgesetz</a></string>
-    <string name="kusss_service_title">KUSSS Service</string>
-    <string name="sign_in">Einloggen</string>
-    <string name="kusss_provider_name">KUSSS</string>
-    <string name="poi_provider_name">POIs</string>
-    <string name="notification_error">"JKU App" Fehler</string>
-    <string name="notification_error_account_is_null">kein Account vorhanden</string>
-    <string name="notification_error_account_not_available">Account konnte nicht validiert werden</string>
+
+    <string name="map_place_not_found">Ort \'%s\' nicht gefunden</string>
+    <string name="map_search_poi_title">Suche</string>
+    <string name="map_search_poi_hint">Hörsaal hier eingeben</string>
+
     <string name="progress_title">Bitte warten...</string>
     <string name="progress_load_menu">Menüs werden geladen...</string>
     <string name="progress_load_exam">Prüfungen werden geladen...</string>
@@ -114,40 +138,44 @@
     <string name="progress_load_calendar">Termine werden geladen...</string>
     <string name="progress_load_map_files">Karten werden geladen...</string>
     <string name="progress_login">Einloggen...</string>
-    <string name="listview_footer_button">Mehr anzeigen</string>
-    <string name="pref_kusss_exam_get_from_lva_title">Prüfungen nach LVA-Nr laden</string>
-    <string name="pref_kusss_exam_get_from_lva_summary">findet Prüfungen zu LVAs auch aus früheren Semestern, ist dafür aber langsamer ...</string>
-    <string name="extension_mensa_title">Mensa</string>
-    <string name="extension_mensa_description">Zeige das Menü der ausgewählten Mensa für den heutigen Tag an</string>
-    <string name="lva_done">abgeschlossene LVAs</string>
-    <string name="lva_open">offene LVAs</string>
-    <string name="lva_all">alle LVAs</string>
-    <string name="all_terms">alle Semester</string>
-    <string name="calendar_exam">JKU Prüfungen</string>
-    <string name="calendar_lva">JKU LVAs</string>
-    <string name="calendar">Kalender</string>
-    <string name="about_force_logout">Ausloggen</string>
-    <string name="menu_show_in_calendar">in Kalender anzeigen</string>
-    <string name="menu_show_on_map">auf Karte anzeigen</string>
-    <string name="lva_state_open">Offen</string>
-    <string name="lva_state_done">Abgeschlossen</string>
-    <string name="lva_state_all">Gesamt</string>
-    <string name="map_place_not_found">Ort \'%s\' nicht gefunden</string>
-    <string name="menu_exam_register">in KUSSS anzeigen</string>
-    <string name="grade_type_none_available">keine Noten verfügbar</string>
-    <string name="pref_cat_mensa">Mensa</string>
-    <string name="pref_mensa_group_menu_by_day_title">Gruppierung</string>
-    <string name="pref_mensa_group_menu_by_day_summary">Menüs in eigenen Tabs je Tag anzeigen (benötigt Neustart)</string>
-    <string name="menu_not_available">kein Speiseplan verfügbar</string>
-    <string name="today">Heute</string>
-    <string name="tomorrow">Morgen</string>
-    <string name="action_about">About</string>
+
+    <string name="mensa_menu_not_available">kein Speiseplan verfügbar</string>
+    <string name="mensa_menu_today">Heute</string>
+    <string name="mensa_menu_tomorrow">Morgen</string>
     <string name="mensa_title_classic">Classic</string>
     <string name="mensa_title_choice">Choice</string>
     <string name="mensa_title_khg">KHG</string>
     <string name="mensa_title_raab">Raab</string>
     <string name="mensa_title_unknown">eine Mensa</string>
+
     <string name="stat_title_grade_weighted">Noten (gewichtet)</string>
     <string name="stat_title_grade">Noten</string>
     <string name="stat_title_lva">LVAs</string>
+    <string name="stat_lva_open">Offen</string>
+    <string name="stat_lva_done">Abgeschlossen</string>
+    <string name="stat_lva_all">Gesamt</string>
+
+    <string name="lva_group_open">offene LVAs</string>
+    <string name="lva_group_done">abgeschlossene LVAs</string>
+    <string name="lva_group_all">alle LVAs</string>
+
+    <string name="extension_mensa_title">Mensa</string>
+    <string name="extension_mensa_description">Zeige das Menü der ausgewählten Mensa für den heutigen Tag an</string>
+
+    <string name="calendar_title_exam">JKU Prüfungen</string>
+    <string name="calendar_title_lva">JKU LVAs</string>
+    <string name="calendar_title_unknown">Kalender</string>
+    <string name="calendar_action_show_in_calendar">in Kalender anzeigen</string>
+    <string name="calendar_action_show_on_map">auf Karte anzeigen</string>
+
+    <string name="default_chip_color" translatable="false" >#ff2b7fc2</string>
+    <string name="drawer_menu_item_icon">Icon</string>
+    <string name="kusss_service_title">KUSSS Service</string>
+    <string name="sign_in">Einloggen</string>
+    <string name="kusss_provider_name">KUSSS</string>
+    <string name="poi_provider_name">POIs</string>
+    <string name="listview_footer_button">Mehr anzeigen</string>
+    <string name="all_terms">alle Semester</string>
+    <string name="about_force_logout">Ausloggen</string>
+    <string name="menu_exam_register">in KUSSS anzeigen</string>
 </resources>

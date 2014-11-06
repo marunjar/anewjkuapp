@@ -58,7 +58,7 @@ public class DrawerAdapter extends BaseArrayAdapter<DrawerItem> {
 			menuItemHolder = (DrawerMenuItemHolder) convertView.getTag();
 		}
 
-		menuItemHolder.labelView.setText(menuItem.getLabel());
+		menuItemHolder.labelView.setText(menuItem.getLabel(getContext()));
 		menuItemHolder.iconView.setImageResource(menuItem.getIconResID());
 
 		return convertView;
@@ -82,7 +82,7 @@ public class DrawerAdapter extends BaseArrayAdapter<DrawerItem> {
 			menuSectionHolder = (DrawerMenuSectionHolder) convertView.getTag();
 		}
 
-		menuSectionHolder.labelView.setText(menuSection.getLabel());
+		menuSectionHolder.labelView.setText(menuSection.getLabel(getContext()));
 
 		return convertView;
 	}

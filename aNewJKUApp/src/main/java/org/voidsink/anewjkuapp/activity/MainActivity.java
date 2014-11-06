@@ -202,7 +202,7 @@ public class MainActivity extends ThemedActivity implements
                     .findFragmentByTag(ARG_SHOW_FRAGMENT);
         }
         if (f != null) {
-            return NavigationDrawerFragment.getLabel(f.getClass());
+            return NavigationDrawerFragment.getLabel(this, f.getClass());
         }
         return getString(R.string.app_name);
     }

@@ -189,9 +189,9 @@ public class StatCardLva extends ThemedCardWithList {
                 double rangeStep = Math.ceil((rangeTopMax / 10) / 10) * 10;
 
                 // init bar chart
-                addSerieToBarChart(barChart, getContext().getString(R.string.lva_done),
+                addSerieToBarChart(barChart, getContext().getString(R.string.lva_group_done),
                         mDoneEcts, Grade.G1.getColor());
-                addSerieToBarChart(barChart, getContext().getString(R.string.lva_open),
+                addSerieToBarChart(barChart, getContext().getString(R.string.lva_group_open),
                         mOpenEcts, Grade.G3.getColor());
 
                 barChart.setRangeTopMin(this.mTerms.size() * 30);
@@ -221,9 +221,9 @@ public class StatCardLva extends ThemedCardWithList {
                 barChart.setVisibility(View.GONE);
 
                 // init pie chart
-                AppUtils.addSerieToPieChart(pieChart, getContext().getString(R.string.lva_done),
+                AppUtils.addSerieToPieChart(pieChart, getContext().getString(R.string.lva_group_done),
                         mDoneEcts, Grade.G1.getColor());
-                AppUtils.addSerieToPieChart(pieChart, getContext().getString(R.string.lva_open),
+                AppUtils.addSerieToPieChart(pieChart, getContext().getString(R.string.lva_group_open),
                         mOpenEcts, Grade.G3.getColor());
 
                 double missingECTS = minEcts - (mDoneEcts + mOpenEcts);

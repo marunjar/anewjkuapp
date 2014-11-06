@@ -49,9 +49,9 @@ public class MensaFragment extends SlidingTabsFragment {
     private String getTabTitle(final Calendar cal) {
         final Calendar now = Calendar.getInstance();
         if (now.get(Calendar.DATE) == cal.get(Calendar.DATE)) {
-            return getResources().getString(R.string.today);
+            return getResources().getString(R.string.mensa_menu_today);
         } else if (cal.get(Calendar.DATE) - now.get(Calendar.DATE) == 1) {
-            return getResources().getString(R.string.tomorrow);
+            return getResources().getString(R.string.mensa_menu_tomorrow);
         }
         return new SimpleDateFormat("EEEE").format(cal.getTime());
     }

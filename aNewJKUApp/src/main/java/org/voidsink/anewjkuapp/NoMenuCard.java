@@ -24,7 +24,7 @@ public class NoMenuCard extends MenuBaseCard {
         // init header
         CardHeader header = new CardHeader(new ContextThemeWrapper(c, R.style.AppTheme));
 
-        header.setTitle(c.getString(R.string.menu_not_available));
+        header.setTitle(c.getString(R.string.mensa_menu_not_available));
         addCardHeader(header);
     }
 }

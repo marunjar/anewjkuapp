@@ -12,7 +12,6 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
@@ -152,11 +151,11 @@ public final class CalendarUtils {
 	public static String getCalendarName(Context context, String name) {
 		switch (name) {
 		case CalendarUtils.ARG_CALENDAR_EXAM:
-			return context.getString(R.string.calendar_exam);
+			return context.getString(R.string.calendar_title_exam);
 		case CalendarUtils.ARG_CALENDAR_LVA:
-			return context.getString(R.string.calendar_lva);
+			return context.getString(R.string.calendar_title_lva);
 		default:
-			return context.getString(R.string.calendar);
+			return context.getString(R.string.calendar_title_unknown);
 		}
 	}
 }
