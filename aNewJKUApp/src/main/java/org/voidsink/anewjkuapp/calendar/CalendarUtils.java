@@ -5,13 +5,13 @@ import java.util.Map;
 
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import android.accounts.Account;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
@@ -23,8 +23,8 @@ public final class CalendarUtils {
 
 	private static final String TAG = CalendarUtils.class.getSimpleName();
 
-	public static final int COLOR_DEFAULT_EXAM = Color.rgb(240, 149, 0);
-	public static final int COLOR_DEFAULT_LVA = Color.rgb(43, 127, 194);
+	public static final int COLOR_DEFAULT_EXAM = Consts.COLOR_DEFAULT_EXAM;
+	public static final int COLOR_DEFAULT_LVA = Consts.COLOR_DEFAULT_LVA;
 
 	public static final String ARG_CALENDAR_EXAM = "ARG_EXAM_CALENDAR";
 	public static final String ARG_CALENDAR_LVA = "ARG_LVA_CALENDAR";
@@ -151,11 +151,11 @@ public final class CalendarUtils {
 	public static String getCalendarName(Context context, String name) {
 		switch (name) {
 		case CalendarUtils.ARG_CALENDAR_EXAM:
-			return context.getString(R.string.calendar_exam);
+			return context.getString(R.string.calendar_title_exam);
 		case CalendarUtils.ARG_CALENDAR_LVA:
-			return context.getString(R.string.calendar_lva);
+			return context.getString(R.string.calendar_title_lva);
 		default:
-			return "Kalender";
+			return context.getString(R.string.calendar_title_unknown);
 		}
 	}
 }

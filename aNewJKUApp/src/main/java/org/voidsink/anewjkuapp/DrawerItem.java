@@ -1,5 +1,6 @@
 package org.voidsink.anewjkuapp;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 
 public interface DrawerItem {
@@ -7,7 +8,7 @@ public interface DrawerItem {
 	public static final int SECTION_TYPE = 0;
 	public static final int ITEM_TYPE = 1;
 	
-	public String getLabel();
+	public String getLabel(Context c);
 	public int getIconResID();
 	public boolean isSectionHeader();
 	public boolean updateActionBarTitle();

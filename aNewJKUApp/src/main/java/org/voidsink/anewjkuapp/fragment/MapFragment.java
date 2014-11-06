@@ -62,7 +62,7 @@ import org.mapsforge.map.rendertheme.InternalRenderTheme;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
 import org.voidsink.anewjkuapp.ImportPoiTask;
 import org.voidsink.anewjkuapp.LocationOverlay;
-import org.voidsink.anewjkuapp.MapUtils;
+import org.voidsink.anewjkuapp.utils.MapUtils;
 import org.voidsink.anewjkuapp.Poi;
 import org.voidsink.anewjkuapp.PoiAdapter;
 import org.voidsink.anewjkuapp.PoiContentContract;
@@ -70,6 +70,7 @@ import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.base.BaseFragment;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -461,5 +462,8 @@ public class MapFragment extends BaseFragment implements
         return false;
     }
 
-
+    @Override
+    protected String getScreenName() {
+        return Consts.SCREEN_MAP;
+    }
 }

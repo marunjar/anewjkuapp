@@ -8,6 +8,7 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.SlidingTabItem;
 import org.voidsink.anewjkuapp.base.SlidingTabsFragment;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -38,20 +39,25 @@ public class MensaFragment extends SlidingTabsFragment {
                 cal.add(Calendar.DATE, 1);
             } while (cal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY);
         } else {
-            mTabs.add(new SlidingTabItem("Classic", MensaClassicFragment.class, indicatorColor, dividerColor));
-            mTabs.add(new SlidingTabItem("Choice", MensaChoiceFragment.class, indicatorColor, dividerColor));
-            mTabs.add(new SlidingTabItem("KHG", MensaKHGFragment.class, indicatorColor, dividerColor));
-            mTabs.add(new SlidingTabItem("Raab", MensaRaabFragment.class, indicatorColor, dividerColor));
+            mTabs.add(new SlidingTabItem(getString(R.string.mensa_title_classic), MensaClassicFragment.class, indicatorColor, dividerColor));
+            mTabs.add(new SlidingTabItem(getString(R.string.mensa_title_choice), MensaChoiceFragment.class, indicatorColor, dividerColor));
+            mTabs.add(new SlidingTabItem(getString(R.string.mensa_title_khg), MensaKHGFragment.class, indicatorColor, dividerColor));
+            mTabs.add(new SlidingTabItem(getString(R.string.mensa_title_raab), MensaRaabFragment.class, indicatorColor, dividerColor));
         }
     }
 
     private String getTabTitle(final Calendar cal) {
         final Calendar now = Calendar.getInstance();
         if (now.get(Calendar.DATE) == cal.get(Calendar.DATE)) {
-            return getResources().getString(R.string.today);
+            return getResources().getString(R.string.mensa_menu_today);
         } else if (cal.get(Calendar.DATE) - now.get(Calendar.DATE) == 1) {
-            return getResources().getString(R.string.tomorrow);
+            return getResources().getString(R.string.mensa_menu_tomorrow);
         }
         return new SimpleDateFormat("EEEE").format(cal.getTime());
+    }
+
+    @Override
+    protected String getScreenName() {
+        return Consts.SCREEN_MENSA;
     }
 }

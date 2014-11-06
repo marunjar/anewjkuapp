@@ -1,25 +1,25 @@
 package org.voidsink.anewjkuapp;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 
-public class DrawerMenuSection implements DrawerItem{
+import org.voidsink.anewjkuapp.base.BaseDrawerItem;
 
-	private String label;
+public class DrawerMenuSection extends BaseDrawerItem {
 
-	public DrawerMenuSection(String label){
-		this.label = label;
-	}
-	
-	@Override
-	public String getLabel() {
-		return this.label;
-	}
-	
-	@Override
-	public int getIconResID() {
-		return 0;
-	}
-	
+    public DrawerMenuSection(String label) {
+        super(label);
+    }
+
+    public DrawerMenuSection(int labelResId) {
+        super(labelResId);
+    }
+
+    @Override
+    public int getIconResID() {
+        return 0;
+    }
+
 	@Override
 	public boolean isSectionHeader() {
 		return true;

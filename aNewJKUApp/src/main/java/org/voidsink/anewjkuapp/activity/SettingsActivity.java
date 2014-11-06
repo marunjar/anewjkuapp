@@ -18,15 +18,15 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
-import org.voidsink.anewjkuapp.AppUtils;
 import org.voidsink.anewjkuapp.ImportExamTask;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.utils.Analytics;
+import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.List;
-import java.util.Random;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -63,6 +63,8 @@ public class SettingsActivity extends PreferenceActivity implements
     protected void onStart() {
         super.onStart();
 
+        Analytics.sendScreen(this, Consts.SCREEN_SETTINGS);
+
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
     }
@@ -73,12 +75,6 @@ public class SettingsActivity extends PreferenceActivity implements
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(getString(R.string.action_settings));
         }
-    }
-
-    protected boolean findMapFile() {
-        // TODO Auto-generated method stub
-        Toast.makeText(getApplication(), "TODO", Toast.LENGTH_SHORT).show();
-        return false;
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -121,12 +117,8 @@ public class SettingsActivity extends PreferenceActivity implements
     protected void onStop() {
         super.onStop();
 
-        Log.i(getClass().getSimpleName(), "1");
-
         PreferenceManager.getDefaultSharedPreferences(this)
                 .unregisterOnSharedPreferenceChangeListener(this);
-
-        Log.i(getClass().getSimpleName(), "2");
 
         if (mThemeChanged) {
             AlarmManager alm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
@@ -134,8 +126,6 @@ public class SettingsActivity extends PreferenceActivity implements
 
             Process.killProcess(Process.myPid());
         }
-
-        Log.i(getClass().getSimpleName(), "3");
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -154,6 +144,22 @@ public class SettingsActivity extends PreferenceActivity implements
             }
         }
         return super.isValidFragment(fragmentName);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(new CalligraphyContextWrapper(newBase));
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -207,19 +213,4 @@ public class SettingsActivity extends PreferenceActivity implements
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(new CalligraphyContextWrapper(newBase));
-    }
 }

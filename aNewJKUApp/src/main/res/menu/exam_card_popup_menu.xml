@@ -5,10 +5,4 @@
         android:title="@string/menu_exam_register"
         android:orderInCategory="100"
         android:showAsAction="always" />
-    <!--
-    <item android:id="@+id/show_in_calendar"
-        android:title="@string/menu_show_in_calendar"
-        android:orderInCategory="200"
-        android:showAsAction="always" />
-    -->
 </menu>

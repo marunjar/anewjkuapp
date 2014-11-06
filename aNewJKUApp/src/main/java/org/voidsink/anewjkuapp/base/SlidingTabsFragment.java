@@ -26,7 +26,7 @@ public abstract class SlidingTabsFragment extends BaseFragment {
      * {@link org.voidsink.anewjkuapp.view.SlidingTabLayout}.
      */
 
-    static final String LOG_TAG = "SlidingTabsColorsFragment";
+    static final String TAG = SlidingTabsFragment.class.getSimpleName();
 
     /**
      * A custom {@link android.support.v4.view.ViewPager} title strip which looks much like Tabs present in Android v4.0 and

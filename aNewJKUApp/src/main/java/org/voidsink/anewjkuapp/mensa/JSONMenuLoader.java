@@ -12,6 +12,7 @@ import java.net.URL;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.voidsink.anewjkuapp.R;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -70,18 +71,18 @@ public abstract class JSONMenuLoader implements MenuLoader {
 		return result;
 	}
 
-	private String getLocation(int nr) {
+	private String getLocation(Context c, int nr) {
 		switch (nr) {
 		case 1:
-			return "Classic";
+			return c.getString(R.string.mensa_title_classic);
 		case 2:
-			return "Choice";
+			return c.getString(R.string.mensa_title_choice);
 		case 3:
-			return "KHG";
+			return c.getString(R.string.mensa_title_khg);
 		case 4:
-			return "Raab";
+			return c.getString(R.string.mensa_title_raab);
 		default:
-			return "unknown";
+			return c.getString(R.string.mensa_title_unknown);
 		}
 	}
 
@@ -94,7 +95,7 @@ public abstract class JSONMenuLoader implements MenuLoader {
 				if (jsonData.getString("success").equals("true")) {
 					JSONObject jsonMensa = jsonData.getJSONObject("result");
 
-					mensa = new Mensa(getLocation(Integer.parseInt(jsonMensa
+					mensa = new Mensa(getLocation(context, Integer.parseInt(jsonMensa
 							.getString("location"))));
 					JSONArray jsonDays = jsonMensa.getJSONArray("offers");
 					for (int i = 0; i < jsonDays.length(); i++) {

@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.voidsink.anewjkuapp.Analytics;
-import org.voidsink.anewjkuapp.AppUtils;
+import org.voidsink.anewjkuapp.utils.Analytics;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.ImportCalendarTask;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
@@ -14,6 +14,7 @@ import org.voidsink.anewjkuapp.calendar.CalendarCard;
 import org.voidsink.anewjkuapp.calendar.CalendarCardArrayAdapter;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
+import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.anewjkuapp.view.CalendarCardListView;
 
 import android.accounts.Account;
@@ -259,4 +260,9 @@ public class CalendarFragment extends BaseFragment {
 			loadData();
 		}
 	}
+
+    @Override
+    protected String getScreenName() {
+        return Consts.SCREEN_CALENDAR;
+    }
 }

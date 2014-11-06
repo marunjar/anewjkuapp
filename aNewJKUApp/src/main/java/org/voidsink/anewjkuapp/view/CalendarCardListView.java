@@ -21,7 +21,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  */
 public class CalendarCardListView extends StickyListHeadersListView {
 
-    protected static String TAG = "CardListView";
+    protected static String TAG = CalendarCardListView.class.getSimpleName();
 
     /**
      * Stycky Card Array Adapter

@@ -1,7 +1,5 @@
 package org.voidsink.anewjkuapp.kusss;
 
-import android.annotation.SuppressLint;
-
 import org.voidsink.anewjkuapp.R;
 
 public enum LvaState {
@@ -16,7 +14,20 @@ public enum LvaState {
         case ALL:
             return R.string.lva_state_all;
 		default:
-			return R.string.grade_type_unknown;
+			return R.string.lva_state_unknown;
 		}
 	}
+
+    public int getStringResIDExt() {
+        switch (this) {
+            case OPEN:
+                return R.string.lva_state_ext_open;
+            case DONE:
+                return R.string.lva_state_ext_done;
+            case ALL:
+                return R.string.lva_state_ext_all;
+            default:
+                return R.string.lva_state_unknown;
+        }
+    }
 }

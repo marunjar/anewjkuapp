@@ -1,4 +1,4 @@
-package org.voidsink.anewjkuapp;
+package org.voidsink.anewjkuapp.utils;
 
 import android.content.Context;
 import android.util.Log;
@@ -6,6 +6,8 @@ import android.util.Log;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
+import org.voidsink.anewjkuapp.BuildConfig;
+import org.voidsink.anewjkuapp.Globals;
 import org.voidsink.anewjkuapp.Globals.TrackerName;
 
 public class Analytics {
@@ -70,9 +72,23 @@ public class Analytics {
 
     // }}
 
-    // {{ Views
+    // {{ Screens
 
-    public static void viewPreferences(Context c) {
+    public static void sendScreen(Context c, String screenName) {
+        Tracker t = getAppTracker(c);
+        if (t != null) {
+            // output some debug info
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, String.format("sendScreen: %s", screenName));
+            }
+
+            t.setScreenName(screenName);
+            t.send(new HitBuilders.ScreenViewBuilder().build());
+        }
+    }
+
+    public static void clearScreen(Context c) {
+        sendScreen(c, null);
     }
 
     // }}

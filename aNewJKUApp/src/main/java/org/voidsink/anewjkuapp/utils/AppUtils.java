@@ -1,4 +1,4 @@
-package org.voidsink.anewjkuapp;
+package org.voidsink.anewjkuapp.utils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import org.voidsink.anewjkuapp.ImportPoiTask;
+import org.voidsink.anewjkuapp.KusssAuthenticator;
+import org.voidsink.anewjkuapp.PreferenceWrapper;
+import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.fragment.MapFragment;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Grade;

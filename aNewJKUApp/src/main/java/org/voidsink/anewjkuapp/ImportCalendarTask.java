@@ -27,8 +27,9 @@ import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.notification.CalendarChangedNotification;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
+import org.voidsink.anewjkuapp.utils.Analytics;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;

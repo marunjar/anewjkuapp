@@ -2,6 +2,7 @@ package org.voidsink.anewjkuapp.fragment;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
@@ -33,4 +34,9 @@ public class OehRightsFragment extends BaseFragment {
 
 		return view;
 	}
+
+    @Override
+    protected String getScreenName() {
+        return Consts.SCREEN_OEH_RIGHTS;
+    }
 }

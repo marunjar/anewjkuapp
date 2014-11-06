@@ -22,7 +22,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  */
 public class ExamCardListView extends StickyListHeadersListView {
 
-    protected static String TAG = "CardListView";
+    protected static String TAG = ExamCardListView.class.getSimpleName();
 
     /**
      * Stycky Card Array Adapter

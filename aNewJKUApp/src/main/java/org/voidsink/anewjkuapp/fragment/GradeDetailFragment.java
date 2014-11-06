@@ -8,7 +8,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.voidsink.anewjkuapp.AppUtils;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.GradeCard;
 import org.voidsink.anewjkuapp.GradeCardArrayAdapter;
 import org.voidsink.anewjkuapp.R;
@@ -17,7 +17,6 @@ import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.view.GradeCardListView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import it.gmariotti.cardslib.library.internal.Card;

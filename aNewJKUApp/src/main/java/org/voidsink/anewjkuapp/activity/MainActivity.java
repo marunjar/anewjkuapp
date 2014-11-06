@@ -19,13 +19,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.android.gms.analytics.GoogleAnalytics;
-
 import net.fortuna.ical4j.data.CalendarBuilder;
 
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
-import org.voidsink.anewjkuapp.Analytics;
-import org.voidsink.anewjkuapp.AppUtils;
+import org.voidsink.anewjkuapp.utils.Analytics;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.DrawerItem;
 import org.voidsink.anewjkuapp.ImportCalendarTask;
 import org.voidsink.anewjkuapp.ImportExamTask;
@@ -89,8 +87,6 @@ public class MainActivity extends ThemedActivity implements
         if (fragment != null) {
             outState.putString(ARG_SHOW_FRAGMENT, fragment.getClass().getName());
         }
-
-        // Log.i(TAG, "onSaveInstanceState");
     }
 
     @Override
@@ -104,8 +100,6 @@ public class MainActivity extends ThemedActivity implements
         AndroidGraphicFactory.createInstance(this.getApplication());
 
         setContentView(R.layout.activity_main);
-
-        // Log.i(TAG, "onCreate");
 
         mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.navigation_drawer);
@@ -168,11 +162,6 @@ public class MainActivity extends ThemedActivity implements
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
@@ -183,7 +172,6 @@ public class MainActivity extends ThemedActivity implements
     @SuppressWarnings("unchecked")
     private Fragment attachFragmentByClassName(final String clazzname) {
         if (clazzname != null && !clazzname.isEmpty()) {
-            // Log.i(TAG, "attach " + clazzname);
             try {
                 Class<?> clazz = getClassLoader().loadClass(clazzname);
                 if (Fragment.class.isAssignableFrom(clazz)) {
@@ -214,7 +202,7 @@ public class MainActivity extends ThemedActivity implements
                     .findFragmentByTag(ARG_SHOW_FRAGMENT);
         }
         if (f != null) {
-            return NavigationDrawerFragment.getLabel(f.getClass());
+            return NavigationDrawerFragment.getLabel(this, f.getClass());
         }
         return getString(R.string.app_name);
     }
@@ -347,18 +335,9 @@ public class MainActivity extends ThemedActivity implements
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        GoogleAnalytics.getInstance(getApplicationContext())
-                .reportActivityStart(this);
-    }
-
-    @Override
     protected void onStop() {
         super.onStop();
 
-        GoogleAnalytics.getInstance(getApplicationContext())
-                .reportActivityStop(this);
+        Analytics.clearScreen(this);
     }
 }

@@ -14,7 +14,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.voidsink.anewjkuapp.Analytics;
+import org.voidsink.anewjkuapp.utils.Analytics;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;

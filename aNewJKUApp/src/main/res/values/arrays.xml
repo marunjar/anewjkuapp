@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="pref_kusss_sync_interval_entries">
-        <item name="1h">Jede Stunde</item>
-        <item name="1d">Jeden Tag</item>
-        <item name="3.5d">Zweimal Wöchentlich</item>
-        <item name="7d">Wöchentlich</item>
+        <item name="1h">@string/interval_1h</item>
+        <item name="1d">@string/interval_1d</item>
+        <item name="3.5d">@string/interval_3.5d</item>
+        <item name="7d">@string/interval_7d</item>
     </array>
     
     <string-array name="pref_kusss_sync_interval_values" translatable="false" >

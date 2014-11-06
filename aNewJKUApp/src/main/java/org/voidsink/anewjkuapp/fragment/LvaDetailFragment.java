@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.voidsink.anewjkuapp.AppUtils;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.LvaCard;
 import org.voidsink.anewjkuapp.LvaCardArrayAdapter;
 import org.voidsink.anewjkuapp.R;

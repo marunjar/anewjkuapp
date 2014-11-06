@@ -6,11 +6,9 @@ import android.content.UriMatcher;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
-import org.voidsink.anewjkuapp.AppUtils;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.LvaTabItem;
 import org.voidsink.anewjkuapp.R;
@@ -21,6 +19,7 @@ import org.voidsink.anewjkuapp.base.SlidingTabsFragment;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -144,4 +143,8 @@ public class LvaFragment2 extends SlidingTabsFragment implements
 		loadLvas(getActivity());
 	}
 
+    @Override
+    protected String getScreenName() {
+        return Consts.SCREEN_LVAS;
+    }
 }
