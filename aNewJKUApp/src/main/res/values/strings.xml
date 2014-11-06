@@ -4,27 +4,27 @@
 
     <string name="title_kusss">KUSSS</string>
     <string name="title_calendar">Stundenplan</string>
-    <string name="title_exams">Prüfugen</string>
+    <string name="title_exams">Prüfungen</string>
     <string name="title_grades">Noten</string>
     <string name="title_lvas">LVAs</string>
     <string name="title_stats">Statistik</string>
     <string name="title_campus">Campus</string>
     <string name="title_mensa">Mensa</string>
     <string name="title_map">Karte</string>
-    <string name="title_oeh">ÖH</string>
+    <string name="title_oeh" translatable="false">ÖH</string>
     <string name="title_oeh_info">Info</string>
     <string name="title_oeh_rights">Rechte</string>
     <string name="title_oeh_news">ÖH News</string>
-    <string name="title_oeh_linz">ÖH Linz</string>
+    <string name="title_oeh_linz" translatable="false">ÖH Linz</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">Navigation anzeigen</string>
+    <string name="navigation_drawer_close">Navigation ausblenden</string>
 
     <string name="action_about">About</string>
     <string name="action_settings">Einstellungen</string>
     <string name="action_refresh">Aktualisieren</string>
     <string name="action_changelog">Change Log</string>
-    <string name="action_settings_summary">Einstellungen von KUSSS, Benachrichtigungen, &#8230;</string>
+    <string name="action_settings_summary">Einstellungen von KUSSS, Benachrichtigungen, ...</string>
     <string name="action_snap_to_location">Karte zur aktuellen GPS-Position bewegen</string>
 
     <string name="grade_1">Sehr gut</string>
@@ -64,7 +64,7 @@
     <string name="pref_cat_sync_settings">Einstellungen bearbeiten</string>
     <string name="pref_cat_update_password">Passwort aktualisieren</string>
     <string name="pref_cat_kusss_main">KUSSS</string>
-    <string name="pref_kusss_user_title">MatrikelNr</string>
+    <string name="pref_kusss_user_title">Matrikelnummer</string>
     <string name="pref_kusss_pw_title">Passwort</string>
     <string name="pref_kusss_sync_title">Synchronisieren</string>
     <string name="pref_kusss_sync_interval_summary">Intervall in dem die Daten synchronisiert werden</string>
@@ -103,30 +103,30 @@
     <string name="settings_app_title">App</string>
     <string name="settings_app_summary">Einstellungen für App</string>
 
-    <string name="about_app_summary">Das ist der Versuch eine neue und aktuellere JKU-, KUSSS- bzw. OEH- App zu erstellen.</string>
+    <string name="about_app_summary">Das ist eine neue JKU, KUSSS, ÖH, ... App für Studenten der JKU Linz. Die App ist noch in Entwicklung und die am meisten benötigten Funktionen sind bereits implementiert. Wenn Sie Fragen, Probleme oder Wünsche haben, schreiben Sie eine E-Mail an die Entwickler! Besitzer eines GitHub-Accounts können auch einfach hier posten: https://github.com/marunjar/anewjkuapp/issues </string>
     <string name="about_libraries_title">verwendete Bibliotheken</string>
     <string name="about_credits_title">Credits</string>
 
-    <string name="oeh_info_main_title">Deine ÖH</string>
-    <string name="oeh_info_main_summary">Die Österreichische Hochschülerinnen- und Hochschülerschaft ist die gesetzliche Vertretung aller Studierenden. Sie gliedert sich bundesweit in die ÖH-Bundesvertretung (<a href="http://www.oeh.ac.at/">http://www.oeh.ac.at/</a>), in die Universitätsvertretungen an den einzelnen Universitäten, wie beispielsweise die HochschülerInnenschaft an der Johannes Kepler Universität Linz (<a href="http://oeh.jku.at/">http://oeh.jku.at</a>).(</string>
-    <string name="oeh_info_jku_title">Deine ÖH an der JKU</string>
-    <string name="oeh_info_jku_summary">An der Johannes Kepler Universität besteht die ÖH aus der Universitätsvertretung, den zugeordneten Referaten, wie beispielsweise dem ÖH Sozialreferat, den Fakultätsvertretungen und den Studienvertretungen. Unsere Aufgabenfelder sind Beratung, Information, Service und Vertretung. In diesem Sinne stehen wir dir bei Problemen im Studium mit Rat und Tat zur Seite, informieren dich über aktuelle Ereignisse an der Universität und vertreten die Studierenden in den Gremien der Universität.</string>
-    <string name="oeh_info_contact_title">Kontakt</string>
-    <string name="oeh_info_contact_summary">Wenn du Fragen und Anregungen hast, kannst du dich jederzeit unter <a href="mailto:oeh@oeh.jku.at">oeh@oeh.jku.at</a> an uns wenden!</string>
-    <string name="oeh_rights_1_title">Deine Rechte und Pflichten</string>
-    <string name="oeh_rights_1_summary">Studierende an der JKU haben bestimmte Rechte und Pflichten. Das Studienrecht ist im Universitätsgesetz (UG 2002) und in der Satzung der JKU (Studienrecht) geregelt.</string>
-    <string name="oeh_rights_2_title">Was passiert wenn ich beim Schummeln erwischt werde?</string>
-    <string name="oeh_rights_2_summary">Wenn du unerlaubte Hilfsmittel benützt, wird deine Prüfung für ungültig erklärt und auf deine Antrittsmöglichkeiten angerechnet. Das bedeutet, dass du dadurch einen Antritt verspielen kannst.</string>
-    <string name="oeh_rights_3_title">Wie lange darf ich in schriftliche Klausuren Einsicht nehmen?</string>
-    <string name="oeh_rights_3_summary">Du hast das Recht innerhalb von sechs Monaten nach Ablegung einer Prüfung in deine Arbeit Einsicht zu nehmen. Weiters darfst du jede von dir abgelegte Prüfung inkl. Beurteilungsunterlagen und Prüfungsprotokolle kopieren (außer bei Multiple-Choice Klausuren).</string>
-    <string name="oeh_rights_4_title">Ist die Festlegung einer höheren Mindestpunktezahl als 50% bei Klausuren zulässig?</string>
-    <string name="oeh_rights_4_summary">Ja. Grundsätzlich obliegt es dem/der LVA-LeiterIn den Schwierigkeitsgrad und die Mindestanforderungen für eine positive Absolvierung festzulegen, sofern im Studienplan keine abweichenden Bestimmungen enthalten sind.</string>
-    <string name="oeh_rights_5_title">Wie oft darf ich eine LVA wiederholen?</string>
-    <string name="oeh_rights_5_summary">Bei allen Prüfungen hast du 4 Wiederholungen, d.h. insgesamt 5 Antritte. Prüfungstechnisch gibt es zwei unterschiedliche Kursformen. Einerseits solche mit "immanentem Prüfungscharakter", d.h. die Note setzt sich aus mehreren Leistungsprüfungen wie z.B. Hausübungen zusammen. Hier kannst du ab der dritten Wiederholung eine kommissionelle Prüfung verlangen; dein Antrag muss vom Vizerektor für Lehre genehmigt werden. Bei allen anderen LVAs und Fachprüfungen muss ab der dritten Wiederholung eine kommissionelle Prüfung abgehalten werden. Kommissionelle Prüfungen sind vom Modus her meist gleich, werden aber von mehreren ProfessorInnen beurteilt. Bei positiven Prüfungen ist eine Wiederholung innerhalb von 6 Monaten möglich, wenn du eine bessere Note haben willst.</string>
-    <string name="oeh_rights_6_title">Links</string>
-    <string name="oeh_rights_6_summary"><a href="http://www.jku.at/content/e262/e239/e3257">Detaillierte Informationen zum Studienrecht der JKU</a>\n\n<a href="http://www.ris.bka.gv.at/GeltendeFassung.wxe?Abfrage=Bundesnormen&amp;Gesetzesnummer=20002128">Das Universitätsgesetz</a></string>
+    <string name="oeh_info_main_title" translatable="false">Deine ÖH</string>
+    <string name="oeh_info_main_summary" translatable="false">Die Österreichische Hochschülerinnen- und Hochschülerschaft ist die gesetzliche Vertretung aller Studierenden. Sie gliedert sich bundesweit in die ÖH-Bundesvertretung (<a href="http://www.oeh.ac.at/">http://www.oeh.ac.at/</a>), in die Universitätsvertretungen an den einzelnen Universitäten, wie beispielsweise die HochschülerInnenschaft an der Johannes Kepler Universität Linz (<a href="http://oeh.jku.at/">http://oeh.jku.at</a>).(</string>
+    <string name="oeh_info_jku_title" translatable="false">Deine ÖH an der JKU</string>
+    <string name="oeh_info_jku_summary" translatable="false">An der Johannes Kepler Universität besteht die ÖH aus der Universitätsvertretung, den zugeordneten Referaten, wie beispielsweise dem ÖH Sozialreferat, den Fakultätsvertretungen und den Studienvertretungen. Unsere Aufgabenfelder sind Beratung, Information, Service und Vertretung. In diesem Sinne stehen wir dir bei Problemen im Studium mit Rat und Tat zur Seite, informieren dich über aktuelle Ereignisse an der Universität und vertreten die Studierenden in den Gremien der Universität.</string>
+    <string name="oeh_info_contact_title" translatable="false">Kontakt</string>
+    <string name="oeh_info_contact_summary" translatable="false">Wenn du Fragen und Anregungen hast, kannst du dich jederzeit unter <a href="mailto:oeh@oeh.jku.at">oeh@oeh.jku.at</a> an uns wenden!</string>
+    <string name="oeh_rights_1_title" translatable="false">Deine Rechte und Pflichten</string>
+    <string name="oeh_rights_1_summary" translatable="false">Studierende an der JKU haben bestimmte Rechte und Pflichten. Das Studienrecht ist im Universitätsgesetz (UG 2002) und in der Satzung der JKU (Studienrecht) geregelt.</string>
+    <string name="oeh_rights_2_title" translatable="false">Was passiert wenn ich beim Schummeln erwischt werde?</string>
+    <string name="oeh_rights_2_summary" translatable="false">Wenn du unerlaubte Hilfsmittel benützt, wird deine Prüfung für ungültig erklärt und auf deine Antrittsmöglichkeiten angerechnet. Das bedeutet, dass du dadurch einen Antritt verspielen kannst.</string>
+    <string name="oeh_rights_3_title" translatable="false">Wie lange darf ich in schriftliche Klausuren Einsicht nehmen?</string>
+    <string name="oeh_rights_3_summary" translatable="false">Du hast das Recht innerhalb von sechs Monaten nach Ablegung einer Prüfung in deine Arbeit Einsicht zu nehmen. Weiters darfst du jede von dir abgelegte Prüfung inkl. Beurteilungsunterlagen und Prüfungsprotokolle kopieren (außer bei Multiple-Choice Klausuren).</string>
+    <string name="oeh_rights_4_title" translatable="false">Ist die Festlegung einer höheren Mindestpunktezahl als 50% bei Klausuren zulässig?</string>
+    <string name="oeh_rights_4_summary" translatable="false">Ja. Grundsätzlich obliegt es dem/der LVA-LeiterIn den Schwierigkeitsgrad und die Mindestanforderungen für eine positive Absolvierung festzulegen, sofern im Studienplan keine abweichenden Bestimmungen enthalten sind.</string>
+    <string name="oeh_rights_5_title" translatable="false">Wie oft darf ich eine LVA wiederholen?</string>
+    <string name="oeh_rights_5_summary" translatable="false">Bei allen Prüfungen hast du 4 Wiederholungen, d.h. insgesamt 5 Antritte. Prüfungstechnisch gibt es zwei unterschiedliche Kursformen. Einerseits solche mit "immanentem Prüfungscharakter", d.h. die Note setzt sich aus mehreren Leistungsprüfungen wie z.B. Hausübungen zusammen. Hier kannst du ab der dritten Wiederholung eine kommissionelle Prüfung verlangen; dein Antrag muss vom Vizerektor für Lehre genehmigt werden. Bei allen anderen LVAs und Fachprüfungen muss ab der dritten Wiederholung eine kommissionelle Prüfung abgehalten werden. Kommissionelle Prüfungen sind vom Modus her meist gleich, werden aber von mehreren ProfessorInnen beurteilt. Bei positiven Prüfungen ist eine Wiederholung innerhalb von 6 Monaten möglich, wenn du eine bessere Note haben willst.</string>
+    <string name="oeh_rights_6_title" translatable="false">Links</string>
+    <string name="oeh_rights_6_summary" translatable="false"><a href="http://www.jku.at/content/e262/e239/e3257">Detaillierte Informationen zum Studienrecht der JKU</a>\n\n<a href="http://www.ris.bka.gv.at/GeltendeFassung.wxe?Abfrage=Bundesnormen&amp;Gesetzesnummer=20002128">Das Universitätsgesetz</a></string>
 
-    <string name="map_place_not_found">Ort \'%s\' nicht gefunden</string>
+    <string name="map_place_not_found" formatted="false">Ort \'%s\' nicht gefunden</string>
     <string name="map_search_poi_title">Suche</string>
     <string name="map_search_poi_hint">Hörsaal hier eingeben</string>
 
@@ -142,10 +142,10 @@
     <string name="mensa_menu_not_available">kein Speiseplan verfügbar</string>
     <string name="mensa_menu_today">Heute</string>
     <string name="mensa_menu_tomorrow">Morgen</string>
-    <string name="mensa_title_classic">Classic</string>
-    <string name="mensa_title_choice">Choice</string>
-    <string name="mensa_title_khg">KHG</string>
-    <string name="mensa_title_raab">Raab</string>
+    <string name="mensa_title_classic" translatable="false">Classic</string>
+    <string name="mensa_title_choice" translatable="false">Choice</string>
+    <string name="mensa_title_khg" translatable="false">KHG</string>
+    <string name="mensa_title_raab" translatable="false">Raab</string>
     <string name="mensa_title_unknown">eine Mensa</string>
 
     <string name="stat_title_grade_weighted">Noten (gewichtet)</string>
@@ -162,8 +162,8 @@
     <string name="extension_mensa_title">Mensa</string>
     <string name="extension_mensa_description">Zeige das Menü der ausgewählten Mensa für den heutigen Tag an</string>
 
-    <string name="calendar_title_exam">JKU Prüfungen</string>
-    <string name="calendar_title_lva">JKU LVAs</string>
+    <string name="calendar_title_exam">Prüfungen</string>
+    <string name="calendar_title_lva">LVAs</string>
     <string name="calendar_title_unknown">Kalender</string>
     <string name="calendar_action_show_in_calendar">in Kalender anzeigen</string>
     <string name="calendar_action_show_on_map">auf Karte anzeigen</string>
