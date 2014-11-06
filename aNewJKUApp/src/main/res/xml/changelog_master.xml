@@ -4,25 +4,33 @@
 		    + added
 		    - fixed
 		    * changed -->
+    <release version="0.23" versioncode="140023">
+        <change>- KUSSS: Fehler beim Laden der Semester</change>
+        <change>- Mensa: Menü von Freitag wurde nicht angezeigt</change>
+        <change>* Map: größere Karte damit auch PE001, PE002 und PE003 zu finden sind</change>
+        <change>* App: Material Design</change>
+        <change>* App: neue Icons</change>
+        <change>* App: dunkles Design ist wieder aktivierbar</change>
+    </release>
     <release version="0.22" versioncode="140022">
-        <change>- Fehler beim Laden von Noten behoben</change>
-        <change>- Fehler beim Laden von Prüfungen behoben</change>
-        <change>- Fehler beim Zugriff auf KUSSS behoben</change>
+        <change>- KUSSS: Fehler beim Laden von Noten behoben</change>
+        <change>- KUSSS: Fehler beim Laden von Prüfungen behoben</change>
+        <change>- KUSSS: Fehler beim Zugriff auf KUSSS behoben</change>
     </release>
     <release version="0.21" versioncode="140021">
         <change>+ Termine: Ort am Campus anzeigen lassen</change>
         <change>+ Mensa: Menüs optional nach Tagen gruppieren</change>
         <change>+ Stats: LVAs, Noten</change>
-        <change>- Zugriffsverletzung beim Laden von LVAs und Prüfungen</change>
-        <change>* neues Layout</change>
+        <change>- KUSSS: Zugriffsverletzung beim Laden von LVAs und Prüfungen</change>
+        <change>* App: neues Layout</change>
     </release>
     <release version="0.19" versioncode="140019">
-        <change>- Zugriffsverletzung beim Aktualisieren der Kalender</change>
-        <change>* Unterstützung für alle Android Versionen vor ICS entfernt</change>
-        <change>* neues Layout</change>
+        <change>- KUSSS: Zugriffsverletzung beim Aktualisieren der Kalender</change>
+        <change>* App: Unterstützung für alle Android Versionen vor ICS entfernt</change>
+        <change>* App: neues Layout</change>
     </release>
 	<release version="0.18" versioncode="140018">
-	   <change>- Semester wurde bei Sprachkursen nicht richtig ausgelesen</change>
+	   <change>- KUSSS: Semester wurde bei Sprachkursen nicht richtig ausgelesen</change>
 	</release>
     <release version="0.17" versioncode="140017">
 	   <change>- nach der Ersten Anmeldung fehlten Kalender</change>
