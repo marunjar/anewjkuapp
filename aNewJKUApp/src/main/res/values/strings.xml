@@ -125,6 +125,7 @@
     <string name="all_terms">alle Semester</string>
     <string name="calendar_exam">JKU Prüfungen</string>
     <string name="calendar_lva">JKU LVAs</string>
+    <string name="calendar">Kalender</string>
     <string name="about_force_logout">Ausloggen</string>
     <string name="menu_show_in_calendar">in Kalender anzeigen</string>
     <string name="menu_show_on_map">auf Karte anzeigen</string>
@@ -141,4 +142,12 @@
     <string name="today">Heute</string>
     <string name="tomorrow">Morgen</string>
     <string name="action_about">About</string>
+    <string name="mensa_title_classic">Classic</string>
+    <string name="mensa_title_choice">Choice</string>
+    <string name="mensa_title_khg">KHG</string>
+    <string name="mensa_title_raab">Raab</string>
+    <string name="mensa_title_unknown">eine Mensa</string>
+    <string name="stat_title_grade_weighted">Noten (gewichtet)</string>
+    <string name="stat_title_grade">Noten</string>
+    <string name="stat_title_lva">LVAs</string>
 </resources>

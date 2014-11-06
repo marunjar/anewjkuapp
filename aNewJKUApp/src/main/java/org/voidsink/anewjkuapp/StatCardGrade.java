@@ -51,9 +51,9 @@ public class StatCardGrade extends ThemedCardWithList {
     protected CardHeader initCardHeader() {
         CardHeader header = new CardHeader(getContext());
         if (mEctsWeighting) {
-            header.setTitle("Noten (gewichtet)");
+            header.setTitle(getContext().getString(R.string.stat_title_grade_weighted));
         } else {
-            header.setTitle("Noten");
+            header.setTitle(getContext().getString(R.string.stat_title_grade));
         }
 
         //Set visible the expand/collapse button
@@ -242,7 +242,7 @@ public class StatCardGrade extends ThemedCardWithList {
 
 
                 SimpleXYSeries mSeries = new SimpleXYSeries(values,
-                        SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Noten");
+                        SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, getContext().getString(R.string.stat_title_grade));
                 barChart.addSeries(mSeries,
                         new GradeBarFormatter(Color.LTGRAY, Color.GRAY));
 

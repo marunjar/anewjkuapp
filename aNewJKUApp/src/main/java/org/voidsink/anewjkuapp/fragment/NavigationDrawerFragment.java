@@ -86,8 +86,8 @@ public class NavigationDrawerFragment extends BaseFragment {
 			// new DrawerMenuItem("News"),
 			// new DrawerMenuItem("Courier"),
 			new DrawerMenuSection("ÖH"),
-			new DrawerMenuItem("Info", OehInfoFragment.class),
-			new DrawerMenuItem("Rechte", OehRightsFragment.class)};
+            new DrawerMenuItem("Info", OehInfoFragment.class),
+            new DrawerMenuItem("Rechte", OehRightsFragment.class)};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

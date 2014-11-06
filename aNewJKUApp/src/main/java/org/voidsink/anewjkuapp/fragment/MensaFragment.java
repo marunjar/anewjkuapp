@@ -39,10 +39,10 @@ public class MensaFragment extends SlidingTabsFragment {
                 cal.add(Calendar.DATE, 1);
             } while (cal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY);
         } else {
-            mTabs.add(new SlidingTabItem("Classic", MensaClassicFragment.class, indicatorColor, dividerColor));
-            mTabs.add(new SlidingTabItem("Choice", MensaChoiceFragment.class, indicatorColor, dividerColor));
-            mTabs.add(new SlidingTabItem("KHG", MensaKHGFragment.class, indicatorColor, dividerColor));
-            mTabs.add(new SlidingTabItem("Raab", MensaRaabFragment.class, indicatorColor, dividerColor));
+            mTabs.add(new SlidingTabItem(getString(R.string.mensa_title_classic), MensaClassicFragment.class, indicatorColor, dividerColor));
+            mTabs.add(new SlidingTabItem(getString(R.string.mensa_title_choice), MensaChoiceFragment.class, indicatorColor, dividerColor));
+            mTabs.add(new SlidingTabItem(getString(R.string.mensa_title_khg), MensaKHGFragment.class, indicatorColor, dividerColor));
+            mTabs.add(new SlidingTabItem(getString(R.string.mensa_title_raab), MensaRaabFragment.class, indicatorColor, dividerColor));
         }
     }
 

@@ -156,7 +156,7 @@ public final class CalendarUtils {
 		case CalendarUtils.ARG_CALENDAR_LVA:
 			return context.getString(R.string.calendar_lva);
 		default:
-			return "Kalender";
+			return context.getString(R.string.calendar);
 		}
 	}
 }

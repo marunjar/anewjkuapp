@@ -24,7 +24,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  */
 public class MenuCardListView extends StickyListHeadersListView {
 
-    protected static String TAG = "CardListView";
+    protected static String TAG = MenuCardListView.class.getSimpleName();
 
     /**
      * Stycky Card Array Adapter

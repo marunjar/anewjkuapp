@@ -125,7 +125,7 @@ public class MensaDashclockExtension extends DashClockExtension {
 			publishUpdate(new ExtensionData()
 					.visible(true)
 					.icon(R.drawable.ic_food)
-					.status("Mensa")
+					.status(getString(R.string.title_mensa))
 					.expandedTitle(status)
 					.expandedBody(body)
 					.clickIntent(

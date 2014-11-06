@@ -87,8 +87,6 @@ public class MainActivity extends ThemedActivity implements
         if (fragment != null) {
             outState.putString(ARG_SHOW_FRAGMENT, fragment.getClass().getName());
         }
-
-        // Log.i(TAG, "onSaveInstanceState");
     }
 
     @Override
@@ -102,8 +100,6 @@ public class MainActivity extends ThemedActivity implements
         AndroidGraphicFactory.createInstance(this.getApplication());
 
         setContentView(R.layout.activity_main);
-
-        // Log.i(TAG, "onCreate");
 
         mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.navigation_drawer);
@@ -176,7 +172,6 @@ public class MainActivity extends ThemedActivity implements
     @SuppressWarnings("unchecked")
     private Fragment attachFragmentByClassName(final String clazzname) {
         if (clazzname != null && !clazzname.isEmpty()) {
-            // Log.i(TAG, "attach " + clazzname);
             try {
                 Class<?> clazz = getClassLoader().loadClass(clazzname);
                 if (Fragment.class.isAssignableFrom(clazz)) {

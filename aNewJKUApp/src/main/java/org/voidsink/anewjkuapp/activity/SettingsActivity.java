@@ -18,13 +18,12 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
-import org.voidsink.anewjkuapp.utils.Analytics;
-import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.ImportExamTask;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.utils.Analytics;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.List;
@@ -78,12 +77,6 @@ public class SettingsActivity extends PreferenceActivity implements
         }
     }
 
-    protected boolean findMapFile() {
-        // TODO Auto-generated method stub
-        Toast.makeText(getApplication(), "TODO", Toast.LENGTH_SHORT).show();
-        return false;
-    }
-
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public View onCreateView(View parent, String name, Context context,
@@ -124,12 +117,8 @@ public class SettingsActivity extends PreferenceActivity implements
     protected void onStop() {
         super.onStop();
 
-        Log.i(getClass().getSimpleName(), "1");
-
         PreferenceManager.getDefaultSharedPreferences(this)
                 .unregisterOnSharedPreferenceChangeListener(this);
-
-        Log.i(getClass().getSimpleName(), "2");
 
         if (mThemeChanged) {
             AlarmManager alm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
@@ -137,8 +126,6 @@ public class SettingsActivity extends PreferenceActivity implements
 
             Process.killProcess(Process.myPid());
         }
-
-        Log.i(getClass().getSimpleName(), "3");
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -157,6 +144,22 @@ public class SettingsActivity extends PreferenceActivity implements
             }
         }
         return super.isValidFragment(fragmentName);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(new CalligraphyContextWrapper(newBase));
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -208,22 +211,6 @@ public class SettingsActivity extends PreferenceActivity implements
             // Load the preferences from an XML resource
             addPreferencesFromResource(R.xml.preference_dashclock_extension_mensa);
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(new CalligraphyContextWrapper(newBase));
     }
 
 }
