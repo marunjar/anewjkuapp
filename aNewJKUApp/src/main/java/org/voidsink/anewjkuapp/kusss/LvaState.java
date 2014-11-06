@@ -8,13 +8,26 @@ public enum LvaState {
 	public int getStringResID() {
 		switch (this) {
 		case OPEN:
-            return R.string.stat_lva_open;
+            return R.string.lva_state_open;
         case DONE:
-            return R.string.stat_lva_done;
+            return R.string.lva_state_done;
         case ALL:
-            return R.string.stat_lva_all;
+            return R.string.lva_state_all;
 		default:
-			return R.string.grade_type_unknown;
+			return R.string.lva_state_unknown;
 		}
 	}
+
+    public int getStringResIDExt() {
+        switch (this) {
+            case OPEN:
+                return R.string.lva_state_ext_open;
+            case DONE:
+                return R.string.lva_state_ext_done;
+            case ALL:
+                return R.string.lva_state_ext_done;
+            default:
+                return R.string.lva_state_unknown;
+        }
+    }
 }

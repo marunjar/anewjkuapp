@@ -99,7 +99,8 @@ public class MensaDashclockExtension extends DashClockExtension {
 						if (!status.isEmpty()) {
 							status += ", ";
 						} else {
-							status += "Mensa: ";
+							status += getString(R.string.title_mensa);
+                            status += ": ";
 						}
 						status += mensa.getName();
 

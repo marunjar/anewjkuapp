@@ -2,15 +2,15 @@
 <resources>
     <string name="mensa_menu_today">Today</string>
     <string name="mensa_menu_tomorrow">Tomorrow</string>
-    <string name="about_app_summary">This is a new JKU, KUSSS, ÖH, ... App for the students of JKU Linz. The developement is still in progress but the most needed functions are already implemented. If you have any questions, problems or feature requests, write an email to the developer! If you have an existing GitHub account you can also post here: https://github.com/marunjar/anewjkuapp/issues</string>
+    <string name="about_app_summary">This is a new JKU, KUSSS, ÖH, ... App for the students of JKU Linz.\n\nThe developement is still in progress but the most needed functions are already implemented.\n\nIf you have any questions, problems or feature requests, write an email to the developer!\nIf you have an existing GitHub account you can also post here: https://github.com/marunjar/anewjkuapp/issues</string>
     <string name="about_credits_title">Credits</string>
     <string name="about_force_logout">Logout</string>
     <string name="about_libraries_title">Libraries</string>
     <string name="action_about">About</string>
     <string name="action_changelog">Change Log</string>
     <string name="action_refresh">Refresh</string>
-    <string name="action_settings">Preferences</string>
-    <string name="action_settings_summary">Preferences for KUSSS, notifications, ...</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_settings_summary">Settings for KUSSS, notifications, ...</string>
     <string name="action_snap_to_location">Snap to current gps location</string>
     <string name="all_terms">All terms</string>
     <string name="app_name">JKU App</string>
@@ -44,10 +44,10 @@
     <string name="kusss_provider_name">KUSSS</string>
     <string name="kusss_service_title">KUSSS service</string>
     <string name="listview_footer_button">Show more</string>
-    <string name="lva_group_all">All courses</string>
-    <string name="lva_group_open">Open courses</string>
-    <string name="lva_group_done">Completed courses</string>
-    <string name="map_place_not_found">Place \'%s\' not found</string>
+    <string name="lva_state_ext_all">All courses</string>
+    <string name="lva_state_ext_open">Open courses</string>
+    <string name="lva_state_ext_done">Completed courses</string>
+    <string name="map_place_not_found">\'%s\' not found</string>
     <string name="map_search_poi_hint">Enter lecture room here</string>
     <string name="map_search_poi_title">Search</string>
     <string name="mensa_menu_not_available">Menu not available</string>
@@ -116,9 +116,9 @@
     <string name="settings_kusss_summary">KUSSS settings</string>
     <string name="settings_kusss_title">KUSSS</string>
     <string name="sign_in">Login</string>
-    <string name="stat_lva_all">All</string>
-    <string name="stat_lva_done">Completed</string>
-    <string name="stat_lva_open">Open</string>
+    <string name="lva_state_all">All</string>
+    <string name="lva_state_done">Completed</string>
+    <string name="lva_state_open">Open</string>
     <string name="stat_title_grade">Grades</string>
     <string name="stat_title_grade_weighted">Grades (weighted)</string>
     <string name="stat_title_lva">Courses</string>
@@ -134,4 +134,9 @@
     <string name="title_oeh_news">ÖH News</string>
     <string name="title_oeh_rights">Right</string>
     <string name="title_stats">Statistics</string>
+    <string name="interval_1d">Every day</string>
+    <string name="interval_1h">Every hour</string>
+    <string name="interval_7d">Weekly</string>
+    <string name="interval_3.5d">Twice a week</string>
+    <string name="lva_state_unknown">TODO</string>
 </resources>

@@ -68,7 +68,7 @@
     <string name="pref_kusss_pw_title">Passwort</string>
     <string name="pref_kusss_sync_title">Synchronisieren</string>
     <string name="pref_kusss_sync_interval_summary">Intervall in dem die Daten synchronisiert werden</string>
-    <string name="pref_kusss_sync_interval_title">Intervall</string>
+    <string name="pref_kusss_sync_interval_title">Synchronisationsintervall</string>
     <string name="pref_kusss_notify_title">Benachrichtigen</string>
     <string name="pref_cat_kusss_calendar">Stundenplan</string>
     <string name="pref_kusss_calendar_sync_summary">Alle LVA-Termine vom aktuellen Semester synchronisieren</string>
@@ -103,7 +103,7 @@
     <string name="settings_app_title">App</string>
     <string name="settings_app_summary">Einstellungen für App</string>
 
-    <string name="about_app_summary">Das ist eine neue JKU, KUSSS, ÖH, ... App für Studenten der JKU Linz. Die App ist noch in Entwicklung und die am meisten benötigten Funktionen sind bereits implementiert. Wenn Sie Fragen, Probleme oder Wünsche haben, schreiben Sie eine E-Mail an die Entwickler! Besitzer eines GitHub-Accounts können auch einfach hier posten: https://github.com/marunjar/anewjkuapp/issues </string>
+    <string name="about_app_summary">Das ist eine neue JKU, KUSSS, ÖH, ... App für Studenten der JKU Linz.\n\nDie App ist noch in Entwicklung und die am meisten benötigten Funktionen sind bereits implementiert.\n\nWenn Sie Fragen, Probleme oder Wünsche haben, schreiben Sie eine E-Mail an die Entwickler!\nBesitzer eines GitHub-Accounts können auch einfach hier posten: https://github.com/marunjar/anewjkuapp/issues </string>
     <string name="about_libraries_title">verwendete Bibliotheken</string>
     <string name="about_credits_title">Credits</string>
 
@@ -126,7 +126,7 @@
     <string name="oeh_rights_6_title" translatable="false">Links</string>
     <string name="oeh_rights_6_summary" translatable="false"><a href="http://www.jku.at/content/e262/e239/e3257">Detaillierte Informationen zum Studienrecht der JKU</a>\n\n<a href="http://www.ris.bka.gv.at/GeltendeFassung.wxe?Abfrage=Bundesnormen&amp;Gesetzesnummer=20002128">Das Universitätsgesetz</a></string>
 
-    <string name="map_place_not_found" formatted="false">Ort \'%s\' nicht gefunden</string>
+    <string name="map_place_not_found" formatted="false">\'%s\' nicht gefunden</string>
     <string name="map_search_poi_title">Suche</string>
     <string name="map_search_poi_hint">Hörsaal hier eingeben</string>
 
@@ -151,13 +151,14 @@
     <string name="stat_title_grade_weighted">Noten (gewichtet)</string>
     <string name="stat_title_grade">Noten</string>
     <string name="stat_title_lva">LVAs</string>
-    <string name="stat_lva_open">Offen</string>
-    <string name="stat_lva_done">Abgeschlossen</string>
-    <string name="stat_lva_all">Gesamt</string>
 
-    <string name="lva_group_open">offene LVAs</string>
-    <string name="lva_group_done">abgeschlossene LVAs</string>
-    <string name="lva_group_all">alle LVAs</string>
+    <string name="lva_state_open">Offen</string>
+    <string name="lva_state_done">Abgeschlossen</string>
+    <string name="lva_state_all">Alle</string>
+    <string name="lva_state_ext_open">offene LVAs</string>
+    <string name="lva_state_ext_done">abgeschlossene LVAs</string>
+    <string name="lva_state_ext_all">alle LVAs</string>
+    <string name="lva_state_unknown">TODO</string>
 
     <string name="extension_mensa_title">Mensa</string>
     <string name="extension_mensa_description">Zeige das Menü der ausgewählten Mensa für den heutigen Tag an</string>
@@ -167,6 +168,11 @@
     <string name="calendar_title_unknown">Kalender</string>
     <string name="calendar_action_show_in_calendar">in Kalender anzeigen</string>
     <string name="calendar_action_show_on_map">auf Karte anzeigen</string>
+
+    <string name="interval_1h">Jede Stunde</string>
+    <string name="interval_1d">Jeden Tag</string>
+    <string name="interval_3.5d">Zweimal Wöchentlich</string>
+    <string name="interval_7d">Wöchentlich</string>
 
     <string name="default_chip_color" translatable="false" >#ff2b7fc2</string>
     <string name="drawer_menu_item_icon">Icon</string>

@@ -126,7 +126,7 @@ public class StatCardLva extends ThemedCardWithList {
 
         LvaStatItem lva = (LvaStatItem) object;
 
-        type.setText(getContext().getString(lva.getType().getStringResID()));
+        type.setText(getContext().getString(lva.getType().getStringResIDExt()));
         ects.setText(String.format("%.2f ECTS", lva.getEcts()));
 
         return convertView;
@@ -189,9 +189,9 @@ public class StatCardLva extends ThemedCardWithList {
                 double rangeStep = Math.ceil((rangeTopMax / 10) / 10) * 10;
 
                 // init bar chart
-                addSerieToBarChart(barChart, getContext().getString(R.string.lva_group_done),
+                addSerieToBarChart(barChart, getContext().getString(LvaState.DONE.getStringResIDExt()),
                         mDoneEcts, Grade.G1.getColor());
-                addSerieToBarChart(barChart, getContext().getString(R.string.lva_group_open),
+                addSerieToBarChart(barChart, getContext().getString(LvaState.OPEN.getStringResIDExt()),
                         mOpenEcts, Grade.G3.getColor());
 
                 barChart.setRangeTopMin(this.mTerms.size() * 30);
@@ -221,9 +221,9 @@ public class StatCardLva extends ThemedCardWithList {
                 barChart.setVisibility(View.GONE);
 
                 // init pie chart
-                AppUtils.addSerieToPieChart(pieChart, getContext().getString(R.string.lva_group_done),
+                AppUtils.addSerieToPieChart(pieChart, getContext().getString(LvaState.DONE.getStringResIDExt()),
                         mDoneEcts, Grade.G1.getColor());
-                AppUtils.addSerieToPieChart(pieChart, getContext().getString(R.string.lva_group_open),
+                AppUtils.addSerieToPieChart(pieChart, getContext().getString(LvaState.OPEN.getStringResIDExt()),
                         mOpenEcts, Grade.G3.getColor());
 
                 double missingECTS = minEcts - (mDoneEcts + mOpenEcts);
