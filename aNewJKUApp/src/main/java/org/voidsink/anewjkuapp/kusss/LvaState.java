@@ -25,7 +25,7 @@ public enum LvaState {
             case DONE:
                 return R.string.lva_state_ext_done;
             case ALL:
-                return R.string.lva_state_ext_done;
+                return R.string.lva_state_ext_all;
             default:
                 return R.string.lva_state_unknown;
         }
