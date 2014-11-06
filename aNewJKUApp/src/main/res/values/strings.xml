@@ -160,8 +160,13 @@
     <string name="lva_state_ext_all">alle LVAs</string>
     <string name="lva_state_unknown">TODO</string>
 
-    <string name="extension_mensa_title">Mensa</string>
-    <string name="extension_mensa_description">Zeige das Menü der ausgewählten Mensa für den heutigen Tag an</string>
+    <string name="extension_mensa_title">JKU Mensa</string>
+    <string name="extension_mensa_description">Zeigt das Menü der ausgewählten JKU Mensa für den aktuellen Tag an.</string>
+    <string name="extension_mensa_pref_visible_always">immer Anzeigen</string>
+    <string name="extension_mensa_pref_visible_from">von</string>
+    <string name="extension_mensa_pref_visible_to">bis</string>
+    <string name="extension_mensa_pref_cat_visibility">Anzeige</string>
+    <string name="extension_mensa_pref_cat_mensa">Mensa</string>
 
     <string name="calendar_title_exam">Prüfungen</string>
     <string name="calendar_title_lva">LVAs</string>

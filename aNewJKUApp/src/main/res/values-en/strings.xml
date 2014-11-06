@@ -20,8 +20,8 @@
     <string name="calendar_title_lva">Courses</string>
     <string name="calendar_title_unknown">Calendar</string>
     <string name="drawer_menu_item_icon">Icon</string>
-    <string name="extension_mensa_description">Show menu of selected cafeteria for today</string>
-    <string name="extension_mensa_title">Cafeteria</string>
+    <string name="extension_mensa_description">Displays menu of the selected JKU cafeteria for current day.</string>
+    <string name="extension_mensa_title">JKU Cafeteria</string>
     <string name="grade_1">Very good</string>
     <string name="grade_2">Good</string>
     <string name="grade_3">Satisfactory</string>
@@ -139,4 +139,9 @@
     <string name="interval_7d">Weekly</string>
     <string name="interval_3.5d">Twice a week</string>
     <string name="lva_state_unknown">TODO</string>
+    <string name="extension_mensa_pref_cat_mensa">Cafeteria</string>
+    <string name="extension_mensa_pref_cat_visibility">Display</string>
+    <string name="extension_mensa_pref_visible_always">Show always</string>
+    <string name="extension_mensa_pref_visible_from">from</string>
+    <string name="extension_mensa_pref_visible_to">to</string>
 </resources>
