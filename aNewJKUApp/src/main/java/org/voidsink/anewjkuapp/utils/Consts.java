@@ -25,7 +25,7 @@ public class Consts {
     public static final String SCREEN_ABOUT = "/about";
     public static final String SCREEN_SETTINGS = "/settings";
 
-    public static final String SCREEN_SETTINGS_DASHCLOCK = "/dashclock/";
+    public static final String SCREEN_SETTINGS_DASHCLOCK = "/dashclock";
     public static final String SCREEN_LOGIN = "/login";
 
     private Consts() {
