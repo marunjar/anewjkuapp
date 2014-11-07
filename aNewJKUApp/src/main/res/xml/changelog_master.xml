@@ -4,6 +4,10 @@
 		    + added
 		    - fixed
 		    * changed -->
+    <release version="0.24" versioncode="1400234">
+        <change>+ App: jetzt auch in Englisch</change>
+        <change>+ App: Passwort kann beim Anmelden auch als Klartext angezeigt werden</change>
+    </release>
     <release version="0.23" versioncode="140023">
         <change>- KUSSS: Fehler beim Laden der Semester</change>
         <change>- Mensa: Menü von Freitag wurde nicht angezeigt</change>
