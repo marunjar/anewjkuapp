@@ -11,10 +11,13 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,19 +39,14 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 
     public final static String PARAM_USER_PASS = "USER_PASS";
 
-    private static final long SYNC_FREQUENCY = 60 * 60 * 23; // 23 hour (in
-    // Seconds)
-    private final int REQ_SIGNUP = 1;
+    private static final long SYNC_FREQUENCY = 60 * 60 * 23; // 23 hour (in Seconds)
 
     private final String TAG = this.getClass().getSimpleName();
 
-    public final static String CONTENT_EXAM = "exam";
-    public final static String CONTENT_LVA = "lva";
-
     private AccountManager mAccountManager;
     private String mAuthTokenType;
-    private boolean mIsNewAccount;
     private Button mSubmit;
+    private CheckBox mShowPassword;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +64,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 
         String accountName = null;
 
-        mIsNewAccount = false;
+        Boolean mIsNewAccount = false;
         Account mAccount = AppUtils.getAccount(this);
         if (mAccount != null) {
             accountName = mAccount.name;
@@ -85,22 +83,37 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
                     KusssAuthenticator.ARG_IS_ADDING_NEW_ACCOUNT, false);
         }
 
-        if (mAuthTokenType == null)
+        if (mAuthTokenType == null) {
             mAuthTokenType = KusssAuthenticator.AUTHTOKEN_TYPE_READ_ONLY;
+        }
 
         if (!mIsNewAccount) {
             if (accountName != null) {
-                ((TextView) findViewById(R.id.accountName))
-                        .setText(accountName);
-                ((TextView) findViewById(R.id.accountName)).setEnabled(false);
+                final TextView tvAccountName = (TextView) findViewById(R.id.accountName);
+                tvAccountName.setText(accountName);
+                tvAccountName.setEnabled(false);
             }
         }
 
-        mSubmit = (Button) findViewById(R.id.submit);
+        mSubmit = (Button) findViewById(R.id.accountLogin);
         mSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 submit();
+            }
+        });
+
+        mShowPassword = (CheckBox) findViewById(R.id.accountPasswordShow);
+        mShowPassword.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                final TextView userPass = ((TextView) findViewById(R.id.accountPassword));
+                if (b) {
+                    userPass.setTransformationMethod(null);
+                } else {
+                    userPass.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
             }
         });
     }
@@ -112,18 +125,10 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        // The sign up activity returned that the user has successfully created
-        // an account
-        if (requestCode == REQ_SIGNUP && resultCode == RESULT_OK) {
-            finishLogin(data);
-        } else
-            super.onActivityResult(requestCode, resultCode, data);
-    }
-
     public void submit() {
+
+        mSubmit.setEnabled(false);
+        mShowPassword.setChecked(false);
 
         final String userName = ((TextView) findViewById(R.id.accountName))
                 .getText().toString();
@@ -144,14 +149,11 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
                         getString(R.string.progress_login), true);
             }
 
-            ;
-
             @Override
             protected Intent doInBackground(String... params) {
-                String authtoken = null;
                 Bundle data = new Bundle();
                 try {
-                    authtoken = KusssHandler.getInstance().login(KusssAuthenticatorActivity.this, userName, userPass);
+                    final String authtoken = KusssHandler.getInstance().login(KusssAuthenticatorActivity.this, userName, userPass);
 
                     data.putString(AccountManager.KEY_ACCOUNT_NAME, userName);
                     data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
@@ -169,8 +171,6 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 
             @Override
             protected void onPostExecute(Intent intent) {
-                progressDialog.dismiss();
-
                 if (intent.hasExtra(KEY_ERROR_MESSAGE)) {
                     Toast.makeText(getBaseContext(),
                             intent.getStringExtra(KEY_ERROR_MESSAGE),
@@ -182,14 +182,18 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
                         finishLogin(intent);
                     } else {
                         Toast.makeText(getBaseContext(),
-                                "Login failed, wrong Password",
+                                getString(R.string.account_login_failed_wrong_pwd),
                                 Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(getBaseContext(),
-                            "Login failed, AuthToken missing",
+                            getString(R.string.account_login_failed_wrong_auth_token),
                             Toast.LENGTH_SHORT).show();
                 }
+
+                progressDialog.dismiss();
+
+                mSubmit.setEnabled(true);
             }
         }.execute();
     }

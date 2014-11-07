@@ -24,13 +24,19 @@
         android:inputType="textPassword"
         android:padding="10dp" />
 
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/account_show_password"
+        android:id="@+id/accountPasswordShow"
+        android:padding="10dp"/>
+
     <Button
-        android:id="@+id/submit"
+        android:id="@+id/accountLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:onClick="submit"
         android:padding="10dp"
-        android:text="@string/sign_in" />
+        android:text="@string/account_login" />
 
 </LinearLayout>
