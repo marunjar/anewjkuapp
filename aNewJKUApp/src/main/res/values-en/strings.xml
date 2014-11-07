@@ -115,7 +115,7 @@
     <string name="settings_app_title">App</string>
     <string name="settings_kusss_summary">KUSSS settings</string>
     <string name="settings_kusss_title">KUSSS</string>
-    <string name="sign_in">Login</string>
+    <string name="account_login">Login</string>
     <string name="lva_state_all">All</string>
     <string name="lva_state_done">Completed</string>
     <string name="lva_state_open">Open</string>
@@ -144,4 +144,7 @@
     <string name="extension_mensa_pref_visible_always">Show always</string>
     <string name="extension_mensa_pref_visible_from">from</string>
     <string name="extension_mensa_pref_visible_to">to</string>
+    <string name="account_show_password">Show password</string>
+    <string name="account_login_failed_wrong_pwd">Login failed: wrong password</string>
+    <string name="account_login_failed_wrong_auth_token">Login failed: wrong authentification token</string>
 </resources>

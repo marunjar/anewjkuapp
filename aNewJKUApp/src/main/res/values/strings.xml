@@ -137,7 +137,7 @@
     <string name="progress_load_lva">LVAs werden geladen...</string>
     <string name="progress_load_calendar">Termine werden geladen...</string>
     <string name="progress_load_map_files">Karten werden geladen...</string>
-    <string name="progress_login">Einloggen...</string>
+    <string name="progress_login">Anmelden...</string>
 
     <string name="mensa_menu_not_available">kein Speiseplan verfügbar</string>
     <string name="mensa_menu_today">Heute</string>
@@ -179,10 +179,14 @@
     <string name="interval_3.5d">Zweimal Wöchentlich</string>
     <string name="interval_7d">Wöchentlich</string>
 
+    <string name="account_show_password">Passwort anzeigen</string>
+    <string name="account_login_failed_wrong_pwd">Anmeldung fehlgeschlagen: falsches Passwort</string>
+    <string name="account_login_failed_wrong_auth_token">Anmeldung fehlgeschlagen: falscher Authentifizierungstoken</string>
+    <string name="account_login">Anmelden</string>
+
     <string name="default_chip_color" translatable="false" >#ff2b7fc2</string>
     <string name="drawer_menu_item_icon">Icon</string>
     <string name="kusss_service_title">KUSSS Service</string>
-    <string name="sign_in">Einloggen</string>
     <string name="kusss_provider_name">KUSSS</string>
     <string name="poi_provider_name">POIs</string>
     <string name="listview_footer_button">Mehr anzeigen</string>
