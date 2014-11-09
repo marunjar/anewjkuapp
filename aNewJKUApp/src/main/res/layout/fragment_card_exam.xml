@@ -4,10 +4,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <org.voidsink.anewjkuapp.view.ExamCardListView
+    <org.voidsink.anewjkuapp.view.StickyCardListView
         android:id="@+id/exam_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </org.voidsink.anewjkuapp.view.ExamCardListView>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

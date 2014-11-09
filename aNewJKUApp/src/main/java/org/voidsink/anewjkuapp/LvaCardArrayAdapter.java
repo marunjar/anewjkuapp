@@ -6,20 +6,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.voidsink.anewjkuapp.view.LvaCardListView;
+import org.voidsink.anewjkuapp.base.StickyCardArrayAdapter;
 
 import java.util.List;
 
 import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
-import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
  * Created by paul on 06.09.2014.
  */
-public class LvaCardArrayAdapter extends CardArrayAdapter implements StickyListHeadersAdapter {
-
-    protected LvaCardListView mLvaListView;
+public class LvaCardArrayAdapter extends StickyCardArrayAdapter {
 
     /**
      * Constructor
@@ -48,12 +44,8 @@ public class LvaCardArrayAdapter extends CardArrayAdapter implements StickyListH
     public long getHeaderId(int position) {
         Card card = getItem(position);
         if (card instanceof LvaCard) {
-            return((LvaCard) card).getLva().getState().getStringResID();
+            return ((LvaCard) card).getLva().getState().getStringResID();
         }
         return 0;
     }
-
-
-    public void setLvaListView(LvaCardListView lvaListView) {
-        this.mLvaListView = lvaListView;
-    }}
+}

@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <org.voidsink.anewjkuapp.view.MenuCardListView
+    <org.voidsink.anewjkuapp.view.StickyCardListView
         android:layout_width="match_parent"
         android:paddingBottom="@dimen/activity_horizontal_margin"
         android:paddingTop="8dip"

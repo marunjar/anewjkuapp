@@ -6,24 +6,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.voidsink.anewjkuapp.base.StickyCardArrayAdapter;
 import org.voidsink.anewjkuapp.mensa.Mensa;
 import org.voidsink.anewjkuapp.mensa.MensaDay;
-import org.voidsink.anewjkuapp.view.MenuCardListView;
 
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.List;
 
 import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
-import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
  * Created by paul on 06.09.2014.
  */
-public class MenuCardArrayAdapter extends CardArrayAdapter implements StickyListHeadersAdapter {
+public class MenuCardArrayAdapter extends StickyCardArrayAdapter {
 
-    protected MenuCardListView mMenuListView;
     protected boolean mUseDateHeader;
 
     /**
@@ -85,9 +82,5 @@ public class MenuCardArrayAdapter extends CardArrayAdapter implements StickyList
             }
         }
         return 0;
-    }
-
-    public void setMenuListView(MenuCardListView menuCardListView) {
-        this.mMenuListView = menuCardListView;
     }
 }
