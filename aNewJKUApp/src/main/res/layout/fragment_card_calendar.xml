@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <org.voidsink.anewjkuapp.view.CalendarCardListView
+    <org.voidsink.anewjkuapp.view.StickyCardListView
         android:id="@+id/calendar_card_events"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -36,6 +36,5 @@
             android:textColor="?android:attr/textColorSecondary"
             android:text="@string/listview_footer_button" />
     </LinearLayout>
-
 
 </RelativeLayout>

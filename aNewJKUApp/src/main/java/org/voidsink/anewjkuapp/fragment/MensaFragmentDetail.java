@@ -17,7 +17,7 @@ import org.voidsink.anewjkuapp.mensa.Mensa;
 import org.voidsink.anewjkuapp.mensa.MensaDay;
 import org.voidsink.anewjkuapp.mensa.MensaMenu;
 import org.voidsink.anewjkuapp.mensa.MenuLoader;
-import org.voidsink.anewjkuapp.view.MenuCardListView;
+import org.voidsink.anewjkuapp.view.StickyCardListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,22 +26,21 @@ import it.gmariotti.cardslib.library.internal.Card;
 
 public abstract class MensaFragmentDetail extends BaseFragment {
 
-	public static final String TAG = MensaFragmentDetail.class.getSimpleName();
-    private MenuCardListView mListView;
+    public static final String TAG = MensaFragmentDetail.class.getSimpleName();
     private MenuCardArrayAdapter mAdapter;
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_card_menu, container,
-				false);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_card_menu, container,
+                false);
 
-		mListView = (MenuCardListView) view.findViewById(R.id.menu_card_list);
-		mAdapter = new MenuCardArrayAdapter(getContext(), new ArrayList<Card>(), true);
-		mListView.setAdapter(mAdapter);
+        final StickyCardListView mListView = (StickyCardListView) view.findViewById(R.id.menu_card_list);
+        mAdapter = new MenuCardArrayAdapter(getContext(), new ArrayList<Card>(), true);
+        mListView.setAdapter(mAdapter);
 
-		return view;
-	}
+        return view;
+    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -50,16 +49,23 @@ public abstract class MensaFragmentDetail extends BaseFragment {
         new MenuLoadTask().execute();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    protected abstract MenuLoader createLoader();
+
     private class MenuLoadTask extends AsyncTask<String, Void, Void> {
-		private Mensa mensa;
+        private Mensa mensa;
         private List<Card> mMenus;
-		private Context mContext;
+        private Context mContext;
 
-		@Override
-		protected Void doInBackground(String... urls) {
-			mensa = createLoader().getMensa(mContext);
+        @Override
+        protected Void doInBackground(String... urls) {
+            mensa = createLoader().getMensa(mContext);
 
-            mMenus = new ArrayList<Card>();
+            mMenus = new ArrayList<>();
 
             for (MensaDay day : mensa.getDays()) {
                 for (MensaMenu menu : day.getMenus()) {
@@ -67,35 +73,28 @@ public abstract class MensaFragmentDetail extends BaseFragment {
                 }
             }
 
-			return null;
-		}
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			mContext = MensaFragmentDetail.this.getContext();
-			if (mContext == null) {
-				Log.e(TAG, "context is null");
-			}
-			mAdapter.clear();
-			mAdapter.notifyDataSetChanged();
+            return null;
         }
 
-		@Override
-		protected void onPostExecute(Void result) {
-			mAdapter.clear();
-			mAdapter.addAll(mMenus);
-			mAdapter.notifyDataSetChanged();
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mContext = MensaFragmentDetail.this.getContext();
+            if (mContext == null) {
+                Log.e(TAG, "context is null");
+            }
+            mAdapter.clear();
+            mAdapter.notifyDataSetChanged();
+        }
 
-			super.onPostExecute(result);
-		}
-	}
+        @Override
+        protected void onPostExecute(Void result) {
+            mAdapter.clear();
+            mAdapter.addAll(mMenus);
+            mAdapter.notifyDataSetChanged();
 
-	@Override
-	public void onStart() {
-		super.onStart();
-	}
-
-	protected abstract MenuLoader createLoader();
+            super.onPostExecute(result);
+        }
+    }
 
 }
