@@ -106,6 +106,7 @@ public abstract class JSONMenuLoader implements MenuLoader {
 
 						mensa.addDay(day);
 						JSONArray jsonMenus = jsonDay.getJSONArray("menus");
+                        			normalize(jsonMenus);
 						for (int j = 0; j < jsonMenus.length(); j++) {
 							day.addMenu(new MensaMenu(jsonMenus
 									.getJSONObject(j), getNameFromMeal()));
@@ -119,6 +120,36 @@ public abstract class JSONMenuLoader implements MenuLoader {
 		}
 		return mensa;
 	}
+	
+	    public static final String pricePattern = "[0-9],[0-9][0-9]";
+
+    protected void normalize(JSONArray jsonDays) {
+        for (int i = 0; i < jsonDays.length(); i++) {
+            try {
+                JSONObject jsonDay = jsonDays.getJSONObject(i);
+                String meal = jsonDay.getString("meal").trim();
+                if (meal != null) {
+                    String[] ms = meal.split(pricePattern);
+                    if (ms.length > 1) {
+                        Log.d("meal", ms[1]);
+                        JSONObject clone = new JSONObject(jsonDay.toString());
+                        int startOfSecond = meal.indexOf(ms[1]);
+                        jsonDay.put("meal", meal.substring(0, startOfSecond));
+                        clone.put("meal", meal.substring(startOfSecond));
+                        jsonDays.put(i + 1, clone);
+                        i--;
+                        continue;
+                    }
+                }
+                String postfix = meal.substring(meal.length()-4);
+                if(postfix.matches(pricePattern)) {
+                    jsonDay.put("meal", meal.substring(0, meal.length()-4));
+                    jsonDay.put("price", postfix.replace(",", ""));
+                }
+            } catch (JSONException e) {     Log.d("meal", e.getMessage())     ;        }
+        }
+    }
+
 
 	protected void onNewDay(MensaDay day) {
 
