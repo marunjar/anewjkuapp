@@ -19,6 +19,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
+import android.util.Log;
 
 public abstract class JSONMenuLoader implements MenuLoader {
 	protected abstract String getUrl();
@@ -120,8 +121,8 @@ public abstract class JSONMenuLoader implements MenuLoader {
 		}
 		return mensa;
 	}
-	
-	    public static final String pricePattern = "[0-9],[0-9][0-9]";
+
+    public static final String pricePattern = "[0-9],[0-9][0-9]";
 
     protected void normalize(JSONArray jsonDays) {
         for (int i = 0; i < jsonDays.length(); i++) {
