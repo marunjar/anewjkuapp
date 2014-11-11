@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.utils.Analytics;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -62,10 +63,9 @@ public abstract class JSONMenuLoader implements MenuLoader {
 				editor.putLong(cacheDateKey, System.currentTimeMillis());
 				editor.commit();
 
-			} catch (IOException e) {
-				e.printStackTrace();
+			} catch (Exception e) {
+                Analytics.sendException(context, e, false);
 				result = sp.getString(cacheDataKey, null);
-			} finally {
 			}
 		}
 
@@ -115,39 +115,37 @@ public abstract class JSONMenuLoader implements MenuLoader {
 					}
 				}
 			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-			return null;
+		} catch (Exception e) {
+            Analytics.sendException(context, e, false);
+            return null;
 		}
 		return mensa;
 	}
 
     public static final String pricePattern = "[0-9],[0-9][0-9]";
 
-    protected void normalize(JSONArray jsonDays) {
+    protected void normalize(JSONArray jsonDays) throws JSONException {
         for (int i = 0; i < jsonDays.length(); i++) {
-            try {
-                JSONObject jsonDay = jsonDays.getJSONObject(i);
-                String meal = jsonDay.getString("meal").trim();
-                if (meal != null) {
-                    String[] ms = meal.split(pricePattern);
-                    if (ms.length > 1) {
-                        Log.d("meal", ms[1]);
-                        JSONObject clone = new JSONObject(jsonDay.toString());
-                        int startOfSecond = meal.indexOf(ms[1]);
-                        jsonDay.put("meal", meal.substring(0, startOfSecond));
-                        clone.put("meal", meal.substring(startOfSecond));
-                        jsonDays.put(i + 1, clone);
-                        i--;
-                        continue;
-                    }
+            JSONObject jsonDay = jsonDays.getJSONObject(i);
+            String meal = jsonDay.getString("meal").trim();
+            if (meal != null) {
+                String[] ms = meal.split(pricePattern);
+                if (ms.length > 1) {
+                    Log.d("meal", ms[1]);
+                    JSONObject clone = new JSONObject(jsonDay.toString());
+                    int startOfSecond = meal.indexOf(ms[1]);
+                    jsonDay.put("meal", meal.substring(0, startOfSecond));
+                    clone.put("meal", meal.substring(startOfSecond));
+                    jsonDays.put(i + 1, clone);
+                    i--;
+                    continue;
                 }
-                String postfix = meal.substring(meal.length()-4);
-                if(postfix.matches(pricePattern)) {
-                    jsonDay.put("meal", meal.substring(0, meal.length()-4));
-                    jsonDay.put("price", postfix.replace(",", ""));
-                }
-            } catch (JSONException e) {     Log.d("meal", e.getMessage())     ;        }
+            }
+            String postfix = meal.substring(meal.length()-4);
+            if(postfix.matches(pricePattern)) {
+                jsonDay.put("meal", meal.substring(0, meal.length()-4));
+                jsonDay.put("price", postfix.replace(",", ""));
+            }
         }
     }
 
