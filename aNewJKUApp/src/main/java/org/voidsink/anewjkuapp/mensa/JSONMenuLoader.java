@@ -24,12 +24,12 @@ import android.util.Log;
 public abstract class JSONMenuLoader implements MenuLoader {
 	protected abstract String getUrl();
 
-	protected abstract String getCacheKey();
-
 	private static final String PREF_DATA_PREFIX = "MENSA_DATA_";
 	private static final String PREF_DATE_PREFIX = "MENSA_DATE_";
 
-	private String getData(Context context) {
+    protected abstract String getCacheKey();
+
+    private String getData(Context context) {
 		String result = null;
 		String cacheDateKey = PREF_DATE_PREFIX + getCacheKey();
 		String cacheDataKey = PREF_DATA_PREFIX + getCacheKey();
@@ -106,7 +106,7 @@ public abstract class JSONMenuLoader implements MenuLoader {
 						mensa.addDay(day);
 						JSONArray jsonMenus = jsonDay.getJSONArray("menus");
                         checkName(jsonMenus);
-                        			normalize(jsonMenus);
+                        normalize(context, jsonMenus);
 						for (int j = 0; j < jsonMenus.length(); j++) {
 							day.addMenu(new MensaMenu(jsonMenus
 									.getJSONObject(j)));
@@ -145,27 +145,45 @@ public abstract class JSONMenuLoader implements MenuLoader {
 
     public static final String pricePattern = "[0-9],[0-9][0-9]";
 
-    protected void normalize(JSONArray jsonDays) throws JSONException {
+    //push every followup-element one position later
+    protected void insert(JSONArray a, Object o, int index) throws JSONException {
+        if(index >= a.length() || index < 0) { //just for some cornercases
+            a.put(o);
+        } else {
+            Object tmp = a.get(index);
+            a.put(index, o);
+            //recursion ftw
+            insert(a, tmp, index + 1);
+        }
+    }
+
+    protected void normalize(Context c, JSONArray jsonDays) throws JSONException {
         for (int i = 0; i < jsonDays.length(); i++) {
-            JSONObject jsonDay = jsonDays.getJSONObject(i);
-            String meal = jsonDay.getString("meal").trim();
-            if (meal != null) {
-                String[] ms = meal.split(pricePattern);
-                if (ms.length > 1) {
-                    Log.d("meal", ms[1]);
-                    JSONObject clone = new JSONObject(jsonDay.toString());
-                    int startOfSecond = meal.indexOf(ms[1]);
-                    jsonDay.put("meal", meal.substring(0, startOfSecond));
-                    clone.put("meal", meal.substring(startOfSecond));
-                    jsonDays.put(i + 1, clone);
-                    i--;
-                    continue;
+            try {
+                JSONObject jsonDay = jsonDays.getJSONObject(i);
+                String meal = jsonDay.getString("meal").trim();
+                if (meal != null) {
+                    String[] ms = meal.split(pricePattern);
+                    if (ms.length > 1) {
+                        Log.d("meal", ms[1]);
+                        JSONObject clone = new JSONObject(jsonDay.toString());
+                        int startOfSecond = meal.indexOf(ms[1]);
+                        jsonDay.put("meal", meal.substring(0, startOfSecond));
+                        clone.put("meal", meal.substring(startOfSecond));
+                        insert(jsonDays, clone, i + 1);
+                        i--;
+                        continue;
+                    }
+                    if (meal.length() > 4) {
+                        String postfix = meal.substring(meal.length() - 4);
+                        if (postfix.matches(pricePattern)) {
+                            jsonDay.put("meal", meal.substring(0, meal.length() - 4));
+                            jsonDay.put("price", postfix.replace(",", ""));
+                        }
+                    }
                 }
-            }
-            String postfix = meal.substring(meal.length() - 4);
-            if (postfix.matches(pricePattern)) {
-                jsonDay.put("meal", meal.substring(0, meal.length() - 4));
-                jsonDay.put("price", postfix.replace(",", ""));
+            } catch (JSONException e) {
+                Analytics.sendException(c, e, false);
             }
         }
     }
