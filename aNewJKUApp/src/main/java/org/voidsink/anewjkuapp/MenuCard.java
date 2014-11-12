@@ -10,6 +10,7 @@ import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.mensa.Mensa;
 import org.voidsink.anewjkuapp.mensa.MensaDay;
 import org.voidsink.anewjkuapp.mensa.MensaMenu;
+import org.voidsink.anewjkuapp.utils.UIUtils;
 
 import it.gmariotti.cardslib.library.internal.CardHeader;
 
@@ -66,13 +67,7 @@ public class MenuCard extends MenuBaseCard {
 //        } else {
         name.setVisibility(View.GONE);
 //        }
-        String menuSoup = mMenu.getSoup();
-        if (menuSoup != null && !menuSoup.isEmpty()) {
-            soup.setText(menuSoup);
-            soup.setVisibility(View.VISIBLE);
-        } else {
-            soup.setVisibility(View.GONE);
-        }
+        UIUtils.setTextAndVisibility(soup, mMenu.getSoup());
         meal.setText(mMenu.getMeal());
         if (mMenu.getPrice() > 0) {
             price.setText(String.format("%.2f €",

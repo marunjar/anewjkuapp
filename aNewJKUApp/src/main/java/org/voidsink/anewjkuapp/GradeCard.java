@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import org.voidsink.anewjkuapp.base.ThemedCard;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
+import org.voidsink.anewjkuapp.utils.UIUtils;
 
 import java.text.DateFormat;
 
@@ -49,19 +50,8 @@ public class GradeCard extends ThemedCard {
         TextView chipInfo = (TextView) view.findViewById(R.id.grade_chip_info);
         TextView chipGrade = (TextView) view.findViewById(R.id.grade_chip_grade);
 
-        if (!mGrade.getLvaNr().isEmpty()) {
-            lvaNr.setText(mGrade.getLvaNr());
-            lvaNr.setVisibility(View.VISIBLE);
-        } else {
-            lvaNr.setVisibility(View.GONE);
-        }
-
-        if (!mGrade.getTerm().isEmpty()) {
-            term.setText(mGrade.getTerm());
-            term.setVisibility(View.VISIBLE);
-        } else {
-            term.setVisibility(View.GONE);
-        }
+        UIUtils.setTextAndVisibility(lvaNr, mGrade.getLvaNr());
+        UIUtils.setTextAndVisibility(term, mGrade.getTerm());
 
         if (mGrade.getSkz() > 0) {
             skz.setText(String.format("[%d]", mGrade.getSkz()));

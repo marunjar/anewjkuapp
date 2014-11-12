@@ -34,17 +34,13 @@ import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.EmbossMaskFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
-import android.view.MenuItem;
 
 public class AppUtils {
 
@@ -99,10 +95,7 @@ public class AppUtils {
 			int currentVersion) {
 		// calendar names changed with 100017, remove account for avoiding
 		// corrupted data
-		if (lastVersion < 100017 && currentVersion >= 100017) {
-			return true;
-		}
-		return false;
+		return (lastVersion < 100017 && currentVersion >= 100017);
 	}
 
 	private static boolean initPreferences(Context context) {
@@ -536,28 +529,4 @@ public class AppUtils {
 
         return result;
     }
-
-    public static void applyTheme(Activity activity) {
-        if (PreferenceWrapper.getUseLightDesign(activity)) {
-            activity.setTheme(R.style.AppTheme_Light);
-        } else {
-            activity.setTheme(R.style.AppTheme);
-        }
-    }
-
-
-    public static boolean handleUpNavigation(Activity activity, MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                ActionBar actionBar = activity.getActionBar();
-                if (actionBar != null && (actionBar.getDisplayOptions() & ActionBar.DISPLAY_HOME_AS_UP) != 0) {
-                    // app icon in action bar clicked; goto parent activity.
-                    NavUtils.navigateUpFromSameTask(activity);
-                    return true;
-                }
-            default:
-                return false;
-        }
-    }
-
 }

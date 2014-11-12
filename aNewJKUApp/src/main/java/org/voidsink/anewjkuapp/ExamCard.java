@@ -11,6 +11,7 @@ import org.voidsink.anewjkuapp.base.ThemedCard;
 import org.voidsink.anewjkuapp.base.ThemedCardExpand;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
+import org.voidsink.anewjkuapp.utils.UIUtils;
 
 import it.gmariotti.cardslib.library.internal.CardExpand;
 import it.gmariotti.cardslib.library.internal.CardHeader;
@@ -77,29 +78,19 @@ public class ExamCard extends ThemedCard {
             chip.setBackgroundColor(CalendarUtils.COLOR_DEFAULT_LVA);
         }
 
-        if (!mExam.getInfo().isEmpty()) {
-            info.setText(mExam.getInfo());
-            info.setVisibility(View.VISIBLE);
-        } else {
-            info.setVisibility(View.GONE);
-        }
+        UIUtils.setTextAndVisibility(info, mExam.getInfo());
         lvaNr.setText(mExam.getLvaNr());
         term.setText(mExam.getTerm());
-        skz.setText(String.format("[%s]", mExam.getSkz()));
-        if (!mExam.getTime().isEmpty()) {
-            time.setText(mExam.getTime());
-            time.setVisibility(View.VISIBLE);
-        }
-        else {
-            time.setVisibility(View.GONE);
+
+        if (mExam.getSkz() > 0) {
+            skz.setText(String.format("[%s]", mExam.getSkz()));
+            skz.setVisibility(View.VISIBLE);
+        } else {
+            skz.setVisibility(View.GONE);
         }
 
-        if (!mExam.getLocation().isEmpty()) {
-            location.setText(mExam.getLocation());
-            location.setVisibility(View.VISIBLE);
-        } else {
-            location.setVisibility(View.GONE);
-        }
+        UIUtils.setTextAndVisibility(time, mExam.getTime());
+        UIUtils.setTextAndVisibility(location, mExam.getLocation());
     }
 
     public ExamCard(Context context) {
@@ -142,11 +133,7 @@ public class ExamCard extends ThemedCard {
         public void setupInnerViewElements(ViewGroup parent, View view) {
             TextView descr = (TextView) view.findViewById(R.id.exam_list_item_description);
 
-            if (!mDescription.isEmpty()) {
-                descr.setText(mDescription);
-            } else {
-                descr.setVisibility(View.GONE);
-            }
+            UIUtils.setTextAndVisibility(descr, mDescription);
         }
     }
 

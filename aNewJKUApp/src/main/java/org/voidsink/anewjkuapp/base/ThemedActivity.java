@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import org.voidsink.anewjkuapp.utils.Analytics;
-import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.utils.UIUtils;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -15,7 +15,7 @@ public class ThemedActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        AppUtils.applyTheme(this);
+        UIUtils.applyTheme(this);
 
         super.onCreate(savedInstanceState);
     }
