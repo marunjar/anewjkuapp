@@ -12,7 +12,9 @@ import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -133,6 +135,34 @@ public class Exam {
         this.date = date;
     }
 
+    private String extractTimeString(String time) {
+        List<String> times = new ArrayList<>();
+        // extract times
+        Matcher timeMatcher = timePattern.matcher(time);
+        while (timeMatcher.find()) {
+            times.add(timeMatcher.group());
+        }
+        // remove duplicates
+        int i = 0;
+        while (i < times.size() - 1) {
+            if (times.get(i).equals(times.get(i + 1))) {
+                times.remove(i + 1);
+            } else {
+                i++;
+            }
+        }
+        // create new time string
+        String result = "";
+        for (String s : times) {
+            if (!result.isEmpty()) {
+                result += " - ";
+            }
+            result += s;
+        }
+
+        return result;
+    }
+
     private void setTimeLocation(Context c, String timeLocation) {
         String[] splitted = timeLocation.split("\\/");
 
@@ -140,19 +170,16 @@ public class Exam {
         String location = "";
 
         try {
-            Matcher timeMatcher = timePattern.matcher(splitted[0]);
-            while (timeMatcher.find()) {
-                if (!time.isEmpty()) {
-                    time += " - ";
-                }
-                time += timeMatcher.group();
+            if (splitted.length > 1) {
+                time = extractTimeString(splitted[0]);
+                location = splitted[1];
+            } else {
+                time = extractTimeString(splitted[0]);
             }
-            location = splitted[1];
         } catch (Exception e) {
             Log.e(TAG, "cant parse string", e);
             Analytics.sendException(c, e, false, timeLocation);
         }
-
         this.time = time;
         this.location = location;
     }

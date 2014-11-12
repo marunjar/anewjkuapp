@@ -86,8 +86,20 @@ public class ExamCard extends ThemedCard {
         lvaNr.setText(mExam.getLvaNr());
         term.setText(mExam.getTerm());
         skz.setText(String.format("[%s]", mExam.getSkz()));
-        time.setText(mExam.getTime());
-        location.setText(mExam.getLocation());
+        if (!mExam.getTime().isEmpty()) {
+            time.setText(mExam.getTime());
+            time.setVisibility(View.VISIBLE);
+        }
+        else {
+            time.setVisibility(View.GONE);
+        }
+
+        if (!mExam.getLocation().isEmpty()) {
+            location.setText(mExam.getLocation());
+            location.setVisibility(View.VISIBLE);
+        } else {
+            location.setVisibility(View.GONE);
+        }
     }
 
     public ExamCard(Context context) {
