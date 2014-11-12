@@ -1,7 +1,6 @@
 package org.voidsink.anewjkuapp.mensa;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
@@ -61,8 +60,7 @@ public abstract class JSONMenuLoader implements MenuLoader {
 				Editor editor = sp.edit();
 				editor.putString(cacheDataKey, result);
 				editor.putLong(cacheDateKey, System.currentTimeMillis());
-				editor.commit();
-
+				editor.apply();
 			} catch (Exception e) {
                 Analytics.sendException(context, e, false);
 				result = sp.getString(cacheDataKey, null);
@@ -107,10 +105,11 @@ public abstract class JSONMenuLoader implements MenuLoader {
 
 						mensa.addDay(day);
 						JSONArray jsonMenus = jsonDay.getJSONArray("menus");
+                        checkName(jsonMenus);
                         			normalize(jsonMenus);
 						for (int j = 0; j < jsonMenus.length(); j++) {
 							day.addMenu(new MensaMenu(jsonMenus
-									.getJSONObject(j), getNameFromMeal()));
+									.getJSONObject(j)));
 						}
 					}
 				}
@@ -121,6 +120,28 @@ public abstract class JSONMenuLoader implements MenuLoader {
 		}
 		return mensa;
 	}
+
+    private void checkName(JSONArray jsonMenus) throws JSONException {
+        if (getNameFromMeal()) {
+            for (int i = 0; i < jsonMenus.length(); i++) {
+                JSONObject jsonMenu = jsonMenus.getJSONObject(i);
+
+                String meal = jsonMenu.getString("meal");
+                String name = "";
+                // get name from meal, separated by :
+                int index = meal.indexOf(":");
+                if (index >= 0) {
+                    name = meal.substring(0, index).trim();
+                    if (index < meal.length()) {
+                        meal = meal.substring(index + 1,
+                                meal.length()).trim();
+                    }
+                }
+                jsonMenu.put("name", name);
+                jsonMenu.put("meal", meal);
+            }
+        }
+    }
 
     public static final String pricePattern = "[0-9],[0-9][0-9]";
 
@@ -141,9 +162,9 @@ public abstract class JSONMenuLoader implements MenuLoader {
                     continue;
                 }
             }
-            String postfix = meal.substring(meal.length()-4);
-            if(postfix.matches(pricePattern)) {
-                jsonDay.put("meal", meal.substring(0, meal.length()-4));
+            String postfix = meal.substring(meal.length() - 4);
+            if (postfix.matches(pricePattern)) {
+                jsonDay.put("meal", meal.substring(0, meal.length() - 4));
                 jsonDay.put("price", postfix.replace(",", ""));
             }
         }
