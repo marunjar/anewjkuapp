@@ -49,10 +49,10 @@ public class NewExamNotification {
 			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
 					mContext)
 					.setSmallIcon(R.drawable.ic_stat_notify_kusss)
-					.setLargeIcon(
-							BitmapFactory.decodeResource(
-									mContext.getResources(),
-									R.drawable.ic_launcher_grey))
+//					.setLargeIcon(
+//							BitmapFactory.decodeResource(
+//									mContext.getResources(),
+//									R.drawable.ic_launcher_grey))
 					.setContentIntent(pendingIntent)
 					.setContentTitle(
 							mContext.getText(R.string.notification_new_exams_title))
