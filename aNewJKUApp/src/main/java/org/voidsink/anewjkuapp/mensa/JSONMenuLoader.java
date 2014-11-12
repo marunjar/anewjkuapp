@@ -1,7 +1,6 @@
 package org.voidsink.anewjkuapp.mensa;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
@@ -13,22 +12,24 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.utils.Analytics;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
+import android.util.Log;
 
 public abstract class JSONMenuLoader implements MenuLoader {
 	protected abstract String getUrl();
 
-	protected abstract String getCacheKey();
-
 	private static final String PREF_DATA_PREFIX = "MENSA_DATA_";
 	private static final String PREF_DATE_PREFIX = "MENSA_DATE_";
 
-	private String getData(Context context) {
+    protected abstract String getCacheKey();
+
+    private String getData(Context context) {
 		String result = null;
 		String cacheDateKey = PREF_DATE_PREFIX + getCacheKey();
 		String cacheDataKey = PREF_DATA_PREFIX + getCacheKey();
@@ -59,12 +60,10 @@ public abstract class JSONMenuLoader implements MenuLoader {
 				Editor editor = sp.edit();
 				editor.putString(cacheDataKey, result);
 				editor.putLong(cacheDateKey, System.currentTimeMillis());
-				editor.commit();
-
-			} catch (IOException e) {
-				e.printStackTrace();
+				editor.apply();
+			} catch (Exception e) {
+                Analytics.sendException(context, e, false);
 				result = sp.getString(cacheDataKey, null);
-			} finally {
 			}
 		}
 
@@ -106,19 +105,89 @@ public abstract class JSONMenuLoader implements MenuLoader {
 
 						mensa.addDay(day);
 						JSONArray jsonMenus = jsonDay.getJSONArray("menus");
+                        checkName(jsonMenus);
+                        normalize(context, jsonMenus);
 						for (int j = 0; j < jsonMenus.length(); j++) {
 							day.addMenu(new MensaMenu(jsonMenus
-									.getJSONObject(j), getNameFromMeal()));
+									.getJSONObject(j)));
 						}
 					}
 				}
 			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-			return null;
+		} catch (Exception e) {
+            Analytics.sendException(context, e, false);
+            return null;
 		}
 		return mensa;
 	}
+
+    private void checkName(JSONArray jsonMenus) throws JSONException {
+        if (getNameFromMeal()) {
+            for (int i = 0; i < jsonMenus.length(); i++) {
+                JSONObject jsonMenu = jsonMenus.getJSONObject(i);
+
+                String meal = jsonMenu.getString("meal");
+                String name = "";
+                // get name from meal, separated by :
+                int index = meal.indexOf(":");
+                if (index >= 0) {
+                    name = meal.substring(0, index).trim();
+                    if (index < meal.length()) {
+                        meal = meal.substring(index + 1,
+                                meal.length()).trim();
+                    }
+                }
+                jsonMenu.put("name", name);
+                jsonMenu.put("meal", meal);
+            }
+        }
+    }
+
+    public static final String pricePattern = "[0-9],[0-9][0-9]";
+
+    //push every followup-element one position later
+    protected void insert(JSONArray a, Object o, int index) throws JSONException {
+        if(index >= a.length() || index < 0) { //just for some cornercases
+            a.put(o);
+        } else {
+            Object tmp = a.get(index);
+            a.put(index, o);
+            //recursion ftw
+            insert(a, tmp, index + 1);
+        }
+    }
+
+    protected void normalize(Context c, JSONArray jsonDays) throws JSONException {
+        for (int i = 0; i < jsonDays.length(); i++) {
+            try {
+                JSONObject jsonDay = jsonDays.getJSONObject(i);
+                String meal = jsonDay.getString("meal").trim();
+                if (meal != null) {
+                    String[] ms = meal.split(pricePattern);
+                    if (ms.length > 1) {
+                        Log.d("meal", ms[1]);
+                        JSONObject clone = new JSONObject(jsonDay.toString());
+                        int startOfSecond = meal.indexOf(ms[1]);
+                        jsonDay.put("meal", meal.substring(0, startOfSecond));
+                        clone.put("meal", meal.substring(startOfSecond));
+                        insert(jsonDays, clone, i + 1);
+                        i--;
+                        continue;
+                    }
+                    if (meal.length() > 4) {
+                        String postfix = meal.substring(meal.length() - 4);
+                        if (postfix.matches(pricePattern)) {
+                            jsonDay.put("meal", meal.substring(0, meal.length() - 4));
+                            jsonDay.put("price", postfix.replace(",", ""));
+                        }
+                    }
+                }
+            } catch (JSONException e) {
+                Analytics.sendException(c, e, false);
+            }
+        }
+    }
+
 
 	protected void onNewDay(MensaDay day) {
 

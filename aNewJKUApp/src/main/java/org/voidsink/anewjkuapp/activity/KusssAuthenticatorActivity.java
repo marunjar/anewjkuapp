@@ -30,6 +30,7 @@ import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.utils.Consts;
+import org.voidsink.anewjkuapp.utils.UIUtils;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -50,7 +51,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        AppUtils.applyTheme(this);
+        UIUtils.applyTheme(this);
 
         super.onCreate(savedInstanceState);
 
@@ -260,7 +261,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (AppUtils.handleUpNavigation(this, item)) {
+        if (UIUtils.handleUpNavigation(this, item)) {
             return true;
         }
         return super.onOptionsItemSelected(item);

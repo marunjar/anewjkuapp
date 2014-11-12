@@ -25,6 +25,7 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
+import org.voidsink.anewjkuapp.utils.UIUtils;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class SettingsActivity extends PreferenceActivity implements
     @SuppressWarnings("deprecation")
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        AppUtils.applyTheme(this);
+        UIUtils.applyTheme(this);
 
         super.onCreate(savedInstanceState);
 

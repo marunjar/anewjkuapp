@@ -16,6 +16,7 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.base.ThemedCard;
 import org.voidsink.anewjkuapp.fragment.MapFragment;
+import org.voidsink.anewjkuapp.utils.UIUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -83,26 +84,9 @@ public class CalendarCard extends ThemedCard {
             title.setText(getTitle());
         }
 
-        if (getDescr().isEmpty()) {
-            descr.setVisibility(View.GONE);
-        } else {
-            descr.setVisibility(View.VISIBLE);
-            descr.setText(getDescr());
-        }
-
-        if (getTime().isEmpty()) {
-            time.setVisibility(View.GONE);
-        } else {
-            time.setVisibility(View.VISIBLE);
-            time.setText(getTime());
-        }
-
-        if (getLocation().isEmpty()) {
-            location.setVisibility(View.GONE);
-        } else {
-            location.setVisibility(View.VISIBLE);
-            location.setText(getLocation());
-        }
+        UIUtils.setTextAndVisibility(descr, getDescr());
+        UIUtils.setTextAndVisibility(time, getTime());
+        UIUtils.setTextAndVisibility(location, getLocation());
     }
 
     public CalendarCard(Context context) {

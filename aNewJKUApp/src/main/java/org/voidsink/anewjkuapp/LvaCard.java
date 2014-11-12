@@ -9,6 +9,7 @@ import android.widget.TextView;
 import org.voidsink.anewjkuapp.base.ThemedCard;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
+import org.voidsink.anewjkuapp.utils.UIUtils;
 
 import it.gmariotti.cardslib.library.internal.CardHeader;
 
@@ -43,13 +44,7 @@ public class LvaCard extends ThemedCard {
         TextView chipEcts = (TextView) chipBack.findViewById(R.id.grade_chip_info);
         TextView chipGrade = (TextView) chipBack.findViewById(R.id.grade_chip_grade);
 
-        if (!lva.getLva().getTeacher().isEmpty()) {
-            teacher.setText(lva.getLva().getTeacher());
-            teacher.setVisibility(View.VISIBLE);
-        } else {
-            teacher.setVisibility(View.GONE);
-        }
-
+        UIUtils.setTextAndVisibility(teacher, lva.getLva().getTeacher());
         lvaNr.setText(lva.getLva().getLvaNr());
         skz.setText(String.format("[%s]", lva.getLva().getSKZ()));
         code.setText(lva.getLva().getCode());

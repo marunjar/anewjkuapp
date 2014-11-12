@@ -29,8 +29,6 @@ import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 
-import org.voidsink.anewjkuapp.R;
-
 import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
 
 /**
@@ -191,6 +189,9 @@ public class SlidingTabLayout extends HorizontalScrollView {
         int padding = (int) (TAB_VIEW_PADDING_DIPS * getResources().getDisplayMetrics().density);
         textView.setPadding(padding, padding, padding, padding);
 
+        //set layoutparams: width=wrap_content, height=match_parent, weight=1 (stretch tabs if view is not fully filled up with tabs)
+        textView.setLayoutParams(new SlidingTabStrip.LayoutParams(SlidingTabStrip.LayoutParams.WRAP_CONTENT, SlidingTabStrip.LayoutParams.MATCH_PARENT, 1));
+
         return textView;
     }
 
@@ -217,7 +218,10 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 tabTitleView = (TextView) tabView;
             }
 
-            tabTitleView.setText(adapter.getPageTitle(i));
+            if (tabTitleView != null) {
+                tabTitleView.setText(adapter.getPageTitle(i));
+            }
+
             tabView.setOnClickListener(tabClickListener);
 
             mTabStrip.addView(tabView);
