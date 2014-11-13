@@ -41,6 +41,8 @@ public class LvaDetailFragment extends BaseFragment {
 
     public LvaDetailFragment(List<String> terms, List<Lva> lvas,
                              List<ExamGrade> grades) {
+        super();
+
         this.mTerms = terms;
         this.mLvas = AppUtils.getLvasWithGrades(terms, lvas, grades);
     }
