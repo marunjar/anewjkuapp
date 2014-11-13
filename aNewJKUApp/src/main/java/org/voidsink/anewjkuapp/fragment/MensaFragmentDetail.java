@@ -57,19 +57,20 @@ public abstract class MensaFragmentDetail extends BaseFragment {
     protected abstract MenuLoader createLoader();
 
     private class MenuLoadTask extends AsyncTask<String, Void, Void> {
-        private Mensa mensa;
         private List<Card> mMenus;
         private Context mContext;
 
         @Override
         protected Void doInBackground(String... urls) {
-            mensa = createLoader().getMensa(mContext);
+            final Mensa mensa = createLoader().getMensa(mContext);
 
             mMenus = new ArrayList<>();
 
-            for (MensaDay day : mensa.getDays()) {
-                for (MensaMenu menu : day.getMenus()) {
-                    mMenus.add(new MenuCard(mContext, mensa, day, menu));
+            if (mensa != null) {
+                for (MensaDay day : mensa.getDays()) {
+                    for (MensaMenu menu : day.getMenus()) {
+                        mMenus.add(new MenuCard(mContext, mensa, day, menu));
+                    }
                 }
             }
 

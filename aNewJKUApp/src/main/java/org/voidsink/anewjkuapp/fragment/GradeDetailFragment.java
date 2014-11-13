@@ -30,7 +30,13 @@ public class GradeDetailFragment extends BaseFragment {
 
     private List<ExamGrade> mGrades;
 
+    public GradeDetailFragment() {
+        this (new ArrayList<String>(), new ArrayList<ExamGrade>());
+    }
+
     public GradeDetailFragment(List<String> terms, List<ExamGrade> grades) {
+        super();
+
         this.mGrades = AppUtils.filterGrades(terms, grades);
     }
 

@@ -16,6 +16,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.voidsink.anewjkuapp.utils.Analytics;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.CookieHandler;
@@ -198,7 +199,11 @@ public class KusssHandler {
             writeParams(conn, new String[]{"selectAll"},
                     new String[]{"ical.category.mycourses"});
 
-            iCal = mCalendarBuilder.build(conn.getInputStream());
+            BufferedInputStream in = new BufferedInputStream(conn.getInputStream());
+
+            iCal = mCalendarBuilder.build(in);
+
+            conn.disconnect();
         } catch (Exception e) {
             Log.e(TAG, "getLVAIcal", e);
             Analytics.sendException(c, e, true);
@@ -219,7 +224,11 @@ public class KusssHandler {
             writeParams(conn, new String[]{"selectAll"},
                     new String[]{"ical.category.examregs"});
 
-            iCal = mCalendarBuilder.build(conn.getInputStream());
+            BufferedInputStream in = new BufferedInputStream(conn.getInputStream());
+
+            iCal = mCalendarBuilder.build(in);
+
+            conn.disconnect();
         } catch (Exception e) {
             Log.e(TAG, "getExamIcal", e);
             Analytics.sendException(c, e, true);
