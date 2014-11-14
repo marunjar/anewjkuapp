@@ -85,7 +85,9 @@ public class GradeFragment extends SlidingTabsFragment implements
 			protected void onPreExecute() {
 				super.onPreExecute();
 
-				progressDialog = ProgressDialog.show(context,
+                this.terms = new ArrayList<>();
+
+                progressDialog = ProgressDialog.show(context,
 						context.getString(R.string.progress_title),
 						context.getString(R.string.progress_load_grade), true);
 			}
@@ -93,8 +95,7 @@ public class GradeFragment extends SlidingTabsFragment implements
 			@Override
 			protected Void doInBackground(Void... params) {
 				this.grades = KusssContentProvider.getGrades(context);
-				this.terms = new ArrayList<String>();
-				for (ExamGrade grade : this.grades) {
+                for (ExamGrade grade : this.grades) {
 					if (!grade.getTerm().isEmpty() && this.terms.indexOf(grade.getTerm()) < 0) {
 						this.terms.add(grade.getTerm());
 					}
@@ -114,14 +115,14 @@ public class GradeFragment extends SlidingTabsFragment implements
 
 			@Override
 			protected void onPostExecute(Void result) {
-				progressDialog.dismiss();
-
 				Log.i(TAG, "loadGrades " + this.terms);
 
                 mGrades = this.grades;
                 mTerms = this.terms;
 
                 updateData();
+
+                progressDialog.dismiss();
 
 				super.onPostExecute(result);
 			}

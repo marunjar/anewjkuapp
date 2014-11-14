@@ -93,7 +93,9 @@ public class LvaFragment2 extends SlidingTabsFragment implements
 			protected void onPreExecute() {
 				super.onPreExecute();
 
-				progressDialog = ProgressDialog.show(context,
+                this.terms = new ArrayList<>();
+
+                progressDialog = ProgressDialog.show(context,
 						context.getString(R.string.progress_title),
 						context.getString(R.string.progress_load_lva), true);
 			}
@@ -102,7 +104,6 @@ public class LvaFragment2 extends SlidingTabsFragment implements
 			protected Void doInBackground(Void... params) {
 				this.lvas = KusssContentProvider.getLvas(context);
 				this.grades = KusssContentProvider.getGrades(context);
-				this.terms = new ArrayList<String>();
 				for (Lva lva : this.lvas) {
 					if (this.terms.indexOf(lva.getTerm()) < 0) {
 						this.terms.add(lva.getTerm());
@@ -122,8 +123,6 @@ public class LvaFragment2 extends SlidingTabsFragment implements
 
 			@Override
 			protected void onPostExecute(Void result) {
-				progressDialog.dismiss();
-
 				// Log.i(TAG, "loadLvas" + this.terms);
 
                 mLvas = this.lvas;
@@ -131,6 +130,8 @@ public class LvaFragment2 extends SlidingTabsFragment implements
                 mTerms = this.terms;
 
                 updateData();
+
+                progressDialog.dismiss();
 
 				super.onPostExecute(result);
 			}

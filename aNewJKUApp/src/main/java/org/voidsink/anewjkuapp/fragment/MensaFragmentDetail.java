@@ -64,8 +64,6 @@ public abstract class MensaFragmentDetail extends BaseFragment {
         protected Void doInBackground(String... urls) {
             final Mensa mensa = createLoader().getMensa(mContext);
 
-            mMenus = new ArrayList<>();
-
             if (mensa != null) {
                 for (MensaDay day : mensa.getDays()) {
                     for (MensaMenu menu : day.getMenus()) {
@@ -84,6 +82,7 @@ public abstract class MensaFragmentDetail extends BaseFragment {
             if (mContext == null) {
                 Log.e(TAG, "context is null");
             }
+            mMenus = new ArrayList<>();
             mAdapter.clear();
             mAdapter.notifyDataSetChanged();
         }

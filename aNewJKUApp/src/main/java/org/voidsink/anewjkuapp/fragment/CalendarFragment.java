@@ -132,15 +132,12 @@ public class CalendarFragment extends BaseFragment {
     private class CalendarLoadTask extends AsyncTask<String, Void, Void> {
         private ProgressDialog progressDialog;
         private List<Card> mCards;
-        private Map<String, Integer> mColors;
         private Context mContext;
 
         @Override
         protected Void doInBackground(String... urls) {
-            mCards = new ArrayList<>();
-
             // fetch calendar colors
-            this.mColors = new HashMap<>();
+            final Map<String, Integer> mColors = new HashMap<>();
             ContentResolver cr = mContext.getContentResolver();
             Cursor c = cr
                     .query(CalendarContractWrapper.Calendars.CONTENT_URI(),
@@ -150,7 +147,7 @@ public class CalendarFragment extends BaseFragment {
                                             .CALENDAR_COLOR()}, null, null,
                             null);
             while (c.moveToNext()) {
-                this.mColors.put(c.getString(0), c.getInt(1));
+                mColors.put(c.getString(0), c.getInt(1));
             }
             c.close();
 
@@ -230,11 +227,12 @@ public class CalendarFragment extends BaseFragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
             mContext = CalendarFragment.this.getContext();
             if (mContext == null) {
                 Log.e(TAG, "context is null");
             }
-
+            mCards = new ArrayList<>();
             progressDialog = ProgressDialog.show(mContext,
                     mContext.getString(R.string.progress_title),
                     mContext.getString(R.string.progress_load_calendar), true);
@@ -245,9 +243,9 @@ public class CalendarFragment extends BaseFragment {
             mAdapter.clear();
             mAdapter.addAll(mCards);
             progressDialog.dismiss();
+
             super.onPostExecute(result);
         }
-
     }
 
     private class CalendarContentObserver extends ContentObserver {
