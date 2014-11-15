@@ -4,7 +4,13 @@
 		    + added
 		    - fixed
 		    * changed -->
-    <release version="0.24" versioncode="1400234">
+    <release version="0.25" versioncode="140025">
+        <change>- Mensa: Fehler beim Laden von Choice behoben</change>
+        <change>- Prüfungen: Fehler beim Laden von Ort und Zeit behoben</change>
+        <change>* App: Material Design angepasst</change>
+        <change>* App: Launcher Icon aktualisiert</change>
+    </release>
+    <release version="0.24" versioncode="140024">
         <change>+ App: jetzt auch in Englisch</change>
         <change>+ App: Passwort kann beim Anmelden auch als Klartext angezeigt werden</change>
     </release>
