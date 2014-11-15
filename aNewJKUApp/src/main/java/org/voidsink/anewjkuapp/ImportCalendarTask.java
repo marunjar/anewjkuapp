@@ -29,6 +29,7 @@ import org.voidsink.anewjkuapp.notification.CalendarChangedNotification;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 
     private final long mSyncFromNow;
 
-    private boolean isSync;
+    private boolean mShowProgress;
     private SyncNotification mUpdateNotification;
     private CalendarChangedNotification mNotification;
 
@@ -95,7 +96,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                         .acquireContentProviderClient(
                                 CalendarContractWrapper.Events.CONTENT_URI()),
                 new SyncResult(), context, getTypeID, calendarBuilder);
-        this.isSync = false;
+        this.mShowProgress = true;
     }
 
     public ImportCalendarTask(Account account, Bundle extras, String authority,
@@ -110,7 +111,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
         this.mCalendarName = calendarName;
         this.mCalendarBuilder = calendarBuilder;
         this.mSyncFromNow = System.currentTimeMillis();
-        this.isSync = true;
+        this.mShowProgress = (extras != null && extras.getBoolean(Consts.SYNC_SHOW_PROGRESS, false));
     }
 
     @Override
@@ -118,7 +119,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
         super.onPreExecute();
         Log.d(TAG, "prepare importing calendar");
 
-        if (!isSync) {
+        if (mShowProgress) {
             mUpdateNotification = new SyncNotification(mContext,
                     R.string.notification_sync_calendar);
             mUpdateNotification.show(CalendarUtils.getCalendarName(mContext,

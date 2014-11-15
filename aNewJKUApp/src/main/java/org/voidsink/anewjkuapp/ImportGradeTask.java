@@ -15,6 +15,7 @@ import org.voidsink.anewjkuapp.notification.GradesChangedNotification;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import android.accounts.Account;
 import android.content.ContentProviderClient;
@@ -39,7 +40,7 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 	private Context mContext;
 	private ContentResolver mResolver;
 
-	private boolean isSync;
+	private boolean mShowProgress;
 	private SyncNotification mUpdateNotification;
 	private GradesChangedNotification mGradeChangeNotification;
 
@@ -75,7 +76,7 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 				.acquireContentProviderClient(
 						KusssContentContract.Exam.CONTENT_URI);
 		this.mSyncResult = new SyncResult();
-		this.isSync = false;
+		this.mShowProgress = true;
 	}
 
 	public ImportGradeTask(Account account, Bundle extras, String authority,
@@ -86,7 +87,7 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 		this.mSyncResult = syncResult;
 		this.mResolver = context.getContentResolver();
 		this.mContext = context;
-		this.isSync = true;
+		this.mShowProgress = (extras != null && extras.getBoolean(Consts.SYNC_SHOW_PROGRESS, false));
 	}
 
 	@Override
@@ -95,7 +96,7 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 
 		Log.d(TAG, "prepare importing grades");
 
-		if (!isSync) {
+		if (mShowProgress) {
 			mUpdateNotification = new SyncNotification(mContext,
 					R.string.notification_sync_lva);
 			mUpdateNotification.show("Import Noten");
