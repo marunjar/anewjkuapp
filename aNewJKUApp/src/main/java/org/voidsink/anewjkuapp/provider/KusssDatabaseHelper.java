@@ -108,7 +108,11 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 	}
 
 	public static void drop(Context context) {
-		context.deleteDatabase(DATABASE_NAME);
+		try {
+            context.deleteDatabase(DATABASE_NAME);
+        } catch (Exception e) {
+            Analytics.sendException(context, e, true);
+        }
 	}
 
 	public static boolean toBool(int integer) {
@@ -127,12 +131,16 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 
 			db.execSQL("DROP TABLE IF EXISTS "
 					+ KusssContentContract.Grade.GRADE_TABLE_NAME);
+            db.execSQL(DB_CREATE_GRADE);
 			db.execSQL("DROP TABLE IF EXISTS "
 					+ KusssContentContract.Exam.EXAM_TABLE_NAME);
+            db.execSQL(DB_CREATE_EXAM);
 			db.execSQL("DROP TABLE IF EXISTS "
 					+ KusssContentContract.Lva.LVA_TABLE_NAME);
+            db.execSQL(DB_CREATE_LVA);
 		} catch (Exception e) {
-			Analytics.sendException(context, e, true);
+            Analytics.sendException(context, e, true);
+            drop(context);
 		}
 	}
 }
