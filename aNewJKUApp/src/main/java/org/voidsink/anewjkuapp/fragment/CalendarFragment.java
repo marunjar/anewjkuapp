@@ -242,6 +242,8 @@ public class CalendarFragment extends BaseFragment {
         protected void onPostExecute(Void result) {
             mAdapter.clear();
             mAdapter.addAll(mCards);
+            mAdapter.notifyDataSetChanged();
+
             progressDialog.dismiss();
 
             super.onPostExecute(result);
