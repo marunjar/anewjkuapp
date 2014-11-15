@@ -119,9 +119,11 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 		return (bool) ? 1 : 0;
 	}
 
-	public void dropUserData() {
+	public static void dropUserData(Context context) {
 		try {
-			SQLiteDatabase db = this.getWritableDatabase();
+            KusssDatabaseHelper mDbHelper = new KusssDatabaseHelper(context);
+
+            SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
 			db.execSQL("DROP TABLE IF EXISTS "
 					+ KusssContentContract.Grade.GRADE_TABLE_NAME);
@@ -130,8 +132,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 			db.execSQL("DROP TABLE IF EXISTS "
 					+ KusssContentContract.Lva.LVA_TABLE_NAME);
 		} catch (Exception e) {
-			Analytics.sendException(mContext, e, true);
-			Log.e(TAG, "dropUserData", e);
+			Analytics.sendException(context, e, true);
 		}
 	}
 }

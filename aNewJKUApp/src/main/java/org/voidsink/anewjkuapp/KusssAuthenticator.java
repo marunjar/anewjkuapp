@@ -4,6 +4,7 @@ import org.voidsink.anewjkuapp.activity.KusssAuthenticatorActivity;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
+import org.voidsink.anewjkuapp.utils.Analytics;
 
 import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;
@@ -182,24 +183,28 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
 		final Bundle result = super.getAccountRemovalAllowed(response, account);
 
 		if (result.getBoolean(AccountManager.KEY_BOOLEAN_RESULT)) {
-			KusssDatabaseHelper.drop(mContext);
+			KusssDatabaseHelper.dropUserData(mContext);
 		}
 		return result;
 	}
 
 	public static void TriggerRefresh(Context context) {
-		Account[] accounts = AccountManager.get(context).getAccountsByType(
-				ACCOUNT_TYPE);
-		for (Account account : accounts) {
-			Bundle b = new Bundle();
-			// Disable sync backoff and ignore sync preferences. In other
-			// words...perform sync NOW!
-			b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-			b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-			ContentResolver.requestSync(account, // Sync
-					CalendarContractWrapper.AUTHORITY(), // Content authority
-					b); // Extras
-		}
+		try {
+            Account[] accounts = AccountManager.get(context).getAccountsByType(
+                    ACCOUNT_TYPE);
+            for (Account account : accounts) {
+                Bundle b = new Bundle();
+                // Disable sync backoff and ignore sync preferences. In other
+                // words...perform sync NOW!
+                b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+                b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+                ContentResolver.requestSync(account, // Sync
+                        CalendarContractWrapper.AUTHORITY(), // Content authority
+                        b); // Extras
+            }
+        } catch (Exception e) {
+            Analytics.sendException(context, e, false);
+        }
 	}
 
 	/**
