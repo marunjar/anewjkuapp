@@ -19,6 +19,7 @@ import org.voidsink.anewjkuapp.notification.NewExamNotification;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
     private Context mContext;
     private ContentResolver mResolver;
 
-    private boolean isSync;
+    private boolean mShowProgress;
     private SyncNotification mUpdateNotification;
     private NewExamNotification mNewExamNotification;
 
@@ -71,7 +72,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
                 .acquireContentProviderClient(
                         KusssContentContract.Exam.CONTENT_URI);
         this.mSyncResult = new SyncResult();
-        this.isSync = false;
+        this.mShowProgress = true;
     }
 
     public ImportExamTask(Account account, Bundle extras, String authority,
@@ -82,7 +83,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
         this.mSyncResult = syncResult;
         this.mResolver = context.getContentResolver();
         this.mContext = context;
-        this.isSync = true;
+        this.mShowProgress = (extras != null && extras.getBoolean(Consts.SYNC_SHOW_PROGRESS, false));
     }
 
     @Override
@@ -91,10 +92,10 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 
         Log.d(TAG, "prepare importing exams");
 
-        if (!isSync) {
+        if (mShowProgress) {
             mUpdateNotification = new SyncNotification(mContext,
                     R.string.notification_sync_exam);
-            mUpdateNotification.show("Prüfungen werden geladen");
+            mUpdateNotification.show(mContext.getString(R.string.notification_sync_exam_loading));
         }
         mNewExamNotification = new NewExamNotification(mContext);
     }
@@ -104,7 +105,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
         Log.d(TAG, "Start importing exams");
 
         synchronized (sync_lock) {
-            updateNotify("Prüfungen werden geladen");
+            updateNotify(mContext.getString(R.string.notification_sync_exam_loading));
 
             final DateFormat df = DateFormat.getDateInstance();
 
@@ -142,7 +143,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 
                         Log.d(TAG, String.format("got %s exams", exams.size()));
 
-                        updateNotify("Prüfungen werden aktualisiert");
+                        updateNotify(mContext.getString(R.string.notification_sync_exam_updating));
 
                         ArrayList<ContentProviderOperation> batch = new ArrayList<>();
 
@@ -264,7 +265,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
                             }
 
                             if (batch.size() > 0) {
-                                updateNotify("Prüfungen werden gespeichert");
+                                updateNotify(mContext.getString(R.string.notification_sync_exam_saving));
 
                                 Log.d(TAG, "Applying batch update");
                                 mProvider.applyBatch(batch);

@@ -46,9 +46,22 @@
 
     <string name="notification_sync_running">Daten werden synchronisiert</string>
     <string name="notification_sync_calendar">Termine werden synchronisiert</string>
+    <string name="notification_sync_calendar_loading">%s: Termine werden geladen</string>
+    <string name="notification_sync_calendar_updating">%s: Termine werden aktualisiert</string>
+    <string name="notification_sync_calendar_adding">%s: Termine werden hinzugefügt</string>
+    <string name="notification_sync_calendar_saving">%s Termine werden gespeichert</string>
     <string name="notification_sync_exam">Prüfungen werden synchronisiert</string>
+    <string name="notification_sync_exam_loading">Prüfungen werden geladen</string>
+    <string name="notification_sync_exam_updating">Prüfungen werden aktualisiert</string>
+    <string name="notification_sync_exam_saving">Prüfungen werden gespeichert</string>
     <string name="notification_sync_grade">Noten werden synchronisiert</string>
+    <string name="notification_sync_grade_loading">Noten werden geladen</string>
+    <string name="notification_sync_grade_updating">Noten werden aktualisiert</string>
+    <string name="notification_sync_grade_saving">Noten werden gespeichert</string>
     <string name="notification_sync_lva">LVAs werden synchronisiert</string>
+    <string name="notification_sync_lva_loading">LVAs werden geladen</string>
+    <string name="notification_sync_lva_updating">LVAs werden aktualisiert</string>
+    <string name="notification_sync_lva_saving">LVAs werden gespeichert</string>
     <string name="notification_events_changed_title" formatted="false">Termin(e) in "%s" geändert</string>
     <string name="notification_events_changed" formatted="false">%d Termin(e) in "%s" geändert</string>
     <string name="notification_new_exams_title">neue Prüfung(en) gefunden</string>

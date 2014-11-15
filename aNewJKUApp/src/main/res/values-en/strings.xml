@@ -66,10 +66,10 @@
     <string name="notification_new_exams_title">Found new exams</string>
     <string name="notification_poi_changed">%d new places available</string>
     <string name="notification_poi_changed_title">New places available</string>
-    <string name="notification_sync_calendar">Events are synchronized</string>
-    <string name="notification_sync_exam">Exams are synchronized</string>
-    <string name="notification_sync_grade">Grades are synchronized</string>
-    <string name="notification_sync_lva">Courses are synchronized</string>
+    <string name="notification_sync_calendar">Synchronizing events</string>
+    <string name="notification_sync_exam">Synchronizing exams</string>
+    <string name="notification_sync_grade">Synchronizing grades</string>
+    <string name="notification_sync_lva">Synchronizing courses</string>
     <string name="notification_sync_running">Data is synchronized</string>
     <string name="poi_provider_name">POIs</string>
     <string name="pref_app_map_file_title">Own map file</string>
@@ -147,4 +147,17 @@
     <string name="account_show_password">Show password</string>
     <string name="account_login_failed_wrong_pwd">Login failed: wrong password</string>
     <string name="account_login_failed_wrong_auth_token">Login failed: wrong authentification token</string>
+    <string name="notification_sync_calendar_adding">%s: adding events</string>
+    <string name="notification_sync_calendar_loading">%s: loading events</string>
+    <string name="notification_sync_calendar_saving">%s: saving events</string>
+    <string name="notification_sync_calendar_updating">%s: updating events</string>
+    <string name="notification_sync_exam_loading">Loading exams</string>
+    <string name="notification_sync_exam_saving">Saving exams</string>
+    <string name="notification_sync_exam_updating">Updating exams</string>
+    <string name="notification_sync_grade_loading">Loading grades</string>
+    <string name="notification_sync_grade_saving">Saving grades</string>
+    <string name="notification_sync_grade_updating">Updating grades</string>
+    <string name="notification_sync_lva_loading">Loading courses</string>
+    <string name="notification_sync_lva_saving">Saving courses</string>
+    <string name="notification_sync_lva_updating">Updating courses</string>
 </resources>

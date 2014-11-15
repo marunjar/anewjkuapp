@@ -22,6 +22,7 @@ import android.widget.TextView;
 import net.fortuna.ical4j.data.CalendarBuilder;
 
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
+import org.voidsink.anewjkuapp.fragment.CalendarFragment;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.DrawerItem;
@@ -114,6 +115,10 @@ public class MainActivity extends ThemedActivity implements
         Intent intent = getIntent();
 
         Fragment f = attachFragment(intent, savedInstanceState, true);
+        // attach calendar fragment as default
+        if (f == null) {
+            f = attachFragmentByClassName(CalendarFragment.class.getName());
+        }
         handleIntent(f, intent);
 
         mTitle = getTitleFromFragment(f);
