@@ -5,6 +5,7 @@ import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
 import org.voidsink.anewjkuapp.utils.Analytics;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;
@@ -116,8 +117,8 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
 		// If we get an authToken - we return it
 		if (!TextUtils.isEmpty(authToken)) {
 			// set new auth token (SessionID)
-			AccountManager.get(mContext).setAuthToken(account, authTokenType, authToken);	
-			
+			AccountManager.get(mContext).setAuthToken(account, authTokenType, authToken);
+
 			final Bundle result = new Bundle();
 			result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
 			result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
@@ -198,8 +199,13 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
                 // words...perform sync NOW!
                 b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
                 b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+                b.putBoolean(Consts.SYNC_SHOW_PROGRESS, true);
+
                 ContentResolver.requestSync(account, // Sync
-                        CalendarContractWrapper.AUTHORITY(), // Content authority
+                        CalendarContractWrapper.AUTHORITY(), // Calendar Content authority
+                        b); // Extras
+                ContentResolver.requestSync(account, // Sync
+                        KusssContentContract.AUTHORITY, // KUSSS Content authority
                         b); // Extras
             }
         } catch (Exception e) {

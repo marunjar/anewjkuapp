@@ -10,6 +10,8 @@ public class Consts {
     public static final int COLOR_DEFAULT_EXAM = Color.rgb(240, 149, 0);
     public static final int COLOR_DEFAULT_LVA = Color.rgb(43, 127, 194);
 
+    public static final String SYNC_SHOW_PROGRESS = "showProgress";
+
     //strings for logging of screens
 
     public static final String SCREEN_CALENDAR = "/calendar";

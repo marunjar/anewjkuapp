@@ -29,6 +29,7 @@ import org.voidsink.anewjkuapp.notification.CalendarChangedNotification;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 
     private final long mSyncFromNow;
 
-    private boolean isSync;
+    private boolean mShowProgress;
     private SyncNotification mUpdateNotification;
     private CalendarChangedNotification mNotification;
 
@@ -95,7 +96,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                         .acquireContentProviderClient(
                                 CalendarContractWrapper.Events.CONTENT_URI()),
                 new SyncResult(), context, getTypeID, calendarBuilder);
-        this.isSync = false;
+        this.mShowProgress = true;
     }
 
     public ImportCalendarTask(Account account, Bundle extras, String authority,
@@ -110,7 +111,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
         this.mCalendarName = calendarName;
         this.mCalendarBuilder = calendarBuilder;
         this.mSyncFromNow = System.currentTimeMillis();
-        this.isSync = true;
+        this.mShowProgress = (extras != null && extras.getBoolean(Consts.SYNC_SHOW_PROGRESS, false));
     }
 
     @Override
@@ -118,11 +119,13 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
         super.onPreExecute();
         Log.d(TAG, "prepare importing calendar");
 
-        if (!isSync) {
+        if (mShowProgress) {
             mUpdateNotification = new SyncNotification(mContext,
                     R.string.notification_sync_calendar);
-            mUpdateNotification.show(CalendarUtils.getCalendarName(mContext,
-                    this.mCalendarName));
+            mUpdateNotification.show(
+                    String.format(
+                            mContext.getString(R.string.notification_sync_calendar_loading),
+                            CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
         }
         mNotification = new CalendarChangedNotification(mContext,
                 CalendarUtils.getCalendarName(mContext, this.mCalendarName));
@@ -134,7 +137,9 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 
         synchronized (sync_lock) {
 
-            updateNotify("Kalender wird gelesen");
+            updateNotify(String.format(
+                    mContext.getString(R.string.notification_sync_calendar_loading),
+                    CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
 
             try {
 
@@ -174,7 +179,9 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                         Log.d(TAG,
                                 String.format("got %s events", events.size()));
 
-                        updateNotify("Termine werden aktualisiert");
+                        updateNotify(String.format(
+                                mContext.getString(R.string.notification_sync_calendar_updating),
+                                CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
 
                         ArrayList<ContentProviderOperation> batch = new ArrayList<>();
 
@@ -433,10 +440,12 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                             Log.d(TAG, "Cursor closed, " + eventsMap.size()
                                     + " events left");
 
+                            updateNotify(String.format(
+                                    mContext.getString(R.string.notification_sync_calendar_adding),
+                                    CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
+
                             // Add new items
                             for (VEvent v : eventsMap.values()) {
-                                updateNotify("Termine werden hinzugefügt");
-
                                 // notify only future changes
                                 if (v.getStartDate().getDate().getTime() > notifyFrom) {
                                     mNotification.addInsert(getEventString(v));
@@ -520,7 +529,9 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                             }
 
                             if (batch.size() > 0) {
-                                updateNotify("Termine werden gespeichert");
+                                updateNotify(String.format(
+                                        mContext.getString(R.string.notification_sync_calendar_saving),
+                                        CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
 
                                 Log.d(TAG, "Applying batch update");
                                 mProvider.applyBatch(batch);
