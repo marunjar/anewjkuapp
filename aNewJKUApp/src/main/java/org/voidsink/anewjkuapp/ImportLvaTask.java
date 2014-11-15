@@ -11,7 +11,6 @@ import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
-import org.voidsink.anewjkuapp.utils.Consts;
 
 import android.accounts.Account;
 import android.content.ContentProviderClient;
@@ -36,7 +35,7 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
 	private Context mContext;
 	private ContentResolver mResolver;
 
-	private boolean mShowProgress;
+	private boolean isSync;
 	private SyncNotification mUpdateNotification;
 
 	public static final String[] LVA_PROJECTION = new String[] {
@@ -68,7 +67,7 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
 				.acquireContentProviderClient(
 						KusssContentContract.Lva.CONTENT_URI);
 		this.mSyncResult = new SyncResult();
-		this.mShowProgress = true;
+		this.isSync = false;
 	}
 
 	public ImportLvaTask(Account account, Bundle extras, String authority,
@@ -79,7 +78,7 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
 		this.mSyncResult = syncResult;
 		this.mResolver = context.getContentResolver();
 		this.mContext = context;
-		this.mShowProgress = (extras != null && extras.getBoolean(Consts.SYNC_SHOW_PROGRESS, false));
+		this.isSync = true;
 	}
 
 	@Override
@@ -88,7 +87,7 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
 
 		Log.d(TAG, "prepare importing LVA");
 
-		if (mShowProgress) {
+		if (!isSync) {
 			mUpdateNotification = new SyncNotification(mContext,
 					R.string.notification_sync_lva);
 			mUpdateNotification.show("LVAs werden geladen");

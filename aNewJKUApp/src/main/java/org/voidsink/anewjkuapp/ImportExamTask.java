@@ -19,7 +19,6 @@ import org.voidsink.anewjkuapp.notification.NewExamNotification;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
-import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
     private Context mContext;
     private ContentResolver mResolver;
 
-    private boolean mShowProgress;
+    private boolean isSync;
     private SyncNotification mUpdateNotification;
     private NewExamNotification mNewExamNotification;
 
@@ -72,7 +71,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
                 .acquireContentProviderClient(
                         KusssContentContract.Exam.CONTENT_URI);
         this.mSyncResult = new SyncResult();
-        this.mShowProgress = true;
+        this.isSync = false;
     }
 
     public ImportExamTask(Account account, Bundle extras, String authority,
@@ -83,7 +82,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
         this.mSyncResult = syncResult;
         this.mResolver = context.getContentResolver();
         this.mContext = context;
-        this.mShowProgress = (extras != null && extras.getBoolean(Consts.SYNC_SHOW_PROGRESS, false));
+        this.isSync = true;
     }
 
     @Override
@@ -92,7 +91,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 
         Log.d(TAG, "prepare importing exams");
 
-        if (mShowProgress) {
+        if (!isSync) {
             mUpdateNotification = new SyncNotification(mContext,
                     R.string.notification_sync_exam);
             mUpdateNotification.show("Prüfungen werden geladen");

@@ -251,14 +251,11 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
             // on other scheduled syncs and network utilization.
         } else {
             mAccountManager.setPassword(account, accountPassword);
+            // updateCalendar();
         }
 
         setAccountAuthenticatorResult(intent.getExtras());
         setResult(RESULT_OK, intent);
-
-        // Sync NOW
-        KusssAuthenticator.TriggerRefresh(this);
-
         finish();
     }
 
