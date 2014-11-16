@@ -84,9 +84,9 @@ public class NavigationDrawerFragment extends BaseFragment {
 			// new DrawerMenuSection("Veranstaltungen"),
 			// new DrawerMenuItem("Veranstaltungen"),
 			new DrawerMenuItem(R.string.title_map, MapFragment.class),
-			// new DrawerMenuItem("News"),
-			// new DrawerMenuItem("Courier"),
 			new DrawerMenuSection(R.string.title_oeh),
+            new DrawerMenuItem(R.string.title_oeh_news, OehNewsFragment.class),
+            // new DrawerMenuItem("Courier"),
             new DrawerMenuItem(R.string.title_oeh_info, OehInfoFragment.class),
             new DrawerMenuItem(R.string.title_oeh_rights, OehRightsFragment.class)};
 

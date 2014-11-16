@@ -14,7 +14,7 @@
     <string name="title_oeh" translatable="false">ÖH</string>
     <string name="title_oeh_info">Info</string>
     <string name="title_oeh_rights">Rechte</string>
-    <string name="title_oeh_news">ÖH News</string>
+    <string name="title_oeh_news">News</string>
     <string name="title_oeh_linz" translatable="false">ÖH Linz</string>
 
     <string name="navigation_drawer_open">Navigation anzeigen</string>
@@ -196,6 +196,12 @@
     <string name="account_login_failed_wrong_pwd">Anmeldung fehlgeschlagen: falsches Passwort</string>
     <string name="account_login_failed_wrong_auth_token">Anmeldung fehlgeschlagen: falscher Authentifizierungstoken</string>
     <string name="account_login">Anmelden</string>
+
+    <string name="feed_title_oeh" translatable="false">ÖH</string>
+    <string name="feed_title_rewi" translatable="false">ReWi</string>
+    <string name="feed_title_sowi" translatable="false">SoWi</string>
+    <string name="feed_title_tnf" translatable="false">TNF</string>
+    <string name="feed_title_med" translatable="false">Medizin</string>
 
     <string name="default_chip_color" translatable="false" >#ff2b7fc2</string>
     <string name="drawer_menu_item_icon">Icon</string>
