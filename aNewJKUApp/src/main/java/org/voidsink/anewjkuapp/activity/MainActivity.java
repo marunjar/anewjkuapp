@@ -19,6 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.pkmmte.pkrss.PkRSS;
+
 import net.fortuna.ical4j.data.CalendarBuilder;
 
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
@@ -99,6 +101,8 @@ public class MainActivity extends ThemedActivity implements
 
         // initialize graphic factory for mapsforge
         AndroidGraphicFactory.createInstance(this.getApplication());
+
+        PkRSS.with(this).setLoggingEnabled(true);
 
         setContentView(R.layout.activity_main);
 

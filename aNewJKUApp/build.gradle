@@ -54,6 +54,8 @@ dependencies {
     compile 'org.mapsforge:mapsforge-map-reader:0.4.3'
     compile 'com.androidplot:androidplot-core:0.6.1'
     compile 'uk.co.chrisjenx:calligraphy:1.2.0'
+    compile 'com.pkmmte.pkrss:pkrss:1.1.2'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
 }
 
 def appendVersionNameVersionCode(variant, defaultConfig) {
