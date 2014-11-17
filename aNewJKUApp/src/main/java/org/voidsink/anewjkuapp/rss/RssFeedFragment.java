@@ -142,8 +142,8 @@ public class RssFeedFragment extends BaseFragment {
                         DisplayImageOptions options = new DisplayImageOptions.Builder()
                                 .cacheInMemory(true)
                                 .displayer(new SimpleBitmapDisplayer())
-                                .showImageForEmptyUri(getResources().getDrawable(R.drawable.ic_launcher_grey))
-                                .showImageOnFail(getResources().getDrawable(R.drawable.ic_launcher_grey))
+                                .showImageForEmptyUri(getResources().getDrawable(R.drawable.ic_launcher))
+                                .showImageOnFail(getResources().getDrawable(R.drawable.ic_launcher))
                                 .build();
 
                         List<Card> cards = new ArrayList<>();

@@ -38,8 +38,15 @@ public class RssCard extends Card {
         header.setTitle(getTitle());
 
         String preview = article.getDescription(); //Jsoup.parse(article.getDescription()).text();
-        if (preview != null && preview.length() > 175) {
-            preview = preview.substring(0, 175) + "...";
+        if (preview != null) {
+            int index = preview.indexOf("\n\n");
+            if (index > 0) {
+                preview = preview.substring(0, index);
+            }
+
+            if (preview.length() > 175) {
+                preview = preview.substring(0, 175) + "...";
+            }
         }
 
         this.setTitle(preview);
@@ -86,7 +93,7 @@ public class RssCard extends Card {
                         !mImage.getLastPathSegment().equals("x-office-document.png")) {
                     imageLoader.displayImage(mImage.toString(), (ImageView) viewImage, options);
                 } else {
-                    imageLoader.displayImage(null, (ImageView) viewImage, options);
+                    imageLoader.displayImage("http://oeh.jku.at/sites/default/files/styles/generic_thumbnail_medium/public/default_images/defaultimage-article_0.png", (ImageView) viewImage, options);
                 }
             } catch (Exception e) {
                 Log.e(TAG, "displayImage failed", e);
