@@ -81,11 +81,12 @@
     <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="okhttp-urlconnection-2.0.0" level="project" />
+    <orderEntry type="library" exported="" name="pkrss-1.1.2" level="project" />
     <orderEntry type="library" exported="" name="svg-android-0.4.3" level="project" />
     <orderEntry type="library" exported="" name="stickylistheaders-2.5.2" level="project" />
     <orderEntry type="library" exported="" name="okio-1.0.0" level="project" />
-    <orderEntry type="library" exported="" name="commons-lang-2.6" level="project" />
     <orderEntry type="library" exported="" name="kxml2-2.3.0" level="project" />
+    <orderEntry type="library" exported="" name="commons-lang-2.6" level="project" />
     <orderEntry type="library" exported="" name="support-v4-20.0.0" level="project" />
     <orderEntry type="library" exported="" name="ckchangelog-1.2.1" level="project" />
     <orderEntry type="library" exported="" name="mapsforge-map-android-0.4.3" level="project" />
@@ -107,7 +108,6 @@
     <orderEntry type="library" exported="" name="jsoup-1.8.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-6.1.71" level="project" />
     <orderEntry type="module" module-name="voidsinkContributors" exported="" />
-    <orderEntry type="module" module-name="pkrss" exported="" />
   </component>
 </module>
 
