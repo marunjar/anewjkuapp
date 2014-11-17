@@ -39,6 +39,7 @@ android {
 dependencies {
     compile 'de.cketti.library.changelog:ckchangelog:1.2.1'
     compile project(':voidsinkContributors')
+    compile project(':pkrss')
     compile 'com.android.support:support-v4:20.0.0'
     compile 'com.github.japgolly.android:svg-android:2.0.6'
     compile 'com.google.android.gms:play-services:6.1.71'
@@ -54,7 +55,6 @@ dependencies {
     compile 'org.mapsforge:mapsforge-map-reader:0.4.3'
     compile 'com.androidplot:androidplot-core:0.6.1'
     compile 'uk.co.chrisjenx:calligraphy:1.2.0'
-    compile 'com.pkmmte.pkrss:pkrss:1.1.2'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
 }
 

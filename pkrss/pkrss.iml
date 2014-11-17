@@ -3,7 +3,7 @@
   <component name="FacetManager">
     <facet type="android-gradle" name="Android-Gradle">
       <configuration>
-        <option name="GRADLE_PROJECT_PATH" value=":aNewJKUApp" />
+        <option name="GRADLE_PROJECT_PATH" value=":pkrss" />
       </configuration>
     </facet>
     <facet type="android" name="Android">
@@ -17,8 +17,9 @@
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res" />
-        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/src/main/res" />
+        <option name="RES_FOLDERS_RELATIVE_PATH" value="" />
         <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/src/main/assets" />
+        <option name="LIBRARY_PROJECT" value="true" />
       </configuration>
     </facet>
   </component>
@@ -77,37 +78,13 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/rs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
+      <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
-    <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android API 20 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="okhttp-urlconnection-2.0.0" level="project" />
-    <orderEntry type="library" exported="" name="svg-android-0.4.3" level="project" />
-    <orderEntry type="library" exported="" name="stickylistheaders-2.5.2" level="project" />
     <orderEntry type="library" exported="" name="okio-1.0.0" level="project" />
-    <orderEntry type="library" exported="" name="commons-lang-2.6" level="project" />
-    <orderEntry type="library" exported="" name="kxml2-2.3.0" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-20.0.0" level="project" />
-    <orderEntry type="library" exported="" name="ckchangelog-1.2.1" level="project" />
-    <orderEntry type="library" exported="" name="mapsforge-map-android-0.4.3" level="project" />
-    <orderEntry type="library" exported="" name="mapsforge-core-0.4.3" level="project" />
-    <orderEntry type="library" exported="" name="mapsforge-map-0.4.3" level="project" />
-    <orderEntry type="library" exported="" name="support-annotations-20.0.0" level="project" />
     <orderEntry type="library" exported="" name="okhttp-2.0.0" level="project" />
-    <orderEntry type="library" exported="" name="library-1.9.1" level="project" />
-    <orderEntry type="library" exported="" name="universal-image-loader-1.9.3" level="project" />
-    <orderEntry type="library" exported="" name="commons-codec-1.8" level="project" />
-    <orderEntry type="library" exported="" name="svg-android-2.0.6" level="project" />
-    <orderEntry type="library" exported="" name="backport-util-concurrent-3.1" level="project" />
-    <orderEntry type="library" exported="" name="ical4j-1.0.6" level="project" />
-    <orderEntry type="library" exported="" name="dashclock-api-2.0.0" level="project" />
-    <orderEntry type="library" exported="" name="mapsforge-map-awt-0.4.3" level="project" />
-    <orderEntry type="library" exported="" name="androidplot-core-0.6.1" level="project" />
-    <orderEntry type="library" exported="" name="calligraphy-1.2.0" level="project" />
-    <orderEntry type="library" exported="" name="mapsforge-map-reader-0.4.3" level="project" />
-    <orderEntry type="library" exported="" name="jsoup-1.8.1" level="project" />
-    <orderEntry type="library" exported="" name="play-services-6.1.71" level="project" />
-    <orderEntry type="module" module-name="voidsinkContributors" exported="" />
-    <orderEntry type="module" module-name="pkrss" exported="" />
   </component>
 </module>
 
