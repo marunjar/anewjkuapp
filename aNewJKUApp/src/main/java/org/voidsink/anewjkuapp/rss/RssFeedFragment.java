@@ -1,13 +1,17 @@
 package org.voidsink.anewjkuapp.rss;
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
@@ -18,7 +22,6 @@ import com.pkmmte.pkrss.PkRSS;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.utils.Consts;
-import android.widget.Toast;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -32,11 +35,10 @@ import it.gmariotti.cardslib.library.view.CardListView;
 /**
  * Created by paul on 16.11.2014.
  */
-public class RssFeedFragment extends BaseFragment implements Callback {
+public class RssFeedFragment extends BaseFragment {
 
     private URL mUrl = null;
     private CardArrayAdapter mCardArrayAdapter;
-    private List<Article> mFeed = new ArrayList<>();
 
     @Override
     public void setArguments(Bundle args) {
@@ -65,52 +67,12 @@ public class RssFeedFragment extends BaseFragment implements Callback {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loadFeed();
-    }
 
-    private void loadFeed() {
-        if (mUrl != null) {
-            PkRSS.with(getContext()).load(mUrl.toString()).callback(RssFeedFragment.this).async();
-        }
-    }
-
-    @Override
-    public void OnPreLoad() {
-
-    }
-
-    @Override
-    public void OnLoaded(List<Article> articles) {
-        if (mUrl != null) {
-            mFeed = PkRSS.with(getContext()).get(mUrl.toString());
-        }
+        updateData();
     }
 
     private void updateData() {
-        if (mCardArrayAdapter != null) {
-            DisplayImageOptions options = new DisplayImageOptions.Builder()
-                    .cacheInMemory(true)
-                    .displayer(new SimpleBitmapDisplayer())
-                    .showImageForEmptyUri(getResources().getDrawable(R.drawable.ic_launcher_grey))
-                    .showImageOnFail(getResources().getDrawable(R.drawable.ic_launcher_grey))
-                    .build();
-
-            List<Card> cards = new ArrayList<>();
-
-            for (Article article : mFeed) {
-                Card card = new RssCard(getContext(), article, options);
-                cards.add(card);
-            }
-
-            mCardArrayAdapter.clear();
-            mCardArrayAdapter.addAll(cards);
-            mCardArrayAdapter.notifyDataSetChanged();
-        }
-    }
-
-    @Override
-    public void OnLoadFailed() {
-        Toast.makeText(getActivity(), "TODO: Error loading feed.", Toast.LENGTH_SHORT).show();
+        new LoadFeedTask().execute();
     }
 
     @Override
@@ -129,4 +91,107 @@ public class RssFeedFragment extends BaseFragment implements Callback {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    private class LoadFeedTask implements Callback {
+
+        private Boolean mDone;
+        private List<Article> mFeed = null;
+
+        private void execute() {
+            mDone = false;
+
+            if (mUrl != null) {
+                List<Article> mArticles = PkRSS.with(getContext()).get(mUrl.toString());
+                if (mArticles != null) mArticles.clear();
+
+                PkRSS.with(getContext()).load(mUrl.toString()).callback(this).async();
+            } else {
+                mDone = true;
+            }
+
+            new AsyncTask<Void, Void, Void>() {
+
+                private ProgressDialog mProgressDialog;
+
+                @Override
+                protected void onPreExecute() {
+                    mProgressDialog = ProgressDialog.show(getContext(),
+                            getContext().getString(R.string.progress_title),
+                            getContext().getString(R.string.progress_load_feed), true);
+
+                    super.onPreExecute();
+                }
+
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    while (!mDone) {
+                        Log.d(getClass().getSimpleName(), "wait...");
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    if (mCardArrayAdapter != null) {
+                        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                                .cacheInMemory(true)
+                                .displayer(new SimpleBitmapDisplayer())
+                                .showImageForEmptyUri(getResources().getDrawable(R.drawable.ic_launcher_grey))
+                                .showImageOnFail(getResources().getDrawable(R.drawable.ic_launcher_grey))
+                                .build();
+
+                        List<Card> cards = new ArrayList<>();
+
+                        if (mFeed != null) {
+                            for (Article article : mFeed) {
+                                Card card = new RssCard(getContext(), article, options);
+                                cards.add(card);
+                            }
+                        }
+
+                        mCardArrayAdapter.clear();
+                        mCardArrayAdapter.addAll(cards);
+                        mCardArrayAdapter.notifyDataSetChanged();
+                    }
+
+                    mProgressDialog.dismiss();
+
+                    super.onPostExecute(aVoid);
+                }
+            }.execute();
+        }
+
+
+        @Override
+        public void OnPreLoad() {
+            Log.d(LoadFeedTask.class.getSimpleName(), "OnPreLoad...");
+        }
+
+        @Override
+        public void OnLoaded(List<Article> articles) {
+            Log.d(LoadFeedTask.class.getSimpleName(), "OnLoaded...");
+
+            if (mUrl != null) {
+                mFeed = PkRSS.with(getContext()).get(mUrl.toString());
+            }
+
+            mDone = true;
+        }
+
+        @Override
+        public void OnLoadFailed() {
+            mDone = true;
+            Log.d(LoadFeedTask.class.getSimpleName(), "OnLoadFailed...");
+
+            Toast.makeText(getContext(), "TODO: Error loading feed.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 }

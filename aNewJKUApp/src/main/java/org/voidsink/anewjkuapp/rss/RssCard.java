@@ -1,10 +1,8 @@
 package org.voidsink.anewjkuapp.rss;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -14,7 +12,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.pkmmte.pkrss.Article;
 
-import org.jsoup.Jsoup;
 import org.voidsink.anewjkuapp.R;
 
 import it.gmariotti.cardslib.library.internal.Card;
@@ -41,8 +38,8 @@ public class RssCard extends Card {
         header.setTitle(getTitle());
 
         String preview = article.getDescription(); //Jsoup.parse(article.getDescription()).text();
-        if (preview != null && preview.length() > 250) {
-            preview = preview.substring(0,250) + "...";
+        if (preview != null && preview.length() > 175) {
+            preview = preview.substring(0, 175) + "...";
         }
 
         this.setTitle(preview);

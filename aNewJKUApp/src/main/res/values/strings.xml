@@ -151,6 +151,7 @@
     <string name="progress_load_calendar">Termine werden geladen...</string>
     <string name="progress_load_map_files">Karten werden geladen...</string>
     <string name="progress_login">Anmelden...</string>
+    <string name="progress_load_feed">Daten werden geladen...</string>
 
     <string name="mensa_menu_not_available">kein Speiseplan verfügbar</string>
     <string name="mensa_menu_today">Heute</string>
@@ -212,5 +213,4 @@
     <string name="all_terms">alle Semester</string>
     <string name="about_force_logout">Ausloggen</string>
     <string name="menu_exam_register">in KUSSS anzeigen</string>
-    <string name="progress_load_feed">TODO</string>
 </resources>
