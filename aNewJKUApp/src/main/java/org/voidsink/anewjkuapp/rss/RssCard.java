@@ -10,9 +10,8 @@ import android.widget.ImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.pkmmte.pkrss.Article;
 
-import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.rss.lib.FeedEntry;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
@@ -25,19 +24,20 @@ public class RssCard extends Card {
 
     private final DisplayImageOptions options;
 
-    public RssCard(Context c, Article article, DisplayImageOptions options) {
+    public RssCard(Context c, FeedEntry entry, DisplayImageOptions options) {
         super(c);
 
         this.options = options;
 
-        this.setTitle(article.getTitle());
+        this.setTitle(entry.getTitle());
 
         // init header
         CardHeader header = new CardHeader(c);
         addCardHeader(header);
         header.setTitle(getTitle());
 
-        String preview = article.getDescription(); //Jsoup.parse(article.getDescription()).text();
+        String preview = entry.getShortDescription();
+        /*
         if (preview != null) {
             int index = preview.indexOf("\n\n");
             if (index > 0) {
@@ -48,11 +48,12 @@ public class RssCard extends Card {
                 preview = preview.substring(0, 175) + "...";
             }
         }
+        */
 
         this.setTitle(preview);
 
         // add thumbnail
-        CardThumbnail cardThumbnail = new UILCardThumbnail(mContext, article.getImage());
+        CardThumbnail cardThumbnail = new UILCardThumbnail(mContext, entry.getImage());
         cardThumbnail.setExternalUsage(true);
         addCardThumbnail(cardThumbnail);
     }
@@ -86,11 +87,9 @@ public class RssCard extends Card {
             try {
                 //ignore some icons of share buttons and linked documents
                 if (mImage != null &&
-                        !mImage.getLastPathSegment().equals("facebook.png") &&
-                        !mImage.getLastPathSegment().equals("google_plus.png") &&
-                        !mImage.getLastPathSegment().equals("twitter.png") &&
-                        !mImage.getLastPathSegment().equals("application-pdf.png") &&
-                        !mImage.getLastPathSegment().equals("x-office-document.png")) {
+                        !mImage.isAbsolute() &&
+                        !mImage.getPath().contains("contrib/service_links/images/") &&
+                        !mImage.getPath().contains("file/icons/")) {
                     imageLoader.displayImage(mImage.toString(), (ImageView) viewImage, options);
                 } else {
                     imageLoader.displayImage("http://oeh.jku.at/sites/default/files/styles/generic_thumbnail_medium/public/default_images/defaultimage-article_0.png", (ImageView) viewImage, options);

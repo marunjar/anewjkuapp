@@ -1,0 +1,209 @@
+package org.voidsink.anewjkuapp.rss.lib;
+
+import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.util.Log;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.TextNode;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * Created by paul on 17.11.2014.
+ */
+public class FeedEntryImpl implements FeedEntry {
+
+    protected Uri source;
+    protected FeedInfo feedInfo;
+    protected String title;
+    protected Uri link;
+    protected String description;
+    protected String author;
+    protected Date pubDate;
+    protected String guid;
+    protected Uri enclosure;
+    protected Uri comments;
+    protected List<String> categories = new ArrayList<>();
+    protected Uri mImage;
+
+    public FeedEntryImpl() {
+
+    }
+
+    @Override
+    public FeedInfo getFeedInfo() {
+        return feedInfo;
+    }
+
+    @Override
+    public String getTitle() {
+        return title;
+    }
+
+    @Override
+    public Uri getLink() {
+        return link;
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
+    @Override
+    public String getShortDescription() {
+        String shortDescr = htmlToStr(getDescription());
+
+        try {
+            Document doc = Jsoup.parse(shortDescr);
+
+            Element body = doc.body();
+            if (body != null) {
+                List<TextNode> textNodes = body.textNodes();
+                if (textNodes.size() > 0) {
+                    shortDescr = textNodes.get(0).getWholeText();
+                } else {
+                    List<Element> children = body.children();
+                    if (children.size() > 0) {
+                        shortDescr = children.get(0).text();
+                    } else {
+                        shortDescr = doc.text();
+                    }
+                }
+            } else {
+                shortDescr = doc.text();
+            }
+
+            shortDescr = shortDescr.trim();
+
+            Pattern p = Pattern.compile("(\\D\\.|\\?|\\!)(\\s{1,})");
+            Matcher m = p.matcher(shortDescr);
+
+            if (m.find()) {
+                shortDescr = shortDescr.substring(0, m.end());
+            }
+            if (shortDescr.length() > 350) {
+                shortDescr = shortDescr.substring(0, 175).trim() + "...";
+            }
+
+        } catch (Exception e) {
+            Log.e(getClass().getSimpleName(), "gsd failed", e);
+        }
+
+        return shortDescr.trim();
+    }
+
+    private String htmlToStr(String description) {
+        description = description.replaceAll("<\\s*(br)\\s*>", "\n"); // replace <br> with \n
+        description = description.replaceAll("<\\s*(p)\\s*>", "\n"); // replace <p> with \n
+        description = description.replaceAll("(\\\\n[\\s]*){2,}", "\\n\\n"); // replace all occurences of more than 2 \n in a row with \n\n
+        description = description.replaceAll("[<](\\/)?\\w[^>]*[>]", ""); // replace all words in < > with ""
+        return description;
+    }
+
+    @Override
+    public String getAuthor() {
+        return author;
+    }
+
+    @Override
+    public List<String> getCategories() {
+        return categories;
+    }
+
+    public void addCategory(String category) {
+        this.categories.add(category);
+    }
+
+    @Override
+    public Uri getComments() {
+        return comments;
+    }
+
+    @Override
+    public Uri getEnclosure() {
+        return enclosure;
+    }
+
+    @Override
+    public String getGUID() {
+        return guid;
+    }
+
+    @Override
+    public Date getPubDate() {
+        return pubDate;
+    }
+
+    @Override
+    public Uri getSource() {
+        return source;
+    }
+
+    @Override
+    public Uri getImage() {
+        if (mImage != null && mImage.isAbsolute()) {
+            return mImage;
+        }
+        if (feedInfo != null) {
+            return feedInfo.getImage();
+        }
+        return null;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeParcelable(source, flags);
+        out.writeParcelable(feedInfo, flags);
+        out.writeString(title);
+        out.writeParcelable(link, flags);
+        out.writeString(description);
+        out.writeString(author);
+        out.writeLong(pubDate.getTime());
+        out.writeString(guid);
+        out.writeParcelable(enclosure, flags);
+        out.writeParcelable(comments, flags);
+        out.writeStringList(categories);
+        out.writeParcelable(mImage, flags);
+    }
+
+    private FeedEntryImpl(Parcel in) {
+        source = in.readParcelable(Uri.class.getClassLoader());
+        feedInfo = in.readParcelable(FeedInfoImpl.class.getClassLoader());
+        title = in.readString();
+        link = in.readParcelable(Uri.class.getClassLoader());
+        description = in.readString();
+        author = in.readString();
+        pubDate = new Date(in.readLong());
+        guid = in.readString();
+        enclosure = in.readParcelable(Uri.class.getClassLoader());
+        comments = in.readParcelable(Uri.class.getClassLoader());
+        categories = new ArrayList<>(); in.readStringList(categories);
+        mImage = in.readParcelable(Uri.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<FeedEntryImpl> CREATOR
+            = new Parcelable.Creator<FeedEntryImpl>() {
+        public FeedEntryImpl createFromParcel(Parcel in) {
+            return new FeedEntryImpl(in);
+        }
+
+        public FeedEntryImpl[] newArray(int size) {
+            return new FeedEntryImpl[size];
+        }
+    };
+
+}

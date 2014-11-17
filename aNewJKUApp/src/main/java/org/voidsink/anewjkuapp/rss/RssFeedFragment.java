@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,12 +14,11 @@ import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
-import com.pkmmte.pkrss.Article;
-import com.pkmmte.pkrss.Callback;
-import com.pkmmte.pkrss.PkRSS;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
+import org.voidsink.anewjkuapp.rss.lib.FeedEntry;
+import org.voidsink.anewjkuapp.rss.lib.FeedPullParser;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.net.MalformedURLException;
@@ -92,104 +90,56 @@ public class RssFeedFragment extends BaseFragment {
         }
     }
 
-    private class LoadFeedTask implements Callback {
+    private class LoadFeedTask extends AsyncTask<Void, Void, Void> {
 
-        private Boolean mDone;
-        private List<Article> mFeed = null;
+        private List<FeedEntry> mFeed = null;
+        private ProgressDialog mProgressDialog;
 
-        private void execute() {
-            mDone = false;
+        @Override
+        protected void onPreExecute() {
+            mProgressDialog = ProgressDialog.show(getContext(),
+                    getContext().getString(R.string.progress_title),
+                    getContext().getString(R.string.progress_load_feed), true);
 
-            if (mUrl != null) {
-                List<Article> mArticles = PkRSS.with(getContext()).get(mUrl.toString());
-                if (mArticles != null) mArticles.clear();
+            super.onPreExecute();
+        }
 
-                PkRSS.with(getContext()).load(mUrl.toString()).callback(this).async();
-            } else {
-                mDone = true;
+        @Override
+        protected Void doInBackground(Void... voids) {
+            mFeed = new FeedPullParser().parse(mUrl);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if (mCardArrayAdapter != null) {
+                DisplayImageOptions options = new DisplayImageOptions.Builder()
+                        .cacheInMemory(true)
+                        .displayer(new SimpleBitmapDisplayer())
+                        .showImageForEmptyUri(getResources().getDrawable(R.drawable.ic_launcher))
+                        .showImageOnFail(getResources().getDrawable(R.drawable.ic_launcher))
+                        .build();
+
+                List<Card> cards = new ArrayList<>();
+
+                if (mFeed != null) {
+                    for (FeedEntry entry : mFeed) {
+                        Card card = new RssCard(getContext(), entry, options);
+                        cards.add(card);
+                    }
+                } else {
+                    Toast.makeText(getContext(), "TODO: Error loading feed.", Toast.LENGTH_SHORT).show();
+                }
+
+                mCardArrayAdapter.clear();
+                mCardArrayAdapter.addAll(cards);
+                mCardArrayAdapter.notifyDataSetChanged();
             }
 
-            new AsyncTask<Void, Void, Void>() {
+            mProgressDialog.dismiss();
 
-                private ProgressDialog mProgressDialog;
-
-                @Override
-                protected void onPreExecute() {
-                    mProgressDialog = ProgressDialog.show(getContext(),
-                            getContext().getString(R.string.progress_title),
-                            getContext().getString(R.string.progress_load_feed), true);
-
-                    super.onPreExecute();
-                }
-
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    while (!mDone) {
-                        Log.d(getClass().getSimpleName(), "wait...");
-                        try {
-                            Thread.sleep(500);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    if (mCardArrayAdapter != null) {
-                        DisplayImageOptions options = new DisplayImageOptions.Builder()
-                                .cacheInMemory(true)
-                                .displayer(new SimpleBitmapDisplayer())
-                                .showImageForEmptyUri(getResources().getDrawable(R.drawable.ic_launcher))
-                                .showImageOnFail(getResources().getDrawable(R.drawable.ic_launcher))
-                                .build();
-
-                        List<Card> cards = new ArrayList<>();
-
-                        if (mFeed != null) {
-                            for (Article article : mFeed) {
-                                Card card = new RssCard(getContext(), article, options);
-                                cards.add(card);
-                            }
-                        }
-
-                        mCardArrayAdapter.clear();
-                        mCardArrayAdapter.addAll(cards);
-                        mCardArrayAdapter.notifyDataSetChanged();
-                    }
-
-                    mProgressDialog.dismiss();
-
-                    super.onPostExecute(aVoid);
-                }
-            }.execute();
-        }
-
-
-        @Override
-        public void OnPreLoad() {
-            Log.d(LoadFeedTask.class.getSimpleName(), "OnPreLoad...");
-        }
-
-        @Override
-        public void OnLoaded(List<Article> articles) {
-            Log.d(LoadFeedTask.class.getSimpleName(), "OnLoaded...");
-
-            if (mUrl != null) {
-                mFeed = PkRSS.with(getContext()).get(mUrl.toString());
-            }
-
-            mDone = true;
-        }
-
-        @Override
-        public void OnLoadFailed() {
-            mDone = true;
-            Log.d(LoadFeedTask.class.getSimpleName(), "OnLoadFailed...");
-
-            Toast.makeText(getContext(), "TODO: Error loading feed.", Toast.LENGTH_SHORT).show();
+            super.onPostExecute(aVoid);
         }
     }
 
