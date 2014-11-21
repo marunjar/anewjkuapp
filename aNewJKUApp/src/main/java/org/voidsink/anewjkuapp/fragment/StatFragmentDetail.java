@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.StatCardGrade;
 import org.voidsink.anewjkuapp.StatCardLva;
@@ -52,18 +53,20 @@ public class StatFragmentDetail extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_stats, container, false);
 
+        boolean mPositiveOnly = PreferenceWrapper.getPositiveGradesOnly(getContext());
+
         CardView cv = (CardView) mView.findViewById(R.id.stat_card_lva);
         mStatCardLva = new StatCardLva(getContext(), this.mTerms, this.mLvas, this.mGrades);
         mStatCardLva.init();
         cv.setCard(mStatCardLva);
 
         cv = (CardView) mView.findViewById(R.id.stat_card_grade);
-        mStatCardGrade = new StatCardGrade(getContext(), this.mTerms, this.mGrades, false);
+        mStatCardGrade = new StatCardGrade(getContext(), this.mTerms, this.mGrades, false, mPositiveOnly);
         mStatCardGrade.init();
         cv.setCard(mStatCardGrade);
 
         cv = (CardView) mView.findViewById(R.id.stat_card_grade_weighted);
-        mStatCardGradeWeighted = new StatCardGrade(getContext(), this.mTerms, this.mGrades, true);
+        mStatCardGradeWeighted = new StatCardGrade(getContext(), this.mTerms, this.mGrades, true, mPositiveOnly);
         mStatCardGradeWeighted.init();
         cv.setCard(mStatCardGradeWeighted);
 

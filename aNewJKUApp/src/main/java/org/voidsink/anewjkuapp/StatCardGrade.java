@@ -39,12 +39,14 @@ import it.gmariotti.cardslib.library.internal.CardHeader;
 public class StatCardGrade extends ThemedCardWithList {
 
     final boolean mEctsWeighting;
+    final boolean mPositiveOnly;
     final List<ExamGrade> mGrades;
 
-    public StatCardGrade(Context context, List<String> terms, List<ExamGrade> grades, boolean ectsWeighting) {
+    public StatCardGrade(Context context, List<String> terms, List<ExamGrade> grades, boolean ectsWeighting, boolean positiveOnly) {
         super(context);
         this.mGrades = AppUtils.filterGrades(terms, grades);
         this.mEctsWeighting = ectsWeighting;
+        this.mPositiveOnly = positiveOnly;
     }
 
     @Override
@@ -63,7 +65,7 @@ public class StatCardGrade extends ThemedCardWithList {
         addCardHeader(header);
 
         //This provides a simple (and useless) expand area
-        CardExpand expand = new GradeDiagramCardExpand(getContext(), this.mGrades, this.mEctsWeighting);
+        CardExpand expand = new GradeDiagramCardExpand(getContext(), this.mGrades, this.mEctsWeighting, this.mPositiveOnly);
 
         addCardExpand(expand);
 
@@ -82,43 +84,43 @@ public class StatCardGrade extends ThemedCardWithList {
     protected List<ListObject> initChildren() {
         List<ListObject> gradeStats = new ArrayList<>();
 
-        GradeStatItem grade = new GradeStatItem(this, GradeType.INTERIM_COURSE_ASSESSMENT, this.mGrades, this.mEctsWeighting);
+        GradeStatItem grade = new GradeStatItem(this, GradeType.INTERIM_COURSE_ASSESSMENT, this.mGrades, this.mEctsWeighting, this.mPositiveOnly);
         if (grade.getAvgGrade() > 0) {
             gradeStats.add(grade);
         }
 
-        grade = new GradeStatItem(this, GradeType.FINAL_COURSE_ASSESSMENT, this.mGrades, this.mEctsWeighting);
+        grade = new GradeStatItem(this, GradeType.FINAL_COURSE_ASSESSMENT, this.mGrades, this.mEctsWeighting, this.mPositiveOnly);
         if (grade.getAvgGrade() > 0) {
             gradeStats.add(grade);
         }
 
-        grade = new GradeStatItem(this, GradeType.RECOGNIZED_COURSE_CERTIFICATE, this.mGrades, this.mEctsWeighting);
+        grade = new GradeStatItem(this, GradeType.RECOGNIZED_COURSE_CERTIFICATE, this.mGrades, this.mEctsWeighting, this.mPositiveOnly);
         if (grade.getAvgGrade() > 0) {
             gradeStats.add(grade);
         }
 
-        grade = new GradeStatItem(this, GradeType.RECOGNIZED_EXAM, this.mGrades, this.mEctsWeighting);
+        grade = new GradeStatItem(this, GradeType.RECOGNIZED_EXAM, this.mGrades, this.mEctsWeighting, this.mPositiveOnly);
         if (grade.getAvgGrade() > 0) {
             gradeStats.add(grade);
         }
 
-        grade = new GradeStatItem(this, GradeType.RECOGNIZED_ASSESSMENT, this.mGrades, this.mEctsWeighting);
+        grade = new GradeStatItem(this, GradeType.RECOGNIZED_ASSESSMENT, this.mGrades, this.mEctsWeighting, this.mPositiveOnly);
         if (grade.getAvgGrade() > 0) {
             gradeStats.add(grade);
         }
 
-        grade = new GradeStatItem(this, GradeType.FINAL_EXAM, this.mGrades, this.mEctsWeighting);
+        grade = new GradeStatItem(this, GradeType.FINAL_EXAM, this.mGrades, this.mEctsWeighting, this.mPositiveOnly);
         if (grade.getAvgGrade() > 0) {
             gradeStats.add(grade);
         }
 
-        grade = new GradeStatItem(this, GradeType.ALL, this.mGrades, this.mEctsWeighting);
+        grade = new GradeStatItem(this, GradeType.ALL, this.mGrades, this.mEctsWeighting, this.mPositiveOnly);
         if (grade.getAvgGrade() > 0 && gradeStats.size() > 1) {
             gradeStats.add(grade);
         }
 
         if (gradeStats.size() == 0) {
-            gradeStats.add(new GradeStatItem(this, GradeType.NONE_AVAILABLE, null, this.mEctsWeighting));
+            gradeStats.add(new GradeStatItem(this, GradeType.NONE_AVAILABLE, null, this.mEctsWeighting, this.mPositiveOnly));
         }
 
         return gradeStats;
@@ -129,11 +131,11 @@ public class StatCardGrade extends ThemedCardWithList {
         private final GradeType mType;
         private final double mAvgGrade;
 
-        public GradeStatItem(Card parentCard, GradeType type, List<ExamGrade> grades, boolean ectsWeighting) {
+        public GradeStatItem(Card parentCard, GradeType type, List<ExamGrade> grades, boolean ectsWeighting, boolean positiveOnly) {
             super(parentCard);
 
             this.mType = type;
-            this.mAvgGrade = AppUtils.getAvgGrade(grades, ectsWeighting, type);
+            this.mAvgGrade = AppUtils.getAvgGrade(grades, ectsWeighting, type, positiveOnly);
         }
 
         public GradeType getType() {
@@ -217,11 +219,13 @@ public class StatCardGrade extends ThemedCardWithList {
 
         private final List<ExamGrade> mGrades;
         private final boolean mEctsWeighting;
+        private final boolean mPositiveOnly;
 
-        public GradeDiagramCardExpand(Context context, List<ExamGrade> grades, boolean ectsWeighting) {
+        public GradeDiagramCardExpand(Context context, List<ExamGrade> grades, boolean ectsWeighting, boolean positiveOnly) {
             super(context, R.layout.stat_card_grade_diagram);
             this.mGrades = grades;
             this.mEctsWeighting = ectsWeighting;
+            this.mPositiveOnly = positiveOnly;
         }
 
         @Override
@@ -234,12 +238,13 @@ public class StatCardGrade extends ThemedCardWithList {
 
                 List<Number> values = new ArrayList<Number>();
                 values.add(null); // workaround to start grades at 1
-                values.add(AppUtils.getGradeCount(this.mGrades, Grade.G1, this.mEctsWeighting));
-                values.add(AppUtils.getGradeCount(this.mGrades, Grade.G2, this.mEctsWeighting));
-                values.add(AppUtils.getGradeCount(this.mGrades, Grade.G3, this.mEctsWeighting));
-                values.add(AppUtils.getGradeCount(this.mGrades, Grade.G4, this.mEctsWeighting));
-                values.add(AppUtils.getGradeCount(this.mGrades, Grade.G5, this.mEctsWeighting));
-
+                values.add(AppUtils.getGradePercent(this.mGrades, Grade.G1, this.mEctsWeighting));
+                values.add(AppUtils.getGradePercent(this.mGrades, Grade.G2, this.mEctsWeighting));
+                values.add(AppUtils.getGradePercent(this.mGrades, Grade.G3, this.mEctsWeighting));
+                values.add(AppUtils.getGradePercent(this.mGrades, Grade.G4, this.mEctsWeighting));
+                if (!mPositiveOnly) {
+                    values.add(AppUtils.getGradePercent(this.mGrades, Grade.G5, this.mEctsWeighting));
+                }
 
                 SimpleXYSeries mSeries = new SimpleXYSeries(values,
                         SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, getContext().getString(R.string.stat_title_grade));
@@ -249,7 +254,7 @@ public class StatCardGrade extends ThemedCardWithList {
                 barChart.getLegendWidget().setVisible(false);
 
                 barChart.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 5);
-                barChart.setRangeBoundaries(0, BoundaryMode.FIXED, 20, BoundaryMode.GROW);
+                barChart.setRangeBoundaries(0, BoundaryMode.FIXED, 50, BoundaryMode.GROW);
 
                 // workaround to center ects bar
                 barChart.setDomainBoundaries(0, 6, BoundaryMode.FIXED);
@@ -298,24 +303,26 @@ public class StatCardGrade extends ThemedCardWithList {
                 // init pie chart
                 AppUtils.addSerieToPieChart(pieChart,
                         getContext().getString(Grade.G1.getStringResID()),
-                        AppUtils.getGradeCount(this.mGrades, Grade.G1, this.mEctsWeighting),
+                        AppUtils.getGradePercent(this.mGrades, Grade.G1, this.mEctsWeighting),
                         Grade.G1.getColor());
                 AppUtils.addSerieToPieChart(pieChart,
                         getContext().getString(Grade.G2.getStringResID()),
-                        AppUtils.getGradeCount(this.mGrades, Grade.G2, this.mEctsWeighting),
+                        AppUtils.getGradePercent(this.mGrades, Grade.G2, this.mEctsWeighting),
                         Grade.G2.getColor());
                 AppUtils.addSerieToPieChart(pieChart,
                         getContext().getString(Grade.G3.getStringResID()),
-                        AppUtils.getGradeCount(this.mGrades, Grade.G3, this.mEctsWeighting),
+                        AppUtils.getGradePercent(this.mGrades, Grade.G3, this.mEctsWeighting),
                         Grade.G3.getColor());
                 AppUtils.addSerieToPieChart(pieChart,
                         getContext().getString(Grade.G4.getStringResID()),
-                        AppUtils.getGradeCount(this.mGrades, Grade.G4, this.mEctsWeighting),
+                        AppUtils.getGradePercent(this.mGrades, Grade.G4, this.mEctsWeighting),
                         Grade.G4.getColor());
-                AppUtils.addSerieToPieChart(pieChart,
-                        getContext().getString(Grade.G5.getStringResID()),
-                        AppUtils.getGradeCount(this.mGrades, Grade.G5, this.mEctsWeighting),
-                        Grade.G5.getColor());
+                if (!mPositiveOnly) {
+                    AppUtils.addSerieToPieChart(pieChart,
+                            getContext().getString(Grade.G5.getStringResID()),
+                            AppUtils.getGradePercent(this.mGrades, Grade.G5, this.mEctsWeighting),
+                            Grade.G5.getColor());
+                }
 
                 if (pieChart.getSeriesSet().size() > 0) {
                     pieChart.setVisibility(View.VISIBLE);

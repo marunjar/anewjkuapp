@@ -76,6 +76,10 @@ public enum Grade {
         }
     }
 
+    public boolean isPositive() {
+        return getValue() < 5;
+    }
+
     public static Grade parseGradeType(int ordinal) {
         return Grade.values()[ordinal];
     }

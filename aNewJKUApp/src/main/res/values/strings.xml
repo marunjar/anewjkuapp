@@ -99,12 +99,14 @@
     <string name="pref_app_use_light_theme_summary">Das Ändern dieser Einstellung startet die App beim Verlassen der Einstellungen neu</string>
     <string name="pref_cat_app_map">Karte</string>
     <string name="pref_app_map_file_title">eigene Kartendatei</string>
-    <string name="pref_cat_diagrams">Diagramme</string>
-    <string name="pref_diagrams_use_lva_bar_chart_summary">Barchart für offene und erledigte LVAs verwenden</string>
-    <string name="pref_diagrams_use_lva_bar_chart_title">Diagrammtyp für LVAs</string>
+    <string name="pref_cat_stats">Statistik</string>
+    <string name="pref_stats_use_lva_bar_chart_summary">Barchart für offene und erledigte LVAs verwenden</string>
+    <string name="pref_stats_use_lva_bar_chart_title">Diagramme</string>
+    <string name="pref_stats_positive_grades_only_summary">Notendurchschnitt nur mit positiven Noten berechnen</string>
+    <string name="pref_stats_positive_grades_only_title">Notendurchschnitt für LVAs</string>
     <string name="pref_cat_mensa">Mensa</string>
     <string name="pref_mensa_group_menu_by_day_title">Gruppierung</string>
-    <string name="pref_mensa_group_menu_by_day_summary">Menüs in eigenen Tabs je Tag anzeigen (benötigt Neustart)</string>
+    <string name="pref_mensa_group_menu_by_day_summary">Menüs in eigenen Tabs je Tag anzeigen</string>
 
     <string name="group_user">User</string>
     <string name="group_oeh">ÖH</string>
@@ -151,7 +153,7 @@
     <string name="progress_load_calendar">Termine werden geladen...</string>
     <string name="progress_load_map_files">Karten werden geladen...</string>
     <string name="progress_login">Anmelden...</string>
-    <string name="progress_load_feed">Daten werden geladen...</string>
+    <string name="progress_load_feed">News werden geladen...</string>
 
     <string name="mensa_menu_not_available">kein Speiseplan verfügbar</string>
     <string name="mensa_menu_today">Heute</string>
