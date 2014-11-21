@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ public abstract class MensaFragmentDetail extends BaseFragment {
 
     public static final String TAG = MensaFragmentDetail.class.getSimpleName();
     private MenuCardArrayAdapter mAdapter;
+    private StickyCardListView mListView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,7 +37,7 @@ public abstract class MensaFragmentDetail extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_card_menu, container,
                 false);
 
-        final StickyCardListView mListView = (StickyCardListView) view.findViewById(R.id.menu_card_list);
+        mListView = (StickyCardListView) view.findViewById(R.id.menu_card_list);
         mAdapter = new MenuCardArrayAdapter(getContext(), new ArrayList<Card>(), true);
         mListView.setAdapter(mAdapter);
 
@@ -59,21 +61,7 @@ public abstract class MensaFragmentDetail extends BaseFragment {
     private class MenuLoadTask extends AsyncTask<String, Void, Void> {
         private List<Card> mMenus;
         private Context mContext;
-
-        @Override
-        protected Void doInBackground(String... urls) {
-            final Mensa mensa = createLoader().getMensa(mContext);
-
-            if (mensa != null) {
-                for (MensaDay day : mensa.getDays()) {
-                    for (MensaMenu menu : day.getMenus()) {
-                        mMenus.add(new MenuCard(mContext, mensa, day, menu));
-                    }
-                }
-            }
-
-            return null;
-        }
+        private int mSelectPosition;
 
         @Override
         protected void onPreExecute() {
@@ -83,8 +71,27 @@ public abstract class MensaFragmentDetail extends BaseFragment {
                 Log.e(TAG, "context is null");
             }
             mMenus = new ArrayList<>();
-            mAdapter.clear();
-            mAdapter.notifyDataSetChanged();
+            mSelectPosition = -1;
+        }
+
+        @Override
+        protected Void doInBackground(String... urls) {
+            final Mensa mensa = createLoader().getMensa(mContext);
+
+            if (mensa != null) {
+                for (MensaDay day : mensa.getDays()) {
+                    for (MensaMenu menu : day.getMenus()) {
+                        mMenus.add(new MenuCard(mContext, mensa, day, menu));
+                        // remember position of menu for today for scrolling to item after update
+                        if (mSelectPosition == -1 &&
+                                DateUtils.isToday(day.getDate().getTime())) {
+                            mSelectPosition = mMenus.size() - 1;
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
 
         @Override
@@ -93,8 +100,13 @@ public abstract class MensaFragmentDetail extends BaseFragment {
             mAdapter.addAll(mMenus);
             mAdapter.notifyDataSetChanged();
 
+            // scroll to today's menu
+            if (mSelectPosition >= 0 &&
+                    mListView != null) {
+                mListView.smoothScrollToPosition(mSelectPosition);
+            }
+
             super.onPostExecute(result);
         }
     }
-
 }

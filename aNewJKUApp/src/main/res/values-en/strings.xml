@@ -99,8 +99,8 @@
     <string name="pref_kusss_sync_interval_title">Sync interval</string>
     <string name="pref_kusss_sync_title">Synchronize</string>
     <string name="pref_kusss_user_title">Matriculation number</string>
-    <string name="pref_mensa_group_menu_by_day_summary">Show menus in tabs per day</string>
-    <string name="pref_mensa_group_menu_by_day_title">Group Menu</string>
+    <string name="pref_mensa_group_menu_by_day_summary">Show all menus grouped by day</string>
+    <string name="pref_mensa_group_menu_by_day_title">Group per day</string>
     <string name="pref_stats_use_lva_bar_chart_summary">Use barchart for open and completed courses</string>
     <string name="pref_stats_use_lva_bar_chart_title">Diagrams</string>
     <string name="progress_load_calendar">Loading dates...</string>

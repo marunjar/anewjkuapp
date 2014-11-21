@@ -105,8 +105,8 @@
     <string name="pref_stats_positive_grades_only_summary">Notendurchschnitt nur mit positiven Noten berechnen</string>
     <string name="pref_stats_positive_grades_only_title">Notendurchschnitt für LVAs</string>
     <string name="pref_cat_mensa">Mensa</string>
-    <string name="pref_mensa_group_menu_by_day_title">Gruppierung</string>
-    <string name="pref_mensa_group_menu_by_day_summary">Menüs in eigenen Tabs je Tag anzeigen</string>
+    <string name="pref_mensa_group_menu_by_day_title">nach Tag gruppieren</string>
+    <string name="pref_mensa_group_menu_by_day_summary">Alle Menüs nach Tag gruppieren</string>
 
     <string name="group_user">User</string>
     <string name="group_oeh">ÖH</string>
