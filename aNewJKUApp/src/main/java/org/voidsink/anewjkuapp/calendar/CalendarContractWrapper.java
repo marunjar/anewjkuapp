@@ -32,6 +32,15 @@ public final class CalendarContractWrapper {
 		}
 	}
 
+    public static Uri CONTENT_URI() {
+        if (useSDK()) {
+            return CalendarContract.CONTENT_URI;
+        } else {
+            return Uri.parse(String.format("content://%1$s",
+                    AUTHORITY()));
+        }
+    }
+
 	public static class Calendars {
 
 		private Calendars() {
