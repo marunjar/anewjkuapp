@@ -23,12 +23,12 @@ public class FeedEntryImpl implements FeedEntry {
 
     protected Uri source;
     protected FeedInfo feedInfo;
-    protected String title;
+    protected String title = "";
     protected Uri link;
-    protected String description;
-    protected String author;
+    protected String description = "";
+    protected String author = "";
     protected Date pubDate;
-    protected String guid;
+    protected String guid = "";
     protected Uri enclosure;
     protected Uri comments;
     protected List<String> categories = new ArrayList<>();
@@ -166,33 +166,69 @@ public class FeedEntryImpl implements FeedEntry {
 
     @Override
     public void writeToParcel(Parcel out, int flags) {
-        out.writeParcelable(source, flags);
-        out.writeParcelable(feedInfo, flags);
+        if (source != null) {
+            out.writeInt(1);
+            out.writeParcelable(source, flags);
+        } else {
+            out.writeInt(0);
+        }
+        if (feedInfo != null){
+            out.writeInt(1);
+            out.writeParcelable(feedInfo, flags);
+        } else {
+            out.writeInt(0);
+        }
         out.writeString(title);
-        out.writeParcelable(link, flags);
+        if (link != null) {
+            out.writeInt(1);
+            out.writeParcelable(link, flags);
+        } else {
+            out.writeInt(0);
+        }
         out.writeString(description);
         out.writeString(author);
-        out.writeLong(pubDate.getTime());
+        if (pubDate != null) {
+            out.writeInt(1);
+            out.writeLong(pubDate.getTime());
+        } else {
+            out.writeInt(0);
+        }
         out.writeString(guid);
-        out.writeParcelable(enclosure, flags);
-        out.writeParcelable(comments, flags);
+        if (enclosure != null) {
+            out.writeInt(1);
+            out.writeParcelable(enclosure, flags);
+        } else {
+            out.writeInt(0);
+        }
+        if (comments != null) {
+            out.writeInt(1);
+            out.writeParcelable(comments, flags);
+        } else {
+            out.writeInt(0);
+        }
         out.writeStringList(categories);
-        out.writeParcelable(mImage, flags);
+        if (mImage != null) {
+            out.writeInt(1);
+            out.writeParcelable(mImage, flags);
+        } else {
+            out.writeInt(0);
+        }
     }
 
     private FeedEntryImpl(Parcel in) {
-        source = in.readParcelable(Uri.class.getClassLoader());
-        feedInfo = in.readParcelable(FeedInfoImpl.class.getClassLoader());
+        if (in.readInt() == 1) source = in.readParcelable(Uri.class.getClassLoader());
+        if (in.readInt() == 1) feedInfo = in.readParcelable(FeedInfoImpl.class.getClassLoader());
         title = in.readString();
-        link = in.readParcelable(Uri.class.getClassLoader());
+        if (in.readInt() == 1) link = in.readParcelable(Uri.class.getClassLoader());
         description = in.readString();
         author = in.readString();
-        pubDate = new Date(in.readLong());
+        if (in.readInt() == 1) pubDate = new Date(in.readLong());
         guid = in.readString();
-        enclosure = in.readParcelable(Uri.class.getClassLoader());
-        comments = in.readParcelable(Uri.class.getClassLoader());
-        categories = new ArrayList<>(); in.readStringList(categories);
-        mImage = in.readParcelable(Uri.class.getClassLoader());
+        if (in.readInt() == 1) enclosure = in.readParcelable(Uri.class.getClassLoader());
+        if (in.readInt() == 1) comments = in.readParcelable(Uri.class.getClassLoader());
+        categories = new ArrayList<>();
+        in.readStringList(categories);
+        if (in.readInt() == 1) mImage = in.readParcelable(Uri.class.getClassLoader());
     }
 
     public static final Parcelable.Creator<FeedEntryImpl> CREATOR

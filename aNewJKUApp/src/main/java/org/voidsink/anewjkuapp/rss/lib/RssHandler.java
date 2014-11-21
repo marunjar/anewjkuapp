@@ -24,14 +24,21 @@ import java.util.regex.Pattern;
  */
 public class RssHandler implements PullParserHandler {
 
-    private final SimpleDateFormat mDateFormat;
+    private static final String[] TIMEZONES = {"MEST", "EST", "PST"};
+
+    private static final String[] TIMEZONES_REPLACE = {"+0200", "-0500", "-0800"};
+
+    private static final SimpleDateFormat[] PUBDATE_FORMATS = {
+            new SimpleDateFormat("EEE', 'd' 'MMM' 'yyyy' 'HH:mm:ss' 'Z", Locale.US),
+            new SimpleDateFormat("d' 'MMM' 'yyyy' 'HH:mm:ss' 'Z", Locale.US),
+            new SimpleDateFormat("EEE', 'd' 'MMM' 'yyyy' 'HH:mm:ss' 'z", Locale.US),
+
+    };
 
     private final List<FeedEntry> mEntries = new ArrayList<>();
     private FeedInfo mInfo = null;
 
     public RssHandler() {
-        this.mDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.getDefault());
-        this.mDateFormat.setTimeZone(Calendar.getInstance().getTimeZone());
     }
 
     @Override
@@ -183,11 +190,16 @@ public class RssHandler implements PullParserHandler {
         }
 
         private Date parseDate(String text) {
-            try {
-                return mDateFormat.parse(mDateFormat.format(mDateFormat.parseObject(text)));
-            } catch (ParseException e) {
-                return new Date(0);
+            for (int n = 0; n < TIMEZONES.length; n++) {
+                text = text.replace(TIMEZONES[n], TIMEZONES_REPLACE[n]);
             }
+            for (int n = 0; n < PUBDATE_FORMATS.length; n++) {
+                try {
+                    return PUBDATE_FORMATS[n].parse(text);
+                } catch (ParseException e) {
+                }
+            }
+            return null;
         }
 
         private String pullImageLink(String encoded) {

@@ -37,6 +37,7 @@ public class RssFeedFragment extends BaseFragment {
 
     private URL mUrl = null;
     private CardArrayAdapter mCardArrayAdapter;
+    private DisplayImageOptions mOptions;
 
     @Override
     public void setArguments(Bundle args) {
@@ -47,6 +48,18 @@ public class RssFeedFragment extends BaseFragment {
         } catch (MalformedURLException e) {
             mUrl = null;
         }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mOptions = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .displayer(new SimpleBitmapDisplayer())
+                .showImageForEmptyUri(getResources().getDrawable(R.drawable.ic_launcher))
+                .showImageOnFail(getResources().getDrawable(R.drawable.ic_launcher))
+                .build();
     }
 
     @Override
@@ -114,18 +127,11 @@ public class RssFeedFragment extends BaseFragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             if (mCardArrayAdapter != null) {
-                DisplayImageOptions options = new DisplayImageOptions.Builder()
-                        .cacheInMemory(true)
-                        .displayer(new SimpleBitmapDisplayer())
-                        .showImageForEmptyUri(getResources().getDrawable(R.drawable.ic_launcher))
-                        .showImageOnFail(getResources().getDrawable(R.drawable.ic_launcher))
-                        .build();
-
                 List<Card> cards = new ArrayList<>();
 
                 if (mFeed != null) {
                     for (FeedEntry entry : mFeed) {
-                        Card card = new RssCard(getContext(), entry, options);
+                        Card card = new RssCard(getContext(), entry, mOptions);
                         cards.add(card);
                     }
                 } else {

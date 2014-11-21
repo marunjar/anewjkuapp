@@ -13,10 +13,10 @@ public class FeedInfoImpl implements FeedInfo {
 
     }
 
-    protected String mTitle;
+    protected String mTitle = "";
     protected Uri mLink;
-    protected String mDescription;
-    protected Integer mTTL;
+    protected String mDescription = "";
+    protected int mTTL = -1;
     protected Uri mImage;
 
     @Override
@@ -35,7 +35,7 @@ public class FeedInfoImpl implements FeedInfo {
     }
 
     @Override
-    public Integer getTTL() {
+    public int getTTL() {
         return mTTL;
     }
 
@@ -52,18 +52,28 @@ public class FeedInfoImpl implements FeedInfo {
     @Override
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(mTitle);
-        out.writeParcelable(mLink, flags);
+        if (mLink != null) {
+            out.writeInt(1);
+            out.writeParcelable(mLink, flags);
+        } else {
+            out.writeInt(0);
+        }
         out.writeString(mDescription);
         out.writeInt(mTTL);
-        out.writeParcelable(mImage, flags);
+        if (mImage != null) {
+            out.writeInt(1);
+            out.writeParcelable(mImage, flags);
+        } else {
+            out.writeInt(0);
+        }
     }
 
     private FeedInfoImpl(Parcel in) {
         mTitle = in.readString();
-        mLink = in.readParcelable(Uri.class.getClassLoader());
+        if (in.readInt() == 1) mLink = in.readParcelable(Uri.class.getClassLoader());
         mDescription = in.readString();
         mTTL = in.readInt();
-        mImage = in.readParcelable(Uri.class.getClassLoader());
+        if (in.readInt() == 1) mImage = in.readParcelable(Uri.class.getClassLoader());
     }
 
     public static final Parcelable.Creator<FeedInfoImpl> CREATOR

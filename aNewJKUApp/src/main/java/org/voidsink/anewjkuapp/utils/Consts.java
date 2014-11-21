@@ -14,6 +14,7 @@ public class Consts {
 
     public static final String ARG_FEED_URL = "feedURL";
     public static final String ARG_FEED_ID = "feedID";
+    public static final String ARG_FEED_ENTRY = "feedEntry";
 
     public static final Integer FEED_ID_OEH = 1;
     public static final Integer FEED_ID_REWI = 2;

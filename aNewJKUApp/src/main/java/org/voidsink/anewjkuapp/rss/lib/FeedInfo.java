@@ -14,7 +14,7 @@ public interface FeedInfo extends Parcelable {
 
     String getDescription();
 
-    Integer getTTL();
+    int getTTL();
 
     Uri getImage();
 }

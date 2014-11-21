@@ -1,6 +1,7 @@
 package org.voidsink.anewjkuapp.rss;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
@@ -9,9 +10,12 @@ import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
+import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.activity.RssFeedEntryActivity;
+import org.voidsink.anewjkuapp.base.ThemedCard;
 import org.voidsink.anewjkuapp.rss.lib.FeedEntry;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
@@ -20,14 +24,20 @@ import it.gmariotti.cardslib.library.internal.CardThumbnail;
 /**
  * Created by paul on 16.11.2014.
  */
-public class RssCard extends Card {
+public class RssCard extends ThemedCard {
 
-    private final DisplayImageOptions options;
+    private final String EMPTY_IMAGE_URL = "http://oeh.jku.at/sites/default/files/styles/generic_thumbnail_medium/public/default_images/defaultimage-article_0.png";
+
+    private final DisplayImageOptions mOptions;
+    private final FeedEntry mEntry;
 
     public RssCard(Context c, FeedEntry entry, DisplayImageOptions options) {
         super(c);
 
-        this.options = options;
+        setInnerLayout(R.layout.rss_feed_item);
+
+        this.mOptions = options;
+        this.mEntry = entry;
 
         this.setTitle(entry.getTitle());
 
@@ -37,18 +47,6 @@ public class RssCard extends Card {
         header.setTitle(getTitle());
 
         String preview = entry.getShortDescription();
-        /*
-        if (preview != null) {
-            int index = preview.indexOf("\n\n");
-            if (index > 0) {
-                preview = preview.substring(0, index);
-            }
-
-            if (preview.length() > 175) {
-                preview = preview.substring(0, 175) + "...";
-            }
-        }
-        */
 
         this.setTitle(preview);
 
@@ -56,10 +54,27 @@ public class RssCard extends Card {
         CardThumbnail cardThumbnail = new UILCardThumbnail(mContext, entry.getImage());
         cardThumbnail.setExternalUsage(true);
         addCardThumbnail(cardThumbnail);
+
+        //Set onClick listener
+        this.setOnClickListener(new Card.OnCardClickListener() {
+            @Override
+            public void onClick(Card card, View view) {
+                ((RssCard) card).startFeedDetailView(mEntry);
+            }
+        });
     }
+
 
     public RssCard(Context context) {
         this(context, null, null);
+    }
+
+    private void startFeedDetailView(FeedEntry entry) {
+        Intent i = new Intent(getContext(), RssFeedEntryActivity.class);
+
+        i.putExtra(Consts.ARG_FEED_ENTRY, entry);
+
+        getContext().startActivity(i);
     }
 
     class UILCardThumbnail extends CardThumbnail {
@@ -82,22 +97,19 @@ public class RssCard extends Card {
             //It is just an example.
             //In real case you should config better the imageLoader
             ImageLoader imageLoader = ImageLoader.getInstance();
-            imageLoader.init(ImageLoaderConfiguration.createDefault(mContext));
 
             try {
                 //ignore some icons of share buttons and linked documents
                 if (mImage != null &&
-                        !mImage.isAbsolute() &&
                         !mImage.getPath().contains("contrib/service_links/images/") &&
                         !mImage.getPath().contains("file/icons/")) {
-                    imageLoader.displayImage(mImage.toString(), (ImageView) viewImage, options);
+                    imageLoader.displayImage(mImage.toString(), (ImageView) viewImage, mOptions);
                 } else {
-                    imageLoader.displayImage("http://oeh.jku.at/sites/default/files/styles/generic_thumbnail_medium/public/default_images/defaultimage-article_0.png", (ImageView) viewImage, options);
+                    imageLoader.displayImage(EMPTY_IMAGE_URL, (ImageView) viewImage, mOptions);
                 }
             } catch (Exception e) {
                 Log.e(TAG, "displayImage failed", e);
             }
         }
     }
-
 }

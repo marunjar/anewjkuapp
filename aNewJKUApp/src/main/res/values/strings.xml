@@ -213,4 +213,5 @@
     <string name="all_terms">alle Semester</string>
     <string name="about_force_logout">Ausloggen</string>
     <string name="menu_exam_register">in KUSSS anzeigen</string>
+    <string name="action_show_rss_entry_in_browser">in Browser anzeigen</string>
 </resources>
