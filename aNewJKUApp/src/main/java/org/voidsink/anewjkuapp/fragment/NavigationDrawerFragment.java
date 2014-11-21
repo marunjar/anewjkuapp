@@ -85,10 +85,10 @@ public class NavigationDrawerFragment extends BaseFragment {
 			// new DrawerMenuItem("Veranstaltungen"),
 			new DrawerMenuItem(R.string.title_map, MapFragment.class),
 			new DrawerMenuSection(R.string.title_oeh),
-            new DrawerMenuItem(R.string.title_oeh_news, OehNewsFragment.class),
+            new DrawerMenuItem(R.string.title_oeh_news, OehNewsFragment.class)/*,
             // new DrawerMenuItem("Courier"),
             new DrawerMenuItem(R.string.title_oeh_info, OehInfoFragment.class),
-            new DrawerMenuItem(R.string.title_oeh_rights, OehRightsFragment.class)};
+            new DrawerMenuItem(R.string.title_oeh_rights, OehRightsFragment.class)*/};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
