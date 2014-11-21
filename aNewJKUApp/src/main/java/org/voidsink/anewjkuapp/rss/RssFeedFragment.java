@@ -149,5 +149,8 @@ public class RssFeedFragment extends BaseFragment {
         }
     }
 
-
+    @Override
+    protected String getScreenName() {
+        return Consts.SCREEN_RSS_FEED;
+    }
 }

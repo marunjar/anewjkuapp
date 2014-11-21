@@ -45,6 +45,8 @@ public class Consts {
 
     public static final String SCREEN_SETTINGS_DASHCLOCK = "/dashclock";
     public static final String SCREEN_LOGIN = "/login";
+    public static final String SCREEN_RSS_FEED = "/rssFeed";
+    public static final String SCREEN_RSS_FEED_ENTRY = "/rssFeed/entry";
 
     private Consts() {
     }

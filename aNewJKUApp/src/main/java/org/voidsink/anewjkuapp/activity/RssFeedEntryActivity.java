@@ -12,6 +12,7 @@ import org.jsoup.nodes.Document;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.ThemedActivity;
 import org.voidsink.anewjkuapp.rss.lib.FeedEntry;
+import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.text.SimpleDateFormat;
@@ -50,6 +51,13 @@ public class RssFeedEntryActivity extends ThemedActivity {
             d.outputSettings().charset("ASCII");
             this.mContent.loadData(d.html(), "text/html", null);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Analytics.sendScreen(this, Consts.SCREEN_RSS_FEED_ENTRY);
     }
 
     @Override
