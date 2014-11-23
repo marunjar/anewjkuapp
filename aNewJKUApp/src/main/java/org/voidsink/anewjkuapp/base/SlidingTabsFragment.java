@@ -130,7 +130,6 @@ public abstract class SlidingTabsFragment extends BaseFragment {
         if (mViewPager != null) {
 //        Log.i(LOG_TAG, "notifyDataSetChanged");
             if (mViewPager.getAdapter() != null) {
-                mViewPager.setAdapter(new SlidingFragmentPagerAdapter(getChildFragmentManager()));
                 mViewPager.getAdapter().notifyDataSetChanged();
             }
             if (mSlidingTabLayout != null) {

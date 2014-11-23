@@ -20,7 +20,7 @@ public class GradeTabItem extends SlidingTabItem {
     private final List<ExamGrade> mGrades;
 
     public GradeTabItem(String title, List<String> terms, List<ExamGrade> grades) {
-        super(title, GradeDetailFragment.class, (terms.size() <= 1 ? CalendarUtils.COLOR_DEFAULT_EXAM : CalendarUtils.COLOR_DEFAULT_LVA), Color.GRAY);
+        super(title, GradeDetailFragment.class);
 
         this.mTerms = terms;
         this.mGrades = grades;
