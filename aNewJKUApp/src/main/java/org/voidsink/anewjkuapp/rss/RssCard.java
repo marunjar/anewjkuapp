@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -39,21 +40,10 @@ public class RssCard extends ThemedCard {
         this.mOptions = options;
         this.mEntry = entry;
 
-        this.setTitle(entry.getTitle());
-
         // init header
         CardHeader header = new CardHeader(c);
         addCardHeader(header);
-        header.setTitle(getTitle());
-
-        String preview = entry.getShortDescription();
-
-        this.setTitle(preview);
-
-        // add thumbnail
-        CardThumbnail cardThumbnail = new UILCardThumbnail(mContext, entry.getImage());
-        cardThumbnail.setExternalUsage(true);
-        addCardThumbnail(cardThumbnail);
+        header.setTitle(entry.getTitle());
 
         //Set onClick listener
         this.setOnClickListener(new Card.OnCardClickListener() {
@@ -64,6 +54,33 @@ public class RssCard extends ThemedCard {
         });
     }
 
+    @Override
+    public void setupInnerViewElements(ViewGroup parent, View view) {
+        super.setupInnerViewElements(parent, view);
+
+        TextView mTitle = (TextView) view.findViewById(R.id.rss_feed_item_title);
+        TextView mDescr = (TextView) view.findViewById(R.id.rss_feed_item_description);
+        ImageView mImageView = (ImageView) view.findViewById(R.id.rss_feed_item_image);
+
+        mTitle.setVisibility(View.GONE);
+        mDescr.setText(this.mEntry.getShortDescription());
+
+        Uri mImage = this.mEntry.getImage();
+
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        try {
+            //ignore some icons of share buttons and linked documents
+            if (mImage != null &&
+                    !mImage.getPath().contains("contrib/service_links/images/") &&
+                    !mImage.getPath().contains("file/icons/")) {
+                imageLoader.displayImage(mImage.toString(), (ImageView) mImageView, mOptions);
+            } else {
+                imageLoader.displayImage(EMPTY_IMAGE_URL, (ImageView) mImageView, mOptions);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "displayImage failed", e);
+        }
+    }
 
     public RssCard(Context context) {
         this(context, null, null);
@@ -75,41 +92,5 @@ public class RssCard extends ThemedCard {
         i.putExtra(Consts.ARG_FEED_ENTRY, entry);
 
         getContext().startActivity(i);
-    }
-
-    class UILCardThumbnail extends CardThumbnail {
-
-        private final Uri mImage;
-
-        public UILCardThumbnail(Context context, Uri image) {
-            super(context);
-            this.mImage = image;
-        }
-
-        @Override
-        public void setupInnerViewElements(ViewGroup parent, View viewImage) {
-
-            /*
-             * If your cardthumbnail uses external library you have to provide how to load the image.
-             * If your cardthumbnail doesn't use an external library it will use a built-in method
-             */
-
-            //It is just an example.
-            //In real case you should config better the imageLoader
-            ImageLoader imageLoader = ImageLoader.getInstance();
-
-            try {
-                //ignore some icons of share buttons and linked documents
-                if (mImage != null &&
-                        !mImage.getPath().contains("contrib/service_links/images/") &&
-                        !mImage.getPath().contains("file/icons/")) {
-                    imageLoader.displayImage(mImage.toString(), (ImageView) viewImage, mOptions);
-                } else {
-                    imageLoader.displayImage(EMPTY_IMAGE_URL, (ImageView) viewImage, mOptions);
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "displayImage failed", e);
-            }
-        }
     }
 }

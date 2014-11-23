@@ -68,7 +68,7 @@ public class RssFeedEntryActivity extends ThemedActivity {
     }
 
     @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_show_rss_entry_in_browser: {
                 if (mFeedEntry != null && mFeedEntry.getLink() != null) {
@@ -79,7 +79,7 @@ public class RssFeedEntryActivity extends ThemedActivity {
                 return true;
             }
             default:
-                return super.onMenuItemSelected(featureId, item);
+                return super.onOptionsItemSelected(item);
         }
     }
 }

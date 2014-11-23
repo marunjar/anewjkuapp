@@ -2,16 +2,40 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="@dimen/card_content_padding">
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/card_main_inner_simple_title"
-        style="@style/Text.Body1"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        android:padding="@dimen/card_content_padding">
 
-    </TextView>
+        <TextView
+            android:id="@+id/rss_feed_item_title"
+            style="@style/Text.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical" />
+
+        <ImageView
+            android:id="@+id/rss_feed_item_image"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_below="@id/rss_feed_item_title"
+            android:layout_alignParentRight="true"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/rss_feed_item_description"
+            style="@style/Text.Body1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rss_feed_item_title"
+            android:layout_toLeftOf="@id/rss_feed_item_image"
+            android:layout_marginRight="@dimen/separator_top_bottom_margin"
+            android:gravity="center_vertical" />
+
+    </RelativeLayout>
+
+    <include layout="@layout/separator" />
 
 </LinearLayout>
