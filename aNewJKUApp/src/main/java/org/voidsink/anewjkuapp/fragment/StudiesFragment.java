@@ -1,6 +1,8 @@
 package org.voidsink.anewjkuapp.fragment;
 
+import android.accounts.Account;
 import android.content.Context;
+import android.content.UriMatcher;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,11 +15,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.voidsink.anewjkuapp.ImportStudiesTask;
+import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.BaseFragment;
+import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.base.ListWithHeaderAdapter;
 import org.voidsink.anewjkuapp.kusss.Studies;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.view.ListViewWithHeader;
 
 import java.util.List;
@@ -25,9 +32,33 @@ import java.util.List;
 /**
  * Created by paul on 24.11.2014.
  */
-public class StudiesFragment extends BaseFragment {
+public class StudiesFragment extends BaseFragment implements
+        ContentObserverListener {
 
     private ListWithHeaderAdapter mAdapter;
+    private BaseContentObserver mStudiesObserver;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+        uriMatcher.addURI(KusssContentContract.AUTHORITY,
+                KusssContentContract.Studies.PATH_CONTENT_CHANGED, 0);
+
+        mStudiesObserver = new BaseContentObserver(uriMatcher, this);
+        getActivity().getContentResolver().registerContentObserver(
+                KusssContentContract.Studies.CONTENT_CHANGED_URI, false,
+                mStudiesObserver);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        getActivity().getContentResolver().unregisterContentObserver(
+                mStudiesObserver);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -58,7 +89,8 @@ public class StudiesFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh_studies: {
-                loadData();
+                Account account = AppUtils.getAccount(getContext());
+                new ImportStudiesTask(account, getContext()).execute();
                 return true;
             }
             default:
@@ -97,6 +129,11 @@ public class StudiesFragment extends BaseFragment {
             }
         }.execute();
 
+    }
+
+    @Override
+    public void onContentChanged(boolean selfChange) {
+        loadData();
     }
 
     private class StudiesAdapter extends ListWithHeaderAdapter<Studies> {
