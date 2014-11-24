@@ -40,13 +40,24 @@ import it.gmariotti.cardslib.library.internal.CardHeader;
  */
 public class StatCardLva extends ThemedCardWithList {
 
-    private final List<LvaWithGrade> mLvas;
-    private final List<String> mTerms;
+    private List<LvaWithGrade> mLvas;
+    private List<String> mTerms;
 
-    public StatCardLva(Context context, List<String> terms, List<Lva> lvas, List<ExamGrade> grades) {
+    public StatCardLva(Context context) {
         super(context);
+        mLvas = new ArrayList<>();
+        mTerms = new ArrayList<>();
+    }
+
+    public void setValues(List<String> terms, List<Lva> lvas, List<ExamGrade> grades) {
         this.mLvas = AppUtils.getLvasWithGrades(terms, lvas, grades);
         this.mTerms = terms;
+
+        List<ListObject> objects = initChildren();
+        getLinearListAdapter().clear();
+        getLinearListAdapter().addAll(objects);
+
+        updateProgressBar(true,true);
     }
 
     @Override
@@ -54,15 +65,13 @@ public class StatCardLva extends ThemedCardWithList {
         CardHeader header = new CardHeader(getContext());
         header.setTitle(getContext().getString(R.string.stat_title_lva));
         //Set visible the expand/collapse button
-        header.setButtonExpandVisible(this.mLvas.size() > 0);
+        header.setButtonExpandVisible(true);
 
         //Add Header to card
         addCardHeader(header);
 
         //This provides a simple (and useless) expand area
-        CardExpand expand = new LvaDiagramCardExpand(getContext(), this.mTerms, this.mLvas);
-
-        addCardExpand(expand);
+        addCardExpand(new LvaDiagramCardExpand(getContext()));
 
         return header;
     }
@@ -73,6 +82,7 @@ public class StatCardLva extends ThemedCardWithList {
         setEmptyViewViewStubLayoutId(R.layout.stat_card_empty);
 
         setUseProgressBar(true);
+        updateProgressBar(false, false);
     }
 
     @Override
@@ -139,22 +149,17 @@ public class StatCardLva extends ThemedCardWithList {
 
     private class LvaDiagramCardExpand extends ThemedCardExpand {
 
-        private final List<String> mTerms;
-        private final List<LvaWithGrade> mLvas;
-
-        public LvaDiagramCardExpand(Context context, List<String> terms, List<LvaWithGrade> lvas) {
+        public LvaDiagramCardExpand(Context context) {
             super(context, R.layout.stat_card_lva_diagram);
-            this.mTerms = terms;
-            this.mLvas = lvas;
         }
 
         @Override
         public void setupInnerViewElements(ViewGroup parent, View view) {
             super.setupInnerViewElements(parent, view);
 
-            double mOpenEcts = AppUtils.getECTS(LvaState.OPEN, this.mLvas);
-            double mDoneEcts = AppUtils.getECTS(LvaState.DONE, this.mLvas);
-            double minEcts = this.mTerms.size() * 30;
+            double mOpenEcts = AppUtils.getECTS(LvaState.OPEN, mLvas);
+            double mDoneEcts = AppUtils.getECTS(LvaState.DONE, mLvas);
+            double minEcts = mTerms.size() * 30;
 
             XYPlot barChart = (XYPlot) view.findViewById(R.id.stat_card_lva_diagram_bar);
             PieChart pieChart = (PieChart) view.findViewById(R.id.stat_card_lva_diagram_pie);
@@ -180,7 +185,7 @@ public class StatCardLva extends ThemedCardWithList {
                 ectsMarker.getLinePaint().setPathEffect(dpe);
 
                 // calc range manually
-                double rangeTopMax = this.mTerms.size() * 30;
+                double rangeTopMax = mTerms.size() * 30;
                 if (mDoneEcts + mOpenEcts > (rangeTopMax * .9)) {
                     rangeTopMax = (Math.ceil((mDoneEcts + mOpenEcts) * 1.1 / 10) * 10);
                 }
@@ -194,7 +199,7 @@ public class StatCardLva extends ThemedCardWithList {
                 addSerieToBarChart(barChart, getContext().getString(LvaState.OPEN.getStringResIDExt()),
                         mOpenEcts, Grade.G3.getColor());
 
-                barChart.setRangeTopMin(this.mTerms.size() * 30);
+                barChart.setRangeTopMin(mTerms.size() * 30);
                 barChart.setRangeBoundaries(0, BoundaryMode.FIXED, rangeTopMax,
                         BoundaryMode.FIXED);
                 barChart.setRangeStep(XYStepMode.INCREMENT_BY_VAL, rangeStep);

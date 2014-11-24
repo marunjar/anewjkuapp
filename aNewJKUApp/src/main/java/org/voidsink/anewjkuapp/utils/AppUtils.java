@@ -449,7 +449,7 @@ public class AppUtils {
     }
 
     public static double getGradePercent(List<ExamGrade> grades, Grade grade, boolean ectsWeighting) {
-        if (grades.size() == 0) return 0;
+        if (grades == null || grades.size() == 0) return 0;
 
         double count = 0;
         double sum = 0;
