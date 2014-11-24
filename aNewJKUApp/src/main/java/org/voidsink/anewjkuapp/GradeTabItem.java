@@ -17,23 +17,16 @@ import java.util.List;
 public class GradeTabItem extends SlidingTabItem {
 
     private final List<String> mTerms;
-    private final List<ExamGrade> mGrades;
 
-    public GradeTabItem(String title, List<String> terms, List<ExamGrade> grades) {
+    public GradeTabItem(String title, List<String> terms) {
         super(title, GradeDetailFragment.class);
 
         this.mTerms = terms;
-        this.mGrades = grades;
-    }
-
-    public GradeTabItem(String title, String term, List<ExamGrade> grades) {
-        this(title, Arrays.asList(new String[]{term}), grades);
-
     }
 
     @Override
     public Fragment createFragment() {
-        return new GradeDetailFragment(this.mTerms, this.mGrades);
+        return new GradeDetailFragment(this.mTerms);
     }
 
 
