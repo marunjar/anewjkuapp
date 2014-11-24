@@ -25,6 +25,8 @@ import net.fortuna.ical4j.data.CalendarBuilder;
 
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.voidsink.anewjkuapp.fragment.CalendarFragment;
+import org.voidsink.anewjkuapp.fragment.GradeFragment;
+import org.voidsink.anewjkuapp.fragment.StudiesFragment;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.DrawerItem;
@@ -333,6 +335,14 @@ public class MainActivity extends ThemedActivity implements
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public static void StartMyStudies(Context context) {
+        //
+        Intent i = new Intent(context, MainActivity.class)
+                .putExtra(MainActivity.ARG_SHOW_FRAGMENT, StudiesFragment.class.getName())
+                .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        context.startActivity(i);
     }
 
     /**

@@ -3,6 +3,8 @@ package org.voidsink.anewjkuapp.provider;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.voidsink.anewjkuapp.ImportStudiesTask;
+import org.voidsink.anewjkuapp.kusss.Studies;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.ImportGradeTask;
 import org.voidsink.anewjkuapp.ImportLvaTask;
@@ -30,6 +32,8 @@ public class KusssContentProvider extends ContentProvider {
 	private static final int CODE_EXAM_ID = 4;
 	private static final int CODE_GRADE = 5;
 	private static final int CODE_GRADE_ID = 6;
+    private static final int CODE_STUDIES = 7;
+    private static final int CODE_STUDIES_ID = 8;
 
 	private static final UriMatcher sUriMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
@@ -48,6 +52,10 @@ public class KusssContentProvider extends ContentProvider {
 				KusssContentContract.Grade.PATH, CODE_GRADE);
 		sUriMatcher.addURI(KusssContentContract.AUTHORITY,
 				KusssContentContract.Grade.PATH + "/#", CODE_GRADE_ID);
+        sUriMatcher.addURI(KusssContentContract.AUTHORITY,
+                KusssContentContract.Studies.PATH, CODE_STUDIES);
+        sUriMatcher.addURI(KusssContentContract.AUTHORITY,
+                KusssContentContract.Studies.PATH + "/#", CODE_STUDIES_ID);
 	}
 
 	private KusssDatabaseHelper mDbHelper;
@@ -71,6 +79,11 @@ public class KusssContentProvider extends ContentProvider {
 					KusssContentContract.Grade.GRADE_TABLE_NAME, selection,
 					selectionArgs);
 			break;
+        case CODE_STUDIES:
+            rowsDeleted = db.delete(
+                    KusssContentContract.Studies.TABLE_NAME, selection,
+                    selectionArgs);
+            break;
 		case CODE_LVA_ID:
 			whereIdClause = KusssContentContract.Lva.LVA_COL_ID + "="
 					+ uri.getLastPathSegment();
@@ -96,6 +109,15 @@ public class KusssContentProvider extends ContentProvider {
 					KusssContentContract.Grade.GRADE_TABLE_NAME, whereIdClause,
 					selectionArgs);
 			break;
+        case CODE_STUDIES_ID:
+            whereIdClause = KusssContentContract.Studies.COL_ID + "="
+                    + uri.getLastPathSegment();
+            if (!TextUtils.isEmpty(selection))
+                whereIdClause += " AND " + selection;
+            rowsDeleted = db.delete(
+                    KusssContentContract.Studies.TABLE_NAME, whereIdClause,
+                    selectionArgs);
+            break;
 		default:
 			throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}
@@ -126,6 +148,12 @@ public class KusssContentProvider extends ContentProvider {
 		case CODE_GRADE_ID:
 			return KusssContentContract.CONTENT_TYPE_ITEM + "/"
 					+ KusssContentContract.Grade.PATH;
+        case CODE_STUDIES:
+            return KusssContentContract.CONTENT_TYPE_DIR + "/"
+                    + KusssContentContract.Studies.PATH;
+        case CODE_STUDIES_ID:
+            return KusssContentContract.CONTENT_TYPE_ITEM + "/"
+                    + KusssContentContract.Studies.PATH;
 		default:
 			throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}
@@ -159,6 +187,14 @@ public class KusssContentProvider extends ContentProvider {
 			return KusssContentContract.Grade.CONTENT_URI.buildUpon()
 					.appendPath(String.valueOf(id)).build();
 		}
+        case CODE_STUDIES: {
+            long id = db.insert(KusssContentContract.Studies.TABLE_NAME,
+                    null, values);
+            if (id != -1)
+                getContext().getContentResolver().notifyChange(uri, null);
+            return KusssContentContract.Studies.CONTENT_URI.buildUpon()
+                    .appendPath(String.valueOf(id)).build();
+        }
 		default: {
 			throw new IllegalArgumentException("Unsupported URI: " + uri);
 		}
@@ -211,6 +247,15 @@ public class KusssContentProvider extends ContentProvider {
 			builder.setTables(KusssContentContract.Grade.GRADE_TABLE_NAME);
 			return builder.query(db, projection, selection, selectionArgs,
 					null, null, sortOrder);
+        case CODE_STUDIES_ID:
+            builder.appendWhere(KusssContentContract.Studies.COL_ID + "="
+                    + uri.getLastPathSegment());
+        case CODE_STUDIES:
+            if (TextUtils.isEmpty(sortOrder))
+                sortOrder = KusssContentContract.Studies.COL_ID + " ASC";
+            builder.setTables(KusssContentContract.Studies.TABLE_NAME);
+            return builder.query(db, projection, selection, selectionArgs,
+                    null, null, sortOrder);
 		default:
 			throw new IllegalArgumentException("URI " + uri
 					+ " is not supported.");
@@ -236,6 +281,10 @@ public class KusssContentProvider extends ContentProvider {
 			return db.update(KusssContentContract.Grade.GRADE_TABLE_NAME,
 					values, selection, selectionArgs);
 		}
+        case CODE_STUDIES: {
+            return db.update(KusssContentContract.Studies.TABLE_NAME,
+                    values, selection, selectionArgs);
+        }
 		case CODE_LVA_ID: {
 			whereIdClause = KusssContentContract.Lva.LVA_COL_ID + "="
 					+ uri.getLastPathSegment();
@@ -260,6 +309,14 @@ public class KusssContentProvider extends ContentProvider {
 			return db.update(KusssContentContract.Grade.GRADE_TABLE_NAME,
 					values, whereIdClause, selectionArgs);
 		}
+        case CODE_STUDIES_ID: {
+            whereIdClause = KusssContentContract.Studies.COL_ID + "="
+                    + uri.getLastPathSegment();
+            if (!TextUtils.isEmpty(selection))
+                whereIdClause += " AND " + selection;
+            return db.update(KusssContentContract.Studies.TABLE_NAME,
+                    values, whereIdClause, selectionArgs);
+        }
 		default:
 			throw new IllegalArgumentException("URI " + uri
 					+ " is not supported.");
@@ -310,5 +367,26 @@ public class KusssContentProvider extends ContentProvider {
 		}
 		return mLvas;
 	}
+
+    public static List<Studies> getStudies(Context context) {
+        List<Studies> mStudies = new ArrayList<>();
+        Account mAccount = AppUtils.getAccount(context);
+        if (mAccount != null) {
+            ContentResolver cr = context.getContentResolver();
+            Cursor c = cr.query(KusssContentContract.Studies.CONTENT_URI,
+                    ImportStudiesTask.STUDIES_PROJECTION, null, null,
+                    KusssContentContract.Studies.COL_DT_START + " DESC");
+
+            if (c != null) {
+                while (c.moveToNext()) {
+                    mStudies.add(new Studies(c));
+                }
+                c.close();
+            }
+        }
+        AppUtils.sortStudies(mStudies);
+
+        return mStudies;
+    }
 
 }

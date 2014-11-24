@@ -63,6 +63,8 @@ public class KusssHandler {
     // "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > table > tbody > tr > td > form > table > tbody > tr:has(td)";
     private static final String SELECT_NEW_EXAMS = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > div.sidetable > form > table > tbody > tr:has(td)";
     private static final String SELECT_EXAMS = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > table > tbody > tr > td > form > table > tbody > tr:has(td)";
+    private static final String URL_MY_STUDIES = "https://www.kusss.jku.at/kusss/studentsettings.action";
+    private static final String SELECT_MY_STUDIES = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > form > table > tbody > tr[class]:has(td)";
     private static KusssHandler handler = null;
     private CookieManager mCookies;
 
@@ -521,7 +523,26 @@ public class KusssHandler {
                 exams.add(exam);
             }
         }
+    }
 
+    public List<Studies> getStudies(Context c) {
+        try {
+            List<Studies> studies = new ArrayList<>();
+
+            Document doc = Jsoup.connect(URL_MY_STUDIES).get();
+
+            Elements rows = doc.select(SELECT_MY_STUDIES);
+            for (Element row : rows) {
+                Studies s = new Studies(c, row);
+                if (s.isInitialized()) {
+                    studies.add(s);
+                }
+            }
+            return studies;
+        } catch (Exception e) {
+            Analytics.sendException(c, e, false);
+            return null;
+        }
     }
 
     public void showExamInBrowser(Context c, String lvaNr) {

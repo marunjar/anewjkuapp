@@ -12,6 +12,7 @@ import android.graphics.EmbossMaskFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.androidplot.pie.PieChart;
@@ -29,6 +30,7 @@ import org.voidsink.anewjkuapp.kusss.GradeType;
 import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.kusss.LvaState;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
+import org.voidsink.anewjkuapp.kusss.Studies;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -545,5 +547,23 @@ public class AppUtils {
         AppUtils.sortGrades(result);
 
         return result;
+    }
+
+    public static void sortStudies(List<Studies> mStudies) {
+        Collections.sort(mStudies, new Comparator<Studies>() {
+
+            @Override
+            public int compare(Studies lhs, Studies rhs) {
+                int value = lhs.getUni().compareToIgnoreCase(rhs.getUni());
+                if (value == 0) {
+                    value = lhs.getDtStart().compareTo(rhs.getDtStart());
+                }
+                if (value == 0) {
+                    value = lhs.getSkz().compareTo(rhs.getSkz());
+                }
+                return value;
+            }
+        });
+
     }
 }

@@ -84,6 +84,22 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
 		try {
 			Looper.prepare();
 
+            Log.d(TAG, "importing Studies");
+
+            ImportStudiesTask studiesTask = new ImportStudiesTask(account, extras,
+                    authority, provider, syncResult, mContext);
+            studiesTask.execute();
+            while (!studiesTask.isDone() && !mSyncCancled) {
+                try {
+                    Thread.sleep(600);
+                } catch (Exception e) {
+                    Analytics.sendException(mContext, e, false);
+                }
+                if (mSyncCancled) {
+                    studiesTask.cancel(true);
+                }
+            }
+
 			Log.d(TAG, "importing LVAs");
 
 			ImportLvaTask lvaTask = new ImportLvaTask(account, extras,

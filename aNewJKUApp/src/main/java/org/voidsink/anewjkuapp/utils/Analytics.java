@@ -149,6 +149,7 @@ public class Analytics {
 
     public static void sendException(Context c, Exception e, boolean fatal) {
         sendException(c, e, fatal, "");
+        Log.e(TAG, "sendException", e);
     }
 
     public static void sendException(Context c, Exception e, boolean fatal, String additionalData) {

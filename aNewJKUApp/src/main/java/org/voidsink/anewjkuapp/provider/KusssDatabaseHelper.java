@@ -14,7 +14,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 	private static final String TAG = KusssDatabaseHelper.class.getSimpleName();
 
 	private static final String DATABASE_NAME = "kusss.db";
-	private static final int DATABASE_VERSION = 9;
+	private static final int DATABASE_VERSION = 10;
 
 	// Database creation sql statement
 	public static final String DB_CREATE_LVA = "create table if not exists "
@@ -74,6 +74,19 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 			+ PoiContentContract.Poi.COL_ADR_STREET + " text, "
 			+ PoiContentContract.Poi.COL_DESCR + " text " + ");";
 
+    public static final String DB_CREATE_STUDIES = "create table if not exists "
+            + KusssContentContract.Studies.TABLE_NAME + "("
+            + KusssContentContract.Studies.COL_ID
+            + " integer primary key autoincrement not null, "
+            + KusssContentContract.Studies.COL_IS_STD + " integer, "
+            + KusssContentContract.Studies.COL_SKZ + " integer, "
+            + KusssContentContract.Studies.COL_TITLE + " text, "
+            + KusssContentContract.Studies.COL_STEOP_DONE + " integer, "
+            + KusssContentContract.Studies.COL_ACTIVE_STATE + " integer, "
+            + KusssContentContract.Studies.COL_UNI + " string, "
+            + KusssContentContract.Studies.COL_DT_START + " integer not null, "
+            + KusssContentContract.Studies.COL_DT_END + " integer" + ")";
+
 	private Context mContext = null;
 
 	public KusssDatabaseHelper(Context context) {
@@ -87,6 +100,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL(DB_CREATE_LVA);
 		db.execSQL(DB_CREATE_EXAM);
 		db.execSQL(DB_CREATE_GRADE);
+        db.execSQL(DB_CREATE_STUDIES);
 
 		db.execSQL("DROP TABLE IF EXISTS " + PoiContentContract.Poi.TABLE_NAME);
 		db.execSQL(DB_CREATE_POI);
@@ -104,6 +118,9 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 			db.execSQL("DROP TABLE IF EXISTS "
 					+ KusssContentContract.Lva.LVA_TABLE_NAME);
 		}
+        if (oldVersion < 10) {
+            // try to import studies
+        }
 		onCreate(db);
 	}
 
@@ -132,12 +149,18 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 			db.execSQL("DROP TABLE IF EXISTS "
 					+ KusssContentContract.Grade.GRADE_TABLE_NAME);
             db.execSQL(DB_CREATE_GRADE);
+
 			db.execSQL("DROP TABLE IF EXISTS "
 					+ KusssContentContract.Exam.EXAM_TABLE_NAME);
             db.execSQL(DB_CREATE_EXAM);
+
 			db.execSQL("DROP TABLE IF EXISTS "
 					+ KusssContentContract.Lva.LVA_TABLE_NAME);
             db.execSQL(DB_CREATE_LVA);
+
+            db.execSQL("DROP TABLE IF EXISTS "
+                    + KusssContentContract.Studies.TABLE_NAME);
+            db.execSQL(DB_CREATE_STUDIES);
 		} catch (Exception e) {
             Analytics.sendException(context, e, true);
             drop(context);

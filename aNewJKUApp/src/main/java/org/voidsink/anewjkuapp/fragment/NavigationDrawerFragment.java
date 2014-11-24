@@ -79,7 +79,7 @@ public class NavigationDrawerFragment extends BaseFragment {
 			new DrawerMenuItem(R.string.title_grades, GradeFragment.class),
 			new DrawerMenuItem(R.string.title_lvas, LvaFragment2.class),
             new DrawerMenuItem(R.string.title_stats, StatFragment.class),
-			new DrawerMenuSection(R.string.title_campus),
+            new DrawerMenuSection(R.string.title_campus),
 			new DrawerMenuItem(R.string.title_mensa, MensaFragment.class),
 			// new DrawerMenuSection("Veranstaltungen"),
 			// new DrawerMenuItem("Veranstaltungen"),
@@ -119,7 +119,7 @@ public class NavigationDrawerFragment extends BaseFragment {
 				}
 			}
 		}
-		return "";
+		return c.getString(R.string.app_name);
 	}
 
 	@Override
@@ -181,7 +181,12 @@ public class NavigationDrawerFragment extends BaseFragment {
 			});
 		} else {
 			mUser.setText(account.name);
-			mUser.setOnClickListener(null);
+			mUser.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MainActivity.StartMyStudies(getContext());
+                }
+            });
 		}
 	}
 

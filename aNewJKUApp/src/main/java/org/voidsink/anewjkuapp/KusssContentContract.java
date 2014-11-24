@@ -79,6 +79,26 @@ public class KusssContentContract {
 		public static final String GRADE_COL_SWS = "sws";
 	}
 
+    public static class Studies {
+        public static final String PATH = "studies";
+        public static final String PATH_CONTENT_CHANGED = "studies_changed";
+        public static final Uri CONTENT_URI = KusssContentContract.CONTENT_URI
+                .buildUpon().appendPath(PATH).build();
+        public static final Uri CONTENT_CHANGED_URI = KusssContentContract.CONTENT_URI
+                .buildUpon().appendPath(PATH_CONTENT_CHANGED).build();
+
+        public static final String TABLE_NAME = "studies";
+        public static final String COL_ID = "_id";
+        public static final String COL_IS_STD = "std";
+        public static final String COL_SKZ = "skz";
+        public static final String COL_TITLE = "title";
+        public static final String COL_STEOP_DONE = "steopDone";
+        public static final String COL_ACTIVE_STATE = "active";
+        public static final String COL_UNI = "uni";
+        public static final String COL_DT_START = "dtStart";
+        public static final String COL_DT_END = "dtEnd";
+    }
+
 	public static Uri asEventSyncAdapter(Uri uri, String account,
 			String accountType) {
 		return uri
