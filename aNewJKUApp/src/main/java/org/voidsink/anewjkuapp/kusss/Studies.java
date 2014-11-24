@@ -182,4 +182,20 @@ public class Studies {
     public static String getKey(String skz, Date dtStart) {
         return skz + "-" + dateFormat.format(dtStart);
     }
+
+    public boolean dateInRange(Date date) {
+        if (date == null) {
+            return false;
+        }
+
+        if (date.before(getDtStart())) {
+            return false;
+        }
+
+        if (getDtEnd() != null && date.after(getDtEnd())) {
+            return false;
+        }
+
+        return true;
+    }
 }

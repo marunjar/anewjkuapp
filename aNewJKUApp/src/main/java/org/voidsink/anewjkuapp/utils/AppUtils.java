@@ -475,7 +475,7 @@ public class AppUtils {
         List<LvaWithGrade> result = new ArrayList<LvaWithGrade>();
 
         for (Lva lva : lvas) {
-            if (terms.contains(lva.getTerm())) {
+            if (terms == null || terms.contains(lva.getTerm())) {
                 ExamGrade grade = findGrade(grades, lva);
                 result.add(new LvaWithGrade(lva, grade));
             }
