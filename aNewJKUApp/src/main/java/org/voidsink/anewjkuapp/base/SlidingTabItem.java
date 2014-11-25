@@ -1,5 +1,7 @@
 package org.voidsink.anewjkuapp.base;
 
+import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 /**
@@ -19,17 +21,30 @@ public class SlidingTabItem {
         mFragment = fragment;
     }
 
+    public SlidingTabItem(CharSequence title, Class<? extends Fragment> fragment) {
+        this(title, fragment, Color.WHITE, Color.WHITE);
+    }
+
     /**
      * @return A new {@link Fragment} to be displayed by a {@link android.support.v4.view.ViewPager}
      */
     public Fragment createFragment() {
         try {
-            return mFragment.newInstance();
+            Fragment f = mFragment.newInstance();
+            Bundle b = getArguments();
+            if (b != null) {
+                f.setArguments(b);
+            }
+            return f;
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+        return null;
+    }
+
+    protected Bundle getArguments() {
         return null;
     }
 

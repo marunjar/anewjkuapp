@@ -18,27 +18,14 @@ import java.util.List;
 public class LvaTabItem extends SlidingTabItem{
 
     private final List<String> mTerms;
-    private final List<ExamGrade> mGrades;
-    private final List<Lva> mLvas;
 
-    public LvaTabItem(String term, List<Lva> lvas, List<ExamGrade> grades) {
-        super(term, LvaDetailFragment.class, CalendarUtils.COLOR_DEFAULT_LVA, Color.GRAY);
-
-        this.mTerms = new ArrayList<String>();
-        this.mTerms.add(term);
-        this.mGrades = grades;
-        this.mLvas = lvas;
-    }
-
-    public LvaTabItem(String title, List<String> terms, List<Lva> lvas, List<ExamGrade> grades) {
-        super(title, null, CalendarUtils.COLOR_DEFAULT_EXAM, Color.GRAY);
+    public LvaTabItem(String title, List<String> terms) {
+        super(title, null);
         this.mTerms = terms;
-        this.mLvas = lvas;
-        this.mGrades = grades;
     }
 
     @Override
     public Fragment createFragment() {
-        return new LvaDetailFragment(this.mTerms, this.mLvas, this.mGrades);
+        return new LvaDetailFragment(this.mTerms);
     }
 }

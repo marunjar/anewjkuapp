@@ -1,139 +1,27 @@
 package org.voidsink.anewjkuapp.fragment;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.UriMatcher;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-
-import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.GradeTabItem;
-import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.base.BaseContentObserver;
-import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.base.SlidingTabItem;
 import org.voidsink.anewjkuapp.base.SlidingTabsFragment;
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.utils.Consts;
 
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Arrays;
 import java.util.List;
 
-import edu.emory.mathcs.backport.java.util.Collections;
-
-public class GradeFragment extends SlidingTabsFragment implements
-		ContentObserverListener {
-
-	private static final String TAG = GradeFragment.class.getSimpleName();
-	private BaseContentObserver mGradeObserver;
-
-    private List<ExamGrade> mGrades = new ArrayList<ExamGrade>();
-    private List<String> mTerms = new ArrayList<String>();
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        loadGrades(getContext());
-    }
-
-    @Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-		uriMatcher.addURI(KusssContentContract.AUTHORITY,
-				KusssContentContract.Grade.PATH_CONTENT_CHANGED, 0);
-
-		mGradeObserver = new BaseContentObserver(uriMatcher, this);
-		getActivity().getContentResolver().registerContentObserver(
-				KusssContentContract.Grade.CONTENT_CHANGED_URI, false,
-				mGradeObserver);
-	}
+public class GradeFragment extends SlidingTabsFragment {
 
     @Override
     protected void fillTabs(List<SlidingTabItem> mTabs) {
-        mTabs.add(new GradeTabItem(getString(R.string.all_terms), this.mTerms, this.mGrades));
+        List<String> mTerms = KusssContentProvider.getTerms(getContext());
 
-        for (String term: mTerms) {
-            mTabs.add(new GradeTabItem(term, term, this.mGrades));
+        mTabs.add(new GradeTabItem(getString(R.string.all_terms), null));
+
+        for (String term : mTerms) {
+            mTabs.add(new GradeTabItem(term, Arrays.asList(term)));
         }
     }
-
-    @Override
-	public void onDestroy() {
-		super.onDestroy();
-
-		getActivity().getContentResolver().unregisterContentObserver(
-				mGradeObserver);
-	}
-
-	private void loadGrades(final Context context) {
-
-		new AsyncTask<Void, Void, Void>() {
-
-			private ProgressDialog progressDialog;
-			private List<ExamGrade> grades;
-			private List<String> terms;
-
-			@Override
-			protected void onPreExecute() {
-				super.onPreExecute();
-
-                this.terms = new ArrayList<>();
-
-                progressDialog = ProgressDialog.show(context,
-						context.getString(R.string.progress_title),
-						context.getString(R.string.progress_load_grade), true);
-			}
-
-			@Override
-			protected Void doInBackground(Void... params) {
-				this.grades = KusssContentProvider.getGrades(context);
-                for (ExamGrade grade : this.grades) {
-					if (!grade.getTerm().isEmpty() && this.terms.indexOf(grade.getTerm()) < 0) {
-						this.terms.add(grade.getTerm());
-					}
-				}
-				
-				Collections.sort(this.terms, new Comparator<String>() {
-
-					@Override
-					public int compare(String lhs, String rhs) {
-						return lhs.compareTo(rhs) * -1;
-					}
-				});
-				AppUtils.sortGrades(grades);
-
-				return null;
-			}
-
-			@Override
-			protected void onPostExecute(Void result) {
-				Log.i(TAG, "loadGrades " + this.terms);
-
-                mGrades = this.grades;
-                mTerms = this.terms;
-
-                updateData();
-
-                progressDialog.dismiss();
-
-				super.onPostExecute(result);
-			}
-		}.execute();
-	}
-
-	@Override
-	public void onContentChanged(boolean selfChange) {
-		Log.i(TAG, "onContentChanged(" + selfChange + ")");
-		loadGrades(getActivity());
-	}
 
     @Override
     protected String getScreenName() {

@@ -8,13 +8,14 @@
     <string name="title_grades">Noten</string>
     <string name="title_lvas">LVAs</string>
     <string name="title_stats">Statistik</string>
+    <string name="title_studies">Studienrichtung</string>
     <string name="title_campus">Campus</string>
     <string name="title_mensa">Mensa</string>
     <string name="title_map">Karte</string>
     <string name="title_oeh" translatable="false">ÖH</string>
     <string name="title_oeh_info">Info</string>
     <string name="title_oeh_rights">Rechte</string>
-    <string name="title_oeh_news">ÖH News</string>
+    <string name="title_oeh_news">News</string>
     <string name="title_oeh_linz" translatable="false">ÖH Linz</string>
 
     <string name="navigation_drawer_open">Navigation anzeigen</string>
@@ -62,6 +63,10 @@
     <string name="notification_sync_lva_loading">LVAs werden geladen</string>
     <string name="notification_sync_lva_updating">LVAs werden aktualisiert</string>
     <string name="notification_sync_lva_saving">LVAs werden gespeichert</string>
+    <string name="notification_sync_studies">Studienrichtungen werden synchronisiert</string>
+    <string name="notification_sync_studies_loading">Studienrichtungen werden geladen</string>
+    <string name="notification_sync_studies_updating">Studienrichtungen werden aktualisiert</string>
+    <string name="notification_sync_studies_saving">Studienrichtungen werden gespeichert</string>
     <string name="notification_events_changed_title" formatted="false">Termin(e) in "%s" geändert</string>
     <string name="notification_events_changed" formatted="false">%d Termin(e) in "%s" geändert</string>
     <string name="notification_new_exams_title">neue Prüfung(en) gefunden</string>
@@ -99,12 +104,14 @@
     <string name="pref_app_use_light_theme_summary">Das Ändern dieser Einstellung startet die App beim Verlassen der Einstellungen neu</string>
     <string name="pref_cat_app_map">Karte</string>
     <string name="pref_app_map_file_title">eigene Kartendatei</string>
-    <string name="pref_cat_diagrams">Diagramme</string>
-    <string name="pref_diagrams_use_lva_bar_chart_summary">Barchart für offene und erledigte LVAs verwenden</string>
-    <string name="pref_diagrams_use_lva_bar_chart_title">Diagrammtyp für LVAs</string>
+    <string name="pref_cat_stats">Statistik</string>
+    <string name="pref_stats_use_lva_bar_chart_summary">Barchart für offene und erledigte LVAs verwenden</string>
+    <string name="pref_stats_use_lva_bar_chart_title">Diagramme</string>
+    <string name="pref_stats_positive_grades_only_summary">Notendurchschnitt nur mit positiven Noten berechnen</string>
+    <string name="pref_stats_positive_grades_only_title">Notendurchschnitt für LVAs</string>
     <string name="pref_cat_mensa">Mensa</string>
-    <string name="pref_mensa_group_menu_by_day_title">Gruppierung</string>
-    <string name="pref_mensa_group_menu_by_day_summary">Menüs in eigenen Tabs je Tag anzeigen (benötigt Neustart)</string>
+    <string name="pref_mensa_group_menu_by_day_title">nach Tag gruppieren</string>
+    <string name="pref_mensa_group_menu_by_day_summary">Alle Menüs nach Tag gruppieren</string>
 
     <string name="group_user">User</string>
     <string name="group_oeh">ÖH</string>
@@ -151,6 +158,7 @@
     <string name="progress_load_calendar">Termine werden geladen...</string>
     <string name="progress_load_map_files">Karten werden geladen...</string>
     <string name="progress_login">Anmelden...</string>
+    <string name="progress_load_feed">News werden geladen...</string>
 
     <string name="mensa_menu_not_available">kein Speiseplan verfügbar</string>
     <string name="mensa_menu_today">Heute</string>
@@ -197,6 +205,24 @@
     <string name="account_login_failed_wrong_auth_token">Anmeldung fehlgeschlagen: falscher Authentifizierungstoken</string>
     <string name="account_login">Anmelden</string>
 
+    <string name="feed_title_oeh" translatable="false">ÖH</string>
+    <string name="feed_title_rewi" translatable="false">ReWi</string>
+    <string name="feed_title_sowi" translatable="false">SoWi</string>
+    <string name="feed_title_tnf" translatable="false">TNF</string>
+    <string name="feed_title_med" translatable="false">Medizin</string>
+
+    <string name="studies_is_standard">Standard</string>
+    <string name="studies_skz">SKZ</string>
+    <string name="studies_title">Studienrichtung</string>
+    <string name="studies_steop_done" translatable="false">StEOP</string>
+    <string name="studies_steop_done_yes">Abgeschlossen</string>
+    <string name="studies_steop_done_no">Offen</string>
+    <string name="studies_active_status">Status</string>
+    <string name="studies_active_status_yes">Aktiv</string>
+    <string name="studies_active_status_no">Inaktiv</string>
+    <string name="studies_dt_start">Beginn</string>
+    <string name="studies_dt_end">Ende</string>
+
     <string name="default_chip_color" translatable="false" >#ff2b7fc2</string>
     <string name="drawer_menu_item_icon">Icon</string>
     <string name="kusss_service_title">KUSSS Service</string>
@@ -206,4 +232,5 @@
     <string name="all_terms">alle Semester</string>
     <string name="about_force_logout">Ausloggen</string>
     <string name="menu_exam_register">in KUSSS anzeigen</string>
+    <string name="action_show_rss_entry_in_browser">in Browser anzeigen</string>
 </resources>

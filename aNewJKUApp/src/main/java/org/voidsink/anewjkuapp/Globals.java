@@ -11,6 +11,8 @@ import com.google.android.gms.analytics.ExceptionReporter;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Logger.LogLevel;
 import com.google.android.gms.analytics.Tracker;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.HashMap;
@@ -30,6 +32,10 @@ public class Globals extends Application {
         super.onCreate();
 
         CalligraphyConfig.initDefault("fonts/Roboto-Regular.ttf", R.attr.fontPath);
+
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
+                .build();
+        ImageLoader.getInstance().init(config);
 
         // initialize analytics
         GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);

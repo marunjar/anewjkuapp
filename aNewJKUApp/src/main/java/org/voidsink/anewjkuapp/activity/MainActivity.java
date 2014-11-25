@@ -3,6 +3,8 @@ package org.voidsink.anewjkuapp.activity;
 import android.accounts.Account;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -23,6 +25,8 @@ import net.fortuna.ical4j.data.CalendarBuilder;
 
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.voidsink.anewjkuapp.fragment.CalendarFragment;
+import org.voidsink.anewjkuapp.fragment.GradeFragment;
+import org.voidsink.anewjkuapp.fragment.StudiesFragment;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.DrawerItem;
@@ -99,6 +103,21 @@ public class MainActivity extends ThemedActivity implements
 
         // initialize graphic factory for mapsforge
         AndroidGraphicFactory.createInstance(this.getApplication());
+
+        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+
+            @Override
+            public void onBackStackChanged() {
+                Log.i(TAG, String.format("backstack changed: %d", getSupportFragmentManager().getBackStackEntryCount()));
+
+                if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                    finish();
+                } else {
+                    mTitle = getTitleFromFragment(null);
+                    initActionBar();
+                }
+            }
+        });
 
         setContentView(R.layout.activity_main);
 
@@ -213,24 +232,37 @@ public class MainActivity extends ThemedActivity implements
     }
 
     private Fragment attachFragment(Class<? extends Fragment> startFragment) {
+        return attachFragment(startFragment, true);
+    }
+
+    private Fragment attachFragment(Class<? extends Fragment> startFragment, boolean addToBackStack) {
         if (startFragment != null) {
             Fragment f = null;
             try {
                 f = (Fragment) startFragment.newInstance();
-                PreferenceWrapper.setLastFragment(this,
-                        startFragment.getCanonicalName());
 
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, f, ARG_SHOW_FRAGMENT).commit();
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.container, f, ARG_SHOW_FRAGMENT);
+                if (addToBackStack) {
+                    ft.addToBackStack(ft.getClass().getSimpleName());
+                }
+                ft.commit();
 
                 mTitle = getTitleFromFragment(f);
                 initActionBar();
+
+                if (addToBackStack) {
+                    PreferenceWrapper.setLastFragment(this,
+                            f.getClass().getCanonicalName());
+                }
 
                 return f;
             } catch (Exception e) {
                 Log.w(TAG, "fragment instantiation failed", e);
                 Analytics.sendException(this, e, false);
-                PreferenceWrapper.setLastFragment(this, PreferenceWrapper.PREF_LAST_FRAGMENT_DEFAULT);
+                if (addToBackStack) {
+                    PreferenceWrapper.setLastFragment(this, PreferenceWrapper.PREF_LAST_FRAGMENT_DEFAULT);
+                }
                 return null;
             }
         }
@@ -303,6 +335,14 @@ public class MainActivity extends ThemedActivity implements
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public static void StartMyStudies(Context context) {
+        //
+        Intent i = new Intent(context, MainActivity.class)
+                .putExtra(MainActivity.ARG_SHOW_FRAGMENT, StudiesFragment.class.getName())
+                .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        context.startActivity(i);
     }
 
     /**

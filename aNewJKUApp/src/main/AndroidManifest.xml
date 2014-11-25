@@ -85,6 +85,15 @@
                 android:value="org.voidsink.anewjkuapp.activity.MainActivity" />
         </activity>
         <activity
+            android:name=".activity.RssFeedEntryActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".activity.MainActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.voidsink.anewjkuapp.activity.MainActivity" />
+        </activity>
+        <activity
             android:name=".activity.KusssAuthenticatorActivity"
             android:permission="android.permission.MANAGE_ACCOUNTS"
             android:screenOrientation="portrait"

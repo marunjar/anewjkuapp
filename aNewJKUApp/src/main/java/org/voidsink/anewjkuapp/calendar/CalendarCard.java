@@ -5,6 +5,7 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 import android.view.View;
@@ -104,10 +105,20 @@ public class CalendarCard extends ThemedCard {
             public void onMenuItemClick(BaseCard card, MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.show_in_calendar: {
-                        Uri uri = ContentUris.withAppendedId(CalendarContractWrapper.Events.CONTENT_URI(), mEventId);
-                        Intent intent = new Intent(Intent.ACTION_VIEW)
-                                .setData(uri);
-                        mContext.startActivity(intent);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                            Uri.Builder builder = CalendarContractWrapper.CONTENT_URI().buildUpon();
+                            builder.appendPath("time");
+                            ContentUris.appendId(builder, mDtStart);
+                            Intent intent = new Intent(Intent.ACTION_VIEW)
+                                    .setData(builder.build());
+                            mContext.startActivity(intent);
+                        } else {
+                            Uri uri = ContentUris.withAppendedId(CalendarContractWrapper.Events.CONTENT_URI(), mEventId);
+                            Intent intent = new Intent(Intent.ACTION_VIEW)
+                                    .setData(uri);
+                            mContext.startActivity(intent);
+                        }
+
                         break;
                     }
                     case R.id.show_on_map: {

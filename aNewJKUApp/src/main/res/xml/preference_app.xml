@@ -14,12 +14,17 @@
             android:summary=""
             android:title="@string/pref_app_map_file_title" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_cat_diagrams" >
+    <PreferenceCategory android:title="@string/pref_cat_stats" >
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="pref_key_use_lva_bar_chart"
-            android:summary="@string/pref_diagrams_use_lva_bar_chart_summary"
-            android:title="@string/pref_diagrams_use_lva_bar_chart_title" />
+            android:summary="@string/pref_stats_use_lva_bar_chart_summary"
+            android:title="@string/pref_stats_use_lva_bar_chart_title" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_key_positive_grades_only"
+            android:summary="@string/pref_stats_positive_grades_only_summary"
+            android:title="@string/pref_stats_positive_grades_only_title" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_cat_mensa" >
         <CheckBoxPreference

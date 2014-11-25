@@ -79,14 +79,14 @@ public class NavigationDrawerFragment extends BaseFragment {
 			new DrawerMenuItem(R.string.title_grades, GradeFragment.class),
 			new DrawerMenuItem(R.string.title_lvas, LvaFragment2.class),
             new DrawerMenuItem(R.string.title_stats, StatFragment.class),
-			new DrawerMenuSection(R.string.title_campus),
+            new DrawerMenuSection(R.string.title_campus),
 			new DrawerMenuItem(R.string.title_mensa, MensaFragment.class),
 			// new DrawerMenuSection("Veranstaltungen"),
 			// new DrawerMenuItem("Veranstaltungen"),
 			new DrawerMenuItem(R.string.title_map, MapFragment.class),
-			// new DrawerMenuItem("News"),
-			// new DrawerMenuItem("Courier"),
 			new DrawerMenuSection(R.string.title_oeh),
+            new DrawerMenuItem(R.string.title_oeh_news, OehNewsFragment.class),
+            // new DrawerMenuItem("Courier"),
             new DrawerMenuItem(R.string.title_oeh_info, OehInfoFragment.class),
             new DrawerMenuItem(R.string.title_oeh_rights, OehRightsFragment.class)};
 
@@ -119,7 +119,7 @@ public class NavigationDrawerFragment extends BaseFragment {
 				}
 			}
 		}
-		return "";
+		return c.getString(R.string.app_name);
 	}
 
 	@Override
@@ -181,7 +181,12 @@ public class NavigationDrawerFragment extends BaseFragment {
 			});
 		} else {
 			mUser.setText(account.name);
-			mUser.setOnClickListener(null);
+			mUser.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MainActivity.StartMyStudies(getContext());
+                }
+            });
 		}
 	}
 

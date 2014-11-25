@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/list_header_text"
+        style="@style/Text"
+        fontPath="fonts/Roboto-Light.ttf"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="4dip"
+        android:paddingLeft="@dimen/list_card_padding_left"
+        android:paddingRight="@dimen/list_card_padding_right"
+        android:paddingTop="@dimen/list_card_padding_top"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="@dimen/text_size_subhead" />
+
+    <include layout="@layout/separator" />
+
+</LinearLayout>
+

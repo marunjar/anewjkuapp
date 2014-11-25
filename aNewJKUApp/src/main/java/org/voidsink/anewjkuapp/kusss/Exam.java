@@ -151,6 +151,7 @@ public class Exam {
                 i++;
             }
         }
+
         // create new time string
         String result = "";
         for (String s : times) {

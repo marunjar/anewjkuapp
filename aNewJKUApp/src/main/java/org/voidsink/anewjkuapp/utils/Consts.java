@@ -12,6 +12,22 @@ public class Consts {
 
     public static final String SYNC_SHOW_PROGRESS = "showProgress";
 
+    public static final String ARG_FEED_URL = "feedURL";
+    public static final String ARG_FEED_ID = "feedID";
+    public static final String ARG_FEED_ENTRY = "feedEntry";
+
+    public static final Integer FEED_ID_OEH = 1;
+    public static final Integer FEED_ID_REWI = 2;
+    public static final Integer FEED_ID_SOWI = 3;
+    public static final Integer FEED_ID_TNF = 4;
+    public static final Integer FEED_ID_MED = 5;
+
+    public static final String FEED_URL_OEH = "http://oeh.jku.at/news.xml";
+    public static final String FEED_URL_REWI = "http://oeh.jku.at/news/49/news.xml";
+    public static final String FEED_URL_SOWI = "http://oeh.jku.at/news/23/news.xml";
+    public static final String FEED_URL_TNF = "http://oeh.jku.at/news/31/news.xml";
+    public static final String FEED_URL_MED = "http://oeh.jku.at/news/58/news.xml";
+
     //strings for logging of screens
 
     public static final String SCREEN_CALENDAR = "/calendar";
@@ -29,6 +45,8 @@ public class Consts {
 
     public static final String SCREEN_SETTINGS_DASHCLOCK = "/dashclock";
     public static final String SCREEN_LOGIN = "/login";
+    public static final String SCREEN_RSS_FEED = "/rssFeed";
+    public static final String SCREEN_RSS_FEED_ENTRY = "/rssFeed/entry";
 
     private Consts() {
     }
