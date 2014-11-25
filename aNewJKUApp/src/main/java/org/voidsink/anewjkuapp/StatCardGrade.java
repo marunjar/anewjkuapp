@@ -261,9 +261,6 @@ public class StatCardGrade extends ThemedCardWithList {
 
                 barChart.getLegendWidget().setVisible(false);
 
-                barChart.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 5);
-                barChart.setRangeBoundaries(0, BoundaryMode.FIXED, 50, BoundaryMode.GROW);
-
                 // workaround to center ects bar
                 barChart.setDomainBoundaries(0, 6, BoundaryMode.FIXED);
                 barChart.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 1);
@@ -311,7 +308,7 @@ public class StatCardGrade extends ThemedCardWithList {
                 barChart.removeMarkers();
 
                 // add grades (in percent)
-                List<Number> values = new ArrayList<Number>();
+                List<Double> values = new ArrayList<>();
                 values.add(null); // workaround to start grades at 1
                 values.add(AppUtils.getGradePercent(mGrades, Grade.G1, this.mEctsWeighting));
                 values.add(AppUtils.getGradePercent(mGrades, Grade.G2, this.mEctsWeighting));
@@ -320,6 +317,32 @@ public class StatCardGrade extends ThemedCardWithList {
                 if (!mPositiveOnly) {
                     values.add(AppUtils.getGradePercent(mGrades, Grade.G5, this.mEctsWeighting));
                 }
+
+                // calculate range
+                double rangeTopMax = 0;
+                // find max %
+                for (Double n : values) {
+                    if (n != null) {
+                        rangeTopMax = Math.max(rangeTopMax, n);
+                    }
+                }
+                if (rangeTopMax > 0) {
+                    // add some free space
+                    rangeTopMax = (Math.ceil((rangeTopMax + 10) / 10) * 10);
+                } else {
+                    // default 25%
+                    rangeTopMax = 25;
+                }
+
+                // max 100%
+                if (rangeTopMax > 100) {
+                    rangeTopMax = 100;
+                }
+
+                barChart.setRangeTopMin(25);
+                barChart.setRangeBoundaries(0, BoundaryMode.FIXED, rangeTopMax,
+                        BoundaryMode.FIXED);
+                barChart.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 10);
 
                 SimpleXYSeries mSeries = new SimpleXYSeries(values,
                         SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, getContext().getString(R.string.stat_title_grade));

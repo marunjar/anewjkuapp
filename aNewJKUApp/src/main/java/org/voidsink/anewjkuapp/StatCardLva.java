@@ -186,7 +186,7 @@ public class StatCardLva extends ThemedCardWithList {
                 // workaround to center ects bar
                 barChart.setDomainBoundaries(0, 2, BoundaryMode.FIXED);
                 // do not display domain
-                barChart.getGraphWidget().getDomainLabelPaint().setColor(Color.TRANSPARENT);
+                barChart.getDomainLabelWidget().setVisible(false);
             } else {
                 pieChart.setVisibility(View.VISIBLE);
                 barChart.setVisibility(View.GONE);
@@ -235,14 +235,16 @@ public class StatCardLva extends ThemedCardWithList {
 
                 // calculate range
                 double rangeTopMax = ((mTerms != null) ? mTerms.size() : 1) * 30;
-                if (mDoneEcts + mOpenEcts > (rangeTopMax * .9)) {
-                    rangeTopMax = (Math.ceil((mDoneEcts + mOpenEcts) * 1.1 / 10) * 10);
+                if ((mDoneEcts + mOpenEcts) > rangeTopMax) {
+                    rangeTopMax = (Math.ceil((mDoneEcts + mOpenEcts + 10) / 10) * 10);
+                } else {
+                    rangeTopMax = rangeTopMax + 10;
                 }
 
                 // calc steps
                 double rangeStep = Math.ceil((rangeTopMax / 10) / 10) * 10;
 
-                barChart.setRangeTopMin(mTerms.size() * 30);
+                barChart.setRangeTopMin(minEcts);
                 barChart.setRangeBoundaries(0, BoundaryMode.FIXED, rangeTopMax,
                         BoundaryMode.FIXED);
                 barChart.setRangeStep(XYStepMode.INCREMENT_BY_VAL, rangeStep);
