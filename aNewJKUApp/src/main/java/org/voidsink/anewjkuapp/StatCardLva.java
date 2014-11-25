@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.androidplot.pie.PieChart;
+import com.androidplot.pie.Segment;
 import com.androidplot.ui.XLayoutStyle;
 import com.androidplot.ui.XPositionMetric;
 import com.androidplot.util.PixelUtils;
@@ -16,6 +17,7 @@ import com.androidplot.xy.BarRenderer;
 import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
+import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.XYStepMode;
 import com.androidplot.xy.YValueMarker;
 
@@ -29,6 +31,7 @@ import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import it.gmariotti.cardslib.library.internal.Card;
@@ -57,15 +60,28 @@ public class StatCardLva extends ThemedCardWithList {
         getLinearListAdapter().clear();
         getLinearListAdapter().addAll(objects);
 
-        updateProgressBar(true,true);
+        updateProgressBar(true, true);
     }
 
     @Override
     protected CardHeader initCardHeader() {
         CardHeader header = new CardHeader(getContext());
         header.setTitle(getContext().getString(R.string.stat_title_lva));
-        //Set visible the expand/collapse button
-        header.setButtonExpandVisible(true);
+
+        //init custom expand button
+        header.setOtherButtonVisible(true);
+        header.setOtherButtonDrawable(R.drawable.ic_insert_chart_grey600_36dp);
+        header.setOtherButtonClickListener(new CardHeader.OnClickCardHeaderOtherButtonListener() {
+            @Override
+            public void onButtonItemClick(Card card, View view) {
+                CardExpand ce = getCardExpand();
+                if (ce instanceof LvaDiagramCardExpand) {
+                    ((LvaDiagramCardExpand) ce).updatePlot();
+                }
+
+                doToogleExpand();
+            }
+        });
 
         //Add Header to card
         addCardHeader(header);
@@ -149,6 +165,9 @@ public class StatCardLva extends ThemedCardWithList {
 
     private class LvaDiagramCardExpand extends ThemedCardExpand {
 
+        private XYPlot barChart;
+        private PieChart pieChart;
+
         public LvaDiagramCardExpand(Context context) {
             super(context, R.layout.stat_card_lva_diagram);
         }
@@ -157,35 +176,65 @@ public class StatCardLva extends ThemedCardWithList {
         public void setupInnerViewElements(ViewGroup parent, View view) {
             super.setupInnerViewElements(parent, view);
 
-            double mOpenEcts = AppUtils.getECTS(LvaState.OPEN, mLvas);
-            double mDoneEcts = AppUtils.getECTS(LvaState.DONE, mLvas);
-            double minEcts = mTerms.size() * 30;
-
-            XYPlot barChart = (XYPlot) view.findViewById(R.id.stat_card_lva_diagram_bar);
-            PieChart pieChart = (PieChart) view.findViewById(R.id.stat_card_lva_diagram_pie);
+            barChart = (XYPlot) view.findViewById(R.id.stat_card_lva_diagram_bar);
+            pieChart = (PieChart) view.findViewById(R.id.stat_card_lva_diagram_pie);
 
             if (PreferenceWrapper.getUseLvaBarChart(getContext())) {
+                barChart.setVisibility(View.VISIBLE);
                 pieChart.setVisibility(View.GONE);
 
-                YValueMarker ectsMarker = new YValueMarker(minEcts, // y-val to mark
-                        String.format("%.2f ECTS", minEcts), // marker label
-                        new XPositionMetric( // object instance to set text
-                                // positioning
-                                // on the marker
-                                PixelUtils.dpToPix(5), // 5dp offset
-                                XLayoutStyle.ABSOLUTE_FROM_RIGHT), // offset origin
-                        Color.rgb(220, 0, 0), // line paint color
-                        Color.rgb(220, 0, 0)); // text paint color
+                // workaround to center ects bar
+                barChart.setDomainBoundaries(0, 2, BoundaryMode.FIXED);
+                // do not display domain
+                barChart.getGraphWidget().getDomainLabelPaint().setColor(Color.TRANSPARENT);
+            } else {
+                pieChart.setVisibility(View.VISIBLE);
+                barChart.setVisibility(View.GONE);
+            }
 
-                ectsMarker.getTextPaint().setTextSize(PixelUtils.dpToPix(12));
+//            updatePlot();
+        }
 
-                DashPathEffect dpe = new DashPathEffect(new float[]{
-                        PixelUtils.dpToPix(2), PixelUtils.dpToPix(2)}, 0);
+        public void updatePlot() {
+            double mOpenEcts = AppUtils.getECTS(LvaState.OPEN, mLvas);
+            double mDoneEcts = AppUtils.getECTS(LvaState.DONE, mLvas);
+            double minEcts = (mTerms != null) ? mTerms.size() * 30 : 0;
 
-                ectsMarker.getLinePaint().setPathEffect(dpe);
+            if (barChart.getVisibility() == View.VISIBLE) {
+                // clear chart
+                // remove all series from each plot
+                Iterator<XYSeries> i = barChart.getSeriesSet().iterator();
+                while (i.hasNext()) {
+                    XYSeries setElement = i.next();
+                    barChart.removeSeries(setElement);
+                }
+                // remove all marker
+                barChart.removeMarkers();
 
-                // calc range manually
-                double rangeTopMax = mTerms.size() * 30;
+                // add ects marker
+                if (minEcts > 0) {
+                    YValueMarker ectsMarker = new YValueMarker(minEcts, // y-val to mark
+                            String.format("%.2f ECTS", minEcts), // marker label
+                            new XPositionMetric( // object instance to set text
+                                    // positioning
+                                    // on the marker
+                                    PixelUtils.dpToPix(5), // 5dp offset
+                                    XLayoutStyle.ABSOLUTE_FROM_RIGHT), // offset origin
+                            Color.rgb(220, 0, 0), // line paint color
+                            Color.rgb(220, 0, 0)); // text paint color
+
+                    ectsMarker.getTextPaint().setTextSize(PixelUtils.dpToPix(12));
+
+                    DashPathEffect dpe = new DashPathEffect(new float[]{
+                            PixelUtils.dpToPix(2), PixelUtils.dpToPix(2)}, 0);
+
+                    ectsMarker.getLinePaint().setPathEffect(dpe);
+
+                    barChart.addMarker(ectsMarker);
+                }
+
+                // calculate range
+                double rangeTopMax = ((mTerms != null) ? mTerms.size() : 1) * 30;
                 if (mDoneEcts + mOpenEcts > (rangeTopMax * .9)) {
                     rangeTopMax = (Math.ceil((mDoneEcts + mOpenEcts) * 1.1 / 10) * 10);
                 }
@@ -193,20 +242,16 @@ public class StatCardLva extends ThemedCardWithList {
                 // calc steps
                 double rangeStep = Math.ceil((rangeTopMax / 10) / 10) * 10;
 
-                // init bar chart
-                addSerieToBarChart(barChart, getContext().getString(LvaState.DONE.getStringResIDExt()),
-                        mDoneEcts, Grade.G1.getColor());
-                addSerieToBarChart(barChart, getContext().getString(LvaState.OPEN.getStringResIDExt()),
-                        mOpenEcts, Grade.G3.getColor());
-
                 barChart.setRangeTopMin(mTerms.size() * 30);
                 barChart.setRangeBoundaries(0, BoundaryMode.FIXED, rangeTopMax,
                         BoundaryMode.FIXED);
                 barChart.setRangeStep(XYStepMode.INCREMENT_BY_VAL, rangeStep);
 
-                // workaround to center ects bar
-                barChart.setDomainBoundaries(0, 2, BoundaryMode.FIXED);
-                barChart.addMarker(ectsMarker);
+                // add series to bar chart
+                addSerieToBarChart(barChart, getContext().getString(LvaState.DONE.getStringResIDExt()),
+                        mDoneEcts, Grade.G1.getColor());
+                addSerieToBarChart(barChart, getContext().getString(LvaState.OPEN.getStringResIDExt()),
+                        mOpenEcts, Grade.G3.getColor());
 
                 // Setup the BarRenderer with our selected options
                 BarRenderer<?> renderer = ((BarRenderer<?>) barChart
@@ -217,33 +262,33 @@ public class StatCardLva extends ThemedCardWithList {
                     renderer.setBarGap(25);
                 }
 
-                if (barChart.getSeriesSet().size() > 0) {
-                    barChart.setVisibility(View.VISIBLE);
-                } else {
-                    barChart.setVisibility(View.GONE);
-                }
-            } else {
-                barChart.setVisibility(View.GONE);
-
-                // init pie chart
-                AppUtils.addSerieToPieChart(pieChart, getContext().getString(LvaState.DONE.getStringResIDExt()),
-                        mDoneEcts, Grade.G1.getColor());
-                AppUtils.addSerieToPieChart(pieChart, getContext().getString(LvaState.OPEN.getStringResIDExt()),
-                        mOpenEcts, Grade.G3.getColor());
-
-                double missingECTS = minEcts - (mDoneEcts + mOpenEcts);
-                if (missingECTS > 0) {
-                    AppUtils.addSerieToPieChart(pieChart, "",
-                            missingECTS, Color.GRAY);
-                }
-
-                if (pieChart.getSeriesSet().size() > 0) {
-                    pieChart.setVisibility(View.VISIBLE);
-                } else {
-                    pieChart.setVisibility(View.GONE);
-                }
+                barChart.redraw();
             }
 
+            if (pieChart.getVisibility() == View.VISIBLE) {
+                // clear chart
+                // remove all series from each plot
+                Iterator<Segment> i = pieChart.getSeriesSet().iterator();
+                while (i.hasNext()) {
+                    Segment setElement = i.next();
+                    pieChart.removeSegment(setElement);
+                }
+
+                // add series to pie chart
+                if (minEcts > 0) {
+                    double missingECTS = minEcts - (mDoneEcts + mOpenEcts);
+                    if (missingECTS > 0) {
+                        AppUtils.addSerieToPieChart(pieChart, "",
+                                missingECTS, Color.GRAY);
+                    }
+                }
+                AppUtils.addSerieToPieChart(pieChart, getContext().getString(LvaState.OPEN.getStringResIDExt()),
+                        mOpenEcts, Grade.G3.getColor());
+                AppUtils.addSerieToPieChart(pieChart, getContext().getString(LvaState.DONE.getStringResIDExt()),
+                        mDoneEcts, Grade.G1.getColor());
+
+                pieChart.redraw();
+            }
         }
 
         private void addSerieToBarChart(XYPlot barChart, String category,

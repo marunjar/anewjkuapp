@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.androidplot.pie.PieChart;
+import com.androidplot.pie.Segment;
 import com.androidplot.ui.SeriesRenderer;
 import com.androidplot.xy.BarFormatter;
 import com.androidplot.xy.BarRenderer;
@@ -27,6 +28,7 @@ import java.text.FieldPosition;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import it.gmariotti.cardslib.library.internal.Card;
@@ -48,14 +50,14 @@ public class StatCardGrade extends ThemedCardWithList {
         this.mPositiveOnly = positiveOnly;
     }
 
-    public void setValues(List<String> terms, List<ExamGrade> grades){
+    public void setValues(List<String> terms, List<ExamGrade> grades) {
         this.mGrades = AppUtils.filterGrades(terms, grades);
 
         List<ListObject> objects = initChildren();
         getLinearListAdapter().clear();
         getLinearListAdapter().addAll(objects);
 
-        updateProgressBar(true,true);
+        updateProgressBar(true, true);
     }
 
     @Override
@@ -67,9 +69,20 @@ public class StatCardGrade extends ThemedCardWithList {
             header.setTitle(getContext().getString(R.string.stat_title_grade));
         }
 
-        //Set visible the expand/collapse button
-        header.setButtonExpandVisible(true);
+//init custom expand button
+        header.setOtherButtonVisible(true);
+        header.setOtherButtonDrawable(R.drawable.ic_insert_chart_grey600_36dp);
+        header.setOtherButtonClickListener(new CardHeader.OnClickCardHeaderOtherButtonListener() {
+            @Override
+            public void onButtonItemClick(Card card, View view) {
+                CardExpand ce = getCardExpand();
+                if (ce instanceof GradeDiagramCardExpand) {
+                    ((GradeDiagramCardExpand) ce).updatePlot();
+                }
 
+                doToogleExpand();
+            }
+        });
         //Add Header to card
         addCardHeader(header);
 
@@ -228,6 +241,9 @@ public class StatCardGrade extends ThemedCardWithList {
         private final boolean mEctsWeighting;
         private final boolean mPositiveOnly;
 
+        private XYPlot barChart;
+        private PieChart pieChart;
+
         public GradeDiagramCardExpand(Context context, boolean ectsWeighting, boolean positiveOnly) {
             super(context, R.layout.stat_card_grade_diagram);
             this.mEctsWeighting = ectsWeighting;
@@ -236,26 +252,12 @@ public class StatCardGrade extends ThemedCardWithList {
 
         @Override
         public void setupInnerViewElements(ViewGroup parent, View view) {
-            XYPlot barChart = (XYPlot) view.findViewById(R.id.stat_card_grade_diagram_bar);
-            PieChart pieChart = (PieChart) view.findViewById(R.id.stat_card_grade_diagram_pie);
+            barChart = (XYPlot) view.findViewById(R.id.stat_card_grade_diagram_bar);
+            pieChart = (PieChart) view.findViewById(R.id.stat_card_grade_diagram_pie);
 
             if (PreferenceWrapper.getUseLvaBarChart(getContext())) {
+                barChart.setVisibility(View.VISIBLE);
                 pieChart.setVisibility(View.GONE);
-
-                List<Number> values = new ArrayList<Number>();
-                values.add(null); // workaround to start grades at 1
-                values.add(AppUtils.getGradePercent(mGrades, Grade.G1, this.mEctsWeighting));
-                values.add(AppUtils.getGradePercent(mGrades, Grade.G2, this.mEctsWeighting));
-                values.add(AppUtils.getGradePercent(mGrades, Grade.G3, this.mEctsWeighting));
-                values.add(AppUtils.getGradePercent(mGrades, Grade.G4, this.mEctsWeighting));
-                if (!mPositiveOnly) {
-                    values.add(AppUtils.getGradePercent(mGrades, Grade.G5, this.mEctsWeighting));
-                }
-
-                SimpleXYSeries mSeries = new SimpleXYSeries(values,
-                        SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, getContext().getString(R.string.stat_title_grade));
-                barChart.addSeries(mSeries,
-                        new GradeBarFormatter(Color.LTGRAY, Color.GRAY));
 
                 barChart.getLegendWidget().setVisible(false);
 
@@ -288,6 +290,41 @@ public class StatCardGrade extends ThemedCardWithList {
                         throw new UnsupportedOperationException("not implemented");
                     }
                 });
+            } else {
+                pieChart.setVisibility(View.VISIBLE);
+                barChart.setVisibility(View.GONE);
+            }
+
+//            updatePlot();
+        }
+
+        public void updatePlot() {
+            if (barChart.getVisibility() == View.VISIBLE) {
+                // clear chart
+                // remove all series from each plot
+                Iterator<XYSeries> i = barChart.getSeriesSet().iterator();
+                while (i.hasNext()) {
+                    XYSeries setElement = i.next();
+                    barChart.removeSeries(setElement);
+                }
+                // remove all marker
+                barChart.removeMarkers();
+
+                // add grades (in percent)
+                List<Number> values = new ArrayList<Number>();
+                values.add(null); // workaround to start grades at 1
+                values.add(AppUtils.getGradePercent(mGrades, Grade.G1, this.mEctsWeighting));
+                values.add(AppUtils.getGradePercent(mGrades, Grade.G2, this.mEctsWeighting));
+                values.add(AppUtils.getGradePercent(mGrades, Grade.G3, this.mEctsWeighting));
+                values.add(AppUtils.getGradePercent(mGrades, Grade.G4, this.mEctsWeighting));
+                if (!mPositiveOnly) {
+                    values.add(AppUtils.getGradePercent(mGrades, Grade.G5, this.mEctsWeighting));
+                }
+
+                SimpleXYSeries mSeries = new SimpleXYSeries(values,
+                        SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, getContext().getString(R.string.stat_title_grade));
+                barChart.addSeries(mSeries,
+                        new GradeBarFormatter(Color.LTGRAY, Color.GRAY));
 
                 // Setup the BarRenderer with our selected options
                 GradeBarRenderer renderer = (GradeBarRenderer) barChart
@@ -298,15 +335,18 @@ public class StatCardGrade extends ThemedCardWithList {
                     renderer.setBarGap(25);
                 }
 
-                if (barChart.getSeriesSet().size() > 0) {
-                    barChart.setVisibility(View.VISIBLE);
-                } else {
-                    barChart.setVisibility(View.GONE);
+                barChart.redraw();
+            }
+            if (pieChart.getVisibility() == View.VISIBLE) {
+                // clear chart
+                // remove all series from each plot
+                Iterator<Segment> i = pieChart.getSeriesSet().iterator();
+                while (i.hasNext()) {
+                    Segment setElement = i.next();
+                    pieChart.removeSegment(setElement);
                 }
-            } else {
-                barChart.setVisibility(View.GONE);
 
-                // init pie chart
+                // add series to pie chart
                 AppUtils.addSerieToPieChart(pieChart,
                         getContext().getString(Grade.G1.getStringResID()),
                         AppUtils.getGradePercent(mGrades, Grade.G1, this.mEctsWeighting),
@@ -330,13 +370,14 @@ public class StatCardGrade extends ThemedCardWithList {
                             Grade.G5.getColor());
                 }
 
-                if (pieChart.getSeriesSet().size() > 0) {
-                    pieChart.setVisibility(View.VISIBLE);
-                } else {
-                    pieChart.setVisibility(View.GONE);
+                // add gray dummy segment
+                if (pieChart.getSeriesSet().size() == 0) {
+                    AppUtils.addSerieToPieChart(pieChart, "", 100, Color.GRAY);
                 }
+
+                pieChart.redraw();
             }
         }
-    }
 
+    }
 }
