@@ -38,13 +38,15 @@ public class BaseArrayAdapter<T> extends ArrayAdapter<T> {
 	@SuppressLint("NewApi")
 	@Override
     public void addAll(Collection<? extends T> collection) {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			super.addAll(collection);
-		} else {
-			for (T item : collection) {
-				super.add(item);
-			}
-		}
+        if (collection != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                super.addAll(collection);
+            } else {
+                for (T item : collection) {
+                    super.add(item);
+                }
+            }
+        }
     }
 
 	@SuppressWarnings("unchecked")
