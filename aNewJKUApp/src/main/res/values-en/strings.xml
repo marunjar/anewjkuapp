@@ -173,7 +173,6 @@
     <string name="studies_dt_start">Begin</string>
     <string name="studies_is_standard">Standard</string>
     <string name="studies_skz">Cur.Id</string>
-    <string name="studies_steop_done" translatable="false"></string>
     <string name="studies_title">Field of study</string>
     <string name="title_studies">Field of study</string>
     <string name="studies_steop_done_yes">Completed</string>
