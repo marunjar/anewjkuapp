@@ -8,7 +8,6 @@ import java.util.Map;
 
 import org.voidsink.anewjkuapp.base.BaseAsyncTask;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
-import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.kusss.Studies;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
 import org.voidsink.anewjkuapp.utils.Analytics;
@@ -68,7 +67,7 @@ public class ImportStudiesTask extends BaseAsyncTask<Void, Void, Void> {
                 .acquireContentProviderClient(
                         KusssContentContract.Lva.CONTENT_URI);
         this.mSyncResult = new SyncResult();
-        this.mShowProgress = true;
+        this.mShowProgress = false;
     }
 
     public ImportStudiesTask(Account account, Bundle extras, String authority,

@@ -54,6 +54,11 @@ public class Studies {
         }
     }
 
+    public Studies(Date dtStart, Date dtEnd) {
+        this.mDtStart = dtStart;
+        this.mDtEnd = dtEnd;
+    }
+
     public Studies(Cursor c) {
         this.mIsStandard = KusssDatabaseHelper.toBool(c.getInt(ImportStudiesTask.COLUMN_STUDIES_IS_STD));
         this.mSkz = c.getString(ImportStudiesTask.COLUMN_STUDIES_SKZ);

@@ -20,6 +20,7 @@ import com.androidplot.pie.Segment;
 import com.androidplot.pie.SegmentFormatter;
 
 import org.voidsink.anewjkuapp.ImportPoiTask;
+import org.voidsink.anewjkuapp.ImportStudiesTask;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
@@ -73,7 +74,11 @@ public class AppUtils {
                         errorOccured = true;
                     }
                 }
-
+                if (shouldImportStudies(mLastVersion, mCurrentVersion)) {
+                    if (!importStudies(context)) {
+                        errorOccured = true;
+                    }
+                }
             } catch (Exception e) {
                 Log.e(TAG, "doOnNewVersion failed", e);
                 Analytics.sendException(context, e, false);
@@ -83,6 +88,25 @@ public class AppUtils {
                 PreferenceWrapper.setLastVersion(context, mCurrentVersion);
             }
         }
+    }
+
+    private static boolean shouldImportStudies(int lastVersion, int currentVersion) {
+        // studies added with 140026
+        // import on startup to avoid strange behaviour and missing tabs
+        return (lastVersion < 100026 && currentVersion >= 100026) ||
+                (lastVersion < 140026 && currentVersion >= 140026);
+    }
+
+    private static boolean importStudies(Context context) {
+        Account account = getAccount(context);
+        if (account != null) {
+            try {
+                new ImportStudiesTask(account, context).execute();
+            } catch (Exception e) {
+                Analytics.sendException(context, e, false);
+            }
+        }
+        return true;
     }
 
     private static boolean removeAccount(Context context) {
@@ -98,7 +122,8 @@ public class AppUtils {
                                                   int currentVersion) {
         // calendar names changed with 100017, remove account for avoiding
         // corrupted data
-        return (lastVersion < 100017 && currentVersion >= 100017);
+        return (lastVersion < 100017 && currentVersion >= 100017) ||
+               (lastVersion < 140017 && currentVersion >= 140017);
     }
 
     private static boolean initPreferences(Context context) {

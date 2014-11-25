@@ -19,6 +19,7 @@ import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.kusss.Studies;
+import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import java.util.ArrayList;
@@ -396,15 +397,49 @@ public class KusssContentProvider extends ContentProvider {
 
     public static List<String> getTerms(Context context) {
         List<String> terms = new ArrayList<>();
+        Calendar cal = Calendar.getInstance();
 
         List<Studies> studies = getStudies(context);
-        if (studies != null && studies.size() > 0) {
-            Calendar cal = Calendar.getInstance();
 
+        if (studies == null) {
+            studies = new ArrayList<>();
+        }
+
+        if (studies.size() == 0) {
+            new ImportStudiesTask(AppUtils.getAccount(context), context).execute();
+
+            try {
+                List<ExamGrade> grades = getGrades(context);
+
+                Date dtStart = null;
+
+                for (ExamGrade grade : grades) {
+                    Date date = grade.getDate();
+                    if (date != null) {
+                        if (dtStart == null || date.before(dtStart)) {
+                            dtStart = date;
+                        }
+                    }
+                }
+
+                if (dtStart != null) {
+                    // subtract -1 term for sure
+                    cal.setTime(dtStart);
+                    cal.add(Calendar.MONTH, -6);
+                    dtStart = cal.getTime();
+
+                    studies.add(new Studies(dtStart, null));
+                }
+            } catch (Exception e) {
+                Analytics.sendException(context, e, false);
+            }
+        }
+
+        if (studies.size() > 0) {
             // calculate terms from studies duration
-            cal.setTimeInMillis(new Date().getTime());
+            cal.setTime(new Date());
             cal.add(Calendar.MONTH, 1);
-            Date then = new Date(cal.getTimeInMillis());
+            Date then = cal.getTime();
 
             cal.set(Calendar.HOUR_OF_DAY, 0);
             cal.set(Calendar.MINUTE, 0);
@@ -416,12 +451,12 @@ public class KusssContentProvider extends ContentProvider {
             cal.set(Calendar.YEAR, year);
             cal.set(Calendar.MONTH, Calendar.MARCH);
             cal.set(Calendar.DAY_OF_MONTH, 1);
-            Date startSS = new Date(cal.getTimeInMillis()); // 1.3.
+            Date startSS = cal.getTime(); // 1.3.
 
             cal.set(Calendar.YEAR, year);
             cal.set(Calendar.MONTH, Calendar.OCTOBER);
             cal.set(Calendar.DAY_OF_MONTH, 1);
-            Date startWS = new Date(cal.getTimeInMillis()); // 1.10.
+            Date startWS = cal.getTime(); // 1.10.
 
             while (startSS.before(then) || startWS.before(then)) {
                 if (startSS.before(then) && dateInRange(startSS, studies)) {
@@ -434,22 +469,18 @@ public class KusssContentProvider extends ContentProvider {
                 // inc year
                 year++;
 
-                cal.setTimeInMillis(startSS.getTime());
+                cal.setTime(startSS);
                 cal.set(Calendar.YEAR, year);
                 startSS.setTime(cal.getTimeInMillis());
 
-                cal.setTimeInMillis(startWS.getTime());
+                cal.setTime(startWS);
                 cal.set(Calendar.YEAR, year);
                 startWS.setTime(cal.getTimeInMillis());
             }
-            ;
-
-        } else {
-            new ImportStudiesTask(AppUtils.getAccount(context), context).execute();
         }
 
         if (terms.size() == 0) {
-            // get Terms from Data
+            // get Terms from Data, may take a little bit longer
         }
 
         Collections.sort(terms, new Comparator<String>() {
