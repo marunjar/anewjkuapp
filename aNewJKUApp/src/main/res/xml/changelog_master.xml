@@ -4,6 +4,15 @@
 		    + added
 		    - fixed
 		    * changed -->
+    <release version="0.26" versioncode="140026">
+        <change>+ App: ÖH News sind jetzt verfügbar</change>
+        <change>+ KUSSS: Studienrichtungen werden geladen</change>
+        <change>+ KUSSS: folgende Beurteilungen werden jetzt erkannt: mit Erfolg Teilgenommen, bestanden, mit Auszeichnung bestanden</change>
+        <change>+ Statistik: Notendurchschnitt wird optional nur aus positiven Noten berechnet</change>
+        <change>* App: Navigation mit Zurück-Button verbessert</change>
+        <change>* Mensa: bei Start wird gleich das Menü für den aktuellen Tag angezeigt</change>
+        <change>* Stundenplan: "in Kalender anzeigen" öffnet nur mehr den Kalender</change>
+    </release>
     <release version="0.25" versioncode="140025">
         <change>- Mensa: Fehler beim Laden von Choice behoben</change>
         <change>- Prüfungen: Fehler beim Laden von Ort und Zeit behoben</change>
