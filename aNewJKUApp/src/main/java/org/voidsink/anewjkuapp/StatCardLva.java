@@ -37,6 +37,7 @@ import java.util.List;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardExpand;
 import it.gmariotti.cardslib.library.internal.CardHeader;
+import it.gmariotti.cardslib.library.internal.ViewToClickToExpand;
 
 /**
  * Created by paul on 14.09.2014.
@@ -83,12 +84,6 @@ public class StatCardLva extends ThemedCardWithList {
             }
         });
 
-        //Add Header to card
-        addCardHeader(header);
-
-        //This provides a simple (and useless) expand area
-        addCardExpand(new LvaDiagramCardExpand(getContext()));
-
         return header;
     }
 
@@ -96,6 +91,13 @@ public class StatCardLva extends ThemedCardWithList {
     protected void initCard() {
         //Provide a custom view for the ViewStud EmptyView
         setEmptyViewViewStubLayoutId(R.layout.stat_card_empty);
+
+        //This provides a simple (and useless) expand area
+        addCardExpand(new LvaDiagramCardExpand(getContext()));
+
+        //init custom expand button
+        ViewToClickToExpand viewToClickToExpand = ViewToClickToExpand.builder().enableForExpandAction();
+        setViewToClickToExpand(viewToClickToExpand);
 
         setUseProgressBar(true);
         updateProgressBar(false, false);
@@ -123,6 +125,25 @@ public class StatCardLva extends ThemedCardWithList {
         return lvaStats;
     }
 
+    @Override
+    public View setupChildView(int childPosition, ListObject object, View convertView, ViewGroup parent) {
+        //Setup the elements inside each row
+        TextView type = (TextView) convertView.findViewById(R.id.stat_card_lva_list_entry_type);
+        TextView ects = (TextView) convertView.findViewById(R.id.stat_card_lva_list_entry_ects);
+
+        LvaStatItem lva = (LvaStatItem) object;
+
+        type.setText(getContext().getString(lva.getType().getStringResIDExt()));
+        ects.setText(String.format("%.2f ECTS", lva.getEcts()));
+
+        return convertView;
+    }
+
+    @Override
+    public int getChildLayoutId() {
+        return R.layout.stat_card_lva_list_entry;
+    }
+
     private class LvaStatItem extends DefaultListObject {
 
         private final LvaState mType;
@@ -142,25 +163,6 @@ public class StatCardLva extends ThemedCardWithList {
         public double getEcts() {
             return mEcts;
         }
-    }
-
-    @Override
-    public View setupChildView(int childPosition, ListObject object, View convertView, ViewGroup parent) {
-        //Setup the elements inside each row
-        TextView type = (TextView) convertView.findViewById(R.id.stat_card_lva_list_entry_type);
-        TextView ects = (TextView) convertView.findViewById(R.id.stat_card_lva_list_entry_ects);
-
-        LvaStatItem lva = (LvaStatItem) object;
-
-        type.setText(getContext().getString(lva.getType().getStringResIDExt()));
-        ects.setText(String.format("%.2f ECTS", lva.getEcts()));
-
-        return convertView;
-    }
-
-    @Override
-    public int getChildLayoutId() {
-        return R.layout.stat_card_lva_list_entry;
     }
 
     private class LvaDiagramCardExpand extends ThemedCardExpand {

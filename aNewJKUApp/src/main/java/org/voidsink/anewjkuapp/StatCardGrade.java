@@ -34,6 +34,7 @@ import java.util.List;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardExpand;
 import it.gmariotti.cardslib.library.internal.CardHeader;
+import it.gmariotti.cardslib.library.internal.ViewToClickToExpand;
 
 /**
  * Created by paul on 14.09.2014.
@@ -69,7 +70,6 @@ public class StatCardGrade extends ThemedCardWithList {
             header.setTitle(getContext().getString(R.string.stat_title_grade));
         }
 
-//init custom expand button
         header.setOtherButtonVisible(true);
         header.setOtherButtonDrawable(R.drawable.ic_insert_chart_grey600_36dp);
         header.setOtherButtonClickListener(new CardHeader.OnClickCardHeaderOtherButtonListener() {
@@ -83,11 +83,6 @@ public class StatCardGrade extends ThemedCardWithList {
                 doToogleExpand();
             }
         });
-        //Add Header to card
-        addCardHeader(header);
-
-        //This provides a simple (and useless) expand area
-        addCardExpand(new GradeDiagramCardExpand(getContext(), this.mEctsWeighting, this.mPositiveOnly));
 
         return header;
     }
@@ -96,6 +91,13 @@ public class StatCardGrade extends ThemedCardWithList {
     protected void initCard() {
         //Provide a custom view for the ViewStud EmptyView
         setEmptyViewViewStubLayoutId(R.layout.stat_card_empty);
+
+        //This provides a simple (and useless) expand area
+        addCardExpand(new GradeDiagramCardExpand(getContext(), this.mEctsWeighting, this.mPositiveOnly));
+
+        //init custom expand button
+        ViewToClickToExpand viewToClickToExpand = ViewToClickToExpand.builder().enableForExpandAction();
+        setViewToClickToExpand(viewToClickToExpand);
 
         setUseProgressBar(true);
         updateProgressBar(false, false);
@@ -147,6 +149,25 @@ public class StatCardGrade extends ThemedCardWithList {
         return gradeStats;
     }
 
+    @Override
+    public View setupChildView(int i, ListObject object, View convertView, ViewGroup viewGroup) {
+        //Setup the elements inside each row
+        TextView type = (TextView) convertView.findViewById(R.id.stat_card_grade_list_entry_type);
+        TextView avgGrade = (TextView) convertView.findViewById(R.id.stat_card_grade_list_entry_grade);
+
+        GradeStatItem grade = (GradeStatItem) object;
+
+        type.setText(getContext().getString(grade.getType().getStringResID()));
+        avgGrade.setText(String.format("ø %.2f", grade.getAvgGrade()));
+
+        return convertView;
+    }
+
+    @Override
+    public int getChildLayoutId() {
+        return R.layout.stat_card_grade_list_entry;
+    }
+
     private class GradeStatItem extends DefaultListObject {
 
         private final GradeType mType;
@@ -166,20 +187,6 @@ public class StatCardGrade extends ThemedCardWithList {
         public double getAvgGrade() {
             return mAvgGrade;
         }
-    }
-
-    @Override
-    public View setupChildView(int i, ListObject object, View convertView, ViewGroup viewGroup) {
-        //Setup the elements inside each row
-        TextView type = (TextView) convertView.findViewById(R.id.stat_card_grade_list_entry_type);
-        TextView avgGrade = (TextView) convertView.findViewById(R.id.stat_card_grade_list_entry_grade);
-
-        GradeStatItem grade = (GradeStatItem) object;
-
-        type.setText(getContext().getString(grade.getType().getStringResID()));
-        avgGrade.setText(String.format("ø %.2f", grade.getAvgGrade()));
-
-        return convertView;
     }
 
     class GradeBarFormatter extends BarFormatter {
@@ -229,11 +236,6 @@ public class StatCardGrade extends ThemedCardWithList {
                     return getFormatter(series);
             }
         }
-    }
-
-    @Override
-    public int getChildLayoutId() {
-        return R.layout.stat_card_grade_list_entry;
     }
 
     private class GradeDiagramCardExpand extends ThemedCardExpand {
