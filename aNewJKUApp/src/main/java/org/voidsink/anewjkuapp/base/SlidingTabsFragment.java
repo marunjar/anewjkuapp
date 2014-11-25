@@ -44,14 +44,6 @@ public abstract class SlidingTabsFragment extends BaseFragment {
      */
     private List<SlidingTabItem> mTabs = new ArrayList<SlidingTabItem>();
 
-    public void updateData() {
-        if (isAdded()) {
-            mTabs.clear();
-            fillTabs(mTabs);
-            notifyDataSetChanged();
-        }
-    }
-
     protected abstract void fillTabs(List<SlidingTabItem> mTabs);
 
     /**
@@ -61,7 +53,8 @@ public abstract class SlidingTabsFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        updateData();
+        mTabs.clear();
+        fillTabs(mTabs);
 
         return LayoutInflater.from(new ContextThemeWrapper(getContext(), R.style.AppTheme)).inflate(R.layout.fragment_sliding_tabs, container, false);
     }
