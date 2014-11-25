@@ -2,12 +2,14 @@ package org.voidsink.anewjkuapp.utils;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.graphics.Color;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.kusss.ExamGrade;
 
 public class UIUtils {
 
@@ -43,5 +45,30 @@ public class UIUtils {
         } else {
             activity.setTheme(R.style.AppTheme);
         }
+    }
+
+    public static String getChipGradeText(ExamGrade grade) {
+        if (grade != null) {
+            if (grade.getGrade().isNumber()) {
+                return String.format("%d", grade.getGrade().getValue());
+            }
+            if (grade.getGrade().isPositive()) {
+                return "\u2713";
+            } else {
+                return "\u2717";
+            }
+        }
+        return "?";
+    }
+
+    public static int getChipGradeColor(ExamGrade grade) {
+        if (grade != null) {
+            return grade.getGrade().getColor();
+        }
+        return Color.GRAY;
+    }
+
+    public static String getChipGradeEcts(double ects) {
+        return String.format("%.2f ECTS", ects);
     }
 }

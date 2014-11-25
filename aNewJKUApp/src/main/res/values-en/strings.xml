@@ -179,4 +179,7 @@
     <string name="studies_steop_done_no">Outstanding</string>
     <string name="studies_active_status_no">Inactive</string>
     <string name="studies_active_status_yes">Active</string>
+    <string name="grade_gb">Pass</string>
+    <string name="grade_gab">Passed with distinction</string>
+    <string name="grade_get">Successful participation</string>
 </resources>

@@ -50,15 +50,10 @@ public class LvaCard extends ThemedCard {
         code.setText(lva.getLva().getCode());
 
         ExamGrade grade = this.lva.getGrade();
-        if (grade == null) {
-            chipBack.setBackgroundColor(Color.GRAY);
-            chipGrade.setText("?");
-        } else {
-            chipBack.setBackgroundColor(grade.getGrade().getColor());
-            chipGrade.setText(String.format("%d", grade.getGrade().getValue()));
-        }
-        chipEcts.setText(String.format("%.2f ECTS", lva.getLva()
-                .getEcts()));
+
+        chipBack.setBackgroundColor(UIUtils.getChipGradeColor(grade));
+        chipGrade.setText(UIUtils.getChipGradeText(grade));
+        chipEcts.setText(UIUtils.getChipGradeEcts(lva.getLva().getEcts()));
     }
 
     public LvaCard(Context context) {

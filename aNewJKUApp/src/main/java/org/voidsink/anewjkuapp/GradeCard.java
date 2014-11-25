@@ -60,16 +60,15 @@ public class GradeCard extends ThemedCard {
             skz.setVisibility(View.GONE);
         }
 
-        chipGrade.setText(String.format("%d", mGrade.getGrade().getValue()));
-        chipInfo.setText(String.format("%.2f ECTS", mGrade.getEcts()));
+        chipGrade.setText(UIUtils.getChipGradeText(mGrade));
+        chipBack.setBackgroundColor(UIUtils.getChipGradeColor(mGrade));
+        chipInfo.setText(UIUtils.getChipGradeEcts(mGrade.getEcts()));
 
         final DateFormat df = DateFormat.getDateInstance();
 
         date.setText(df.format(mGrade.getDate()));
         grade.setText(mContext.getString(mGrade.getGrade()
                 .getStringResID()));
-
-        chipBack.setBackgroundColor(mGrade.getGrade().getColor());
     }
 
     public GradeCard(Context context) {
