@@ -33,6 +33,9 @@
     <string name="grade_3">Befriedigend</string>
     <string name="grade_4">Genügend</string>
     <string name="grade_5">Nicht genügend</string>
+    <string name="grade_get">Mit Erfolg teilgenommen</string>
+    <string name="grade_gb">Bestanden</string>
+    <string name="grade_gab">Mit Auszeichnung bestanden</string>
     <string name="grade_unknown">Nicht bewertet</string>
 
     <string name="grade_type_interim_ca">Vorläufige Lehrveranstaltungsbeurteilungen</string>
