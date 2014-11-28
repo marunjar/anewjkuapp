@@ -4,6 +4,9 @@
 		    + added
 		    - fixed
 		    * changed -->
+    <release version="0.27" versioncode="140027">
+        <change>- Statistik: Diagramme werden wieder angezeigt</change>
+    </release>
     <release version="0.26" versioncode="140026">
         <change>+ App: ÖH News sind jetzt verfügbar</change>
         <change>+ KUSSS: Studienrichtungen werden geladen</change>
