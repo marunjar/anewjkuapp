@@ -9,6 +9,7 @@ import org.voidsink.anewjkuapp.base.BaseAsyncTask;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
+import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
@@ -112,7 +113,8 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
 
 					Log.d(TAG, "load lvas");
 
-					List<Lva> lvas = KusssHandler.getInstance().getLvas(mContext);
+                    List<String> terms = KusssContentProvider.getTerms(mContext);
+					List<Lva> lvas = KusssHandler.getInstance().getLvas(mContext, terms);
 					if (lvas == null) {
 						mSyncResult.stats.numParseExceptions++;
 					} else {

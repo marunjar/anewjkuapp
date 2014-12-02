@@ -114,9 +114,11 @@ public class GradeDetailFragment extends BaseFragment implements
                     mGradeCards.add(new GradeCard(mContext, grade));
                 }
 
-                mAdapter.clear();
-                mAdapter.addAll(mGradeCards);
-                mAdapter.notifyDataSetChanged();
+                if (mAdapter != null) {
+                    mAdapter.clear();
+                    mAdapter.addAll(mGradeCards);
+                    mAdapter.notifyDataSetChanged();
+                }
 
                 super.onPostExecute(result);
             }
