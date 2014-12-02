@@ -244,7 +244,7 @@ public class MainActivity extends ThemedActivity implements
                 if (addToBackStack) {
                     int entryCount = getSupportFragmentManager().getBackStackEntryCount();
                     if (entryCount > 0) {
-                        addToBackStack = !getSupportFragmentManager().getBackStackEntryAt(entryCount - 1).getName().equals(f.getClass().getName());
+                        addToBackStack = !getSupportFragmentManager().getBackStackEntryAt(entryCount - 1).getName().equals(f.getClass().getCanonicalName());
                     }
                 }
 
@@ -252,7 +252,7 @@ public class MainActivity extends ThemedActivity implements
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.container, f, ARG_SHOW_FRAGMENT);
                 if (addToBackStack) {
-                    ft.addToBackStack(f.getClass().getName());
+                    ft.addToBackStack(f.getClass().getCanonicalName());
                 }
                 ft.commit();
 
