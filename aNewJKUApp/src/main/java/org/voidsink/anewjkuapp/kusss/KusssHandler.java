@@ -65,6 +65,10 @@ public class KusssHandler {
     private static final String SELECT_EXAMS = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > table > tbody > tr > td > form > table > tbody > tr:has(td)";
     private static final String URL_MY_STUDIES = "https://www.kusss.jku.at/kusss/studentsettings.action";
     private static final String SELECT_MY_STUDIES = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > form > table > tbody > tr[class]:has(td)";
+
+    private static final int TIMEOUT_LOGIN = 15 * 1000; // 15s
+    private static final int TIMEOUT_SEARCH_EXAM_BY_LVA = 10 * 1000; //10s
+
     private static KusssHandler handler = null;
     private CookieManager mCookies;
 
@@ -106,7 +110,7 @@ public class KusssHandler {
                 user = "k" + user;
             }
 
-            Document doc = Jsoup.connect(URL_LOGIN).data("j_username", user)
+            Document doc = Jsoup.connect(URL_LOGIN).timeout(TIMEOUT_LOGIN).data("j_username", user)
                     .data("j_password", password).post();
 
             //TODO: check document for successful login message
@@ -197,6 +201,8 @@ public class KusssHandler {
             URL url = new URL(URL_GET_ICAL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(15000);
 
             writeParams(conn, new String[]{"selectAll"},
                     new String[]{"ical.category.mycourses"});
@@ -222,6 +228,8 @@ public class KusssHandler {
             URL url = new URL(URL_GET_ICAL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(15000);
 
             writeParams(conn, new String[]{"selectAll"},
                     new String[]{"ical.category.examregs"});
@@ -476,6 +484,7 @@ public class KusssHandler {
             Log.d(TAG, "getNewExamsByLvaNr: " + lvaNr);
             Document doc = Jsoup
                     .connect(URL_GET_NEW_EXAMS)
+                    .timeout(TIMEOUT_SEARCH_EXAM_BY_LVA)
                     .data("search", "true")
                     .data("searchType", "specific")
                     .data("searchDateFrom",
@@ -484,7 +493,7 @@ public class KusssHandler {
                             df.format(new Date(System.currentTimeMillis()
                                     + DateUtils.YEAR_IN_MILLIS)))
                     .data("searchLvaNr", lvaNr).data("searchLvaTitle", "")
-                    .data("searchCourseClass", "").get();
+                    .data("searchCourseClass", "").post();
 
             Elements rows = doc.select(SELECT_NEW_EXAMS);
 
