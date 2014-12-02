@@ -112,10 +112,11 @@ public class LvaDetailFragment extends BaseFragment implements
                     mLvaCards.add(new LvaCard(mContext, lvaWithGrade));
                 }
 
-                mAdapter.clear();
-                mAdapter.addAll(mLvaCards);
-                mAdapter.notifyDataSetChanged();
-
+                if (mAdapter != null) {
+                    mAdapter.clear();
+                    mAdapter.addAll(mLvaCards);
+                    mAdapter.notifyDataSetChanged();
+                }
 //                progressDialog.dismiss();
 
                 super.onPostExecute(result);

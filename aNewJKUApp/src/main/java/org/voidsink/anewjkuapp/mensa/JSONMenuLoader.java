@@ -7,6 +7,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,7 +45,9 @@ public abstract class JSONMenuLoader implements MenuLoader {
 			try {
 				URL url = new URL(getUrl());
 				HttpURLConnection conn = (HttpURLConnection) url
-						.openConnection();
+                        .openConnection();
+                conn.setConnectTimeout(5000);
+                conn.setReadTimeout(15000);
 
 				Writer writer = new StringWriter();
 
@@ -56,6 +59,8 @@ public abstract class JSONMenuLoader implements MenuLoader {
 					writer.write(buffer, 0, n);
 				}
 				result = writer.toString();
+
+                conn.disconnect();
 
 				Editor editor = sp.edit();
 				editor.putString(cacheDataKey, result);

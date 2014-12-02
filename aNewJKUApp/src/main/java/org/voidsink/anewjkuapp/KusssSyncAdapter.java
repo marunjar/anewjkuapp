@@ -116,6 +116,23 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
 				}
 			}
 
+            Log.d(TAG, "importing Grades");
+
+            ImportGradeTask gradeTask = new ImportGradeTask(account, extras,
+                    authority, provider, syncResult, mContext);
+
+            gradeTask.execute();
+            while (!gradeTask.isDone() && !mSyncCancled) {
+                try {
+                    Thread.sleep(600);
+                } catch (Exception e) {
+                    Analytics.sendException(mContext, e, false);
+                }
+                if (mSyncCancled) {
+                    gradeTask.cancel(true);
+                }
+            }
+
 			Log.d(TAG, "importing Exams");
 
 			ImportExamTask examTask = new ImportExamTask(account, extras,
@@ -130,23 +147,6 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
 				}
 				if (mSyncCancled) {
 					examTask.cancel(true);
-				}
-			}
-
-			Log.d(TAG, "importing Grades");
-
-			ImportGradeTask gradeTask = new ImportGradeTask(account, extras,
-					authority, provider, syncResult, mContext);
-
-			gradeTask.execute();
-			while (!gradeTask.isDone() && !mSyncCancled) {
-				try {
-					Thread.sleep(600);
-				} catch (Exception e) {
-                    Analytics.sendException(mContext, e, false);
-				}
-				if (mSyncCancled) {
-					gradeTask.cancel(true);
 				}
 			}
 

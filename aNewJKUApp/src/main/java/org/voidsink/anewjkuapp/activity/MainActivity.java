@@ -241,10 +241,18 @@ public class MainActivity extends ThemedActivity implements
             try {
                 f = (Fragment) startFragment.newInstance();
 
+                if (addToBackStack) {
+                    int entryCount = getSupportFragmentManager().getBackStackEntryCount();
+                    if (entryCount > 0) {
+                        addToBackStack = !getSupportFragmentManager().getBackStackEntryAt(entryCount - 1).getName().equals(f.getClass().getCanonicalName());
+                    }
+                }
+
+
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.container, f, ARG_SHOW_FRAGMENT);
                 if (addToBackStack) {
-                    ft.addToBackStack(ft.getClass().getSimpleName());
+                    ft.addToBackStack(f.getClass().getCanonicalName());
                 }
                 ft.commit();
 

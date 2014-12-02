@@ -65,6 +65,10 @@ public class KusssHandler {
     private static final String SELECT_EXAMS = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > table > tbody > tr > td > form > table > tbody > tr:has(td)";
     private static final String URL_MY_STUDIES = "https://www.kusss.jku.at/kusss/studentsettings.action";
     private static final String SELECT_MY_STUDIES = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > form > table > tbody > tr[class]:has(td)";
+
+    private static final int TIMEOUT_LOGIN = 15 * 1000; // 15s
+    private static final int TIMEOUT_SEARCH_EXAM_BY_LVA = 10 * 1000; //10s
+
     private static KusssHandler handler = null;
     private CookieManager mCookies;
 
@@ -106,7 +110,7 @@ public class KusssHandler {
                 user = "k" + user;
             }
 
-            Document doc = Jsoup.connect(URL_LOGIN).data("j_username", user)
+            Document doc = Jsoup.connect(URL_LOGIN).timeout(TIMEOUT_LOGIN).data("j_username", user)
                     .data("j_password", password).post();
 
             //TODO: check document for successful login message
@@ -197,6 +201,8 @@ public class KusssHandler {
             URL url = new URL(URL_GET_ICAL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(15000);
 
             writeParams(conn, new String[]{"selectAll"},
                     new String[]{"ical.category.mycourses"});
@@ -222,6 +228,8 @@ public class KusssHandler {
             URL url = new URL(URL_GET_ICAL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(15000);
 
             writeParams(conn, new String[]{"selectAll"},
                     new String[]{"ical.category.examregs"});
@@ -245,12 +253,14 @@ public class KusssHandler {
         try {
             Document doc = Jsoup.connect(URL_GET_TERMS).get();
             Element termDropdown = doc.getElementById("term");
-            Elements termDropdownEntries = termDropdown
-                    .getElementsByClass("dropdownentry");
+            if (termDropdown != null) {
+                Elements termDropdownEntries = termDropdown
+                        .getElementsByClass("dropdownentry");
 
-            for (Element termDropdownEntry : termDropdownEntries) {
-                terms.put(termDropdownEntry.attr("value"),
-                        termDropdownEntry.text());
+                for (Element termDropdownEntry : termDropdownEntries) {
+                    terms.put(termDropdownEntry.attr("value"),
+                            termDropdownEntry.text());
+                }
             }
         } catch (Exception e) {
             Log.e(TAG, "getTerms", e);
@@ -273,35 +283,42 @@ public class KusssHandler {
         return true;
     }
 
-    public List<Lva> getLvas(Context c) {
+    public List<Lva> getLvas(Context c, List<String> terms) {
         List<Lva> lvas = new ArrayList<>();
         try {
             Log.d(TAG, "getLvas");
-            Map<String, String> termsHelper = getTerms(c);
-            if (termsHelper != null) {
-                List<String> terms = new ArrayList<>(termsHelper.keySet());
-                Collections.sort(terms);
-                for (String term : terms) {
-                    if (selectTerm(c, term)) {
-                        Document doc = Jsoup.connect(URL_MY_LVAS).get();
+            if (terms == null) {
+                terms = new ArrayList<>();
+            }
 
-                        if (isSelected(doc, term)) {
-                            // .select("body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > table > tbody > tr");
-                            Elements rows = doc.select(SELECT_MY_LVAS);
-                            for (Element row : rows) {
-                                Lva lva = new Lva(term, row);
-                                if (lva.isInitialized()) {
-                                    lvas.add(lva);
-                                }
+            if (terms.size() == 0) {
+                Map<String, String> termsHelper = getTerms(c);
+                if (termsHelper != null) {
+                    terms.addAll(termsHelper.keySet());
+                }
+            }
+
+            Collections.sort(terms);
+            for (String term : terms) {
+                if (selectTerm(c, term)) {
+                    Document doc = Jsoup.connect(URL_MY_LVAS).get();
+
+                    if (isSelected(doc, term)) {
+                        // .select("body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > table > tbody > tr");
+                        Elements rows = doc.select(SELECT_MY_LVAS);
+                        for (Element row : rows) {
+                            Lva lva = new Lva(term, row);
+                            if (lva.isInitialized()) {
+                                lvas.add(lva);
                             }
-                        } else {
-                            // break if selection is not equal previously selected term
-                            throw new IOException(String.format("term not selected: %s", term));
                         }
                     } else {
-                        // break if selection failed
-                        throw new IOException(String.format("cannot select term: %s", term));
+                        // break if selection is not equal previously selected term
+                        throw new IOException(String.format("term not selected: %s", term));
                     }
+                } else {
+                    // break if selection failed
+                    throw new IOException(String.format("cannot select term: %s", term));
                 }
             }
         } catch (Exception e) {
@@ -396,28 +413,30 @@ public class KusssHandler {
         return exams;
     }
 
-    public List<Exam> getNewExamsByLvaNr(Context c, List<Lva> lvas)
+    public List<Exam> getNewExamsByLvaNr(Context c, List<Lva> lvas, List<String> terms)
             throws IOException {
 
         List<Exam> exams = new ArrayList<>();
         try {
             if (lvas == null || lvas.size() == 0) {
                 Log.d(TAG, "no lvas found, reload");
-                lvas = getLvas(c);
+                lvas = getLvas(c, terms);
             }
             if (lvas != null && lvas.size() > 0) {
-                List<ExamGrade> grades = getGrades(c);
-
                 Map<String, ExamGrade> gradeCache = new HashMap<>();
-                for (ExamGrade grade : grades) {
-                    if (!grade.getLvaNr().isEmpty()) {
-                        ExamGrade existing = gradeCache.get(grade.getLvaNr());
-                        if (existing != null) {
-                            Log.d(TAG,
-                                    existing.getTitle() + " --> "
-                                            + grade.getTitle());
+
+                List<ExamGrade> grades = getGrades(c);
+                if (grades != null) {
+                    for (ExamGrade grade : grades) {
+                        if (!grade.getLvaNr().isEmpty()) {
+                            ExamGrade existing = gradeCache.get(grade.getLvaNr());
+                            if (existing != null) {
+                                Log.d(TAG,
+                                        existing.getTitle() + " --> "
+                                                + grade.getTitle());
+                            }
+                            gradeCache.put(grade.getLvaNr(), grade);
                         }
-                        gradeCache.put(grade.getLvaNr(), grade);
                     }
                 }
 
@@ -465,6 +484,7 @@ public class KusssHandler {
             Log.d(TAG, "getNewExamsByLvaNr: " + lvaNr);
             Document doc = Jsoup
                     .connect(URL_GET_NEW_EXAMS)
+                    .timeout(TIMEOUT_SEARCH_EXAM_BY_LVA)
                     .data("search", "true")
                     .data("searchType", "specific")
                     .data("searchDateFrom",
@@ -473,7 +493,7 @@ public class KusssHandler {
                             df.format(new Date(System.currentTimeMillis()
                                     + DateUtils.YEAR_IN_MILLIS)))
                     .data("searchLvaNr", lvaNr).data("searchLvaTitle", "")
-                    .data("searchCourseClass", "").get();
+                    .data("searchCourseClass", "").post();
 
             Elements rows = doc.select(SELECT_NEW_EXAMS);
 

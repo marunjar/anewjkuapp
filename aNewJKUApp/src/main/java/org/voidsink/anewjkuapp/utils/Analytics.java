@@ -159,7 +159,7 @@ public class Analytics {
                 HitBuilders.ExceptionBuilder eb = new HitBuilders.ExceptionBuilder()
                         .setFatal(fatal)
                         .setCustomDimension(GA_DIM_EXCEPTION,
-                                e.getClass().getSimpleName())
+                                e.getClass().getCanonicalName())
                         .setDescription(
                                 new AnalyticsExceptionParser(c, null)
                                         .getDescription(Thread.currentThread()
