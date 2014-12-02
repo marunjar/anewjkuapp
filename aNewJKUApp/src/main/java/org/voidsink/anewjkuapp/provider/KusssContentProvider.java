@@ -435,6 +435,11 @@ public class KusssContentProvider extends ContentProvider {
             }
         }
 
+        // always load current term, subtract -1 term for sure
+        cal.setTime(new Date());
+        cal.add(Calendar.MONTH, -6);
+        studies.add(new Studies(cal.getTime(), null));
+
         if (studies.size() > 0) {
             // calculate terms from studies duration
             cal.setTime(new Date());
