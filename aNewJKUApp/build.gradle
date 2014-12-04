@@ -8,12 +8,14 @@ android {
     buildToolsVersion "20.0.0"
     defaultConfig {
         applicationId "org.voidsink.anewjkuapp"
+        versionCode 140027
+        versionName "0.27"
         minSdkVersion 14
         targetSdkVersion 19
     }
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
 
             applicationVariants.all { variant ->
@@ -58,20 +60,10 @@ dependencies {
 }
 
 def appendVersionNameVersionCode(variant, defaultConfig) {
-    if (variant.zipAlign) {
-        def file = variant.outputFile
-        def fileName = file.name.replace(".apk", "-" + manifestVersionName() + ".apk")
-        variant.outputFile = new File(file.parent, fileName)
+    variant.outputs.each { output ->
+        def file = output.outputFile;
+        output.outputFile = new File(
+                file.parent,
+                file.name.replace(".apk", "-${variant.versionName}.apk"))
     }
-
-    def file = variant.packageApplication.outputFile
-    def fileName = file.name.replace(".apk", "-" + manifestVersionName() + ".apk")
-    variant.packageApplication.outputFile = new File(file.parent, fileName)
-}
-
-def manifestVersionName() {
-    def manifestFile = file(project.projectDir.absolutePath + '/src/main/AndroidManifest.xml')
-    def ns = new groovy.xml.Namespace("http://schemas.android.com/apk/res/android", "android")
-    def xml = new XmlParser().parse(manifestFile)
-    return xml.attributes()[ns.versionName].toString()
 }
