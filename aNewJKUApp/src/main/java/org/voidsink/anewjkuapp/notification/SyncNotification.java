@@ -25,10 +25,10 @@ public class SyncNotification {
 				.setSmallIcon(R.drawable.ic_stat_notify_kusss)
 				.setOngoing(true)
 				.setAutoCancel(true)
-				.setLargeIcon(
-						BitmapFactory.decodeResource(
-								this.mContext.getResources(),
-								R.drawable.ic_menu_refresh))
+//				.setLargeIcon(
+//						BitmapFactory.decodeResource(
+//								this.mContext.getResources(),
+//								R.drawable.ic_refresh_white_24dp))
 				.setContentTitle(mTitle).setProgress(0, 0, true);
 
 		// contenIntent required for all Versions before ICS
