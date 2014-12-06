@@ -11,10 +11,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 
 import org.voidsink.anewjkuapp.KusssContentContract;
-import org.voidsink.anewjkuapp.LvaCard;
-import org.voidsink.anewjkuapp.LvaCardArrayAdapter;
+import org.voidsink.anewjkuapp.LvaListAdapter;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.BaseFragment;
@@ -24,25 +24,22 @@ import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.utils.AppUtils;
-import org.voidsink.anewjkuapp.view.StickyCardListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import it.gmariotti.cardslib.library.internal.Card;
-
-@SuppressLint("ValidFragment")
 public class LvaDetailFragment extends BaseFragment implements
         ContentObserverListener {
 
     private BaseContentObserver mLvaObserver;
     private List<String> mTerms;
-    private LvaCardArrayAdapter mAdapter;
+    private LvaListAdapter mAdapter;
 
     public LvaDetailFragment() {
         this(null);
     }
 
+    @SuppressLint("ValidFragment")
     public LvaDetailFragment(List<String> terms) {
         super();
 
@@ -52,13 +49,13 @@ public class LvaDetailFragment extends BaseFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_card_lva_detail, container,
+        View view = inflater.inflate(R.layout.fragment_grid, container,
                 false);
 
-        final StickyCardListView mListView = (StickyCardListView) view.findViewById(R.id.lva_card_list);
+        final GridView mGridView = (GridView) view.findViewById(R.id.gridview);
 
-        mAdapter = new LvaCardArrayAdapter(getContext(), new ArrayList<Card>());
-        mListView.setAdapter(mAdapter);
+        mAdapter = new LvaListAdapter(getContext());
+        mGridView.setAdapter(mAdapter);
 
         return view;
     }
@@ -106,17 +103,11 @@ public class LvaDetailFragment extends BaseFragment implements
                 // Log.i(TAG, "loadLvas" + this.terms);
 
                 List<LvaWithGrade> mLvasWithGrades = AppUtils.getLvasWithGrades(mTerms, lvas, grades);
-                List<Card> mLvaCards = new ArrayList<>();
 
-                for (LvaWithGrade lvaWithGrade : mLvasWithGrades) {
-                    mLvaCards.add(new LvaCard(mContext, lvaWithGrade));
-                }
+                mAdapter.clear();
+                mAdapter.addAll(mLvasWithGrades);
+                mAdapter.notifyDataSetChanged();
 
-                if (mAdapter != null) {
-                    mAdapter.clear();
-                    mAdapter.addAll(mLvaCards);
-                    mAdapter.notifyDataSetChanged();
-                }
 //                progressDialog.dismiss();
 
                 super.onPostExecute(result);

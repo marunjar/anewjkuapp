@@ -10,7 +10,7 @@ import org.voidsink.anewjkuapp.utils.Consts;
 import java.util.Arrays;
 import java.util.List;
 
-public class LvaFragment2 extends SlidingTabsFragment {
+public class LvaFragment extends SlidingTabsFragment {
 
     @Override
     protected void fillTabs(List<SlidingTabItem> mTabs) {

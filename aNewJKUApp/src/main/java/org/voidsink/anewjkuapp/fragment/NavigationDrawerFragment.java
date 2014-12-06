@@ -77,7 +77,7 @@ public class NavigationDrawerFragment extends BaseFragment {
             new DrawerMenuItem(R.string.title_calendar, CalendarFragment.class),
             new DrawerMenuItem(R.string.title_exams, ExamFragment.class),
 			new DrawerMenuItem(R.string.title_grades, GradeFragment.class),
-			new DrawerMenuItem(R.string.title_lvas, LvaFragment2.class),
+			new DrawerMenuItem(R.string.title_lvas, LvaFragment.class),
             new DrawerMenuItem(R.string.title_stats, StatFragment.class),
             new DrawerMenuSection(R.string.title_campus),
 			new DrawerMenuItem(R.string.title_mensa, MensaFragment.class),
