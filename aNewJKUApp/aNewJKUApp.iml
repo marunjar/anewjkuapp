@@ -106,6 +106,7 @@
     <orderEntry type="library" exported="" name="mapsforge-core-0.4.3" level="project" />
     <orderEntry type="library" exported="" name="ckchangelog-1.2.1" level="project" />
     <orderEntry type="library" exported="" name="svg-android-2.0.6" level="project" />
+    <orderEntry type="library" exported="" name="appcompat-v7-21.0.2" level="project" />
     <orderEntry type="module" module-name="voidsinkContributors" exported="" />
   </component>
 </module>
