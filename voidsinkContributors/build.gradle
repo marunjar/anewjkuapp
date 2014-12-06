@@ -4,14 +4,13 @@ android {
     buildToolsVersion "20.0.0"
 
     defaultConfig {
-        applicationId "org.voidsink.library.contributors"
         minSdkVersion 9
         targetSdkVersion 19
     }
 
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }

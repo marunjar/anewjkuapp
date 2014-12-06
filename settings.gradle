@@ -1,3 +1,2 @@
-include ':ckChangelog'
 include ':voidsinkContributors'
 include ':aNewJKUApp'
