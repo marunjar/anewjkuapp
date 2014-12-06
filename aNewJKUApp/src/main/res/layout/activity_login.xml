@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:paddingLeft="17dp"
-    android:paddingRight="17dp" >
+    android:paddingRight="17dp">
 
     <EditText
         android:id="@+id/accountName"

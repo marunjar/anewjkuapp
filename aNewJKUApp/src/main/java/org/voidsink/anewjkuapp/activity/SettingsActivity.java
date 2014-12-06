@@ -36,7 +36,6 @@ public class SettingsActivity extends PreferenceActivity implements
 
     private boolean mThemeChanged = false;
 
-    @SuppressWarnings("deprecation")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         UIUtils.applyTheme(this);

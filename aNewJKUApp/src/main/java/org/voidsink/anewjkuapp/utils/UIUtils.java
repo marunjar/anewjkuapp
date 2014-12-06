@@ -26,6 +26,7 @@ public class UIUtils {
                     NavUtils.navigateUpFromSameTask(activity);
                     return true;
                 }
+                return false;
             default:
                 return false;
         }

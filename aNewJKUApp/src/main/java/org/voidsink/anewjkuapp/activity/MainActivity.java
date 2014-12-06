@@ -2,17 +2,19 @@ package org.voidsink.anewjkuapp.activity;
 
 import android.accounts.Account;
 import android.annotation.TargetApi;
-import android.app.ActionBar;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.app.ActionBar;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,11 +26,6 @@ import android.widget.TextView;
 import net.fortuna.ical4j.data.CalendarBuilder;
 
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
-import org.voidsink.anewjkuapp.fragment.CalendarFragment;
-import org.voidsink.anewjkuapp.fragment.GradeFragment;
-import org.voidsink.anewjkuapp.fragment.StudiesFragment;
-import org.voidsink.anewjkuapp.utils.Analytics;
-import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.DrawerItem;
 import org.voidsink.anewjkuapp.ImportCalendarTask;
 import org.voidsink.anewjkuapp.ImportExamTask;
@@ -41,9 +38,13 @@ import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.base.ThemedActivity;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
+import org.voidsink.anewjkuapp.fragment.CalendarFragment;
 import org.voidsink.anewjkuapp.fragment.NavigationDrawerFragment;
+import org.voidsink.anewjkuapp.fragment.StudiesFragment;
 import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
+import org.voidsink.anewjkuapp.utils.Analytics;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import java.util.List;
 
@@ -83,6 +84,14 @@ public class MainActivity extends ThemedActivity implements
         }
     }
 
+    public static void StartMyStudies(Context context) {
+        //
+        Intent i = new Intent(context, MainActivity.class)
+                .putExtra(MainActivity.ARG_SHOW_FRAGMENT, StudiesFragment.class.getName())
+                .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        context.startActivity(i);
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -92,6 +101,12 @@ public class MainActivity extends ThemedActivity implements
         if (fragment != null) {
             outState.putString(ARG_SHOW_FRAGMENT, fragment.getClass().getName());
         }
+    }
+
+    @Override
+    public View onCreateView(String name, @NonNull Context context, @NonNull AttributeSet attrs) {
+        return super.onCreateView(name, context, attrs);
+
     }
 
     @Override
@@ -257,12 +272,12 @@ public class MainActivity extends ThemedActivity implements
                 ft.commit();
 
                 mTitle = getTitleFromFragment(f);
-                initActionBar();
-
                 if (addToBackStack) {
                     PreferenceWrapper.setLastFragment(this,
                             f.getClass().getCanonicalName());
                 }
+
+                initActionBar();
 
                 return f;
             } catch (Exception e) {
@@ -277,18 +292,19 @@ public class MainActivity extends ThemedActivity implements
         return null;
     }
 
-    @Override
-    public void initActionBar() {
-        super.initActionBar();
 
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null &&
-                mNavigationDrawerFragment != null &&
+    @Override
+    protected void onInitActionBar(ActionBar actionBar) {
+        super.onInitActionBar(actionBar);
+
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (mNavigationDrawerFragment != null &&
                 !mNavigationDrawerFragment.isDrawerOpen()) {
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(mTitle);
+        } else {
+            actionBar.setTitle(getString(R.string.app_name));
         }
     }
 
@@ -345,12 +361,11 @@ public class MainActivity extends ThemedActivity implements
         }
     }
 
-    public static void StartMyStudies(Context context) {
-        //
-        Intent i = new Intent(context, MainActivity.class)
-                .putExtra(MainActivity.ARG_SHOW_FRAGMENT, StudiesFragment.class.getName())
-                .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        context.startActivity(i);
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        Analytics.clearScreen(this);
     }
 
     /**
@@ -385,12 +400,5 @@ public class MainActivity extends ThemedActivity implements
                     ARG_SECTION_NUMBER)));
             return rootView;
         }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        Analytics.clearScreen(this);
     }
 }

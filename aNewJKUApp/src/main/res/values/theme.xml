@@ -1,7 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--
- Mostly generated from:
- http://jgilfelt.github.io/android-actionbarstylegenerator/#name=AppTheme&compat=holo&theme=dark&actionbarstyle=solid&texture=0&hairline=0&neutralPressed=1&backColor=0f60bd%2C100&secondaryColor=0f60bd%2C100&tabColor=fff%2C100&tertiaryColor=fff%2C100&accentColor=ee8c2b%2C100&cabBackColor=fff%2C100&cabHighlightColor=0f60bd%2C100
--->
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <style name="AppTheme_Light" parent="@android:style/Theme.Holo.Light">
@@ -14,10 +11,24 @@
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_apptheme</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Apptheme</item>
         <item name="android:actionOverflowButtonStyle">@style/AppTheme.ActionButton.Overflow</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
         <item name="themed_card_menu_button_overflow">@drawable/card_menu_button_rounded_overflow</item>
         <item name="themed_card_menu_button_expand">@drawable/card_menu_button_expand</item>
-        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="toolbarStyle">@style/ThemeOverlay.AppCompat.ActionBar</item>
+        <item name="cardToolbarStyle">@style/card.toolbar.light</item>
+        <item name="cardBackground">@color/cardview_light_background</item>
+        <!-- Support library compatibility -->
+        <item name="actionBarItemBackground">@drawable/selectable_background_apptheme</item>
+        <item name="dropDownListViewStyle">@style/DropDownListView.Apptheme</item>
+        <item name="actionBarTabStyle">@style/ActionBarTabStyle.Apptheme</item>
+        <item name="actionDropDownStyle">@style/DropDownNav.Apptheme</item>
+        <item name="actionBarStyle">@style/ActionBar.Solid.Apptheme</item>
+        <item name="actionModeBackground">@drawable/cab_background_top_apptheme</item>
+        <item name="actionModeSplitBackground">@drawable/cab_background_bottom_apptheme</item>
+        <item name="actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Apptheme</item>
+        <item name="actionOverflowButtonStyle">@style/AppTheme.ActionButton.Overflow</item>
+        <item name="homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
     </style>
 
     <style name="AppTheme" parent="@android:style/Theme.Holo">
@@ -30,10 +41,24 @@
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_apptheme</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Apptheme</item>
         <item name="android:actionOverflowButtonStyle">@style/AppTheme.ActionButton.Overflow</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
         <item name="themed_card_menu_button_overflow">@drawable/card_menu_button_rounded_overflow_holo</item>
         <item name="themed_card_menu_button_expand">@drawable/card_menu_button_expand_holo</item>
-        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="toolbarStyle">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="cardToolbarStyle">@style/card.toolbar</item>
+        <item name="cardBackground">@color/cardview_dark_background</item>
+        <!-- Support library compatibility -->
+        <item name="actionBarItemBackground">@drawable/selectable_background_apptheme</item>
+        <item name="dropDownListViewStyle">@style/DropDownListView.Apptheme</item>
+        <item name="actionBarTabStyle">@style/ActionBarTabStyle.Apptheme</item>
+        <item name="actionDropDownStyle">@style/DropDownNav.Apptheme</item>
+        <item name="actionBarStyle">@style/ActionBar.Solid.Apptheme</item>
+        <item name="actionModeBackground">@drawable/cab_background_top_apptheme</item>
+        <item name="actionModeSplitBackground">@drawable/cab_background_bottom_apptheme</item>
+        <item name="actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Apptheme</item>
+        <item name="actionOverflowButtonStyle">@style/AppTheme.ActionButton.Overflow</item>
+        <item name="homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
     </style>
 
     <style name="AppTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
@@ -41,7 +66,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="AppTheme.ActionButton.Overflow" parent="@android:style/Widget.ActionButton.Overflow">
+    <style name="AppTheme.ActionButton.Overflow" parent="@android:Widget.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_action_overflow_round</item>
     </style>
 
@@ -50,14 +75,24 @@
         <item name="android:backgroundStacked">@color/primary</item>
         <item name="android:backgroundSplit">@color/primary</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Apptheme</item>
-        <item name="android:titleTextStyle">@style/AppTheme.ActionBar.TitleTextStyle</item>
         <item name="android:icon">@android:color/transparent</item>
+        <item name="android:titleTextStyle">@style/AppTheme.ActionBar.TitleTextStyle</item>
+        <!-- Support library compatibility -->
+        <item name="background">@color/primary</item>
+        <item name="backgroundStacked">@color/primary</item>
+        <item name="backgroundSplit">@color/primary</item>
+        <item name="progressBarStyle">@style/ProgressBar.Apptheme</item>
+        <item name="titleTextStyle">@style/AppTheme.ActionBar.TitleTextStyle</item>
     </style>
 
     <style name="ActionBar.Transparent.Apptheme" parent="@android:style/Widget.Holo.ActionBar">
         <item name="android:background">@drawable/ab_transparent_apptheme</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Apptheme</item>
         <item name="android:titleTextStyle">@style/AppTheme.ActionBar.TitleTextStyle</item>
+        <!-- Support library compatibility -->
+        <item name="background">@drawable/ab_transparent_apptheme</item>
+        <item name="progressBarStyle">@style/ProgressBar.Apptheme</item>
+        <item name="titleTextStyle">@style/AppTheme.ActionBar.TitleTextStyle</item>
     </style>
 
     <style name="DropDownListView.Apptheme" parent="@android:style/Widget.Holo.ListView.DropDown">

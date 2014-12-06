@@ -1,37 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/card.default"
     android:layout_width="match_parent"
-    android:padding="@dimen/card_content_padding"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/calendar_list_item_title"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical" />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/calendar_list_item_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/Text.Body1"
-        android:layout_below="@id/calendar_list_item_title"
-        android:gravity="center_vertical" />
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/calendar_list_item_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="24dp"
+            app:theme="?attr/cardToolbarStyle"/>
 
-    <TextView
-        android:id="@+id/calendar_list_item_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/Text.Body1"
-        android:layout_below="@id/calendar_list_item_time"
-        android:gravity="center_vertical" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/card_content_padding">
 
-    <TextView
-        android:id="@+id/calendar_list_item_descr"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        style="@style/Text.Body2"
-        android:layout_below="@id/calendar_list_item_location" />
+            <TextView
+                android:id="@+id/calendar_list_item_time"
+                style="@style/Text.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:gravity="center_vertical" />
 
-</RelativeLayout>
+            <TextView
+                android:id="@+id/calendar_list_item_location"
+                style="@style/Text.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/calendar_list_item_time"
+                android:gravity="center_vertical" />
+
+            <TextView
+                android:id="@+id/calendar_list_item_descr"
+                style="@style/Text.Body2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/calendar_list_item_location"
+                android:gravity="center_vertical" />
+
+        </RelativeLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

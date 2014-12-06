@@ -3,6 +3,7 @@ package org.voidsink.anewjkuapp.base;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.app.ActionBar;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -27,12 +28,18 @@ public class ThemedActivity extends FragmentActivity {
 
     @Override
     public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-        initActionBar();
-
         return super.onCreateView(parent, name, context, attrs);
     }
 
-    protected void initActionBar() {
+    protected final void initActionBar() {
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            onInitActionBar(actionBar);
+        }
+    }
+
+    protected void onInitActionBar(ActionBar actionBar) {
+
     }
 
     @Override

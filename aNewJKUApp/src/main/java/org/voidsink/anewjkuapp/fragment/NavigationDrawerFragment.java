@@ -2,7 +2,7 @@ package org.voidsink.anewjkuapp.fragment;
 
 import android.accounts.Account;
 import android.app.Activity;
-import android.app.ActionBar;
+import android.support.v7.app.ActionBar;
 import android.content.Context;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
@@ -214,10 +214,6 @@ public class NavigationDrawerFragment extends BaseFragment {
 		// GravityCompat.START);
 		// set up the drawer's list view with items and click listener
 
-		ActionBar actionBar = getActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setHomeButtonEnabled(true);
-
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the navigation drawer and the action bar app icon.
 		mDrawerToggle = new ActionBarDrawerToggle(getActivity(), /* host Activity */
@@ -333,7 +329,6 @@ public class NavigationDrawerFragment extends BaseFragment {
 		// action bar.
 		if (mDrawerLayout != null && isDrawerOpen()) {
 			inflater.inflate(R.menu.global, menu);
-			showGlobalContextActionBar();
 		}
 		super.onCreateOptionsMenu(menu, inflater);
 	}
@@ -345,22 +340,6 @@ public class NavigationDrawerFragment extends BaseFragment {
 		}
 
 		return super.onOptionsItemSelected(item);
-	}
-
-	/**
-	 * Per the navigation drawer design guidelines, updates the action bar to
-	 * show the global app 'context', rather than just what's in the current
-	 * screen.
-	 */
-	private void showGlobalContextActionBar() {
-		ActionBar actionBar = getActionBar();
-		actionBar.setDisplayShowTitleEnabled(true);
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		actionBar.setTitle(R.string.app_name);
-	}
-
-	private ActionBar getActionBar() {
-		return getActivity().getActionBar();
 	}
 
 	/**

@@ -1,13 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent">
 
-    <ListView
-        android:id="@+id/calendar_events"
+    <org.voidsink.anewjkuapp.view.ListViewWithHeader
+        android:id="@+id/calendar_card_events"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
+        android:layout_height="match_parent"
+        android:scrollbarStyle="outsideOverlay"
+        android:padding="@dimen/card_content_padding"
+        android:layout_above="@+id/calendar_card_footer"
+        android:layout_alignParentTop="true" />
 
-</LinearLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:id="@+id/calendar_card_footer"
+        android:layout_height="wrap_content">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp" />
+
+        <Button
+            android:id="@+id/calendar_card_load"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/selectable_background_apptheme"
+            style="@style/Text.Button"
+            android:textColor="?android:attr/textColorSecondary"
+            android:text="@string/listview_footer_button" />
+    </LinearLayout>
+
+</RelativeLayout>

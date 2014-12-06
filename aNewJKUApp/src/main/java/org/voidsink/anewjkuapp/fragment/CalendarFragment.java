@@ -2,14 +2,17 @@ package org.voidsink.anewjkuapp.fragment;
 
 import android.accounts.Account;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,41 +20,43 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
 
 import org.voidsink.anewjkuapp.ImportCalendarTask;
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.base.BaseFragment;
-import org.voidsink.anewjkuapp.calendar.CalendarCard;
-import org.voidsink.anewjkuapp.calendar.CalendarCardArrayAdapter;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
+import org.voidsink.anewjkuapp.calendar.CalendarEventAdapter;
+import org.voidsink.anewjkuapp.calendar.CalendarListEvent;
+import org.voidsink.anewjkuapp.calendar.CalendarListItem;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
-import org.voidsink.anewjkuapp.view.StickyCardListView;
+import org.voidsink.anewjkuapp.view.ListViewWithHeader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import it.gmariotti.cardslib.library.internal.Card;
-
 public class CalendarFragment extends BaseFragment {
 
     private static final String TAG = CalendarFragment.class.getSimpleName();
     long now = 0, then = 0;
-    private CalendarCardArrayAdapter mAdapter;
+    private CalendarEventAdapter mAdapter;
     private ContentObserver mCalendarObserver;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_card_calendar, container,
+        View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_calendar, container,
                 false);
 
-        final StickyCardListView mListView = (StickyCardListView) view.findViewById(R.id.calendar_card_events);
+        final ListViewWithHeader mListView = (ListViewWithHeader) view.findViewById(R.id.calendar_card_events);
 
         Button loadMore = (Button) view.findViewById(R.id.calendar_card_load);
 
@@ -63,10 +68,33 @@ public class CalendarFragment extends BaseFragment {
         });
         loadMore.setClickable(true);
 
-        mAdapter = new CalendarCardArrayAdapter(getContext(), new ArrayList<Card>());
+        mAdapter = new CalendarEventAdapter(getContext());
 
 //		mListView.addFooterView(loadMore);
         mListView.setAdapter(mAdapter);
+
+        mListView.setOnItemClickListener(new ListView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                 CalendarListItem item = mAdapter.getItem(i);
+                if (item instanceof CalendarListEvent) {
+                    Intent intent = new Intent(getContext(), MainActivity.class).putExtra(
+                            MainActivity.ARG_SHOW_FRAGMENT,
+                            MapFragment.class.getName()).setAction(
+                            Intent.ACTION_SEARCH).addFlags(
+                            Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                    String location = ((CalendarListEvent) item).getLocation();
+                    if (!TextUtils.isEmpty(location)) {
+                        intent.putExtra(SearchManager.QUERY, location);
+                        intent.putExtra(MainActivity.ARG_EXACT_LOCATION, true);
+                    } else {
+                        intent.putExtra(SearchManager.QUERY, "Uniteich");
+                    }
+                    getContext().startActivity(intent);
+                }
+            }
+        });
 
         return view;
     }
@@ -131,7 +159,7 @@ public class CalendarFragment extends BaseFragment {
 
     private class CalendarLoadTask extends AsyncTask<String, Void, Void> {
         private ProgressDialog progressDialog;
-        private List<Card> mCards;
+        private List<CalendarListItem> mEvents;
         private Context mContext;
 
         @Override
@@ -207,7 +235,7 @@ public class CalendarFragment extends BaseFragment {
                 } while (c != null && !eventsFound);
                 if (c != null && !c.isClosed()) {
                     while (c.moveToNext()) {
-                        mCards.add(new CalendarCard(mContext,
+                        mEvents.add(new CalendarListEvent(
                                 c.getLong(ImportCalendarTask.COLUMN_EVENT_ID),
                                 mColors.get(c
                                         .getString(ImportCalendarTask.COLUMN_EVENT_CAL_ID)),
@@ -216,7 +244,6 @@ public class CalendarFragment extends BaseFragment {
                                 c.getString(ImportCalendarTask.COLUMN_EVENT_LOCATION),
                                 c.getLong(ImportCalendarTask.COLUMN_EVENT_DTSTART),
                                 c.getLong(ImportCalendarTask.COLUMN_EVENT_DTEND)));
-
                     }
                     c.close();
                 }
@@ -232,7 +259,7 @@ public class CalendarFragment extends BaseFragment {
             if (mContext == null) {
                 Log.e(TAG, "context is null");
             }
-            mCards = new ArrayList<>();
+            mEvents = new ArrayList<>();
             progressDialog = ProgressDialog.show(mContext,
                     mContext.getString(R.string.progress_title),
                     mContext.getString(R.string.progress_load_calendar), true);
@@ -241,7 +268,7 @@ public class CalendarFragment extends BaseFragment {
         @Override
         protected void onPostExecute(Void result) {
             mAdapter.clear();
-            mAdapter.addAll(mCards);
+            mAdapter.addAll(mEvents);
             mAdapter.notifyDataSetChanged();
 
             progressDialog.dismiss();

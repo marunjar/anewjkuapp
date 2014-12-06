@@ -86,4 +86,22 @@
         <!--<item name="androidPlot.graphWidget.background">?attr/plot_background_color</item>-->
     </style>
 
+    <attr name="cardBackground" format="reference"/>
+    <style name="card.default">
+        <item name="cardCornerRadius">@dimen/cardview_default_radius</item>
+        <item name="cardElevation">@dimen/cardview_default_elevation</item>
+        <item name="cardMaxElevation">@dimen/cardview_default_elevation</item>
+        <item name="cardUseCompatPadding">true</item>
+        <item name="contentPadding">@dimen/card_content_padding</item>
+        <item name="cardBackgroundColor">?attr/cardBackground</item>
+    </style>
+
+    <!--this styles are for toolbars in cards-->
+    <attr name="cardToolbarStyle" format="reference"/>
+    <style name="card.toolbar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    </style>
+
+    <style name="card.toolbar.light" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+    </style>
+
 </resources>
