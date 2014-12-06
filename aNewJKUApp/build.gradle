@@ -58,6 +58,7 @@ dependencies {
     compile 'com.androidplot:androidplot-core:0.6.1'
     compile 'uk.co.chrisjenx:calligraphy:1.2.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
+    compile 'com.mikepenz.aboutlibraries:library:4.4.0'
 }
 
 def appendVersionNameVersionCode(variant, defaultConfig) {

@@ -2,6 +2,7 @@ package org.voidsink.anewjkuapp.utils;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
@@ -40,10 +41,14 @@ public class UIUtils {
     }
 
     public static void applyTheme(Activity activity) {
-        if (PreferenceWrapper.getUseLightDesign(activity)) {
-            activity.setTheme(R.style.AppTheme_Light);
+        activity.setTheme(getAppThemeResId(activity));
+    }
+
+    public static int getAppThemeResId(Context context) {
+        if (PreferenceWrapper.getUseLightDesign(context)) {
+            return R.style.AppTheme_Light;
         } else {
-            activity.setTheme(R.style.AppTheme);
+            return R.style.AppTheme;
         }
     }
 
