@@ -7,14 +7,12 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.app.ActionBar;
-import android.util.AttributeSet;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -101,12 +99,6 @@ public class MainActivity extends ThemedActivity implements
         if (fragment != null) {
             outState.putString(ARG_SHOW_FRAGMENT, fragment.getClass().getName());
         }
-    }
-
-    @Override
-    public View onCreateView(String name, @NonNull Context context, @NonNull AttributeSet attrs) {
-        return super.onCreateView(name, context, attrs);
-
     }
 
     @Override

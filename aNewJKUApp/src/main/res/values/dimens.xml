@@ -14,6 +14,10 @@
     <dimen name="text_size_medium">18dp</dimen>
     <dimen name="text_size_small">14dp</dimen>
 
+    <dimen name="list_card_padding_left">8dp</dimen>
+    <dimen name="list_card_padding_right">8dp</dimen>
+    <dimen name="list_card_padding_top">8dp</dimen>
+
     <!-- set card dimension -->
     <dimen name="card_base_empty_height">10dp</dimen>
 

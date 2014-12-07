@@ -5,7 +5,7 @@
         android:id="@+id/show_on_map"
         android:orderInCategory="100"
         android:title="@string/calendar_action_show_on_map"
-        android:icon="@drawable/ic_marker_goal_position"
+        android:icon="@drawable/ic_menu_mylocation"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/show_in_calendar"

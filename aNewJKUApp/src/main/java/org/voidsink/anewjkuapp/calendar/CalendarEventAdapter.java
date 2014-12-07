@@ -54,6 +54,7 @@ public class CalendarEventAdapter extends ListWithHeaderAdapter<CalendarListItem
             convertView = mInflater.inflate(R.layout.calendar_list_item, parent,
                     false);
             eventItemHolder = new CalendarListEventHolder();
+
             eventItemHolder.toolbar = (Toolbar) convertView.findViewById(R.id.calendar_list_item_toolbar);
             eventItemHolder.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                 @Override
@@ -95,7 +96,7 @@ public class CalendarEventAdapter extends ListWithHeaderAdapter<CalendarListItem
                 }
             });
 
-            //eventItemHolder.toolbar.inflateMenu(R.menu.calendar_card_popup_menu);
+            eventItemHolder.toolbar.inflateMenu(R.menu.calendar_card_popup_menu);
 
 //            eventItemHolder.title = (TextView) convertView
 //                    .findViewById(R.id.calendar_list_item_title);

@@ -3,6 +3,7 @@ package org.voidsink.anewjkuapp;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Point;
+import android.os.Build;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
@@ -77,10 +78,14 @@ public class Globals extends Application {
                         WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
                         Display display = wm.getDefaultDisplay();
 
-                        Point size = new Point();
-                        display.getSize(size);
+                        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+                            Point size = new Point();
+                            display.getSize(size);
 
-                        t.setScreenResolution(size.x, size.y);
+                            t.setScreenResolution(size.x, size.y);
+                        } else {
+                            t.setScreenResolution(display.getWidth(), display.getHeight());
+                        }
                     } catch (Exception e) {
                         Log.e(TAG, "get sceen size", e);
                     }

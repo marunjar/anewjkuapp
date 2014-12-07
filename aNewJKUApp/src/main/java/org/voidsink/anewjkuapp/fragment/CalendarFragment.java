@@ -164,23 +164,25 @@ public class CalendarFragment extends BaseFragment {
 
         @Override
         protected Void doInBackground(String... urls) {
-            // fetch calendar colors
-            final Map<String, Integer> mColors = new HashMap<>();
-            ContentResolver cr = mContext.getContentResolver();
-            Cursor c = cr
-                    .query(CalendarContractWrapper.Calendars.CONTENT_URI(),
-                            new String[]{
-                                    CalendarContractWrapper.Calendars._ID(),
-                                    CalendarContractWrapper.Calendars
-                                            .CALENDAR_COLOR()}, null, null,
-                            null);
-            while (c.moveToNext()) {
-                mColors.put(c.getString(0), c.getInt(1));
-            }
-            c.close();
-
             Account mAccount = AppUtils.getAccount(mContext);
             if (mAccount != null) {
+                // fetch calendar colors
+                final Map<String, Integer> mColors = new HashMap<>();
+                ContentResolver cr = mContext.getContentResolver();
+                Cursor c = cr
+                        .query(CalendarContractWrapper.Calendars.CONTENT_URI(),
+                                new String[]{
+                                        CalendarContractWrapper.Calendars._ID(),
+                                        CalendarContractWrapper.Calendars
+                                                .CALENDAR_COLOR()}, null, null,
+                                null);
+                if (c != null) {
+                    while (c.moveToNext()) {
+                        mColors.put(c.getString(0), c.getInt(1));
+                    }
+                    c.close();
+                }
+
                 String calIDLva = CalendarUtils.getCalIDByName(mContext,
                         mAccount, CalendarUtils.ARG_CALENDAR_LVA);
                 String calIDExam = CalendarUtils.getCalIDByName(mContext,

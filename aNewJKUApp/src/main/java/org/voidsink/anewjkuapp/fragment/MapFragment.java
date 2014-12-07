@@ -36,7 +36,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
+import android.support.v7.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -323,10 +323,12 @@ public class MapFragment extends BaseFragment implements
         SearchManager searchManager = (SearchManager) getActivity()
                 .getSystemService(Context.SEARCH_SERVICE);
         // Assumes current activity is the searchable activity
-        mSearchView.setSearchableInfo(searchManager
-                .getSearchableInfo(getActivity().getComponentName()));
+        if (mSearchView != null) {
+            mSearchView.setSearchableInfo(searchManager
+                    .getSearchableInfo(getActivity().getComponentName()));
 
-        mSearchView.setOnQueryTextListener(this);
+            mSearchView.setOnQueryTextListener(this);
+        }
     }
 
     @Override
