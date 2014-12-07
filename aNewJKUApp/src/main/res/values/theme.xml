@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme_Light" parent="@style/Theme.AppCompat.Light">
+    <style name="AppTheme_Light" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="actionBarItemBackground">@drawable/selectable_background_apptheme</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Apptheme</item>
         <item name="actionBarTabStyle">@style/ActionBarTabStyle.Apptheme</item>
@@ -18,10 +18,9 @@
         <item name="cardBackground">@color/cardview_light_background</item>
 
         <item name="colorPrimary">@color/primary</item>
-        <item name="android:textColorPrimary">@android:color/white</item>
-        <item name="android:textColorSecondary">@android:color/white</item>
         <item name="colorPrimaryDark">@color/primaryDark</item>
         <item name="colorAccent">@color/accent</item>
+        <item name="android:colorAccent">@color/accent</item>
     </style>
 
     <style name="AppTheme" parent="@style/Theme.AppCompat">
@@ -42,10 +41,9 @@
         <item name="cardBackground">@color/cardview_dark_background</item>
 
         <item name="colorPrimary">@color/primary</item>
-        <item name="android:textColorPrimary">@android:color/white</item>
-        <item name="android:textColorSecondary">@android:color/white</item>
         <item name="colorPrimaryDark">@color/primaryDark</item>
         <item name="colorAccent">@color/accent</item>
+        <item name="android:colorAccent">@color/accent</item>
     </style>
 
     <style name="AppTheme.ActionBar.TitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">

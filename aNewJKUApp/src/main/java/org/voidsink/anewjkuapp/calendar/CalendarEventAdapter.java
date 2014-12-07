@@ -98,8 +98,8 @@ public class CalendarEventAdapter extends ListWithHeaderAdapter<CalendarListItem
 
             eventItemHolder.toolbar.inflateMenu(R.menu.calendar_card_popup_menu);
 
-//            eventItemHolder.title = (TextView) convertView
-//                    .findViewById(R.id.calendar_list_item_title);
+            eventItemHolder.title = (TextView) convertView
+                    .findViewById(R.id.calendar_list_item_title);
             eventItemHolder.descr = (TextView) convertView
                     .findViewById(R.id.calendar_list_item_descr);
             eventItemHolder.time = (TextView) convertView
@@ -114,7 +114,7 @@ public class CalendarEventAdapter extends ListWithHeaderAdapter<CalendarListItem
             eventItemHolder = (CalendarListEventHolder) convertView.getTag();
         }
 
-        eventItemHolder.toolbar.setTitle(eventItem.getTitle());
+        eventItemHolder.title.setText(eventItem.getTitle());
 
         if (eventItem.getDescr().isEmpty()) {
             eventItemHolder.descr.setVisibility(View.GONE);
@@ -186,7 +186,7 @@ public class CalendarEventAdapter extends ListWithHeaderAdapter<CalendarListItem
 
     private static class CalendarListEventHolder {
         private Toolbar toolbar;
-//        private TextView title;
+        private TextView title;
         private TextView descr;
         private TextView time;
         private TextView location;

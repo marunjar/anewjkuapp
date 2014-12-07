@@ -106,10 +106,16 @@
 
     <!--this styles are for toolbars in cards-->
     <attr name="cardToolbarStyle" format="reference"/>
-    <style name="card.toolbar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    <style name="card.toolbar" parent="@style/Theme.AppCompat">
+        <item name="colorPrimary">@android:color/transparent</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="colorAccent">@color/accent</item>
     </style>
 
-    <style name="card.toolbar.light" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+    <style name="card.toolbar.light" parent="@style/Theme.AppCompat.Light">
+        <item name="colorPrimary">@android:color/transparent</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="colorAccent">@color/accent</item>
     </style>
 
 </resources>

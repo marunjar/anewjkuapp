@@ -6,10 +6,10 @@
         android:orderInCategory="100"
         android:title="@string/calendar_action_show_on_map"
         android:icon="@drawable/ic_menu_mylocation"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
     <item
         android:id="@+id/show_in_calendar"
         android:orderInCategory="200"
         android:title="@string/calendar_action_show_in_calendar"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 </menu>
