@@ -12,8 +12,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.voidsink.anewjkuapp.GradeCard;
-import org.voidsink.anewjkuapp.GradeCardArrayAdapter;
+import org.voidsink.anewjkuapp.GradeListAdapter;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
@@ -22,12 +21,10 @@ import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.utils.AppUtils;
-import org.voidsink.anewjkuapp.view.StickyCardListView;
+import org.voidsink.anewjkuapp.view.GridViewWithHeader;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import it.gmariotti.cardslib.library.internal.Card;
 
 @SuppressLint("ValidFragment")
 public class GradeDetailFragment extends BaseFragment implements
@@ -37,7 +34,7 @@ public class GradeDetailFragment extends BaseFragment implements
     private final List<String> mTerms;
 
     private BaseContentObserver mGradeObserver;
-    private GradeCardArrayAdapter mAdapter;
+    private GradeListAdapter mAdapter;
 
     public GradeDetailFragment() {
         this(null);
@@ -52,13 +49,13 @@ public class GradeDetailFragment extends BaseFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_card_grade_detail, container,
+        View view = inflater.inflate(R.layout.fragment_grid_with_header, container,
                 false);
 
-        final StickyCardListView mListView = (StickyCardListView) view.findViewById(R.id.grade_card_list);
+        final GridViewWithHeader mGridView = (GridViewWithHeader) view.findViewById(R.id.gridview);
 
-        mAdapter = new GradeCardArrayAdapter(getContext(), new ArrayList<Card>());
-        mListView.setAdapter(mAdapter);
+        mAdapter = new GradeListAdapter(getContext());
+        mGridView.setAdapter(mAdapter);
 
         return view;
     }
@@ -108,15 +105,9 @@ public class GradeDetailFragment extends BaseFragment implements
             @Override
             protected void onPostExecute(Void result) {
 //                progressDialog.dismiss();
-
-                List<Card> mGradeCards = new ArrayList<>();
-                for (ExamGrade grade : this.grades) {
-                    mGradeCards.add(new GradeCard(mContext, grade));
-                }
-
                 if (mAdapter != null) {
                     mAdapter.clear();
-                    mAdapter.addAll(mGradeCards);
+                    mAdapter.addAll(this.grades);
                     mAdapter.notifyDataSetChanged();
                 }
 
