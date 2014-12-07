@@ -95,7 +95,6 @@ public class CalendarEventAdapter extends ListWithHeaderAdapter<CalendarListItem
                     return false;
                 }
             });
-
             eventItemHolder.toolbar.inflateMenu(R.menu.calendar_card_popup_menu);
 
             eventItemHolder.title = (TextView) convertView

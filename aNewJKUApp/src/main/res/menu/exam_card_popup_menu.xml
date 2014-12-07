@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_exam_register"
+        android:icon="@drawable/ic_open_in_browser_white_24dp"
         android:orderInCategory="100"
         android:title="@string/menu_exam_register"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
 </menu>
