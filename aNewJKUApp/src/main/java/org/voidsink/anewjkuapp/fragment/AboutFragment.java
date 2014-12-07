@@ -51,7 +51,7 @@ public class AboutFragment extends BaseFragment {
                         i.putExtra(Libs.BUNDLE_LICENSE, true);
 
                         //Pass your theme (must be AppCompat theme)
-                        //i.putExtra(Libs.BUNDLE_THEME, UIUtils.getAppThemeResId(getActivity()));
+                        i.putExtra(Libs.BUNDLE_THEME, UIUtils.getAppThemeResId(getActivity()));
 
                         //Pass a custom accent color (OPTIONAL)
 
