@@ -24,6 +24,7 @@ import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.view.GridViewWithHeader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,10 +50,10 @@ public class LvaDetailFragment extends BaseFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_grid, container,
+        View view = inflater.inflate(R.layout.fragment_grid_with_header, container,
                 false);
 
-        final GridView mGridView = (GridView) view.findViewById(R.id.gridview);
+        final GridViewWithHeader mGridView = (GridViewWithHeader) view.findViewById(R.id.gridview);
 
         mAdapter = new LvaListAdapter(getContext());
         mGridView.setAdapter(mAdapter);

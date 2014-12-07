@@ -7,17 +7,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.voidsink.anewjkuapp.base.BaseArrayAdapter;
+import org.voidsink.anewjkuapp.base.GridWithHeaderAdapter;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.utils.UIUtils;
 
-public class LvaListAdapter extends BaseArrayAdapter<LvaWithGrade> {
-
-    private LayoutInflater inflater;
+public class LvaListAdapter extends GridWithHeaderAdapter<LvaWithGrade> {
 
     public LvaListAdapter(Context context) {
         super(context, 0);
-        this.inflater = LayoutInflater.from(context);
     }
 
     @Override
@@ -35,7 +33,8 @@ public class LvaListAdapter extends BaseArrayAdapter<LvaWithGrade> {
         LvaList2ItemHolder lvaHolder = null;
 
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.lva_list_item, parent,
+            final LayoutInflater mInflater = LayoutInflater.from(getContext());
+            convertView = mInflater.inflate(R.layout.lva_list_item, parent,
                     false);
             lvaHolder = new LvaList2ItemHolder();
 
@@ -94,6 +93,29 @@ public class LvaListAdapter extends BaseArrayAdapter<LvaWithGrade> {
         private View chipBack;
         private TextView chipEcts;
         private TextView chipGrade;
-
     }
+
+    @Override
+    public View getHeaderView(int position, View convertView, ViewGroup viewGroup) {
+        // Build your custom HeaderView
+        final LayoutInflater mInflater = LayoutInflater.from(getContext());
+        final View headerView = mInflater.inflate(R.layout.list_header, null);
+        final TextView tvHeaderTitle = (TextView) headerView.findViewById(R.id.list_header_text);
+
+        LvaWithGrade lva = getItem(position);
+        if (lva != null) {
+            tvHeaderTitle.setText(getContext().getString(lva.getState().getStringResID()));
+        }
+        return headerView;
+    }
+
+    @Override
+    public long getHeaderId(int position) {
+        LvaWithGrade lva = getItem(position);
+        if (lva != null) {
+            return lva.getState().getStringResID();
+        }
+        return 0;
+    }
+
 }
