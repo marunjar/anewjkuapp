@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -36,7 +37,7 @@ public class UIUtils {
     }
 
     public static void setTextAndVisibility(TextView v, String text) {
-        if (text != null && !text.isEmpty()) {
+        if (!TextUtils.isEmpty(text)) {
             v.setText(text);
             v.setVisibility(TextView.VISIBLE);
         } else {

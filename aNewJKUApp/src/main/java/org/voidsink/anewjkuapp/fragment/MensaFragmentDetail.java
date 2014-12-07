@@ -10,35 +10,34 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.voidsink.anewjkuapp.MenuCard;
-import org.voidsink.anewjkuapp.MenuCardArrayAdapter;
+import org.voidsink.anewjkuapp.MensaItem;
+import org.voidsink.anewjkuapp.MensaMenuAdapter;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.mensa.Mensa;
 import org.voidsink.anewjkuapp.mensa.MensaDay;
 import org.voidsink.anewjkuapp.mensa.MensaMenu;
 import org.voidsink.anewjkuapp.mensa.MenuLoader;
-import org.voidsink.anewjkuapp.view.StickyCardListView;
+import org.voidsink.anewjkuapp.view.GridViewWithHeader;
+import org.voidsink.anewjkuapp.view.ListViewWithHeader;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import it.gmariotti.cardslib.library.internal.Card;
-
 public abstract class MensaFragmentDetail extends BaseFragment {
 
     public static final String TAG = MensaFragmentDetail.class.getSimpleName();
-    private MenuCardArrayAdapter mAdapter;
-    private StickyCardListView mListView;
+    private MensaMenuAdapter mAdapter;
+    private GridViewWithHeader mListView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_card_menu, container,
+        View view = inflater.inflate(R.layout.fragment_grid_with_header, container,
                 false);
 
-        mListView = (StickyCardListView) view.findViewById(R.id.menu_card_list);
-        mAdapter = new MenuCardArrayAdapter(getContext(), new ArrayList<Card>(), true);
+        mListView = (GridViewWithHeader) view.findViewById(R.id.gridview);
+        mAdapter = new MensaMenuAdapter(getContext(), android.R.layout.simple_list_item_1, true);
         mListView.setAdapter(mAdapter);
 
         return view;
@@ -59,7 +58,7 @@ public abstract class MensaFragmentDetail extends BaseFragment {
     protected abstract MenuLoader createLoader();
 
     private class MenuLoadTask extends AsyncTask<String, Void, Void> {
-        private List<Card> mMenus;
+        private List<MensaItem> mMenus;
         private Context mContext;
         private int mSelectPosition;
 
@@ -81,7 +80,7 @@ public abstract class MensaFragmentDetail extends BaseFragment {
             if (mensa != null) {
                 for (MensaDay day : mensa.getDays()) {
                     for (MensaMenu menu : day.getMenus()) {
-                        mMenus.add(new MenuCard(mContext, mensa, day, menu));
+                        mMenus.add(menu);
                         // remember position of menu for today for scrolling to item after update
                         if (mSelectPosition == -1 &&
                                 DateUtils.isToday(day.getDate().getTime())) {
@@ -96,16 +95,17 @@ public abstract class MensaFragmentDetail extends BaseFragment {
 
         @Override
         protected void onPostExecute(Void result) {
-            mAdapter.clear();
-            mAdapter.addAll(mMenus);
-            mAdapter.notifyDataSetChanged();
+            if (mAdapter != null) {
+                mAdapter.clear();
+                mAdapter.addAll(mMenus);
+                mAdapter.notifyDataSetChanged();
 
-            // scroll to today's menu
-            if (mSelectPosition >= 0 &&
-                    mListView != null) {
-                mListView.smoothScrollToPosition(mSelectPosition);
+                // scroll to today's menu
+                if (mSelectPosition >= 0 &&
+                        mListView != null) {
+                    mListView.smoothScrollToPosition(mSelectPosition);
+                }
             }
-
             super.onPostExecute(result);
         }
     }

@@ -2,6 +2,7 @@ package org.voidsink.anewjkuapp.mensa;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.voidsink.anewjkuapp.MensaItem;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,6 +15,7 @@ public class MensaDay {
     private Date date;
     private List<MensaMenu> menus;
     private boolean isModified = false;
+    private Mensa mensa;
 
     public MensaDay(Date date) {
         this.date = date;
@@ -32,6 +34,7 @@ public class MensaDay {
 
     public void addMenu(MensaMenu menu) {
         this.menus.add(menu);
+        menu.setDay(this);
     }
 
     public List<MensaMenu> getMenus() {
@@ -53,5 +56,13 @@ public class MensaDay {
 
     public boolean isModified() {
         return this.isModified;
+    }
+
+    public void setMensa(Mensa mensa) {
+        this.mensa = mensa;
+    }
+
+    public Mensa getMensa() {
+        return mensa;
     }
 }
