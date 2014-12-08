@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/show_on_map"
-        android:title="@string/calendar_action_show_on_map"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/show_on_map"
         android:orderInCategory="100"
-        android:showAsAction="always" />
-    <item android:id="@+id/show_in_calendar"
-        android:title="@string/calendar_action_show_in_calendar"
+        android:title="@string/calendar_action_show_on_map"
+        android:icon="@drawable/ic_menu_mylocation"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/show_in_calendar"
         android:orderInCategory="200"
-        android:showAsAction="always" />
+        android:title="@string/calendar_action_show_in_calendar"
+        app:showAsAction="never" />
 </menu>

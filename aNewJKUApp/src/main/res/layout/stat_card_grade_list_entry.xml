@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    style="@style/card.main_layout"
-    android:background="@color/fullTransparent"
-    android:padding="@dimen/card_content_padding">
+    android:layout_height="wrap_content">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/stat_card_grade_list_entry_grade"
-        android:layout_alignParentRight="true"/>
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:gravity="center_vertical" />
+
+    <TextView
         android:id="@+id/stat_card_grade_list_entry_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@id/stat_card_grade_list_entry_grade"/>
+        android:layout_toLeftOf="@id/stat_card_grade_list_entry_grade"
+        android:gravity="center_vertical" />
 
 </RelativeLayout>

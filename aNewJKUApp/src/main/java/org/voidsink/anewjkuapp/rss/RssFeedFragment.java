@@ -20,23 +20,16 @@ import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.rss.lib.FeedEntry;
 import org.voidsink.anewjkuapp.rss.lib.FeedPullParser;
 import org.voidsink.anewjkuapp.utils.Consts;
+import org.voidsink.anewjkuapp.view.GridViewWithHeader;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
-import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
-import it.gmariotti.cardslib.library.view.CardListView;
-
-/**
- * Created by paul on 16.11.2014.
- */
 public class RssFeedFragment extends BaseFragment {
 
     private URL mUrl = null;
-    private CardArrayAdapter mCardArrayAdapter;
+    private RssListAdapter mAdapter;
     private DisplayImageOptions mOptions;
 
     @Override
@@ -64,13 +57,12 @@ public class RssFeedFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_rss_feed, container, false);
+        View v = inflater.inflate(R.layout.fragment_grid_with_header, container, false);
 
-        final CardListView mCardListView = (CardListView) v.findViewById(R.id.rssfeed_list);
-        final List<Card> cards = new ArrayList<>();
+        final GridViewWithHeader mGridView = (GridViewWithHeader) v.findViewById(R.id.gridview);
 
-        mCardArrayAdapter = new CardArrayAdapter(getContext(), cards);
-        mCardListView.setAdapter(mCardArrayAdapter);
+        mAdapter = new RssListAdapter(getContext(), mOptions);
+        mGridView.setAdapter(mAdapter);
 
         return v;
     }
@@ -89,6 +81,7 @@ public class RssFeedFragment extends BaseFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+
         inflater.inflate(R.menu.rss_feed, menu);
     }
 
@@ -101,6 +94,11 @@ public class RssFeedFragment extends BaseFragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected String getScreenName() {
+        return Consts.SCREEN_RSS_FEED;
     }
 
     private class LoadFeedTask extends AsyncTask<Void, Void, Void> {
@@ -126,31 +124,19 @@ public class RssFeedFragment extends BaseFragment {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            if (mCardArrayAdapter != null) {
-                List<Card> cards = new ArrayList<>();
-
+            if (mAdapter != null) {
+                mAdapter.clear();
                 if (mFeed != null) {
-                    for (FeedEntry entry : mFeed) {
-                        Card card = new RssCard(getContext(), entry, mOptions);
-                        cards.add(card);
-                    }
+                    mAdapter.addAll(mFeed);
                 } else {
                     Toast.makeText(getContext(), "TODO: Error loading feed.", Toast.LENGTH_SHORT).show();
                 }
-
-                mCardArrayAdapter.clear();
-                mCardArrayAdapter.addAll(cards);
-                mCardArrayAdapter.notifyDataSetChanged();
+                mAdapter.notifyDataSetChanged();
             }
 
             mProgressDialog.dismiss();
 
             super.onPostExecute(aVoid);
         }
-    }
-
-    @Override
-    protected String getScreenName() {
-        return Consts.SCREEN_RSS_FEED;
     }
 }

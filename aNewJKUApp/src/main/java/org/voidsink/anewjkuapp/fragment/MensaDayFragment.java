@@ -9,9 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.voidsink.anewjkuapp.MenuCard;
-import org.voidsink.anewjkuapp.MenuCardArrayAdapter;
-import org.voidsink.anewjkuapp.NoMenuCard;
+import org.voidsink.anewjkuapp.MensaInfoItem;
+import org.voidsink.anewjkuapp.MensaItem;
+import org.voidsink.anewjkuapp.MensaMenuAdapter;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.mensa.ChoiceMenuLoader;
@@ -22,13 +22,11 @@ import org.voidsink.anewjkuapp.mensa.MensaDay;
 import org.voidsink.anewjkuapp.mensa.MensaMenu;
 import org.voidsink.anewjkuapp.mensa.MenuLoader;
 import org.voidsink.anewjkuapp.mensa.RaabMenuLoader;
-import org.voidsink.anewjkuapp.view.StickyCardListView;
+import org.voidsink.anewjkuapp.view.GridViewWithHeader;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import it.gmariotti.cardslib.library.internal.Card;
 
 /**
  * Created by paul on 18.09.2014.
@@ -38,7 +36,7 @@ public class MensaDayFragment extends BaseFragment {
     public static final String TAG = MensaDayFragment.class.getSimpleName();
     private static final List<Mensa> mMensen = new ArrayList<>();
     private Date mDate;
-    private MenuCardArrayAdapter mAdapter;
+    private MensaMenuAdapter mAdapter;
 
     public MensaDayFragment() {
         super();
@@ -49,12 +47,12 @@ public class MensaDayFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_card_menu, container,
+        View view = inflater.inflate(R.layout.fragment_grid_with_header, container,
                 false);
 
-        final StickyCardListView mListView = (StickyCardListView) view.findViewById(R.id.menu_card_list);
-        mAdapter = new MenuCardArrayAdapter(getContext(), new ArrayList<Card>(), false);
-        mListView.setAdapter(mAdapter);
+        final GridViewWithHeader mGridView = (GridViewWithHeader) view.findViewById(R.id.gridview);
+        mAdapter = new MensaMenuAdapter(getContext(), android.R.layout.simple_list_item_1, false);
+        mGridView.setAdapter(mAdapter);
 
         return view;
     }
@@ -111,15 +109,13 @@ public class MensaDayFragment extends BaseFragment {
             if (mContext == null) {
                 Log.e(TAG, "context is null");
             }
-            mAdapter.clear();
-            mAdapter.notifyDataSetChanged();
         }
 
         @Override
         protected void onPostExecute(Void result) {
             setMensa(mMensa, mIndex);
 
-            List<Card> menus = new ArrayList<Card>();
+            List<MensaItem> menus = new ArrayList<>();
             int noMenuCount = 0;
 
             for (Mensa mensa : mMensen) {
@@ -127,11 +123,11 @@ public class MensaDayFragment extends BaseFragment {
                     MensaDay day = mensa.getDay(mDate);
                     if (day != null && !day.isEmpty()) {
                         for (MensaMenu menu : day.getMenus()) {
-                            menus.add(new MenuCard(mContext, mensa, day, menu));
+                            menus.add(menu);
                         }
                     } else {
                         // add no menu card
-                        menus.add(new NoMenuCard(mContext, mensa, day, null));
+                        menus.add(new MensaInfoItem(mensa, day, getString(R.string.mensa_menu_not_available), null));
                         noMenuCount++;
                     }
                 }
@@ -140,15 +136,16 @@ public class MensaDayFragment extends BaseFragment {
             // add default no menu card
             if (menus.size() == 0 || menus.size() == noMenuCount) {
                 menus.clear();
-                menus.add(new NoMenuCard(mContext, null, null, null));
+                menus.add(new MensaInfoItem(null, null, getString(R.string.mensa_menu_not_available), null));
             }
 
-            mAdapter.clear();
-            mAdapter.addAll(menus);
-            mAdapter.notifyDataSetChanged();
+            if (mAdapter != null) {
+                mAdapter.clear();
+                mAdapter.addAll(menus);
+                mAdapter.notifyDataSetChanged();
+            }
 
             super.onPostExecute(result);
         }
     }
-
 }

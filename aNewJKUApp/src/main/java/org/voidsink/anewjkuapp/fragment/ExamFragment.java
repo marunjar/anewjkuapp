@@ -17,8 +17,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.voidsink.anewjkuapp.ExamCard;
-import org.voidsink.anewjkuapp.ExamCardArrayAdapter;
+import org.voidsink.anewjkuapp.ExamListAdapter;
 import org.voidsink.anewjkuapp.ExamListExam;
 import org.voidsink.anewjkuapp.ImportExamTask;
 import org.voidsink.anewjkuapp.KusssContentContract;
@@ -27,29 +26,26 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
-import org.voidsink.anewjkuapp.view.StickyCardListView;
+import org.voidsink.anewjkuapp.view.GridViewWithHeader;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import it.gmariotti.cardslib.library.internal.Card;
 
 public class ExamFragment extends BaseFragment {
 
     private static final String TAG = ExamFragment.class.getSimpleName();
 
-    private ExamCardArrayAdapter mAdapter;
-
+    private ExamListAdapter mAdapter;
     private ContentObserver mNewExamObserver;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_card_exam, container, false);
+        View view = inflater.inflate(R.layout.fragment_grid_with_header, container, false);
 
-        final StickyCardListView mListView = (StickyCardListView) view.findViewById(R.id.exam_list);
-        mAdapter = new ExamCardArrayAdapter(getContext(), new ArrayList<Card>());
-        mListView.setAdapter(mAdapter);
+        final GridViewWithHeader mGridView = (GridViewWithHeader) view.findViewById(R.id.gridview);
+        mAdapter = new ExamListAdapter(getContext());
+        mGridView.setAdapter(mAdapter);
 
         return view;
     }
@@ -91,7 +87,7 @@ public class ExamFragment extends BaseFragment {
 
     private class ExamLoadTask extends AsyncTask<String, Void, Void> {
         private ProgressDialog progressDialog;
-        private List<Card> mExams;
+        private List<ExamListExam> mExams;
         private Context mContext;
 
         @Override
@@ -107,7 +103,7 @@ public class ExamFragment extends BaseFragment {
 
                 if (c != null) {
                     while (c.moveToNext()) {
-                        mExams.add(new ExamCard(mContext, new ExamListExam(c, map)));
+                        mExams.add(new ExamListExam(c, map));
                     }
                     c.close();
                 }
@@ -131,9 +127,14 @@ public class ExamFragment extends BaseFragment {
 
         @Override
         protected void onPostExecute(Void result) {
-            mAdapter.clear();
-            mAdapter.addAll(mExams);
+            if (mAdapter != null) {
+                mAdapter.clear();
+                mAdapter.addAll(mExams);
+                mAdapter.notifyDataSetChanged();
+            }
+
             progressDialog.dismiss();
+
             super.onPostExecute(result);
         }
     }

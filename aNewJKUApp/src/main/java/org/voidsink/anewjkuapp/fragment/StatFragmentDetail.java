@@ -9,12 +9,13 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.StatCardGrade;
-import org.voidsink.anewjkuapp.StatCardLva;
+import org.voidsink.anewjkuapp.StatCard;
+import org.voidsink.anewjkuapp.StatCardAdapter;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
@@ -25,19 +26,13 @@ import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import java.util.List;
 
-import it.gmariotti.cardslib.library.view.CardView;
-
 @SuppressLint("ValidFragment")
 public class StatFragmentDetail extends BaseFragment implements
         ContentObserverListener {
 
     private BaseContentObserver mDataObserver;
-
-    private StatCardLva mStatCardLva;
-    private StatCardGrade mStatCardGrade;
-    private StatCardGrade mStatCardGradeWeighted;
-
     private final List<String> mTerms;
+    private StatCardAdapter mAdapter;
 
     public StatFragmentDetail() {
         this(null);
@@ -51,28 +46,13 @@ public class StatFragmentDetail extends BaseFragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View mView = inflater.inflate(R.layout.fragment_stats, container, false);
+        View view = inflater.inflate(R.layout.fragment_stats, container, false);
 
-        boolean mPositiveOnly = PreferenceWrapper.getPositiveGradesOnly(getContext());
+        final GridView mGridView = (GridView) view.findViewById(R.id.stat_cards);
+        mAdapter = new StatCardAdapter(getContext());
+        mGridView.setAdapter(mAdapter);
 
-        CardView scl = (CardView) mView.findViewById(R.id.stat_card_lva);
-        mStatCardLva = new StatCardLva(getContext());
-        mStatCardLva.init();
-        scl.setCard(mStatCardLva);
-
-        CardView scg = (CardView) mView.findViewById(R.id.stat_card_grade);
-        mStatCardGrade = new StatCardGrade(getContext(), false, mPositiveOnly);
-        mStatCardGrade.init();
-        scg.setCard(mStatCardGrade);
-
-        CardView scgw = (CardView) mView.findViewById(R.id.stat_card_grade_weighted);
-        mStatCardGradeWeighted = new StatCardGrade(getContext(), true, mPositiveOnly);
-        mStatCardGradeWeighted.init();
-        scgw.setCard(mStatCardGradeWeighted);
-
-
-
-        return mView;
+        return view;
     }
 
     @Override
@@ -95,6 +75,7 @@ public class StatFragmentDetail extends BaseFragment implements
             private List<Lva> lvas;
             private List<ExamGrade> grades;
             private Context mContext = getContext();
+            public boolean positiveOnly;
 
             @Override
             protected void onPreExecute() {
@@ -107,6 +88,7 @@ public class StatFragmentDetail extends BaseFragment implements
 
             @Override
             protected Void doInBackground(Void... params) {
+                this.positiveOnly = PreferenceWrapper.getPositiveGradesOnly(getContext());
                 this.lvas = KusssContentProvider.getLvas(mContext);
                 this.grades = AppUtils.filterGrades(mTerms, KusssContentProvider.getGrades(mContext));
                 AppUtils.sortLVAs(this.lvas);
@@ -115,10 +97,15 @@ public class StatFragmentDetail extends BaseFragment implements
 
             @Override
             protected void onPostExecute(Void result) {
-                mStatCardLva.setValues(mTerms, this.lvas, this.grades);
-                mStatCardGrade.setValues(mTerms, this.grades);
-                mStatCardGradeWeighted.setValues(mTerms, this.grades);
+                if (mAdapter != null) {
+                    mAdapter.clear();
 
+                    mAdapter.add(StatCard.getLvaInstance(mTerms, this.lvas, this.grades));
+                    mAdapter.add(StatCard.getGradeInstance(mTerms, this.grades, false, this.positiveOnly));
+                    mAdapter.add(StatCard.getGradeInstance(mTerms, this.grades, true, this.positiveOnly));
+
+                    mAdapter.notifyDataSetChanged();
+                }
 //                progressDialog.dismiss();
 
                 super.onPostExecute(result);

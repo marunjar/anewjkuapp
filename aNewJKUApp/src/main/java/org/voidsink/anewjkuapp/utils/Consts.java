@@ -42,8 +42,10 @@ public class Consts {
 
     public static final String SCREEN_ABOUT = "/about";
     public static final String SCREEN_SETTINGS = "/settings";
+    public static final String SCREEN_SETTINGS_KUSSS = "/settings/kusss";
+    public static final String SCREEN_SETTINGS_APP = "/settings/app";
 
-    public static final String SCREEN_SETTINGS_DASHCLOCK = "/dashclock";
+    public static final String SCREEN_SETTINGS_DASHCLOCK = "/settings/dashclock";
     public static final String SCREEN_LOGIN = "/login";
     public static final String SCREEN_RSS_FEED = "/rssFeed";
     public static final String SCREEN_RSS_FEED_ENTRY = "/rssFeed/entry";

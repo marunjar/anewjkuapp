@@ -1,2 +1,2 @@
-include ':voidsinkContributors'
+include ':voidsinkContributors', ':android-support-v4-preferencefragment'
 include ':aNewJKUApp'

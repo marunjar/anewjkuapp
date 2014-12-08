@@ -8,35 +8,33 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="org.voidsink.anewjkuapp.fragment.AboutFragment" >
+    tools:context="org.voidsink.anewjkuapp.fragment.AboutFragment">
 
     <ScrollView
         android:id="@+id/about_content_scroller"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true" >
+        android:layout_alignParentTop="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
-                style="?android:attr/listSeparatorTextViewStyle"
+                style="@style/Text.Title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:text="@string/app_name">
-            </TextView>
+                android:text="@string/app_name" />
 
             <TextView
+                style="@style/Text.Body1"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:text="@string/about_app_summary"
-                android:textAppearance="?android:attr/textAppearanceSmall">
-            </TextView>
-		</LinearLayout>
+                android:text="@string/about_app_summary" />
+        </LinearLayout>
     </ScrollView>
 
     <!--
@@ -52,29 +50,41 @@
 
     <Button
         android:id="@+id/about_credits"
+        style="@style/Text.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/about_changelog"
         android:layout_marginTop="10dp"
+        android:background="@drawable/selectable_background_apptheme"
         android:padding="10dp"
-        android:text="@string/about_credits_title" />
+        android:text="@string/about_credits_title"
+
+        android:textColor="?android:attr/textColorSecondary" />
 
     <Button
         android:id="@id/about_changelog"
+        style="@style/Text.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_above="@+id/about_libraries"
-        android:padding="10dp"
-        android:text="@string/action_changelog" />
 
-	<Button
+        android:layout_above="@+id/about_libraries"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/selectable_background_apptheme"
+        android:padding="10dp"
+        android:text="@string/action_changelog"
+        android:textColor="?android:attr/textColorSecondary" />
+
+    <Button
         android:id="@id/about_libraries"
+        style="@style/Text.Button"
         android:layout_width="match_parent"
+
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="10dp"
+        android:background="@drawable/selectable_background_apptheme"
         android:padding="10dp"
-        android:text="@string/about_libraries_title" />
-    
+        android:text="@string/about_libraries_title"
+        android:textColor="?android:attr/textColorSecondary" />
+
 </RelativeLayout>

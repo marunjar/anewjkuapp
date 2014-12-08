@@ -2,22 +2,23 @@ package org.voidsink.anewjkuapp.base;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.util.AttributeSet;
-import android.view.View;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.UIUtils;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class ThemedActivity extends FragmentActivity {
+public class ThemedActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         UIUtils.applyTheme(this);
 
         super.onCreate(savedInstanceState);
+
+        initActionBar();
     }
 
     @Override
@@ -25,14 +26,15 @@ public class ThemedActivity extends FragmentActivity {
         super.attachBaseContext(new CalligraphyContextWrapper(newBase));
     }
 
-    @Override
-    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-        initActionBar();
-
-        return super.onCreateView(parent, name, context, attrs);
+    protected final void initActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            onInitActionBar(actionBar);
+        }
     }
 
-    protected void initActionBar() {
+    protected void onInitActionBar(ActionBar actionBar) {
+
     }
 
     @Override

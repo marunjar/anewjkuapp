@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:paddingLeft="17dp"
-    android:paddingRight="17dp" >
+    android:paddingRight="17dp">
 
     <EditText
         android:id="@+id/accountName"
@@ -25,11 +25,11 @@
         android:padding="10dp" />
 
     <CheckBox
-        android:layout_width="wrap_content"
+        android:id="@+id/accountPasswordShow"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/account_show_password"
-        android:id="@+id/accountPasswordShow"
-        android:padding="10dp"/>
+        android:padding="10dp" />
 
     <Button
         android:id="@+id/accountLogin"

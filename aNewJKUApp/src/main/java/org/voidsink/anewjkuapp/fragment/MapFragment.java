@@ -36,7 +36,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
+import android.support.v7.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -308,8 +308,8 @@ public class MapFragment extends BaseFragment implements
         inflater.inflate(R.menu.map, menu);
 
         MenuItem searchItem = menu.findItem(R.id.action_search_poi);
-        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        setupSearchView(searchItem);
+        mSearchView = (SearchView) searchItem.getActionView();
+        setupSearchView(mSearchView);
 
         if (mMyLocationOverlay != null) {
             MenuItem snapToLocationItem = menu
@@ -318,15 +318,17 @@ public class MapFragment extends BaseFragment implements
         }
     }
 
-    private void setupSearchView(MenuItem searchItem) {
+    private void setupSearchView(SearchView searchView) {
         // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getActivity()
                 .getSystemService(Context.SEARCH_SERVICE);
         // Assumes current activity is the searchable activity
-        mSearchView.setSearchableInfo(searchManager
-                .getSearchableInfo(getActivity().getComponentName()));
+        if (searchView != null) {
+            searchView.setSearchableInfo(searchManager
+                    .getSearchableInfo(getActivity().getComponentName()));
 
-        mSearchView.setOnQueryTextListener(this);
+            searchView.setOnQueryTextListener(this);
+        }
     }
 
     @Override

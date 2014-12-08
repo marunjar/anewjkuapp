@@ -18,7 +18,5 @@
         android:textColor="?android:attr/textColorSecondary"
         android:textSize="@dimen/text_size_subhead" />
 
-    <include layout="@layout/separator" />
-
 </LinearLayout>
 

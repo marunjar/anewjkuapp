@@ -12,11 +12,7 @@
 
         <TextView
             android:id="@+id/oeh_info_main_title"
-            style="@style/Text.Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/accent"
-            android:padding="8dp"
+            style="@style/oeh_text_title"
             android:text="@string/oeh_info_main_title" />
 
         <TextView

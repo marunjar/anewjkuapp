@@ -14,13 +14,17 @@
     <dimen name="text_size_medium">18dp</dimen>
     <dimen name="text_size_small">14dp</dimen>
 
+    <dimen name="list_card_padding_left">8dp</dimen>
+    <dimen name="list_card_padding_right">8dp</dimen>
+    <dimen name="list_card_padding_top">8dp</dimen>
+
     <!-- set card dimension -->
     <dimen name="card_base_empty_height">10dp</dimen>
 
     <!-- dimension for grade chip -->
     <dimen name="grade_chip_info_size">12sp</dimen>
     <dimen name="grade_chip_grade_size">28sp</dimen>
-    <dimen name="card_content_padding">16dp</dimen>
+    <dimen name="card_content_padding">8dp</dimen>
 
     <!-- Material Design -->
     <dimen name="text_left_icon_margin">16dip</dimen>
@@ -37,4 +41,5 @@
     <dimen name="text_size_body">12sp</dimen>
     <dimen name="text_size_caption">12sp</dimen>
     <dimen name="text_size_button">14sp</dimen>
+    <dimen name="grid_entry_width">280dp</dimen>
 </resources>

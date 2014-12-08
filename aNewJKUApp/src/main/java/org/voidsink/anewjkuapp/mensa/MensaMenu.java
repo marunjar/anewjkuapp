@@ -2,8 +2,9 @@ package org.voidsink.anewjkuapp.mensa;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.voidsink.anewjkuapp.MensaItem;
 
-public class MensaMenu {
+public class MensaMenu implements MensaItem {
 
 	private String name;
 	private String soup;
@@ -11,8 +12,9 @@ public class MensaMenu {
 	private double price;
 	private double priceBig;
 	private double oehBonus;
+    private MensaDay day;
 
-	public MensaMenu(JSONObject jsonObject) {
+    public MensaMenu(JSONObject jsonObject) {
 		try {
 			this.name = jsonObject.getString("name").trim();
 			if (jsonObject.isNull("soup")) {
@@ -54,4 +56,25 @@ public class MensaMenu {
 		return this.oehBonus;
 	}
 
+    @Override
+    public int getType() {
+        return TYPE_MENU;
+    }
+
+    public void setDay(MensaDay day) {
+        this.day = day;
+    }
+
+    public MensaDay getDay() {
+        return day;
+    }
+
+    @Override
+    public Mensa getMensa() {
+        MensaDay day = getDay();
+        if (day != null) {
+            return day.getMensa();
+        }
+        return null;
+    }
 }

@@ -126,15 +126,17 @@ public final class CalendarUtils {
 		// todo: add selection
 		Cursor c = cr.query(CalendarContractWrapper.Calendars.CONTENT_URI(),
 				CALENDAR_PROJECTION, null, null, null);
-		while (c.moveToNext()) {
-			if (account.name.equals(c.getString(COLUMN_CAL_ACCOUNT_NAME))
-					&& account.type
-							.equals(c.getString(COLUMN_CAL_ACCOUNT_TYPE))) {
-				ids.put(c.getString(COLUMN_CAL_NAME),
-						c.getString(COLUMN_CAL_ID));
-			}
-		}
-		c.close();
+        if (c != null) {
+            while (c.moveToNext()) {
+                if (account.name.equals(c.getString(COLUMN_CAL_ACCOUNT_NAME))
+                        && account.type
+                        .equals(c.getString(COLUMN_CAL_ACCOUNT_TYPE))) {
+                    ids.put(c.getString(COLUMN_CAL_NAME),
+                            c.getString(COLUMN_CAL_ID));
+                }
+            }
+            c.close();
+        }
 
 		return ids;
 	}

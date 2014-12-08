@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.voidsink.anewjkuapp.MensaItem;
 
 public class Mensa {
 
@@ -19,6 +20,7 @@ public class Mensa {
 	public void addDay(MensaDay menuDay) {
 		if (menuDay != null) {
 			this.days.add(menuDay);
+            menuDay.setMensa(this);
 		}
 	}
 

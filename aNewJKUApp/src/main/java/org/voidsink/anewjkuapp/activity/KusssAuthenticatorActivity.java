@@ -1,7 +1,6 @@
 package org.voidsink.anewjkuapp.activity;
 
 import android.accounts.Account;
-import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
 import android.app.ActionBar;
 import android.app.ProgressDialog;
@@ -31,6 +30,7 @@ import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.anewjkuapp.utils.UIUtils;
+import org.voidsink.anewjkuapp.workaround.AccountAuthenticatorActivity;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 

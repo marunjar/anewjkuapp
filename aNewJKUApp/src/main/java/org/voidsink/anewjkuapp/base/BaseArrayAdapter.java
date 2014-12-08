@@ -1,12 +1,12 @@
 package org.voidsink.anewjkuapp.base;
 
-import java.util.Collection;
-import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.widget.ArrayAdapter;
+
+import java.util.Collection;
+import java.util.List;
 
 public class BaseArrayAdapter<T> extends ArrayAdapter<T> {
 
@@ -15,7 +15,7 @@ public class BaseArrayAdapter<T> extends ArrayAdapter<T> {
     }
 
     public BaseArrayAdapter(Context context, int resource, int textViewResourceId) {
-    	super(context, resource, textViewResourceId);
+        super(context, resource, textViewResourceId);
     }
 
     public BaseArrayAdapter(Context context, int textViewResourceId, T[] objects) {
@@ -35,8 +35,8 @@ public class BaseArrayAdapter<T> extends ArrayAdapter<T> {
     }
 
 
-	@SuppressLint("NewApi")
-	@Override
+    @SuppressLint("NewApi")
+    @Override
     public void addAll(Collection<? extends T> collection) {
         if (collection != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -49,17 +49,16 @@ public class BaseArrayAdapter<T> extends ArrayAdapter<T> {
         }
     }
 
-	@SuppressWarnings("unchecked")
-	@SuppressLint("NewApi")
-	@Override
-    public void addAll(T ... items) {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			super.addAll(items);
-		} else {
-			for (T item : items) {
-				super.add(item);
-			}
-		}
+    @SuppressWarnings("unchecked")
+    @SuppressLint("NewApi")
+    @Override
+    public void addAll(T... items) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            super.addAll(items);
+        } else {
+            for (T item : items) {
+                super.add(item);
+            }
+        }
     }
-
 }

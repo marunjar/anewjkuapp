@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceScreen
+        android:key="preferences_kusss"
+        android:summary="@string/settings_kusss_summary"
+        android:title="@string/settings_kusss_title"
+        android:fragment="org.voidsink.anewjkuapp.fragment.SettingsFragment$KusssSettingsFragment" />
+
+    <PreferenceScreen
+        android:key="preferences_app"
+        android:summary="@string/settings_app_summary"
+        android:title="@string/settings_app_title"
+        android:fragment="org.voidsink.anewjkuapp.fragment.SettingsFragment$AppSettingsFragment"/>
+</PreferenceScreen>
