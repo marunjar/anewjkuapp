@@ -61,31 +61,6 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
-    <!-- for themed cards-->
-    <style name="card.header_simple_title">
-        <item name="android:textSize">@dimen/card_header_simple_title_text_size</item>
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
-        <item name="android:layout_gravity">left|center_vertical</item>
-        <item name="android:layout_marginLeft">@dimen/card_header_simple_title_margin_left</item>
-        <item name="android:layout_marginTop">@dimen/card_header_simple_title_margin_top</item>
-        <item name="android:layout_marginRight">@dimen/card_header_simple_title_margin_right</item>
-        <item name="android:layout_marginBottom">@dimen/card_header_simple_title_margin_bottom</item>
-    </style>
-
-    <!-- Button Overflow in Header for themed cards-->
-    <attr name="themed_card_menu_button_overflow" format="reference"/>
-    <style name="card.header_button_base.overflow" >
-        <item name="android:background">?attr/themed_card_menu_button_overflow</item>
-        <item name="android:layout_marginRight">@dimen/card_header_button_overflow_margin_right</item>
-    </style>
-
-    <!-- Button to Expand/Collapse in Header for themed cards-->
-    <attr name="themed_card_menu_button_expand" format="reference"/>
-    <style name="card.header_button_base.expand">
-        <item name="android:background">?attr/themed_card_menu_button_expand</item>
-    </style>
-
-
     <attr name="themed_plot_background_color" format="reference"/>
     <style name="plotStyle">
         <item name="android:layout_width">match_parent</item>
@@ -95,7 +70,7 @@
     </style>
 
     <attr name="cardBackground" format="reference"/>
-    <style name="card.default">
+    <style name="card">
         <item name="cardCornerRadius">@dimen/cardview_default_radius</item>
         <item name="cardElevation">@dimen/cardview_default_elevation</item>
         <item name="cardMaxElevation">@dimen/cardview_default_elevation</item>
@@ -106,13 +81,13 @@
 
     <!--this styles are for toolbars in cards-->
     <attr name="cardToolbarStyle" format="reference"/>
-    <style name="card.toolbar" parent="@style/Theme.AppCompat">
+    <style name="cardToolbar" parent="@style/Theme.AppCompat">
         <item name="colorPrimary">@android:color/transparent</item>
         <item name="colorPrimaryDark">@android:color/transparent</item>
         <item name="colorAccent">@color/accent</item>
     </style>
 
-    <style name="card.toolbar.light" parent="@style/Theme.AppCompat.Light">
+    <style name="cardToolbar.light" parent="@style/Theme.AppCompat.Light">
         <item name="colorPrimary">@android:color/transparent</item>
         <item name="colorPrimaryDark">@android:color/transparent</item>
         <item name="colorAccent">@color/accent</item>

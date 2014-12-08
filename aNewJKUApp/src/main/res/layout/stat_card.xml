@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/card.default"
+    style="@style/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -31,8 +31,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:stretchMode="columnWidth"
-            app:columnCount="1"
             app:alignmentMode="alignBounds"
+            app:columnCount="1"
             app:orientation="vertical"
             app:useDefaultMargins="true" />
 
