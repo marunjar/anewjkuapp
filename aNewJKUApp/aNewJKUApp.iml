@@ -112,6 +112,7 @@
     <orderEntry type="library" exported="" name="mapsforge-map-reader-0.4.3" level="project" />
     <orderEntry type="library" exported="" name="svg-android-0.4.3" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-21.0.2" level="project" />
+    <orderEntry type="module" module-name="android-support-v4-preferencefragment" exported="" />
     <orderEntry type="module" module-name="voidsinkContributors" exported="" />
   </component>
 </module>

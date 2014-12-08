@@ -112,17 +112,10 @@ public class MainActivity extends ThemedActivity implements
         AndroidGraphicFactory.createInstance(this.getApplication());
 
         getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-
             @Override
             public void onBackStackChanged() {
-                Log.i(TAG, String.format("backstack changed: %d", getSupportFragmentManager().getBackStackEntryCount()));
-
-                if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-                    finish();
-                } else {
-                    mTitle = getTitleFromFragment(null);
-                    initActionBar();
-                }
+                mTitle = getTitleFromFragment(null);
+                initActionBar();
             }
         });
 
@@ -244,17 +237,14 @@ public class MainActivity extends ThemedActivity implements
 
     private Fragment attachFragment(Class<? extends Fragment> startFragment, boolean addToBackStack) {
         if (startFragment != null) {
-            Fragment f = null;
             try {
-                f = (Fragment) startFragment.newInstance();
+                Fragment f = startFragment.newInstance();
 
                 if (addToBackStack) {
-                    int entryCount = getSupportFragmentManager().getBackStackEntryCount();
-                    if (entryCount > 0) {
-                        addToBackStack = !getSupportFragmentManager().getBackStackEntryAt(entryCount - 1).getName().equals(f.getClass().getCanonicalName());
-                    }
-                }
+                    Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(ARG_SHOW_FRAGMENT);
 
+                    addToBackStack = (oldFragment != null) && (!oldFragment.getClass().equals(f.getClass()));
+                }
 
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.container, f, ARG_SHOW_FRAGMENT);
@@ -303,6 +293,9 @@ public class MainActivity extends ThemedActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         initActionBar();
+
+        menu.clear();
+        getMenuInflater().inflate(R.menu.main, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
