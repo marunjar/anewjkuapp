@@ -100,9 +100,9 @@ public class StatFragmentDetail extends BaseFragment implements
                 if (mAdapter != null) {
                     mAdapter.clear();
 
-                    mAdapter.add(StatCard.getLvaInstance(mTerms, this.lvas, this.grades));
                     mAdapter.add(StatCard.getGradeInstance(mTerms, this.grades, false, this.positiveOnly));
                     mAdapter.add(StatCard.getGradeInstance(mTerms, this.grades, true, this.positiveOnly));
+                    mAdapter.add(StatCard.getLvaInstance(mTerms, this.lvas, this.grades));
 
                     mAdapter.notifyDataSetChanged();
                 }

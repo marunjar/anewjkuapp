@@ -26,7 +26,7 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
-import org.voidsink.anewjkuapp.view.GridViewWithHeader;
+import org.voidsink.anewjkuapp.view.ListViewWithHeader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,11 +41,11 @@ public class ExamFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_grid_with_header, container, false);
+        View view = inflater.inflate(R.layout.fragment_list_with_header, container, false);
 
-        final GridViewWithHeader mGridView = (GridViewWithHeader) view.findViewById(R.id.gridview);
+        final ListViewWithHeader mListView = (ListViewWithHeader) view.findViewById(R.id.list_with_header);
         mAdapter = new ExamListAdapter(getContext());
-        mGridView.setAdapter(mAdapter);
+        mListView.setAdapter(mAdapter);
 
         return view;
     }

@@ -11,7 +11,9 @@
         <TextView
             android:id="@+id/rss_feed_item_title"
             style="@style/Text.Title"
+            android:minLines="2"
             android:layout_width="match_parent"
+            android:layout_marginBottom="@dimen/separator_top_bottom_margin"
             android:layout_height="wrap_content"
             android:gravity="center_vertical" />
 
@@ -29,9 +31,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/rss_feed_item_title"
+            android:lines="6"
             android:layout_marginRight="@dimen/separator_top_bottom_margin"
             android:layout_toLeftOf="@id/rss_feed_item_image"
-            android:gravity="center_vertical" />
+            android:gravity="top|left" />
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>
