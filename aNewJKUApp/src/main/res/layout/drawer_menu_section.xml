@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="36dp">
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/drawer_section_height">
 
     <TextView
         android:id="@+id/navmenusection_label"
         style="@style/Text.Body2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
         android:gravity="center_vertical"
-        android:textColor="?android:attr/textColorSecondary" />
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="@dimen/text_size_drawer_section" />
 
 </RelativeLayout>

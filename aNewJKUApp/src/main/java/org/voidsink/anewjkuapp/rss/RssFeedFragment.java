@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -20,7 +21,6 @@ import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.rss.lib.FeedEntry;
 import org.voidsink.anewjkuapp.rss.lib.FeedPullParser;
 import org.voidsink.anewjkuapp.utils.Consts;
-import org.voidsink.anewjkuapp.view.GridViewWithHeader;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -57,9 +57,9 @@ public class RssFeedFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_grid_with_header, container, false);
+        View v = inflater.inflate(R.layout.fragment_grid, container, false);
 
-        final GridViewWithHeader mGridView = (GridViewWithHeader) v.findViewById(R.id.gridview);
+        final GridView mGridView = (GridView) v.findViewById(R.id.gridview);
 
         mAdapter = new RssListAdapter(getContext(), mOptions);
         mGridView.setAdapter(mAdapter);

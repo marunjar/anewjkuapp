@@ -25,29 +25,15 @@
             android:scaleType="fitXY"
             android:src="@drawable/person_image_empty" />
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/drawer_user"
+            style="@style/Text.Title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/drawer_user"
-                style="@style/Text.Title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:textColor="@android:color/white" />
-
-            <TextView
-                style="@style/Text.Body2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Matrikelnummer"
-                android:drawablePadding="@dimen/activity_horizontal_margin"
-                android:gravity="center_vertical"
-                android:textColor="@android:color/white" />
-        </LinearLayout>
+            android:gravity="center_vertical"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_drawer_item" />
 
     </LinearLayout>
 
@@ -56,9 +42,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:paddingTop="8dip"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"
+        android:paddingTop="8dip"
         android:scrollbarStyle="outsideOverlay" />
 
 </LinearLayout>
