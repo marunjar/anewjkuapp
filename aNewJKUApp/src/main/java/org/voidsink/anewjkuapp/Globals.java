@@ -70,8 +70,8 @@ public class Globals extends Application {
                     // Make myHandler the new default uncaught exception handler.
                     Thread.setDefaultUncaughtExceptionHandler(myHandler);
 
-                    // enable auto activity tracking
-                    t.enableAutoActivityTracking(true);
+                    // disable auto activity tracking
+                    t.enableAutoActivityTracking(false);
 
                     // try to initialize screen size
                     try {

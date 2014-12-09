@@ -82,4 +82,9 @@ public class RssFeedEntryActivity extends ThemedActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    @Override
+    protected String getScreenName() {
+        return Consts.SCREEN_RSS_FEED_ENTRY;
+    }
 }
