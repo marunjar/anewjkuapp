@@ -14,7 +14,10 @@
             android:id="@+id/stat_card_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="24dp"
+            app:contentInsetEnd="0dp"
+            app:contentInsetLeft="0dp"
+            app:contentInsetRight="0dp"
+            app:contentInsetStart="0dp"
             app:theme="?attr/cardToolbarStyle">
 
             <TextView
@@ -23,7 +26,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical" />
-
         </android.support.v7.widget.Toolbar>
 
         <android.support.v7.widget.GridLayout
@@ -33,8 +35,7 @@
             android:stretchMode="columnWidth"
             app:alignmentMode="alignBounds"
             app:columnCount="1"
-            app:orientation="vertical"
-            app:useDefaultMargins="true" />
+            app:orientation="vertical"/>
 
         <com.androidplot.pie.PieChart
             android:id="@+id/stat_card_diagram_pie"

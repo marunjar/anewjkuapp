@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/separator_top_bottom_margin"
+    android:paddingTop="@dimen/separator_top_bottom_margin">
 
     <TextView
         android:id="@+id/stat_card_lva_list_entry_ects"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:layout_alignParentRight="true"
         android:gravity="center_vertical" />
 
