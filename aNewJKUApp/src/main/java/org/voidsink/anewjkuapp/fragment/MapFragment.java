@@ -308,7 +308,7 @@ public class MapFragment extends BaseFragment implements
         inflater.inflate(R.menu.map, menu);
 
         MenuItem searchItem = menu.findItem(R.id.action_search_poi);
-        mSearchView = (SearchView) searchItem.getActionView();
+        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         setupSearchView(mSearchView);
 
         if (mMyLocationOverlay != null) {
