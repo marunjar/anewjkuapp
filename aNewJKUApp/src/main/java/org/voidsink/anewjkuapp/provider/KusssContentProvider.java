@@ -41,6 +41,13 @@ public class KusssContentProvider extends ContentProvider {
     private static final int CODE_STUDIES = 7;
     private static final int CODE_STUDIES_ID = 8;
 
+    private static final Comparator<String> TermComparator = new Comparator<String>() {
+        @Override
+        public int compare(String lhs, String rhs) {
+            return rhs.compareTo(lhs);
+        }
+    };
+
     private static final UriMatcher sUriMatcher = new UriMatcher(
             UriMatcher.NO_MATCH);
 //	private static final String TAG = KusssContentProvider.class.getSimpleName();
@@ -488,12 +495,7 @@ public class KusssContentProvider extends ContentProvider {
             // get Terms from Data, may take a little bit longer
         }
 
-        Collections.sort(terms, new Comparator<String>() {
-            @Override
-            public int compare(String lhs, String rhs) {
-                return rhs.compareTo(lhs);
-            }
-        });
+        Collections.sort(terms, TermComparator);
 
         return terms;
     }

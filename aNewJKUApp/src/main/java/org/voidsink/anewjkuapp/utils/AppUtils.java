@@ -12,7 +12,6 @@ import android.graphics.EmbossMaskFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.androidplot.pie.PieChart;
@@ -50,6 +49,66 @@ public class AppUtils {
 
     private static final String DEFAULT_POI_FILE_NAME = "JKU.gpx";
     private static final String TAG = AppUtils.class.getSimpleName();
+
+    private static final Comparator<Lva> LvaComparator = new Comparator<Lva>() {
+        @Override
+        public int compare(Lva lhs, Lva rhs) {
+            int value = lhs.getTitle().compareTo(rhs.getTitle());
+            if (value == 0) {
+                value = lhs.getTerm().compareTo(rhs.getTerm());
+            }
+            return value;
+        }
+    };
+
+    private static final Comparator<LvaWithGrade> LvaWithGradeComparator = new Comparator<LvaWithGrade>() {
+        @Override
+        public int compare(LvaWithGrade lhs, LvaWithGrade rhs) {
+            int value = lhs.getState().compareTo(rhs.getState());
+            if (value == 0) {
+                value = lhs.getLva().getTitle()
+                        .compareTo(rhs.getLva().getTitle());
+            }
+            if (value == 0) {
+                value = lhs.getLva().getTerm()
+                        .compareTo(rhs.getLva().getTerm());
+            }
+            return value;
+        }
+    };
+
+    private static final Comparator<Studies> StudiesComparator = new Comparator<Studies>() {
+
+        @Override
+        public int compare(Studies lhs, Studies rhs) {
+            int value = lhs.getUni().compareToIgnoreCase(rhs.getUni());
+            if (value == 0) {
+                value = lhs.getDtStart().compareTo(rhs.getDtStart());
+            }
+            if (value == 0) {
+                value = lhs.getSkz().compareTo(rhs.getSkz());
+            }
+            return value;
+        }
+    };
+
+    private static final Comparator<ExamGrade> ExamGradeComparator = new Comparator<ExamGrade>() {
+        @Override
+        public int compare(ExamGrade lhs, ExamGrade rhs) {
+            int value = lhs.getGradeType().compareTo(rhs.getGradeType());
+            if (value == 0) {
+                value = rhs.getDate().compareTo(lhs.getDate());
+            }
+            if (value == 0) {
+                value = rhs.getTerm().compareTo(lhs.getTerm());
+            }
+            if (value == 0) {
+                value = lhs.getTitle().compareTo(rhs.getTitle());
+            }
+            return value;
+        }
+    };
+
 
     public static void doOnNewVersion(Context context) {
         int mLastVersion = PreferenceWrapper.getLastVersion(context);
@@ -209,57 +268,16 @@ public class AppUtils {
     }
 
     public static void sortLVAs(List<Lva> lvas) {
-        Collections.sort(lvas, new Comparator<Lva>() {
-
-            @Override
-            public int compare(Lva lhs, Lva rhs) {
-                int value = lhs.getTitle().compareTo(rhs.getTitle());
-                if (value == 0) {
-                    value = lhs.getTerm().compareTo(rhs.getTerm());
-                }
-                return value;
-            }
-        });
+        Collections.sort(lvas, LvaComparator);
     }
 
     public static void sortLVAsWithGrade(List<LvaWithGrade> lvas) {
-        Collections.sort(lvas, new Comparator<LvaWithGrade>() {
-
-            @Override
-            public int compare(LvaWithGrade lhs, LvaWithGrade rhs) {
-                int value = lhs.getState().compareTo(rhs.getState());
-                if (value == 0) {
-                    value = lhs.getLva().getTitle()
-                            .compareTo(rhs.getLva().getTitle());
-                }
-                if (value == 0) {
-                    value = lhs.getLva().getTerm()
-                            .compareTo(rhs.getLva().getTerm());
-                }
-                return value;
-            }
-        });
+        Collections.sort(lvas, LvaWithGradeComparator);
 
     }
 
     public static void sortGrades(List<ExamGrade> grades) {
-        Collections.sort(grades, new Comparator<ExamGrade>() {
-
-            @Override
-            public int compare(ExamGrade lhs, ExamGrade rhs) {
-                int value = lhs.getGradeType().compareTo(rhs.getGradeType());
-                if (value == 0) {
-                    value = rhs.getDate().compareTo(lhs.getDate());
-                }
-                if (value == 0) {
-                    value = rhs.getTerm().compareTo(lhs.getTerm());
-                }
-                if (value == 0) {
-                    value = lhs.getTitle().compareTo(rhs.getTitle());
-                }
-                return value;
-            }
-        });
+        Collections.sort(grades, ExamGradeComparator);
     }
 
     public static void removeDuplicates(List<LvaWithGrade> mLvas) {
@@ -575,20 +593,6 @@ public class AppUtils {
     }
 
     public static void sortStudies(List<Studies> mStudies) {
-        Collections.sort(mStudies, new Comparator<Studies>() {
-
-            @Override
-            public int compare(Studies lhs, Studies rhs) {
-                int value = lhs.getUni().compareToIgnoreCase(rhs.getUni());
-                if (value == 0) {
-                    value = lhs.getDtStart().compareTo(rhs.getDtStart());
-                }
-                if (value == 0) {
-                    value = lhs.getSkz().compareTo(rhs.getSkz());
-                }
-                return value;
-            }
-        });
-
+        Collections.sort(mStudies, StudiesComparator);
     }
 }
