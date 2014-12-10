@@ -1,14 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceScreen
+        android:fragment="org.voidsink.anewjkuapp.fragment.SettingsFragment$KusssSettingsFragment"
         android:key="preferences_kusss"
         android:summary="@string/settings_kusss_summary"
-        android:title="@string/settings_kusss_title"
-        android:fragment="org.voidsink.anewjkuapp.fragment.SettingsFragment$KusssSettingsFragment" />
+        android:title="@string/settings_kusss_title">
+
+        <!-- add intent for support of android api <= 10 -->
+        <intent
+            android:action="org.voidsink.anewjkuapp.prefs.LEGACY"
+            android:data="org.voidsink.anewjkuapp.fragment.SettingsFragment$KusssSettingsFragment"
+            android:targetClass="org.voidsink.anewjkuapp.activity.SettingsActivity"
+            android:targetPackage="org.voidsink.anewjkuapp"></intent>
+
+    </PreferenceScreen>
 
     <PreferenceScreen
+        android:fragment="org.voidsink.anewjkuapp.fragment.SettingsFragment$AppSettingsFragment"
         android:key="preferences_app"
         android:summary="@string/settings_app_summary"
-        android:title="@string/settings_app_title"
-        android:fragment="org.voidsink.anewjkuapp.fragment.SettingsFragment$AppSettingsFragment"/>
+        android:title="@string/settings_app_title">
+
+        <!-- add intent for support of android api <= 10 -->
+        <intent
+            android:action="org.voidsink.anewjkuapp.prefs.LEGACY"
+            android:data="org.voidsink.anewjkuapp.fragment.SettingsFragment$AppSettingsFragment"
+            android:targetClass="org.voidsink.anewjkuapp.activity.SettingsActivity"
+            android:targetPackage="org.voidsink.anewjkuapp"></intent>
+    </PreferenceScreen>
 </PreferenceScreen>

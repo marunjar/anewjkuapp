@@ -7,26 +7,63 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.preference.PreferenceFragment;
 import android.support.v7.app.ActionBar;
 
 import org.voidsink.anewjkuapp.ImportExamTask;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.base.ThemedActivity;
 import org.voidsink.anewjkuapp.fragment.SettingsFragment;
-import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
-import org.voidsink.anewjkuapp.utils.Consts;
 
 public class SettingsActivity extends ThemedActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
+    public static final String ACTION_PREFS_LEGACY = "org.voidsink.anewjkuapp.prefs.LEGACY";
+    public static final String ARG_SHOW_FRAGMENT = "show_fragment";
     private boolean mThemeChanged = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getSupportFragmentManager().beginTransaction().add(android.R.id.content,
-                new SettingsFragment()).commit();
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(ARG_SHOW_FRAGMENT);
+        if (fragment == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(android.R.id.content, new SettingsFragment(), ARG_SHOW_FRAGMENT)
+                    .commit();
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        if (intent != null && ACTION_PREFS_LEGACY.equals(intent.getAction())) {
+            Fragment fragment = null;
+            try {
+                String clazzname = intent.getDataString();
+                if (clazzname != null) {
+                    Class<?> clazz = getClassLoader().loadClass(clazzname);
+                    if (PreferenceFragment.class.isAssignableFrom(clazz)) {
+                        fragment = (Fragment) clazz.newInstance();
+                    }
+                }
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            if (fragment != null) {
+                Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(ARG_SHOW_FRAGMENT);
+                if (oldFragment == null || !fragment.getClass().equals(oldFragment.getClass())) {
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(android.R.id.content, fragment, ARG_SHOW_FRAGMENT)
+                            .addToBackStack(fragment.getClass().getCanonicalName())
+                            .commit();
+                }
+            }
+        }
     }
 
     @Override
