@@ -96,11 +96,6 @@ public class RssFeedFragment extends BaseFragment {
         }
     }
 
-    @Override
-    protected String getScreenName() {
-        return Consts.SCREEN_RSS_FEED;
-    }
-
     private class LoadFeedTask extends AsyncTask<Void, Void, Void> {
 
         private List<FeedEntry> mFeed = null;

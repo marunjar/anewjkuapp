@@ -1,12 +1,15 @@
 package org.voidsink.anewjkuapp.fragment;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.support.v4.app.Fragment;
 import android.support.v4.preference.PreferenceFragment;
 
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.activity.SettingsActivity;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.Consts;
 
@@ -29,16 +32,22 @@ public class SettingsFragment extends PreferenceFragment {
     @Override
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
         if (preference instanceof PreferenceScreen) {
-            if (preference.getFragment() != null) {
-                try {
-                    Class<?> clazz = getActivity().getClassLoader().loadClass(preference.getFragment());
-                    if (PreferenceFragment.class.isAssignableFrom(clazz)) {
-                        PreferenceFragment pf = (PreferenceFragment) clazz.newInstance();
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(android.R.id.content, pf).addToBackStack(clazz.getCanonicalName()).commit();
-                        return true;
+            if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
+                if (preference.getFragment() != null) {
+                    try {
+                        Class<?> clazz = getActivity().getClassLoader().loadClass(preference.getFragment());
+                        if (PreferenceFragment.class.isAssignableFrom(clazz)) {
+                            Fragment pf = (Fragment) clazz.newInstance();
+                            getActivity().getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(android.R.id.content, pf, SettingsActivity.ARG_SHOW_FRAGMENT)
+                                    .addToBackStack(pf.getClass().getCanonicalName())
+                                    .commit();
+                            return true;
+                        }
+                    } catch (ClassNotFoundException | java.lang.InstantiationException | IllegalAccessException e) {
+                        e.printStackTrace();
                     }
-                } catch (ClassNotFoundException | java.lang.InstantiationException | IllegalAccessException e) {
-                    e.printStackTrace();
                 }
             }
         }

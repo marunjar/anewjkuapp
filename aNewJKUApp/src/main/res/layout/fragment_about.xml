@@ -53,38 +53,29 @@
         style="@style/Text.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/about_changelog"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/selectable_background_apptheme"
-        android:padding="10dp"
-        android:text="@string/about_credits_title"
-
-        android:textColor="?android:attr/textColorSecondary" />
-
-    <Button
-        android:id="@id/about_changelog"
-        style="@style/Text.Button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:layout_above="@+id/about_libraries"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/selectable_background_apptheme"
-        android:padding="10dp"
-        android:text="@string/action_changelog"
-        android:textColor="?android:attr/textColorSecondary" />
-
-    <Button
-        android:id="@id/about_libraries"
-        style="@style/Text.Button"
-        android:layout_width="match_parent"
-
-        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="10dp"
         android:background="@drawable/selectable_background_apptheme"
         android:padding="10dp"
-        android:text="@string/about_libraries_title"
-        android:textColor="?android:attr/textColorSecondary" />
+        android:text="@string/about_credits_title" />
+
+    <Button
+        android:id="@+id/about_libraries"
+        style="@style/Text.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/about_credits"
+        android:background="@drawable/selectable_background_apptheme"
+        android:padding="10dp"
+        android:text="@string/about_libraries_title" />
+
+    <Button
+        android:id="@+id/about_changelog"
+        style="@style/Text.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/about_libraries"
+        android:background="@drawable/selectable_background_apptheme"
+        android:padding="10dp"
+        android:text="@string/action_changelog" />
 
 </RelativeLayout>

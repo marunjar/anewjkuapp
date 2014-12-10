@@ -21,4 +21,10 @@ public class OehNewsFragment extends SlidingTabsFragment {
         mTabs.add(new RssFeedTab(getString(R.string.feed_title_tnf), Consts.FEED_ID_TNF, Consts.FEED_URL_TNF));
         mTabs.add(new RssFeedTab(getString(R.string.feed_title_med), Consts.FEED_ID_MED, Consts.FEED_URL_MED));
     }
+
+    @Override
+    protected String getScreenName() {
+        return Consts.SCREEN_RSS_FEED;
+    }
+
 }

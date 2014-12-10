@@ -208,7 +208,7 @@ public class NavigationDrawerFragment extends BaseFragment {
         // GravityCompat.START);
         // set up the drawer's list view with items and click listener
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
 
@@ -341,7 +341,7 @@ public class NavigationDrawerFragment extends BaseFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private ActionBar getActionBar() {
+    private ActionBar getSupportActionBar() {
         return ((ActionBarActivity) getActivity()).getSupportActionBar();
     }
 

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 import android.accounts.Account;
@@ -43,48 +44,51 @@ public final class CalendarUtils {
 
 	public static Uri createCalendar(Context context, Account account,
 			String name, int color) {
-		Log.d(TAG, "create calendar: " + name);
+        try {
+            String accountName = account.name;
+            String accountType = account.type;
 
-		String accountName = account.name;
-		String accountType = account.type;
+            String displayName = getCalendarName(context, name);
 
-		String displayName = getCalendarName(context, name);
+            Uri target = KusssAuthenticator.asCalendarSyncAdapter(
+                    CalendarContractWrapper.Calendars.CONTENT_URI(), accountName,
+                    accountType);
 
-		Uri target = KusssAuthenticator.asCalendarSyncAdapter(
-				CalendarContractWrapper.Calendars.CONTENT_URI(), accountName,
-				accountType);
+            ContentValues values = new ContentValues();
+            values.put(CalendarContractWrapper.Calendars.OWNER_ACCOUNT(),
+                    accountName);
+            values.put(CalendarContractWrapper.Calendars.ACCOUNT_NAME(),
+                    accountName);
+            values.put(CalendarContractWrapper.Calendars.ACCOUNT_TYPE(),
+                    accountType);
+            values.put(CalendarContractWrapper.Calendars.NAME(), name);
+            values.put(CalendarContractWrapper.Calendars.CALENDAR_DISPLAY_NAME(),
+                    displayName);
+            values.put(CalendarContractWrapper.Calendars.CALENDAR_COLOR(), color);
+            // read only, CAL_ACCESS_OWNER() will be editable but is it useful?
+            values.put(CalendarContractWrapper.Calendars.CALENDAR_ACCESS_LEVEL(),
+                    CalendarContractWrapper.Calendars.CAL_ACCESS_READ());
 
-		ContentValues values = new ContentValues();
-		values.put(CalendarContractWrapper.Calendars.OWNER_ACCOUNT(),
-				accountName);
-		values.put(CalendarContractWrapper.Calendars.ACCOUNT_NAME(),
-				accountName);
-		values.put(CalendarContractWrapper.Calendars.ACCOUNT_TYPE(),
-				accountType);
-		values.put(CalendarContractWrapper.Calendars.NAME(), name);
-		values.put(CalendarContractWrapper.Calendars.CALENDAR_DISPLAY_NAME(),
-				displayName);
-		values.put(CalendarContractWrapper.Calendars.CALENDAR_COLOR(), color);
-		// read only, CAL_ACCESS_OWNER() will be editable but is it useful?
-		values.put(CalendarContractWrapper.Calendars.CALENDAR_ACCESS_LEVEL(),
-				CalendarContractWrapper.Calendars.CAL_ACCESS_READ());
+            values.put(CalendarContractWrapper.Calendars.SYNC_EVENTS(), 1);
 
-		values.put(CalendarContractWrapper.Calendars.SYNC_EVENTS(), 1);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                values.put(CalendarContractWrapper.Calendars.VISIBLE(), 1);
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-			values.put(CalendarContractWrapper.Calendars.VISIBLE(), 1);
+                values.put(
+                        CalendarContractWrapper.Calendars.CAN_PARTIALLY_UPDATE(), 0);
 
-			values.put(
-					CalendarContractWrapper.Calendars.CAN_PARTIALLY_UPDATE(), 0);
+                values.put(
+                        CalendarContractWrapper.Calendars.ALLOWED_ATTENDEE_TYPES(),
+                        CalendarContractWrapper.Attendees.TYPE_NONE());
+            }
 
-			values.put(
-					CalendarContractWrapper.Calendars.ALLOWED_ATTENDEE_TYPES(),
-					CalendarContractWrapper.Attendees.TYPE_NONE());
-		}
+            Uri newCalendar = context.getContentResolver().insert(target, values);
 
-		Uri newCalendar = context.getContentResolver().insert(target, values);
-
-		return newCalendar;
+            return newCalendar;
+        } catch (Exception e) {
+            Analytics.sendException(context, e, true, name);
+            return null;
+        }
 	}
 
 	private static boolean createCalendarIfNecessary(Context context,

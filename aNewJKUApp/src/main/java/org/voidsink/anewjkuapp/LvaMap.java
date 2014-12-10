@@ -15,6 +15,14 @@ import android.database.Cursor;
 
 public class LvaMap {
 
+    private static final Comparator<Lva> LvaTermComparator = new Comparator<Lva>() {
+        @Override
+        public int compare(Lva lhs, Lva rhs) {
+            // sort lvas by term desc
+            return rhs.getTerm().compareTo(lhs.getTerm());
+        }
+    };
+
 	private Map<String, Lva> map;
 
 	public LvaMap(Context context) {
@@ -56,13 +64,7 @@ public class LvaMap {
 			return null;
 		}
 
-		Collections.sort(lvas, new Comparator<Lva>() {
-			@Override
-			public int compare(Lva lhs, Lva rhs) {
-				// sort by term desc
-				return rhs.getTerm().compareTo(lhs.getTerm());
-			}
-		});
+		Collections.sort(lvas, LvaTermComparator);
 		return lvas.get(0);
 	}
 	
