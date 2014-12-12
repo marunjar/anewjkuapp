@@ -8,8 +8,8 @@ android {
     buildToolsVersion "21.1.1"
     defaultConfig {
         applicationId "org.voidsink.anewjkuapp"
-        versionCode 140027
-        versionName "0.27"
+        versionCode 140028
+        versionName "0.28"
         minSdkVersion 14
         targetSdkVersion 21
     }
