@@ -18,6 +18,7 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.base.ListWithHeaderAdapter;
 import org.voidsink.anewjkuapp.fragment.MapFragment;
+import org.voidsink.anewjkuapp.utils.UIUtils;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -115,26 +116,9 @@ public class CalendarEventAdapter extends ListWithHeaderAdapter<CalendarListItem
 
         eventItemHolder.title.setText(eventItem.getTitle());
 
-        if (eventItem.getDescr().isEmpty()) {
-            eventItemHolder.descr.setVisibility(View.GONE);
-        } else {
-            eventItemHolder.descr.setVisibility(View.VISIBLE);
-            eventItemHolder.descr.setText(eventItem.getDescr());
-        }
-
-        if (eventItem.getTime().isEmpty()) {
-            eventItemHolder.time.setVisibility(View.GONE);
-        } else {
-            eventItemHolder.time.setVisibility(View.VISIBLE);
-            eventItemHolder.time.setText(eventItem.getTime());
-        }
-
-        if (eventItem.getLocation().isEmpty()) {
-            eventItemHolder.location.setVisibility(View.GONE);
-        } else {
-            eventItemHolder.location.setVisibility(View.VISIBLE);
-            eventItemHolder.location.setText(eventItem.getLocation());
-        }
+        UIUtils.setTextAndVisibility(eventItemHolder.descr, eventItem.getDescr());
+        UIUtils.setTextAndVisibility(eventItemHolder.time, eventItem.getTime());
+        UIUtils.setTextAndVisibility(eventItemHolder.location, eventItem.getLocation());
 
         return convertView;
     }

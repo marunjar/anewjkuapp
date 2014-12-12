@@ -159,7 +159,7 @@ public final class CalendarContractWrapper {
 				return "_id";
 			}
 		}
-		
+
 		public static String ALLOWED_ATTENDEE_TYPES() {
 			if (useSDK()) {
 				return CalendarContract.Calendars.ALLOWED_ATTENDEE_TYPES;
@@ -169,17 +169,17 @@ public final class CalendarContractWrapper {
 		}
 
 	}
-	
+
 	public static class Attendees {
 
 		public static int TYPE_NONE() {
 			if (useSDK()) {
-				return CalendarContract.Attendees.TYPE_NONE; 
+				return CalendarContract.Attendees.TYPE_NONE;
 			} else {
 				return 0;
 			}
 		}
-		
+
 	}
 
 	public static class Events {
@@ -256,6 +256,14 @@ public final class CalendarContractWrapper {
 				return "_sync_id";
 			}
 		}
+
+        public static String SYNC_LOCAL_ID() {
+            if (useSDK()) {
+                return CalendarContract.Events.SYNC_DATA2; // sync_data2 : _sync_local_id
+            } else {
+                return "_sync_local_id";
+            }
+        }
 
 		public static String DIRTY() {
 			if (useSDK()) {

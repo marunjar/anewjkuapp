@@ -12,6 +12,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import org.apache.commons.lang.time.DateUtils;
+
+import android.text.TextUtils;
 import android.util.Log;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
@@ -73,10 +75,11 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
             CalendarContractWrapper.Events.DESCRIPTION(), // VEvent.getDescription()
             CalendarContractWrapper.Events.DTSTART(), // VEvent.getStartDate()
             CalendarContractWrapper.Events.DTEND(), // VEvent.getEndDate()
-            CalendarContractWrapper.Events._SYNC_ID(), // VEvent.getUID()
+            CalendarContractWrapper.Events.SYNC_LOCAL_ID(), // VEvent.getUID()
             CalendarContractWrapper.Events.DIRTY(),
             CalendarContractWrapper.Events.DELETED(),
-            CalendarContractWrapper.Events.CALENDAR_ID()};
+            CalendarContractWrapper.Events.CALENDAR_ID(),
+            CalendarContractWrapper.Events._SYNC_ID()};
 
     // Constants representing column positions from PROJECTION.
     public static final int COLUMN_EVENT_ID = 0;
@@ -89,6 +92,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
     public static final int COLUMN_EVENT_DIRTY = 7;
     public static final int COLUMN_EVENT_DELETED = 8;
     public static final int COLUMN_EVENT_CAL_ID = 9;
+    public static final int COLUMN_EVENT_KUSSS_ID_LEGACY = 10;
 
     public ImportCalendarTask(Account account, Context context,
                               String getTypeID, CalendarBuilder calendarBuilder) {
@@ -142,7 +146,6 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                     CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
 
             try {
-
                 Log.d(TAG, "setup connection");
 
                 if (KusssHandler.getInstance().isAvailable(mContext,
@@ -292,11 +295,16 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                             while (c.moveToNext()) {
                                 mSyncResult.stats.numEntries++;
                                 eventId = c.getString(COLUMN_EVENT_ID);
+
                                 eventKusssId = c
                                         .getString(COLUMN_EVENT_KUSSS_ID);
+                                if (TextUtils.isEmpty(eventKusssId)){
+                                    eventKusssId = c.getString(COLUMN_EVENT_KUSSS_ID_LEGACY);
+                                }
+                                eventTitle = c.getString(COLUMN_EVENT_TITLE);
+
                                 eventLocation = c
                                         .getString(COLUMN_EVENT_LOCATION);
-                                eventTitle = c.getString(COLUMN_EVENT_TITLE);
                                 eventDescription = c
                                         .getString(COLUMN_EVENT_DESCRIPTION);
                                 eventDTStart = c.getLong(COLUMN_EVENT_DTSTART);
@@ -306,7 +314,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                                 eventDeleted = "1".equals(c
                                         .getString(COLUMN_EVENT_DELETED));
 
-                                if (eventKusssId != null) {
+                                if (eventKusssId != null && eventKusssId.startsWith("at-jku-kusss-")) {
                                     VEvent match = eventsMap.get(eventKusssId);
                                     if (match != null && !eventDeleted) {
                                         // Entry exists. Remove from entry
@@ -391,10 +399,9 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                                                         + eventDTStart
                                                         + " > "
                                                         + (mSyncFromNow - DateUtils.MILLIS_PER_DAY));
-                                        if (eventDeleted
-                                                || ((eventKusssId != null)
-                                                && (!eventKusssId
-                                                .isEmpty()) && (eventDTStart > (mSyncFromNow - DateUtils.MILLIS_PER_DAY)))) {
+                                        if (eventDeleted ||
+                                                ((!TextUtils.isEmpty(eventKusssId)) &&
+                                                        (eventDTStart > (mSyncFromNow - DateUtils.MILLIS_PER_DAY)))) {
                                             // Entry doesn't exist. Remove
                                             // only newer events from the
                                             // database.
@@ -430,9 +437,9 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                                     }
                                 } else {
                                     Log.i(TAG,
-                                            "SyncID not set, ignore event: dirty="
-                                                    + eventDirty + " title="
-                                                    + eventTitle);
+                                            "Event UID not set, ignore event: uid=" + eventKusssId
+                                                    + " dirty=" + eventDirty
+                                                    + " title=" + eventTitle);
                                 }
                             }
                             c.close();
@@ -480,6 +487,10 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                                         .withValue(
                                                 CalendarContractWrapper.Events
                                                         ._SYNC_ID(),
+                                                v.getUid().getValue())
+                                        .withValue(
+                                                CalendarContractWrapper.Events
+                                                        .SYNC_LOCAL_ID(),
                                                 v.getUid().getValue())
                                         .withValue(
                                                 CalendarContractWrapper.Events

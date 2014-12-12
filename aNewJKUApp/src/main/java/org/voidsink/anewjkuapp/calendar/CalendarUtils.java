@@ -65,9 +65,14 @@ public final class CalendarUtils {
             values.put(CalendarContractWrapper.Calendars.CALENDAR_DISPLAY_NAME(),
                     displayName);
             values.put(CalendarContractWrapper.Calendars.CALENDAR_COLOR(), color);
-            // read only, CAL_ACCESS_OWNER() will be editable but is it useful?
-            values.put(CalendarContractWrapper.Calendars.CALENDAR_ACCESS_LEVEL(),
-                    CalendarContractWrapper.Calendars.CAL_ACCESS_READ());
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                values.put(CalendarContractWrapper.Calendars.CALENDAR_ACCESS_LEVEL(),
+                        CalendarContractWrapper.Calendars.CAL_ACCESS_OWNER());
+            } else {
+                values.put(CalendarContractWrapper.Calendars.CALENDAR_ACCESS_LEVEL(),
+                        CalendarContractWrapper.Calendars.CAL_ACCESS_READ());
+            }
 
             values.put(CalendarContractWrapper.Calendars.SYNC_EVENTS(), 1);
 
