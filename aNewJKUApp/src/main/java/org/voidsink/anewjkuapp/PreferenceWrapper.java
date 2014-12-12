@@ -38,24 +38,28 @@ public final class PreferenceWrapper {
 
     public static final String PREF_MAP_FILE = "pref_key_map_file";
     public static final String PREF_MAP_FILE_DEFAULT = "";
-
-    private static final String PREF_LAST_FRAGMENT = "pref_key_last_fragment";
     public static final String PREF_LAST_FRAGMENT_DEFAULT = "";
-
     public static final String PREF_GET_NEW_EXAMS = "pref_key_get_exams_from_lva";
-    private static final boolean PREF_GET_NEW_EXAMS_DEFAULT = false;
-
-    private static final String PREF_LAST_VERSION = "pref_key_last_version";
     public static final int PREF_LAST_VERSION_NONE = -1;
-
     public static final String PREF_USE_LVA_BAR_CHART = "pref_key_use_lva_bar_chart";
-    private static final boolean PREF_USE_LVA_BAR_CHART_DEFAULT = false;
-
     public static final String PREF_MENSA_GROUP_MENU_BY_DAY = "pref_key_group_menu_by_day";
-    private static final boolean PREF_MENSA_GROUP_MENU_BY_DAY_DEFAULT = false;
-
     public static final String PREF_POSITIVE_GRADES_ONLY = "pref_key_positive_grades_only";
+    private static final String PREF_LAST_FRAGMENT = "pref_key_last_fragment";
+    private static final boolean PREF_GET_NEW_EXAMS_DEFAULT = false;
+    private static final String PREF_LAST_VERSION = "pref_key_last_version";
+    private static final boolean PREF_USE_LVA_BAR_CHART_DEFAULT = false;
+    private static final boolean PREF_MENSA_GROUP_MENU_BY_DAY_DEFAULT = false;
     private static final boolean PREF_POSITIVE_GRADES_ONLY_DEFAULT = false;
+
+    private static final String PREF_EXTEND_CALENDAR_LVA = "pref_key_extend_calendar_lva";
+    private static final boolean PREF_EXTEND_CALENDAR_LVA_DEFAULT = false;
+    private static final String PREF_EXTENDED_CALENDAR_LVA = "pref_key_extended_calendar_lva";
+    private static final String PREF_EXTENDED_CALENDAR_LVA_DEFAULT = null;
+
+    private static final String PREF_EXTEND_CALENDAR_EXAM = "pref_key_extend_calendar_exam";
+    private static final boolean PREF_EXTEND_CALENDAR_EXAM_DEFAULT = false;
+    private static final String PREF_EXTENDED_CALENDAR_EXAM = "pref_key_extended_calendar_exam";
+    private static final String PREF_EXTENDED_CALENDAR_EXAM_DEFAULT = null;
 
     private PreferenceWrapper() {
 
@@ -271,7 +275,6 @@ public final class PreferenceWrapper {
         }
     }
 
-
     public static boolean getGroupMenuByDay(Context mContext) {
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(mContext);
@@ -284,5 +287,59 @@ public final class PreferenceWrapper {
         }
     }
 
+    public static boolean useDefaultExamCalendarId(Context context) {
+        try {
+            SharedPreferences sp = PreferenceManager
+                    .getDefaultSharedPreferences(context);
 
+            return !sp.getBoolean(PREF_EXTEND_CALENDAR_EXAM,
+                    PREF_EXTEND_CALENDAR_EXAM_DEFAULT);
+        } catch (Exception e) {
+            Log.e(TAG, "Failure", e);
+            return !PREF_EXTEND_CALENDAR_EXAM_DEFAULT;
+        }
+    }
+
+    public static String getExamCalendarId(Context context) {
+        if (useDefaultExamCalendarId(context))
+            return null;
+
+        try {
+            SharedPreferences sp = PreferenceManager
+                    .getDefaultSharedPreferences(context);
+
+            return sp.getString(PREF_EXTENDED_CALENDAR_EXAM, PREF_EXTENDED_CALENDAR_EXAM_DEFAULT);
+        } catch (Exception e) {
+            Log.e(TAG, "Failure", e);
+            return PREF_EXTENDED_CALENDAR_EXAM_DEFAULT;
+        }
+    }
+
+    public static boolean useDefaultLvaCalendarId(Context context) {
+        try {
+            SharedPreferences sp = PreferenceManager
+                    .getDefaultSharedPreferences(context);
+
+            return !sp.getBoolean(PREF_EXTEND_CALENDAR_LVA,
+                    PREF_EXTEND_CALENDAR_LVA_DEFAULT);
+        } catch (Exception e) {
+            Log.e(TAG, "Failure", e);
+            return !PREF_EXTEND_CALENDAR_LVA_DEFAULT;
+        }
+    }
+
+    public static String getLvaCalendarId(Context context) {
+        if (useDefaultLvaCalendarId(context))
+            return null;
+
+        try {
+            SharedPreferences sp = PreferenceManager
+                    .getDefaultSharedPreferences(context);
+
+            return sp.getString(PREF_EXTENDED_CALENDAR_LVA, PREF_EXTENDED_CALENDAR_LVA_DEFAULT);
+        } catch (Exception e) {
+            Log.e(TAG, "Failure", e);
+            return PREF_EXTENDED_CALENDAR_LVA_DEFAULT;
+        }
+    }
 }

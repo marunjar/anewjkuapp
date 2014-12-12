@@ -249,7 +249,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                         }
 
                         String calendarId = CalendarUtils.getCalIDByName(
-                                mContext, mAccount, mCalendarName);
+                                mContext, mAccount, mCalendarName, true);
 
                         if (calendarId == null) {
                             return null;

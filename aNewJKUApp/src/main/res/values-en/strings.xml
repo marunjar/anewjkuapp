@@ -182,4 +182,6 @@
     <string name="grade_gb">Pass</string>
     <string name="grade_gab">Passed with distinction</string>
     <string name="grade_get">Successful participation</string>
+    <string name="settings_timetable_title">Timetable</string>
+    <string name="settings_timetable_summary">Timetable and calendar settings</string>
 </resources>

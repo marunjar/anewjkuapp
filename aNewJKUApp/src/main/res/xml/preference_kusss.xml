@@ -13,13 +13,6 @@
             android:summary="@string/pref_kusss_sync_interval_summary"
             android:title="@string/pref_kusss_sync_interval_title" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_cat_kusss_calendar" >
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="pref_key_notify_calendar"
-            android:summary="@string/pref_kusss_calendar_notify_summary"
-            android:title="@string/pref_kusss_notify_title" />
-    </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_cat_kusss_grade" >
         <CheckBoxPreference
             android:defaultValue="true"

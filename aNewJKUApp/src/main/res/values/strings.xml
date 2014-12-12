@@ -94,6 +94,10 @@
     <string name="pref_cat_kusss_calendar">Stundenplan</string>
     <string name="pref_kusss_calendar_sync_summary">Alle LVA-Termine vom aktuellen Semester synchronisieren</string>
     <string name="pref_kusss_calendar_notify_summary">Benachrichtigen wenn sich Termine geändert haben</string>
+    <string name="pref_kusss_calendar_extend_title">Kalender erweitern</string>
+    <string name="pref_kusss_calendar_extend_summary">alle Termine werden in einen bestehenden Kalender importiert</string>
+    <string name="pref_kusss_calendar_extended_title">Kalender</string>
+    <string name="pref_kusss_calendar_extended_summary">der Kalender in den die Termine importiert werden</string>
     <string name="pref_cat_kusss_grade">Noten</string>
     <string name="pref_kusss_grade_sync_summary">Noten synchronisieren</string>
     <string name="pref_kusss_grade_notify_summary">Benachrichtigen wenn neue Noten vorhanden sind</string>
@@ -125,6 +129,8 @@
     <string name="settings_kusss_summary">Einstellungen für KUSSS</string>
     <string name="settings_app_title">App</string>
     <string name="settings_app_summary">Einstellungen für App</string>
+    <string name="settings_timetable_title">Stundenplan</string>
+    <string name="settings_timetable_summary">Einstellungen für Stundenplan und verwendete Kalender</string>
 
     <string name="about_app_summary">Das ist eine neue JKU, KUSSS, ÖH, ... App für Studenten der JKU Linz.\n\nDie App ist noch in Entwicklung und die am meisten benötigten Funktionen sind bereits implementiert.\n\nWenn Sie Fragen, Probleme oder Wünsche haben, schreiben Sie eine E-Mail an die Entwickler!\nBesitzer eines GitHub-Accounts können auch einfach hier posten: https://github.com/marunjar/anewjkuapp/issues </string>
     <string name="about_libraries_title">verwendete Bibliotheken</string>

@@ -2,9 +2,6 @@ package org.voidsink.anewjkuapp.utils;
 
 import android.graphics.Color;
 
-/**
- * Created by paul on 05.11.2014.
- */
 public class Consts {
 
     public static final int COLOR_DEFAULT_EXAM = Color.rgb(240, 149, 0);
@@ -44,6 +41,8 @@ public class Consts {
     public static final String SCREEN_SETTINGS = "/settings";
     public static final String SCREEN_SETTINGS_KUSSS = "/settings/kusss";
     public static final String SCREEN_SETTINGS_APP = "/settings/app";
+    public static final String SCREEN_SETTINGS_TIMETABLE = "/settings/timetable";
+
 
     public static final String SCREEN_SETTINGS_DASHCLOCK = "/settings/dashclock";
     public static final String SCREEN_LOGIN = "/login";

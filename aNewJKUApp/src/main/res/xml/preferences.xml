@@ -16,6 +16,22 @@
     </PreferenceScreen>
 
     <PreferenceScreen
+        android:fragment="org.voidsink.anewjkuapp.fragment.SettingsFragment$TimetableSettingsFragment"
+        android:key="preferences_timetable"
+        android:summary="@string/settings_timetable_summary"
+        android:title="@string/settings_timetable_title">
+
+        <!-- add intent for support of android api <= 10 -->
+        <intent
+            android:action="org.voidsink.anewjkuapp.prefs.LEGACY"
+            android:data="org.voidsink.anewjkuapp.fragment.SettingsFragment$TimetableSettingsFragment"
+            android:targetClass="org.voidsink.anewjkuapp.activity.SettingsActivity"
+            android:targetPackage="org.voidsink.anewjkuapp"></intent>
+
+    </PreferenceScreen>
+
+
+    <PreferenceScreen
         android:fragment="org.voidsink.anewjkuapp.fragment.SettingsFragment$AppSettingsFragment"
         android:key="preferences_app"
         android:summary="@string/settings_app_summary"

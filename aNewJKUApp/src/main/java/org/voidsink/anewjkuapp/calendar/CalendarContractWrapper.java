@@ -103,7 +103,43 @@ public final class CalendarContractWrapper {
 			}
 		}
 
-		public static int CAL_ACCESS_READ() {
+        public static int CAL_ACCESS_CONTRIBUTOR() {
+            if (useSDK()) {
+                return CalendarContract.Calendars.CAL_ACCESS_CONTRIBUTOR;
+            }
+            return 500;
+        }
+
+        public static int CAL_ACCESS_EDITOR() {
+            if (useSDK()) {
+                return CalendarContract.Calendars.CAL_ACCESS_EDITOR;
+            }
+            return 600;
+        }
+
+        public static int CAL_ACCESS_FREEBUSY() {
+            if (useSDK()) {
+                return CalendarContract.Calendars.CAL_ACCESS_FREEBUSY;
+            }
+            return 100;
+        }
+
+        public static int CAL_ACCESS_NONE() {
+            if (useSDK()) {
+                return CalendarContract.Calendars.CAL_ACCESS_NONE;
+            }
+            return 0;
+        }
+
+        public static int CAL_ACCESS_OWNER() {
+            if (useSDK()) {
+                return CalendarContract.Calendars.CAL_ACCESS_OWNER;
+            } else {
+                return 700;
+            }
+        }
+
+        public static int CAL_ACCESS_READ() {
 			if (useSDK()) {
 				return CalendarContract.Calendars.CAL_ACCESS_READ;
 			} else {
@@ -111,13 +147,21 @@ public final class CalendarContractWrapper {
 			}
 		}
 
-		public static int CAL_ACCESS_OWNER() {
-			if (useSDK()) {
-				return CalendarContract.Calendars.CAL_ACCESS_OWNER;
-			} else {
-				return 700;
-			}
-		}
+        public static int CAL_ACCESS_RESPOND() {
+            if (useSDK()) {
+                return CalendarContract.Calendars.CAL_ACCESS_RESPOND;
+            } else {
+                return 300;
+            }
+        }
+
+        public static int CAL_ACCESS_ROOT() {
+            if (useSDK()) {
+                return CalendarContract.Calendars.CAL_ACCESS_ROOT;
+            } else {
+                return 800;
+            }
+        }
 
 		public static String VISIBLE() {
 			if (useSDK()) {

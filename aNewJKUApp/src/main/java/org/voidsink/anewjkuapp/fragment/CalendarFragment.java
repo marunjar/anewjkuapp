@@ -184,9 +184,9 @@ public class CalendarFragment extends BaseFragment {
                 }
 
                 String calIDLva = CalendarUtils.getCalIDByName(mContext,
-                        mAccount, CalendarUtils.ARG_CALENDAR_LVA);
+                        mAccount, CalendarUtils.ARG_CALENDAR_LVA, true);
                 String calIDExam = CalendarUtils.getCalIDByName(mContext,
-                        mAccount, CalendarUtils.ARG_CALENDAR_EXAM);
+                        mAccount, CalendarUtils.ARG_CALENDAR_EXAM, true);
 
                 if (calIDLva == null || calIDExam == null) {
                     Log.w(TAG, "no events loaded, calendars not found");

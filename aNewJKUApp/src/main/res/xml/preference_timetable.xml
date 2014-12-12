@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/pref_cat_kusss_calendar">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_key_notify_calendar"
+            android:summary="@string/pref_kusss_calendar_notify_summary"
+            android:title="@string/pref_kusss_notify_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/calendar_title_lva">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_key_extend_calendar_lva"
+            android:summary="@string/pref_kusss_calendar_extend_summary"
+            android:title="@string/pref_kusss_calendar_extend_title" />
+
+        <ListPreference
+            android:dependency="pref_key_extend_calendar_lva"
+            android:key="pref_key_extended_calendar_lva"
+            android:summary="@string/pref_kusss_calendar_extended_summary"
+            android:title="@string/pref_kusss_calendar_extended_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/calendar_title_exam">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_key_extend_calendar_exam"
+            android:summary="@string/pref_kusss_calendar_extend_summary"
+            android:title="@string/pref_kusss_calendar_extend_title" />
+
+        <ListPreference
+            android:dependency="pref_key_extend_calendar_exam"
+            android:key="pref_key_extended_calendar_exam"
+            android:summary="@string/pref_kusss_calendar_extended_summary"
+            android:title="@string/pref_kusss_calendar_extended_title" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
