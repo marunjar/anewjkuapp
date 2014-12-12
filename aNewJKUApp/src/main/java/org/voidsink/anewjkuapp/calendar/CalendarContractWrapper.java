@@ -381,5 +381,13 @@ public final class CalendarContractWrapper {
 				return "deleted";
 			}
 		}
-	}
+
+        public static String SYNC_ID_CUSTOM() {
+            if (useSDK()) {
+                return CalendarContract.Events.SYNC_DATA10;
+            } else {
+                return SYNC_LOCAL_ID();
+            }
+        }
+    }
 }

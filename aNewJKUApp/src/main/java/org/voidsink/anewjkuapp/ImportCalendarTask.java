@@ -75,7 +75,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
             CalendarContractWrapper.Events.DESCRIPTION(), // VEvent.getDescription()
             CalendarContractWrapper.Events.DTSTART(), // VEvent.getStartDate()
             CalendarContractWrapper.Events.DTEND(), // VEvent.getEndDate()
-            CalendarContractWrapper.Events.SYNC_LOCAL_ID(), // VEvent.getUID()
+            CalendarContractWrapper.Events.SYNC_ID_CUSTOM(), // VEvent.getUID()
             CalendarContractWrapper.Events.DIRTY(),
             CalendarContractWrapper.Events.DELETED(),
             CalendarContractWrapper.Events.CALENDAR_ID(),
@@ -251,6 +251,26 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                         String calendarId = CalendarUtils.getCalIDByName(
                                 mContext, mAccount, mCalendarName, true);
 
+                        String mCalendarAccountName = mAccount.name;
+                        String mCalendarAccountType = mAccount.type;
+
+                        try {
+                            Cursor c = mProvider.query(CalendarContractWrapper.Calendars.CONTENT_URI(),
+                                    CalendarUtils.CALENDAR_PROJECTION, null, null, null);
+                            if (c != null) {
+                                while (c.moveToNext()) {
+                                    if (calendarId.equals(c.getString(CalendarUtils.COLUMN_CAL_ID))) {
+                                        mCalendarAccountName = c.getString(CalendarUtils.COLUMN_CAL_ACCOUNT_NAME);
+                                        mCalendarAccountType = c.getString(CalendarUtils.COLUMN_CAL_ACCOUNT_TYPE);
+                                        break;
+                                    }
+                                }
+                                c.close();
+                            }
+                        } catch (Exception e) {
+                            return null;
+                        }
+
                         if (calendarId == null) {
                             return null;
                         }
@@ -358,8 +378,8 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                                                             KusssContentContract
                                                                     .asEventSyncAdapter(
                                                                             existingUri,
-                                                                            mAccount.name,
-                                                                            mAccount.type))
+                                                                            mCalendarAccountName,
+                                                                            mCalendarAccountType))
                                                     .withValue(
                                                             CalendarContractWrapper.Events
                                                                     .EVENT_LOCATION(),
@@ -384,7 +404,12 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                                                     .withValue(
                                                             CalendarContractWrapper.Events
                                                                     .DTEND(),
-                                                            eventDTEnd).build());
+                                                            eventDTEnd)
+                                                    .withValue(
+                                                            CalendarContractWrapper.Events
+                                                                    .SYNC_ID_CUSTOM(),
+                                                            eventKusssId)
+                                                    .build());
                                             mSyncResult.stats.numUpdates++;
                                         } else {
                                             mSyncResult.stats.numSkippedEntries++;
@@ -427,8 +452,8 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                                                             KusssContentContract
                                                                     .asEventSyncAdapter(
                                                                             deleteUri,
-                                                                            mAccount.name,
-                                                                            mAccount.type))
+                                                                            mCalendarAccountName,
+                                                                            mCalendarAccountType))
                                                     .build());
                                             mSyncResult.stats.numDeletes++;
                                         } else {
@@ -486,11 +511,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                                                 v.getDescription().getValue())
                                         .withValue(
                                                 CalendarContractWrapper.Events
-                                                        ._SYNC_ID(),
-                                                v.getUid().getValue())
-                                        .withValue(
-                                                CalendarContractWrapper.Events
-                                                        .SYNC_LOCAL_ID(),
+                                                        .SYNC_ID_CUSTOM(),
                                                 v.getUid().getValue())
                                         .withValue(
                                                 CalendarContractWrapper.Events
@@ -522,13 +543,6 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                                                 CalendarContractWrapper.Events
                                                         .AVAILABILITY_FREE());
                                     }
-                                }
-
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                                    builder.withValue(
-                                            CalendarContractWrapper.Events
-                                                    .UID_2445(), v.getUid()
-                                                    .getValue());
                                 }
 
                                 ContentProviderOperation op = builder.build();
