@@ -7,6 +7,7 @@ import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.EmbossMaskFilter;
 import android.os.Build;
@@ -594,5 +595,21 @@ public class AppUtils {
 
     public static void sortStudies(List<Studies> mStudies) {
         Collections.sort(mStudies, StudiesComparator);
+    }
+
+    public static String getRowString(Cursor c) {
+        if (c == null) {
+            return null;
+        }
+
+        String row = "";
+        for (int i = 0; i < c.getColumnCount(); i++) {
+            try {
+                row = row + c.getColumnName(i) + "=" + c.getString(i) + ";";
+            } catch (Exception e) {
+                row = row + "@" + Integer.toString(i) + "=?;";
+            }
+        }
+        return row;
     }
 }

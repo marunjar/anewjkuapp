@@ -130,7 +130,7 @@ public class CalendarFragment extends BaseFragment {
     }
 
     private void loadData() {
-        Log.d(TAG, "loadData");
+//        Log.d(TAG, "loadData");
         new CalendarLoadTask().execute();
     }
 
