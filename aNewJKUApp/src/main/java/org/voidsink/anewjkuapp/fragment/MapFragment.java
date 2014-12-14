@@ -139,6 +139,7 @@ public class MapFragment extends BaseFragment implements
     }
 
     private void doSearch(String query, boolean isExactLocation) {
+        query = query.trim();
         Log.i(TAG, "query: " + query);
 
         List<Poi> pois = new ArrayList<>();

@@ -565,9 +565,9 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
     private ContentValues getContentValuesFromEvent(VEvent v) {
         ContentValues cv = new ContentValues();
 
-        cv.put(CalendarContractWrapper.Events.EVENT_LOCATION(), v.getLocation().getValue());
-        cv.put(CalendarContractWrapper.Events.TITLE(), v.getSummary().getValue());
-        cv.put(CalendarContractWrapper.Events.DESCRIPTION(), v.getDescription().getValue());
+        cv.put(CalendarContractWrapper.Events.EVENT_LOCATION(), v.getLocation().getValue().trim());
+        cv.put(CalendarContractWrapper.Events.TITLE(), v.getSummary().getValue().trim());
+        cv.put(CalendarContractWrapper.Events.DESCRIPTION(), v.getDescription().getValue().trim());
         cv.put(CalendarContractWrapper.Events.DTSTART(), v.getStartDate().getDate().getTime());
         cv.put(CalendarContractWrapper.Events.DTEND(), v.getEndDate().getDate().getTime());
 
