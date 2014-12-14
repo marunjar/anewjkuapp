@@ -77,7 +77,7 @@ public class CalendarFragment extends BaseFragment {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                 CalendarListItem item = mAdapter.getItem(i);
+                CalendarListItem item = mAdapter.getItem(i);
                 if (item instanceof CalendarListEvent) {
                     Intent intent = new Intent(getContext(), MainActivity.class).putExtra(
                             MainActivity.ARG_SHOW_FRAGMENT,
@@ -139,9 +139,26 @@ public class CalendarFragment extends BaseFragment {
         super.onStart();
 
         mCalendarObserver = new CalendarContentObserver(new Handler());
-        getActivity().getContentResolver().registerContentObserver(
-                CalendarContractWrapper.Events.CONTENT_URI().buildUpon()
-                        .appendPath("#").build(), false, mCalendarObserver);
+
+        Account account = AppUtils.getAccount(getContext());
+
+        String lvaCalId = CalendarUtils.getCalIDByName(getContext(), account, CalendarUtils.ARG_CALENDAR_LVA, true);
+        String examCalId = CalendarUtils.getCalIDByName(getContext(), account, CalendarUtils.ARG_CALENDAR_EXAM, true);
+
+        if (lvaCalId == null || examCalId == null) {
+            // listen to all changes
+            getActivity().getContentResolver().registerContentObserver(
+                    CalendarContractWrapper.Events.CONTENT_URI().buildUpon()
+                            .appendPath("#").build(), false, mCalendarObserver);
+        } else {
+            getActivity().getContentResolver().registerContentObserver(
+                    CalendarContractWrapper.Events.CONTENT_URI().buildUpon()
+                            .appendPath(lvaCalId).build(), false, mCalendarObserver);
+            getActivity().getContentResolver().registerContentObserver(
+                    CalendarContractWrapper.Events.CONTENT_URI().buildUpon()
+                            .appendPath(examCalId).build(), false, mCalendarObserver);
+        }
+
     }
 
     @Override
