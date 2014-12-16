@@ -16,7 +16,7 @@ public class StatFragment extends SlidingTabsFragment {
     protected void fillTabs(List<SlidingTabItem> mTabs) {
         List<String> mTerms = KusssContentProvider.getTerms(getContext());
 
-        mTabs.add(new StatTabItem(getString(R.string.all_terms), mTerms));
+        mTabs.add(new StatTabItem(getString(R.string.all_terms), null));
 
         for (String term : mTerms) {
             mTabs.add(new StatTabItem(term, Arrays.asList(term)));
