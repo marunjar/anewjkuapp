@@ -140,8 +140,11 @@ public class AppUtils {
                         errorOccured = true;
                     }
                 }
-                if (shouldRemoveCalendars(mLastVersion, mCurrentVersion)) {
+                if (shouldRecreateCalendars(mLastVersion, mCurrentVersion)) {
                     if (!removeCalendars(context)) {
+                        errorOccured = true;
+                    }
+                    if (!createCalendars(context)) {
                         errorOccured = true;
                     }
                 }
@@ -156,12 +159,21 @@ public class AppUtils {
         }
     }
 
+    private static boolean createCalendars(Context context) {
+        Account account = AppUtils.getAccount(context);
+        if (account == null) {
+            return true;
+        }
+
+        return CalendarUtils.createCalendarsIfNecessary(context, account);
+    }
+
     private static boolean removeCalendars(Context context) {
         return CalendarUtils.removeCalendar(context, CalendarUtils.ARG_CALENDAR_EXAM) &&
                 CalendarUtils.removeCalendar(context, CalendarUtils.ARG_CALENDAR_LVA);
     }
 
-    private static boolean shouldRemoveCalendars(int lastVersion, int currentVersion) {
+    private static boolean shouldRecreateCalendars(int lastVersion, int currentVersion) {
         // calendars changed with 140029
         // remove old calendars on startup to avoid strange behaviour
         return (lastVersion <= 140028 && currentVersion > 140028);
