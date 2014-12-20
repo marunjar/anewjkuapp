@@ -1,11 +1,13 @@
 package org.voidsink.anewjkuapp.utils;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
+import org.jsoup.HttpStatusException;
 import org.voidsink.anewjkuapp.BuildConfig;
 import org.voidsink.anewjkuapp.Globals;
 import org.voidsink.anewjkuapp.Globals.TrackerName;
@@ -148,7 +150,7 @@ public class Analytics {
     // {{ Exceptions
 
     public static void sendException(Context c, Exception e, boolean fatal) {
-        sendException(c, e, fatal, "");
+        sendException(c, e, fatal, null);
         Log.e(TAG, "sendException", e);
     }
 
@@ -165,7 +167,12 @@ public class Analytics {
                                         .getDescription(Thread.currentThread()
                                                 .getName(), e)
                         );
-                if (additionalData.length() > 0) {
+
+                if (TextUtils.isEmpty(additionalData) && (e instanceof HttpStatusException)) {
+                    additionalData = String.format("%d: %s", ((HttpStatusException) e).getStatusCode(), ((HttpStatusException) e).getUrl());
+                }
+
+                if (!TextUtils.isEmpty(additionalData)) {
                     eb.setCustomDimension(GA_DIM_ADDITIONAL_DATA, additionalData);
                 }
 
