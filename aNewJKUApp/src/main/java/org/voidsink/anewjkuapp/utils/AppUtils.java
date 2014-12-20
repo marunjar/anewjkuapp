@@ -24,6 +24,7 @@ import org.voidsink.anewjkuapp.ImportStudiesTask;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.fragment.MapFragment;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Grade;
@@ -139,6 +140,11 @@ public class AppUtils {
                         errorOccured = true;
                     }
                 }
+                if (shouldRemoveCalendars(mLastVersion, mCurrentVersion)) {
+                    if (!removeCalendars(context)) {
+                        errorOccured = true;
+                    }
+                }
             } catch (Exception e) {
                 Log.e(TAG, "doOnNewVersion failed", e);
                 Analytics.sendException(context, e, false);
@@ -148,6 +154,17 @@ public class AppUtils {
                 PreferenceWrapper.setLastVersion(context, mCurrentVersion);
             }
         }
+    }
+
+    private static boolean removeCalendars(Context context) {
+        return CalendarUtils.removeCalendar(context, CalendarUtils.ARG_CALENDAR_EXAM) &&
+                CalendarUtils.removeCalendar(context, CalendarUtils.ARG_CALENDAR_LVA);
+    }
+
+    private static boolean shouldRemoveCalendars(int lastVersion, int currentVersion) {
+        // calendars changed with 140029
+        // remove old calendars on startup to avoid strange behaviour
+        return (lastVersion <= 140028 && currentVersion > 140028);
     }
 
     private static boolean shouldImportStudies(int lastVersion, int currentVersion) {

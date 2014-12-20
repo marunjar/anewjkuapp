@@ -14,6 +14,7 @@ import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.utils.Analytics;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.ArrayList;
@@ -98,6 +99,30 @@ public final class CalendarUtils {
             Analytics.sendException(context, e, true, name);
             return null;
         }
+    }
+
+    public static boolean removeCalendar(Context context, String name) {
+        Account account = AppUtils.getAccount(context);
+        if (account == null) {
+            return true;
+        }
+
+        String id = getCalIDByName(context, account, name, false);
+        if (id == null) {
+            return true;
+        }
+
+        final ContentResolver resolver = context.getContentResolver();
+
+        resolver.delete(
+                KusssAuthenticator.asCalendarSyncAdapter(CalendarContractWrapper.Calendars.CONTENT_URI(),
+                        account.name,
+                        account.type),
+                CalendarContractWrapper.Calendars._ID() + "=?", new String[]{id});
+
+        Log.i(TAG, String.format("calendar %s (id=%s) removed", name, id));
+
+        return true;
     }
 
     private static boolean createCalendarIfNecessary(Context context,
