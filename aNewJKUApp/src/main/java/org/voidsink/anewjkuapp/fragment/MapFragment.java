@@ -50,8 +50,9 @@ import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.mapsforge.map.android.graphics.AndroidResourceBitmap;
 import org.mapsforge.map.android.util.AndroidUtil;
 import org.mapsforge.map.android.view.MapView;
-import org.mapsforge.map.layer.LayerManager;
+import org.mapsforge.map.layer.Layers;
 import org.mapsforge.map.layer.cache.TileCache;
+import org.mapsforge.map.layer.labels.LabelLayer;
 import org.mapsforge.map.layer.overlay.Marker;
 import org.mapsforge.map.layer.renderer.TileRendererLayer;
 import org.mapsforge.map.model.MapViewPosition;
@@ -88,8 +89,12 @@ public class MapFragment extends BaseFragment implements
     private static final byte MIN_ZOOM_LEVEL = 14; // full campus fits to screen at zoom level 15
     private static final byte DEFAULT_ZOOM_LEVEL = 17;
 
-    LocationOverlay mMyLocationOverlay;
-    Marker goalLocationOverlay;
+    // Map Layer
+    private TileRendererLayer tileRendererLayer;
+    private LabelLayer labelLayer;
+    private Marker goalLocationOverlay;
+    private LocationOverlay mMyLocationOverlay;
+
     /**
      * The dummy content this fragment is presenting.
      */
@@ -231,7 +236,9 @@ public class MapFragment extends BaseFragment implements
     }
 
     private void setNewGoal(LatLong latLong, String name) {
-        if (latLong != null) {
+        if (latLong != null &&
+                mMyLocationOverlay != null &&
+                goalLocationOverlay != null) {
             this.mMyLocationOverlay.setSnapToLocationEnabled(false);
 
             if (!name.isEmpty()) {
@@ -263,7 +270,8 @@ public class MapFragment extends BaseFragment implements
                 this.goalLocationOverlay.setVerticalOffset(0);
             }
 
-            if (this.mMyLocationOverlay.getLastLocation() != null) {
+            if (this.mMyLocationOverlay != null &&
+                    this.mMyLocationOverlay.getLastLocation() != null) {
                 LatLong mLocation = LocationOverlay
                         .locationToLatLong(this.mMyLocationOverlay
                                 .getLastLocation());
@@ -343,21 +351,41 @@ public class MapFragment extends BaseFragment implements
         //this.mapView.getFpsCounter().setVisible(true);
         this.mapView.getMapScaleBar().setVisible(true);
 
-        final LayerManager mLayerManager = this.mapView.getLayerManager();
+        this.tileCache = AndroidUtil.createTileCache(this.getActivity(),
+                "mapFragment",
+                this.mapView.getModel().displayModel.getTileSize(), 1.0f, this.mapView.getModel().frameBufferModel.getOverdrawFactor());
+
+        return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        // create layer before handling intents in super
+        createLayers();
+
+        super.onStart();
+    }
+
+    private void createLayers() {
+        final Layers layers = this.mapView.getLayerManager().getLayers();
 
         this.mapViewPosition = this.mapView.getModel().mapViewPosition;
-
         initializePosition(this.mapViewPosition);
 
         this.tileCache = AndroidUtil.createTileCache(this.getActivity(),
                 "mapFragment",
                 this.mapView.getModel().displayModel.getTileSize(), 1.0f, this.mapView.getModel().frameBufferModel.getOverdrawFactor());
-        mLayerManager.getLayers().add(createTileRendererLayer(this.tileCache, mapViewPosition,
-                getMapFile(), InternalRenderTheme.OSMARENDER, false));
+
+        tileRendererLayer = createTileRendererLayer(this.tileCache, mapViewPosition,
+                getMapFile(), InternalRenderTheme.OSMARENDER, false);
+        layers.add(tileRendererLayer);
+
+        labelLayer = new LabelLayer(AndroidGraphicFactory.INSTANCE, tileRendererLayer.getLabelStore());
+        layers.add(labelLayer);
 
         // overlay with a marker to show the goal position
         this.goalLocationOverlay = new Marker(null, null, 0, 0);
-        mLayerManager.getLayers().add(this.goalLocationOverlay);
+        layers.add(this.goalLocationOverlay);
 
         // overlay with a marker to show the actual position
         //TODO: find a way to colorize and use R.drawable.ic_marker_position instead of R.drawable.ic_marker_own_position
@@ -367,18 +395,38 @@ public class MapFragment extends BaseFragment implements
         this.mMyLocationOverlay = new LocationOverlay(this.getActivity(),
                 this.mapViewPosition, bitmap);
         this.mMyLocationOverlay.setSnapToLocationEnabled(false);
-        mLayerManager.getLayers().add(this.mMyLocationOverlay);
+        layers.add(this.mMyLocationOverlay);
+    }
 
-        return rootView;
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        removeLayers();
+    }
+
+    private void removeLayers() {
+        this.mapView.getLayerManager().getLayers().remove(this.mMyLocationOverlay);
+        this.mMyLocationOverlay.onDestroy();
+        this.mMyLocationOverlay = null;
+
+        this.mapView.getLayerManager().getLayers().remove(this.goalLocationOverlay);
+        this.goalLocationOverlay.onDestroy();
+        this.goalLocationOverlay = null;
+
+        this.mapView.getLayerManager().getLayers().remove(this.labelLayer);
+        this.labelLayer.onDestroy();
+        this.labelLayer = null;
+
+        this.mapView.getLayerManager().getLayers().remove(this.tileRendererLayer);
+        this.tileRendererLayer.onDestroy();
+        this.tileRendererLayer = null;
     }
 
     private TileRendererLayer createTileRendererLayer(TileCache tileCache,
                                                       MapViewPosition mapViewPosition, File mapFile,
                                                       XmlRenderTheme renderTheme, boolean hasAlpha) {
-        TileRendererLayer tileRendererLayer = new TileRendererLayer(tileCache,
-                mapViewPosition, hasAlpha, AndroidGraphicFactory.INSTANCE);
-        tileRendererLayer.setMapFile(mapFile);
-        tileRendererLayer.setXmlRenderTheme(renderTheme);
+        TileRendererLayer tileRendererLayer = AndroidUtil.createTileRendererLayer(tileCache, mapViewPosition,mapFile, renderTheme, hasAlpha, false);
         tileRendererLayer.setTextScale(1.5f);
 
         return tileRendererLayer;
