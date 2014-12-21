@@ -46,8 +46,10 @@ import org.mapsforge.core.model.Dimension;
 import org.mapsforge.core.model.LatLong;
 import org.mapsforge.core.model.MapPosition;
 import org.mapsforge.core.util.LatLongUtils;
+import org.mapsforge.core.util.MercatorProjection;
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.mapsforge.map.android.graphics.AndroidResourceBitmap;
+import org.mapsforge.map.android.rendertheme.AssetsRenderTheme;
 import org.mapsforge.map.android.util.AndroidUtil;
 import org.mapsforge.map.android.view.MapView;
 import org.mapsforge.map.layer.Layers;
@@ -63,6 +65,7 @@ import org.mapsforge.map.rendertheme.InternalRenderTheme;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
 import org.voidsink.anewjkuapp.ImportPoiTask;
 import org.voidsink.anewjkuapp.LocationOverlay;
+import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.MapUtils;
 import org.voidsink.anewjkuapp.Poi;
 import org.voidsink.anewjkuapp.PoiAdapter;
@@ -235,8 +238,8 @@ public class MapFragment extends BaseFragment implements
         super.onCreate(savedInstanceState);
     }
 
-    private void setNewGoal(LatLong latLong, String name) {
-        if (latLong != null &&
+    private void setNewGoal(LatLong goalPosition, String name) {
+        if (goalPosition != null &&
                 mMyLocationOverlay != null &&
                 goalLocationOverlay != null) {
             this.mMyLocationOverlay.setSnapToLocationEnabled(false);
@@ -255,7 +258,7 @@ public class MapFragment extends BaseFragment implements
                 bubble.incrementRefCount();
 
                 // set new goal
-                this.goalLocationOverlay.setLatLong(latLong);
+                this.goalLocationOverlay.setLatLong(goalPosition);
                 this.goalLocationOverlay.setBitmap(bubble);
                 this.goalLocationOverlay.setHorizontalOffset(0);
                 this.goalLocationOverlay.setVerticalOffset(-bubble.getHeight() / 2);
@@ -264,7 +267,7 @@ public class MapFragment extends BaseFragment implements
                 Bitmap b = AndroidGraphicFactory.convertToBitmap(d);
 
                 // set new goal
-                this.goalLocationOverlay.setLatLong(latLong);
+                this.goalLocationOverlay.setLatLong(goalPosition);
                 this.goalLocationOverlay.setBitmap(b);
                 this.goalLocationOverlay.setHorizontalOffset(0);
                 this.goalLocationOverlay.setVerticalOffset(0);
@@ -276,20 +279,32 @@ public class MapFragment extends BaseFragment implements
                         .locationToLatLong(this.mMyLocationOverlay
                                 .getLastLocation());
 
+                // lat long difference for bounding box
+                double mDLat = Math.abs((mLocation.latitude - goalPosition.latitude));
+                double mDLong = Math.abs((mLocation.longitude - goalPosition.longitude));
+
+                // trunc distance
+                double distance = mLocation.distance(goalPosition);
+                if (distance > 0.0088) {
+                    mDLat = (mDLat * 0.0088 / distance);
+                    mDLong = (mDLong * 0.0088 / distance);
+                }
+
                 // zoom to bounds
-                BoundingBox bb = new BoundingBox(Math.min(latLong.latitude,
-                        mLocation.latitude), Math.min(latLong.longitude,
-                        mLocation.longitude), Math.max(latLong.latitude,
-                        mLocation.latitude), Math.max(latLong.longitude,
-                        mLocation.longitude));
+                BoundingBox bb = new BoundingBox(
+                        Math.max(MercatorProjection.LATITUDE_MIN, goalPosition.latitude - mDLat),
+                        Math.max(-180, goalPosition.longitude - mDLong),
+                        Math.min(MercatorProjection.LATITUDE_MAX, goalPosition.latitude + mDLat),
+                        Math.min(180, goalPosition.longitude + mDLong));
                 Dimension dimension = this.mapView.getModel().mapViewDimension
                         .getDimension();
+                // zoom to bounding box, center at goalPosition
                 this.mapView.getModel().mapViewPosition
-                        .setMapPosition(new MapPosition(latLong, LatLongUtils
+                        .setMapPosition(new MapPosition(goalPosition, LatLongUtils
                                 .zoomForBounds(dimension, bb, this.mapView
                                         .getModel().displayModel.getTileSize())));
             } else {
-                this.mapViewPosition.setCenter(latLong);
+                this.mapViewPosition.setCenter(goalPosition);
             }
         } else {
             this.goalLocationOverlay.setLatLong(null);
@@ -377,7 +392,7 @@ public class MapFragment extends BaseFragment implements
                 this.mapView.getModel().displayModel.getTileSize(), 1.0f, this.mapView.getModel().frameBufferModel.getOverdrawFactor());
 
         tileRendererLayer = createTileRendererLayer(this.tileCache, mapViewPosition,
-                getMapFile(), InternalRenderTheme.OSMARENDER, false);
+                getMapFile(), getRenderTheme(), false);
         layers.add(tileRendererLayer);
 
         labelLayer = new LabelLayer(AndroidGraphicFactory.INSTANCE, tileRendererLayer.getLabelStore());
@@ -396,6 +411,17 @@ public class MapFragment extends BaseFragment implements
                 this.mapViewPosition, bitmap);
         this.mMyLocationOverlay.setSnapToLocationEnabled(false);
         layers.add(this.mMyLocationOverlay);
+    }
+
+    private XmlRenderTheme getRenderTheme() {
+        try {
+            // TODO: use own rendertheme here
+            //return new AssetsRenderTheme(getContext(), "", "renderthemes/rendertheme-v4.xml");
+        } catch (Exception e) {
+            Analytics.sendException(getContext(), e, false);
+        }
+
+        return InternalRenderTheme.OSMARENDER;
     }
 
     @Override
@@ -448,7 +474,7 @@ public class MapFragment extends BaseFragment implements
         MapDatabase mapDatabase = new MapDatabase();
         final FileOpenResult result = mapDatabase.openFile(mapFile);
         if (result.isSuccess()) {
-            LatLong uniteich = new LatLong(48.33706, 14.31960);
+            final LatLong uniteich = new LatLong(48.33706, 14.31960);
             final MapFileInfo mapFileInfo = mapDatabase.getMapFileInfo();
             if (mapFileInfo != null) {
                 if (mapFileInfo.boundingBox.contains(uniteich)) {
