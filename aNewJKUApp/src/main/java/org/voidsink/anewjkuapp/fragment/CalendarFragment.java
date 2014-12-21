@@ -18,11 +18,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+
+import net.fortuna.ical4j.data.CalendarBuilder;
 
 import org.voidsink.anewjkuapp.ImportCalendarTask;
 import org.voidsink.anewjkuapp.R;
@@ -119,6 +122,28 @@ public class CalendarFragment extends BaseFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.calendar, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_refresh_calendar:
+                final Account account = AppUtils.getAccount(getContext());
+
+                if (account != null) {
+                    Log.d(TAG, "importing calendars");
+                    Analytics.eventReloadEvents(getContext());
+                    new ImportCalendarTask(account, getContext(),
+                            CalendarUtils.ARG_CALENDAR_EXAM, new CalendarBuilder())
+                            .execute();
+                    new ImportCalendarTask(account, getContext(),
+                            CalendarUtils.ARG_CALENDAR_LVA, new CalendarBuilder())
+                            .execute();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void loadMoreData() {
