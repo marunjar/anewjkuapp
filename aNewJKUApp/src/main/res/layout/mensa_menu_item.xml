@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:padding="4dp" />
+            android:padding="@dimen/separator_top_bottom_margin" />
 
         <TextView
             android:id="@+id/mensa_menu_item_soup"
@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:padding="4dp" />
+            android:padding="@dimen/separator_top_bottom_margin" />
 
         <TextView
             android:id="@+id/mensa_menu_item_meal"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:minLines="2"
-            android:padding="4dp" />
+            android:padding="@dimen/separator_top_bottom_margin" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -41,23 +41,21 @@
             <TextView
                 android:id="@+id/mensa_menu_item_price"
                 style="@style/Text.Body2"
-                fontPath="fonts/Roboto-Light.ttf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:padding="4dp"
+                android:padding="@dimen/separator_top_bottom_margin"
                 android:textColor="@color/accent"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/mensa_menu_item_oeh_bonus"
                 style="@style/Text.Body2"
-                fontPath="fonts/Roboto-Light.ttf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/mensa_menu_item_price"
                 android:gravity="center_vertical"
-                android:padding="4dp"
+                android:padding="@dimen/separator_top_bottom_margin"
                 android:textColor="?android:attr/textColorSecondary" />
         </RelativeLayout>
     </LinearLayout>

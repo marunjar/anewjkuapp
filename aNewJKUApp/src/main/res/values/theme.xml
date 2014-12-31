@@ -12,7 +12,7 @@
         <item name="actionOverflowButtonStyle">@style/AppTheme.ActionButton.Overflow</item>
         <item name="homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
 
-        <item name="cardToolbarStyle">@style/cardToolbar.light</item>
+        <item name="cardToolbarTheme">@style/cardToolbar.light</item>
         <item name="cardBackground">@color/cardview_light_background</item>
 
         <item name="colorPrimary">@color/primary</item>
@@ -32,7 +32,7 @@
         <item name="actionOverflowButtonStyle">@style/AppTheme.ActionButton.Overflow</item>
         <item name="homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
 
-        <item name="cardToolbarStyle">@style/cardToolbar</item>
+        <item name="cardToolbarTheme">@style/cardToolbar</item>
         <item name="cardBackground">@color/cardview_dark_background</item>
 
         <item name="colorPrimary">@color/primary</item>

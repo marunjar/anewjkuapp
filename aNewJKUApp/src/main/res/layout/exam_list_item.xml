@@ -12,13 +12,8 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/exam_list_item_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:contentInsetEnd="0dp"
-            app:contentInsetLeft="0dp"
-            app:contentInsetRight="0dp"
-            app:contentInsetStart="0dp"
-            app:theme="?attr/cardToolbarStyle">
+            style="@style/cardToolbarStyle"
+            app:theme="?attr/cardToolbarTheme">
 
             <TextView
                 android:id="@+id/exam_list_item_title"
@@ -61,7 +56,8 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/card_content_padding">
 
                 <TextView
                     android:id="@+id/exam_list_item_lvanr"
@@ -86,7 +82,6 @@
                 <TextView
                     android:id="@+id/exam_list_item_skz"
                     style="@style/Text.Body2"
-                    fontPath="fonts/Roboto-Light.ttf"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/separator_top_bottom_margin"
@@ -99,16 +94,15 @@
             <TextView
                 android:id="@+id/exam_list_item_info"
                 style="@style/Text.Body2"
-                fontPath="fonts/Roboto-Light.ttf"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/accent"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_marginTop="@dimen/card_content_padding"/>
 
             <TextView
                 android:id="@+id/exam_list_item_description"
                 style="@style/Text.Body2"
-                fontPath="fonts/Roboto-Light.ttf"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/card_content_padding" />
