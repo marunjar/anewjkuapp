@@ -40,23 +40,13 @@ public class AboutFragment extends BaseFragment {
                     @Override
                     public void onClick(View v) {
 
-                        //Create an intent with context and the Activity class
-                        Intent i = new Intent(getActivity().getApplicationContext(), LibsActivity.class);
-                        //Pass the fields of your application to the lib so it can find all external lib information
-                        i.putExtra(Libs.BUNDLE_FIELDS, Libs.toStringArray(R.string.class.getFields()));
-
-                        //Display the library version (OPTIONAL)
-                        i.putExtra(Libs.BUNDLE_VERSION, true);
-                        //Display the library license (OPTIONAL
-                        i.putExtra(Libs.BUNDLE_LICENSE, true);
-
-                        //Pass your theme (must be AppCompat theme)
-                        i.putExtra(Libs.BUNDLE_THEME, UIUtils.getAppThemeResId(getActivity()));
-
-                        //Pass a custom accent color (OPTIONAL)
-
-                        //start the activity
-                        startActivity(i);
+                        new Libs.Builder()
+                                .withFields(Libs.toStringArray(R.string.class.getFields())) // pass the fields of your application to the lib so it can find all external lib information
+                                .withAutoDetect(true)
+                                .withVersionShown(true)
+                                .withLicenseShown(true)
+                                .withActivityTheme(UIUtils.getAppThemeResId(getActivity())) // must be AppCompat theme
+                                .start(getActivity());
                     }
                 });
 
