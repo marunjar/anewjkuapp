@@ -35,7 +35,7 @@
     <dimen name="text_size_drawer_section">16sp</dimen>
     <dimen name="text_size_headline">20sp</dimen>
     <dimen name="text_size_title">16sp</dimen>
-    <dimen name="text_size_subhead">14sp</dimen>
+    <dimen name="text_size_subtitle">14sp</dimen>
     <dimen name="text_size_body">12sp</dimen>
     <dimen name="text_size_caption">12sp</dimen>
     <dimen name="text_size_button">14sp</dimen>

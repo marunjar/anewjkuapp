@@ -12,7 +12,7 @@
 
         <TextView
             android:id="@+id/grade_list_grade_title"
-            style="@style/Text.Title"
+            style="@style/Text.ItemTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/separator_top_bottom_margin"
