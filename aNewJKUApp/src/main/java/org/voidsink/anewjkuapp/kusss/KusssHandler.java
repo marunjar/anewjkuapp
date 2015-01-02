@@ -29,7 +29,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -278,7 +277,7 @@ public class KusssHandler {
         return terms;
     }
 
-    public boolean selectTerm(Context c, String term) throws IOException{
+    public boolean selectTerm(Context c, String term) throws IOException {
         Document doc = Jsoup.connect(URL_SELECT_TERM)
                 .data("term", term)
                 .data("previousQueryString", "")
@@ -370,7 +369,7 @@ public class KusssHandler {
                     Elements gradeRows = row
                             .select("tbody > tr[class]:has(td)");
                     for (Element gradeRow : gradeRows) {
-                        ExamGrade grade = new ExamGrade(type, gradeRow);
+                        ExamGrade grade = new ExamGrade(c, type, gradeRow);
                         if (grade.isInitialized()) {
                             grades.add(grade);
                         }
