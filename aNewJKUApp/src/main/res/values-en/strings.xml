@@ -162,7 +162,7 @@
     <string name="notification_sync_lva_updating">Updating courses</string>
     <string name="action_show_rss_entry_in_browser">Show in browser</string>
     <string name="progress_load_feed">Loading news...</string>
-    <string name="pref_stats_positive_grades_only_title">Grade point average</string>
+    <string name="pref_stats_positive_grades_only_title">Improved grade point average</string>
     <string name="pref_stats_positive_grades_only_summary">Grade point average is calculated for positive grades only</string>
     <string name="notification_sync_studies">Synchronizing curricula</string>
     <string name="notification_sync_studies_loading">Loading curricula</string>
@@ -182,4 +182,12 @@
     <string name="grade_gb">Pass</string>
     <string name="grade_gab">Passed with distinction</string>
     <string name="grade_get">Successful participation</string>
+    <string name="settings_timetable_summary">Calendar and timetable settings</string>
+    <string name="studies_is_standard_no">No</string>
+    <string name="studies_is_standard_yes">Yes</string>
+    <string name="settings_timetable_title">Calendar</string>
+    <string name="pref_kusss_calendar_extended_title">Calendar</string>
+    <string name="pref_kusss_calendar_extend_title">Extend calendar</string>
+    <string name="pref_kusss_calendar_extend_summary">All dates are imported into an existing calendar</string>
+    <string name="pref_kusss_calendar_extended_summary">Calendar where dates are imported</string>
 </resources>

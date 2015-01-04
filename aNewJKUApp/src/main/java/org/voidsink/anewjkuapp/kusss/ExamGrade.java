@@ -1,12 +1,14 @@
 package org.voidsink.anewjkuapp.kusss;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.voidsink.anewjkuapp.ImportGradeTask;
 import org.voidsink.anewjkuapp.KusssContentContract;
+import org.voidsink.anewjkuapp.utils.Analytics;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -49,63 +51,66 @@ public class ExamGrade {
         this.sws = sws;
     }
 
-    public ExamGrade(GradeType type, Element row) {
+    public ExamGrade(Context c, GradeType type, Element row) {
         this(type, null, "", "", null, 0, "", "", 0, 0);
 
         final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
-        Elements columns = row.getElementsByTag("td");
+        final Elements columns = row.getElementsByTag("td");
         if (columns.size() >= 7) {
-            try {
-                String title = columns.get(1).text();
-                Matcher lvaNrTermMatcher = lvaNrTermPattern.matcher(title); // (lvaNr,term)
-                if (lvaNrTermMatcher.find()) {
-                    String lvaNrTerm = lvaNrTermMatcher.group();
+            String title = columns.get(1).text();
+            Matcher lvaNrTermMatcher = lvaNrTermPattern.matcher(title); // (lvaNr,term)
+            if (lvaNrTermMatcher.find()) {
+                String lvaNrTerm = lvaNrTermMatcher.group();
 
-                    Matcher lvaNrMatcher = lvaNrPattern.matcher(lvaNrTerm); // lvaNr
-                    if (lvaNrMatcher.find()) {
-                        setLvaNr(lvaNrMatcher.group());
-                    }
-
-                    Matcher termMatcher = termPattern.matcher(lvaNrTerm); // term
-                    if (termMatcher.find(lvaNrMatcher.end())) {
-                        setTerm(termMatcher.group());
-                    }
-
-                    String tmp = title.substring(0, lvaNrTermMatcher.start());
-                    if (lvaNrTermMatcher.end() <= title.length()) {
-                        String addition = title
-                                .substring(lvaNrTermMatcher.end(),
-                                        title.length())
-                                .replaceAll("(\\(.*?\\))", "").trim();
-                        if (addition.length() > 0) {
-                            tmp = tmp + " (" + addition + ")";
-                        }
-                    }
-                    title = tmp;
+                Matcher lvaNrMatcher = lvaNrPattern.matcher(lvaNrTerm); // lvaNr
+                if (lvaNrMatcher.find()) {
+                    setLvaNr(lvaNrMatcher.group());
                 }
 
-                title = title.trim() + " " + columns.get(4).text().trim(); // title + lvaType
-
-                setTitle(title); // title
-
-                setDate(dateFormat.parse(columns.get(0).text())); // date
-
-                setGrade(Grade.parseGrade(columns.get(2).text())); // grade
-
-                String[] ectsSws = columns.get(5).text().replace(",", ".")
-                        .split("/");
-                if (ectsSws.length == 2) {
-                    setEcts(Double.parseDouble(ectsSws[0]));
-                    setSws(Double.parseDouble(ectsSws[1]));
+                Matcher termMatcher = termPattern.matcher(lvaNrTerm); // term
+                if (termMatcher.find(lvaNrMatcher.end())) {
+                    setTerm(termMatcher.group());
                 }
 
-                setSKZ(Integer.parseInt(columns.get(6).text())); // grade
-
-                setCode(columns.get(3).text());
-            } catch (ParseException e) {
-                e.printStackTrace();
+                String tmp = title.substring(0, lvaNrTermMatcher.start());
+                if (lvaNrTermMatcher.end() <= title.length()) {
+                    String addition = title
+                            .substring(lvaNrTermMatcher.end(),
+                                    title.length())
+                            .replaceAll("(\\(.*?\\))", "").trim();
+                    if (addition.length() > 0) {
+                        tmp = tmp + " (" + addition + ")";
+                    }
+                }
+                title = tmp;
             }
+
+            title = title.trim() + " " + columns.get(4).text().trim(); // title + lvaType
+
+            setTitle(title); // title
+
+            try {
+                setDate(dateFormat.parse(columns.get(0).text())); // date
+            } catch (ParseException e) {
+                Analytics.sendException(c, e, false, columns.get(0).text());
+            }
+
+            setGrade(Grade.parseGrade(columns.get(2).text())); // grade
+
+            String[] ectsSws = columns.get(5).text().replace(",", ".")
+                    .split("/");
+            if (ectsSws.length == 2) {
+                setEcts(Double.parseDouble(ectsSws[0]));
+                setSws(Double.parseDouble(ectsSws[1]));
+            }
+
+            try {
+                setSKZ(Integer.parseInt(columns.get(6).text())); // grade
+            } catch (NumberFormatException e) {
+                Analytics.sendException(c, e, false, columns.get(6).text());
+            }
+            setCode(columns.get(3).text());
         }
     }
 

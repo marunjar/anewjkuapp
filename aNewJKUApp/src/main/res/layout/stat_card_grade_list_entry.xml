@@ -7,6 +7,7 @@
 
     <TextView
         android:id="@+id/stat_card_grade_list_entry_grade"
+        style="@style/Text.Body2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -14,6 +15,7 @@
 
     <TextView
         android:id="@+id/stat_card_grade_list_entry_type"
+        style="@style/Text.Body2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"

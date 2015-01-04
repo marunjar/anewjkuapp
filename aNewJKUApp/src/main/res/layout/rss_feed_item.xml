@@ -10,7 +10,7 @@
 
         <TextView
             android:id="@+id/rss_feed_item_title"
-            style="@style/Text.Title"
+            style="@style/Text.ItemTitle"
             android:minLines="2"
             android:layout_width="match_parent"
             android:layout_marginBottom="@dimen/separator_top_bottom_margin"

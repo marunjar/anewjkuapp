@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.voidsink.anewjkuapp.MensaInfoItem;
 import org.voidsink.anewjkuapp.MensaItem;
 import org.voidsink.anewjkuapp.MensaMenuAdapter;
 import org.voidsink.anewjkuapp.R;
@@ -19,9 +20,9 @@ import org.voidsink.anewjkuapp.mensa.MensaDay;
 import org.voidsink.anewjkuapp.mensa.MensaMenu;
 import org.voidsink.anewjkuapp.mensa.MenuLoader;
 import org.voidsink.anewjkuapp.view.GridViewWithHeader;
-import org.voidsink.anewjkuapp.view.ListViewWithHeader;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public abstract class MensaFragmentDetail extends BaseFragment {
@@ -77,17 +78,31 @@ public abstract class MensaFragmentDetail extends BaseFragment {
         protected Void doInBackground(String... urls) {
             final Mensa mensa = createLoader().getMensa(mContext);
 
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            // set date to start of week
+            cal.add(Calendar.DAY_OF_YEAR, -cal.get(Calendar.DAY_OF_WEEK) + cal.getFirstDayOfWeek());
+
             if (mensa != null) {
                 for (MensaDay day : mensa.getDays()) {
-                    for (MensaMenu menu : day.getMenus()) {
-                        mMenus.add(menu);
-                        // remember position of menu for today for scrolling to item after update
-                        if (mSelectPosition == -1 &&
-                                DateUtils.isToday(day.getDate().getTime())) {
-                            mSelectPosition = mMenus.size() - 1;
+                    // allow only menus >= start of this week
+                    if (day.getDate().getTime() >= cal.getTimeInMillis()) {
+                        for (MensaMenu menu : day.getMenus()) {
+                            mMenus.add(menu);
+                            // remember position of menu for today for scrolling to item after update
+                            if (mSelectPosition == -1 &&
+                                    DateUtils.isToday(day.getDate().getTime())) {
+                                mSelectPosition = mMenus.size() - 1;
+                            }
                         }
                     }
                 }
+            }
+            if (mMenus.size() == 0) {
+                mMenus.add(new MensaInfoItem(mensa, null, getString(R.string.mensa_menu_not_available), null));
             }
 
             return null;

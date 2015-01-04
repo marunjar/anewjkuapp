@@ -14,30 +14,28 @@
     <dimen name="text_size_medium">18dp</dimen>
     <dimen name="text_size_small">14dp</dimen>
 
-    <dimen name="list_card_padding_left">8dp</dimen>
-    <dimen name="list_card_padding_right">8dp</dimen>
-    <dimen name="list_card_padding_top">8dp</dimen>
-
-    <!-- set card dimension -->
-    <dimen name="card_base_empty_height">10dp</dimen>
+    <dimen name="list_card_padding_left">4dp</dimen>
+    <dimen name="list_card_padding_right">4dp</dimen>
+    <dimen name="list_card_padding_top">4dp</dimen>
+    <dimen name="list_card_padding_bottom">4dp</dimen>
 
     <!-- dimension for grade chip -->
     <dimen name="grade_chip_info_size">12sp</dimen>
     <dimen name="grade_chip_grade_size">28sp</dimen>
-    <dimen name="card_content_padding">8dp</dimen>
+    <dimen name="card_content_padding">6dp</dimen>
 
     <!-- Material Design -->
-    <dimen name="text_left_icon_margin">16dip</dimen>
-    <dimen name="icon_size">48dip</dimen>
-    <dimen name="icon_padding">4dip</dimen>
+    <dimen name="text_left_icon_margin">16dp</dimen>
+    <dimen name="icon_size">48dp</dimen>
+    <dimen name="icon_padding">4dp</dimen>
     <dimen name="drawer_section_height">36dp</dimen>
-    <dimen name="drawer_item_height">50dip</dimen>
+    <dimen name="drawer_item_height">50dp</dimen>
     <dimen name="separator_top_bottom_margin">4dp</dimen>
     <dimen name="text_size_drawer_item">20sp</dimen>
     <dimen name="text_size_drawer_section">16sp</dimen>
     <dimen name="text_size_headline">20sp</dimen>
     <dimen name="text_size_title">16sp</dimen>
-    <dimen name="text_size_subhead">14sp</dimen>
+    <dimen name="text_size_subtitle">14sp</dimen>
     <dimen name="text_size_body">12sp</dimen>
     <dimen name="text_size_caption">12sp</dimen>
     <dimen name="text_size_button">14sp</dimen>

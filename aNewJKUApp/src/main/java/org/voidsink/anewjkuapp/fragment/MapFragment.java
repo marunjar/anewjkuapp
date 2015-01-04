@@ -46,12 +46,15 @@ import org.mapsforge.core.model.Dimension;
 import org.mapsforge.core.model.LatLong;
 import org.mapsforge.core.model.MapPosition;
 import org.mapsforge.core.util.LatLongUtils;
+import org.mapsforge.core.util.MercatorProjection;
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.mapsforge.map.android.graphics.AndroidResourceBitmap;
+import org.mapsforge.map.android.rendertheme.AssetsRenderTheme;
 import org.mapsforge.map.android.util.AndroidUtil;
 import org.mapsforge.map.android.view.MapView;
-import org.mapsforge.map.layer.LayerManager;
+import org.mapsforge.map.layer.Layers;
 import org.mapsforge.map.layer.cache.TileCache;
+import org.mapsforge.map.layer.labels.LabelLayer;
 import org.mapsforge.map.layer.overlay.Marker;
 import org.mapsforge.map.layer.renderer.TileRendererLayer;
 import org.mapsforge.map.model.MapViewPosition;
@@ -62,6 +65,7 @@ import org.mapsforge.map.rendertheme.InternalRenderTheme;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
 import org.voidsink.anewjkuapp.ImportPoiTask;
 import org.voidsink.anewjkuapp.LocationOverlay;
+import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.MapUtils;
 import org.voidsink.anewjkuapp.Poi;
 import org.voidsink.anewjkuapp.PoiAdapter;
@@ -88,8 +92,12 @@ public class MapFragment extends BaseFragment implements
     private static final byte MIN_ZOOM_LEVEL = 14; // full campus fits to screen at zoom level 15
     private static final byte DEFAULT_ZOOM_LEVEL = 17;
 
-    LocationOverlay mMyLocationOverlay;
-    Marker goalLocationOverlay;
+    // Map Layer
+    private TileRendererLayer tileRendererLayer;
+    private LabelLayer labelLayer;
+    private Marker goalLocationOverlay;
+    private LocationOverlay mMyLocationOverlay;
+
     /**
      * The dummy content this fragment is presenting.
      */
@@ -139,6 +147,7 @@ public class MapFragment extends BaseFragment implements
     }
 
     private void doSearch(String query, boolean isExactLocation) {
+        query = query.trim();
         Log.i(TAG, "query: " + query);
 
         List<Poi> pois = new ArrayList<>();
@@ -229,8 +238,10 @@ public class MapFragment extends BaseFragment implements
         super.onCreate(savedInstanceState);
     }
 
-    private void setNewGoal(LatLong latLong, String name) {
-        if (latLong != null) {
+    private void setNewGoal(LatLong goalPosition, String name) {
+        if (goalPosition != null &&
+                mMyLocationOverlay != null &&
+                goalLocationOverlay != null) {
             this.mMyLocationOverlay.setSnapToLocationEnabled(false);
 
             if (!name.isEmpty()) {
@@ -247,7 +258,7 @@ public class MapFragment extends BaseFragment implements
                 bubble.incrementRefCount();
 
                 // set new goal
-                this.goalLocationOverlay.setLatLong(latLong);
+                this.goalLocationOverlay.setLatLong(goalPosition);
                 this.goalLocationOverlay.setBitmap(bubble);
                 this.goalLocationOverlay.setHorizontalOffset(0);
                 this.goalLocationOverlay.setVerticalOffset(-bubble.getHeight() / 2);
@@ -256,31 +267,44 @@ public class MapFragment extends BaseFragment implements
                 Bitmap b = AndroidGraphicFactory.convertToBitmap(d);
 
                 // set new goal
-                this.goalLocationOverlay.setLatLong(latLong);
+                this.goalLocationOverlay.setLatLong(goalPosition);
                 this.goalLocationOverlay.setBitmap(b);
                 this.goalLocationOverlay.setHorizontalOffset(0);
                 this.goalLocationOverlay.setVerticalOffset(0);
             }
 
-            if (this.mMyLocationOverlay.getLastLocation() != null) {
+            if (this.mMyLocationOverlay != null &&
+                    this.mMyLocationOverlay.getLastLocation() != null) {
                 LatLong mLocation = LocationOverlay
                         .locationToLatLong(this.mMyLocationOverlay
                                 .getLastLocation());
 
+                // lat long difference for bounding box
+                double mDLat = Math.abs((mLocation.latitude - goalPosition.latitude));
+                double mDLong = Math.abs((mLocation.longitude - goalPosition.longitude));
+
+                // trunc distance
+                double distance = mLocation.distance(goalPosition);
+                if (distance > 0.0088) {
+                    mDLat = (mDLat * 0.0088 / distance);
+                    mDLong = (mDLong * 0.0088 / distance);
+                }
+
                 // zoom to bounds
-                BoundingBox bb = new BoundingBox(Math.min(latLong.latitude,
-                        mLocation.latitude), Math.min(latLong.longitude,
-                        mLocation.longitude), Math.max(latLong.latitude,
-                        mLocation.latitude), Math.max(latLong.longitude,
-                        mLocation.longitude));
+                BoundingBox bb = new BoundingBox(
+                        Math.max(MercatorProjection.LATITUDE_MIN, goalPosition.latitude - mDLat),
+                        Math.max(-180, goalPosition.longitude - mDLong),
+                        Math.min(MercatorProjection.LATITUDE_MAX, goalPosition.latitude + mDLat),
+                        Math.min(180, goalPosition.longitude + mDLong));
                 Dimension dimension = this.mapView.getModel().mapViewDimension
                         .getDimension();
+                // zoom to bounding box, center at goalPosition
                 this.mapView.getModel().mapViewPosition
-                        .setMapPosition(new MapPosition(latLong, LatLongUtils
+                        .setMapPosition(new MapPosition(goalPosition, LatLongUtils
                                 .zoomForBounds(dimension, bb, this.mapView
                                         .getModel().displayModel.getTileSize())));
             } else {
-                this.mapViewPosition.setCenter(latLong);
+                this.mapViewPosition.setCenter(goalPosition);
             }
         } else {
             this.goalLocationOverlay.setLatLong(null);
@@ -342,21 +366,41 @@ public class MapFragment extends BaseFragment implements
         //this.mapView.getFpsCounter().setVisible(true);
         this.mapView.getMapScaleBar().setVisible(true);
 
-        final LayerManager mLayerManager = this.mapView.getLayerManager();
+        this.tileCache = AndroidUtil.createTileCache(this.getActivity(),
+                "mapFragment",
+                this.mapView.getModel().displayModel.getTileSize(), 1.0f, this.mapView.getModel().frameBufferModel.getOverdrawFactor());
+
+        return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        // create layer before handling intents in super
+        createLayers();
+
+        super.onStart();
+    }
+
+    private void createLayers() {
+        final Layers layers = this.mapView.getLayerManager().getLayers();
 
         this.mapViewPosition = this.mapView.getModel().mapViewPosition;
-
         initializePosition(this.mapViewPosition);
 
         this.tileCache = AndroidUtil.createTileCache(this.getActivity(),
                 "mapFragment",
                 this.mapView.getModel().displayModel.getTileSize(), 1.0f, this.mapView.getModel().frameBufferModel.getOverdrawFactor());
-        mLayerManager.getLayers().add(createTileRendererLayer(this.tileCache, mapViewPosition,
-                getMapFile(), InternalRenderTheme.OSMARENDER, false));
+
+        tileRendererLayer = createTileRendererLayer(this.tileCache, mapViewPosition,
+                getMapFile(), getRenderTheme(), false);
+        layers.add(tileRendererLayer);
+
+        labelLayer = new LabelLayer(AndroidGraphicFactory.INSTANCE, tileRendererLayer.getLabelStore());
+        layers.add(labelLayer);
 
         // overlay with a marker to show the goal position
         this.goalLocationOverlay = new Marker(null, null, 0, 0);
-        mLayerManager.getLayers().add(this.goalLocationOverlay);
+        layers.add(this.goalLocationOverlay);
 
         // overlay with a marker to show the actual position
         //TODO: find a way to colorize and use R.drawable.ic_marker_position instead of R.drawable.ic_marker_own_position
@@ -366,18 +410,49 @@ public class MapFragment extends BaseFragment implements
         this.mMyLocationOverlay = new LocationOverlay(this.getActivity(),
                 this.mapViewPosition, bitmap);
         this.mMyLocationOverlay.setSnapToLocationEnabled(false);
-        mLayerManager.getLayers().add(this.mMyLocationOverlay);
+        layers.add(this.mMyLocationOverlay);
+    }
 
-        return rootView;
+    private XmlRenderTheme getRenderTheme() {
+        try {
+            // TODO: use own rendertheme here
+            //return new AssetsRenderTheme(getContext(), "", "renderthemes/rendertheme-v4.xml");
+        } catch (Exception e) {
+            Analytics.sendException(getContext(), e, false);
+        }
+
+        return InternalRenderTheme.OSMARENDER;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        removeLayers();
+    }
+
+    private void removeLayers() {
+        this.mapView.getLayerManager().getLayers().remove(this.mMyLocationOverlay);
+        this.mMyLocationOverlay.onDestroy();
+        this.mMyLocationOverlay = null;
+
+        this.mapView.getLayerManager().getLayers().remove(this.goalLocationOverlay);
+        this.goalLocationOverlay.onDestroy();
+        this.goalLocationOverlay = null;
+
+        this.mapView.getLayerManager().getLayers().remove(this.labelLayer);
+        this.labelLayer.onDestroy();
+        this.labelLayer = null;
+
+        this.mapView.getLayerManager().getLayers().remove(this.tileRendererLayer);
+        this.tileRendererLayer.onDestroy();
+        this.tileRendererLayer = null;
     }
 
     private TileRendererLayer createTileRendererLayer(TileCache tileCache,
                                                       MapViewPosition mapViewPosition, File mapFile,
                                                       XmlRenderTheme renderTheme, boolean hasAlpha) {
-        TileRendererLayer tileRendererLayer = new TileRendererLayer(tileCache,
-                mapViewPosition, hasAlpha, AndroidGraphicFactory.INSTANCE);
-        tileRendererLayer.setMapFile(mapFile);
-        tileRendererLayer.setXmlRenderTheme(renderTheme);
+        TileRendererLayer tileRendererLayer = AndroidUtil.createTileRendererLayer(tileCache, mapViewPosition,mapFile, renderTheme, hasAlpha, false);
         tileRendererLayer.setTextScale(1.5f);
 
         return tileRendererLayer;
@@ -399,7 +474,7 @@ public class MapFragment extends BaseFragment implements
         MapDatabase mapDatabase = new MapDatabase();
         final FileOpenResult result = mapDatabase.openFile(mapFile);
         if (result.isSuccess()) {
-            LatLong uniteich = new LatLong(48.33706, 14.31960);
+            final LatLong uniteich = new LatLong(48.33706, 14.31960);
             final MapFileInfo mapFileInfo = mapDatabase.getMapFileInfo();
             if (mapFileInfo != null) {
                 if (mapFileInfo.boundingBox.contains(uniteich)) {

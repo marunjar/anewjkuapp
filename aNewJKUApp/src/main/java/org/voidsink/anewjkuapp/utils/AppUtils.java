@@ -7,6 +7,7 @@ import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.EmbossMaskFilter;
 import android.os.Build;
@@ -23,6 +24,7 @@ import org.voidsink.anewjkuapp.ImportStudiesTask;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.fragment.MapFragment;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Grade;
@@ -138,6 +140,14 @@ public class AppUtils {
                         errorOccured = true;
                     }
                 }
+                if (shouldRecreateCalendars(mLastVersion, mCurrentVersion)) {
+                    if (!removeCalendars(context)) {
+                        errorOccured = true;
+                    }
+                    if (!createCalendars(context)) {
+                        errorOccured = true;
+                    }
+                }
             } catch (Exception e) {
                 Log.e(TAG, "doOnNewVersion failed", e);
                 Analytics.sendException(context, e, false);
@@ -147,6 +157,26 @@ public class AppUtils {
                 PreferenceWrapper.setLastVersion(context, mCurrentVersion);
             }
         }
+    }
+
+    private static boolean createCalendars(Context context) {
+        Account account = AppUtils.getAccount(context);
+        if (account == null) {
+            return true;
+        }
+
+        return CalendarUtils.createCalendarsIfNecessary(context, account);
+    }
+
+    private static boolean removeCalendars(Context context) {
+        return CalendarUtils.removeCalendar(context, CalendarUtils.ARG_CALENDAR_EXAM) &&
+                CalendarUtils.removeCalendar(context, CalendarUtils.ARG_CALENDAR_LVA);
+    }
+
+    private static boolean shouldRecreateCalendars(int lastVersion, int currentVersion) {
+        // calendars changed with 140029
+        // remove old calendars on startup to avoid strange behaviour
+        return (lastVersion <= 140028 && currentVersion > 140028);
     }
 
     private static boolean shouldImportStudies(int lastVersion, int currentVersion) {
@@ -594,5 +624,21 @@ public class AppUtils {
 
     public static void sortStudies(List<Studies> mStudies) {
         Collections.sort(mStudies, StudiesComparator);
+    }
+
+    public static String getRowString(Cursor c) {
+        if (c == null) {
+            return null;
+        }
+
+        String row = "";
+        for (int i = 0; i < c.getColumnCount(); i++) {
+            try {
+                row = row + c.getColumnName(i) + "=" + c.getString(i) + ";";
+            } catch (Exception e) {
+                row = row + "@" + Integer.toString(i) + "=?;";
+            }
+        }
+        return row;
     }
 }

@@ -24,6 +24,7 @@ import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -121,9 +122,12 @@ public class KusssHandler {
                 return sessionId;
             }
             return null;
+        } catch (SocketTimeoutException e) {
+            // bad connection, timeout
+            return null;
         } catch (Exception e) {
             Log.w(TAG, "login failed", e);
-            Analytics.sendException(c, e, false);
+            Analytics.sendException(c, e, true);
             return null;
         }
     }
@@ -156,7 +160,7 @@ public class KusssHandler {
             return !isLoggedIn(c, null);
         } catch (Exception e) {
             Log.w(TAG, "logout failed", e);
-            Analytics.sendException(c, e, false);
+            Analytics.sendException(c, e, true);
             return true;
         }
     }
@@ -170,15 +174,18 @@ public class KusssHandler {
                 return false;
             }
 
-            Document doc = Jsoup.connect(URL_START_PAGE).get();
+            Document doc = Jsoup.connect(URL_START_PAGE).timeout(TIMEOUT_LOGIN).get();
 
             Elements notLoggedIn = doc.select(SELECT_NOT_LOGGED_IN);
             if (notLoggedIn.size() > 0) {
                 return false;
             }
+        } catch (SocketTimeoutException e) {
+            // bad connection, timeout
+            return false;
         } catch (IOException e) {
             Log.e(TAG, "isLoggedIn", e);
-            Analytics.sendException(c, e, false);
+            Analytics.sendException(c, e, true);
             return false;
         }
         return true;
@@ -270,7 +277,7 @@ public class KusssHandler {
         return terms;
     }
 
-    public boolean selectTerm(Context c, String term) throws IOException{
+    public boolean selectTerm(Context c, String term) throws IOException {
         Document doc = Jsoup.connect(URL_SELECT_TERM)
                 .data("term", term)
                 .data("previousQueryString", "")
@@ -362,7 +369,7 @@ public class KusssHandler {
                     Elements gradeRows = row
                             .select("tbody > tr[class]:has(td)");
                     for (Element gradeRow : gradeRows) {
-                        ExamGrade grade = new ExamGrade(type, gradeRow);
+                        ExamGrade grade = new ExamGrade(c, type, gradeRow);
                         if (grade.isInitialized()) {
                             grades.add(grade);
                         }
@@ -560,7 +567,7 @@ public class KusssHandler {
             }
             return studies;
         } catch (Exception e) {
-            Analytics.sendException(c, e, false);
+            Analytics.sendException(c, e, true);
             return null;
         }
     }

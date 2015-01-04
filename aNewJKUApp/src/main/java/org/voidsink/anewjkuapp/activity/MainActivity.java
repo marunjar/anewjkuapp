@@ -322,16 +322,6 @@ public class MainActivity extends ThemedActivity implements
                 Analytics.eventReloadGrades(this);
                 new ImportGradeTask(account, MainActivity.this).execute();
                 return true;
-            case R.id.action_refresh_calendar:
-                Log.d(TAG, "importing calendars");
-                Analytics.eventReloadEvents(this);
-                new ImportCalendarTask(account, this,
-                        CalendarUtils.ARG_CALENDAR_EXAM, new CalendarBuilder())
-                        .execute();
-                new ImportCalendarTask(account, this,
-                        CalendarUtils.ARG_CALENDAR_LVA, new CalendarBuilder())
-                        .execute();
-                return true;
             case R.id.action_refresh_lvas:
                 Log.d(TAG, "importing lvas");
                 Analytics.eventReloadLvas(this);

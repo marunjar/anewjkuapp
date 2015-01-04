@@ -5,13 +5,15 @@ import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderOperation.Builder;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import org.apache.commons.lang.time.DateUtils;
+import android.provider.CalendarContract;
+import android.text.TextUtils;
 import android.util.Log;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
@@ -21,6 +23,7 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.component.VEvent;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.voidsink.anewjkuapp.base.BaseAsyncTask;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
@@ -52,6 +55,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
             .compile(KusssHandler.PATTERN_LVA_NR_SLASH_TERM);
     private static final Pattern lvaLeiterPattern = Pattern
             .compile("Lva-LeiterIn:\\s+");
+    private static final String EXTENDED_PROPERTY_NAME_KUSSS_ID = "kusssId";
 
     private ContentProviderClient mProvider;
     private Account mAccount;
@@ -73,10 +77,17 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
             CalendarContractWrapper.Events.DESCRIPTION(), // VEvent.getDescription()
             CalendarContractWrapper.Events.DTSTART(), // VEvent.getStartDate()
             CalendarContractWrapper.Events.DTEND(), // VEvent.getEndDate()
-            CalendarContractWrapper.Events._SYNC_ID(), // VEvent.getUID()
+            CalendarContractWrapper.Events.SYNC_ID_CUSTOM(), // VEvent.getUID()
             CalendarContractWrapper.Events.DIRTY(),
             CalendarContractWrapper.Events.DELETED(),
-            CalendarContractWrapper.Events.CALENDAR_ID()};
+            CalendarContractWrapper.Events.CALENDAR_ID(),
+            CalendarContractWrapper.Events._SYNC_ID()};
+
+    public static final String[] EXTENDED_PROPERTIES_PROJECTION = new String[]{
+            CalendarContract.ExtendedProperties.EVENT_ID,
+            CalendarContract.ExtendedProperties.NAME,
+            CalendarContract.ExtendedProperties.VALUE
+    };
 
     // Constants representing column positions from PROJECTION.
     public static final int COLUMN_EVENT_ID = 0;
@@ -89,6 +100,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
     public static final int COLUMN_EVENT_DIRTY = 7;
     public static final int COLUMN_EVENT_DELETED = 8;
     public static final int COLUMN_EVENT_CAL_ID = 9;
+    public static final int COLUMN_EVENT_KUSSS_ID_LEGACY = 10;
 
     public ImportCalendarTask(Account account, Context context,
                               String getTypeID, CalendarBuilder calendarBuilder) {
@@ -117,7 +129,6 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        Log.d(TAG, "prepare importing calendar");
 
         if (mShowProgress) {
             mUpdateNotification = new SyncNotification(mContext,
@@ -142,7 +153,6 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                     CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
 
             try {
-
                 Log.d(TAG, "setup connection");
 
                 if (KusssHandler.getInstance().isAvailable(mContext,
@@ -153,344 +163,312 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                     Log.d(TAG, "loading calendar");
 
                     Calendar iCal = null;
+                    String kusssIdPrefix = null;
                     // {{ Load calendar events from resource
                     switch (this.mCalendarName) {
                         case CalendarUtils.ARG_CALENDAR_EXAM:
                             iCal = KusssHandler.getInstance().getExamIcal(mContext,
                                     mCalendarBuilder);
+                            kusssIdPrefix = "at-jku-kusss-exam-";
                             break;
                         case CalendarUtils.ARG_CALENDAR_LVA:
                             iCal = KusssHandler.getInstance().getLVAIcal(mContext,
                                     mCalendarBuilder);
+                            kusssIdPrefix = "at-jku-kusss-coursedate-";
                             break;
+                        default: {
+                            Log.w(TAG, "calendar not found: " + this.mCalendarName);
+                            return null;
+                        }
                     }
                     if (iCal == null) {
+                        Log.w(TAG, "calendar not loaded: " + this.mCalendarName);
                         mSyncResult.stats.numParseExceptions++;
-                    } else {
-                        // calc date for notifiying only future changes
-                        // max update interval is 1 week
-                        long notifyFrom = new Date().getTime()
-                                - (DateUtils.MILLIS_PER_DAY * 7);
-                        String lineSeparator = System
-                                .getProperty("line.separator");
+                        return null;
+                    }
 
-                        List<?> events = iCal.getComponents(Component.VEVENT);
+                    List<?> events = iCal.getComponents(Component.VEVENT);
 
-                        Log.d(TAG,
-                                String.format("got %s events", events.size()));
+                    Log.d(TAG, String.format("got %d events", events.size()));
 
-                        updateNotify(String.format(
-                                mContext.getString(R.string.notification_sync_calendar_updating),
-                                CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
+                    updateNotify(String.format(
+                            mContext.getString(R.string.notification_sync_calendar_updating),
+                            CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
 
-                        ArrayList<ContentProviderOperation> batch = new ArrayList<>();
+                    ArrayList<ContentProviderOperation> batch = new ArrayList<>();
 
-                        // modify event: move lvanr/term and teacher to
-                        // description
-                        Map<String, VEvent> eventsMap = new HashMap<>();
-                        for (Object e : events) {
-                            if (VEvent.class.isInstance(e)) {
-                                VEvent ev = ((VEvent) e);
+                    // modify events: move lvanr/term and teacher to description
+                    String lineSeparator = System.getProperty("line.separator");
+                    if (lineSeparator == null) lineSeparator = ", ";
 
-                                String summary = ev.getSummary().getValue()
-                                        .trim();
-                                String description = ev.getDescription()
-                                        .getValue().trim();
+                    Map<String, VEvent> eventsMap = new HashMap<>();
+                    for (Object e : events) {
+                        if (VEvent.class.isInstance(e)) {
+                            VEvent ev = ((VEvent) e);
 
-                                Matcher lvaNrTermMatcher = lvaNrTermPattern
-                                        .matcher(summary); // (lvaNr/term)
-                                if (lvaNrTermMatcher.find()) {
+                            String summary = ev.getSummary().getValue()
+                                    .trim();
+                            String description = ev.getDescription()
+                                    .getValue().trim();
+
+                            Matcher lvaNrTermMatcher = lvaNrTermPattern
+                                    .matcher(summary); // (lvaNr/term)
+                            if (lvaNrTermMatcher.find()) {
+                                if (!description.isEmpty()) {
+                                    description += lineSeparator;
+                                    description += lineSeparator;
+                                }
+                                description += summary
+                                        .substring(lvaNrTermMatcher.start());
+                                summary = summary.substring(0,
+                                        lvaNrTermMatcher.start());
+                            } else {
+                                Matcher lvaLeiterMatcher = lvaLeiterPattern
+                                        .matcher(summary);
+                                if (lvaLeiterMatcher.find()) {
                                     if (!description.isEmpty()) {
                                         description += lineSeparator;
                                         description += lineSeparator;
                                     }
                                     description += summary
-                                            .substring(lvaNrTermMatcher.start());
+                                            .substring(lvaLeiterMatcher
+                                                    .start());
                                     summary = summary.substring(0,
-                                            lvaNrTermMatcher.start());
-                                } else {
-                                    Matcher lvaLeiterMatcher = lvaLeiterPattern
-                                            .matcher(summary);
-                                    if (lvaLeiterMatcher.find()) {
-                                        if (!description.isEmpty()) {
-                                            description += lineSeparator;
-                                            description += lineSeparator;
-                                        }
-                                        description += summary
-                                                .substring(lvaLeiterMatcher
-                                                        .start());
-                                        summary = summary.substring(0,
-                                                lvaLeiterMatcher.start());
-                                    }
+                                            lvaLeiterMatcher.start());
                                 }
-                                summary = summary.trim();
-                                description = description.trim();
-
-                                ev.getProperty(Property.SUMMARY).setValue(
-                                        summary);
-                                ev.getProperty(Property.DESCRIPTION).setValue(
-                                        description);
                             }
+
+                            summary = summary.replaceAll("([\\r\\n]|\\\\n)+", ", ").trim();
+                            description = description.trim();
+
+                            ev.getProperty(Property.SUMMARY).setValue(
+                                    summary);
+                            ev.getProperty(Property.DESCRIPTION).setValue(
+                                    description);
                         }
+                    }
 
-                        // Build hash table of incoming entries
-                        for (Object e : events) {
-                            if (VEvent.class.isInstance(e)) {
-                                VEvent ev = ((VEvent) e);
+                    // Build hash table of incoming entries
+                    for (Object e : events) {
+                        if (VEvent.class.isInstance(e)) {
+                            VEvent ev = ((VEvent) e);
 
-                                String uid = ev.getUid().getValue();
-                                // Log.d(TAG, "uid hashed: " + uid);
-                                // compense DST
-                                eventsMap.put(uid, ev);
-                            }
+                            String uid = ev.getUid().getValue();
+                            // compense DST
+                            eventsMap.put(uid, ev);
                         }
+                    }
 
-                        String calendarId = CalendarUtils.getCalIDByName(
-                                mContext, mAccount, mCalendarName);
+                    String calendarId = CalendarUtils.getCalIDByName(
+                            mContext, mAccount, mCalendarName, true);
 
-                        if (calendarId == null) {
-                            return null;
-                        }
+                    if (calendarId == null) {
+                        Log.w(TAG, "calendarId not found");
+                        return null;
+                    }
 
-                        Log.d(TAG, "Fetching local entries for merge with:"
-                                + calendarId);
+                    String mCalendarAccountName = mAccount.name;
+                    String mCalendarAccountType = mAccount.type;
 
-                        Uri calUri = CalendarContractWrapper.Events
-                                .CONTENT_URI();
-
-                        // The ID of the recurring event whose instances you are
-                        // searching
-                        // for in the Instances table
-                        String selection = CalendarContractWrapper.Events
-                                .CALENDAR_ID() + " = ?";
-                        String[] selectionArgs = new String[]{calendarId};
-
-                        Log.d(TAG, "calUri: " + calUri.toString());
-
-                        Cursor c = mProvider.query(calUri, EVENT_PROJECTION,
-                                selection, selectionArgs, null);
-
-                        if (c == null) {
-                            Log.w(TAG, "selection failed");
-                        } else {
-                            Log.d(TAG,
-                                    "Found "
-                                            + c.getCount()
-                                            + " local entries. Computing merge solution...");
-
-                            // Find stale data
-                            String eventId;
-                            String eventKusssId;
-                            String eventLocation;
-                            String eventTitle;
-                            String eventDescription;
-                            long eventDTStart;
-                            long eventDTEnd;
-                            boolean eventDirty;
-                            boolean eventDeleted;
-
+                    try {
+                        Cursor c = mProvider.query(CalendarContractWrapper.Calendars.CONTENT_URI(),
+                                CalendarUtils.CALENDAR_PROJECTION, null, null, null);
+                        if (c != null) {
                             while (c.moveToNext()) {
-                                mSyncResult.stats.numEntries++;
-                                eventId = c.getString(COLUMN_EVENT_ID);
-                                eventKusssId = c
-                                        .getString(COLUMN_EVENT_KUSSS_ID);
-                                eventLocation = c
-                                        .getString(COLUMN_EVENT_LOCATION);
-                                eventTitle = c.getString(COLUMN_EVENT_TITLE);
-                                eventDescription = c
-                                        .getString(COLUMN_EVENT_DESCRIPTION);
-                                eventDTStart = c.getLong(COLUMN_EVENT_DTSTART);
-                                eventDTEnd = c.getLong(COLUMN_EVENT_DTEND);
-                                eventDirty = "1".equals(c
-                                        .getString(COLUMN_EVENT_DIRTY));
-                                eventDeleted = "1".equals(c
-                                        .getString(COLUMN_EVENT_DELETED));
-
-                                if (eventKusssId != null) {
-                                    VEvent match = eventsMap.get(eventKusssId);
-                                    if (match != null && !eventDeleted) {
-                                        // Entry exists. Remove from entry
-                                        // map to prevent insert later
-                                        eventsMap.remove(eventKusssId);
-                                        // Check to see if the entry needs
-                                        // to be
-                                        // updated
-                                        Uri existingUri = calUri.buildUpon()
-                                                .appendPath(eventId).build();
-                                        if ((!match.getSummary().getValue()
-                                                .trim().equals(eventTitle))
-                                                || (!match.getLocation()
-                                                .getValue().trim()
-                                                .equals(eventLocation))
-                                                || (!match
-                                                .getDescription()
-                                                .getValue()
-                                                .equals(eventDescription))
-                                                || (match.getStartDate()
-                                                .getDate().getTime() != eventDTStart)
-                                                || (match.getEndDate()
-                                                .getDate().getTime() != eventDTEnd)) {
-                                            // Update existing record
-                                            Log.d(TAG, "Scheduling update: "
-                                                    + existingUri + " dirty="
-                                                    + eventDirty);
-
-                                            if (mNotification != null) {
-                                                // notify only future changes
-                                                if (match.getStartDate()
-                                                        .getDate().getTime() > notifyFrom) {
-                                                    mNotification
-                                                            .addUpdate(getEventString(match));
-
-                                                }
-                                            }
-
-                                            batch.add(ContentProviderOperation
-                                                    .newUpdate(
-                                                            KusssContentContract
-                                                                    .asEventSyncAdapter(
-                                                                            existingUri,
-                                                                            mAccount.name,
-                                                                            mAccount.type))
-                                                    .withValue(
-                                                            CalendarContractWrapper.Events
-                                                                    .EVENT_LOCATION(),
-                                                            match.getLocation()
-                                                                    .getValue()
-                                                                    .trim())
-                                                    .withValue(
-                                                            CalendarContractWrapper.Events
-                                                                    .TITLE(),
-                                                            match.getSummary()
-                                                                    .getValue()
-                                                                    .trim())
-                                                    .withValue(
-                                                            CalendarContractWrapper.Events
-                                                                    .DESCRIPTION(),
-                                                            match.getDescription()
-                                                                    .getValue())
-                                                    .withValue(
-                                                            CalendarContractWrapper.Events
-                                                                    .DTSTART(),
-                                                            eventDTStart)
-                                                    .withValue(
-                                                            CalendarContractWrapper.Events
-                                                                    .DTEND(),
-                                                            eventDTEnd).build());
-                                            mSyncResult.stats.numUpdates++;
-                                        } else {
-                                            mSyncResult.stats.numSkippedEntries++;
-                                            // Log.d(TAG, "No action: " +
-                                            // eventKusssId);
-                                        }
-                                    } else {
-                                        Log.d(TAG,
-                                                "may delete event: "
-                                                        + eventKusssId
-                                                        + " "
-                                                        + eventDTStart
-                                                        + " > "
-                                                        + (mSyncFromNow - DateUtils.MILLIS_PER_DAY));
-                                        if (eventDeleted
-                                                || ((eventKusssId != null)
-                                                && (!eventKusssId
-                                                .isEmpty()) && (eventDTStart > (mSyncFromNow - DateUtils.MILLIS_PER_DAY)))) {
-                                            // Entry doesn't exist. Remove
-                                            // only newer events from the
-                                            // database.
-                                            Uri deleteUri = calUri.buildUpon()
-                                                    .appendPath(eventId)
-                                                    .build();
-                                            Log.d(TAG, "Scheduling delete: "
-                                                    + deleteUri);
-
-                                            if (!eventDeleted) {
-                                                // notify only future changes
-                                                if (eventDTStart > notifyFrom) {
-                                                    mNotification
-                                                            .addDelete(getEventString(
-                                                                    eventDTStart,
-                                                                    eventDTEnd,
-                                                                    eventTitle));
-                                                }
-                                            }
-
-                                            batch.add(ContentProviderOperation
-                                                    .newDelete(
-                                                            KusssContentContract
-                                                                    .asEventSyncAdapter(
-                                                                            deleteUri,
-                                                                            mAccount.name,
-                                                                            mAccount.type))
-                                                    .build());
-                                            mSyncResult.stats.numDeletes++;
-                                        } else {
-                                            mSyncResult.stats.numSkippedEntries++;
-                                        }
-                                    }
-                                } else {
-                                    Log.i(TAG,
-                                            "SyncID not set, ignore event: dirty="
-                                                    + eventDirty + " title="
-                                                    + eventTitle);
+                                if (calendarId.equals(c.getString(CalendarUtils.COLUMN_CAL_ID))) {
+                                    mCalendarAccountName = c.getString(CalendarUtils.COLUMN_CAL_ACCOUNT_NAME);
+                                    mCalendarAccountType = c.getString(CalendarUtils.COLUMN_CAL_ACCOUNT_TYPE);
+                                    break;
                                 }
                             }
                             c.close();
+                        }
+                    } catch (Exception e) {
+                        return null;
+                    }
 
-                            Log.d(TAG, "Cursor closed, " + eventsMap.size()
-                                    + " events left");
+                    Log.d(TAG, "Fetching local entries for merge with: " + calendarId);
 
-                            updateNotify(String.format(
-                                    mContext.getString(R.string.notification_sync_calendar_adding),
-                                    CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
+                    Uri calUri = CalendarContractWrapper.Events
+                            .CONTENT_URI();
 
-                            // Add new items
-                            for (VEvent v : eventsMap.values()) {
+                    // The ID of the recurring event whose instances you are
+                    // searching
+                    // for in the Instances table
+                    String selection = CalendarContractWrapper.Events
+                            .CALENDAR_ID() + " = ?";
+                    String[] selectionArgs = new String[]{calendarId};
+
+                    Cursor c = mProvider.query(calUri, EVENT_PROJECTION,
+                            selection, selectionArgs, null);
+
+                    if (c == null) {
+                        Log.w(TAG, "selection failed");
+                    } else {
+                        Log.d(TAG, String.format("Found %d local entries. Computing merge solution...", c.getCount()));
+
+                        // find stale data
+                        String eventId;
+                        String eventKusssId;
+                        String eventLocation;
+                        String eventTitle;
+                        String eventDescription;
+                        long eventDTStart;
+                        long eventDTEnd;
+                        boolean eventDirty;
+                        boolean eventDeleted;
+
+                        // calc date for notifiying only future changes
+                        // max update interval is 1 week
+                        long notifyFrom = new Date().getTime()
+                                - (DateUtils.MILLIS_PER_DAY * 7);
+
+                        while (c.moveToNext()) {
+                            mSyncResult.stats.numEntries++;
+                            eventId = c.getString(COLUMN_EVENT_ID);
+
+                            eventKusssId = null;
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                                // get kusssId from extended properties
+                                Cursor c2 = mProvider.query(CalendarContract.ExtendedProperties.CONTENT_URI, EXTENDED_PROPERTIES_PROJECTION,
+                                        CalendarContract.ExtendedProperties.EVENT_ID + " = ?",
+                                        new String[]{eventId},
+                                        null);
+
+                                while (c2.moveToNext()) {
+                                    if (c2.getString(1).contains(EXTENDED_PROPERTY_NAME_KUSSS_ID)) {
+                                        eventKusssId = c2.getString(2);
+                                    }
+                                }
+                                c2.close();
+                            } else {
+                                eventKusssId = c.getString(COLUMN_EVENT_KUSSS_ID);
+                            }
+                            if (TextUtils.isEmpty(eventKusssId)) {
+                                eventKusssId = c.getString(COLUMN_EVENT_KUSSS_ID_LEGACY);
+                            }
+
+                            eventTitle = c.getString(COLUMN_EVENT_TITLE);
+
+                            eventLocation = c
+                                    .getString(COLUMN_EVENT_LOCATION);
+                            eventDescription = c
+                                    .getString(COLUMN_EVENT_DESCRIPTION);
+                            eventDTStart = c.getLong(COLUMN_EVENT_DTSTART);
+                            eventDTEnd = c.getLong(COLUMN_EVENT_DTEND);
+                            eventDirty = "1".equals(c
+                                    .getString(COLUMN_EVENT_DIRTY));
+                            eventDeleted = "1".equals(c
+                                    .getString(COLUMN_EVENT_DELETED));
+
+                            if (eventKusssId != null && kusssIdPrefix != null && eventKusssId.startsWith(kusssIdPrefix)) {
+                                VEvent match = eventsMap.get(eventKusssId);
+                                if (match != null && !eventDeleted) {
+                                    // Entry exists. Remove from entry
+                                    // map to prevent insert later
+                                    eventsMap.remove(eventKusssId);
+
+                                    // update only changes after notifiyFrom
+                                    if ((match.getStartDate().getDate().getTime() > notifyFrom || eventDTStart > notifyFrom) &&
+                                            // check to see if the entry needs to be updated
+                                            ((match.getStartDate().getDate().getTime() != eventDTStart) ||
+                                                    (match.getEndDate().getDate().getTime() != eventDTEnd) ||
+                                                    (!match.getSummary().getValue().trim().equals(eventTitle.trim())) ||
+                                                    (!match.getSummary().getValue().trim().equals(eventTitle.trim())) ||
+                                                    (!match.getLocation().getValue().trim().equals(eventLocation.trim())) ||
+                                                    (!match.getDescription().getValue().trim().equals(eventDescription.trim()))
+                                            )) {
+                                        Uri existingUri = calUri.buildUpon()
+                                                .appendPath(eventId).build();
+
+                                        // Update existing record
+                                        Log.d(TAG, "Scheduling update: " + existingUri
+                                                + " dirty=" + eventDirty);
+
+                                        batch.add(ContentProviderOperation
+                                                .newUpdate(existingUri)
+                                                .withValues(getContentValuesFromEvent(match))
+                                                .build());
+                                        mSyncResult.stats.numUpdates++;
+
+                                        if (mNotification != null) {
+                                            mNotification.addUpdate(getEventString(match));
+                                        }
+                                    } else {
+                                        mSyncResult.stats.numSkippedEntries++;
+                                    }
+                                } else {
+                                    if (eventDTStart > (mSyncFromNow - DateUtils.MILLIS_PER_DAY)) {
+                                        // Entry doesn't exist. Remove only newer events from the database.
+                                        Uri deleteUri = calUri.buildUpon()
+                                                .appendPath(eventId)
+                                                .build();
+                                        Log.d(TAG, "Scheduling delete: " + deleteUri);
+                                        // notify only future changes
+                                        if (eventDTStart > notifyFrom && !eventDeleted) {
+                                            mNotification
+                                                    .addDelete(getEventString(
+                                                            eventDTStart,
+                                                            eventDTEnd,
+                                                            eventTitle));
+                                        }
+
+                                        batch.add(ContentProviderOperation
+                                                .newDelete(deleteUri)
+                                                .build());
+                                        mSyncResult.stats.numDeletes++;
+                                    } else {
+                                        mSyncResult.stats.numSkippedEntries++;
+                                    }
+                                }
+                            } else {
+                                Log.i(TAG,
+                                        "Event UID not set, ignore event: uid=" + eventKusssId
+                                                + " dirty=" + eventDirty
+                                                + " title=" + eventTitle);
+                            }
+                        }
+                        c.close();
+
+                        Log.d(TAG, String.format("Cursor closed, %d events left", eventsMap.size()));
+
+                        updateNotify(String.format(
+                                mContext.getString(R.string.notification_sync_calendar_adding),
+                                CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
+
+                        // Add new items
+                        for (VEvent v : eventsMap.values()) {
+
+                            if (v.getUid().getValue().startsWith(kusssIdPrefix)) {
                                 // notify only future changes
                                 if (v.getStartDate().getDate().getTime() > notifyFrom) {
                                     mNotification.addInsert(getEventString(v));
                                 }
 
-                                Builder builder = ContentProviderOperation
-                                        .newInsert(
-                                                KusssContentContract
-                                                        .asEventSyncAdapter(
-                                                                CalendarContractWrapper.Events
-                                                                        .CONTENT_URI(),
-                                                                mAccount.name,
-                                                                mAccount.type))
+                                Builder builder = null;
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                                    builder = ContentProviderOperation
+                                            .newInsert(CalendarContractWrapper.Events.CONTENT_URI());
+                                } else {
+                                    builder = ContentProviderOperation
+                                            .newInsert(
+                                                    KusssContentContract
+                                                            .asEventSyncAdapter(
+                                                                    CalendarContractWrapper.Events
+                                                                            .CONTENT_URI(),
+                                                                    mCalendarAccountName,
+                                                                    mCalendarAccountType))
+                                            .withValue(
+                                                    CalendarContractWrapper.Events.SYNC_ID_CUSTOM(),
+                                                    v.getUid().getValue());
+                                }
+
+                                builder
                                         .withValue(
                                                 CalendarContractWrapper.Events
                                                         .CALENDAR_ID(),
                                                 calendarId)
-                                        .withValue(
-                                                CalendarContractWrapper.Events
-                                                        .EVENT_LOCATION(),
-                                                v.getLocation().getValue()
-                                                        .trim())
-                                        .withValue(
-                                                CalendarContractWrapper.Events
-                                                        .TITLE(),
-                                                v.getSummary().getValue()
-                                                        .trim())
-                                        .withValue(
-                                                CalendarContractWrapper.Events
-                                                        .DESCRIPTION(),
-                                                v.getDescription().getValue())
-                                        .withValue(
-                                                CalendarContractWrapper.Events
-                                                        ._SYNC_ID(),
-                                                v.getUid().getValue())
-                                        .withValue(
-                                                CalendarContractWrapper.Events
-                                                        .DTSTART(),
-                                                v.getStartDate().getDate()
-                                                        .getTime())
-                                        .withValue(
-                                                CalendarContractWrapper.Events
-                                                        .DTEND(),
-                                                v.getEndDate().getDate()
-                                                        .getTime())
+                                        .withValues(getContentValuesFromEvent(v))
                                         .withValue(
                                                 CalendarContractWrapper.Events
                                                         .EVENT_TIMEZONE(),
@@ -511,44 +489,58 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                                                 CalendarContractWrapper.Events
                                                         .AVAILABILITY_FREE());
                                     }
-                                }
 
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                                    builder.withValue(
-                                            CalendarContractWrapper.Events
-                                                    .UID_2445(), v.getUid()
-                                                    .getValue());
+                                    builder.withValue(CalendarContract.Events.STATUS, CalendarContract.Events.STATUS_TENTATIVE);
+                                    builder.withValue(CalendarContract.Events.HAS_ALARM, "0");
+                                    builder.withValue(CalendarContract.Events.HAS_ATTENDEE_DATA, "0");
+                                    builder.withValue(CalendarContract.Events.HAS_EXTENDED_PROPERTIES, "1");
                                 }
 
                                 ContentProviderOperation op = builder.build();
-                                Log.d(TAG, "Scheduling insert: "
-                                        + v.getUid().getValue());
+                                Log.d(TAG, "Scheduling insert: " + v.getUid().getValue());
                                 batch.add(op);
 
+                                int eventIndex = batch.size() - 1;
+
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                                    // add kusssid as extendet property
+                                    batch.add(ContentProviderOperation
+                                            .newInsert(
+                                                    KusssContentContract
+                                                            .asEventSyncAdapter(
+                                                                    CalendarContract.ExtendedProperties.CONTENT_URI,
+                                                                    mAccount.name,
+                                                                    mAccount.type))
+                                            .withValueBackReference(CalendarContract.ExtendedProperties.EVENT_ID, eventIndex)
+                                            .withValue(CalendarContract.ExtendedProperties.NAME, EXTENDED_PROPERTY_NAME_KUSSS_ID)
+                                            .withValue(CalendarContract.ExtendedProperties.VALUE, v.getUid().getValue()).build());
+                                }
                                 mSyncResult.stats.numInserts++;
-                            }
-
-                            if (batch.size() > 0) {
-                                updateNotify(String.format(
-                                        mContext.getString(R.string.notification_sync_calendar_saving),
-                                        CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
-
-                                Log.d(TAG, "Applying batch update");
-                                mProvider.applyBatch(batch);
-                                Log.d(TAG, "Notify resolver");
-                                mResolver.notifyChange(calUri.buildUpon()
-                                                .appendPath(calendarId).build(), // URI
-                                        // where
-                                        // data
-                                        // was
-                                        // modified
-                                        null, // No local observer
-                                        false); // IMPORTANT: Do not sync to
-                                // network
                             } else {
-                                Log.w(TAG,
-                                        "No batch operations found! Do nothing");
+                                mSyncResult.stats.numSkippedEntries++;
                             }
+                        }
+
+                        if (batch.size() > 0) {
+                            updateNotify(String.format(
+                                    mContext.getString(R.string.notification_sync_calendar_saving),
+                                    CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
+
+                            Log.d(TAG, "Applying batch update");
+                            mProvider.applyBatch(batch);
+                            Log.d(TAG, "Notify resolver");
+                            mResolver.notifyChange(calUri.buildUpon()
+                                            .appendPath(calendarId).build(), // URI
+                                    // where
+                                    // data
+                                    // was
+                                    // modified
+                                    null, // No local observer
+                                    false); // IMPORTANT: Do not sync to
+                            // network
+                        } else {
+                            Log.w(TAG,
+                                    "No batch operations found! Do nothing");
                         }
                     }
                 } else {
@@ -568,6 +560,18 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
         mNotification.show();
 
         return null;
+    }
+
+    private ContentValues getContentValuesFromEvent(VEvent v) {
+        ContentValues cv = new ContentValues();
+
+        cv.put(CalendarContractWrapper.Events.EVENT_LOCATION(), v.getLocation().getValue().trim());
+        cv.put(CalendarContractWrapper.Events.TITLE(), v.getSummary().getValue().trim());
+        cv.put(CalendarContractWrapper.Events.DESCRIPTION(), v.getDescription().getValue().trim());
+        cv.put(CalendarContractWrapper.Events.DTSTART(), v.getStartDate().getDate().getTime());
+        cv.put(CalendarContractWrapper.Events.DTEND(), v.getEndDate().getDate().getTime());
+
+        return cv;
     }
 
     private void updateNotify(String string) {

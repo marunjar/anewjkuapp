@@ -18,11 +18,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+
+import net.fortuna.ical4j.data.CalendarBuilder;
 
 import org.voidsink.anewjkuapp.ImportCalendarTask;
 import org.voidsink.anewjkuapp.R;
@@ -77,7 +80,7 @@ public class CalendarFragment extends BaseFragment {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                 CalendarListItem item = mAdapter.getItem(i);
+                CalendarListItem item = mAdapter.getItem(i);
                 if (item instanceof CalendarListEvent) {
                     Intent intent = new Intent(getContext(), MainActivity.class).putExtra(
                             MainActivity.ARG_SHOW_FRAGMENT,
@@ -121,6 +124,28 @@ public class CalendarFragment extends BaseFragment {
         inflater.inflate(R.menu.calendar, menu);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_refresh_calendar:
+                final Account account = AppUtils.getAccount(getContext());
+
+                if (account != null) {
+                    Log.d(TAG, "importing calendars");
+                    Analytics.eventReloadEvents(getContext());
+                    new ImportCalendarTask(account, getContext(),
+                            CalendarUtils.ARG_CALENDAR_EXAM, new CalendarBuilder())
+                            .execute();
+                    new ImportCalendarTask(account, getContext(),
+                            CalendarUtils.ARG_CALENDAR_LVA, new CalendarBuilder())
+                            .execute();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private void loadMoreData() {
         then += 31 * DateUtils.DAY_IN_MILLIS;
 
@@ -130,7 +155,7 @@ public class CalendarFragment extends BaseFragment {
     }
 
     private void loadData() {
-        Log.d(TAG, "loadData");
+//        Log.d(TAG, "loadData");
         new CalendarLoadTask().execute();
     }
 
@@ -139,9 +164,26 @@ public class CalendarFragment extends BaseFragment {
         super.onStart();
 
         mCalendarObserver = new CalendarContentObserver(new Handler());
-        getActivity().getContentResolver().registerContentObserver(
-                CalendarContractWrapper.Events.CONTENT_URI().buildUpon()
-                        .appendPath("#").build(), false, mCalendarObserver);
+
+        Account account = AppUtils.getAccount(getContext());
+
+        String lvaCalId = CalendarUtils.getCalIDByName(getContext(), account, CalendarUtils.ARG_CALENDAR_LVA, true);
+        String examCalId = CalendarUtils.getCalIDByName(getContext(), account, CalendarUtils.ARG_CALENDAR_EXAM, true);
+
+        if (lvaCalId == null || examCalId == null) {
+            // listen to all changes
+            getActivity().getContentResolver().registerContentObserver(
+                    CalendarContractWrapper.Events.CONTENT_URI().buildUpon()
+                            .appendPath("#").build(), false, mCalendarObserver);
+        } else {
+            getActivity().getContentResolver().registerContentObserver(
+                    CalendarContractWrapper.Events.CONTENT_URI().buildUpon()
+                            .appendPath(lvaCalId).build(), false, mCalendarObserver);
+            getActivity().getContentResolver().registerContentObserver(
+                    CalendarContractWrapper.Events.CONTENT_URI().buildUpon()
+                            .appendPath(examCalId).build(), false, mCalendarObserver);
+        }
+
     }
 
     @Override
@@ -184,9 +226,9 @@ public class CalendarFragment extends BaseFragment {
                 }
 
                 String calIDLva = CalendarUtils.getCalIDByName(mContext,
-                        mAccount, CalendarUtils.ARG_CALENDAR_LVA);
+                        mAccount, CalendarUtils.ARG_CALENDAR_LVA, true);
                 String calIDExam = CalendarUtils.getCalIDByName(mContext,
-                        mAccount, CalendarUtils.ARG_CALENDAR_EXAM);
+                        mAccount, CalendarUtils.ARG_CALENDAR_EXAM, true);
 
                 if (calIDLva == null || calIDExam == null) {
                     Log.w(TAG, "no events loaded, calendars not found");

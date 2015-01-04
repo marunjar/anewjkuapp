@@ -4,6 +4,7 @@
     <color name="primary">#0F60BD</color>
     <color name="primaryDark">#0F4D9D</color>
     <color name="accent">#EE8C2B</color>
+    <color name="accentTransparent">#55EE8C2B</color>
 
     <color name="color_chip_grade_back_default">@color/primary</color>
     <color name="color_chip_grade_text">#fff</color>

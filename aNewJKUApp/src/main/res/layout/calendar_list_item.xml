@@ -12,17 +12,12 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/calendar_list_item_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:contentInsetEnd="0dp"
-            app:contentInsetLeft="0dp"
-            app:contentInsetRight="0dp"
-            app:contentInsetStart="0dp"
-            app:theme="?attr/cardToolbarStyle">
+            style="@style/cardToolbarStyle"
+            app:theme="?attr/cardToolbarTheme">
 
             <TextView
                 android:id="@+id/calendar_list_item_title"
-                style="@style/Text.Title"
+                style="@style/Text.ItemTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical" />
@@ -35,7 +30,7 @@
 
             <TextView
                 android:id="@+id/calendar_list_item_time"
-                style="@style/Text.Body1"
+                style="@style/Text.Body2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -43,7 +38,7 @@
 
             <TextView
                 android:id="@+id/calendar_list_item_location"
-                style="@style/Text.Body1"
+                style="@style/Text.Body2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/calendar_list_item_time"

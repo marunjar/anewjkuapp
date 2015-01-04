@@ -200,7 +200,7 @@ public class StudiesFragment extends BaseFragment implements
                 holder = (StudiesHolder) convertView.getTag();
             }
 
-            holder.isStandard.setText(item.isStandard() ? getString(android.R.string.yes) : getString(android.R.string.no));
+            holder.isStandard.setText(item.isStandard() ? getString(R.string.studies_is_standard_yes) : getString(R.string.studies_is_standard_no));
             holder.skz.setText(item.getSkz());
             holder.title.setText(item.getTitle());
             holder.steopDone.setText(item.isSteopDone() ? getString(R.string.studies_steop_done_yes) : getString(R.string.studies_steop_done_no));

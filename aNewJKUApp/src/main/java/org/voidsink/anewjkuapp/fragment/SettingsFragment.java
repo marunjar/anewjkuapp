@@ -2,14 +2,17 @@ package org.voidsink.anewjkuapp.fragment;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.support.v4.app.Fragment;
 import android.support.v4.preference.PreferenceFragment;
+import android.text.TextUtils;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.SettingsActivity;
+import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.Consts;
 
@@ -96,6 +99,76 @@ public class SettingsFragment extends PreferenceFragment {
             super.onStart();
 
             Analytics.sendScreen(getActivity(), Consts.SCREEN_SETTINGS_APP);
+        }
+    }
+
+    public static class TimetableSettingsFragment extends PreferenceFragment {
+
+        private CalendarUtils.CalendarList calendars;
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            // Make sure default values are applied. In a real app, you would
+            // want this in a shared function that is used to retrieve the
+            // SharedPreferences wherever they are needed.
+            PreferenceManager.setDefaultValues(getActivity(),
+                    R.xml.preference_timetable, false);
+
+            // Load the preferences from an XML resource
+            addPreferencesFromResource(R.xml.preference_timetable);
+
+            calendars = CalendarUtils.getCalendars(getActivity(), true);
+
+            ListPreference calendarLva = (ListPreference) findPreference("pref_key_extended_calendar_lva");
+            setEntries(calendars, calendarLva);
+            updateTextPrefSummary(calendarLva, null, R.string.pref_kusss_calendar_extended_summary);
+            calendarLva.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    updateTextPrefSummary((ListPreference) preference, newValue.toString(), R.string.pref_kusss_calendar_extended_summary);
+                    return true;
+                }
+            });
+
+            ListPreference calendarExam = (ListPreference) findPreference("pref_key_extended_calendar_exam");
+            setEntries(calendars, calendarExam);
+            updateTextPrefSummary(calendarExam, null, R.string.pref_kusss_calendar_extended_summary);
+            calendarExam.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    updateTextPrefSummary((ListPreference) preference, newValue.toString(), R.string.pref_kusss_calendar_extended_summary);
+                    return true;
+                }
+            });
+        }
+
+        private void updateTextPrefSummary(ListPreference preference, String value, int defaultSummaryResId) {
+            if (preference != null) {
+                if (TextUtils.isEmpty(value)) {
+                    value = preference.getValue();
+                }
+
+                int index = preference.findIndexOfValue(value);
+                if (index >= 0) {
+                    preference.setSummary(preference.getEntries()[index]);
+                } else {
+                    preference.setSummary(defaultSummaryResId);
+                }
+            }
+        }
+
+        private void setEntries(CalendarUtils.CalendarList calendars, ListPreference preference) {
+            preference.setEntries(calendars.getDisplayNames().toArray(new String[0]));
+            preference.setEntryValues(calendars.getIdsAsStrings());
+        }
+
+        @Override
+        public void onStart() {
+            super.onStart();
+
+            Analytics.sendScreen(getActivity(), Consts.SCREEN_SETTINGS_TIMETABLE);
         }
     }
 }

@@ -12,17 +12,12 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/stat_card_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:contentInsetEnd="0dp"
-            app:contentInsetLeft="0dp"
-            app:contentInsetRight="0dp"
-            app:contentInsetStart="0dp"
-            app:theme="?attr/cardToolbarStyle">
+            style="@style/cardToolbarStyle"
+            app:theme="?attr/cardToolbarTheme">
 
             <TextView
                 android:id="@+id/stat_card_title"
-                style="@style/Text.Title"
+                style="@style/Text.ItemTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical" />
