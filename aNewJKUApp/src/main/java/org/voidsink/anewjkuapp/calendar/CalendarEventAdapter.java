@@ -62,34 +62,11 @@ public class CalendarEventAdapter extends ListWithHeaderAdapter<CalendarListItem
                 public boolean onMenuItemClick(MenuItem menuItem) {
                     switch (menuItem.getItemId()) {
                         case R.id.show_in_calendar: {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                                Uri.Builder builder = CalendarContractWrapper.CONTENT_URI().buildUpon();
-                                builder.appendPath("time");
-                                ContentUris.appendId(builder, eventItem.getDtStart());
-                                Intent intent = new Intent(Intent.ACTION_VIEW)
-                                        .setData(builder.build());
-                                getContext().startActivity(intent);
-                            } else {
-                                Uri uri = ContentUris.withAppendedId(CalendarContractWrapper.Events.CONTENT_URI(), eventItem.getEventId());
-                                Intent intent = new Intent(Intent.ACTION_VIEW)
-                                        .setData(uri);
-                                getContext().startActivity(intent);
-                            }
+                            eventItem.showInCalendar(getContext());
                             return true;
                         }
                         case R.id.show_on_map: {
-                            Intent intent = new Intent(getContext(), MainActivity.class).putExtra(
-                                    MainActivity.ARG_SHOW_FRAGMENT,
-                                    MapFragment.class.getName()).setAction(
-                                    Intent.ACTION_SEARCH).addFlags(
-                                    Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                            if (!TextUtils.isEmpty(eventItem.getLocation())) {
-                                intent.putExtra(SearchManager.QUERY, eventItem.getLocation());
-                                intent.putExtra(MainActivity.ARG_EXACT_LOCATION, true);
-                            } else {
-                                intent.putExtra(SearchManager.QUERY, "Uniteich");
-                            }
-                            getContext().startActivity(intent);
+                            eventItem.showOnMap(getContext());
                             return true;
                         }
                     }

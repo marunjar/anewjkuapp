@@ -21,11 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import net.fortuna.ical4j.data.CalendarBuilder;
-
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.voidsink.anewjkuapp.DrawerItem;
-import org.voidsink.anewjkuapp.ImportCalendarTask;
 import org.voidsink.anewjkuapp.ImportExamTask;
 import org.voidsink.anewjkuapp.ImportGradeTask;
 import org.voidsink.anewjkuapp.ImportLvaTask;
@@ -35,7 +32,6 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.base.ThemedActivity;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
-import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.fragment.CalendarFragment;
 import org.voidsink.anewjkuapp.fragment.NavigationDrawerFragment;
 import org.voidsink.anewjkuapp.fragment.StudiesFragment;
@@ -53,6 +49,7 @@ public class MainActivity extends ThemedActivity implements
 
     public static final String ARG_SHOW_FRAGMENT = "show_fragment";
     public static final String ARG_EXACT_LOCATION = "exact_location";
+    public static final String ARG_SAVE_LAST_FRAGMENT = "save_last_fragment";
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -156,8 +153,9 @@ public class MainActivity extends ThemedActivity implements
                                     boolean attachStored) {
         if (intent != null && intent.hasExtra(ARG_SHOW_FRAGMENT)) {
             // show fragment from intent
-            return attachFragmentByClassName(intent
-                    .getStringExtra(ARG_SHOW_FRAGMENT));
+            return attachFragmentByClassName(
+                    intent.getStringExtra(ARG_SHOW_FRAGMENT),
+                    intent.getBooleanExtra(ARG_SAVE_LAST_FRAGMENT, true));
         } else if (savedInstanceState != null) {
             // restore saved fragment
             return attachFragmentByClassName(savedInstanceState
@@ -193,13 +191,16 @@ public class MainActivity extends ThemedActivity implements
         handleIntent(f, intent);
     }
 
-    @SuppressWarnings("unchecked")
     private Fragment attachFragmentByClassName(final String clazzname) {
+        return attachFragmentByClassName(clazzname, true);
+    }
+
+    private Fragment attachFragmentByClassName(final String clazzname, final boolean saveLastFragment) {
         if (clazzname != null && !clazzname.isEmpty()) {
             try {
                 Class<?> clazz = getClassLoader().loadClass(clazzname);
                 if (Fragment.class.isAssignableFrom(clazz)) {
-                    return attachFragment((Class<? extends Fragment>) clazz);
+                    return attachFragment((Class<? extends Fragment>) clazz, saveLastFragment);
                 }
             } catch (ClassNotFoundException e) {
                 Log.w(TAG, "fragment instantiation failed", e);
@@ -235,26 +236,23 @@ public class MainActivity extends ThemedActivity implements
         return attachFragment(startFragment, true);
     }
 
-    private Fragment attachFragment(Class<? extends Fragment> startFragment, boolean addToBackStack) {
+    private Fragment attachFragment(Class<? extends Fragment> startFragment, boolean saveLastFragment) {
         if (startFragment != null) {
             try {
                 Fragment f = startFragment.newInstance();
 
-                if (addToBackStack) {
-                    Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(ARG_SHOW_FRAGMENT);
-
-                    addToBackStack = (oldFragment != null) && (!oldFragment.getClass().equals(f.getClass()));
-                }
+                Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(ARG_SHOW_FRAGMENT);
+                boolean addToBackstack = (oldFragment != null) && (!oldFragment.getClass().equals(f.getClass()));
 
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.container, f, ARG_SHOW_FRAGMENT);
-                if (addToBackStack) {
+                if (addToBackstack) {
                     ft.addToBackStack(f.getClass().getCanonicalName());
                 }
                 ft.commit();
 
                 mTitle = getTitleFromFragment(f);
-                if (addToBackStack) {
+                if (saveLastFragment) {
                     PreferenceWrapper.setLastFragment(this,
                             f.getClass().getCanonicalName());
                 }
@@ -265,7 +263,7 @@ public class MainActivity extends ThemedActivity implements
             } catch (Exception e) {
                 Log.w(TAG, "fragment instantiation failed", e);
                 Analytics.sendException(this, e, false);
-                if (addToBackStack) {
+                if (saveLastFragment) {
                     PreferenceWrapper.setLastFragment(this, PreferenceWrapper.PREF_LAST_FRAGMENT_DEFAULT);
                 }
                 return null;
