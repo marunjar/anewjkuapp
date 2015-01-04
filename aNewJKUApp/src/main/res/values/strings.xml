@@ -115,7 +115,7 @@
     <string name="pref_stats_use_lva_bar_chart_summary">Barchart für offene und erledigte LVAs verwenden</string>
     <string name="pref_stats_use_lva_bar_chart_title">Diagramme</string>
     <string name="pref_stats_positive_grades_only_summary">Notendurchschnitt nur mit positiven Noten berechnen</string>
-    <string name="pref_stats_positive_grades_only_title">Notendurchschnitt für LVAs</string>
+    <string name="pref_stats_positive_grades_only_title">besserer Notendurchschnitt für LVAs</string>
     <string name="pref_cat_mensa">Mensa</string>
     <string name="pref_mensa_group_menu_by_day_title">nach Tag gruppieren</string>
     <string name="pref_mensa_group_menu_by_day_summary">Alle Menüs nach Tag gruppieren</string>
@@ -129,8 +129,8 @@
     <string name="settings_kusss_summary">Einstellungen für KUSSS</string>
     <string name="settings_app_title">App</string>
     <string name="settings_app_summary">Einstellungen für App</string>
-    <string name="settings_timetable_title">Stundenplan</string>
-    <string name="settings_timetable_summary">Einstellungen für Stundenplan und verwendete Kalender</string>
+    <string name="settings_timetable_title">Kalender</string>
+    <string name="settings_timetable_summary">Einstellungen für verwendete Kalender und Stundenplan</string>
 
     <string name="about_app_summary">Das ist eine neue JKU, KUSSS, ÖH, ... App für Studenten der JKU Linz.\n\nDie App ist noch in Entwicklung und die am meisten benötigten Funktionen sind bereits implementiert.\n\nWenn Sie Fragen, Probleme oder Wünsche haben, schreiben Sie eine E-Mail an die Entwickler!\nBesitzer eines GitHub-Accounts können auch einfach hier posten: https://github.com/marunjar/anewjkuapp/issues </string>
     <string name="about_libraries_title">verwendete Bibliotheken</string>
@@ -221,6 +221,8 @@
     <string name="feed_title_med" translatable="false">Medizin</string>
 
     <string name="studies_is_standard">Standard</string>
+    <string name="studies_is_standard_yes">Ja</string>
+    <string name="studies_is_standard_no">Nein</string>
     <string name="studies_skz">SKZ</string>
     <string name="studies_title">Studienrichtung</string>
     <string name="studies_steop_done" translatable="false">StEOP</string>
