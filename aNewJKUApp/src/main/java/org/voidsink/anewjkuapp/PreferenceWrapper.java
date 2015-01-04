@@ -51,14 +51,14 @@ public final class PreferenceWrapper {
     private static final boolean PREF_MENSA_GROUP_MENU_BY_DAY_DEFAULT = false;
     private static final boolean PREF_POSITIVE_GRADES_ONLY_DEFAULT = false;
 
-    private static final String PREF_EXTEND_CALENDAR_LVA = "pref_key_extend_calendar_lva";
+    public static final String PREF_EXTEND_CALENDAR_LVA = "pref_key_extend_calendar_lva";
     private static final boolean PREF_EXTEND_CALENDAR_LVA_DEFAULT = false;
-    private static final String PREF_EXTENDED_CALENDAR_LVA = "pref_key_extended_calendar_lva";
+    public static final String PREF_EXTENDED_CALENDAR_LVA = "pref_key_extended_calendar_lva";
     private static final String PREF_EXTENDED_CALENDAR_LVA_DEFAULT = null;
 
-    private static final String PREF_EXTEND_CALENDAR_EXAM = "pref_key_extend_calendar_exam";
+    public static final String PREF_EXTEND_CALENDAR_EXAM = "pref_key_extend_calendar_exam";
     private static final boolean PREF_EXTEND_CALENDAR_EXAM_DEFAULT = false;
-    private static final String PREF_EXTENDED_CALENDAR_EXAM = "pref_key_extended_calendar_exam";
+    public static final String PREF_EXTENDED_CALENDAR_EXAM = "pref_key_extended_calendar_exam";
     private static final String PREF_EXTENDED_CALENDAR_EXAM_DEFAULT = null;
 
     private PreferenceWrapper() {
