@@ -239,15 +239,17 @@ public final class CalendarUtils {
         try {
             c = cr.query(CalendarContractWrapper.Calendars.CONTENT_URI(),
                     CALENDAR_PROJECTION, null, null, null);
-            while (c.moveToNext()) {
-                if (!onlyWritable || CalendarUtils.isWriteable(c.getInt(COLUMN_CAL_ACCESS_LEVEL))) {
-                    int id = c.getInt(COLUMN_CAL_ID);
-                    String name = c.getString(COLUMN_CAL_NAME);
-                    String displayName = c.getString(COLUMN_CAL_DISPLAY_NAME);
+            if (c != null) {
+                while (c.moveToNext()) {
+                    if (!onlyWritable || CalendarUtils.isWriteable(c.getInt(COLUMN_CAL_ACCESS_LEVEL))) {
+                        int id = c.getInt(COLUMN_CAL_ID);
+                        String name = c.getString(COLUMN_CAL_NAME);
+                        String displayName = c.getString(COLUMN_CAL_DISPLAY_NAME);
 
-                    ids.add(id);
-                    names.add(name);
-                    displayNames.add(displayName);
+                        ids.add(id);
+                        names.add(name);
+                        displayNames.add(displayName);
+                    }
                 }
             }
         } catch (Exception e) {
