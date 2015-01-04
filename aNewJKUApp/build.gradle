@@ -41,7 +41,7 @@ dependencies {
     compile 'de.cketti.library.changelog:ckchangelog:1.2.1'
     compile 'com.android.support:support-v4:21.0.3'
     compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.android.support:gridlayout-v7:21.0.2'
+    compile 'com.android.support:gridlayout-v7:21.0.3'
     compile 'com.github.japgolly.android:svg-android:2.0.6'
     compile 'com.google.android.gms:play-services-base:6.5.87'
     compile 'se.emilsjolander:stickylistheaders:2.5.2'
