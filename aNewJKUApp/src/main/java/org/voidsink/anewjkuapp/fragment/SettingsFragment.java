@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.preference.PreferenceFragment;
 import android.text.TextUtils;
 
+import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.SettingsActivity;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
@@ -121,7 +122,7 @@ public class SettingsFragment extends PreferenceFragment {
 
             calendars = CalendarUtils.getCalendars(getActivity(), true);
 
-            ListPreference calendarLva = (ListPreference) findPreference("pref_key_extended_calendar_lva");
+            ListPreference calendarLva = (ListPreference) findPreference(PreferenceWrapper.PREF_EXTENDED_CALENDAR_LVA);
             setEntries(calendars, calendarLva);
             updateTextPrefSummary(calendarLva, null, R.string.pref_kusss_calendar_extended_summary);
             calendarLva.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -132,7 +133,7 @@ public class SettingsFragment extends PreferenceFragment {
                 }
             });
 
-            ListPreference calendarExam = (ListPreference) findPreference("pref_key_extended_calendar_exam");
+            ListPreference calendarExam = (ListPreference) findPreference(PreferenceWrapper.PREF_EXTENDED_CALENDAR_EXAM);
             setEntries(calendars, calendarExam);
             updateTextPrefSummary(calendarExam, null, R.string.pref_kusss_calendar_extended_summary);
             calendarExam.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -142,6 +143,14 @@ public class SettingsFragment extends PreferenceFragment {
                     return true;
                 }
             });
+
+            if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                // disable calendar extension before ICS
+                calendarLva.setEnabled(false);
+                findPreference(PreferenceWrapper.PREF_EXTEND_CALENDAR_LVA).setEnabled(false);
+                calendarExam.setEnabled(false);
+                findPreference(PreferenceWrapper.PREF_EXTEND_CALENDAR_EXAM).setEnabled(false);
+            }
         }
 
         private void updateTextPrefSummary(ListPreference preference, String value, int defaultSummaryResId) {
