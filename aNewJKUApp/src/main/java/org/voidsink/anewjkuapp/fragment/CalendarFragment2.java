@@ -1,21 +1,14 @@
 package org.voidsink.anewjkuapp.fragment;
 
 import android.accounts.Account;
-import android.app.ProgressDialog;
-import android.app.SearchManager;
 import android.content.ContentResolver;
-import android.content.Context;
-import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.text.TextUtils;
-import android.text.format.DateUtils;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,10 +16,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListView;
 
+import com.alamkanak.weekview.DateTimeInterpreter;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 
@@ -34,28 +25,26 @@ import net.fortuna.ical4j.data.CalendarBuilder;
 
 import org.voidsink.anewjkuapp.ImportCalendarTask;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
-import org.voidsink.anewjkuapp.calendar.CalendarEventAdapter;
-import org.voidsink.anewjkuapp.calendar.CalendarListEvent;
-import org.voidsink.anewjkuapp.calendar.CalendarListItem;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
-import org.voidsink.anewjkuapp.view.ListViewWithHeader;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class CalendarFragment2 extends BaseFragment implements WeekView.MonthChangeListener,
-        WeekView.EventClickListener, WeekView.EventLongPressListener {
+        WeekView.EventClickListener, WeekView.EventLongPressListener, DateTimeInterpreter {
 
     private static final String TAG = CalendarFragment2.class.getSimpleName();
+    private static final SimpleDateFormat COLUMN_TITLE = new SimpleDateFormat("EEE dd.MM.");
     private ContentObserver mCalendarObserver;
     private WeekView mWeekView;
 
@@ -74,10 +63,82 @@ public class CalendarFragment2 extends BaseFragment implements WeekView.MonthCha
         mWeekView.setMonthChangeListener(this);
         // Set long press listener for events.
         mWeekView.setEventLongPressListener(this);
+        // Set formatter for Date/Time
+        mWeekView.setDateTimeInterpreter(this);
 
-        mWeekView.goToToday();
+        goToFirstEvent(mWeekView);
 
         return view;
+    }
+
+    private void goToFirstEvent(final WeekView weekView) {
+
+        new AsyncTask<Void, Void, Void>() {
+
+            Date mDate = null;
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                Account mAccount = AppUtils.getAccount(getContext());
+                if (mAccount == null) {
+                    return null;
+                }
+
+                final String calIDLva = CalendarUtils.getCalIDByName(getContext(),
+                        mAccount, CalendarUtils.ARG_CALENDAR_LVA, true);
+                final String calIDExam = CalendarUtils.getCalIDByName(getContext(),
+                        mAccount, CalendarUtils.ARG_CALENDAR_EXAM, true);
+
+                if (calIDLva == null || calIDExam == null) {
+                    Log.w(TAG, "no events loaded, calendars not found");
+                    return null;
+                }
+
+                ContentResolver cr = getContext().getContentResolver();
+                Cursor c = cr.query(
+                        CalendarContractWrapper.Events.CONTENT_URI(),
+                        ImportCalendarTask.EVENT_PROJECTION,
+                        "("
+                                + CalendarContractWrapper.Events
+                                .CALENDAR_ID()
+                                + " = ? or "
+                                + CalendarContractWrapper.Events
+                                .CALENDAR_ID() + " = ? ) and "
+                                + CalendarContractWrapper.Events.DTEND()
+                                + " >= ? and "
+                                + CalendarContractWrapper.Events.DELETED()
+                                + " != 1",
+                        new String[]{calIDExam, calIDLva,
+                                Long.toString(new Date().getTime())},
+                        CalendarContractWrapper.Events.DTSTART() + " ASC");
+                if (c != null) {
+                    if (c.moveToNext()) {
+                        mDate = new Date(c.getLong(ImportCalendarTask.COLUMN_EVENT_DTSTART));
+                    }
+                    c.close();
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+
+                Calendar cal = Calendar.getInstance();
+                if (mDate != null) {
+                    cal.setTime(mDate);
+                    weekView.goToDate(cal);
+
+                    // set date again, weekView.goToDate modifies date
+                    cal.setTime(mDate);
+                    weekView.goToHour(Math.max(cal.get(Calendar.HOUR_OF_DAY) - 1, 0));
+                } else {
+                    weekView.goToToday();
+                    weekView.goToHour(Math.max(cal.get(Calendar.HOUR_OF_DAY) - 1, 0));
+                }
+            }
+        }.execute();
     }
 
     @Override
@@ -251,6 +312,31 @@ public class CalendarFragment2 extends BaseFragment implements WeekView.MonthCha
         c.close();
 
         return events;
+    }
+
+    @Override
+    public String interpretDate(Calendar calendar) {
+        return COLUMN_TITLE.format(calendar.getTime());
+    }
+
+    @Override
+    public String interpretTime(int hour) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        SimpleDateFormat timeFormat;
+
+        boolean is24h = DateFormat.is24HourFormat(getContext());
+        if (is24h) {
+            timeFormat = new SimpleDateFormat("HH:mm");
+        } else {
+            timeFormat = new SimpleDateFormat("hh a");
+        }
+
+        return timeFormat.format(calendar.getTime());
     }
 
     private class CalendarContentObserver extends ContentObserver {

@@ -15,7 +15,7 @@
     app:dayBackgroundColor="@color/fullTransparent"
     app:headerColumnBackground="@color/fullTransparent"
     app:headerColumnTextColor="?android:attr/textColorSecondary"
-    app:headerRowBackgroundColor="#ff7f7f7f"
+    app:headerRowBackgroundColor="@color/fullTransparent"
     app:hourSeparatorColor="@color/divider"
     app:todayBackgroundColor="@color/divider"
     app:todayHeaderTextColor="?android:attr/textColorPrimary"/>
