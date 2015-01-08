@@ -59,7 +59,7 @@ dependencies {
     compile 'com.mikepenz.aboutlibraries:library:4.5.0'
     compile 'com.android.support:cardview-v7:21.0.2'
     compile 'com.tonicartos:stickygridheaders:1.0.1'
-    compile 'com.github.alamkanak:android-week-view:1.1.7'
+    compile 'com.github.alamkanak:android-week-view:1.2.1'
     compile project(':voidsinkContributors')
     compile project(':android-support-v4-preferencefragment')
 }

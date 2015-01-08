@@ -457,6 +457,9 @@ public class AppUtils {
     }
 
     public static Account getAccount(Context context) {
+        if (context == null) {
+            return null;
+        }
         // get first account
         Account[] accounts = AccountManager.get(context).getAccountsByType(
                 KusssAuthenticator.ACCOUNT_TYPE);
