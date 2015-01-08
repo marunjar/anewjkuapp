@@ -223,9 +223,11 @@ public class CalendarFragment2 extends BaseFragment implements WeekView.MonthCha
 
     @Override
     public List<WeekViewEvent> onMonthChange(int newYear, int newMonth) {
+        List<WeekViewEvent> events = new ArrayList<>();
+
         Account mAccount = AppUtils.getAccount(getContext());
         if (mAccount == null) {
-            return null;
+            return events;
         }
 
         final String calIDLva = CalendarUtils.getCalIDByName(getContext(),
@@ -235,7 +237,7 @@ public class CalendarFragment2 extends BaseFragment implements WeekView.MonthCha
 
         if (calIDLva == null || calIDExam == null) {
             Log.w(TAG, "no events loaded, calendars not found");
-            return null;
+            return events;
         }
 
         // fetch calendar colors
@@ -287,29 +289,32 @@ public class CalendarFragment2 extends BaseFragment implements WeekView.MonthCha
                 CalendarContractWrapper.Events.DTSTART() + " ASC");
 
         if (c == null) {
-            return null;
+            return events;
         }
 
-        List<WeekViewEvent> events = new ArrayList<>();
+        try {
+            while (c.moveToNext()) {
+                Calendar startTime = Calendar.getInstance();
+                startTime.setTimeInMillis(c.getLong(ImportCalendarTask.COLUMN_EVENT_DTSTART));
+                Calendar endTime = Calendar.getInstance();
+                endTime.setTimeInMillis(c.getLong(ImportCalendarTask.COLUMN_EVENT_DTEND));
 
-        while (c.moveToNext()) {
-            Calendar startTime = Calendar.getInstance();
-            startTime.setTimeInMillis(c.getLong(ImportCalendarTask.COLUMN_EVENT_DTSTART));
-            Calendar endTime = Calendar.getInstance();
-            endTime.setTimeInMillis(c.getLong(ImportCalendarTask.COLUMN_EVENT_DTEND));
+                WeekViewEvent event = new WeekViewEvent(c.getLong(ImportCalendarTask.COLUMN_EVENT_ID), c.getString(ImportCalendarTask.COLUMN_EVENT_TITLE), startTime, endTime);
 
-            WeekViewEvent event = new WeekViewEvent(c.getLong(ImportCalendarTask.COLUMN_EVENT_ID), c.getString(ImportCalendarTask.COLUMN_EVENT_TITLE), startTime, endTime);
+                int color = getContext().getResources().getColor(R.color.accentTransparent);
+                final String key = c.getString(ImportCalendarTask.COLUMN_EVENT_CAL_ID);
+                if (mColors.containsKey(key)) {
+                    color = mColors.get(key);
+                }
+                event.setColor(color);
 
-            int color = getContext().getResources().getColor(R.color.accentTransparent);
-            final String key = c.getString(ImportCalendarTask.COLUMN_EVENT_CAL_ID);
-            if (mColors.containsKey(key)) {
-                color = mColors.get(key);
+                events.add(event);
             }
-            event.setColor(color);
-
-            events.add(event);
+            c.close();
+        } catch (Exception e) {
+            Analytics.sendException(getContext(), e, false);
+            events.clear();
         }
-        c.close();
 
         return events;
     }
