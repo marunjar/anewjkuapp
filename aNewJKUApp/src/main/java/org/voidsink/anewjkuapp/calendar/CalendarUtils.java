@@ -160,6 +160,11 @@ public final class CalendarUtils {
         // get map with calendar ids and names for specific account
         Map<String, String> ids = new HashMap<String, String>();
 
+        // nothing to do if there's no account
+        if (context != null || account == null) {
+            return ids;
+        }
+
         ContentResolver cr = context.getContentResolver();
         // todo: add selection
         Cursor c = cr.query(CalendarContractWrapper.Calendars.CONTENT_URI(),
