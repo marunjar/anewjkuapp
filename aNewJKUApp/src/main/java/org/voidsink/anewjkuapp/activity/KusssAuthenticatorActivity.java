@@ -208,15 +208,26 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 
         Log.i(TAG, "finish login to " + accountName);
 
-        final Account account = new Account(accountName, accountType);
+        Account account;
+        boolean addNewAccount;
 
-        CalendarUtils.createCalendarsIfNecessary(this, account);
+        final Account oldAccount = AppUtils.getAccount(this);
+        if (oldAccount != null) {
+            if (oldAccount.name.equals(accountName)) {
+                account = oldAccount;
+                addNewAccount = false;
+            } else {
+                mAccountManager.removeAccount(oldAccount, null, null); // todo: set param2, set param3
+                account = new Account(accountName, accountType);
+                addNewAccount = true;
+            }
+        } else {
+            account = new Account(accountName, accountType);
+            addNewAccount = true;
+        }
 
-        if (getIntent().getBooleanExtra(
-                KusssAuthenticator.ARG_IS_ADDING_NEW_ACCOUNT, false)) {
-
-            String authtoken = intent
-                    .getStringExtra(AccountManager.KEY_AUTHTOKEN);
+        if (addNewAccount) {
+            String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
             String authtokenType = mAuthTokenType;
 
             // Creating the account on the device and setting the auth token we
@@ -252,6 +263,9 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
         } else {
             mAccountManager.setPassword(account, accountPassword);
         }
+
+        // Kalender aktualisieren
+        CalendarUtils.createCalendarsIfNecessary(this, account);
 
         // Sync NOW
         KusssAuthenticator.TriggerRefresh(this);
