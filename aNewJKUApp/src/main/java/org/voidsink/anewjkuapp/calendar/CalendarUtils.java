@@ -161,7 +161,7 @@ public final class CalendarUtils {
         Map<String, String> ids = new HashMap<String, String>();
 
         // nothing to do if there's no account
-        if (context != null || account == null) {
+        if (context == null || account == null) {
             return ids;
         }
 
