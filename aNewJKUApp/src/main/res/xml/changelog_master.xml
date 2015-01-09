@@ -4,6 +4,13 @@
 		    + added
 		    - fixed
 		    * changed -->
+    <release version="0.29" versioncode="140029">
+        <change>- Statistik: anerkannte Beurteilungen werden wieder angezeigt</change>
+        <change>- KUSSS: Fehler beim Laden von Terminen behoben</change>
+        <change>- Mensa: alte Speispläne werden nicht mehr angezeigt</change>
+        <change>* Stundenplan: "auf Karte anzeigen" verbessert</change>
+        <change>+ Stundenplan: Termine können in beliebige Google-Kalender importiert werden</change>
+    </release>
     <release version="0.28" versioncode="140028">
         <change>Material Design: jetzt für die ganze App</change>
     </release>
