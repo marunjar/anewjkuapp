@@ -251,15 +251,20 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 
 		setImportDone();
 
-		if (mUpdateNotification != null) {
-			mUpdateNotification.cancel();
-		}
-		mGradeChangeNotification.show();
-
 		return null;
 	}
 
-	private void updateNotify(String string) {
+    @Override
+    protected void onPostExecute(Void result) {
+        super.onPostExecute(result);
+
+        if (mUpdateNotification != null) {
+            mUpdateNotification.cancel();
+        }
+        mGradeChangeNotification.show();
+    }
+
+    private void updateNotify(String string) {
 		if (mUpdateNotification != null) {
 			mUpdateNotification.update(string);
 		}
