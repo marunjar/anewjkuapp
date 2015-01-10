@@ -148,6 +148,10 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 
         synchronized (sync_lock) {
 
+            if (!CalendarUtils.getSyncCalendar(mContext, this.mCalendarName)) {
+                return null;
+            }
+
             updateNotify(String.format(
                     mContext.getString(R.string.notification_sync_calendar_loading),
                     CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
@@ -554,12 +558,17 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 
         setImportDone();
 
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void result) {
+        super.onPostExecute(result);
+
         if (mUpdateNotification != null) {
             mUpdateNotification.cancel();
         }
         mNotification.show();
-
-        return null;
     }
 
     private ContentValues getContentValuesFromEvent(VEvent v) {

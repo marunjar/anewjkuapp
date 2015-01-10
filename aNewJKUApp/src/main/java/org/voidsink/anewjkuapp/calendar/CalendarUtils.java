@@ -281,6 +281,19 @@ public final class CalendarUtils {
                 accessLevel == CalendarContractWrapper.Calendars.CAL_ACCESS_ROOT();
     }
 
+    public static boolean getSyncCalendar(Context context, String name) {
+        if (context == null) return false;
+
+        switch (name) {
+            case ARG_CALENDAR_EXAM:
+                return PreferenceWrapper.getSyncCalendarExam(context);
+            case ARG_CALENDAR_LVA:
+                return PreferenceWrapper.getSyncCalendarLva(context);
+            default:
+                return true;
+        }
+    }
+
     public static class CalendarList {
         private final List<Integer> mIds;
         private final List<String> mNames;

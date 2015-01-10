@@ -92,7 +92,8 @@
     <string name="pref_kusss_sync_interval_title">Synchronisationsintervall</string>
     <string name="pref_kusss_notify_title">Benachrichtigen</string>
     <string name="pref_cat_kusss_calendar">Stundenplan</string>
-    <string name="pref_kusss_calendar_sync_summary">Alle LVA-Termine vom aktuellen Semester synchronisieren</string>
+    <string name="pref_kusss_calendar_sync_summary">Termine vom aktuellen Semester aus KUSSS synchronisieren</string>
+    <string name="pref_kusss_calendar_sync_title">Synchronisieren</string>
     <string name="pref_kusss_calendar_notify_summary">Benachrichtigen wenn sich Termine geändert haben</string>
     <string name="pref_kusss_calendar_extend_title">Kalender erweitern</string>
     <string name="pref_kusss_calendar_extend_summary">alle Termine werden in einen bestehenden Kalender importiert</string>

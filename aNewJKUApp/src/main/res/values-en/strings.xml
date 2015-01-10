@@ -86,7 +86,7 @@
     <string name="pref_cat_sync_settings">Edit settings</string>
     <string name="pref_cat_update_password">Change passwort</string>
     <string name="pref_kusss_calendar_notify_summary">Notify if course dates have changed</string>
-    <string name="pref_kusss_calendar_sync_summary">Synchronize all course dates of current term</string>
+    <string name="pref_kusss_calendar_sync_summary">Synchronize course dates of current term from KUSSS</string>
     <string name="pref_kusss_exam_get_from_lva_summary">Search for exams for all courses from previous terms</string>
     <string name="pref_kusss_exam_get_from_lva_title">Search for exams by course number</string>
     <string name="pref_kusss_exam_notify_summary">Notify if new exams for my courses are available</string>
@@ -190,4 +190,5 @@
     <string name="pref_kusss_calendar_extend_title">Extend calendar</string>
     <string name="pref_kusss_calendar_extend_summary">All dates are imported into an existing calendar</string>
     <string name="pref_kusss_calendar_extended_summary">Calendar where dates are imported</string>
+    <string name="pref_kusss_calendar_sync_title">Synchronisation</string>
 </resources>
