@@ -33,11 +33,11 @@
             app:columnCount="1"
             app:orientation="vertical" />
 
-        <com.androidplot.pie.PieChart
+        <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/stat_card_diagram_pie"
             style="@style/plotStyle" />
 
-        <com.androidplot.xy.XYPlot
+        <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/stat_card_diagram_bar"
             style="@style/plotStyle" />
 
