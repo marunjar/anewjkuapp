@@ -22,6 +22,7 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.Legend;
+import com.github.mikephil.charting.utils.LimitLine;
 import com.github.mikephil.charting.utils.XLabels;
 import com.github.mikephil.charting.utils.YLabels;
 
@@ -140,6 +141,7 @@ public class StatCardAdapter extends BaseArrayAdapter<StatCard> {
         List<LvaWithGrade> mLvas = card.getLvasWithGrades();
         double mOpenEcts = AppUtils.getECTS(LvaState.OPEN, mLvas);
         double mDoneEcts = AppUtils.getECTS(LvaState.DONE, mLvas);
+        double minEcts = (card.getTerms() != null) ? card.getTerms().size() * 30 : 0;
 
         if (views.barChart.getVisibility() == View.VISIBLE) {
             // clear chart
@@ -153,6 +155,9 @@ public class StatCardAdapter extends BaseArrayAdapter<StatCard> {
                 } else {
                     rangeTopMax = rangeTopMax + 5;
                 }
+            }
+            if (rangeTopMax <= minEcts) {
+                rangeTopMax = minEcts + 5;
             }
 
             views.barChart.setYRange(0, (float) rangeTopMax, true);
@@ -170,6 +175,16 @@ public class StatCardAdapter extends BaseArrayAdapter<StatCard> {
             BarDataSet dataSet = new BarDataSet(yVals, "");
             dataSet.setColors(colors);
             BarData barData = new BarData(captions, dataSet);
+
+            if (minEcts > 0) {
+                LimitLine limitLine = new LimitLine((float) minEcts);
+                limitLine.setDrawValue(true);
+                limitLine.setLineColor(Color.RED);
+                limitLine.enableDashedLine(20, 10, 0);
+                limitLine.setLineWidth(2);
+                limitLine.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT);
+                barData.addLimitLine(limitLine);
+            }
 
             views.barChart.setData(barData);
             // undo all highlights
