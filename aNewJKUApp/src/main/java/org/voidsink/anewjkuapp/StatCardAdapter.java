@@ -474,6 +474,8 @@ public class StatCardAdapter extends BaseArrayAdapter<StatCard> {
         pieChart.setUsePercentValues(true);
         pieChart.setDescription("");
         pieChart.setHoleColor(mBackgroundColor);
+        pieChart.setRotationEnabled(false);
+        pieChart.setRotationAngle(180);
 
         pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
