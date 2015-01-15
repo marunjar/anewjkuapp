@@ -15,9 +15,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.androidplot.pie.PieChart;
-import com.androidplot.pie.Segment;
-import com.androidplot.pie.SegmentFormatter;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
 
 import org.voidsink.anewjkuapp.ImportPoiTask;
 import org.voidsink.anewjkuapp.ImportStudiesTask;
@@ -510,17 +510,12 @@ public class AppUtils {
         }
     }
 
-    public static void addSerieToPieChart(PieChart chart, String category,
-                                          double value, int color) {
+    public static void addSerieToPieChart(List<Entry> values, List<String> captions, List<Integer> colors, String category,
+                                          double value, double ects, int color) {
         if (value > 0) {
-            EmbossMaskFilter emf = new EmbossMaskFilter(
-                    new float[]{1, 1, 1}, 0.7f, 11.5f, 2f);
-            Segment segment = new Segment(category, value);
-            SegmentFormatter formatter = new SegmentFormatter(color,
-                    Color.TRANSPARENT, Color.TRANSPARENT, Color.DKGRAY);
-            formatter.getFillPaint().setMaskFilter(emf);
-
-            chart.addSegment(segment, formatter);
+            values.add(new EctsEntry((float) value, (float) ects, values.size()));
+            captions.add(category);
+            colors.add(color);
         }
     }
 
@@ -546,6 +541,19 @@ public class AppUtils {
 
         return count / sum * 100;
     }
+
+    public static double getGradeEcts(List<ExamGrade> grades, Grade grade) {
+        if (grades == null || grades.size() == 0) return 0;
+
+        double sum = 0;
+        for (ExamGrade examGrade : grades) {
+            if (examGrade.getGrade().equals(grade)) {
+                sum += examGrade.getEcts();
+            }
+        }
+        return sum;
+    }
+
 
     public static List<LvaWithGrade> getLvasWithGrades(List<String> terms, List<Lva> lvas, List<ExamGrade> grades) {
         List<LvaWithGrade> result = new ArrayList<LvaWithGrade>();
@@ -644,4 +652,5 @@ public class AppUtils {
         }
         return row;
     }
+
 }

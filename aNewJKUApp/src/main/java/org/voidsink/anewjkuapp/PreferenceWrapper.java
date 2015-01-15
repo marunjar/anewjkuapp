@@ -61,6 +61,11 @@ public final class PreferenceWrapper {
     public static final String PREF_EXTENDED_CALENDAR_EXAM = "pref_key_extended_calendar_exam";
     private static final String PREF_EXTENDED_CALENDAR_EXAM_DEFAULT = null;
 
+    private static final String PREF_SYNC_CALENDAR_LVA = "pref_key_sync_calendar_lva";
+    private static final boolean PREF_SYNC_CALENDAR_LVA_DEFAULT = true;
+    private static final String PREF_SYNC_CALENDAR_EXAM = "pref_key_sync_calendar_exam";
+    private static final boolean PREF_SYNC_CALENDAR_EXAM_DEFAULT = true;
+
     private PreferenceWrapper() {
 
     }
@@ -340,6 +345,36 @@ public final class PreferenceWrapper {
         } catch (Exception e) {
             Log.e(TAG, "Failure", e);
             return PREF_EXTENDED_CALENDAR_LVA_DEFAULT;
+        }
+    }
+
+    public static boolean getSyncCalendarLva(Context context) {
+        if (useDefaultLvaCalendarId(context))
+            return PREF_SYNC_CALENDAR_LVA_DEFAULT;
+
+        try {
+            SharedPreferences sp = PreferenceManager
+                    .getDefaultSharedPreferences(context);
+
+            return sp.getBoolean(PREF_SYNC_CALENDAR_LVA, PREF_SYNC_CALENDAR_LVA_DEFAULT);
+        } catch (Exception e) {
+            Log.e(TAG, "Failure", e);
+            return PREF_SYNC_CALENDAR_LVA_DEFAULT;
+        }
+    }
+
+    public static boolean getSyncCalendarExam(Context context) {
+        if (useDefaultExamCalendarId(context))
+            return PREF_SYNC_CALENDAR_EXAM_DEFAULT;
+
+        try {
+            SharedPreferences sp = PreferenceManager
+                    .getDefaultSharedPreferences(context);
+
+            return sp.getBoolean(PREF_SYNC_CALENDAR_EXAM, PREF_SYNC_CALENDAR_EXAM_DEFAULT);
+        } catch (Exception e) {
+            Log.e(TAG, "Failure", e);
+            return PREF_SYNC_CALENDAR_EXAM_DEFAULT;
         }
     }
 }

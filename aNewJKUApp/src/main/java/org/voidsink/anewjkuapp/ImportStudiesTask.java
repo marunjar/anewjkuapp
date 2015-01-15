@@ -251,11 +251,16 @@ public class ImportStudiesTask extends BaseAsyncTask<Void, Void, Void> {
 
         setImportDone();
 
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void result) {
+        super.onPostExecute(result);
+
         if (mUpdateNotification != null) {
             mUpdateNotification.cancel();
         }
-
-        return null;
     }
 
     private void updateNotify(String string) {

@@ -53,7 +53,6 @@ dependencies {
     compile 'org.mapsforge:mapsforge-map-android:0.5.0'
     compile 'org.mapsforge:mapsforge-map-awt:0.5.0'
     compile 'org.mapsforge:mapsforge-map-reader:0.5.0'
-    compile 'com.androidplot:androidplot-core:0.6.1'
     compile 'uk.co.chrisjenx:calligraphy:1.2.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
     compile 'com.mikepenz.aboutlibraries:library:4.5.0'
@@ -62,6 +61,7 @@ dependencies {
     compile 'com.github.alamkanak:android-week-view:1.2.1'
     compile project(':voidsinkContributors')
     compile project(':android-support-v4-preferencefragment')
+    compile project(':mpandroidchartlibrary')
 }
 
 def appendVersionNameVersionCode(variant, defaultConfig) {

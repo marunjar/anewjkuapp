@@ -298,12 +298,18 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 
         setImportDone();
 
+        return null;
+    }
+
+
+    @Override
+    protected void onPostExecute(Void result) {
+        super.onPostExecute(result);
+
         if (mUpdateNotification != null) {
             mUpdateNotification.cancel();
         }
         mNewExamNotification.show();
-
-        return null;
     }
 
     private void updateNotify(String string) {

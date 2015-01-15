@@ -27,6 +27,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
@@ -36,7 +37,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v7.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,8 +65,6 @@ import org.mapsforge.map.rendertheme.InternalRenderTheme;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
 import org.voidsink.anewjkuapp.ImportPoiTask;
 import org.voidsink.anewjkuapp.LocationOverlay;
-import org.voidsink.anewjkuapp.utils.Analytics;
-import org.voidsink.anewjkuapp.utils.MapUtils;
 import org.voidsink.anewjkuapp.Poi;
 import org.voidsink.anewjkuapp.PoiAdapter;
 import org.voidsink.anewjkuapp.PoiContentContract;
@@ -74,7 +72,9 @@ import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.base.BaseFragment;
+import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.Consts;
+import org.voidsink.anewjkuapp.utils.MapUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -365,10 +365,14 @@ public class MapFragment extends BaseFragment implements
         this.mapView.setClickable(true);
         //this.mapView.getFpsCounter().setVisible(true);
         this.mapView.getMapScaleBar().setVisible(true);
+        this.mapView.setBuiltInZoomControls(true);
+        this.mapView.getMapZoomControls().setZoomLevelMin(MIN_ZOOM_LEVEL);
+        this.mapView.getMapZoomControls().setZoomLevelMax(MAX_ZOOM_LEVEL);
 
         this.tileCache = AndroidUtil.createTileCache(this.getActivity(),
                 "mapFragment",
-                this.mapView.getModel().displayModel.getTileSize(), 1.0f, this.mapView.getModel().frameBufferModel.getOverdrawFactor());
+                this.mapView.getModel().displayModel.getTileSize(), 1.0f,
+                this.mapView.getModel().frameBufferModel.getOverdrawFactor());
 
         return rootView;
     }
@@ -452,7 +456,8 @@ public class MapFragment extends BaseFragment implements
     private TileRendererLayer createTileRendererLayer(TileCache tileCache,
                                                       MapViewPosition mapViewPosition, File mapFile,
                                                       XmlRenderTheme renderTheme, boolean hasAlpha) {
-        TileRendererLayer tileRendererLayer = AndroidUtil.createTileRendererLayer(tileCache, mapViewPosition,mapFile, renderTheme, hasAlpha, false);
+        TileRendererLayer tileRendererLayer = AndroidUtil.createTileRendererLayer(tileCache,
+                mapViewPosition, mapFile, renderTheme, hasAlpha, false);
         tileRendererLayer.setTextScale(1.5f);
 
         return tileRendererLayer;

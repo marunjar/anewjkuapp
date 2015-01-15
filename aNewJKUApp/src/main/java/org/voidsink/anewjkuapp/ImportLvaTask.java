@@ -106,7 +106,7 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
 			try {
 				Log.d(TAG, "setup connection");
 
-				if (KusssHandler.getInstance().isAvailable(mContext, 
+				if (KusssHandler.getInstance().isAvailable(mContext,
 						AppUtils.getAccountAuthToken(mContext, mAccount),
 						AppUtils.getAccountName(mContext, mAccount),
 						AppUtils.getAccountPassword(mContext, mAccount))) {
@@ -251,15 +251,20 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
 		}
 
 		setImportDone();
-		
-		if (mUpdateNotification != null) {
-			mUpdateNotification.cancel();
-		}
-		
+
 		return null;
 	}
 
-	private void updateNotify(String string) {
+    @Override
+    protected void onPostExecute(Void result) {
+        super.onPostExecute(result);
+
+        if (mUpdateNotification != null) {
+            mUpdateNotification.cancel();
+        }
+    }
+
+    private void updateNotify(String string) {
 		if (mUpdateNotification != null) {
 			mUpdateNotification.update(string);
 		}
