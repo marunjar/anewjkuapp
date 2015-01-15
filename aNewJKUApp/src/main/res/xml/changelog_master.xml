@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
     <!-- Legend:
-		    + added
 		    - fixed
-		    * changed -->
+		    * changed
+		    + added -->
+    <release version="0.30" versioncode="140030">
+        <change>* Statistik: Diagramme angepasst</change>
+        <change>+ Stundenplan: Synchronisation kann deaktiviert werden</change>
+    </release>
     <release version="0.29" versioncode="140029">
         <change>- Statistik: anerkannte Beurteilungen werden wieder angezeigt</change>
         <change>- KUSSS: Fehler beim Laden von Terminen behoben</change>
