@@ -66,9 +66,8 @@
 
     <style name="plotStyle">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">180dp</item>
+        <item name="android:layout_height">190dp</item>
         <item name="android:padding">3dp</item>
-        <!--<item name="androidPlot.graphWidget.background">?attr/plot_background_color</item>-->
     </style>
 
     <attr name="cardBackground" format="reference" />

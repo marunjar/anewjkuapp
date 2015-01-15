@@ -202,10 +202,10 @@ public class StatCardAdapter extends BaseArrayAdapter<StatCard> {
             ArrayList<Integer> colors = new ArrayList<>();
 
             // add series to pie chart
-            AppUtils.addSerieToPieChart(yVals, captions, colors, getContext().getString(LvaState.OPEN.getStringResIDExt()),
-                    mOpenEcts, mOpenEcts, Grade.G3.getColor());
             AppUtils.addSerieToPieChart(yVals, captions, colors, getContext().getString(LvaState.DONE.getStringResIDExt()),
                     mDoneEcts, mDoneEcts, Grade.G1.getColor());
+            AppUtils.addSerieToPieChart(yVals, captions, colors, getContext().getString(LvaState.OPEN.getStringResIDExt()),
+                    mOpenEcts, mOpenEcts, Grade.G3.getColor());
 
             PieDataSet dataSet = new PieDataSet(yVals, "");
             dataSet.setColors(colors);
@@ -473,9 +473,12 @@ public class StatCardAdapter extends BaseArrayAdapter<StatCard> {
         pieChart.setDrawXValues(false);
         pieChart.setUsePercentValues(true);
         pieChart.setDescription("");
+        pieChart.setHoleRadius(45);
+        pieChart.setTransparentCircleRadius(50);
         pieChart.setHoleColor(mBackgroundColor);
         pieChart.setRotationEnabled(false);
         pieChart.setRotationAngle(180);
+        pieChart.setValueTextColor(mTextColorPrimary);
 
         pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
