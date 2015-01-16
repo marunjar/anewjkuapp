@@ -15,16 +15,26 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            minifyEnabled false
+            shrinkResources true
+            proguardFile 'proguard-rules.txt'
+            proguardFile 'proguard-rules-google-play-services.txt'
+            proguardFile 'proguard-rules-ical4j.txt'
+            proguardFile 'proguard-rules-keep-names.txt'
+            proguardFile getDefaultProguardFile('proguard-android.txt')
 
             applicationVariants.all { variant ->
                 appendVersionNameVersionCode(variant, defaultConfig)
             }
         }
         debug {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            minifyEnabled false
+            shrinkResources true
+            proguardFile 'proguard-rules.txt'
+            proguardFile 'proguard-rules-google-play-services.txt'
+            proguardFile 'proguard-rules-ical4j.txt'
+            proguardFile 'proguard-rules-keep-names.txt'
+            proguardFile getDefaultProguardFile('proguard-android.txt')
         }
     }
     compileOptions {

@@ -6,49 +6,29 @@
 -dontwarn org.xmlpull.v1.**
 -dontwarn com.caverock.androidsvg.**
 
-###############
-# google play services needs some files not to be removed or obfuscated
-# http://developer.android.com/google/play-services/setup.html#Proguard
-
--keep class * extends java.util.ListResourceBundle {
-    protected Object[][] getContents();
-}
-
--keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
-    public static final *** NULL;
-}
-
--keepnames @com.google.android.gms.common.annotation.KeepName class *
--keepclassmembernames class * {
-    @com.google.android.gms.common.annotation.KeepName *;
-}
-
--keepnames class * implements android.os.Parcelable {
-    public static final ** CREATOR;
-}
 
 ###############
-# ical4j also contains groovy code which is not used in android
--dontwarn groovy.**
--dontwarn org.codehaus.groovy.**
--dontwarn org.apache.commons.logging.**
--dontwarn sun.misc.Perf
+-keepclasseswithmembernames class * {
+public <init>(android.content.Context);
+}
 
--dontnote com.google.vending.**
--dontnote com.android.vending.licensing.**
+-keepclasseswithmembernames class * {
+public <init>(android.content.Context, android.util.AttributeSet);
+}
 
-###############
-# Get rid of #can't find referenced method in library class java.lang.Object# warnings for clone() and finalize()
-# Warning: net.fortuna.ical4j.model.CalendarFactory: can't find referenced method 'void finalize()' in library class java.lang.Object
-# Warning: net.fortuna.ical4j.model.ContentBuilder: can't find referenced method 'java.lang.Object clone()' in library class java.lang.Object
-# for details see http://stackoverflow.com/questions/23883028/how-to-fix-proguard-warning-cant-find-referenced-method-for-existing-methods
--dontwarn net.fortuna.ical4j.model.**
+-keepclasseswithmembernames class * {
+public <init>(android.content.Context, android.util.AttributeSet, int);
+}
 
+# Preserve static fields of inner classes of R classes that might be accessed
+# through introspection.
+-keepclassmembers class **.R$* {
+public static <fields>;
+}
 
+# Preserve the special static methods that are required in all enumeration classes.
+-keepclassmembers enum * {
+public static **[] values();
+public static ** valueOf(java.lang.String);
+}
 
-###############
-# I use proguard only to remove unused stuff and to keep the app small.
-# I do not want to obfuscate (rename packages, classes, methods, ...) since this is open source
--keepnames class ** { *; }
--keepnames interface ** { *; }
--keepnames enum ** { *; }
