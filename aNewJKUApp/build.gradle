@@ -66,7 +66,7 @@ dependencies {
     compile 'org.jsoup:jsoup:1.8.1'
     compile 'org.mnode.ical4j:ical4j:1.0.6'
 
-    compile 'uk.co.chrisjenx:calligraphy:1.2.0'
+    compile 'uk.co.chrisjenx:calligraphy:2.0.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
     compile 'com.github.alamkanak:android-week-view:1.2.1'
     compile 'se.emilsjolander:stickylistheaders:2.5.2'

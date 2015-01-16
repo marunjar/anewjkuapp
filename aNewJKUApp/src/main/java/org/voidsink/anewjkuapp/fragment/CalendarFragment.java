@@ -52,7 +52,7 @@ public class CalendarFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_calendar, container,
+        View view = inflater.inflate(R.layout.fragment_calendar, container,
                 false);
 
         final ListViewWithHeader mListView = (ListViewWithHeader) view.findViewById(R.id.calendar_card_events);

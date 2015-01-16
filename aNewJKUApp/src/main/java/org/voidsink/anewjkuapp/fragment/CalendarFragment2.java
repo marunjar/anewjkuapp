@@ -51,7 +51,7 @@ public class CalendarFragment2 extends BaseFragment implements WeekView.MonthCha
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_calendar_2, container,
+        View view = inflater.inflate(R.layout.fragment_calendar_2, container,
                 false);
 
         mWeekView = (WeekView) view.findViewById(R.id.weekView);
