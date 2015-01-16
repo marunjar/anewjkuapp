@@ -1,10 +1,14 @@
 #  proguard-rules.txt
 #
 
+###############
+# TODO: some stuff that must be checked
 -dontwarn org.xmlpull.v1.**
+-dontwarn com.caverock.androidsvg.**
 
 ###############
-## some stuff for google play services
+# google play services needs some files not to be removed or obfuscated
+# http://developer.android.com/google/play-services/setup.html#Proguard
 
 -keep class * extends java.util.ListResourceBundle {
     protected Object[][] getContents();
@@ -24,7 +28,7 @@
 }
 
 ###############
-## ical4j also contains groovy code which is not used in android
+# ical4j also contains groovy code which is not used in android
 -dontwarn groovy.**
 -dontwarn org.codehaus.groovy.**
 -dontwarn org.apache.commons.logging.**
@@ -42,11 +46,9 @@
 
 
 
-
-
 ###############
 # I use proguard only to remove unused stuff and to keep the app small.
-# I donot want to obfuscate (rename packages, classes, methods, ...) since this is open source
+# I do not want to obfuscate (rename packages, classes, methods, ...) since this is open source
 -keepnames class ** { *; }
 -keepnames interface ** { *; }
 -keepnames enum ** { *; }
