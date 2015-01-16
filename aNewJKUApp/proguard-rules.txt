@@ -1,0 +1,34 @@
+#  proguard-rules.txt
+#
+
+###############
+# TODO: some stuff that must be checked
+-dontwarn org.xmlpull.v1.**
+-dontwarn com.caverock.androidsvg.**
+
+
+###############
+-keepclasseswithmembernames class * {
+public <init>(android.content.Context);
+}
+
+-keepclasseswithmembernames class * {
+public <init>(android.content.Context, android.util.AttributeSet);
+}
+
+-keepclasseswithmembernames class * {
+public <init>(android.content.Context, android.util.AttributeSet, int);
+}
+
+# Preserve static fields of inner classes of R classes that might be accessed
+# through introspection.
+-keepclassmembers class **.R$* {
+public static <fields>;
+}
+
+# Preserve the special static methods that are required in all enumeration classes.
+-keepclassmembers enum * {
+public static **[] values();
+public static ** valueOf(java.lang.String);
+}
+

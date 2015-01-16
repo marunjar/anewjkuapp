@@ -1,3 +1,10 @@
+#  proguard-rules.txt
+#
+
+###############
+# google play services needs some files not to be removed or obfuscated
+# http://developer.android.com/google/play-services/setup.html#Proguard
+
 -keep class * extends java.util.ListResourceBundle {
     protected Object[][] getContents();
 }

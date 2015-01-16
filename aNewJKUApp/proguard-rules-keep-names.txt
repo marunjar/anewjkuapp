@@ -1,0 +1,9 @@
+#  proguard-rules.txt
+#
+
+###############
+# I use proguard only to remove unused stuff and to keep the app small.
+# I do not want to obfuscate (rename packages, classes, methods, ...) since this is open source
+-keepnames class ** { *; }
+-keepnames interface ** { *; }
+-keepnames enum ** { *; }
