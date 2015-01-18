@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import org.voidsink.anewjkuapp.R;
@@ -48,7 +49,7 @@ public class TwoLinesListPreference extends ListPreference {
             class ViewHolder {
                 TextView title;
                 TextView subTitle;
-                //ImageView selectedIndicator;
+                public RadioButton radio;
             }
 
             public View getView(int position, View convertView, ViewGroup parent) {
@@ -60,7 +61,7 @@ public class TwoLinesListPreference extends ListPreference {
                     holder = new ViewHolder();
                     holder.title = (TextView) convertView.findViewById(android.R.id.text1);
                     holder.subTitle = (TextView) convertView.findViewById(android.R.id.text2);
-                    //holder.selectedIndicator = (ImageView) convertView.findViewById(R.id.custom_list_view_row_selected_indicator);
+                    holder.radio = (RadioButton) convertView.findViewById(R.id.radio);
 
                     convertView.setTag(holder);
                 } else {
@@ -70,7 +71,9 @@ public class TwoLinesListPreference extends ListPreference {
 
                 holder.title.setText(getEntries()[position]);
                 holder.subTitle.setText(mEntriesSubtitles[position]);
-                //holder.selectedIndicator.setVisibility(position == mClickedDialogEntryIndex ? View.VISIBLE : View.GONE);
+                if (holder.radio != null) {
+                    holder.radio.setChecked(position == mClickedDialogEntryIndex);
+                }
 
                 return convertView;
             }
