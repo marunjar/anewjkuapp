@@ -40,6 +40,8 @@ import java.util.List;
 
 public class StatCardAdapter extends BaseArrayAdapter<StatCard> {
 
+    private static final int ANIMATION_DURATION = 1500;
+
     private final int mBackgroundColor;
     private final int mTextColorPrimary;
     private final int mTextColorSecondary;
@@ -191,7 +193,7 @@ public class StatCardAdapter extends BaseArrayAdapter<StatCard> {
             views.barChart.highlightValues(null);
             views.barChart.getLegend().setTextColor(mTextColorPrimary);
             views.barChart.getLegend().setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
-            views.barChart.animateY(1500);
+            views.barChart.animateY(ANIMATION_DURATION);
         }
         if (views.pieChart.getVisibility() == View.VISIBLE) {
             // clear chart
@@ -216,7 +218,7 @@ public class StatCardAdapter extends BaseArrayAdapter<StatCard> {
             views.pieChart.highlightValues(null);
             views.pieChart.getLegend().setTextColor(mTextColorPrimary);
             views.pieChart.getLegend().setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
-            views.pieChart.animateX(1500);
+            views.pieChart.animateXY(ANIMATION_DURATION, ANIMATION_DURATION);
         }
     }
 
@@ -383,7 +385,7 @@ public class StatCardAdapter extends BaseArrayAdapter<StatCard> {
             views.barChart.highlightValues(null);
             views.barChart.getLegend().setTextColor(mTextColorPrimary);
             views.barChart.getLegend().setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
-            views.barChart.animateY(1500);
+            views.barChart.animateY(ANIMATION_DURATION);
         }
         if (views.pieChart.getVisibility() == View.VISIBLE) {
             // clear chart
@@ -431,7 +433,7 @@ public class StatCardAdapter extends BaseArrayAdapter<StatCard> {
             views.pieChart.highlightValues(null);
             views.pieChart.getLegend().setTextColor(mTextColorPrimary);
             views.pieChart.getLegend().setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
-            views.pieChart.animateX(1500);
+            views.pieChart.animateXY(ANIMATION_DURATION, ANIMATION_DURATION);
         }
     }
 
