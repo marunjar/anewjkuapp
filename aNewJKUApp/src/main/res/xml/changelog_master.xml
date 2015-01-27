@@ -4,6 +4,11 @@
 		    - fixed
 		    * changed
 		    + added -->
+    <release version="0.31" versioncode="140031">
+        <change>- KUSSS: LVAs werden wieder geladen</change>
+        <change>* App: fehlerhaftes Grid entfernt (betrifft vor allem Tablets)</change>
+        <change>* App: UI leicht angepasst</change>
+    </release>
     <release version="0.30" versioncode="140030">
         <change>* Statistik: Diagramme angepasst</change>
         <change>+ Stundenplan: Synchronisation kann deaktiviert werden</change>
