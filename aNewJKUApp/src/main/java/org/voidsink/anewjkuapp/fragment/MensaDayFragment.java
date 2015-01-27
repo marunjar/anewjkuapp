@@ -22,7 +22,7 @@ import org.voidsink.anewjkuapp.mensa.MensaDay;
 import org.voidsink.anewjkuapp.mensa.MensaMenu;
 import org.voidsink.anewjkuapp.mensa.MenuLoader;
 import org.voidsink.anewjkuapp.mensa.RaabMenuLoader;
-import org.voidsink.anewjkuapp.view.GridViewWithHeader;
+import org.voidsink.anewjkuapp.view.ListViewWithHeader;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,12 +47,12 @@ public class MensaDayFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_grid_with_header, container,
+        View view = inflater.inflate(R.layout.fragment_list_with_header, container,
                 false);
 
-        final GridViewWithHeader mGridView = (GridViewWithHeader) view.findViewById(R.id.gridview);
+        final ListViewWithHeader mListView = (ListViewWithHeader) view.findViewById(R.id.list_with_header);
         mAdapter = new MensaMenuAdapter(getContext(), android.R.layout.simple_list_item_1, false);
-        mGridView.setAdapter(mAdapter);
+        mListView.setAdapter(mAdapter);
 
         return view;
     }

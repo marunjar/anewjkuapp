@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.LvaListAdapter;
@@ -24,7 +23,7 @@ import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.utils.AppUtils;
-import org.voidsink.anewjkuapp.view.GridViewWithHeader;
+import org.voidsink.anewjkuapp.view.ListViewWithHeader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,13 +49,13 @@ public class LvaDetailFragment extends BaseFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_grid_with_header, container,
+        View view = inflater.inflate(R.layout.fragment_list_with_header, container,
                 false);
 
-        final GridViewWithHeader mGridView = (GridViewWithHeader) view.findViewById(R.id.gridview);
+        final ListViewWithHeader mListView = (ListViewWithHeader) view.findViewById(R.id.list_with_header);
 
         mAdapter = new LvaListAdapter(getContext());
-        mGridView.setAdapter(mAdapter);
+        mListView.setAdapter(mAdapter);
 
         return view;
     }

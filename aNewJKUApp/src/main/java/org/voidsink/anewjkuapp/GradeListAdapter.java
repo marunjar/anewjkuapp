@@ -6,22 +6,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.voidsink.anewjkuapp.base.GridWithHeaderAdapter;
+import org.voidsink.anewjkuapp.base.ListWithHeaderAdapter;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.utils.UIUtils;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
-public class GradeListAdapter extends GridWithHeaderAdapter<ExamGrade> {
-
-    private static final DateFormat df = SimpleDateFormat.getDateInstance();
-    private LayoutInflater inflater;
+public class GradeListAdapter extends ListWithHeaderAdapter<ExamGrade> {
 
     public GradeListAdapter(Context context) {
         super(context, R.layout.grade_list_item);
-
-        this.inflater = LayoutInflater.from(context);
     }
 
     @Override
@@ -38,7 +32,9 @@ public class GradeListAdapter extends GridWithHeaderAdapter<ExamGrade> {
         GradeListGradeHolder gradeItemHolder = null;
 
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.grade_list_item, parent,
+            final LayoutInflater mInflater = LayoutInflater.from(getContext());
+
+            convertView = mInflater.inflate(R.layout.grade_list_item, parent,
                     false);
             gradeItemHolder = new GradeListGradeHolder();
             gradeItemHolder.title = (TextView) convertView

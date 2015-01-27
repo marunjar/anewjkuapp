@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.voidsink.anewjkuapp.base.GridWithHeaderAdapter;
+import org.voidsink.anewjkuapp.base.ListWithHeaderAdapter;
 import org.voidsink.anewjkuapp.mensa.Mensa;
 import org.voidsink.anewjkuapp.mensa.MensaDay;
 import org.voidsink.anewjkuapp.mensa.MensaMenu;
@@ -16,7 +16,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class MensaMenuAdapter extends GridWithHeaderAdapter<MensaItem> {
+public class MensaMenuAdapter extends ListWithHeaderAdapter<MensaItem> {
 
     private static final DateFormat df = SimpleDateFormat.getDateInstance();
     protected boolean mUseDateHeader;
