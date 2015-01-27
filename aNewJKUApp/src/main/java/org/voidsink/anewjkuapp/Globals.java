@@ -32,7 +32,10 @@ public class Globals extends Application {
     public void onCreate() {
         super.onCreate();
 
-        CalligraphyConfig.initDefault("fonts/Roboto-Regular.ttf", R.attr.fontPath);
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/Roboto-Regular.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build());
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
                 .build();

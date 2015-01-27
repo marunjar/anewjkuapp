@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.SettingsActivity;
+import org.voidsink.anewjkuapp.base.TwoLinesListPreference;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.Consts;
@@ -122,7 +123,7 @@ public class SettingsFragment extends PreferenceFragment {
 
             calendars = CalendarUtils.getCalendars(getActivity(), true);
 
-            ListPreference calendarLva = (ListPreference) findPreference(PreferenceWrapper.PREF_EXTENDED_CALENDAR_LVA);
+            TwoLinesListPreference calendarLva = (TwoLinesListPreference) findPreference(PreferenceWrapper.PREF_EXTENDED_CALENDAR_LVA);
             setEntries(calendars, calendarLva);
             updateTextPrefSummary(calendarLva, null, R.string.pref_kusss_calendar_extended_summary);
             calendarLva.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -133,7 +134,7 @@ public class SettingsFragment extends PreferenceFragment {
                 }
             });
 
-            ListPreference calendarExam = (ListPreference) findPreference(PreferenceWrapper.PREF_EXTENDED_CALENDAR_EXAM);
+            TwoLinesListPreference calendarExam = (TwoLinesListPreference) findPreference(PreferenceWrapper.PREF_EXTENDED_CALENDAR_EXAM);
             setEntries(calendars, calendarExam);
             updateTextPrefSummary(calendarExam, null, R.string.pref_kusss_calendar_extended_summary);
             calendarExam.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -168,9 +169,10 @@ public class SettingsFragment extends PreferenceFragment {
             }
         }
 
-        private void setEntries(CalendarUtils.CalendarList calendars, ListPreference preference) {
+        private void setEntries(CalendarUtils.CalendarList calendars, TwoLinesListPreference preference) {
             preference.setEntries(calendars.getDisplayNames().toArray(new String[0]));
             preference.setEntryValues(calendars.getIdsAsStrings());
+            preference.setEntriesSubtitles(calendars.getAccountNames().toArray(new String[0]));
         }
 
         @Override

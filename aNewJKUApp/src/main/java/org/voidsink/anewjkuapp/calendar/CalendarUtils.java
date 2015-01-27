@@ -236,8 +236,9 @@ public final class CalendarUtils {
 
     public static CalendarList getCalendars(Context context, boolean onlyWritable) {
         List<Integer> ids = new ArrayList<>();
-        ArrayList<String> names = new ArrayList<>();
-        ArrayList<String> displayNames = new ArrayList<>();
+        List<String> names = new ArrayList<>();
+        List<String> displayNames = new ArrayList<>();
+        List<String> accountNames = new ArrayList<>();
         ContentResolver cr = context.getContentResolver();
 
         Cursor c = null;
@@ -250,10 +251,12 @@ public final class CalendarUtils {
                         int id = c.getInt(COLUMN_CAL_ID);
                         String name = c.getString(COLUMN_CAL_NAME);
                         String displayName = c.getString(COLUMN_CAL_DISPLAY_NAME);
+                        String accountName = c.getString(COLUMN_CAL_ACCOUNT_NAME);
 
                         ids.add(id);
                         names.add(name);
                         displayNames.add(displayName);
+                        accountNames.add(accountName);
                     }
                 }
             }
@@ -263,7 +266,7 @@ public final class CalendarUtils {
             if (c != null) c.close();
         }
 
-        return new CalendarList(ids, names, displayNames);
+        return new CalendarList(ids, names, displayNames, accountNames);
     }
 
     private static boolean isReadable(int accessLevel) {
@@ -298,11 +301,13 @@ public final class CalendarUtils {
         private final List<Integer> mIds;
         private final List<String> mNames;
         private final List<String> mDisplayNames;
+        private final List<String> mAccountNames;
 
-        public CalendarList(List<Integer> ids, ArrayList<String> names, List<String> displayNames) {
+        public CalendarList(List<Integer> ids, List<String> names, List<String> displayNames, List<String> accountNames) {
             this.mIds = ids;
             this.mNames = names;
             this.mDisplayNames = displayNames;
+            this.mAccountNames = accountNames;
         }
 
         public List<String> getNames() {
@@ -311,6 +316,10 @@ public final class CalendarUtils {
 
         public List<String> getDisplayNames() {
             return mDisplayNames;
+        }
+
+        public List<String> getAccountNames() {
+            return mAccountNames;
         }
 
         public List<Integer> getIds() {
