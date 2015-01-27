@@ -6,13 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.voidsink.anewjkuapp.base.BaseArrayAdapter;
-import org.voidsink.anewjkuapp.base.GridWithHeaderAdapter;
+import org.voidsink.anewjkuapp.base.ListWithHeaderAdapter;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.utils.UIUtils;
 
-public class LvaListAdapter extends GridWithHeaderAdapter<LvaWithGrade> {
+public class LvaListAdapter extends ListWithHeaderAdapter<LvaWithGrade> {
 
     public LvaListAdapter(Context context) {
         super(context, 0);

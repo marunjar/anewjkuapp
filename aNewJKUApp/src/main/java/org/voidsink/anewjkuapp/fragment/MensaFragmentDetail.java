@@ -19,7 +19,7 @@ import org.voidsink.anewjkuapp.mensa.Mensa;
 import org.voidsink.anewjkuapp.mensa.MensaDay;
 import org.voidsink.anewjkuapp.mensa.MensaMenu;
 import org.voidsink.anewjkuapp.mensa.MenuLoader;
-import org.voidsink.anewjkuapp.view.GridViewWithHeader;
+import org.voidsink.anewjkuapp.view.ListViewWithHeader;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,15 +29,15 @@ public abstract class MensaFragmentDetail extends BaseFragment {
 
     public static final String TAG = MensaFragmentDetail.class.getSimpleName();
     private MensaMenuAdapter mAdapter;
-    private GridViewWithHeader mListView;
+    private ListViewWithHeader mListView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_grid_with_header, container,
+        View view = inflater.inflate(R.layout.fragment_list_with_header, container,
                 false);
 
-        mListView = (GridViewWithHeader) view.findViewById(R.id.gridview);
+        mListView = (ListViewWithHeader) view.findViewById(R.id.list_with_header);
         mAdapter = new MensaMenuAdapter(getContext(), android.R.layout.simple_list_item_1, true);
         mListView.setAdapter(mAdapter);
 

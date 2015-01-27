@@ -3,6 +3,7 @@ package org.voidsink.anewjkuapp.kusss;
 import java.util.regex.Pattern;
 
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.voidsink.anewjkuapp.ImportLvaTask;
 import org.voidsink.anewjkuapp.KusssContentContract;
 
@@ -32,22 +33,24 @@ public class Lva {
 	public Lva(String term, Element row) {
 		this(term, "");
 
-		if (row.childNodeSize() >= 11) {
+        Elements columns = row.getElementsByTag("td");
+
+		if (columns.size() >= 11) {
 			try {
-				boolean active = row.child(10)
+				boolean active = columns.get(9)
 						.getElementsByClass("assignment-active").size() == 1;
-				String lvaNrText = row.child(6).text();
+				String lvaNrText = columns.get(6).text();
 				if (active && lvaNrPattern.matcher(lvaNrText).matches()) {
 					this.lvaNr = lvaNrText.toUpperCase().replace(".", "");
-					setTitle(row.child(5).text());
-					setLvaType(row.child(4).text()); // type (UE, ...)
-					setTeacher(row.child(7).text()); // Leiter
-					setSKZ(Integer.parseInt(row.child(2).text())); // SKZ
-					setECTS(Double.parseDouble(row.child(8).text()
+					setTitle(columns.get(5).text());
+					setLvaType(columns.get(4).text()); // type (UE, ...)
+					setTeacher(columns.get(7).text()); // Leiter
+					setSKZ(Integer.parseInt(columns.get(2).text())); // SKZ
+					setECTS(Double.parseDouble(columns.get(8).text()
 							.replace(",", "."))); // ECTS
-					// setSWS(Double.parseDouble(row.child(6).text()
+					// setSWS(Double.parseDouble(columns.get.child(6).text()
 					// .replace(",", "."))); // SWS
-					setCode(row.child(3).text());
+					setCode(columns.get(3).text());
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
