@@ -328,6 +328,10 @@ public class KusssHandler {
                     throw new IOException(String.format("cannot select term: %s", term));
                 }
             }
+            if (lvas.size() == 0) {
+                // break if no lvas found, a student without courses is a quite impossible case
+                throw new IOException("no lvas found");
+            }
         } catch (Exception e) {
             Log.e(TAG, "getLvas", e);
             Analytics.sendException(c, e, true);
