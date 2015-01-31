@@ -14,8 +14,9 @@ import org.voidsink.anewjkuapp.Globals.TrackerName;
 
 public class Analytics {
 
-    private static final int GA_DIM_EXCEPTION = 1;
+    private static final int GA_DIM_EXCEPTION_NAME = 1;
     private static final int GA_DIM_ADDITIONAL_DATA = 2;
+    private static final int GA_DIM_EXCEPTION_MESSAGE = 3;
 
     // private static final int GA_METRIC_SYNC_INTERVAL = 1;
     // private static final int GA_METRIC_LOAD_EXAM_BY_LVANR = 2;
@@ -160,7 +161,7 @@ public class Analytics {
             if (t != null && e != null) {
                 HitBuilders.ExceptionBuilder eb = new HitBuilders.ExceptionBuilder()
                         .setFatal(fatal)
-                        .setCustomDimension(GA_DIM_EXCEPTION,
+                        .setCustomDimension(GA_DIM_EXCEPTION_NAME,
                                 e.getClass().getCanonicalName())
                         .setDescription(
                                 new AnalyticsExceptionParser(c, null)
@@ -175,6 +176,7 @@ public class Analytics {
                 if (!TextUtils.isEmpty(additionalData)) {
                     eb.setCustomDimension(GA_DIM_ADDITIONAL_DATA, additionalData);
                 }
+                eb.setCustomDimension(GA_DIM_EXCEPTION_MESSAGE, e.getMessage());
 
                 t.send(eb.build());
             }
