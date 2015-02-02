@@ -310,18 +310,22 @@ public class KusssHandler {
                 if (selectTerm(c, term)) {
                     Document doc = Jsoup.connect(URL_MY_LVAS).get();
 
-                    if (isSelected(doc, term)) {
-                        // .select("body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > table > tbody > tr");
-                        Elements rows = doc.select(SELECT_MY_LVAS);
-                        for (Element row : rows) {
-                            Lva lva = new Lva(term, row);
-                            if (lva.isInitialized()) {
-                                lvas.add(lva);
+                    if (isSelectable(doc, term)) {
+                        if (isSelected(doc, term)) {
+                            // .select("body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > table > tbody > tr");
+                            Elements rows = doc.select(SELECT_MY_LVAS);
+                            for (Element row : rows) {
+                                Lva lva = new Lva(term, row);
+                                if (lva.isInitialized()) {
+                                    lvas.add(lva);
+                                }
                             }
+                        } else {
+                            // break if selection is not equal previously selected term
+                            throw new IOException(String.format("term not selected: %s", term));
                         }
                     } else {
-                        // break if selection is not equal previously selected term
-                        throw new IOException(String.format("term not selected: %s", term));
+                        throw new IOException(String.format("term is not selectable: %s", term));
                     }
                 } else {
                     // break if selection failed
@@ -338,6 +342,16 @@ public class KusssHandler {
             return null;
         }
         return lvas;
+    }
+
+    private boolean isSelectable(Document doc, String term) {
+        Element termSelector = doc.getElementById("term");
+        if (termSelector == null) return false;
+
+        Elements selectable = termSelector.getElementsByAttributeValue("value", term);
+        if (selectable.size() != 1) return false;
+
+        return true;
     }
 
     private boolean isSelected(Document doc, String term) {
