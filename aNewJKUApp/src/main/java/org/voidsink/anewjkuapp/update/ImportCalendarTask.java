@@ -154,17 +154,19 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                 return null;
             }
 
-            updateNotify(String.format(
-                    mContext.getString(R.string.notification_sync_calendar_loading),
-                    CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
-
             try {
                 Log.d(TAG, "setup connection");
+
+                updateNotify(mContext.getString(R.string.notification_sync_connect));
 
                 if (KusssHandler.getInstance().isAvailable(mContext,
                         AppUtils.getAccountAuthToken(mContext, mAccount),
                         AppUtils.getAccountName(mContext, mAccount),
                         AppUtils.getAccountPassword(mContext, mAccount))) {
+
+                    updateNotify(String.format(
+                            mContext.getString(R.string.notification_sync_calendar_loading),
+                            CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
 
                     Log.d(TAG, "loading calendar");
 

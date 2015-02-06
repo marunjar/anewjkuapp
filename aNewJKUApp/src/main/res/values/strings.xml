@@ -49,6 +49,7 @@
     <string name="grade_type_none_available">keine Noten verfügbar</string>
 
     <string name="notification_sync_running">Daten werden synchronisiert</string>
+    <string name="notification_sync_connect">Verbindung wird aufgebaut</string>
     <string name="notification_sync_calendar">Termine werden synchronisiert</string>
     <string name="notification_sync_calendar_loading">%s: Termine werden geladen</string>
     <string name="notification_sync_calendar_updating">%s: Termine werden aktualisiert</string>

@@ -8,19 +8,15 @@ import android.accounts.OperationCanceledException;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.EmbossMaskFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 
 import org.voidsink.anewjkuapp.ImportPoiTask;
-import org.voidsink.anewjkuapp.ImportStudiesTask;
+import org.voidsink.anewjkuapp.update.ImportStudiesTask;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;

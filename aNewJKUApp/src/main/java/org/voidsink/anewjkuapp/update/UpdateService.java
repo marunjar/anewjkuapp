@@ -18,6 +18,7 @@ public class UpdateService extends IntentService {
     public static final int UPDATE_EXAMS = 3;
     public static final int UPDATE_LVAS = 4;
     public static final int UPDATE_GRADES = 5;
+    public static final int UPDATE_STUDIES = 6;
 
     public UpdateService(String name) {
         super(name);
@@ -60,6 +61,11 @@ public class UpdateService extends IntentService {
                     case UPDATE_GRADES: {
                         Analytics.eventReloadGrades(this);
                         new ImportGradeTask(account, this).execute();
+                        break;
+                    }
+                    case UPDATE_STUDIES: {
+                        Analytics.eventReloadStudies(this);
+                        new ImportStudiesTask(account, this).execute();
                         break;
                     }
                 }

@@ -5,6 +5,7 @@ import org.voidsink.anewjkuapp.notification.KusssNotificationBuilder;
 import org.voidsink.anewjkuapp.update.ImportExamTask;
 import org.voidsink.anewjkuapp.update.ImportGradeTask;
 import org.voidsink.anewjkuapp.update.ImportLvaTask;
+import org.voidsink.anewjkuapp.update.ImportStudiesTask;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
@@ -94,7 +95,7 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
             studiesTask.execute();
             while (!studiesTask.isDone() && !mSyncCancled) {
                 try {
-                    Thread.sleep(600);
+                    Thread.sleep(500);
                 } catch (Exception e) {
                     Analytics.sendException(mContext, e, false);
                 }
@@ -110,7 +111,7 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
 			lvaTask.execute();
 			while (!lvaTask.isDone() && !mSyncCancled) {
 				try {
-					Thread.sleep(600);
+					Thread.sleep(500);
 				} catch (Exception e) {
                     Analytics.sendException(mContext, e, false);
 				}
@@ -127,7 +128,7 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
             gradeTask.execute();
             while (!gradeTask.isDone() && !mSyncCancled) {
                 try {
-                    Thread.sleep(600);
+                    Thread.sleep(500);
                 } catch (Exception e) {
                     Analytics.sendException(mContext, e, false);
                 }
@@ -144,7 +145,7 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
 			examTask.execute();
 			while (!examTask.isDone() && !mSyncCancled) {
 				try {
-					Thread.sleep(600);
+					Thread.sleep(500);
 				} catch (Exception e) {
                     Analytics.sendException(mContext, e, false);
 				}

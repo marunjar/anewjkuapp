@@ -11,6 +11,7 @@ import org.jsoup.HttpStatusException;
 import org.voidsink.anewjkuapp.BuildConfig;
 import org.voidsink.anewjkuapp.Globals;
 import org.voidsink.anewjkuapp.Globals.TrackerName;
+import org.voidsink.anewjkuapp.update.UpdateService;
 
 public class Analytics {
 
@@ -152,6 +153,16 @@ public class Analytics {
             t.send(new HitBuilders.EventBuilder()
                     .setCategory(GA_EVENT_CATEGORY_UI)
                     .setAction("button_press").setLabel("reload_grades")
+                    .build());
+        }
+    }
+
+    public static void eventReloadStudies(Context c) {
+        Tracker t = getAppTracker(c);
+        if (t != null) {
+            t.send(new HitBuilders.EventBuilder()
+                    .setCategory(GA_EVENT_CATEGORY_UI)
+                    .setAction("button_press").setLabel("reload_studies")
                     .build());
         }
     }

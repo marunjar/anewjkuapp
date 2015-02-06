@@ -2,6 +2,7 @@ package org.voidsink.anewjkuapp.fragment;
 
 import android.accounts.Account;
 import android.content.Context;
+import android.content.Intent;
 import android.content.UriMatcher;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,7 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.voidsink.anewjkuapp.ImportStudiesTask;
+import org.voidsink.anewjkuapp.update.ImportStudiesTask;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
@@ -24,6 +25,7 @@ import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.base.ListWithHeaderAdapter;
 import org.voidsink.anewjkuapp.kusss.Studies;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
+import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.view.ListViewWithHeader;
 
@@ -89,8 +91,10 @@ public class StudiesFragment extends BaseFragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh_studies: {
-                Account account = AppUtils.getAccount(getContext());
-                new ImportStudiesTask(account, getContext()).execute();
+                Intent mUpdateService = new Intent(getActivity(), UpdateService.class);
+                mUpdateService.putExtra(UpdateService.UPDATE_TYPE, UpdateService.UPDATE_STUDIES);
+                getActivity().startService(mUpdateService);
+
                 return true;
             }
             default:

@@ -110,17 +110,19 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
         Log.d(TAG, "Start importing exams");
 
         synchronized (sync_lock) {
-            updateNotify(mContext.getString(R.string.notification_sync_exam_loading));
-
             final DateFormat df = DateFormat.getDateInstance();
 
             try {
                 Log.d(TAG, "setup connection");
 
+                updateNotify(mContext.getString(R.string.notification_sync_connect));
+
                 if (KusssHandler.getInstance().isAvailable(mContext,
                         AppUtils.getAccountAuthToken(mContext, mAccount),
                         AppUtils.getAccountName(mContext, mAccount),
                         AppUtils.getAccountPassword(mContext, mAccount))) {
+
+                    updateNotify(mContext.getString(R.string.notification_sync_exam_loading));
 
                     List<Exam> exams;
                     if (PreferenceWrapper.getNewExamsByLvaNr(mContext)) {

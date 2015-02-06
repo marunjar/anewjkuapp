@@ -111,7 +111,7 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
         Log.d(TAG, "Start importing grades");
 
         synchronized (sync_lock) {
-            updateNotify(mContext.getString(R.string.notification_sync_grade_loading));
+            updateNotify(mContext.getString(R.string.notification_sync_connect));
 
             try {
                 Log.d(TAG, "setup connection");
@@ -121,6 +121,7 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
                         AppUtils.getAccountName(mContext, mAccount),
                         AppUtils.getAccountPassword(mContext, mAccount))) {
 
+                    updateNotify(mContext.getString(R.string.notification_sync_grade_loading));
                     Log.d(TAG, "load grades");
 
                     List<ExamGrade> grades = KusssHandler.getInstance()
