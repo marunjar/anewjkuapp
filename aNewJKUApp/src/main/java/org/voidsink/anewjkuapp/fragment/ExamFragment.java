@@ -21,13 +21,12 @@ import android.view.ViewGroup;
 
 import org.voidsink.anewjkuapp.ExamListAdapter;
 import org.voidsink.anewjkuapp.ExamListExam;
-import org.voidsink.anewjkuapp.update.ImportExamTask;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.LvaMap;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
+import org.voidsink.anewjkuapp.update.ImportExamTask;
 import org.voidsink.anewjkuapp.update.UpdateService;
-import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.anewjkuapp.view.ListViewWithHeader;
@@ -88,15 +87,12 @@ public class ExamFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh_exams: {
-                final Account account = AppUtils.getAccount(getContext());
-                if (account != null) {
-                    Intent mUpdateService = new Intent(getActivity(), UpdateService.class);
-                    mUpdateService.putExtra(UpdateService.UPDATE_TYPE, UpdateService.UPDATE_EXAMS);
-                    mUpdateService.putExtra(UpdateService.UPDATE_ACCOUNT, account);
-                    getActivity().startService(mUpdateService);
-                }
+                Intent mUpdateService = new Intent(getActivity(), UpdateService.class);
+                mUpdateService.putExtra(UpdateService.UPDATE_TYPE, UpdateService.UPDATE_EXAMS);
+                getActivity().startService(mUpdateService);
             }
-            default: return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

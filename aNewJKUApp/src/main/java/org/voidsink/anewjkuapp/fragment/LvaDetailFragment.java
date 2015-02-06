@@ -2,6 +2,7 @@ package org.voidsink.anewjkuapp.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.UriMatcher;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -22,6 +24,7 @@ import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
+import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.view.ListViewWithHeader;
 
@@ -120,6 +123,24 @@ public class LvaDetailFragment extends BaseFragment implements
         super.onCreateOptionsMenu(menu, inflater);
 
         inflater.inflate(R.menu.lva, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_refresh_lvas:
+                Intent mUpdateService = new Intent(getActivity(), UpdateService.class);
+                mUpdateService.putExtra(UpdateService.UPDATE_TYPE, UpdateService.UPDATE_LVAS);
+                getActivity().startService(mUpdateService);
+
+                mUpdateService = new Intent(getActivity(), UpdateService.class);
+                mUpdateService.putExtra(UpdateService.UPDATE_TYPE, UpdateService.UPDATE_GRADES);
+                getActivity().startService(mUpdateService);
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

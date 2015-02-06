@@ -6,7 +6,7 @@ import android.database.Cursor;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.voidsink.anewjkuapp.ImportGradeTask;
+import org.voidsink.anewjkuapp.update.ImportGradeTask;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.utils.Analytics;
 

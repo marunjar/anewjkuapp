@@ -107,12 +107,22 @@ public class Analytics {
         }
     }
 
-    public static void eventReloadEvents(Context c) {
+    public static void eventReloadEventsLva(Context c) {
         Tracker t = getAppTracker(c);
         if (t != null) {
             t.send(new HitBuilders.EventBuilder()
                     .setCategory(GA_EVENT_CATEGORY_UI)
-                    .setAction("button_press").setLabel("reload_events")
+                    .setAction("button_press").setLabel("reload_events_exam")
+                    .build());
+        }
+    }
+
+    public static void eventReloadEventsExam(Context c) {
+        Tracker t = getAppTracker(c);
+        if (t != null) {
+            t.send(new HitBuilders.EventBuilder()
+                    .setCategory(GA_EVENT_CATEGORY_UI)
+                    .setAction("button_press").setLabel("reload_events_lva")
                     .build());
         }
     }

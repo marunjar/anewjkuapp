@@ -22,13 +22,11 @@ import com.alamkanak.weekview.DateTimeInterpreter;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 
-import net.fortuna.ical4j.data.CalendarBuilder;
-
-import org.voidsink.anewjkuapp.update.ImportCalendarTask;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
+import org.voidsink.anewjkuapp.update.ImportCalendarTask;
 import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
@@ -154,21 +152,14 @@ public class CalendarFragment2 extends BaseFragment implements WeekView.MonthCha
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh_calendar:
-                final Account account = AppUtils.getAccount(getContext());
+                Intent mUpdateService = new Intent(getActivity(), UpdateService.class);
+                mUpdateService.putExtra(UpdateService.UPDATE_TYPE, UpdateService.UPDATE_CAL_LVA);
+                getActivity().startService(mUpdateService);
 
-                if (account != null) {
-                    Log.d(TAG, "importing calendars");
-                    Analytics.eventReloadEvents(getContext());
-                    Intent mUpdateService = new Intent(getActivity(), UpdateService.class);
-                    mUpdateService.putExtra(UpdateService.UPDATE_TYPE, UpdateService.UPDATE_CAL_LVA);
-                    mUpdateService.putExtra(UpdateService.UPDATE_ACCOUNT, account);
-                    getActivity().startService(mUpdateService);
+                mUpdateService = new Intent(getActivity(), UpdateService.class);
+                mUpdateService.putExtra(UpdateService.UPDATE_TYPE, UpdateService.UPDATE_CAL_EXAM);
+                getActivity().startService(mUpdateService);
 
-                    mUpdateService = new Intent(getActivity(), UpdateService.class);
-                    mUpdateService.putExtra(UpdateService.UPDATE_TYPE, UpdateService.UPDATE_CAL_EXAM);
-                    mUpdateService.putExtra(UpdateService.UPDATE_ACCOUNT, account);
-                    getActivity().startService(mUpdateService);
-                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

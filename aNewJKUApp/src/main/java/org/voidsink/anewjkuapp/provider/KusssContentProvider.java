@@ -12,8 +12,8 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import org.voidsink.anewjkuapp.ImportGradeTask;
-import org.voidsink.anewjkuapp.ImportLvaTask;
+import org.voidsink.anewjkuapp.update.ImportGradeTask;
+import org.voidsink.anewjkuapp.update.ImportLvaTask;
 import org.voidsink.anewjkuapp.ImportStudiesTask;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
