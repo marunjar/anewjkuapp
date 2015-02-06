@@ -1,5 +1,6 @@
 package org.voidsink.anewjkuapp.activity;
 
+import android.accounts.Account;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -11,10 +12,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.preference.PreferenceFragment;
 import android.support.v7.app.ActionBar;
 
-import org.voidsink.anewjkuapp.ImportExamTask;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.base.ThemedActivity;
 import org.voidsink.anewjkuapp.fragment.SettingsFragment;
+import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
 public class SettingsActivity extends ThemedActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -100,7 +101,13 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         switch (key) {
             case PreferenceWrapper.PREF_GET_NEW_EXAMS:
-                new ImportExamTask(AppUtils.getAccount(this), this).execute();
+                Account account = AppUtils.getAccount(this);
+                if (account != null) {
+                    Intent mUpdateService = new Intent(this, UpdateService.class);
+                    mUpdateService.putExtra(UpdateService.UPDATE_TYPE, UpdateService.UPDATE_EXAMS);
+                    mUpdateService.putExtra(UpdateService.UPDATE_ACCOUNT, account);
+                    this.startService(mUpdateService);
+                }
                 break;
             case PreferenceWrapper.PREF_SYNC_INTERVAL_KEY:
                 PreferenceWrapper.applySyncInterval(this);

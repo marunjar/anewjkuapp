@@ -23,7 +23,6 @@ import android.widget.TextView;
 
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.voidsink.anewjkuapp.DrawerItem;
-import org.voidsink.anewjkuapp.ImportExamTask;
 import org.voidsink.anewjkuapp.ImportGradeTask;
 import org.voidsink.anewjkuapp.ImportLvaTask;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
@@ -309,11 +308,6 @@ public class MainActivity extends ThemedActivity implements
                 return true;
             case R.id.action_about:
                 startActivity(new Intent(this, AboutActivity.class));
-                return true;
-            case R.id.action_refresh_exams:
-                Log.d(TAG, "importing exams");
-                Analytics.eventReloadExams(this);
-                new ImportExamTask(account, this).execute();
                 return true;
             case R.id.action_refresh_grades:
                 Log.d(TAG, "importing grades");

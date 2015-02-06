@@ -1,4 +1,4 @@
-package org.voidsink.anewjkuapp;
+package org.voidsink.anewjkuapp.update;
 
 import android.accounts.Account;
 import android.content.ContentProviderClient;
@@ -24,6 +24,8 @@ import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.component.VEvent;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.voidsink.anewjkuapp.KusssContentContract;
+import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseAsyncTask;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;

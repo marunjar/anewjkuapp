@@ -115,6 +115,8 @@
             android:name=".service.KusssService"
             android:exported="false"
             android:label="@string/kusss_service_title"></service>
+        <service android:name=".update.UpdateService"
+            android:exported="false"></service>
         <service
             android:name=".service.KusssAuthenticatorService"
             android:permission="android.permission.AUTHENTICATE_ACCOUNTS">

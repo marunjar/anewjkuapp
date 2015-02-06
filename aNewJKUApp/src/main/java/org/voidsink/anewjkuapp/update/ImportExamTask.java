@@ -1,4 +1,4 @@
-package org.voidsink.anewjkuapp;
+package org.voidsink.anewjkuapp.update;
 
 import android.accounts.Account;
 import android.content.ContentProviderClient;
@@ -12,6 +12,10 @@ import android.os.Bundle;
 import android.util.Log;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.voidsink.anewjkuapp.KusssContentContract;
+import org.voidsink.anewjkuapp.LvaMap;
+import org.voidsink.anewjkuapp.PreferenceWrapper;
+import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseAsyncTask;
 import org.voidsink.anewjkuapp.kusss.Exam;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;

@@ -2,6 +2,7 @@ package org.voidsink.anewjkuapp;
 
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.notification.KusssNotificationBuilder;
+import org.voidsink.anewjkuapp.update.ImportExamTask;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 

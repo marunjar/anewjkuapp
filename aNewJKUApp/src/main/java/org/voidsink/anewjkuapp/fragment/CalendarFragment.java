@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -24,7 +25,7 @@ import android.widget.ListView;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 
-import org.voidsink.anewjkuapp.ImportCalendarTask;
+import org.voidsink.anewjkuapp.update.ImportCalendarTask;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
@@ -32,6 +33,7 @@ import org.voidsink.anewjkuapp.calendar.CalendarEventAdapter;
 import org.voidsink.anewjkuapp.calendar.CalendarListEvent;
 import org.voidsink.anewjkuapp.calendar.CalendarListItem;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
+import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
@@ -117,12 +119,16 @@ public class CalendarFragment extends BaseFragment {
                 if (account != null) {
                     Log.d(TAG, "importing calendars");
                     Analytics.eventReloadEvents(getContext());
-                    new ImportCalendarTask(account, getContext(),
-                            CalendarUtils.ARG_CALENDAR_EXAM, new CalendarBuilder())
-                            .execute();
-                    new ImportCalendarTask(account, getContext(),
-                            CalendarUtils.ARG_CALENDAR_LVA, new CalendarBuilder())
-                            .execute();
+
+                    Intent mUpdateService = new Intent(getActivity(), UpdateService.class);
+                    mUpdateService.putExtra(UpdateService.UPDATE_TYPE, UpdateService.UPDATE_CAL_LVA);
+                    mUpdateService.putExtra(UpdateService.UPDATE_ACCOUNT, account);
+                    getActivity().startService(mUpdateService);
+
+                    mUpdateService = new Intent(getActivity(), UpdateService.class);
+                    mUpdateService.putExtra(UpdateService.UPDATE_TYPE, UpdateService.UPDATE_CAL_EXAM);
+                    mUpdateService.putExtra(UpdateService.UPDATE_ACCOUNT, account);
+                    getActivity().startService(mUpdateService);
                 }
                 return true;
             default:
