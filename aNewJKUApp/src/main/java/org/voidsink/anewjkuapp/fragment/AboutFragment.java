@@ -41,11 +41,15 @@ public class AboutFragment extends BaseFragment {
                     public void onClick(View v) {
 
                         new Libs.Builder()
-                                .withFields(Libs.toStringArray(R.string.class.getFields())) // pass the fields of your application to the lib so it can find all external lib information
+                                .withFields(R.string.class.getFields()) // pass the fields of your application to the lib so it can find all external lib information
+                                .withLibraries("jsoup")
                                 .withAutoDetect(true)
-                                .withVersionShown(true)
+                                .withVersionShown(false)
                                 .withLicenseShown(true)
                                 .withActivityTheme(UIUtils.getAppThemeResId(getActivity())) // must be AppCompat theme
+                                .withAboutAppName(getString(R.string.app_name))
+                                .withAboutIconShown(true)
+                                .withAboutVersionShown(true)
                                 .start(getActivity());
                     }
                 });
