@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.voidsink.anewjkuapp.ImportLvaTask;
+import org.voidsink.anewjkuapp.update.ImportLvaTask;
 import org.voidsink.anewjkuapp.KusssContentContract;
 
 import android.content.ContentValues;

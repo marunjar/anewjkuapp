@@ -147,10 +147,10 @@
     <string name="account_show_password">Show password</string>
     <string name="account_login_failed_wrong_pwd">Login failed: wrong password</string>
     <string name="account_login_failed_wrong_auth_token">Login failed: wrong authentification token</string>
-    <string name="notification_sync_calendar_adding">%s: adding events</string>
-    <string name="notification_sync_calendar_loading">%s: loading events</string>
-    <string name="notification_sync_calendar_saving">%s: saving events</string>
-    <string name="notification_sync_calendar_updating">%s: updating events</string>
+    <string name="notification_sync_calendar_adding">adding events: %s</string>
+    <string name="notification_sync_calendar_loading">loading events: %s</string>
+    <string name="notification_sync_calendar_saving">saving events: %s</string>
+    <string name="notification_sync_calendar_updating">updating events: %s</string>
     <string name="notification_sync_exam_loading">Loading exams</string>
     <string name="notification_sync_exam_saving">Saving exams</string>
     <string name="notification_sync_exam_updating">Updating exams</string>
@@ -191,4 +191,5 @@
     <string name="pref_kusss_calendar_extend_summary">All dates are imported into an existing calendar</string>
     <string name="pref_kusss_calendar_extended_summary">Calendar where dates are imported</string>
     <string name="pref_kusss_calendar_sync_title">Synchronisation</string>
+    <string name="notification_sync_connect">Connecting</string>
 </resources>

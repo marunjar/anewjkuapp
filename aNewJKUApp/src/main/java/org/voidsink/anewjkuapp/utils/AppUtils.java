@@ -6,21 +6,25 @@ import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.EmbossMaskFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.format.DateUtils;
 import android.util.Log;
 
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 
 import org.voidsink.anewjkuapp.ImportPoiTask;
-import org.voidsink.anewjkuapp.ImportStudiesTask;
+import org.voidsink.anewjkuapp.KusssContentContract;
+import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
+import org.voidsink.anewjkuapp.service.SyncAlarmService;
+import org.voidsink.anewjkuapp.update.ImportStudiesTask;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
@@ -651,6 +655,76 @@ public class AppUtils {
             }
         }
         return row;
+    }
+
+    public static void updateSyncAlarm(Context context, boolean reCreateAlarm) {
+        boolean mIsCalendarSyncEnabled = false;
+        boolean mIsKusssSyncEnable = false;
+        boolean mIsMasterSyncEnabled = ContentResolver.getMasterSyncAutomatically();
+
+        if (mIsMasterSyncEnabled) {
+            final Account mAccount = getAccount(context);
+            if (mAccount != null) {
+                mIsCalendarSyncEnabled = ContentResolver.getSyncAutomatically(mAccount, CalendarContractWrapper.AUTHORITY());
+                mIsKusssSyncEnable = ContentResolver.getSyncAutomatically(mAccount, KusssContentContract.AUTHORITY);
+            }
+        }
+
+        Log.d(TAG, String.format("MasterSync=%b, CalendarSync=%b, KusssSync=%b", mIsMasterSyncEnabled, mIsCalendarSyncEnabled, mIsKusssSyncEnable));
+
+        AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent  = new Intent(context, SyncAlarmService.class);
+        intent.putExtra(Consts.ARG_UPDATE_CAL, !mIsCalendarSyncEnabled);
+        intent.putExtra(Consts.ARG_UPDATE_KUSSS, !mIsKusssSyncEnable);
+        intent.putExtra(Consts.ARG_RECREATE_SYNC_ALARM, true);
+        intent.putExtra(Consts.SYNC_SHOW_PROGRESS, true);
+
+        // check if pending intent exists
+        reCreateAlarm = reCreateAlarm || (PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE) == null);
+
+        // new pending intent
+        PendingIntent alarmIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        if (!mIsMasterSyncEnabled || !mIsCalendarSyncEnabled || !mIsKusssSyncEnable) {
+            if (reCreateAlarm) {
+                long interval = PreferenceWrapper.getSyncInterval(context) * DateUtils.HOUR_IN_MILLIS;
+
+                // synchronize in half an hour
+                am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + AlarmManager.INTERVAL_HALF_HOUR, interval, alarmIntent);
+            }
+        } else {
+            am.cancel(alarmIntent);
+        }
+    }
+
+
+    public static void triggerSync(Context context, Account account, boolean syncCalendar, boolean syncKusss) {
+        try {
+            if (context == null || account == null) {
+                return;
+            }
+
+            if (syncCalendar || syncKusss) {
+                Bundle b = new Bundle();
+                // Disable sync backoff and ignore sync preferences. In other
+                // words...perform sync NOW!
+                b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+                b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+                b.putBoolean(Consts.SYNC_SHOW_PROGRESS, true);
+
+                if (syncCalendar) {
+                    ContentResolver.requestSync(account, // Sync
+                            CalendarContractWrapper.AUTHORITY(), // Calendar Content authority
+                            b); // Extras
+                }
+                if (syncKusss) {
+                    ContentResolver.requestSync(account, // Sync
+                            KusssContentContract.AUTHORITY, // KUSSS Content authority
+                            b); // Extras
+                }
+            }
+        } catch (Exception e) {
+            Analytics.sendException(context, e, true);
+        }
     }
 
 }

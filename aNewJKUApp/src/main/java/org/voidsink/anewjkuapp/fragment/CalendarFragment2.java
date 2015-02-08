@@ -2,6 +2,7 @@ package org.voidsink.anewjkuapp.fragment;
 
 import android.accounts.Account;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.RectF;
@@ -21,13 +22,12 @@ import com.alamkanak.weekview.DateTimeInterpreter;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 
-import net.fortuna.ical4j.data.CalendarBuilder;
-
-import org.voidsink.anewjkuapp.ImportCalendarTask;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
+import org.voidsink.anewjkuapp.update.ImportCalendarTask;
+import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
@@ -152,18 +152,10 @@ public class CalendarFragment2 extends BaseFragment implements WeekView.MonthCha
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh_calendar:
-                final Account account = AppUtils.getAccount(getContext());
+                Intent mUpdateService = new Intent(getActivity(), UpdateService.class);
+                mUpdateService.putExtra(Consts.ARG_UPDATE_CAL, true);
+                getActivity().startService(mUpdateService);
 
-                if (account != null) {
-                    Log.d(TAG, "importing calendars");
-                    Analytics.eventReloadEvents(getContext());
-                    new ImportCalendarTask(account, getContext(),
-                            CalendarUtils.ARG_CALENDAR_EXAM, new CalendarBuilder())
-                            .execute();
-                    new ImportCalendarTask(account, getContext(),
-                            CalendarUtils.ARG_CALENDAR_LVA, new CalendarBuilder())
-                            .execute();
-                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

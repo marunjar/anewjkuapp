@@ -20,14 +20,15 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.voidsink.anewjkuapp.utils.Analytics;
-import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.KusssContentContract;
+import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
+import org.voidsink.anewjkuapp.utils.Analytics;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.anewjkuapp.utils.UIUtils;
 import org.voidsink.anewjkuapp.workaround.AccountAuthenticatorActivity;
@@ -39,8 +40,6 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
     public static final String KEY_ERROR_MESSAGE = "ERR_MSG";
 
     public final static String PARAM_USER_PASS = "USER_PASS";
-
-    private static final long SYNC_FREQUENCY = 60 * 60 * 23; // 23 hour (in Seconds)
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -240,12 +239,14 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
             mAccountManager.setPassword(account, accountPassword);
 
             // Turn on periodic syncing
+            long interval = PreferenceWrapper.getSyncInterval(this) * 60 * 60;
+
             ContentResolver.addPeriodicSync(account,
                     CalendarContractWrapper.AUTHORITY(), new Bundle(),
-                    SYNC_FREQUENCY);
+                    interval);
             ContentResolver.addPeriodicSync(account,
                     KusssContentContract.AUTHORITY, new Bundle(),
-                    SYNC_FREQUENCY);
+                    interval);
             // Inform the system that this account supports sync
             ContentResolver.setIsSyncable(account,
                     CalendarContractWrapper.AUTHORITY(), 1);
@@ -268,7 +269,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
         CalendarUtils.createCalendarsIfNecessary(this, account);
 
         // Sync NOW
-        KusssAuthenticator.TriggerRefresh(this);
+        KusssAuthenticator.triggerSync(this);
 
         setAccountAuthenticatorResult(intent.getExtras());
         setResult(RESULT_OK, intent);

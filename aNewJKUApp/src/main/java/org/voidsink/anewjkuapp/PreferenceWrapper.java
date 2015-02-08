@@ -22,7 +22,7 @@ public final class PreferenceWrapper {
     public static final String TAG = PreferenceWrapper.class.getSimpleName();
 
     public static final String PREF_SYNC_INTERVAL_KEY = "pref_key_sync_interval";
-    public static final int PREF_SYNC_INTERVAL_DEFAULT = 23;
+    public static final int PREF_SYNC_INTERVAL_DEFAULT = 85;
 
     public static final String PREF_NOTIFY_CALENDAR_KEY = "pref_key_notify_calendar";
     public static final boolean PREF_NOTIFY_CALENDAR_DEFAULT = true;
@@ -83,8 +83,6 @@ public final class PreferenceWrapper {
     }
 
     public static void applySyncInterval(Context mContext) {
-        int interval = getSyncInterval(mContext);
-
         Account mAccount = AppUtils.getAccount(mContext);
 
         if (mAccount != null) {
@@ -103,7 +101,10 @@ public final class PreferenceWrapper {
                     CalendarContractWrapper.AUTHORITY(), new Bundle());
             ContentResolver.removePeriodicSync(mAccount,
                     KusssContentContract.AUTHORITY, new Bundle());
+
             // Turn on periodic syncing
+            int interval = getSyncInterval(mContext);
+
             ContentResolver.addPeriodicSync(mAccount,
                     CalendarContractWrapper.AUTHORITY(), new Bundle(),
                     60 * 60 * interval);
@@ -111,6 +112,7 @@ public final class PreferenceWrapper {
                     KusssContentContract.AUTHORITY, new Bundle(),
                     60 * 60 * interval);
         }
+        AppUtils.updateSyncAlarm(mContext, true);
     }
 
     public static boolean getNotifyCalendar(Context mContext) {

@@ -15,6 +15,8 @@ import com.google.android.gms.analytics.Tracker;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
+import org.voidsink.anewjkuapp.utils.AppUtils;
+
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.HashMap;
 
@@ -53,6 +55,8 @@ public class Globals extends Application {
             analytics.setAppOptOut(false); // TODO: get option from shared preferences
             Log.i(TAG, "debug disabled");
         }
+
+        AppUtils.updateSyncAlarm(this, false);
     }
 
     private static String PROPERTY_ID = "UA-51633871-1";
@@ -98,5 +102,4 @@ public class Globals extends Application {
         }
         return mTrackers.get(trackerId);
     }
-
 }

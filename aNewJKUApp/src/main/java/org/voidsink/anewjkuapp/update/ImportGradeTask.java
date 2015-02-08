@@ -1,21 +1,4 @@
-package org.voidsink.anewjkuapp;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.voidsink.anewjkuapp.base.BaseAsyncTask;
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
-import org.voidsink.anewjkuapp.kusss.Grade;
-import org.voidsink.anewjkuapp.kusss.GradeType;
-import org.voidsink.anewjkuapp.kusss.KusssHandler;
-import org.voidsink.anewjkuapp.notification.GradesChangedNotification;
-import org.voidsink.anewjkuapp.notification.SyncNotification;
-import org.voidsink.anewjkuapp.utils.Analytics;
-import org.voidsink.anewjkuapp.utils.AppUtils;
-import org.voidsink.anewjkuapp.utils.Consts;
+package org.voidsink.anewjkuapp.update;
 
 import android.accounts.Account;
 import android.content.ContentProviderClient;
@@ -28,104 +11,124 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
+import org.voidsink.anewjkuapp.KusssContentContract;
+import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.base.BaseAsyncTask;
+import org.voidsink.anewjkuapp.kusss.ExamGrade;
+import org.voidsink.anewjkuapp.kusss.Grade;
+import org.voidsink.anewjkuapp.kusss.GradeType;
+import org.voidsink.anewjkuapp.kusss.KusssHandler;
+import org.voidsink.anewjkuapp.notification.GradesChangedNotification;
+import org.voidsink.anewjkuapp.notification.SyncNotification;
+import org.voidsink.anewjkuapp.utils.Analytics;
+import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.utils.Consts;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 
-	private static final String TAG = ImportLvaTask.class.getSimpleName();
+    private static final String TAG = ImportLvaTask.class.getSimpleName();
 
-	private static final Object sync_lock = new Object();
+    private static final Object sync_lock = new Object();
 
-	private ContentProviderClient mProvider;
-	private Account mAccount;
-	private SyncResult mSyncResult;
-	private Context mContext;
-	private ContentResolver mResolver;
+    private ContentProviderClient mProvider;
+    private Account mAccount;
+    private SyncResult mSyncResult;
+    private Context mContext;
+    private ContentResolver mResolver;
 
-	private boolean mShowProgress;
-	private SyncNotification mUpdateNotification;
-	private GradesChangedNotification mGradeChangeNotification;
+    private boolean mShowProgress;
+    private SyncNotification mUpdateNotification;
+    private GradesChangedNotification mGradeChangeNotification;
 
-	public static final String[] GRADE_PROJECTION = new String[] {
-			KusssContentContract.Grade.GRADE_COL_ID,
-			KusssContentContract.Grade.GRADE_COL_TERM,
-			KusssContentContract.Grade.GRADE_COL_LVANR,
-			KusssContentContract.Grade.GRADE_COL_DATE,
-			KusssContentContract.Grade.GRADE_COL_SKZ,
-			KusssContentContract.Grade.GRADE_COL_TYPE,
-			KusssContentContract.Grade.GRADE_COL_GRADE,
-			KusssContentContract.Grade.GRADE_COL_TITLE,
-			KusssContentContract.Grade.GRADE_COL_CODE,
-			KusssContentContract.Grade.GRADE_COL_ECTS,
-			KusssContentContract.Grade.GRADE_COL_SWS };
+    public static final String[] GRADE_PROJECTION = new String[]{
+            KusssContentContract.Grade.GRADE_COL_ID,
+            KusssContentContract.Grade.GRADE_COL_TERM,
+            KusssContentContract.Grade.GRADE_COL_LVANR,
+            KusssContentContract.Grade.GRADE_COL_DATE,
+            KusssContentContract.Grade.GRADE_COL_SKZ,
+            KusssContentContract.Grade.GRADE_COL_TYPE,
+            KusssContentContract.Grade.GRADE_COL_GRADE,
+            KusssContentContract.Grade.GRADE_COL_TITLE,
+            KusssContentContract.Grade.GRADE_COL_CODE,
+            KusssContentContract.Grade.GRADE_COL_ECTS,
+            KusssContentContract.Grade.GRADE_COL_SWS};
 
-	// Constants representing column positions from PROJECTION.
-	public static final int COLUMN_GRADE_ID = 0;
-	public static final int COLUMN_GRADE_TERM = 1;
-	public static final int COLUMN_GRADE_LVANR = 2;
-	public static final int COLUMN_GRADE_DATE = 3;
-	public static final int COLUMN_GRADE_SKZ = 4;
-	public static final int COLUMN_GRADE_TYPE = 5;
-	public static final int COLUMN_GRADE_GRADE = 6;
-	public static final int COLUMN_GRADE_TITLE = 7;
-	public static final int COLUMN_GRADE_CODE = 8;
-	public static final int COLUMN_GRADE_ECTS = 9;
-	public static final int COLUMN_GRADE_SWS = 10;
+    // Constants representing column positions from PROJECTION.
+    public static final int COLUMN_GRADE_ID = 0;
+    public static final int COLUMN_GRADE_TERM = 1;
+    public static final int COLUMN_GRADE_LVANR = 2;
+    public static final int COLUMN_GRADE_DATE = 3;
+    public static final int COLUMN_GRADE_SKZ = 4;
+    public static final int COLUMN_GRADE_TYPE = 5;
+    public static final int COLUMN_GRADE_GRADE = 6;
+    public static final int COLUMN_GRADE_TITLE = 7;
+    public static final int COLUMN_GRADE_CODE = 8;
+    public static final int COLUMN_GRADE_ECTS = 9;
+    public static final int COLUMN_GRADE_SWS = 10;
 
-	public ImportGradeTask(Account account, Context context) {
-		this(account, null, null, null, null, context);
-		this.mProvider = context.getContentResolver()
-				.acquireContentProviderClient(
-						KusssContentContract.Exam.CONTENT_URI);
-		this.mSyncResult = new SyncResult();
-		this.mShowProgress = true;
-	}
+    public ImportGradeTask(Account account, Context context) {
+        this(account, null, null, null, null, context);
+        this.mProvider = context.getContentResolver()
+                .acquireContentProviderClient(
+                        KusssContentContract.Exam.CONTENT_URI);
+        this.mSyncResult = new SyncResult();
+        this.mShowProgress = true;
+    }
 
-	public ImportGradeTask(Account account, Bundle extras, String authority,
-			ContentProviderClient provider, SyncResult syncResult,
-			Context context) {
-		this.mAccount = account;
-		this.mProvider = provider;
-		this.mSyncResult = syncResult;
-		this.mResolver = context.getContentResolver();
-		this.mContext = context;
-		this.mShowProgress = (extras != null && extras.getBoolean(Consts.SYNC_SHOW_PROGRESS, false));
-	}
+    public ImportGradeTask(Account account, Bundle extras, String authority,
+                           ContentProviderClient provider, SyncResult syncResult,
+                           Context context) {
+        this.mAccount = account;
+        this.mProvider = provider;
+        this.mSyncResult = syncResult;
+        this.mResolver = context.getContentResolver();
+        this.mContext = context;
+        this.mShowProgress = (extras != null && extras.getBoolean(Consts.SYNC_SHOW_PROGRESS, false));
+    }
 
-	@Override
-	protected void onPreExecute() {
-		super.onPreExecute();
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
 
-		Log.d(TAG, "prepare importing grades");
+        Log.d(TAG, "prepare importing grades");
 
-		if (mShowProgress) {
-			mUpdateNotification = new SyncNotification(mContext,
-					R.string.notification_sync_grade);
-			mUpdateNotification.show(mContext.getString(R.string.notification_sync_grade_loading));
-		}
-		mGradeChangeNotification = new GradesChangedNotification(mContext);
-	}
+        if (mShowProgress) {
+            mUpdateNotification = new SyncNotification(mContext,
+                    R.string.notification_sync_grade);
+            mUpdateNotification.show(mContext.getString(R.string.notification_sync_grade_loading));
+        }
+        mGradeChangeNotification = new GradesChangedNotification(mContext);
+    }
 
-	@Override
-	protected Void doInBackground(Void... params) {
-		Log.d(TAG, "Start importing grades");
+    @Override
+    protected Void doInBackground(Void... params) {
+        Log.d(TAG, "Start importing grades");
 
-		synchronized (sync_lock) {
-			updateNotify(mContext.getString(R.string.notification_sync_grade_loading));
+        synchronized (sync_lock) {
+            updateNotify(mContext.getString(R.string.notification_sync_connect));
 
-			try {
-				Log.d(TAG, "setup connection");
+            try {
+                Log.d(TAG, "setup connection");
 
-				if (KusssHandler.getInstance().isAvailable(mContext,
-						AppUtils.getAccountAuthToken(mContext, mAccount),
-						AppUtils.getAccountName(mContext, mAccount),
-						AppUtils.getAccountPassword(mContext, mAccount))) {
+                if (KusssHandler.getInstance().isAvailable(mContext,
+                        AppUtils.getAccountAuthToken(mContext, mAccount),
+                        AppUtils.getAccountName(mContext, mAccount),
+                        AppUtils.getAccountPassword(mContext, mAccount))) {
 
-					Log.d(TAG, "load grades");
+                    updateNotify(mContext.getString(R.string.notification_sync_grade_loading));
+                    Log.d(TAG, "load grades");
 
-					List<ExamGrade> grades = KusssHandler.getInstance()
-							.getGrades(mContext);
-					if (grades == null) {
-						mSyncResult.stats.numParseExceptions++;
-					} else {
+                    List<ExamGrade> grades = KusssHandler.getInstance()
+                            .getGrades(mContext);
+                    if (grades == null) {
+                        mSyncResult.stats.numParseExceptions++;
+                    } else {
                         Map<String, ExamGrade> gradeMap = new HashMap<String, ExamGrade>();
                         for (ExamGrade grade : grades) {
                             gradeMap.put(String.format("%s-%d", grade.getCode(),
@@ -240,19 +243,19 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
                             }
                         }
                     }
-				} else {
-					mSyncResult.stats.numAuthExceptions++;
-				}
-			} catch (Exception e) {
-				Analytics.sendException(mContext, e, true);
-				Log.e(TAG, "import failed", e);
-			}
-		}
+                } else {
+                    mSyncResult.stats.numAuthExceptions++;
+                }
+            } catch (Exception e) {
+                Analytics.sendException(mContext, e, true);
+                Log.e(TAG, "import failed", e);
+            }
+        }
 
-		setImportDone();
+        setImportDone();
 
-		return null;
-	}
+        return null;
+    }
 
     @Override
     protected void onPostExecute(Void result) {
@@ -265,9 +268,9 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
     }
 
     private void updateNotify(String string) {
-		if (mUpdateNotification != null) {
-			mUpdateNotification.update(string);
-		}
-	}
+        if (mUpdateNotification != null) {
+            mUpdateNotification.update(string);
+        }
+    }
 
 }

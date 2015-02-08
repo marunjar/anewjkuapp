@@ -1,4 +1,4 @@
-package org.voidsink.anewjkuapp;
+package org.voidsink.anewjkuapp.update;
 
 import android.accounts.Account;
 import android.content.ContentProviderClient;
@@ -12,6 +12,10 @@ import android.os.Bundle;
 import android.util.Log;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.voidsink.anewjkuapp.KusssContentContract;
+import org.voidsink.anewjkuapp.LvaMap;
+import org.voidsink.anewjkuapp.PreferenceWrapper;
+import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseAsyncTask;
 import org.voidsink.anewjkuapp.kusss.Exam;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
@@ -106,17 +110,19 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
         Log.d(TAG, "Start importing exams");
 
         synchronized (sync_lock) {
-            updateNotify(mContext.getString(R.string.notification_sync_exam_loading));
-
             final DateFormat df = DateFormat.getDateInstance();
 
             try {
                 Log.d(TAG, "setup connection");
 
+                updateNotify(mContext.getString(R.string.notification_sync_connect));
+
                 if (KusssHandler.getInstance().isAvailable(mContext,
                         AppUtils.getAccountAuthToken(mContext, mAccount),
                         AppUtils.getAccountName(mContext, mAccount),
                         AppUtils.getAccountPassword(mContext, mAccount))) {
+
+                    updateNotify(mContext.getString(R.string.notification_sync_exam_loading));
 
                     List<Exam> exams;
                     if (PreferenceWrapper.getNewExamsByLvaNr(mContext)) {

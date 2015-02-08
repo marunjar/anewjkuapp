@@ -1,6 +1,5 @@
 package org.voidsink.anewjkuapp.activity;
 
-import android.accounts.Account;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
@@ -23,9 +22,6 @@ import android.widget.TextView;
 
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.voidsink.anewjkuapp.DrawerItem;
-import org.voidsink.anewjkuapp.ImportExamTask;
-import org.voidsink.anewjkuapp.ImportGradeTask;
-import org.voidsink.anewjkuapp.ImportLvaTask;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
@@ -35,12 +31,8 @@ import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.fragment.CalendarFragment;
 import org.voidsink.anewjkuapp.fragment.NavigationDrawerFragment;
 import org.voidsink.anewjkuapp.fragment.StudiesFragment;
-import org.voidsink.anewjkuapp.kusss.Lva;
-import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
-
-import java.util.List;
 
 import de.cketti.library.changelog.ChangeLog;
 
@@ -300,34 +292,12 @@ public class MainActivity extends ThemedActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Log.i(TAG, "onOptionsItemSelected");
-        Account account = AppUtils.getAccount(this);
-
         switch (item.getItemId()) {
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
             case R.id.action_about:
                 startActivity(new Intent(this, AboutActivity.class));
-                return true;
-            case R.id.action_refresh_exams:
-                Log.d(TAG, "importing exams");
-                Analytics.eventReloadExams(this);
-                new ImportExamTask(account, this).execute();
-                return true;
-            case R.id.action_refresh_grades:
-                Log.d(TAG, "importing grades");
-                Analytics.eventReloadGrades(this);
-                new ImportGradeTask(account, MainActivity.this).execute();
-                return true;
-            case R.id.action_refresh_lvas:
-                Log.d(TAG, "importing lvas");
-                Analytics.eventReloadLvas(this);
-                new ImportLvaTask(account, MainActivity.this).execute();
-                List<Lva> lvas = KusssContentProvider.getLvas(this);
-                if (lvas != null && lvas.size() == 0) {
-                    new ImportGradeTask(account, MainActivity.this).execute();
-                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

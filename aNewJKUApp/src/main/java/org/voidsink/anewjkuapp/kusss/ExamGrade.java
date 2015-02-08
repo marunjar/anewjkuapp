@@ -6,7 +6,7 @@ import android.database.Cursor;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.voidsink.anewjkuapp.ImportGradeTask;
+import org.voidsink.anewjkuapp.update.ImportGradeTask;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.utils.Analytics;
 
@@ -98,11 +98,15 @@ public class ExamGrade {
 
             setGrade(Grade.parseGrade(columns.get(2).text())); // grade
 
-            String[] ectsSws = columns.get(5).text().replace(",", ".")
-                    .split("/");
-            if (ectsSws.length == 2) {
-                setEcts(Double.parseDouble(ectsSws[0]));
-                setSws(Double.parseDouble(ectsSws[1]));
+            try {
+                String[] ectsSws = columns.get(5).text().replace(",", ".")
+                        .split("/");
+                if (ectsSws.length == 2) {
+                    setEcts(Double.parseDouble(ectsSws[0]));
+                    setSws(Double.parseDouble(ectsSws[1]));
+                }
+            } catch (Exception e) {
+                Analytics.sendException(c, e, false, columns.get(5).text());
             }
 
             try {

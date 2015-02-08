@@ -89,7 +89,7 @@ public abstract class MensaFragmentDetail extends BaseFragment {
             if (mensa != null) {
                 for (MensaDay day : mensa.getDays()) {
                     // allow only menus >= start of this week
-                    if (day.getDate().getTime() >= cal.getTimeInMillis()) {
+                    if ((day.getDate() != null) && (day.getDate().getTime() >= cal.getTimeInMillis())) {
                         for (MensaMenu menu : day.getMenus()) {
                             mMenus.add(menu);
                             // remember position of menu for today for scrolling to item after update

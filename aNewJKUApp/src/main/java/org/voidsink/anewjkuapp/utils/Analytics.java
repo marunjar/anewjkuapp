@@ -11,11 +11,13 @@ import org.jsoup.HttpStatusException;
 import org.voidsink.anewjkuapp.BuildConfig;
 import org.voidsink.anewjkuapp.Globals;
 import org.voidsink.anewjkuapp.Globals.TrackerName;
+import org.voidsink.anewjkuapp.update.UpdateService;
 
 public class Analytics {
 
-    private static final int GA_DIM_EXCEPTION = 1;
+    private static final int GA_DIM_EXCEPTION_NAME = 1;
     private static final int GA_DIM_ADDITIONAL_DATA = 2;
+    private static final int GA_DIM_EXCEPTION_MESSAGE = 3;
 
     // private static final int GA_METRIC_SYNC_INTERVAL = 1;
     // private static final int GA_METRIC_LOAD_EXAM_BY_LVANR = 2;
@@ -106,12 +108,22 @@ public class Analytics {
         }
     }
 
-    public static void eventReloadEvents(Context c) {
+    public static void eventReloadEventsLva(Context c) {
         Tracker t = getAppTracker(c);
         if (t != null) {
             t.send(new HitBuilders.EventBuilder()
                     .setCategory(GA_EVENT_CATEGORY_UI)
-                    .setAction("button_press").setLabel("reload_events")
+                    .setAction("button_press").setLabel("reload_events_exam")
+                    .build());
+        }
+    }
+
+    public static void eventReloadEventsExam(Context c) {
+        Tracker t = getAppTracker(c);
+        if (t != null) {
+            t.send(new HitBuilders.EventBuilder()
+                    .setCategory(GA_EVENT_CATEGORY_UI)
+                    .setAction("button_press").setLabel("reload_events_lva")
                     .build());
         }
     }
@@ -145,6 +157,16 @@ public class Analytics {
         }
     }
 
+    public static void eventReloadStudies(Context c) {
+        Tracker t = getAppTracker(c);
+        if (t != null) {
+            t.send(new HitBuilders.EventBuilder()
+                    .setCategory(GA_EVENT_CATEGORY_UI)
+                    .setAction("button_press").setLabel("reload_studies")
+                    .build());
+        }
+    }
+
     // }}
 
     // {{ Exceptions
@@ -160,7 +182,7 @@ public class Analytics {
             if (t != null && e != null) {
                 HitBuilders.ExceptionBuilder eb = new HitBuilders.ExceptionBuilder()
                         .setFatal(fatal)
-                        .setCustomDimension(GA_DIM_EXCEPTION,
+                        .setCustomDimension(GA_DIM_EXCEPTION_NAME,
                                 e.getClass().getCanonicalName())
                         .setDescription(
                                 new AnalyticsExceptionParser(c, null)
@@ -175,6 +197,7 @@ public class Analytics {
                 if (!TextUtils.isEmpty(additionalData)) {
                     eb.setCustomDimension(GA_DIM_ADDITIONAL_DATA, additionalData);
                 }
+                eb.setCustomDimension(GA_DIM_EXCEPTION_MESSAGE, e.getMessage());
 
                 t.send(eb.build());
             }

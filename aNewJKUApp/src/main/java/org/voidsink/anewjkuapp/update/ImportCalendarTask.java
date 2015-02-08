@@ -1,4 +1,4 @@
-package org.voidsink.anewjkuapp;
+package org.voidsink.anewjkuapp.update;
 
 import android.accounts.Account;
 import android.content.ContentProviderClient;
@@ -24,6 +24,8 @@ import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.component.VEvent;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.voidsink.anewjkuapp.KusssContentContract;
+import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseAsyncTask;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
@@ -152,17 +154,19 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                 return null;
             }
 
-            updateNotify(String.format(
-                    mContext.getString(R.string.notification_sync_calendar_loading),
-                    CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
-
             try {
                 Log.d(TAG, "setup connection");
+
+                updateNotify(mContext.getString(R.string.notification_sync_connect));
 
                 if (KusssHandler.getInstance().isAvailable(mContext,
                         AppUtils.getAccountAuthToken(mContext, mAccount),
                         AppUtils.getAccountName(mContext, mAccount),
                         AppUtils.getAccountPassword(mContext, mAccount))) {
+
+                    updateNotify(String.format(
+                            mContext.getString(R.string.notification_sync_calendar_loading),
+                            CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
 
                     Log.d(TAG, "loading calendar");
 

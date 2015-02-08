@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.voidsink.anewjkuapp" >
+    package="org.voidsink.anewjkuapp">
 
     <supports-screens
         android:anyDensity="true"
@@ -21,6 +21,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:name="Globals"
@@ -53,10 +54,10 @@
         </activity>
         <activity
             android:name=".activity.SettingsActivity"
-            android:permission="android.permission.MANAGE_ACCOUNTS"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".activity.MainActivity">
+            android:parentActivityName=".activity.MainActivity"
+            android:permission="android.permission.MANAGE_ACCOUNTS"
+            android:screenOrientation="portrait">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -72,8 +73,8 @@
         </activity>
         <activity
             android:name=".activity.AboutActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".activity.MainActivity">
+            android:parentActivityName=".activity.MainActivity"
+            android:screenOrientation="portrait">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -81,8 +82,8 @@
         </activity>
         <activity
             android:name=".activity.RssFeedEntryActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".activity.MainActivity">
+            android:parentActivityName=".activity.MainActivity"
+            android:screenOrientation="portrait">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -90,9 +91,9 @@
         </activity>
         <activity
             android:name=".activity.KusssAuthenticatorActivity"
+            android:parentActivityName=".activity.MainActivity"
             android:permission="android.permission.MANAGE_ACCOUNTS"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".activity.MainActivity">
+            android:screenOrientation="portrait">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -112,9 +113,11 @@
             android:label="@string/extension_mensa_title" />
 
         <service
-            android:name=".service.KusssService"
-            android:exported="false"
-            android:label="@string/kusss_service_title"></service>
+            android:name=".update.UpdateService"
+            android:exported="false" />
+        <service
+            android:name=".service.SyncAlarmService"
+            android:exported="false" />
         <service
             android:name=".service.KusssAuthenticatorService"
             android:permission="android.permission.AUTHENTICATE_ACCOUNTS">
@@ -184,6 +187,12 @@
             android:name="org.voidsink.anewjkuapp.provider.PoiContentProvider"
             android:authorities="org.voidsink.anewjkuapp.provider.poi"
             android:exported="false" />
+
+        <receiver android:name=".utils.BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
