@@ -689,11 +689,13 @@ public class AppUtils {
                 long interval = PreferenceWrapper.getSyncInterval(context) * DateUtils.HOUR_IN_MILLIS;
 
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-                    // save some battery if api version < 19
+                    // save some battery if api version < 19 and sync interval < 24h
                     // see also https://developer.android.com/reference/android/app/AlarmManager.html#setInexactRepeating%28int,%20long,%20long,%20android.app.PendingIntent%29
                     if (interval < AlarmManager.INTERVAL_DAY) interval = AlarmManager.INTERVAL_DAY;
                 }
-                am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, alarmIntent);
+
+                // synchronize in half an hour
+                am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + AlarmManager.INTERVAL_HALF_HOUR, interval, alarmIntent);
             }
         } else {
             am.cancel(alarmIntent);
