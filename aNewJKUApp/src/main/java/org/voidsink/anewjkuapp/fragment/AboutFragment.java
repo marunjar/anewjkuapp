@@ -47,6 +47,9 @@ public class AboutFragment extends BaseFragment {
                                 .withVersionShown(false)
                                 .withLicenseShown(true)
                                 .withActivityTheme(UIUtils.getAppThemeResId(getActivity())) // must be AppCompat theme
+                                .withAboutAppName(getString(R.string.app_name))
+                                .withAboutIconShown(true)
+                                .withAboutVersionShown(true)
                                 .start(getActivity());
                     }
                 });
