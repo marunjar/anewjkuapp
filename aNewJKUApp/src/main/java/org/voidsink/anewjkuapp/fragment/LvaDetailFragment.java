@@ -26,6 +26,7 @@ import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.anewjkuapp.view.ListViewWithHeader;
 
 import java.util.ArrayList;
@@ -130,11 +131,8 @@ public class LvaDetailFragment extends BaseFragment implements
         switch (item.getItemId()) {
             case R.id.action_refresh_lvas:
                 Intent mUpdateService = new Intent(getActivity(), UpdateService.class);
-                mUpdateService.putExtra(UpdateService.UPDATE_TYPE, UpdateService.UPDATE_LVAS);
-                getActivity().startService(mUpdateService);
-
-                mUpdateService = new Intent(getActivity(), UpdateService.class);
-                mUpdateService.putExtra(UpdateService.UPDATE_TYPE, UpdateService.UPDATE_GRADES);
+                mUpdateService.putExtra(Consts.ARG_UPDATE_KUSSS_LVAS, true);
+                mUpdateService.putExtra(Consts.ARG_UPDATE_KUSSS_GRADES, true);
                 getActivity().startService(mUpdateService);
 
                 return true;

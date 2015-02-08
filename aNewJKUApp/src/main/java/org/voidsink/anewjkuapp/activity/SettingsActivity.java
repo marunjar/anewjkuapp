@@ -16,6 +16,7 @@ import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.base.ThemedActivity;
 import org.voidsink.anewjkuapp.fragment.SettingsFragment;
 import org.voidsink.anewjkuapp.update.UpdateService;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 public class SettingsActivity extends ThemedActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -105,7 +106,7 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
         switch (key) {
             case PreferenceWrapper.PREF_GET_NEW_EXAMS:
                 Intent mUpdateService = new Intent(this, UpdateService.class);
-                mUpdateService.putExtra(UpdateService.UPDATE_TYPE, UpdateService.UPDATE_EXAMS);
+                mUpdateService.putExtra(Consts.ARG_UPDATE_KUSSS_EXAMS, true);
                 this.startService(mUpdateService);
 
                 break;

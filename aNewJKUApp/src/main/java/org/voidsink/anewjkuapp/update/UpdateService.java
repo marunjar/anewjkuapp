@@ -9,16 +9,9 @@ import net.fortuna.ical4j.data.CalendarBuilder;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 public class UpdateService extends IntentService {
-
-    public static final String UPDATE_TYPE = "UPDATE_TYPE";
-    public static final int UPDATE_CAL_LVA = 1;
-    public static final int UPDATE_CAL_EXAM = 2;
-    public static final int UPDATE_EXAMS = 3;
-    public static final int UPDATE_LVAS = 4;
-    public static final int UPDATE_GRADES = 5;
-    public static final int UPDATE_STUDIES = 6;
 
     public UpdateService(String name) {
         super(name);
@@ -30,48 +23,44 @@ public class UpdateService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if (intent != null && intent.hasExtra(UPDATE_TYPE)) {
+        if (intent != null) {
             final Account account = AppUtils.getAccount(this);
             if (account != null) {
-                switch (intent.getIntExtra(UPDATE_TYPE, 0)) {
-                    case UPDATE_CAL_LVA: {
-                        Analytics.eventReloadEventsLva(this);
-                        new ImportCalendarTask(account, this,
-                                CalendarUtils.ARG_CALENDAR_LVA, new CalendarBuilder())
-                                .execute();
-                        break;
-                    }
-                    case UPDATE_CAL_EXAM: {
-                        Analytics.eventReloadEventsExam(this);
-                        new ImportCalendarTask(account, this,
-                                CalendarUtils.ARG_CALENDAR_EXAM, new CalendarBuilder())
-                                .execute();
-                        break;
-                    }
-                    case UPDATE_EXAMS: {
-                        Analytics.eventReloadExams(this);
-                        new ImportExamTask(account, this).execute();
-                        break;
-                    }
-                    case UPDATE_LVAS: {
-                        Analytics.eventReloadLvas(this);
-                        new ImportLvaTask(account, this).execute();
-                        break;
-                    }
-                    case UPDATE_GRADES: {
-                        Analytics.eventReloadGrades(this);
-                        new ImportGradeTask(account, this).execute();
-                        break;
-                    }
-                    case UPDATE_STUDIES: {
-                        Analytics.eventReloadStudies(this);
-                        new ImportStudiesTask(account, this).execute();
-                        break;
-                    }
+                if (intent.getBooleanExtra(Consts.ARG_UPDATE_CAL, false) ||
+                        intent.getBooleanExtra(Consts.ARG_UPDATE_CAL_LVA, false)) {
+                    Analytics.eventReloadEventsLva(this);
+                    new ImportCalendarTask(account, this,
+                            CalendarUtils.ARG_CALENDAR_LVA, new CalendarBuilder())
+                            .execute();
+                }
+                if (intent.getBooleanExtra(Consts.ARG_UPDATE_CAL, false) ||
+                        intent.getBooleanExtra(Consts.ARG_UPDATE_CAL_EXAM, false)) {
+                    Analytics.eventReloadEventsExam(this);
+                    new ImportCalendarTask(account, this,
+                            CalendarUtils.ARG_CALENDAR_EXAM, new CalendarBuilder())
+                            .execute();
+                }
+                if (intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false) ||
+                        intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS_STUDIES, false)) {
+                    Analytics.eventReloadStudies(this);
+                    new ImportStudiesTask(account, this).execute();
+                }
+                if (intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false) ||
+                        intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS_LVAS, false)) {
+                    Analytics.eventReloadLvas(this);
+                    new ImportLvaTask(account, this).execute();
+                }
+                if (intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false) ||
+                        intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS_GRADES, false)) {
+                    Analytics.eventReloadGrades(this);
+                    new ImportGradeTask(account, this).execute();
+                }
+                if (intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false) ||
+                        intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS_EXAMS, false)) {
+                    Analytics.eventReloadExams(this);
+                    new ImportExamTask(account, this).execute();
                 }
             }
         }
     }
-
-
 }

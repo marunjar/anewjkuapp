@@ -7,6 +7,16 @@ public class Consts {
     public static final int COLOR_DEFAULT_EXAM = Color.rgb(240, 149, 0);
     public static final int COLOR_DEFAULT_LVA = Color.rgb(43, 127, 194);
 
+    public static final String ARG_RECREATE_SYNC_ALARM = "RECREATE_SYNC_ALARM";
+    public static final String ARG_UPDATE_CAL = "UPDATE_CAL";
+    public static final String ARG_UPDATE_CAL_LVA = "UPDATE_CAL_LVA";
+    public static final String ARG_UPDATE_CAL_EXAM = "UPDATE_CAL_EXAM";
+    public static final String ARG_UPDATE_KUSSS = "UPDATE_KUSSS";
+    public static final String ARG_UPDATE_KUSSS_STUDIES = "UPDATE_KUSSS_STUDIES";
+    public static final String ARG_UPDATE_KUSSS_LVAS = "UPDATE_KUSSS_LVAS";
+    public static final String ARG_UPDATE_KUSSS_GRADES = "UPDATE_KUSSS_GRADES";
+    public static final String ARG_UPDATE_KUSSS_EXAMS = "UPDATE_KUSSS_EXAMS";
+
     public static final String SYNC_SHOW_PROGRESS = "showProgress";
 
     public static final String ARG_FEED_URL = "feedURL";
@@ -42,7 +52,6 @@ public class Consts {
     public static final String SCREEN_SETTINGS_KUSSS = "/settings/kusss";
     public static final String SCREEN_SETTINGS_APP = "/settings/app";
     public static final String SCREEN_SETTINGS_TIMETABLE = "/settings/timetable";
-
 
     public static final String SCREEN_SETTINGS_DASHCLOCK = "/settings/dashclock";
     public static final String SCREEN_LOGIN = "/login";

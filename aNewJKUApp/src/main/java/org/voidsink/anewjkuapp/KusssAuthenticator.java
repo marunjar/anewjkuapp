@@ -5,6 +5,7 @@ import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
 import org.voidsink.anewjkuapp.utils.Analytics;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 import android.accounts.AbstractAccountAuthenticator;
@@ -189,24 +190,12 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
 		return result;
 	}
 
-	public static void TriggerRefresh(Context context) {
+	public static void triggerSync(Context context) {
 		try {
             Account[] accounts = AccountManager.get(context).getAccountsByType(
                     ACCOUNT_TYPE);
             for (Account account : accounts) {
-                Bundle b = new Bundle();
-                // Disable sync backoff and ignore sync preferences. In other
-                // words...perform sync NOW!
-                b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-                b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-                b.putBoolean(Consts.SYNC_SHOW_PROGRESS, true);
-
-                ContentResolver.requestSync(account, // Sync
-                        CalendarContractWrapper.AUTHORITY(), // Calendar Content authority
-                        b); // Extras
-                ContentResolver.requestSync(account, // Sync
-                        KusssContentContract.AUTHORITY, // KUSSS Content authority
-                        b); // Extras
+                AppUtils.triggerSync(context, account, true, true);
             }
         } catch (Exception e) {
             Analytics.sendException(context, e, false);

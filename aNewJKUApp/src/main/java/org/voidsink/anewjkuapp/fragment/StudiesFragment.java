@@ -1,6 +1,5 @@
 package org.voidsink.anewjkuapp.fragment;
 
-import android.accounts.Account;
 import android.content.Context;
 import android.content.Intent;
 import android.content.UriMatcher;
@@ -16,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.voidsink.anewjkuapp.update.ImportStudiesTask;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
@@ -26,7 +24,7 @@ import org.voidsink.anewjkuapp.base.ListWithHeaderAdapter;
 import org.voidsink.anewjkuapp.kusss.Studies;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.update.UpdateService;
-import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.anewjkuapp.view.ListViewWithHeader;
 
 import java.util.List;
@@ -92,7 +90,7 @@ public class StudiesFragment extends BaseFragment implements
         switch (item.getItemId()) {
             case R.id.action_refresh_studies: {
                 Intent mUpdateService = new Intent(getActivity(), UpdateService.class);
-                mUpdateService.putExtra(UpdateService.UPDATE_TYPE, UpdateService.UPDATE_STUDIES);
+                mUpdateService.putExtra(Consts.ARG_UPDATE_KUSSS_STUDIES, true);
                 getActivity().startService(mUpdateService);
 
                 return true;

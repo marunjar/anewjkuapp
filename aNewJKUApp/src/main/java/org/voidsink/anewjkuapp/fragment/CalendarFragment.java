@@ -113,11 +113,7 @@ public class CalendarFragment extends BaseFragment {
         switch (item.getItemId()) {
             case R.id.action_refresh_calendar:
                 Intent mUpdateService = new Intent(getActivity(), UpdateService.class);
-                mUpdateService.putExtra(UpdateService.UPDATE_TYPE, UpdateService.UPDATE_CAL_LVA);
-                getActivity().startService(mUpdateService);
-
-                mUpdateService = new Intent(getActivity(), UpdateService.class);
-                mUpdateService.putExtra(UpdateService.UPDATE_TYPE, UpdateService.UPDATE_CAL_EXAM);
+                mUpdateService.putExtra(Consts.ARG_UPDATE_CAL, true);
                 getActivity().startService(mUpdateService);
 
                 return true;

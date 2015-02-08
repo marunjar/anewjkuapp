@@ -88,7 +88,7 @@ public class ExamFragment extends BaseFragment {
         switch (item.getItemId()) {
             case R.id.action_refresh_exams: {
                 Intent mUpdateService = new Intent(getActivity(), UpdateService.class);
-                mUpdateService.putExtra(UpdateService.UPDATE_TYPE, UpdateService.UPDATE_EXAMS);
+                mUpdateService.putExtra(Consts.ARG_UPDATE_KUSSS_EXAMS, true);
                 getActivity().startService(mUpdateService);
             }
             default:
