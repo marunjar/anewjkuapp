@@ -4,6 +4,11 @@
 		    - fixed
 		    * changed
 		    + added -->
+    <release version="0.32" versioncode="140032">
+        <change>- KUSSS: Fehler beim Laden von Daten behoben</change>
+        <change>- Mensa: Fehler beim Laden von Daten behoben</change>
+        <change>* App: Daten werden jetzt immer synchronisiert</change>
+    </release>
     <release version="0.31" versioncode="140031">
         <change>- KUSSS: LVAs werden wieder geladen</change>
         <change>* App: fehlerhaftes Grid entfernt (betrifft vor allem Tablets)</change>
