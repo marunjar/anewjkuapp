@@ -51,10 +51,10 @@
     <string name="notification_sync_running">Daten werden synchronisiert</string>
     <string name="notification_sync_connect">Verbindung wird aufgebaut</string>
     <string name="notification_sync_calendar">Termine werden synchronisiert</string>
-    <string name="notification_sync_calendar_loading">%s: Termine werden geladen</string>
-    <string name="notification_sync_calendar_updating">%s: Termine werden aktualisiert</string>
-    <string name="notification_sync_calendar_adding">%s: Termine werden hinzugefügt</string>
-    <string name="notification_sync_calendar_saving">%s Termine werden gespeichert</string>
+    <string name="notification_sync_calendar_loading">Termine werden geladen: %s</string>
+    <string name="notification_sync_calendar_updating">Termine werden aktualisiert: %s</string>
+    <string name="notification_sync_calendar_adding">Termine werden hinzugefügt: %s</string>
+    <string name="notification_sync_calendar_saving">Termine werden gespeichert: %s</string>
     <string name="notification_sync_exam">Prüfungen werden synchronisiert</string>
     <string name="notification_sync_exam_loading">Prüfungen werden geladen</string>
     <string name="notification_sync_exam_updating">Prüfungen werden aktualisiert</string>
