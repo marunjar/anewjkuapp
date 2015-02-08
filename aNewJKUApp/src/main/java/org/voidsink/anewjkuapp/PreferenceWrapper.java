@@ -83,8 +83,6 @@ public final class PreferenceWrapper {
     }
 
     public static void applySyncInterval(Context mContext) {
-        int interval = getSyncInterval(mContext);
-
         Account mAccount = AppUtils.getAccount(mContext);
 
         if (mAccount != null) {
@@ -103,7 +101,10 @@ public final class PreferenceWrapper {
                     CalendarContractWrapper.AUTHORITY(), new Bundle());
             ContentResolver.removePeriodicSync(mAccount,
                     KusssContentContract.AUTHORITY, new Bundle());
+
             // Turn on periodic syncing
+            int interval = getSyncInterval(mContext);
+
             ContentResolver.addPeriodicSync(mAccount,
                     CalendarContractWrapper.AUTHORITY(), new Bundle(),
                     60 * 60 * interval);

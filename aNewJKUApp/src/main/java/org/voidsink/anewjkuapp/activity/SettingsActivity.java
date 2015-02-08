@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.preference.PreferenceFragment;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.base.ThemedActivity;
@@ -21,6 +22,8 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
     public static final String ACTION_PREFS_LEGACY = "org.voidsink.anewjkuapp.prefs.LEGACY";
     public static final String ARG_SHOW_FRAGMENT = "show_fragment";
     private boolean mThemeChanged = false;
+
+    private static final String TAG = SettingsActivity.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,6 +84,8 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
                 .unregisterOnSharedPreferenceChangeListener(this);
 
         if (mThemeChanged) {
+            Log.i(TAG, "theme changed");
+
             AlarmManager alm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             alm.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0));
 

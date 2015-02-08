@@ -111,10 +111,6 @@
             android:exported="true"
             android:label="@string/extension_mensa_title" />
 
-        <service
-            android:name=".service.KusssService"
-            android:exported="false"
-            android:label="@string/kusss_service_title"></service>
         <service android:name=".update.UpdateService"
             android:exported="false"></service>
         <service
