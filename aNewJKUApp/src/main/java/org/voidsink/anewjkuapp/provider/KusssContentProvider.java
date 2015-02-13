@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.update.ImportGradeTask;
 import org.voidsink.anewjkuapp.update.ImportLvaTask;
 import org.voidsink.anewjkuapp.update.ImportStudiesTask;
@@ -24,11 +25,10 @@ import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 
 public class KusssContentProvider extends ContentProvider {
 
@@ -402,7 +402,7 @@ public class KusssContentProvider extends ContentProvider {
         return mStudies;
     }
 
-    public static List<String> getTerms(Context context) {
+    public static List<Term> getTerms(Context context) {
         List<String> terms = new ArrayList<>();
         Calendar cal = Calendar.getInstance();
 
@@ -497,7 +497,12 @@ public class KusssContentProvider extends ContentProvider {
 
         Collections.sort(terms, TermComparator);
 
-        return terms;
+        List<Term> objects = new ArrayList<>();
+        for (String term : terms) {
+            objects.add(new Term(term));
+        }
+
+        return Collections.unmodifiableList(objects);
     }
 
     private static boolean dateInRange(Date date, List<Studies> studies) {

@@ -19,6 +19,7 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseAsyncTask;
 import org.voidsink.anewjkuapp.kusss.Exam;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
+import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.notification.NewExamNotification;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
@@ -127,7 +128,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
                     List<Exam> exams;
                     if (PreferenceWrapper.getNewExamsByLvaNr(mContext)) {
                         LvaMap lvaMap = new LvaMap(mContext);
-                        List<String> terms = KusssContentProvider.getTerms(mContext);
+                        List<Term> terms = KusssContentProvider.getTerms(mContext);
 
                         Log.d(TAG, "load exams by lvanr");
                         exams = KusssHandler.getInstance().getNewExamsByLvaNr(

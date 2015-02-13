@@ -290,42 +290,33 @@ public class KusssHandler {
         return true;
     }
 
-    public List<Lva> getLvas(Context c, List<String> terms) {
+    public List<Lva> getLvas(Context c, List<Term> terms) {
+        if (terms == null || terms.size() == 0) {
+            return null;
+        }
+
         List<Lva> lvas = new ArrayList<>();
         try {
             Log.d(TAG, "getLvas");
-            if (terms == null) {
-                terms = new ArrayList<>();
-            }
 
-            if (terms.size() == 0) {
-                Map<String, String> termsHelper = getTerms(c);
-                if (termsHelper != null) {
-                    terms.addAll(termsHelper.keySet());
-                }
-            }
-
-            Collections.sort(terms);
-            for (String term : terms) {
-                if (selectTerm(c, term)) {
+            for (Term term : terms) {
+                if (selectTerm(c, term.getTerm())) {
                     Document doc = Jsoup.connect(URL_MY_LVAS).get();
 
-                    if (isSelectable(c, doc, term)) {
-                        if (isSelected(c, doc, term)) {
+                    if (isSelectable(c, doc, term.getTerm())) {
+                        if (isSelected(c, doc, term.getTerm())) {
                             // .select("body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > table > tbody > tr");
                             Elements rows = doc.select(SELECT_MY_LVAS);
                             for (Element row : rows) {
-                                Lva lva = new Lva(term, row);
+                                Lva lva = new Lva(term.getTerm(), row);
                                 if (lva.isInitialized()) {
                                     lvas.add(lva);
                                 }
                             }
+                            term.setLoaded(true);
                         } else {
-                            // break if selection is not equal previously selected term
                             throw new IOException(String.format("term not selected: %s", term));
                         }
-                    } else {
-                        throw new IOException(String.format("term is not selectable: %s", term));
                     }
                 } else {
                     // break if selection failed
@@ -442,7 +433,7 @@ public class KusssHandler {
         return exams;
     }
 
-    public List<Exam> getNewExamsByLvaNr(Context c, List<Lva> lvas, List<String> terms)
+    public List<Exam> getNewExamsByLvaNr(Context c, List<Lva> lvas, List<Term> terms)
             throws IOException {
 
         List<Exam> exams = new ArrayList<>();
