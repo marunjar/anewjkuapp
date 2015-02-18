@@ -246,7 +246,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                                 }
                             }
 
-                            summary = summary.replaceAll("([\\r\\n]|\\\\n)+", ", ").trim();
+                            summary = summary.trim().replaceAll("([\\r\\n]|\\\\n)+", ", ").trim();
                             description = description.trim();
 
                             ev.getProperty(Property.SUMMARY).setValue(
