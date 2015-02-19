@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -20,7 +21,8 @@
                 style="@style/Text.ItemTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical" />
+                android:gravity="center_vertical"
+                tools:text="Title" />
 
         </android.support.v7.widget.Toolbar>
 
@@ -29,9 +31,10 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/exam_list_item_time"
@@ -40,7 +43,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/separator_top_bottom_margin"
                     android:layout_marginRight="@dimen/separator_top_bottom_margin"
-                    android:gravity="center_vertical" />
+                    android:gravity="center_vertical"
+                    tools:text="08:00 - 10:00" />
 
                 <TextView
                     android:id="@+id/exam_list_item_location"
@@ -49,15 +53,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/separator_top_bottom_margin"
                     android:layout_marginRight="@dimen/separator_top_bottom_margin"
-                    android:layout_toEndOf="@id/exam_list_item_time"
-                    android:layout_toRightOf="@id/exam_list_item_time"
-                    android:gravity="center_vertical" />
-            </RelativeLayout>
+                    android:gravity="center_vertical"
+                    tools:text="HS 19" />
+            </LinearLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/card_content_padding">
+                android:layout_marginTop="@dimen/card_content_padding"
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/exam_list_item_lvanr"
@@ -66,7 +70,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/separator_top_bottom_margin"
                     android:layout_marginRight="@dimen/separator_top_bottom_margin"
-                    android:gravity="center_vertical" />
+                    tools:text="133337" />
 
                 <TextView
                     android:id="@+id/exam_list_item_term"
@@ -75,9 +79,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/separator_top_bottom_margin"
                     android:layout_marginRight="@dimen/separator_top_bottom_margin"
-                    android:layout_toEndOf="@id/exam_list_item_lvanr"
-                    android:layout_toRightOf="@id/exam_list_item_lvanr"
-                    android:gravity="center_vertical" />
+                    tools:text="2014S" />
 
                 <TextView
                     android:id="@+id/exam_list_item_skz"
@@ -86,26 +88,26 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/separator_top_bottom_margin"
                     android:layout_marginRight="@dimen/separator_top_bottom_margin"
-                    android:layout_toEndOf="@id/exam_list_item_term"
-                    android:layout_toRightOf="@id/exam_list_item_term"
-                    android:gravity="center_vertical" />
-            </RelativeLayout>
+                    tools:text="[521]" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/exam_list_item_info"
                 style="@style/Text.Body2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/card_content_padding"
                 android:textColor="@color/accent"
                 android:textStyle="bold"
-                android:layout_marginTop="@dimen/card_content_padding"/>
+                tools:text="Info" />
 
             <TextView
                 android:id="@+id/exam_list_item_description"
                 style="@style/Text.Body2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/card_content_padding" />
+                android:layout_marginTop="@dimen/card_content_padding"
+                tools:text="Description" />
 
         </LinearLayout>
     </LinearLayout>
