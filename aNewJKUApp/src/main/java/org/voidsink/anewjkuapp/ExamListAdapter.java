@@ -111,7 +111,13 @@ public class ExamListAdapter extends ListWithHeaderAdapter<ExamListExam> {
         }
         eventItemHolder.lvaNr.setText(exam.getLvaNr());
         eventItemHolder.term.setText(exam.getTerm());
-        eventItemHolder.skz.setText(String.format("[%s]", exam.getSkz()));
+
+        if (exam.getSkz() > 0) {
+            eventItemHolder.skz.setText(String.format("[%d]", exam.getSkz()));
+            eventItemHolder.skz.setVisibility(View.VISIBLE);
+        } else {
+            eventItemHolder.skz.setVisibility(View.GONE);
+        }
         eventItemHolder.time.setText(exam.getTime());
         eventItemHolder.location.setText(exam.getLocation());
 

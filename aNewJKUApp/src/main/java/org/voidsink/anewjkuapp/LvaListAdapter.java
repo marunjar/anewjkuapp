@@ -57,7 +57,12 @@ public class LvaListAdapter extends ListWithHeaderAdapter<LvaWithGrade> {
         lvaHolder.title.setText(lva.getLva().getTitle());
         UIUtils.setTextAndVisibility(lvaHolder.teacher, lva.getLva().getTeacher());
         lvaHolder.lvaNr.setText(lva.getLva().getLvaNr());
-        lvaHolder.skz.setText(String.format("[%s]", lva.getLva().getSKZ()));
+        if (lva.getLva().getSKZ() > 0) {
+            lvaHolder.skz.setText(String.format("[%d]", lva.getLva().getSKZ()));
+            lvaHolder.skz.setVisibility(View.VISIBLE);
+        } else {
+            lvaHolder.skz.setVisibility(View.GONE);
+        }
         lvaHolder.code.setText(lva.getLva().getCode());
 
         ExamGrade grade = lva.getGrade();

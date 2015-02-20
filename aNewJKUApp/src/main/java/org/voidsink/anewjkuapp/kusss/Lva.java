@@ -6,8 +6,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.voidsink.anewjkuapp.update.ImportLvaTask;
 import org.voidsink.anewjkuapp.KusssContentContract;
+import org.voidsink.anewjkuapp.utils.Analytics;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 
 public class Lva {
@@ -30,7 +32,7 @@ public class Lva {
 		this.lvaNr = lvaNr;
 	}
 
-	public Lva(String term, Element row) {
+	public Lva(Context c, String term, Element row) {
 		this(term, "");
 
         Elements columns = row.getElementsByTag("td");
@@ -53,7 +55,7 @@ public class Lva {
 					setCode(columns.get(3).text());
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+                Analytics.sendException(c, e, true);
 			}
 		}
 	}

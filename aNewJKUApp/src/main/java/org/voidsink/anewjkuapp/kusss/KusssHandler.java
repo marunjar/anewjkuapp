@@ -300,6 +300,7 @@ public class KusssHandler {
             Log.d(TAG, "getLvas");
 
             for (Term term : terms) {
+                term.setLoaded(false); // init loaded flag
                 if (selectTerm(c, term.getTerm())) {
                     Document doc = Jsoup.connect(URL_MY_LVAS).get();
 
@@ -308,7 +309,7 @@ public class KusssHandler {
                             // .select("body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > table > tbody > tr");
                             Elements rows = doc.select(SELECT_MY_LVAS);
                             for (Element row : rows) {
-                                Lva lva = new Lva(term.getTerm(), row);
+                                Lva lva = new Lva(c, term.getTerm(), row);
                                 if (lva.isInitialized()) {
                                     lvas.add(lva);
                                 }
