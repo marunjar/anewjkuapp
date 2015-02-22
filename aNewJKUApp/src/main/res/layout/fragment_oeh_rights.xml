@@ -14,7 +14,7 @@
             android:id="@+id/oeh_rights_1_title"
             style="@style/Text.Title"
             android:layout_width="match_parent"
-            android:textColor="@color/accent"
+            android:textColor="?attr/colorAccent"
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:text="@string/oeh_rights_1_title" />

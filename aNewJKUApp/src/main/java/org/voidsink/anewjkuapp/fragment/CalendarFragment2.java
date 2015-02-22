@@ -3,6 +3,7 @@ package org.voidsink.anewjkuapp.fragment;
 import android.accounts.Account;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.RectF;
@@ -293,7 +294,11 @@ public class CalendarFragment2 extends BaseFragment implements WeekView.MonthCha
 
                 WeekViewEvent event = new WeekViewEvent(c.getLong(ImportCalendarTask.COLUMN_EVENT_ID), c.getString(ImportCalendarTask.COLUMN_EVENT_TITLE), startTime, endTime);
 
-                int color = getContext().getResources().getColor(R.color.accentTransparent);
+                // get accent color from theme
+                TypedArray themeArray = getContext().getTheme().obtainStyledAttributes(new int[]{android.R.attr.colorAccent});
+                int color = themeArray.getColor(0, getContext().getResources().getColor(R.color.default_accent));
+                themeArray.recycle();
+
                 final String key = c.getString(ImportCalendarTask.COLUMN_EVENT_CAL_ID);
                 if (mColors.containsKey(key)) {
                     color = mColors.get(key);
