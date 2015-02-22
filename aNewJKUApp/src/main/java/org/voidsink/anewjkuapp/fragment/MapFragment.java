@@ -175,7 +175,8 @@ public class MapFragment extends BaseFragment implements
             AlertDialog.Builder poiSelector = new AlertDialog.Builder(
                     new ContextThemeWrapper(getContext(), R.style.AppTheme));
 
-            poiSelector.setIcon(R.drawable.ic_launcher);
+            poiSelector.setTitle(R.string.map_select_location);
+            poiSelector.setIcon(R.drawable.ic_menu_mylocation);
 
             final PoiAdapter arrayAdapter = new PoiAdapter(getContext());
             arrayAdapter.addAll(pois);

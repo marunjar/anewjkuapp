@@ -192,4 +192,5 @@
     <string name="pref_kusss_calendar_extended_summary">Calendar where dates are imported</string>
     <string name="pref_kusss_calendar_sync_title">Synchronisation</string>
     <string name="notification_sync_connect">Connecting</string>
+    <string name="map_select_location">Select lecture room</string>
 </resources>
