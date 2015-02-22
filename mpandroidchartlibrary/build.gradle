@@ -1,2 +1,2 @@
 configurations.create("default")
-artifacts.add("default", file('mpandroidchartlibrary-1-7-4.jar'))
+artifacts.add("default", file('mpchartlibrary-2-0-0-beta.jar'))
