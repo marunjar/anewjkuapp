@@ -173,9 +173,9 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
                             long examDate;
                             String examTime;
                             String examLocation;
-                            // delete exams one day after exam
-                            long validUntil = System.currentTimeMillis()
-                                    + DateUtils.MILLIS_PER_DAY;
+                            // modify exams only until one day before today
+                            long modifyUntil = new Date().getTime()
+                                    - (DateUtils.MILLIS_PER_DAY);
 
                             while (c.moveToNext()) {
                                 examId = c.getInt(COLUMN_EXAM_ID);
@@ -226,7 +226,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
                                             .withValues(exam.getContentValues())
                                             .build());
                                     mSyncResult.stats.numUpdates++;
-                                } else if (examDate < validUntil) {
+                                } else if (examDate > modifyUntil) {
                                     // Entry doesn't exist. Remove only newer
                                     // events from the database.
                                     Uri deleteUri = examUri
