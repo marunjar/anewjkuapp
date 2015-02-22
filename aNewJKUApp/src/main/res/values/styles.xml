@@ -1,5 +1,36 @@
 <resources>
 
+    <!--colors for default theme-->
+    <style name="colorStyle">
+        <item name="colorPrimary">@color/default_primary</item>
+        <item name="colorPrimaryDark">@color/default_primaryDark</item>
+        <item name="colorAccent">@color/default_accent</item>
+    </style>
+    <!--colors for sowi theme-->
+    <style name="colorStyle.sowi">
+        <item name="colorPrimary">@color/sowi_primary</item>
+        <item name="colorPrimaryDark">@color/sowi_primaryDark</item>
+        <item name="colorAccent">@color/sowi_accent</item>
+    </style>
+    <!--colors for re theme-->
+    <style name="colorStyle.re">
+        <item name="colorPrimary">@color/re_primary</item>
+        <item name="colorPrimaryDark">@color/re_primaryDark</item>
+        <item name="colorAccent">@color/re_accent</item>
+    </style>
+    <!--colors for tnf theme-->
+    <style name="colorStyle.tnf">
+        <item name="colorPrimary">@color/tnf_primary</item>
+        <item name="colorPrimaryDark">@color/tnf_primaryDark</item>
+        <item name="colorAccent">@color/tnf_accent</item>
+    </style>
+    <!--colors for med theme-->
+    <style name="colorStyle.med">
+        <item name="colorPrimary">@color/med_primary</item>
+        <item name="colorPrimaryDark">@color/med_primaryDark</item>
+        <item name="colorAccent">@color/med_accent</item>
+    </style>
+
     <style name="chip">
         <item name="android:layout_width">8dp</item>
         <item name="android:layout_height">match_parent</item>
@@ -19,7 +50,7 @@
         <item name="android:padding">8dp</item>
         <item name="android:textSize">@dimen/text_size_subtitle</item>
         <item name="android:layout_marginTop">@dimen/activity_horizontal_margin</item>
-        <item name="android:textColor">@color/accent</item>
+        <item name="android:textColor">?attr/colorAccent</item>
     </style>
 
     <style name="oeh_text_content" parent="Text.Body2">
@@ -97,14 +128,14 @@
     <style name="cardToolbar" parent="@style/Theme.AppCompat">
         <item name="colorPrimary">@android:color/transparent</item>
         <item name="colorPrimaryDark">@android:color/transparent</item>
-        <item name="colorAccent">@color/accent</item>
+        <item name="colorAccent">?attr/colorAccent</item>
         <item name="actionOverflowButtonStyle">@style/cardToolbar.ActionButton.Overflow</item>
     </style>
 
     <style name="cardToolbar.light" parent="@style/Theme.AppCompat.Light">
         <item name="colorPrimary">@android:color/transparent</item>
         <item name="colorPrimaryDark">@android:color/transparent</item>
-        <item name="colorAccent">@color/accent</item>
+        <item name="colorAccent">?attr/colorAccent</item>
         <item name="actionOverflowButtonStyle">@style/cardToolbar.light.ActionButton.Overflow</item>
     </style>
 
