@@ -4,6 +4,11 @@
 		    - fixed
 		    * changed
 		    + added -->
+    <release version="0.33" versioncode="140033">
+        <change>- KUSSS: Laden von LVAs verbessert</change>
+        <change>- App: diverse Fehler korrigiert</change>
+        <change>* App: kleine Änderungen an der Oberfläche</change>
+    </release>
     <release version="0.32" versioncode="140032">
         <change>- KUSSS: Fehler beim Laden von Daten behoben</change>
         <change>- Mensa: Fehler beim Laden von Daten behoben</change>
