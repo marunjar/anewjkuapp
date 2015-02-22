@@ -40,10 +40,10 @@ public class CalendarListEvent implements CalendarListItem {
         Date mDtStart = new Date(dtStart);
         Date mDtEnd = new Date(dtEnd);
 
-        DateFormat dfStart = DateFormat.getTimeInstance();
-        DateFormat dfEnd = DateFormat.getTimeInstance();
+        DateFormat dfStart = DateFormat.getTimeInstance(DateFormat.SHORT);
+        DateFormat dfEnd = DateFormat.getTimeInstance(DateFormat.SHORT);
         if (!DateUtils.isSameDay(mDtStart, mDtEnd)) {
-            dfEnd = DateFormat.getDateTimeInstance();
+            dfEnd = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
         }
 
         this.mTime = String.format("%s - %s", dfStart.format(mDtStart),

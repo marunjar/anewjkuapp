@@ -7,20 +7,14 @@ import org.voidsink.anewjkuapp.fragment.LvaDetailFragment;
 
 import java.util.List;
 
-/**
- * Created by paul on 03.09.2014.
- */
-public class LvaTabItem extends SlidingTabItem{
-
-    private final List<String> mTerms;
+public class LvaTabItem extends TermTabItem{
 
     public LvaTabItem(String title, List<String> terms) {
-        super(title, null);
-        this.mTerms = terms;
+        super(title, terms, null);
     }
 
     @Override
     public Fragment createFragment() {
-        return new LvaDetailFragment(this.mTerms);
+        return new LvaDetailFragment(getTerms());
     }
 }

@@ -80,18 +80,32 @@
     </style>
 
     <!--this themes are for toolbars in cards-->
+    <style name="cardToolbar.ActionButton.Overflow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+    </style>
+
+    <style name="cardToolbar.light.ActionButton.Overflow" parent="@style/Widget.AppCompat.Light.ActionButton.Overflow">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+    </style>
+
     <attr name="cardToolbarTheme" format="reference" />
 
     <style name="cardToolbar" parent="@style/Theme.AppCompat">
         <item name="colorPrimary">@android:color/transparent</item>
         <item name="colorPrimaryDark">@android:color/transparent</item>
         <item name="colorAccent">@color/accent</item>
+        <item name="actionOverflowButtonStyle">@style/cardToolbar.ActionButton.Overflow</item>
     </style>
 
     <style name="cardToolbar.light" parent="@style/Theme.AppCompat.Light">
         <item name="colorPrimary">@android:color/transparent</item>
         <item name="colorPrimaryDark">@android:color/transparent</item>
         <item name="colorAccent">@color/accent</item>
+        <item name="actionOverflowButtonStyle">@style/cardToolbar.light.ActionButton.Overflow</item>
     </style>
 
     <style name="cardToolbarStyle">

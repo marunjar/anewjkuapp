@@ -4,6 +4,7 @@ import org.voidsink.anewjkuapp.GradeTabItem;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.SlidingTabItem;
 import org.voidsink.anewjkuapp.base.SlidingTabsFragment;
+import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.utils.Consts;
 
@@ -14,12 +15,12 @@ public class GradeFragment extends SlidingTabsFragment {
 
     @Override
     protected void fillTabs(List<SlidingTabItem> mTabs) {
-        List<String> mTerms = KusssContentProvider.getTerms(getContext());
+        List<Term> mTerms = KusssContentProvider.getTerms(getContext());
 
         mTabs.add(new GradeTabItem(getString(R.string.all_terms), null));
 
-        for (String term : mTerms) {
-            mTabs.add(new GradeTabItem(term, Arrays.asList(term)));
+        for (Term term : mTerms) {
+            mTabs.add(new GradeTabItem(term.getTerm(), Arrays.asList(term.getTerm())));
         }
     }
 

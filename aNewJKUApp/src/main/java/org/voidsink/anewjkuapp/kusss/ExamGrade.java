@@ -3,6 +3,7 @@ package org.voidsink.anewjkuapp.kusss;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.text.TextUtils;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -110,7 +111,10 @@ public class ExamGrade {
             }
 
             try {
-                setSKZ(Integer.parseInt(columns.get(6).text())); // grade
+                String skzText = columns.get(6).text();
+                if (!TextUtils.isEmpty(skzText)) {
+                    setSKZ(Integer.parseInt(skzText)); // grade
+                }
             } catch (NumberFormatException e) {
                 Analytics.sendException(c, e, false, columns.get(6).text());
             }

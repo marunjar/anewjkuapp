@@ -290,71 +290,67 @@ public class KusssHandler {
         return true;
     }
 
-    public List<Lva> getLvas(Context c, List<String> terms) {
+    public List<Lva> getLvas(Context c, List<Term> terms) {
+        if (terms == null || terms.size() == 0) {
+            return null;
+        }
+
         List<Lva> lvas = new ArrayList<>();
         try {
             Log.d(TAG, "getLvas");
-            if (terms == null) {
-                terms = new ArrayList<>();
-            }
 
-            if (terms.size() == 0) {
-                Map<String, String> termsHelper = getTerms(c);
-                if (termsHelper != null) {
-                    terms.addAll(termsHelper.keySet());
-                }
-            }
-
-            Collections.sort(terms);
-            for (String term : terms) {
-                if (selectTerm(c, term)) {
+            for (Term term : terms) {
+                term.setLoaded(false); // init loaded flag
+                if (selectTerm(c, term.getTerm())) {
                     Document doc = Jsoup.connect(URL_MY_LVAS).get();
 
-                    if (isSelectable(doc, term)) {
-                        if (isSelected(doc, term)) {
+                    if (isSelectable(c, doc, term.getTerm())) {
+                        if (isSelected(c, doc, term.getTerm())) {
                             // .select("body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > table > tbody > tr");
                             Elements rows = doc.select(SELECT_MY_LVAS);
                             for (Element row : rows) {
-                                Lva lva = new Lva(term, row);
+                                Lva lva = new Lva(c, term.getTerm(), row);
                                 if (lva.isInitialized()) {
                                     lvas.add(lva);
                                 }
                             }
+                            term.setLoaded(true);
                         } else {
-                            // break if selection is not equal previously selected term
                             throw new IOException(String.format("term not selected: %s", term));
                         }
-                    } else {
-                        throw new IOException(String.format("term is not selectable: %s", term));
                     }
                 } else {
                     // break if selection failed
                     throw new IOException(String.format("cannot select term: %s", term));
                 }
             }
-            if (lvas.size() == 0) {
+            if (lvas != null && lvas.size() == 0) {
                 // break if no lvas found, a student without courses is a quite impossible case
                 throw new IOException("no lvas found");
             }
         } catch (Exception e) {
-            Log.e(TAG, "getLvas", e);
             Analytics.sendException(c, e, true);
             return null;
         }
         return lvas;
     }
 
-    private boolean isSelectable(Document doc, String term) {
-        Element termSelector = doc.getElementById("term");
-        if (termSelector == null) return false;
+    private boolean isSelectable(Context c, Document doc, String term) {
+        try {
+            Element termSelector = doc.getElementById("term");
+            if (termSelector == null) return false;
 
-        Elements selectable = termSelector.getElementsByAttributeValue("value", term);
-        if (selectable.size() != 1) return false;
+            Elements selectable = termSelector.getElementsByAttributeValue("value", term);
+            if (selectable.size() != 1) return false;
 
-        return true;
+            return true;
+        } catch (Exception e) {
+            Analytics.sendException(c, e, true);
+            return false;
+        }
     }
 
-    private boolean isSelected(Document doc, String term) {
+    private boolean isSelected(Context c, Document doc, String term) {
         try {
             Elements terms = doc.getElementById("term").getElementsByAttribute(
                     "selected");
@@ -365,7 +361,7 @@ public class KusssHandler {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, "isSelected", e);
+            Analytics.sendException(c, e, true);
             return false;
         }
         return false;
@@ -438,7 +434,7 @@ public class KusssHandler {
         return exams;
     }
 
-    public List<Exam> getNewExamsByLvaNr(Context c, List<Lva> lvas, List<String> terms)
+    public List<Exam> getNewExamsByLvaNr(Context c, List<Lva> lvas, List<Term> terms)
             throws IOException {
 
         List<Exam> exams = new ArrayList<>();
