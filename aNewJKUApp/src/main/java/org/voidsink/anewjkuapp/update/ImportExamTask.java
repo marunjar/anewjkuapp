@@ -38,6 +38,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 
     private static final String TAG = ImportExamTask.class.getSimpleName();
     private static final Object sync_lock = new Object();
+    private final long mSyncFromNow;
 
     private ContentProviderClient mProvider;
     private Account mAccount;
@@ -90,6 +91,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
         this.mResolver = context.getContentResolver();
         this.mContext = context;
         this.mShowProgress = (extras != null && extras.getBoolean(Consts.SYNC_SHOW_PROGRESS, false));
+        this.mSyncFromNow = System.currentTimeMillis();
     }
 
     @Override
@@ -173,9 +175,6 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
                             long examDate;
                             String examTime;
                             String examLocation;
-                            // modify exams only until one day before today
-                            long modifyUntil = new Date().getTime()
-                                    - (DateUtils.MILLIS_PER_DAY);
 
                             while (c.moveToNext()) {
                                 examId = c.getInt(COLUMN_EXAM_ID);
@@ -226,7 +225,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
                                             .withValues(exam.getContentValues())
                                             .build());
                                     mSyncResult.stats.numUpdates++;
-                                } else if (examDate > modifyUntil) {
+                                } else if (examDate > mSyncFromNow - DateUtils.MILLIS_PER_DAY) {
                                     // Entry doesn't exist. Remove only newer
                                     // events from the database.
                                     Uri deleteUri = examUri
