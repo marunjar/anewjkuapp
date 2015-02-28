@@ -50,8 +50,9 @@ public class RssFeedFragment extends BaseFragment {
         mOptions = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .displayer(new SimpleBitmapDisplayer())
-                .showImageForEmptyUri(getResources().getDrawable(R.drawable.ic_launcher))
-                .showImageOnFail(getResources().getDrawable(R.drawable.ic_launcher))
+                .showImageOnLoading(getResources().getDrawable(R.mipmap.ic_launcher))
+                .showImageForEmptyUri(getResources().getDrawable(R.mipmap.ic_launcher))
+                .showImageOnFail(getResources().getDrawable(R.mipmap.ic_launcher))
                 .build();
     }
 

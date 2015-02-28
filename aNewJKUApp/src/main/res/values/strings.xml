@@ -160,6 +160,7 @@
     <string name="map_place_not_found" formatted="false">\'%s\' nicht gefunden</string>
     <string name="map_search_poi_title">Suche</string>
     <string name="map_search_poi_hint">Hörsaal hier eingeben</string>
+    <string name="map_select_location">Hörsaal auswählen</string>
 
     <string name="progress_title">Bitte warten...</string>
     <string name="progress_load_menu">Menüs werden geladen...</string>

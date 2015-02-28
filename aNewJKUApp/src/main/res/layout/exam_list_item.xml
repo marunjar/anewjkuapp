@@ -97,7 +97,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/card_content_padding"
-                android:textColor="@color/accent"
+                android:textColor="?attr/colorAccent"
                 android:textStyle="bold"
                 tools:text="Info" />
 

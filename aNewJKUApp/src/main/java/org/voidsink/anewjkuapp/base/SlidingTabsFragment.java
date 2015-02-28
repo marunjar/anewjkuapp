@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +55,7 @@ public abstract class SlidingTabsFragment extends BaseFragment {
         mTabs.clear();
         fillTabs(mTabs);
 
-        return LayoutInflater.from(new ContextThemeWrapper(getContext(), R.style.AppTheme)).inflate(R.layout.fragment_sliding_tabs, container, false);
+        return LayoutInflater.from(getContext()).inflate(R.layout.fragment_sliding_tabs, container, false);
     }
 
     // BEGIN_INCLUDE (fragment_onviewcreated)

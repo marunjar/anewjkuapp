@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="AppTheme_Light" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="actionBarItemBackground">@drawable/selectable_background_apptheme</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Apptheme</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="actionBarItemBackground">@drawable/selectable_background_apptheme</item>
         <item name="actionBarTabStyle">@style/ActionBarTabStyle.Apptheme</item>
         <item name="actionDropDownStyle">@style/DropDownNav.Apptheme</item>
         <item name="actionBarStyle">@style/ActionBar.Solid.Apptheme</item>
@@ -15,14 +17,15 @@
         <item name="cardToolbarTheme">@style/cardToolbar.light</item>
         <item name="cardBackgroundColor">@color/cardview_light_background</item>
 
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primaryDark</item>
-        <item name="colorAccent">@color/accent</item>
+        <item name="colorPrimary">@color/default_primary</item>
+        <item name="colorPrimaryDark">@color/default_primaryDark</item>
+        <item name="colorAccent">@color/default_accent</item>
     </style>
 
     <style name="AppTheme" parent="@style/Theme.AppCompat">
-        <item name="actionBarItemBackground">@drawable/selectable_background_apptheme</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Apptheme</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="actionBarItemBackground">@drawable/selectable_background_apptheme</item>
         <item name="actionBarTabStyle">@style/ActionBarTabStyle.Apptheme</item>
         <item name="actionDropDownStyle">@style/DropDownNav.Apptheme</item>
         <item name="actionBarStyle">@style/ActionBar.Solid.Apptheme</item>
@@ -35,9 +38,9 @@
         <item name="cardToolbarTheme">@style/cardToolbar</item>
         <item name="cardBackgroundColor">@color/cardview_dark_background</item>
 
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primaryDark</item>
-        <item name="colorAccent">@color/accent</item>
+        <item name="colorPrimary">@color/default_primary</item>
+        <item name="colorPrimaryDark">@color/default_primaryDark</item>
+        <item name="colorAccent">@color/default_accent</item>
     </style>
 
     <style name="AppTheme.ActionBar.TitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
@@ -50,14 +53,15 @@
     </style>
 
     <style name="ActionBar.Solid.Apptheme" parent="@style/Widget.AppCompat.ActionBar.Solid">
-        <item name="android:background">@color/primary</item>
-        <item name="backgroundStacked">@color/primary</item>
-        <item name="backgroundSplit">@color/primary</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="backgroundStacked">?attr/colorPrimary</item>
+        <item name="backgroundSplit">?attr/colorPrimary</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Apptheme</item>
         <item name="titleTextStyle">@style/AppTheme.ActionBar.TitleTextStyle</item>
         <item name="android:icon">@android:color/transparent</item>
+        <item name="elevation">0dp</item>
         <!-- Support library compatibility -->
-        <item name="background">@color/primary</item>
+        <item name="background">?attr/colorPrimary</item>
     </style>
 
     <style name="ActionBar.Transparent.Apptheme" parent="@style/Widget.AppCompat.ActionBar">
@@ -99,5 +103,4 @@
         <item name="spinBars">true</item>
         <item name="color">@android:color/white</item>
     </style>
-
 </resources>

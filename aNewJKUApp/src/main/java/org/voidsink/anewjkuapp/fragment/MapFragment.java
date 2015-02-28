@@ -29,7 +29,6 @@ import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -49,7 +48,6 @@ import org.mapsforge.core.util.LatLongUtils;
 import org.mapsforge.core.util.MercatorProjection;
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.mapsforge.map.android.graphics.AndroidResourceBitmap;
-import org.mapsforge.map.android.rendertheme.AssetsRenderTheme;
 import org.mapsforge.map.android.util.AndroidUtil;
 import org.mapsforge.map.android.view.MapView;
 import org.mapsforge.map.layer.Layers;
@@ -172,10 +170,9 @@ public class MapFragment extends BaseFragment implements
         } else if (pois.size() == 1) {
             finishSearch(pois.get(0));
         } else {
-            AlertDialog.Builder poiSelector = new AlertDialog.Builder(
-                    new ContextThemeWrapper(getContext(), R.style.AppTheme));
+            AlertDialog.Builder poiSelector = new AlertDialog.Builder(getContext());
 
-            poiSelector.setIcon(R.drawable.ic_launcher);
+            poiSelector.setTitle(R.string.map_select_location);
 
             final PoiAdapter arrayAdapter = new PoiAdapter(getContext());
             arrayAdapter.addAll(pois);
@@ -369,9 +366,10 @@ public class MapFragment extends BaseFragment implements
         this.mapView.getMapZoomControls().setZoomLevelMin(MIN_ZOOM_LEVEL);
         this.mapView.getMapZoomControls().setZoomLevelMax(MAX_ZOOM_LEVEL);
 
-        this.tileCache = AndroidUtil.createTileCache(this.getActivity(),
+        this.tileCache = AndroidUtil.createTileCache(getContext(),
                 "mapFragment",
-                this.mapView.getModel().displayModel.getTileSize(), 1.0f,
+                this.mapView.getModel().displayModel.getTileSize(),
+                1.0f,
                 this.mapView.getModel().frameBufferModel.getOverdrawFactor());
 
         return rootView;
@@ -391,10 +389,6 @@ public class MapFragment extends BaseFragment implements
         this.mapViewPosition = this.mapView.getModel().mapViewPosition;
         initializePosition(this.mapViewPosition);
 
-        this.tileCache = AndroidUtil.createTileCache(this.getActivity(),
-                "mapFragment",
-                this.mapView.getModel().displayModel.getTileSize(), 1.0f, this.mapView.getModel().frameBufferModel.getOverdrawFactor());
-
         tileRendererLayer = createTileRendererLayer(this.tileCache, mapViewPosition,
                 getMapFile(), getRenderTheme(), false);
         layers.add(tileRendererLayer);
@@ -411,8 +405,7 @@ public class MapFragment extends BaseFragment implements
         Drawable drawable = getContext().getResources().getDrawable(R.drawable.ic_marker_own_position);
         Bitmap bitmap = AndroidGraphicFactory.convertToBitmap(drawable);
 
-        this.mMyLocationOverlay = new LocationOverlay(this.getActivity(),
-                this.mapViewPosition, bitmap);
+        this.mMyLocationOverlay = new LocationOverlay(getContext(), this.mapViewPosition, bitmap);
         this.mMyLocationOverlay.setSnapToLocationEnabled(false);
         layers.add(this.mMyLocationOverlay);
     }

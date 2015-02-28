@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:padding="@dimen/separator_top_bottom_margin"
-                android:textColor="@color/accent"
+                android:textColor="?attr/colorAccent"
                 android:textStyle="bold"
                 tools:text="Price" />
 

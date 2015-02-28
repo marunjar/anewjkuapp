@@ -23,7 +23,7 @@ public class PoiAdapter extends BaseArrayAdapter<Poi> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		PoiHolder poiHolder = null;
 
-		LayoutInflater inflater = LayoutInflater.from(new ContextThemeWrapper(getContext(), R.style.AppTheme));
+		LayoutInflater inflater = LayoutInflater.from(getContext());
 		
 		if (convertView == null) {
 			convertView = inflater.inflate(android.R.layout.simple_list_item_2,

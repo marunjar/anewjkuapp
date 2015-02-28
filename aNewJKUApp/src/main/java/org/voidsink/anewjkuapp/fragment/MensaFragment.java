@@ -19,9 +19,6 @@ public class MensaFragment extends SlidingTabsFragment {
 
     @Override
     protected void fillTabs(List<SlidingTabItem> mTabs) {
-        final int indicatorColor = getResources().getColor(android.R.color.white);
-        final int dividerColor = getResources().getColor(R.color.primary);
-
         if (PreferenceWrapper.getGroupMenuByDay(getContext())) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(new Date());
@@ -33,16 +30,16 @@ public class MensaFragment extends SlidingTabsFragment {
             do {
                 // do not add weekend (no menu)
                 if (cal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && cal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
-                    mTabs.add(new MensaDayTabItem(getTabTitle(cal), cal.getTime(), CalendarUtils.COLOR_DEFAULT_LVA, Color.GRAY));
+                    mTabs.add(new MensaDayTabItem(getTabTitle(cal), cal.getTime(), CalendarUtils.COLOR_DEFAULT_EXAM, Color.GRAY));
                 }
                 // increment day
                 cal.add(Calendar.DATE, 1);
             } while (cal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY);
         } else {
-            mTabs.add(new SlidingTabItem(getString(R.string.mensa_title_classic), MensaClassicFragment.class, indicatorColor, dividerColor));
-            mTabs.add(new SlidingTabItem(getString(R.string.mensa_title_choice), MensaChoiceFragment.class, indicatorColor, dividerColor));
-            mTabs.add(new SlidingTabItem(getString(R.string.mensa_title_khg), MensaKHGFragment.class, indicatorColor, dividerColor));
-            mTabs.add(new SlidingTabItem(getString(R.string.mensa_title_raab), MensaRaabFragment.class, indicatorColor, dividerColor));
+            mTabs.add(new SlidingTabItem(getString(R.string.mensa_title_classic), MensaClassicFragment.class));
+            mTabs.add(new SlidingTabItem(getString(R.string.mensa_title_choice), MensaChoiceFragment.class));
+            mTabs.add(new SlidingTabItem(getString(R.string.mensa_title_khg), MensaKHGFragment.class));
+            mTabs.add(new SlidingTabItem(getString(R.string.mensa_title_raab), MensaRaabFragment.class));
         }
     }
 
