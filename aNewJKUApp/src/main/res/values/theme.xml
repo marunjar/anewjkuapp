@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="AppTheme_Light" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="actionBarItemBackground">@drawable/selectable_background_apptheme</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Apptheme</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="actionBarItemBackground">@drawable/selectable_background_apptheme</item>
         <item name="actionBarTabStyle">@style/ActionBarTabStyle.Apptheme</item>
         <item name="actionDropDownStyle">@style/DropDownNav.Apptheme</item>
         <item name="actionBarStyle">@style/ActionBar.Solid.Apptheme</item>
@@ -21,8 +23,9 @@
     </style>
 
     <style name="AppTheme" parent="@style/Theme.AppCompat">
-        <item name="actionBarItemBackground">@drawable/selectable_background_apptheme</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Apptheme</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="actionBarItemBackground">@drawable/selectable_background_apptheme</item>
         <item name="actionBarTabStyle">@style/ActionBarTabStyle.Apptheme</item>
         <item name="actionDropDownStyle">@style/DropDownNav.Apptheme</item>
         <item name="actionBarStyle">@style/ActionBar.Solid.Apptheme</item>
@@ -56,6 +59,7 @@
         <item name="android:progressBarStyle">@style/ProgressBar.Apptheme</item>
         <item name="titleTextStyle">@style/AppTheme.ActionBar.TitleTextStyle</item>
         <item name="android:icon">@android:color/transparent</item>
+        <item name="elevation">0dp</item>
         <!-- Support library compatibility -->
         <item name="background">?attr/colorPrimary</item>
     </style>
@@ -99,5 +103,4 @@
         <item name="spinBars">true</item>
         <item name="color">@android:color/white</item>
     </style>
-
 </resources>
