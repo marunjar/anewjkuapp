@@ -8,6 +8,8 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -148,7 +150,7 @@ public abstract class JSONMenuLoader implements MenuLoader {
         }
     }
 
-    public static final String pricePattern = "[0-9],[0-9][0-9]";
+    public static final Pattern pricePattern = Pattern.compile("(€? ?)\\d[\\,\\.]\\d{2}( ?€?)");
 
     //push every followup-element one position later
     protected void insert(JSONArray a, Object o, int index) throws JSONException {
@@ -163,38 +165,52 @@ public abstract class JSONMenuLoader implements MenuLoader {
     }
 
     protected void normalize(Context c, JSONArray jsonDays) throws JSONException {
-        for (int i = 0; i < jsonDays.length(); i++) {
+        int i = 0;
+        while (i < jsonDays.length()) {
             try {
                 JSONObject jsonDay = jsonDays.getJSONObject(i);
                 String meal = jsonDay.getString("meal").trim();
                 if (meal != null) {
-                    String[] ms = meal.split(pricePattern);
-                    if (ms.length > 1) {
-                        Log.d("meal", ms[1]);
-                        JSONObject clone = new JSONObject(jsonDay.toString());
-                        int startOfSecond = meal.indexOf(ms[1]);
-                        jsonDay.put("meal", meal.substring(0, startOfSecond));
-                        clone.put("meal", meal.substring(startOfSecond));
-                        insert(jsonDays, clone, i + 1);
-                        i--;
-                        continue;
-                    }
-                    if (meal.length() > 4) {
-                        String postfix = meal.substring(meal.length() - 4);
-                        if (postfix.matches(pricePattern)) {
-                            jsonDay.put("meal", meal.substring(0, meal.length() - 4));
-                            jsonDay.put("price", postfix.replace(",", ""));
+                    Matcher priceMatcher = pricePattern.matcher(meal);
+
+                    if (priceMatcher.find()) {
+                        // get rest of meal and insert for processing as next
+                        String nextMeal = meal.substring(priceMatcher.end()).trim();
+                        if (Pattern.compile("\\w+").matcher(nextMeal).find()) {
+                            JSONObject clone = new JSONObject(jsonDay.toString());
+                            clone.put("meal", nextMeal);
+                            insert(jsonDays, clone, i + 1);
                         }
+
+                        // insert meal
+                        jsonDay.put("meal", meal.substring(0, priceMatcher.start()).trim());
+                        jsonDay.put("price", normalizePrice(meal.substring(priceMatcher.start(), priceMatcher.end())));
                     }
                 }
             } catch (JSONException e) {
                 Analytics.sendException(c, e, false);
             }
+            i++;
         }
     }
 
+    private String normalizePrice(String price) {
+        String result = price.trim().replaceAll("[€ ]", "");
+        try {
+            String[] parts = result.split("[\\,\\.]");
+            if (parts.length == 2 && parts[1].length() == 2) {
+                result = parts[0] + parts[1];
+            } else {
+                result = "";
+            }
+        } catch (Exception e) {
+            result = "";
+        }
+        return result;
+    }
 
-	protected void onNewDay(MensaDay day) {
+
+    protected void onNewDay(MensaDay day) {
 
 	}
 
