@@ -90,6 +90,7 @@
     <orderEntry type="library" exported="" name="gridlayout-v7-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="play-services-base-6.5.87" level="project" />
     <orderEntry type="library" exported="" name="jsoup-1.8.1" level="project" />
+    <orderEntry type="library" exported="" name="mpandroidchartlibrary-2-0-1" level="project" />
     <orderEntry type="library" exported="" name="ical4j-1.0.6" level="project" />
     <orderEntry type="library" exported="" name="cardview-v7-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="ckchangelog-1.2.2" level="project" />
@@ -111,7 +112,6 @@
     <orderEntry type="library" exported="" name="calligraphy-2.0.1" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="mapsforge-map-reader-0.5.0" level="project" />
-    <orderEntry type="library" exported="" name="mpchartlibrary-2-0-0-beta" level="project" />
     <orderEntry type="module" module-name="android-support-v4-preferencefragment" exported="" />
     <orderEntry type="module" module-name="voidsinkContributors" exported="" />
   </component>
