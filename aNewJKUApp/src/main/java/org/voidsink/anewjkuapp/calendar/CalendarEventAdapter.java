@@ -144,10 +144,10 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
     public void onBindHeaderViewHolder(DateHeaderHolder dateHeaderHolder, int position) {
         CalendarListEvent e = getItem(position);
 
-        if (e == null) {
-            dateHeaderHolder.mText.setText("");
-        } else {
+        if (e != null) {
             dateHeaderHolder.mText.setText(DateFormat.getDateInstance().format(new Date(e.getDtStart())));
+        } else {
+            dateHeaderHolder.mText.setText("");
         }
     }
 }
