@@ -72,6 +72,7 @@ dependencies {
     compile 'com.github.alamkanak:android-week-view:1.2.1'
     compile 'se.emilsjolander:stickylistheaders:2.5.2'
     compile 'com.tonicartos:stickygridheaders:1.0.1'
+    compile 'com.timehop.stickyheadersrecyclerview:library:0.3.6'
 
     compile 'de.cketti.library.changelog:ckchangelog:1.2.2'
     compile 'com.mikepenz.aboutlibraries:library:4.5.5'

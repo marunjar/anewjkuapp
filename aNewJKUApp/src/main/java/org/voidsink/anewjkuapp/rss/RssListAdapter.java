@@ -19,6 +19,7 @@ import org.voidsink.anewjkuapp.activity.RssFeedEntryActivity;
 import org.voidsink.anewjkuapp.rss.lib.FeedEntry;
 import org.voidsink.anewjkuapp.utils.Consts;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RssListAdapter extends RecyclerView.Adapter<RssListAdapter.FeedEntryViewHolder> {
@@ -30,6 +31,18 @@ public class RssListAdapter extends RecyclerView.Adapter<RssListAdapter.FeedEntr
     private final Context mContext;
     private final List<FeedEntry> mDataSet;
     private OnItemClickListener mItemClickListener;
+
+    public void clear() {
+        mDataSet.clear();
+    }
+
+    public void add(FeedEntry mFeedEntry) {
+        mDataSet.add(mFeedEntry);
+    }
+
+    public void addAll(List<FeedEntry> mFeedEntries) {
+        mDataSet.addAll(mFeedEntries);
+    }
 
     public interface OnItemClickListener {
         public void onItemClick(View view, int viewType, int position);
@@ -44,7 +57,7 @@ public class RssListAdapter extends RecyclerView.Adapter<RssListAdapter.FeedEntr
 
         this.mOptions = options;
         this.mContext = context;
-        this.mDataSet = dataset;
+        this.mDataSet = new ArrayList<>();
 
         SetOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -53,6 +66,8 @@ public class RssListAdapter extends RecyclerView.Adapter<RssListAdapter.FeedEntr
                 startFeedDetailView(feedEntry);
             }
         });
+
+        addAll(dataset);
     }
 
     @Override
@@ -98,6 +113,10 @@ public class RssListAdapter extends RecyclerView.Adapter<RssListAdapter.FeedEntr
     }
 
     private FeedEntry getItem(int position) {
+        if (mDataSet.isEmpty()) {
+            return null;
+        } ;
+
         return mDataSet.get(position);
     }
 
@@ -111,9 +130,9 @@ public class RssListAdapter extends RecyclerView.Adapter<RssListAdapter.FeedEntr
     // you provide access to all the views for a data item in a view holder
     public static class FeedEntryViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public TextView mTitle;
-        public TextView mDescription;
-        public ImageView mImage;
+        public final TextView mTitle;
+        public final TextView mDescription;
+        public final ImageView mImage;
 
         public FeedEntryViewHolder(View v) {
             super(v);

@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -35,7 +34,6 @@ public class RssFeedFragment extends BaseFragment {
     private URL mUrl = null;
     private RssListAdapter mAdapter;
     private DisplayImageOptions mOptions;
-    private RecyclerView mRecyclerView;
 
     @Override
     public void setArguments(Bundle args) {
@@ -65,7 +63,7 @@ public class RssFeedFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
-        mRecyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
+        final RecyclerView mRecyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
 
         mRecyclerView.setHasFixedSize(true); // performance
 
@@ -128,12 +126,14 @@ public class RssFeedFragment extends BaseFragment {
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            mAdapter.clear();
+
             if (mFeed != null) {
-                mRecyclerView.setAdapter(new RssListAdapter(getContext(), mFeed, mOptions));
+                mAdapter.addAll(mFeed);
             } else {
-                mRecyclerView.setAdapter(new RssListAdapter(getContext(), new ArrayList<FeedEntry>(), mOptions));
                 Toast.makeText(getContext(), "TODO: Error loading feed.", Toast.LENGTH_SHORT).show();
             }
+            mAdapter.notifyDataSetChanged();
 
             mProgressDialog.dismiss();
 
