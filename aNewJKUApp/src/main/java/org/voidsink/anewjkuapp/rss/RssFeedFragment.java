@@ -4,13 +4,16 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -24,6 +27,7 @@ import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RssFeedFragment extends BaseFragment {
@@ -31,6 +35,7 @@ public class RssFeedFragment extends BaseFragment {
     private URL mUrl = null;
     private RssListAdapter mAdapter;
     private DisplayImageOptions mOptions;
+    private RecyclerView mRecyclerView;
 
     @Override
     public void setArguments(Bundle args) {
@@ -58,12 +63,15 @@ public class RssFeedFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_grid, container, false);
+        View v = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
-        final GridView mGridView = (GridView) v.findViewById(R.id.gridview);
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
 
-        mAdapter = new RssListAdapter(getContext(), mOptions);
-        mGridView.setAdapter(mAdapter);
+        mRecyclerView.setHasFixedSize(true); // performance
+
+        mAdapter = new RssListAdapter(getContext(), new ArrayList<FeedEntry>(), mOptions);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
 
         return v;
     }
@@ -120,14 +128,11 @@ public class RssFeedFragment extends BaseFragment {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            if (mAdapter != null) {
-                mAdapter.clear();
-                if (mFeed != null) {
-                    mAdapter.addAll(mFeed);
-                } else {
-                    Toast.makeText(getContext(), "TODO: Error loading feed.", Toast.LENGTH_SHORT).show();
-                }
-                mAdapter.notifyDataSetChanged();
+            if (mFeed != null) {
+                mRecyclerView.setAdapter(new RssListAdapter(getContext(), mFeed, mOptions));
+            } else {
+                mRecyclerView.setAdapter(new RssListAdapter(getContext(), new ArrayList<FeedEntry>(), mOptions));
+                Toast.makeText(getContext(), "TODO: Error loading feed.", Toast.LENGTH_SHORT).show();
             }
 
             mProgressDialog.dismiss();
