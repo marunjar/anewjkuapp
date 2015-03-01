@@ -16,33 +16,20 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.RssFeedEntryActivity;
+import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.rss.lib.FeedEntry;
 import org.voidsink.anewjkuapp.utils.Consts;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class RssListAdapter extends RecyclerView.Adapter<RssListAdapter.FeedEntryViewHolder> {
+public class RssListAdapter extends RecyclerArrayAdapter<FeedEntry, RssListAdapter.FeedEntryViewHolder> {
 
     private static final String TAG = RssListAdapter.class.getSimpleName();
     private static final String EMPTY_IMAGE_URL = "http://oeh.jku.at/sites/default/files/styles/generic_thumbnail_medium/public/default_images/defaultimage-article_0.png";
 
     private final DisplayImageOptions mOptions;
     private final Context mContext;
-    private final List<FeedEntry> mDataSet;
     private OnItemClickListener mItemClickListener;
-
-    public void clear() {
-        mDataSet.clear();
-    }
-
-    public void add(FeedEntry mFeedEntry) {
-        mDataSet.add(mFeedEntry);
-    }
-
-    public void addAll(List<FeedEntry> mFeedEntries) {
-        mDataSet.addAll(mFeedEntries);
-    }
 
     public interface OnItemClickListener {
         public void onItemClick(View view, int viewType, int position);
@@ -57,7 +44,6 @@ public class RssListAdapter extends RecyclerView.Adapter<RssListAdapter.FeedEntr
 
         this.mOptions = options;
         this.mContext = context;
-        this.mDataSet = new ArrayList<>();
 
         SetOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -110,19 +96,6 @@ public class RssListAdapter extends RecyclerView.Adapter<RssListAdapter.FeedEntr
         } catch (Exception e) {
             Log.e(TAG, "displayImage failed", e);
         }
-    }
-
-    private FeedEntry getItem(int position) {
-        if (mDataSet.isEmpty()) {
-            return null;
-        } ;
-
-        return mDataSet.get(position);
-    }
-
-    @Override
-    public int getItemCount() {
-        return mDataSet.size();
     }
 
     // Provide a reference to the views for each data item

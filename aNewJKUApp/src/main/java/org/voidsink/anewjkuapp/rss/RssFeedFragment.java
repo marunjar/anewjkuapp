@@ -67,7 +67,7 @@ public class RssFeedFragment extends BaseFragment {
 
         mRecyclerView.setHasFixedSize(true); // performance
 
-        mAdapter = new RssListAdapter(getContext(), new ArrayList<FeedEntry>(), mOptions);
+        mAdapter = new RssListAdapter(getContext(), null, mOptions);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
 

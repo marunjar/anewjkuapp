@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/list_header_text"
+    fontPath="fonts/Roboto-Light.ttf"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/list_header_text"
-        fontPath="fonts/Roboto-Light.ttf"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/list_card_padding_bottom"
-        android:paddingLeft="@dimen/list_card_padding_left"
-        android:paddingRight="@dimen/list_card_padding_right"
-        android:paddingTop="@dimen/list_card_padding_top"
-        android:textColor="?android:attr/textColorSecondary"
-        android:textSize="@dimen/text_size_subtitle" />
-
-</LinearLayout>
+    android:orientation="horizontal"
+    android:background="?attr/colorPrimary"
+    android:padding="@dimen/list_card_padding_bottom"
+    android:textColor="@android:color/white"
+    android:textSize="@dimen/text_size_subtitle"
+    tools:text="this is the header text" />
 
