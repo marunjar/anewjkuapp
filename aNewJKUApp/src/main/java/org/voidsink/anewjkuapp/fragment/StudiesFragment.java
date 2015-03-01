@@ -173,7 +173,7 @@ public class StudiesFragment extends BaseFragment implements
         @Override
         public long getHeaderId(int i) {
             Studies studies = getItem(i);
-            if (studies != null && !TextUtils.isEmpty(studies.getUni())) {
+            if (studies != null) {
                 return studies.getUni().hashCode();
             }
             return 0;
