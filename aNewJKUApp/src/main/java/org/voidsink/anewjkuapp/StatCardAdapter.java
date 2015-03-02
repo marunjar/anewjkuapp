@@ -3,7 +3,6 @@ package org.voidsink.anewjkuapp;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -14,17 +13,20 @@ import android.widget.TextView;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LimitLine;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.Legend;
-import com.github.mikephil.charting.utils.LimitLine;
-import com.github.mikephil.charting.utils.XLabels;
-import com.github.mikephil.charting.utils.YLabels;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.renderer.PieChartRenderer;
+import com.github.mikephil.charting.utils.Highlight;
+import com.github.mikephil.charting.utils.PercentFormatter;
 
 import org.voidsink.anewjkuapp.base.BaseArrayAdapter;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
@@ -42,17 +44,15 @@ public class StatCardAdapter extends BaseArrayAdapter<StatCard> {
 
     private static final int ANIMATION_DURATION = 1500;
 
-    private final int mBackgroundColor;
     private final int mTextColorPrimary;
     private final int mTextColorSecondary;
 
     public StatCardAdapter(Context context) {
         super(context, 0);
 
-        TypedArray themeArray = context.getTheme().obtainStyledAttributes(new int[] {android.R.attr.windowBackground, android.R.attr.textColorPrimary, android.R.attr.textColorSecondary});
-        this.mBackgroundColor = themeArray.getColor(0, Color.WHITE);
-        this.mTextColorPrimary = themeArray.getColor(1, Color.BLACK);
-        this.mTextColorSecondary = themeArray.getColor(2, Color.DKGRAY);
+        TypedArray themeArray = context.getTheme().obtainStyledAttributes(new int[]{android.R.attr.textColorPrimary, android.R.attr.textColorSecondary});
+        this.mTextColorPrimary = themeArray.getColor(0, Color.BLACK);
+        this.mTextColorSecondary = themeArray.getColor(1, Color.DKGRAY);
         themeArray.recycle();
     }
 
@@ -162,7 +162,9 @@ public class StatCardAdapter extends BaseArrayAdapter<StatCard> {
                 rangeTopMax = minEcts + 5;
             }
 
-            views.barChart.setYRange(0, (float) rangeTopMax, true);
+            YAxis yAxis = views.barChart.getAxisLeft();
+            yAxis.setAxisMinValue(0);
+            yAxis.setAxisMaxValue((float) rangeTopMax);
 
             ArrayList<BarEntry> yVals = new ArrayList<>();
             ArrayList<String> captions = new ArrayList<>();
@@ -175,17 +177,22 @@ public class StatCardAdapter extends BaseArrayAdapter<StatCard> {
                     mOpenEcts, Grade.G3.getColor());
 
             BarDataSet dataSet = new BarDataSet(yVals, "");
+
             dataSet.setColors(colors);
+            dataSet.setValueTextColor(mTextColorPrimary);
+            dataSet.setValueFormatter(new PercentFormatter());
+
             BarData barData = new BarData(captions, dataSet);
 
             if (minEcts > 0) {
-                LimitLine limitLine = new LimitLine((float) minEcts);
-                limitLine.setDrawValue(true);
+                LimitLine limitLine = new LimitLine((float) minEcts, String.format("%.2f ECTS", minEcts));
                 limitLine.setLineColor(Color.RED);
+                limitLine.setTextColor(Color.RED);
+                limitLine.setTextSize(11);
                 limitLine.enableDashedLine(20, 10, 0);
                 limitLine.setLineWidth(2);
-                limitLine.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT);
-                barData.addLimitLine(limitLine);
+                limitLine.setLabelPosition(LimitLine.LimitLabelPosition.POS_RIGHT);
+                yAxis.addLimitLine(limitLine);
             }
 
             views.barChart.setData(barData);
@@ -193,6 +200,7 @@ public class StatCardAdapter extends BaseArrayAdapter<StatCard> {
             views.barChart.highlightValues(null);
             views.barChart.getLegend().setTextColor(mTextColorPrimary);
             views.barChart.getLegend().setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
+            views.barChart.getLegend().setEnabled(false);
             views.barChart.animateY(ANIMATION_DURATION);
         }
         if (views.pieChart.getVisibility() == View.VISIBLE) {
@@ -210,7 +218,11 @@ public class StatCardAdapter extends BaseArrayAdapter<StatCard> {
                     mOpenEcts, mOpenEcts, Grade.G3.getColor());
 
             PieDataSet dataSet = new PieDataSet(yVals, "");
+
             dataSet.setColors(colors);
+            dataSet.setValueTextColor(mTextColorPrimary);
+            dataSet.setValueFormatter(new PercentFormatter());
+
             PieData pieData = new PieData(captions, dataSet);
 
             views.pieChart.setData(pieData);
@@ -225,7 +237,7 @@ public class StatCardAdapter extends BaseArrayAdapter<StatCard> {
     private void addSerieToBarChart(List<BarEntry> values, List<String> captions, List<Integer> colors, String category,
                                     double value, int color) {
         if (value > 0) {
-            values.add(new BarEntry((float)value, values.size()));
+            values.add(new BarEntry((float) value, values.size()));
             captions.add(category);
             colors.add(color);
         }
@@ -374,10 +386,16 @@ public class StatCardAdapter extends BaseArrayAdapter<StatCard> {
                 rangeTopMax = 100;
             }
 
-            views.barChart.setYRange(0, (float)rangeTopMax, true);
+            YAxis yAxis = views.barChart.getAxisLeft();
+            yAxis.setAxisMinValue(0);
+            yAxis.setAxisMaxValue((float) rangeTopMax);
 
             BarDataSet dataSet = new BarDataSet(yVals, "");
+
             dataSet.setColors(colors);
+            dataSet.setValueTextColor(mTextColorPrimary);
+            dataSet.setValueFormatter(new PercentFormatter());
+
             BarData barData = new BarData(captions, dataSet);
 
             views.barChart.setData(barData);
@@ -385,6 +403,7 @@ public class StatCardAdapter extends BaseArrayAdapter<StatCard> {
             views.barChart.highlightValues(null);
             views.barChart.getLegend().setTextColor(mTextColorPrimary);
             views.barChart.getLegend().setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
+            views.barChart.getLegend().setEnabled(false);
             views.barChart.animateY(ANIMATION_DURATION);
         }
         if (views.pieChart.getVisibility() == View.VISIBLE) {
@@ -425,7 +444,11 @@ public class StatCardAdapter extends BaseArrayAdapter<StatCard> {
             }
 
             PieDataSet dataSet = new PieDataSet(yVals, "");
+
             dataSet.setColors(colors);
+            dataSet.setValueTextColor(mTextColorPrimary);
+            dataSet.setValueFormatter(new PercentFormatter());
+
             PieData pieData = new PieData(captions, dataSet);
 
             views.pieChart.setData(pieData);
@@ -450,41 +473,48 @@ public class StatCardAdapter extends BaseArrayAdapter<StatCard> {
     }
 
     private void initBarChart(BarChart barChart) {
+        initBaseChart(barChart);
+
         barChart.setPinchZoom(false);
         barChart.setHighlightEnabled(false);
-        barChart.setDescription("");
-        barChart.setDrawLegend(false);
         barChart.setDrawBarShadow(false);
-        barChart.setDrawYValues(false);
+        barChart.setDrawValueAboveBar(false);
 
-        XLabels xl = barChart.getXLabels();
-        xl.setPosition(XLabels.XLabelPosition.BOTTOM);
-        xl.setCenterXLabelText(true);
+        XAxis xl = barChart.getXAxis();
+        xl.setPosition(XAxis.XAxisPosition.BOTTOM);
         xl.setTextColor(mTextColorPrimary);
 
-        YLabels yl = barChart.getYLabels();
-        yl.setTextColor(mTextColorPrimary);
+        barChart.getAxisRight().setEnabled(false);
+
+        YAxis yAxis = barChart.getAxisLeft();
+        yAxis.setTextColor(mTextColorPrimary);
+        yAxis.setGridColor(mTextColorSecondary);
+        yAxis.setDrawGridLines(true);
+
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setTextColor(mTextColorPrimary);
+        xAxis.setGridColor(mTextColorSecondary);
+        xAxis.setDrawGridLines(true);
 
         barChart.setDrawGridBackground(false);
-        barChart.setGridColor(mTextColorSecondary);
 //        barChart.setDrawBorder(true);
 //        barChart.setBorderColor(mTextColorSecondary);
     }
 
     private void initPieChart(final PieChart pieChart) {
-        pieChart.setDrawXValues(false);
+        initBaseChart(pieChart);
+
+        pieChart.setDrawSliceText(false);
         pieChart.setUsePercentValues(true);
-        pieChart.setDescription("");
         pieChart.setHoleRadius(45);
         pieChart.setTransparentCircleRadius(50);
-        pieChart.setHoleColor(mBackgroundColor);
+        pieChart.setHoleColorTransparent(true);
         pieChart.setRotationEnabled(false);
         pieChart.setRotationAngle(180);
-        pieChart.setValueTextColor(mTextColorPrimary);
 
         pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
-            public void onValueSelected(Entry entry, int i) {
+            public void onValueSelected(Entry entry, int i, Highlight h) {
                 if (entry instanceof EctsEntry) {
                     float ects = ((EctsEntry) entry).getEcts();
                     if (ects > 0) {
@@ -500,10 +530,13 @@ public class StatCardAdapter extends BaseArrayAdapter<StatCard> {
             }
         });
 
-        Paint mCenterTextPaint = pieChart.getPaint(Chart.PAINT_CENTER_TEXT);
-        if (mCenterTextPaint != null) {
-            mCenterTextPaint.setColor(mTextColorPrimary);
+        if (pieChart.getRenderer() != null) {
+            ((PieChartRenderer) pieChart.getRenderer()).getPaintCenterText().setColor(mTextColorPrimary);
         }
+    }
+
+    private void initBaseChart(Chart chart) {
+        chart.setDescription("");
     }
 
     @Override
