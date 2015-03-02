@@ -3,6 +3,7 @@ package org.voidsink.anewjkuapp.rss;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,86 +16,70 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.RssFeedEntryActivity;
-import org.voidsink.anewjkuapp.base.GridWithHeaderAdapter;
-import org.voidsink.anewjkuapp.base.ListWithHeaderAdapter;
-import org.voidsink.anewjkuapp.calendar.CalendarListEvent;
-import org.voidsink.anewjkuapp.calendar.CalendarListItem;
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
+import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.rss.lib.FeedEntry;
 import org.voidsink.anewjkuapp.utils.Consts;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.List;
 
-/**
- * Created by paul on 23.11.2014.
- */
-public class RssListAdapter extends GridWithHeaderAdapter<FeedEntry> {
+public class RssListAdapter extends RecyclerArrayAdapter<FeedEntry, RssListAdapter.FeedEntryViewHolder> {
 
-    private static final DateFormat df = SimpleDateFormat.getDateInstance();
     private static final String TAG = RssListAdapter.class.getSimpleName();
     private static final String EMPTY_IMAGE_URL = "http://oeh.jku.at/sites/default/files/styles/generic_thumbnail_medium/public/default_images/defaultimage-article_0.png";
 
-    private final LayoutInflater inflater;
     private final DisplayImageOptions mOptions;
+    private final Context mContext;
+    private OnItemClickListener mItemClickListener;
 
-    public RssListAdapter(Context context, DisplayImageOptions options) {
-        super(context, R.layout.rss_feed_item);
+    public interface OnItemClickListener {
+        public void onItemClick(View view, int viewType, int position);
+    }
 
-        this.inflater = LayoutInflater.from(context);
+    public void SetOnItemClickListener(final OnItemClickListener mItemClickListener) {
+        this.mItemClickListener = mItemClickListener;
+    }
+
+    public RssListAdapter(Context context, List<FeedEntry> dataset, DisplayImageOptions options) {
+        super();
+
         this.mOptions = options;
+        this.mContext = context;
+
+        SetOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int viewType, int position) {
+                FeedEntry feedEntry = getItem(position);
+                startFeedDetailView(feedEntry);
+            }
+        });
+
+        addAll(dataset);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View view = null;
-        FeedEntry item = this.getItem(position);
-        if (item != null) {
-            view = getFeedEntryView(convertView, parent, item);
-        } else {
-            view = null;
-        }
-        return view;
-    }
+    public FeedEntryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        final View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.rss_feed_item, parent, false);
+        final FeedEntryViewHolder vh = new FeedEntryViewHolder(v);
 
-    @Override
-    public boolean isEnabled(int position) {
-        return getItem(position) != null;
-    }
-
-    private View getFeedEntryView(View convertView, ViewGroup parent, FeedEntry item) {
-        FeedEntryHolder feedEntryHolder = null;
-        final FeedEntry entry = item;
-
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.rss_feed_item, parent,
-                    false);
-
-            //Set onClick listener
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startFeedDetailView(entry);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mItemClickListener != null) {
+                    mItemClickListener.onItemClick(v, vh.getItemViewType(), vh.getPosition());
                 }
-            });
+            }
+        });
 
-            feedEntryHolder = new FeedEntryHolder();
+        return vh;
+    }
 
-            feedEntryHolder.title = (TextView) convertView.findViewById(R.id.rss_feed_item_title);
-            feedEntryHolder.description = (TextView) convertView.findViewById(R.id.rss_feed_item_description);
-            feedEntryHolder.image = (ImageView) convertView.findViewById(R.id.rss_feed_item_image);
+    @Override
+    public void onBindViewHolder(FeedEntryViewHolder holder, int position) {
 
-            convertView.setTag(feedEntryHolder);
-        }
+        FeedEntry item = getItem(position);
 
-        if (feedEntryHolder == null) {
-            feedEntryHolder = (FeedEntryHolder) convertView.getTag();
-        }
-
-        feedEntryHolder.title.setText(item.getTitle());
-        feedEntryHolder.description.setText(item.getShortDescription());
+        holder.mTitle.setText(item.getTitle());
+        holder.mDescription.setText(item.getShortDescription());
 
         ImageLoader imageLoader = ImageLoader.getInstance();
 
@@ -104,59 +89,40 @@ public class RssListAdapter extends GridWithHeaderAdapter<FeedEntry> {
             if (mImage != null &&
                     !mImage.getPath().contains("contrib/service_links/images/") &&
                     !mImage.getPath().contains("file/icons/")) {
-                imageLoader.displayImage(mImage.toString(), (ImageView) feedEntryHolder.image, mOptions);
+                imageLoader.displayImage(mImage.toString(), holder.mImage, mOptions);
             } else {
-                imageLoader.displayImage(EMPTY_IMAGE_URL, (ImageView) feedEntryHolder.image, mOptions);
+                imageLoader.displayImage(EMPTY_IMAGE_URL, holder.mImage, mOptions);
             }
         } catch (Exception e) {
             Log.e(TAG, "displayImage failed", e);
         }
-
-        return convertView;
     }
 
-    private static class FeedEntryHolder {
-        private TextView title;
-        private TextView description;
-        public ImageView image;
-    }
+    // Provide a reference to the views for each data item
+    // Complex data items may need more than one view per item, and
+    // you provide access to all the views for a data item in a view holder
+    public static class FeedEntryViewHolder extends RecyclerView.ViewHolder {
+        // each data item is just a string in this case
+        public final TextView mTitle;
+        public final TextView mDescription;
+        public final ImageView mImage;
 
-    @Override
-    public View getHeaderView(int position, View convertView, ViewGroup viewGroup) {
-        // Build your custom HeaderView
-        LayoutInflater mInflater = LayoutInflater.from(getContext());
-        final View headerView = mInflater.inflate(R.layout.list_header, null);
+        public FeedEntryViewHolder(View v) {
+            super(v);
 
-        final TextView tvHeaderTitle = (TextView) headerView.findViewById(R.id.list_header_text);
-        FeedEntry card = getItem(position);
-        Date date = card.getPubDate();
-        if (date != null) {
-            tvHeaderTitle.setText(DateFormat.getDateInstance().format(date));
+            mTitle = (TextView) v.findViewById(R.id.rss_feed_item_title);
+            mDescription = (TextView) v.findViewById(R.id.rss_feed_item_description);
+            mImage = (ImageView) v.findViewById(R.id.rss_feed_item_image);
         }
-        return headerView;
-    }
-
-    @Override
-    public long getHeaderId(int position) {
-        FeedEntry card = getItem(position);
-        Date date = card.getPubDate();
-        if (date != null) {
-            Calendar cal = Calendar.getInstance(); // locale-specific
-            cal.setTimeInMillis(date.getTime());
-            cal.set(Calendar.HOUR_OF_DAY, 0);
-            cal.set(Calendar.MINUTE, 0);
-            cal.set(Calendar.SECOND, 0);
-            cal.set(Calendar.MILLISECOND, 0);
-            return cal.getTimeInMillis();
-        }
-        return 0;
     }
 
     private void startFeedDetailView(FeedEntry entry) {
-        Intent i = new Intent(getContext(), RssFeedEntryActivity.class);
+        if (entry != null) {
+            Intent i = new Intent(mContext, RssFeedEntryActivity.class);
 
-        i.putExtra(Consts.ARG_FEED_ENTRY, entry);
+            i.putExtra(Consts.ARG_FEED_ENTRY, entry);
 
-        getContext().startActivity(i);
+            mContext.startActivity(i);
+        }
     }
 }

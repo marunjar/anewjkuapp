@@ -1,6 +1,7 @@
 package org.voidsink.anewjkuapp;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -8,158 +9,83 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.voidsink.anewjkuapp.base.ListWithHeaderAdapter;
-import org.voidsink.anewjkuapp.calendar.CalendarUtils;
+import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
+
+import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class ExamListAdapter extends ListWithHeaderAdapter<ExamListExam> {
+public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamListAdapter.ExamViewHolder> implements StickyRecyclerHeadersAdapter<ExamListAdapter.DateHeaderHolder> {
 
-    private static final DateFormat df = SimpleDateFormat.getDateInstance();
+    private final Context mContext;
 
     public ExamListAdapter(Context context) {
-        super(context, R.layout.exam_list_item);
+        super();
+
+        this.mContext = context;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ExamListExam item = this.getItem(position);
-        if (item == null) {
-            return null;
-        }
-        return getExamView(convertView, parent, item);
+    public ExamViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.exam_list_item, parent, false);
+
+        return new ExamViewHolder(v);
     }
 
-    private View getExamView(View convertView, ViewGroup parent,
-                             ExamListExam item) {
-        ExamListExamHolder eventItemHolder = null;
-        final ExamListExam exam = item;
+    @Override
+    public void onBindViewHolder(ExamViewHolder holder, int position) {
+        final ExamListExam exam = getItem(position);
 
-        if (convertView == null) {
-            final LayoutInflater mInflater = LayoutInflater.from(getContext());
-            convertView = mInflater.inflate(R.layout.exam_list_item, parent,
-                    false);
-
-            eventItemHolder = new ExamListExamHolder();
-
-            eventItemHolder.toolbar = (Toolbar) convertView.findViewById(R.id.exam_list_item_toolbar);
-            eventItemHolder.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+        if (exam != null) {
+            holder.mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
                     switch (menuItem.getItemId()) {
                         case R.id.menu_exam_register: {
-                            KusssHandler.getInstance().showExamInBrowser(getContext(), exam.getLvaNr());
+                            KusssHandler.getInstance().showExamInBrowser(mContext, exam.getLvaNr());
                             return true;
                         }
                     }
                     return false;
                 }
             });
-            eventItemHolder.toolbar.inflateMenu(R.menu.exam_card_popup_menu);
 
-            eventItemHolder.title = (TextView) convertView
-                    .findViewById(R.id.exam_list_item_title);
-            eventItemHolder.description = (TextView) convertView
-                    .findViewById(R.id.exam_list_item_description);
-            eventItemHolder.info = (TextView) convertView
-                    .findViewById(R.id.exam_list_item_info);
-            eventItemHolder.lvaNr = (TextView) convertView
-                    .findViewById(R.id.exam_list_item_lvanr);
-            eventItemHolder.term = (TextView) convertView
-                    .findViewById(R.id.exam_list_item_term);
-            eventItemHolder.skz = (TextView) convertView
-                    .findViewById(R.id.exam_list_item_skz);
-            eventItemHolder.time = (TextView) convertView
-                    .findViewById(R.id.exam_list_item_time);
-            eventItemHolder.location = (TextView) convertView
-                    .findViewById(R.id.exam_list_item_location);
-            eventItemHolder.chip = (View) convertView
-                    .findViewById(R.id.empty_chip_background);
-
-            convertView.setTag(eventItemHolder);
-        }
-
-        if (eventItemHolder == null) {
-            eventItemHolder = (ExamListExamHolder) convertView.getTag();
-        }
-
-        if (eventItemHolder.chip != null) {
-            if (exam.mark()) {
-                eventItemHolder.chip
-                        .setBackgroundColor(CalendarUtils.COLOR_DEFAULT_EXAM);
+            holder.mTitle.setText(exam.getTitle());
+            if (!exam.getDescription().isEmpty()) {
+                holder.mDescription.setText(exam.getDescription());
+                holder.mDescription.setVisibility(View.VISIBLE);
             } else {
-                eventItemHolder.chip
-                        .setBackgroundColor(CalendarUtils.COLOR_DEFAULT_LVA);
+                holder.mDescription.setVisibility(View.GONE);
             }
+            if (!exam.getInfo().isEmpty()) {
+                holder.mInfo.setText(exam.getInfo());
+                holder.mInfo.setVisibility(View.VISIBLE);
+            } else {
+                holder.mInfo.setVisibility(View.GONE);
+            }
+            holder.mLvaNr.setText(exam.getLvaNr());
+            holder.mTerm.setText(exam.getTerm());
+
+            if (exam.getSkz() > 0) {
+                holder.mSkz.setText(String.format("[%d]", exam.getSkz()));
+                holder.mSkz.setVisibility(View.VISIBLE);
+            } else {
+                holder.mSkz.setVisibility(View.GONE);
+            }
+            holder.mTime.setText(exam.getTime());
+            holder.mLocation.setText(exam.getLocation());
         }
-
-        eventItemHolder.title.setText(exam.getTitle());
-        if (!exam.getDescription().isEmpty()) {
-            eventItemHolder.description.setText(exam.getDescription());
-            eventItemHolder.description.setVisibility(View.VISIBLE);
-        } else {
-            eventItemHolder.description.setVisibility(View.GONE);
-        }
-        if (!exam.getInfo().isEmpty()) {
-            eventItemHolder.info.setText(exam.getInfo());
-            eventItemHolder.info.setVisibility(View.VISIBLE);
-        } else {
-            eventItemHolder.info.setVisibility(View.GONE);
-        }
-        eventItemHolder.lvaNr.setText(exam.getLvaNr());
-        eventItemHolder.term.setText(exam.getTerm());
-
-        if (exam.getSkz() > 0) {
-            eventItemHolder.skz.setText(String.format("[%d]", exam.getSkz()));
-            eventItemHolder.skz.setVisibility(View.VISIBLE);
-        } else {
-            eventItemHolder.skz.setVisibility(View.GONE);
-        }
-        eventItemHolder.time.setText(exam.getTime());
-        eventItemHolder.location.setText(exam.getLocation());
-
-        return convertView;
-    }
-
-    @Override
-    public int getViewTypeCount() {
-        return 1;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return 0;
-    }
-
-    @Override
-    public boolean isEnabled(int position) {
-        return false;
-    }
-
-    @Override
-    public View getHeaderView(int position, View convertView, ViewGroup viewGroup) {
-        // Build your custom HeaderView
-        final LayoutInflater mInflater = LayoutInflater.from(getContext());
-        final View headerView = mInflater.inflate(R.layout.list_header, null);
-        final TextView tvHeaderTitle = (TextView) headerView.findViewById(R.id.list_header_text);
-
-        ExamListExam exam = getItem(position);
-        if (exam != null) {
-            tvHeaderTitle.setText(DateFormat.getDateInstance().format(exam.getDate()));
-        }
-
-        return headerView;
     }
 
     @Override
     public long getHeaderId(int position) {
         ExamListExam exam = getItem(position);
+
         if (exam != null) {
             Calendar cal = Calendar.getInstance(); // locale-specific
-            cal.setTimeInMillis(exam.getDate().getTime());
+            cal.setTime(exam.getDate());
             cal.set(Calendar.HOUR_OF_DAY, 0);
             cal.set(Calendar.MINUTE, 0);
             cal.set(Calendar.SECOND, 0);
@@ -169,16 +95,61 @@ public class ExamListAdapter extends ListWithHeaderAdapter<ExamListExam> {
         return 0;
     }
 
-    private static class ExamListExamHolder {
-        public TextView term;
-        public View chip;
-        public TextView location;
-        public TextView info;
-        public TextView description;
-        public TextView time;
-        public Toolbar toolbar;
-        private TextView title;
-        private TextView lvaNr;
-        private TextView skz;
+    @Override
+    public DateHeaderHolder onCreateHeaderViewHolder(ViewGroup viewGroup) {
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_header, viewGroup, false);
+        return new DateHeaderHolder(v);
     }
+
+    @Override
+    public void onBindHeaderViewHolder(DateHeaderHolder dateHeaderHolder, int position) {
+        ExamListExam exam = getItem(position);
+
+        if (exam != null) {
+            dateHeaderHolder.mText.setText(DateFormat.getDateInstance().format(exam.getDate()));
+        } else {
+            dateHeaderHolder.mText.setText("");
+        }
+    }
+
+    public static class ExamViewHolder extends RecyclerView.ViewHolder {
+        public final Toolbar mToolbar;
+        public final View mChip;
+        public final TextView mLocation;
+        public final TextView mTime;
+        public final TextView mSkz;
+        public final TextView mTerm;
+        public final TextView mLvaNr;
+        public final TextView mInfo;
+        public final TextView mDescription;
+        public final TextView mTitle;
+
+        public ExamViewHolder(View itemView) {
+            super(itemView);
+
+            mToolbar = (Toolbar) itemView.findViewById(R.id.exam_list_item_toolbar);
+            mToolbar.inflateMenu(R.menu.exam_card_popup_menu);
+
+            mTitle = (TextView) itemView.findViewById(R.id.exam_list_item_title);
+            mDescription = (TextView) itemView.findViewById(R.id.exam_list_item_description);
+            mInfo = (TextView) itemView.findViewById(R.id.exam_list_item_info);
+            mLvaNr = (TextView) itemView.findViewById(R.id.exam_list_item_lvanr);
+            mTerm = (TextView) itemView.findViewById(R.id.exam_list_item_term);
+            mSkz = (TextView) itemView.findViewById(R.id.exam_list_item_skz);
+            mTime = (TextView) itemView.findViewById(R.id.exam_list_item_time);
+            mLocation = (TextView) itemView.findViewById(R.id.exam_list_item_location);
+            mChip = itemView.findViewById(R.id.empty_chip_background);
+        }
+    }
+
+    protected static class DateHeaderHolder extends RecyclerView.ViewHolder {
+        public final TextView mText;
+
+        public DateHeaderHolder(View itemView) {
+            super(itemView);
+
+            mText = (TextView) itemView.findViewById(R.id.list_header_text);
+        }
+    }
+
 }

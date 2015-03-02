@@ -1,119 +1,57 @@
 package org.voidsink.anewjkuapp;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.voidsink.anewjkuapp.base.ListWithHeaderAdapter;
+import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
+
+import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.utils.UIUtils;
 
 import java.text.DateFormat;
 
-public class GradeListAdapter extends ListWithHeaderAdapter<ExamGrade> {
+public class GradeListAdapter extends RecyclerArrayAdapter<ExamGrade, GradeListAdapter.GradeViewHolder> implements StickyRecyclerHeadersAdapter<GradeListAdapter.GradeHeaderHolder> {
+
+    private final Context mContext;
 
     public GradeListAdapter(Context context) {
-        super(context, R.layout.grade_list_item);
+        super();
+        this.mContext = context;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ExamGrade item = this.getItem(position);
-        if (item == null) {
-            return null;
-        }
-        return getGradeView(convertView, parent, item);
-    }
-
-    private View getGradeView(View convertView, ViewGroup parent,
-                              ExamGrade item) {
-        GradeListGradeHolder gradeItemHolder = null;
-
-        if (convertView == null) {
-            final LayoutInflater mInflater = LayoutInflater.from(getContext());
-
-            convertView = mInflater.inflate(R.layout.grade_list_item, parent,
-                    false);
-            gradeItemHolder = new GradeListGradeHolder();
-            gradeItemHolder.title = (TextView) convertView
-                    .findViewById(R.id.grade_list_grade_title);
-            gradeItemHolder.lvaNr = (TextView) convertView
-                    .findViewById(R.id.grade_list_grade_lvanr);
-            gradeItemHolder.term = (TextView) convertView
-                    .findViewById(R.id.grade_list_grade_term);
-            gradeItemHolder.skz = (TextView) convertView
-                    .findViewById(R.id.grade_list_grade_skz);
-            gradeItemHolder.date = (TextView) convertView
-                    .findViewById(R.id.grade_list_grade_date);
-            gradeItemHolder.grade = (TextView) convertView
-                    .findViewById(R.id.grade_list_grade_grade);
-            gradeItemHolder.chipBack = (View) convertView
-                    .findViewById(R.id.grade_chip);
-            gradeItemHolder.chipInfo = (TextView) convertView.findViewById(R.id.grade_chip_info);
-            gradeItemHolder.chipGrade = (TextView) convertView.findViewById(R.id.grade_chip_grade);
-
-            convertView.setTag(gradeItemHolder);
-        }
-
-        if (gradeItemHolder == null) {
-            gradeItemHolder = (GradeListGradeHolder) convertView.getTag();
-        }
-
-        gradeItemHolder.title.setText(item.getTitle());
-
-        UIUtils.setTextAndVisibility(gradeItemHolder.lvaNr, item.getLvaNr());
-        UIUtils.setTextAndVisibility(gradeItemHolder.term, item.getTerm());
-
-        if (item.getSkz() > 0) {
-            gradeItemHolder.skz.setText(String.format("[%d]", item.getSkz()));
-            gradeItemHolder.skz.setVisibility(View.VISIBLE);
-        } else {
-            gradeItemHolder.skz.setVisibility(View.GONE);
-        }
-
-        gradeItemHolder.chipBack.setBackgroundColor(UIUtils.getChipGradeColor(item));
-        gradeItemHolder.chipGrade.setText(UIUtils.getChipGradeText(item));
-        gradeItemHolder.chipInfo.setText(UIUtils.getChipGradeEcts(item.getEcts()));
-
-        final DateFormat df = DateFormat.getDateInstance();
-
-        gradeItemHolder.date.setText(df.format(item.getDate()));
-        gradeItemHolder.grade.setText(getContext().getString(item.getGrade()
-                .getStringResID()));
-
-        return convertView;
+    public GradeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.grade_list_item, parent, false);
+        return new GradeViewHolder(v);
     }
 
     @Override
-    public int getViewTypeCount() {
-        return 1;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return 0;
-    }
-
-    @Override
-    public boolean isEnabled(int position) {
-        return false;
-    }
-
-    @Override
-    public View getHeaderView(int position, View convertView, ViewGroup viewGroup) {
-        // Build your custom HeaderView
-        LayoutInflater mInflater = LayoutInflater.from(getContext());
-        final View headerView = mInflater.inflate(R.layout.list_header, null);
-        final TextView tvHeaderTitle = (TextView) headerView.findViewById(R.id.list_header_text);
-
+    public void onBindViewHolder(GradeViewHolder holder, int position) {
         ExamGrade grade = getItem(position);
-        if (grade != null) {
-            tvHeaderTitle.setText(getContext().getString(grade.getGradeType().getStringResID()));
+        holder.mTitle.setText(grade.getTitle());
 
+        UIUtils.setTextAndVisibility(holder.mLvaNr, grade.getLvaNr());
+        UIUtils.setTextAndVisibility(holder.mTerm, grade.getTerm());
+
+        if (grade.getSkz() > 0) {
+            holder.mSkz.setText(String.format("[%d]", grade.getSkz()));
+            holder.mSkz.setVisibility(View.VISIBLE);
+        } else {
+            holder.mSkz.setVisibility(View.GONE);
         }
-        return headerView;
+
+        holder.mChipBack.setBackgroundColor(UIUtils.getChipGradeColor(grade));
+        holder.mChipGrade.setText(UIUtils.getChipGradeText(grade));
+        holder.mChipInfo.setText(UIUtils.getChipGradeEcts(grade.getEcts()));
+
+        holder.mDate.setText(DateFormat.getDateInstance().format(grade.getDate()));
+        holder.mGrade.setText(mContext.getString(grade.getGrade()
+                .getStringResID()));
     }
 
     @Override
@@ -125,15 +63,54 @@ public class GradeListAdapter extends ListWithHeaderAdapter<ExamGrade> {
         return 0;
     }
 
-    private static class GradeListGradeHolder {
-        public TextView grade;
-        public TextView date;
-        public TextView term;
-        public View chipBack;
-        public TextView chipInfo;
-        public TextView chipGrade;
-        private TextView title;
-        private TextView lvaNr;
-        private TextView skz;
+    @Override
+    public GradeHeaderHolder onCreateHeaderViewHolder(ViewGroup viewGroup) {
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_header, viewGroup, false);
+        return new GradeHeaderHolder(v);
+    }
+
+    @Override
+    public void onBindHeaderViewHolder(GradeHeaderHolder gradeHeaderHolder, int position) {
+        ExamGrade grade = getItem(position);
+        if (grade != null) {
+            gradeHeaderHolder.mText.setText(mContext.getString(grade.getGradeType().getStringResID()));
+
+        }
+    }
+
+    public static class GradeViewHolder extends RecyclerView.ViewHolder {
+        public final TextView mTitle;
+        public final TextView mGrade;
+        public final TextView mLvaNr;
+        public final TextView mTerm;
+        public final TextView mSkz;
+        public final TextView mDate;
+        public final View mChipBack;
+        public final TextView mChipGrade;
+        public final TextView mChipInfo;
+
+        public GradeViewHolder(View itemView) {
+            super(itemView);
+
+            mTitle = (TextView) itemView.findViewById(R.id.grade_list_grade_title);
+            mLvaNr = (TextView) itemView.findViewById(R.id.grade_list_grade_lvanr);
+            mTerm = (TextView) itemView.findViewById(R.id.grade_list_grade_term);
+            mSkz = (TextView) itemView.findViewById(R.id.grade_list_grade_skz);
+            mDate = (TextView) itemView.findViewById(R.id.grade_list_grade_date);
+            mGrade = (TextView) itemView.findViewById(R.id.grade_list_grade_grade);
+            mChipBack = itemView.findViewById(R.id.grade_chip);
+            mChipInfo = (TextView) itemView.findViewById(R.id.grade_chip_info);
+            mChipGrade = (TextView) itemView.findViewById(R.id.grade_chip_grade);
+        }
+    }
+
+    protected static class GradeHeaderHolder extends RecyclerView.ViewHolder {
+        public final TextView mText;
+
+        public GradeHeaderHolder(View itemView) {
+            super(itemView);
+
+            mText = (TextView) itemView.findViewById(R.id.list_header_text);
+        }
     }
 }

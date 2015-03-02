@@ -1,116 +1,53 @@
 package org.voidsink.anewjkuapp;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.voidsink.anewjkuapp.base.ListWithHeaderAdapter;
+import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
+
+import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.utils.UIUtils;
 
-public class LvaListAdapter extends ListWithHeaderAdapter<LvaWithGrade> {
+public class LvaListAdapter extends RecyclerArrayAdapter<LvaWithGrade, LvaListAdapter.LvaViewHolder> implements StickyRecyclerHeadersAdapter<LvaListAdapter.LvaHeaderHolder> {
+
+    private final Context mContext;
 
     public LvaListAdapter(Context context) {
-        super(context, 0);
+        super();
+        this.mContext = context;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        LvaWithGrade item = this.getItem(position);
-        if (item == null) {
-            return null;
-        }
-        return getLvaView(convertView, parent, item);
+    public LvaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.lva_list_item, parent, false);
+        return new LvaViewHolder(v);
     }
 
-    public View getLvaView(View convertView, ViewGroup parent,
-                           LvaWithGrade item) {
-        LvaWithGrade lva = item;
-        LvaList2ItemHolder lvaHolder = null;
+    @Override
+    public void onBindViewHolder(LvaViewHolder holder, int position) {
+        LvaWithGrade lva = getItem(position);
 
-        if (convertView == null) {
-            final LayoutInflater mInflater = LayoutInflater.from(getContext());
-            convertView = mInflater.inflate(R.layout.lva_list_item, parent,
-                    false);
-            lvaHolder = new LvaList2ItemHolder();
-
-            lvaHolder.title = (TextView) convertView.findViewById(R.id.lva_list2_item_title);
-            lvaHolder.lvaNr = (TextView) convertView.findViewById(R.id.lva_list2_item_lvanr);
-            lvaHolder.skz = (TextView) convertView.findViewById(R.id.lva_list2_item_skz);
-            lvaHolder.code = (TextView) convertView.findViewById(R.id.lva_list2_item_code);
-            lvaHolder.teacher = (TextView) convertView.findViewById(R.id.lva_list2_item_teacher);
-
-            lvaHolder.chipBack = (View) convertView.findViewById(R.id.grade_chip);
-            lvaHolder.chipEcts = (TextView) convertView.findViewById(R.id.grade_chip_info);
-            lvaHolder.chipGrade = (TextView) convertView.findViewById(R.id.grade_chip_grade);
-
-            convertView.setTag(lvaHolder);
-        }
-
-        if (lvaHolder == null) {
-            lvaHolder = (LvaList2ItemHolder) convertView.getTag();
-        }
-
-        lvaHolder.title.setText(lva.getLva().getTitle());
-        UIUtils.setTextAndVisibility(lvaHolder.teacher, lva.getLva().getTeacher());
-        lvaHolder.lvaNr.setText(lva.getLva().getLvaNr());
+        holder.mTitle.setText(lva.getLva().getTitle());
+        UIUtils.setTextAndVisibility(holder.mTeacher, lva.getLva().getTeacher());
+        holder.mLvaNr.setText(lva.getLva().getLvaNr());
         if (lva.getLva().getSKZ() > 0) {
-            lvaHolder.skz.setText(String.format("[%d]", lva.getLva().getSKZ()));
-            lvaHolder.skz.setVisibility(View.VISIBLE);
+            holder.mSkz.setText(String.format("[%d]", lva.getLva().getSKZ()));
+            holder.mSkz.setVisibility(View.VISIBLE);
         } else {
-            lvaHolder.skz.setVisibility(View.GONE);
+            holder.mSkz.setVisibility(View.GONE);
         }
-        lvaHolder.code.setText(lva.getLva().getCode());
+        holder.mCode.setText(lva.getLva().getCode());
 
         ExamGrade grade = lva.getGrade();
-        lvaHolder.chipBack.setBackgroundColor(UIUtils.getChipGradeColor(grade));
-        lvaHolder.chipGrade.setText(UIUtils.getChipGradeText(grade));
-        lvaHolder.chipEcts.setText(UIUtils.getChipGradeEcts(lva.getLva().getEcts()));
-
-        return convertView;
-    }
-
-    @Override
-    public int getViewTypeCount() {
-        return 1;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return 0;
-    }
-
-    @Override
-    public boolean isEnabled(int position) {
-        return false;
-    }
-
-    private static class LvaList2ItemHolder {
-        private TextView title;
-        private TextView lvaNr;
-        private TextView skz;
-        private TextView code;
-        private TextView teacher;
-        private View chipBack;
-        private TextView chipEcts;
-        private TextView chipGrade;
-    }
-
-    @Override
-    public View getHeaderView(int position, View convertView, ViewGroup viewGroup) {
-        // Build your custom HeaderView
-        final LayoutInflater mInflater = LayoutInflater.from(getContext());
-        final View headerView = mInflater.inflate(R.layout.list_header, null);
-        final TextView tvHeaderTitle = (TextView) headerView.findViewById(R.id.list_header_text);
-
-        LvaWithGrade lva = getItem(position);
-        if (lva != null) {
-            tvHeaderTitle.setText(getContext().getString(lva.getState().getStringResID()));
-        }
-        return headerView;
+        holder.mChipBack.setBackgroundColor(UIUtils.getChipGradeColor(grade));
+        holder.mChipGrade.setText(UIUtils.getChipGradeText(grade));
+        holder.mChipEcts.setText(UIUtils.getChipGradeEcts(lva.getLva().getEcts()));
     }
 
     @Override
@@ -122,4 +59,51 @@ public class LvaListAdapter extends ListWithHeaderAdapter<LvaWithGrade> {
         return 0;
     }
 
+    @Override
+    public LvaHeaderHolder onCreateHeaderViewHolder(ViewGroup viewGroup) {
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_header, viewGroup, false);
+        return new LvaHeaderHolder(v);
+    }
+
+    @Override
+    public void onBindHeaderViewHolder(LvaHeaderHolder lvaHeaderHolder, int position) {
+        LvaWithGrade lva = getItem(position);
+        if (lva != null) {
+            lvaHeaderHolder.mText.setText(mContext.getString(lva.getState().getStringResID()));
+        }
+    }
+
+    protected static class LvaViewHolder extends RecyclerView.ViewHolder {
+        private final TextView mTitle;
+        private final TextView mLvaNr;
+        private final TextView mCode;
+        private final TextView mSkz;
+        private final TextView mTeacher;
+        private final View mChipBack;
+        private final TextView mChipEcts;
+        private final TextView mChipGrade;
+
+        public LvaViewHolder(View itemView) {
+            super(itemView);
+
+            mTitle = (TextView) itemView.findViewById(R.id.lva_list2_item_title);
+            mLvaNr = (TextView) itemView.findViewById(R.id.lva_list2_item_lvanr);
+            mSkz = (TextView) itemView.findViewById(R.id.lva_list2_item_skz);
+            mCode = (TextView) itemView.findViewById(R.id.lva_list2_item_code);
+            mTeacher = (TextView) itemView.findViewById(R.id.lva_list2_item_teacher);
+
+            mChipBack = itemView.findViewById(R.id.grade_chip);
+            mChipEcts = (TextView) itemView.findViewById(R.id.grade_chip_info);
+            mChipGrade = (TextView) itemView.findViewById(R.id.grade_chip_grade);
+        }
+    }
+
+    protected static class LvaHeaderHolder extends RecyclerView.ViewHolder {
+        public TextView mText;
+
+        public LvaHeaderHolder(View itemView) {
+            super(itemView);
+            mText = (TextView) itemView.findViewById(R.id.list_header_text);
+        }
+    }
 }
