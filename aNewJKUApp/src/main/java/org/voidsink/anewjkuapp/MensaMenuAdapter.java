@@ -1,12 +1,15 @@
 package org.voidsink.anewjkuapp;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.voidsink.anewjkuapp.base.ListWithHeaderAdapter;
+import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
+
+import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.mensa.Mensa;
 import org.voidsink.anewjkuapp.mensa.MensaDay;
 import org.voidsink.anewjkuapp.mensa.MensaMenu;
@@ -16,149 +19,76 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class MensaMenuAdapter extends ListWithHeaderAdapter<MensaItem> {
+public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerView.ViewHolder> implements StickyRecyclerHeadersAdapter<MensaMenuAdapter.MenuHeaderHolder> {
 
     private static final DateFormat df = SimpleDateFormat.getDateInstance();
+
+    private final Context mContext;
     protected boolean mUseDateHeader;
 
-    public MensaMenuAdapter(Context context, int textViewResourceId, boolean useDateHeader) {
-        super(context, textViewResourceId);
-
+    public MensaMenuAdapter(Context context, boolean useDateHeader) {
+        super();
+        this.mContext = context;
         this.mUseDateHeader = useDateHeader;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        MensaItem item = this.getItem(position);
-        if (item == null) {
-            return null;
-        }
-
-        switch (item.getType()) {
-            case MensaItem.TYPE_MENU:
-                return getMenuView(convertView, parent, item);
-            case MensaItem.TYPE_INFO:
-                return getInfoView(convertView, parent, item);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        switch (viewType) {
+            case MensaItem.TYPE_INFO: {
+                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.mensa_info_item, parent, false);
+                return new MensaInfoHolder(v);
+            }
+            case MensaItem.TYPE_MENU: {
+                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.mensa_menu_item, parent, false);
+                return new MenuViewHolder(v);
+            }
             default:
                 return null;
         }
     }
 
-    private View getInfoView(View convertView, ViewGroup parent, MensaItem item) {
-        MensaInfoItem mensaInfoItem = (org.voidsink.anewjkuapp.MensaInfoItem) item;
-        MensaInfoHolder mensaInfoItemHolder = null;
-
-        if (convertView == null ||
-                !(convertView.getTag() instanceof MensaInfoHolder)) {
-            final LayoutInflater mInflater = LayoutInflater.from(getContext());
-            convertView = mInflater.inflate(R.layout.mensa_info_item, parent,
-                    false);
-            mensaInfoItemHolder = new MensaInfoHolder();
-            mensaInfoItemHolder.title = (TextView) convertView
-                    .findViewById(R.id.mensa_info_item_title);
-            mensaInfoItemHolder.descr = (TextView) convertView
-                    .findViewById(R.id.mensa_info_item_descr);
-
-            convertView.setTag(mensaInfoItemHolder);
-        }
-
-        if (mensaInfoItemHolder == null) {
-            mensaInfoItemHolder = (MensaInfoHolder) convertView.getTag();
-        }
-
-        mensaInfoItemHolder.title.setText(mensaInfoItem.getTitle());
-        UIUtils.setTextAndVisibility(mensaInfoItemHolder.descr, mensaInfoItem.getDescr());
-
-        return convertView;
-    }
-
-    private View getMenuView(View convertView, ViewGroup parent, MensaItem item) {
-        MensaMenu mensaMenuItem = (MensaMenu) item;
-        MensaMenuHolder mensaMenuItemHolder = null;
-
-        if (convertView == null || !(convertView.getTag() instanceof MensaMenuHolder)) {
-            final LayoutInflater mInflater = LayoutInflater.from(getContext());
-            convertView = mInflater.inflate(R.layout.mensa_menu_item, parent,
-                    false);
-            mensaMenuItemHolder = new MensaMenuHolder();
-
-            mensaMenuItemHolder.name = (TextView) convertView
-                    .findViewById(R.id.mensa_menu_item_name);
-            mensaMenuItemHolder.soup = (TextView) convertView
-                    .findViewById(R.id.mensa_menu_item_soup);
-            mensaMenuItemHolder.meal = (TextView) convertView
-                    .findViewById(R.id.mensa_menu_item_meal);
-            mensaMenuItemHolder.price = (TextView) convertView
-                    .findViewById(R.id.mensa_menu_item_price);
-            mensaMenuItemHolder.oehBonus = (TextView) convertView
-                    .findViewById(R.id.mensa_menu_item_oeh_bonus);
-
-            convertView.setTag(mensaMenuItemHolder);
-        }
-
-        if (mensaMenuItemHolder == null) {
-            mensaMenuItemHolder = (MensaMenuHolder) convertView.getTag();
-        }
-
-        UIUtils.setTextAndVisibility(mensaMenuItemHolder.name, mensaMenuItem.getName());
-        UIUtils.setTextAndVisibility(mensaMenuItemHolder.soup, mensaMenuItem.getSoup());
-
-        mensaMenuItemHolder.meal.setText(mensaMenuItem.getMeal());
-        if (mensaMenuItem.getPrice() > 0) {
-            mensaMenuItemHolder.price.setText(String.format("%.2f €",
-                    mensaMenuItem.getPrice()));
-            mensaMenuItemHolder.price.setVisibility(View.VISIBLE);
-
-            if (mensaMenuItem.getOehBonus() > 0) {
-                mensaMenuItemHolder.oehBonus.setText(String.format(
-                        "inkl %.2f € ÖH Bonus", mensaMenuItem.getOehBonus()));
-                mensaMenuItemHolder.oehBonus.setVisibility(View.VISIBLE);
-            } else {
-                mensaMenuItemHolder.oehBonus.setVisibility(View.GONE);
-            }
-        } else {
-            mensaMenuItemHolder.price.setVisibility(View.GONE);
-            mensaMenuItemHolder.oehBonus.setVisibility(View.GONE);
-        }
-        return convertView;
-    }
-
     @Override
-    public int getViewTypeCount() {
-        return 2;
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        switch (getItemViewType(position)) {
+            case MensaItem.TYPE_INFO: {
+                MensaInfoItem mensaInfoItem = (MensaInfoItem) getItem(position);
+                ((MensaInfoHolder) holder).mTitle.setText(mensaInfoItem.getTitle());
+                UIUtils.setTextAndVisibility(((MensaInfoHolder) holder).mDescr, mensaInfoItem.getDescr());
+                break;
+            }
+            case MensaItem.TYPE_MENU: {
+                MenuViewHolder mensaMenuItemHolder = (MenuViewHolder) holder;
+                MensaMenu mensaMenuItem = (MensaMenu) getItem(position);
+
+                UIUtils.setTextAndVisibility(mensaMenuItemHolder.mName, mensaMenuItem.getName());
+                UIUtils.setTextAndVisibility(mensaMenuItemHolder.mSoup, mensaMenuItem.getSoup());
+
+                mensaMenuItemHolder.mMeal.setText(mensaMenuItem.getMeal());
+                if (mensaMenuItem.getPrice() > 0) {
+                    mensaMenuItemHolder.mPrice.setText(String.format("%.2f €",
+                            mensaMenuItem.getPrice()));
+                    mensaMenuItemHolder.mPrice.setVisibility(View.VISIBLE);
+
+                    if (mensaMenuItem.getOehBonus() > 0) {
+                        mensaMenuItemHolder.mOehBonus.setText(String.format(
+                                "inkl %.2f € ÖH Bonus", mensaMenuItem.getOehBonus()));
+                        mensaMenuItemHolder.mOehBonus.setVisibility(View.VISIBLE);
+                    } else {
+                        mensaMenuItemHolder.mOehBonus.setVisibility(View.GONE);
+                    }
+                } else {
+                    mensaMenuItemHolder.mPrice.setVisibility(View.GONE);
+                    mensaMenuItemHolder.mOehBonus.setVisibility(View.GONE);
+                }
+                break;
+            }
+        }
     }
 
     @Override
     public int getItemViewType(int position) {
         return this.getItem(position).getType();
-    }
-
-    @Override
-    public boolean isEnabled(int position) {
-        return false;
-    }
-
-    @Override
-    public View getHeaderView(int position, View convertView, ViewGroup viewGroup) {
-        LayoutInflater mInflater = LayoutInflater.from(getContext());
-        View headerView = mInflater.inflate(R.layout.list_header, viewGroup, false);
-
-        MensaItem item = getItem(position);
-        if (item != null) {
-            final TextView tvHeaderTitle = (TextView) headerView.findViewById(R.id.list_header_text);
-            if (mUseDateHeader) {
-                final MensaDay day = item.getDay();
-                if (day != null) {
-                    tvHeaderTitle.setText(df.format(day.getDate()));
-                }
-            } else {
-                Mensa mensa = item.getMensa();
-                if (mensa != null) {
-                    tvHeaderTitle.setText(mensa.getName());
-                }
-            }
-        }
-        return headerView;
     }
 
     @Override
@@ -177,25 +107,77 @@ public class MensaMenuAdapter extends ListWithHeaderAdapter<MensaItem> {
                     return cal.getTimeInMillis();
                 }
             } else {
-                Mensa mensa = item.getMensa();
+                final Mensa mensa = item.getMensa();
                 if (mensa != null) {
-                    return mensa.getName().hashCode();
+                    return (long)mensa.getName().hashCode() + (long)Integer.MAX_VALUE; // header id has to be > 0???
                 }
             }
         }
         return 0;
     }
 
-    private class MensaMenuHolder {
-        public TextView name;
-        public TextView soup;
-        public TextView meal;
-        public TextView price;
-        public TextView oehBonus;
+    @Override
+    public MenuHeaderHolder onCreateHeaderViewHolder(ViewGroup viewGroup) {
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_header, viewGroup, false);
+        return new MenuHeaderHolder(v);
     }
 
-    private class MensaInfoHolder {
-        public TextView title;
-        public TextView descr;
+    @Override
+    public void onBindHeaderViewHolder(MenuHeaderHolder menuHeaderHolder, int position) {
+        MensaItem item = getItem(position);
+        if (item != null) {
+            if (mUseDateHeader) {
+                final MensaDay day = item.getDay();
+                if (day != null) {
+                    menuHeaderHolder.mText.setText(df.format(day.getDate()));
+                }
+            } else {
+                Mensa mensa = item.getMensa();
+                if (mensa != null) {
+                    menuHeaderHolder.mText.setText(mensa.getName());
+                }
+            }
+        }
+    }
+
+    public static class MenuViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView mName;
+        public TextView mSoup;
+        public TextView mMeal;
+        public TextView mPrice;
+        public TextView mOehBonus;
+
+        public MenuViewHolder(View itemView) {
+            super(itemView);
+
+            mName = (TextView) itemView.findViewById(R.id.mensa_menu_item_name);
+            mSoup = (TextView) itemView.findViewById(R.id.mensa_menu_item_soup);
+            mMeal = (TextView) itemView.findViewById(R.id.mensa_menu_item_meal);
+            mPrice = (TextView) itemView.findViewById(R.id.mensa_menu_item_price);
+            mOehBonus = (TextView) itemView.findViewById(R.id.mensa_menu_item_oeh_bonus);
+        }
+    }
+
+    public static class MensaInfoHolder extends RecyclerView.ViewHolder {
+        public TextView mTitle;
+        public TextView mDescr;
+
+        public MensaInfoHolder(View itemView) {
+            super(itemView);
+            mTitle = (TextView) itemView.findViewById(R.id.mensa_info_item_title);
+            mDescr = (TextView) itemView.findViewById(R.id.mensa_info_item_descr);
+        }
+    }
+
+
+    public class MenuHeaderHolder extends RecyclerView.ViewHolder {
+        public TextView mText;
+
+        public MenuHeaderHolder(View itemView) {
+            super(itemView);
+            mText = (TextView) itemView.findViewById(R.id.list_header_text);
+        }
+
     }
 }
