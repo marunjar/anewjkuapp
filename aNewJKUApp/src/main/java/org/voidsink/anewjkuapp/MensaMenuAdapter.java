@@ -107,9 +107,9 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
                     return cal.getTimeInMillis();
                 }
             } else {
-                Mensa mensa = item.getMensa();
+                final Mensa mensa = item.getMensa();
                 if (mensa != null) {
-                    return mensa.getName().hashCode();
+                    return (long)mensa.getName().hashCode() + (long)Integer.MAX_VALUE; // header id has to be > 0???
                 }
             }
         }
