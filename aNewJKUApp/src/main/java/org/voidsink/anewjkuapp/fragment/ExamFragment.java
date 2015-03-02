@@ -33,7 +33,6 @@ import org.voidsink.anewjkuapp.update.ImportExamTask;
 import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
-import org.voidsink.anewjkuapp.view.ListViewWithHeader;
 
 import java.util.ArrayList;
 import java.util.List;
