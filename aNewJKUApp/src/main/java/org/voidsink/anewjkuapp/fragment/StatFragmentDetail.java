@@ -15,7 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
@@ -106,7 +105,6 @@ public class StatFragmentDetail extends BaseFragment implements
             private List<Lva> lvas;
             private List<ExamGrade> grades;
             private Context mContext = getContext();
-            public boolean positiveOnly;
 
             @Override
             protected void onPreExecute() {
@@ -119,7 +117,6 @@ public class StatFragmentDetail extends BaseFragment implements
 
             @Override
             protected Void doInBackground(Void... params) {
-                this.positiveOnly = PreferenceWrapper.getPositiveGradesOnly(getContext());
                 this.lvas = KusssContentProvider.getLvas(mContext);
                 this.grades = AppUtils.filterGrades(mTerms, KusssContentProvider.getGrades(mContext));
                 AppUtils.sortLVAs(this.lvas);
@@ -131,8 +128,10 @@ public class StatFragmentDetail extends BaseFragment implements
                 if (mAdapter != null) {
                     mAdapter.clear();
 
-                    mAdapter.add(StatCard.getGradeInstance(mTerms, this.grades, true, this.positiveOnly));
-                    mAdapter.add(StatCard.getGradeInstance(mTerms, this.grades, false, this.positiveOnly));
+                    boolean mPositiveOnly = PreferenceWrapper.getPositiveGradesOnly(getContext());
+
+                    mAdapter.add(StatCard.getGradeInstance(mTerms, this.grades, true, mPositiveOnly));
+                    mAdapter.add(StatCard.getGradeInstance(mTerms, this.grades, false, mPositiveOnly));
                     mAdapter.add(StatCard.getLvaInstance(mTerms, this.lvas, this.grades));
 
                     mAdapter.notifyDataSetChanged();
