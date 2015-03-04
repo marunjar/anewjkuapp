@@ -1,6 +1,5 @@
 package org.voidsink.anewjkuapp.fragment;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.UriMatcher;
@@ -22,8 +21,8 @@ import org.voidsink.anewjkuapp.GradeListAdapter;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
-import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
+import org.voidsink.anewjkuapp.base.TermFragment;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.update.UpdateService;
@@ -33,25 +32,13 @@ import org.voidsink.anewjkuapp.utils.Consts;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressLint("ValidFragment")
-public class GradeDetailFragment extends BaseFragment implements
+public class GradeDetailFragment extends TermFragment implements
         ContentObserverListener {
 
     public static final String TAG = GradeDetailFragment.class.getSimpleName();
-    private final List<String> mTerms;
 
     private BaseContentObserver mGradeObserver;
     private GradeListAdapter mAdapter;
-
-    public GradeDetailFragment() {
-        this(null);
-    }
-
-    public GradeDetailFragment(List<String> terms) {
-        super();
-
-        this.mTerms = terms;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -118,7 +105,7 @@ public class GradeDetailFragment extends BaseFragment implements
 
             @Override
             protected Void doInBackground(Void... params) {
-                this.grades = AppUtils.filterGrades(mTerms, KusssContentProvider.getGrades(mContext));
+                this.grades = AppUtils.filterGrades(getTerms(), KusssContentProvider.getGrades(mContext));
 
                 AppUtils.sortGrades(grades);
 

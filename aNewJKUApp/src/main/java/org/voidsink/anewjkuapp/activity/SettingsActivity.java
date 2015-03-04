@@ -22,9 +22,10 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
 
     public static final String ACTION_PREFS_LEGACY = "org.voidsink.anewjkuapp.prefs.LEGACY";
     public static final String ARG_SHOW_FRAGMENT = "show_fragment";
-    private boolean mThemeChanged = false;
 
     private static final String TAG = SettingsActivity.class.getSimpleName();
+
+    private boolean mThemeChanged = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -16,6 +16,7 @@ public class Consts {
     public static final String ARG_UPDATE_KUSSS_LVAS = "UPDATE_KUSSS_LVAS";
     public static final String ARG_UPDATE_KUSSS_GRADES = "UPDATE_KUSSS_GRADES";
     public static final String ARG_UPDATE_KUSSS_EXAMS = "UPDATE_KUSSS_EXAMS";
+    public static final String ARG_TERMS = "TERMS";
 
     public static final String SYNC_SHOW_PROGRESS = "showProgress";
 

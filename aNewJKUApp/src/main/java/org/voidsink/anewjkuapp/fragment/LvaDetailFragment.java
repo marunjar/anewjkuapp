@@ -1,6 +1,5 @@
 package org.voidsink.anewjkuapp.fragment;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.UriMatcher;
@@ -22,8 +21,8 @@ import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.LvaListAdapter;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
-import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
+import org.voidsink.anewjkuapp.base.TermFragment;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
@@ -35,23 +34,11 @@ import org.voidsink.anewjkuapp.utils.Consts;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LvaDetailFragment extends BaseFragment implements
+public class LvaDetailFragment extends TermFragment implements
         ContentObserverListener {
 
     private BaseContentObserver mLvaObserver;
-    private List<String> mTerms;
     private LvaListAdapter mAdapter;
-
-    public LvaDetailFragment() {
-        this(null);
-    }
-
-    @SuppressLint("ValidFragment")
-    public LvaDetailFragment(List<String> terms) {
-        super();
-
-        this.mTerms = terms;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -110,7 +97,7 @@ public class LvaDetailFragment extends BaseFragment implements
             protected void onPostExecute(Void result) {
                 // Log.i(TAG, "loadLvas" + this.terms);
 
-                List<LvaWithGrade> mLvasWithGrades = AppUtils.getLvasWithGrades(mTerms, lvas, grades);
+                List<LvaWithGrade> mLvasWithGrades = AppUtils.getLvasWithGrades(getTerms(), lvas, grades);
 
                 mAdapter.clear();
                 mAdapter.addAll(mLvasWithGrades);

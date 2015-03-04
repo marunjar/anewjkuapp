@@ -1,6 +1,5 @@
 package org.voidsink.anewjkuapp.fragment;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.UriMatcher;
@@ -22,8 +21,8 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.StatCard;
 import org.voidsink.anewjkuapp.StatCardAdapter;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
-import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
+import org.voidsink.anewjkuapp.base.TermFragment;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
@@ -33,23 +32,11 @@ import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.List;
 
-@SuppressLint("ValidFragment")
-public class StatFragmentDetail extends BaseFragment implements
+public class StatFragmentDetail extends TermFragment implements
         ContentObserverListener {
 
     private BaseContentObserver mDataObserver;
-    private final List<String> mTerms;
     private StatCardAdapter mAdapter;
-
-    public StatFragmentDetail() {
-        this(null);
-    }
-
-    public StatFragmentDetail(List<String> terms) {
-        super();
-
-        this.mTerms = terms;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -118,7 +105,7 @@ public class StatFragmentDetail extends BaseFragment implements
             @Override
             protected Void doInBackground(Void... params) {
                 this.lvas = KusssContentProvider.getLvas(mContext);
-                this.grades = AppUtils.filterGrades(mTerms, KusssContentProvider.getGrades(mContext));
+                this.grades = AppUtils.filterGrades(getTerms(), KusssContentProvider.getGrades(mContext));
                 AppUtils.sortLVAs(this.lvas);
                 return null;
             }
@@ -130,9 +117,9 @@ public class StatFragmentDetail extends BaseFragment implements
 
                     boolean mPositiveOnly = PreferenceWrapper.getPositiveGradesOnly(getContext());
 
-                    mAdapter.add(StatCard.getGradeInstance(mTerms, this.grades, true, mPositiveOnly));
-                    mAdapter.add(StatCard.getGradeInstance(mTerms, this.grades, false, mPositiveOnly));
-                    mAdapter.add(StatCard.getLvaInstance(mTerms, this.lvas, this.grades));
+                    mAdapter.add(StatCard.getGradeInstance(getTerms(), this.grades, true, mPositiveOnly));
+                    mAdapter.add(StatCard.getGradeInstance(getTerms(), this.grades, false, mPositiveOnly));
+                    mAdapter.add(StatCard.getLvaInstance(getTerms(), this.lvas, this.grades));
 
                     mAdapter.notifyDataSetChanged();
                 }
