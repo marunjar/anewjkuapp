@@ -21,13 +21,11 @@ import android.util.Log;
 import com.github.mikephil.charting.data.Entry;
 
 import org.voidsink.anewjkuapp.ImportPoiTask;
-import org.voidsink.anewjkuapp.KusssContentContract;
-import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
-import org.voidsink.anewjkuapp.service.SyncAlarmService;
-import org.voidsink.anewjkuapp.update.ImportStudiesTask;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
+import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.fragment.MapFragment;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
@@ -37,6 +35,8 @@ import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.kusss.LvaState;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.kusss.Studies;
+import org.voidsink.anewjkuapp.service.SyncAlarmService;
+import org.voidsink.anewjkuapp.update.ImportStudiesTask;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -216,7 +216,7 @@ public class AppUtils {
         // calendar names changed with 100017, remove account for avoiding
         // corrupted data
         return (lastVersion < 100017 && currentVersion >= 100017) ||
-               (lastVersion < 140017 && currentVersion >= 140017);
+                (lastVersion < 140017 && currentVersion >= 140017);
     }
 
     private static boolean initPreferences(Context context) {
@@ -580,21 +580,28 @@ public class AppUtils {
         ExamGrade finalGrade = null;
 
         for (ExamGrade grade : grades) {
-            if (grade.getCode().equals(lva.getCode())) {
-                if (finalGrade == null || finalGrade.getGrade() == Grade.G5) {
+            if (grade.getCode().equals(lva.getCode()) && grade.getLvaNr().equals(lva.getLvaNr())) {
+                if (finalGrade == null || finalGrade.getGrade().getValue() > grade.getGrade().getValue()) {
                     finalGrade = grade;
                 }
             }
         }
+
         if (finalGrade == null) {
-            Log.d(TAG, "findByLvaNr: " + lva.getLvaNr() + "/" + lva.getTitle());
             for (ExamGrade grade : grades) {
-                if (grade.getLvaNr().equals(lva.getLvaNr())) {
-                    if (finalGrade == null || finalGrade.getGrade() == Grade.G5) {
+                if (grade.getCode().equals(lva.getCode()) &&
+                        (grade.getTitle().contains(lva.getTitle()) ||
+                                lva.getTitle().contains(grade.getTitle()))) {
+                    if (finalGrade == null || finalGrade.getGrade().getValue() > grade.getGrade().getValue()) {
                         finalGrade = grade;
                     }
                 }
             }
+            if (finalGrade != null) {
+                Log.d(TAG, String.format("found by LvaNr/Title: %s/%s", lva.getLvaNr(), lva.getTitle()));
+            }
+        } else {
+            Log.d(TAG, String.format("found by LvaNr/Code: %s/%s", lva.getLvaNr(), lva.getCode()));
         }
 
         return finalGrade;
@@ -672,8 +679,8 @@ public class AppUtils {
 
         Log.d(TAG, String.format("MasterSync=%b, CalendarSync=%b, KusssSync=%b", mIsMasterSyncEnabled, mIsCalendarSyncEnabled, mIsKusssSyncEnable));
 
-        AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent  = new Intent(context, SyncAlarmService.class);
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, SyncAlarmService.class);
         intent.putExtra(Consts.ARG_UPDATE_CAL, !mIsCalendarSyncEnabled);
         intent.putExtra(Consts.ARG_UPDATE_KUSSS, !mIsKusssSyncEnable);
         intent.putExtra(Consts.ARG_RECREATE_SYNC_ALARM, true);
