@@ -28,7 +28,7 @@ import android.widget.LinearLayout;
 class SlidingTabStrip extends LinearLayout {
 
     private static final int DEFAULT_BOTTOM_BORDER_THICKNESS_DIPS = 2;
-    private static final int DEFAULT_BOTTOM_BORDER_COLOR_ALPHA = 0xEE;
+    private static final int DEFAULT_BOTTOM_BORDER_COLOR_ALPHA = 0x55;
     private static final int SELECTED_INDICATOR_THICKNESS_DIPS = 6;
 
     private static final int DEFAULT_DIVIDER_THICKNESS_DIPS = 1;
@@ -60,19 +60,16 @@ class SlidingTabStrip extends LinearLayout {
 
         final float density = getResources().getDisplayMetrics().density;
 
-        /*
         TypedValue outValue = new TypedValue();
-        context.getTheme().resolveAttribute(android.R.attr.colorForegroundInverse, outValue, true);
-        final int themeForegroundColor = outValue.data;
-        */
-        final int themeForegroundColor = getResources().getColor(android.R.color.white);
+        context.getTheme().resolveAttribute(android.R.attr.colorBackground, outValue, true);
+        final int themeBackgroundColor = outValue.data;
 
-        int mDefaultBottomBorderColor = setColorAlpha(themeForegroundColor,
+        int mDefaultBottomBorderColor = setColorAlpha(themeBackgroundColor,
                 DEFAULT_BOTTOM_BORDER_COLOR_ALPHA);
 
         mDefaultTabColorizer = new SimpleTabColorizer();
         mDefaultTabColorizer.setIndicatorColors(getResources().getColor(android.R.color.white));
-        mDefaultTabColorizer.setDividerColors(setColorAlpha(themeForegroundColor,
+        mDefaultTabColorizer.setDividerColors(setColorAlpha(themeBackgroundColor,
                 DEFAULT_DIVIDER_COLOR_ALPHA));
 
         mBottomBorderThickness = (int) (DEFAULT_BOTTOM_BORDER_THICKNESS_DIPS * density);

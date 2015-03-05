@@ -7,9 +7,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:background="?attr/colorPrimary"
+    android:background="?android:attr/colorBackground"
     android:padding="@dimen/list_card_padding_bottom"
-    android:textColor="@android:color/white"
+    android:textColor="?android:attr/textColorSecondary"
     android:textSize="@dimen/text_size_subtitle"
     tools:text="this is the header text" />
 
