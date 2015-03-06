@@ -1,7 +1,7 @@
 package org.voidsink.anewjkuapp.fragment;
 
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.StatTabItem;
+import org.voidsink.anewjkuapp.TermTabItem;
 import org.voidsink.anewjkuapp.base.SlidingTabItem;
 import org.voidsink.anewjkuapp.base.SlidingTabsFragment;
 import org.voidsink.anewjkuapp.kusss.Term;
@@ -17,10 +17,10 @@ public class StatFragment extends SlidingTabsFragment {
     protected void fillTabs(List<SlidingTabItem> mTabs) {
         List<Term> mTerms = KusssContentProvider.getTerms(getContext());
 
-        mTabs.add(new StatTabItem(getString(R.string.all_terms), null));
+        mTabs.add(new TermTabItem(getString(R.string.all_terms), null, StatFragmentDetail.class));
 
         for (Term term : mTerms) {
-            mTabs.add(new StatTabItem(term.getTerm(), Arrays.asList(term.getTerm())));
+            mTabs.add(new TermTabItem(term.getTerm(), Arrays.asList(term.getTerm()), StatFragmentDetail.class));
         }
     }
 
