@@ -173,7 +173,7 @@ public class StudiesFragment extends BaseFragment implements
         public long getHeaderId(int i) {
             Studies studies = getItem(i);
             if (studies != null) {
-                return studies.getUni().hashCode();
+                return (long)studies.getUni().hashCode() + (long)Integer.MAX_VALUE; // header id has to be > 0???
             }
             return 0;
         }
