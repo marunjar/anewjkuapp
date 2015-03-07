@@ -38,10 +38,9 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 
     public static final String KEY_ERROR_MESSAGE = "ERR_MSG";
-
     public final static String PARAM_USER_PASS = "USER_PASS";
 
-    private final String TAG = this.getClass().getSimpleName();
+    private final static String TAG = KusssAuthenticatorActivity.class.getSimpleName();
 
     private AccountManager mAccountManager;
     private String mAuthTokenType;

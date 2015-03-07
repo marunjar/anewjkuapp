@@ -84,7 +84,7 @@
     <string name="pref_cat_mensa">Cafeteria</string>
     <string name="pref_cat_stats">Statistics</string>
     <string name="pref_cat_sync_settings">Edit settings</string>
-    <string name="pref_cat_update_password">Change passwort</string>
+    <string name="pref_cat_update_password">Change password</string>
     <string name="pref_kusss_calendar_notify_summary">Notify if course dates have changed</string>
     <string name="pref_kusss_calendar_sync_summary">Synchronize course dates of current term from KUSSS</string>
     <string name="pref_kusss_exam_get_from_lva_summary">Search for exams for all courses from previous terms</string>

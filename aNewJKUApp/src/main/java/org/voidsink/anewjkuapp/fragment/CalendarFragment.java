@@ -11,6 +11,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,9 +21,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
+
+import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
@@ -35,7 +37,6 @@ import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
-import org.voidsink.anewjkuapp.view.ListViewWithHeader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,6 +47,7 @@ public class CalendarFragment extends BaseFragment {
 
     private static final String TAG = CalendarFragment.class.getSimpleName();
     long now = 0, then = 0;
+
     private CalendarEventAdapter mAdapter;
     private ContentObserver mCalendarObserver;
 
@@ -55,7 +57,7 @@ public class CalendarFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_calendar, container,
                 false);
 
-        final ListViewWithHeader mListView = (ListViewWithHeader) view.findViewById(R.id.calendar_card_events);
+        final RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.calendar_card_events);
 
         Button loadMore = (Button) view.findViewById(R.id.calendar_card_load);
 
@@ -70,18 +72,21 @@ public class CalendarFragment extends BaseFragment {
         mAdapter = new CalendarEventAdapter(getContext());
 
 //		mListView.addFooterView(loadMore);
-        mListView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mAdapter));
 
-        mListView.setOnItemClickListener(new ListView.OnItemClickListener() {
+        mAdapter.setOnItemClickListener(new CalendarEventAdapter.OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                CalendarListItem item = mAdapter.getItem(i);
+            public void onItemClick(View view, int viewType, int position) {
+                CalendarListItem item = mAdapter.getItem(position);
                 if (item instanceof CalendarListEvent) {
                     ((CalendarListEvent) item).showOnMap(getContext());
                 }
             }
         });
+
 
         return view;
     }
@@ -177,7 +182,7 @@ public class CalendarFragment extends BaseFragment {
 
     private class CalendarLoadTask extends AsyncTask<String, Void, Void> {
         private ProgressDialog progressDialog;
-        private List<CalendarListItem> mEvents;
+        private List<CalendarListEvent> mEvents;
         private Context mContext;
 
         @Override

@@ -1,12 +1,13 @@
 package org.voidsink.anewjkuapp.fragment;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.UriMatcher;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,52 +15,43 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
+
 import org.voidsink.anewjkuapp.GradeListAdapter;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
-import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
+import org.voidsink.anewjkuapp.base.TermFragment;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
-import org.voidsink.anewjkuapp.view.ListViewWithHeader;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressLint("ValidFragment")
-public class GradeDetailFragment extends BaseFragment implements
+public class GradeDetailFragment extends TermFragment implements
         ContentObserverListener {
 
     public static final String TAG = GradeDetailFragment.class.getSimpleName();
-    private final List<String> mTerms;
 
     private BaseContentObserver mGradeObserver;
     private GradeListAdapter mAdapter;
 
-    public GradeDetailFragment() {
-        this(null);
-    }
-
-    public GradeDetailFragment(List<String> terms) {
-        super();
-
-        this.mTerms = terms;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_list_with_header, container,
+        View view = inflater.inflate(R.layout.fragment_recycler_view, container,
                 false);
 
-        final ListViewWithHeader mListView = (ListViewWithHeader) view.findViewById(R.id.list_with_header);
+        final RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new GradeListAdapter(getContext());
-        mListView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mAdapter));
 
         return view;
     }
@@ -113,7 +105,7 @@ public class GradeDetailFragment extends BaseFragment implements
 
             @Override
             protected Void doInBackground(Void... params) {
-                this.grades = AppUtils.filterGrades(mTerms, KusssContentProvider.getGrades(mContext));
+                this.grades = AppUtils.filterGrades(getTerms(), KusssContentProvider.getGrades(mContext));
 
                 AppUtils.sortGrades(grades);
 

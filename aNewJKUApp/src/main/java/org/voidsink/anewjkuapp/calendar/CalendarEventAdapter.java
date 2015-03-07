@@ -1,140 +1,130 @@
 package org.voidsink.anewjkuapp.calendar;
 
-import android.app.SearchManager;
-import android.content.ContentUris;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
+
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.activity.MainActivity;
-import org.voidsink.anewjkuapp.base.ListWithHeaderAdapter;
-import org.voidsink.anewjkuapp.fragment.MapFragment;
+import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.utils.UIUtils;
 
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class CalendarEventAdapter extends ListWithHeaderAdapter<CalendarListItem> {
+public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent, CalendarEventAdapter.EventItemHolder> implements StickyRecyclerHeadersAdapter<CalendarEventAdapter.DateHeaderHolder> {
 
-    private final LayoutInflater mInflater;
+    private final Context mContext;
+    private OnItemClickListener mItemClickListener;
 
     public CalendarEventAdapter(Context context) {
-        super(context, R.layout.calendar_list_item);
+        super();
 
-        mInflater = LayoutInflater.from(context);
+        mContext = context;
+    }
+
+    public interface OnItemClickListener {
+        public void onItemClick(View view, int viewType, int position);
+    }
+
+    protected static class EventItemHolder extends RecyclerView.ViewHolder {
+
+        public final Toolbar mToolbar;
+        public final TextView mTitle;
+        public final TextView mDescr;
+        public final TextView mLocation;
+        public final TextView mTime;
+
+        public EventItemHolder(View itemView) {
+            super(itemView);
+
+            mToolbar = (Toolbar) itemView.findViewById(R.id.calendar_list_item_toolbar);
+            mToolbar.inflateMenu(R.menu.calendar_card_popup_menu);
+
+            mTitle = (TextView) itemView.findViewById(R.id.calendar_list_item_title);
+            mDescr = (TextView) itemView.findViewById(R.id.calendar_list_item_descr);
+            mTime = (TextView) itemView.findViewById(R.id.calendar_list_item_time);
+            mLocation = (TextView) itemView.findViewById(R.id.calendar_list_item_location);
+        }
+    }
+
+    protected static class DateHeaderHolder extends RecyclerView.ViewHolder {
+        public final TextView mText;
+
+        public DateHeaderHolder(View itemView) {
+            super(itemView);
+
+            mText = (TextView) itemView.findViewById(R.id.list_header_text);
+        }
+    }
+
+    public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
+        this.mItemClickListener = mItemClickListener;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        CalendarListItem item = this.getItem(position);
-        if (item == null) {
-            return null;
-        }
-        if (!item.isEvent()) {
-            return null;
-        }
-        return getEventView(convertView, parent, item);
+    public EventItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        final View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.calendar_list_item, parent, false);
+        final EventItemHolder vh = new EventItemHolder(v);
+
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mItemClickListener != null) {
+                    mItemClickListener.onItemClick(v, vh.getItemViewType(), vh.getPosition());
+                }
+            }
+        });
+
+        return vh;
     }
 
-    private View getEventView(View convertView, ViewGroup parent,
-                              CalendarListItem item) {
-        final CalendarListEvent eventItem = (CalendarListEvent) item;
-        CalendarListEventHolder eventItemHolder = null;
+    @Override
+    public void onBindViewHolder(EventItemHolder holder, int position) {
+        final CalendarListEvent eventItem = getItem(position);
 
-        if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.calendar_list_item, parent,
-                    false);
-            eventItemHolder = new CalendarListEventHolder();
-
-            eventItemHolder.toolbar = (Toolbar) convertView.findViewById(R.id.calendar_list_item_toolbar);
-            eventItemHolder.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+        if (eventItem != null) {
+            holder.mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
                     switch (menuItem.getItemId()) {
                         case R.id.show_in_calendar: {
-                            eventItem.showInCalendar(getContext());
+                            eventItem.showInCalendar(mContext);
                             return true;
                         }
                         case R.id.show_on_map: {
-                            eventItem.showOnMap(getContext());
+                            eventItem.showOnMap(mContext);
                             return true;
                         }
                     }
                     return false;
                 }
             });
-            eventItemHolder.toolbar.inflateMenu(R.menu.calendar_card_popup_menu);
 
-            eventItemHolder.title = (TextView) convertView
-                    .findViewById(R.id.calendar_list_item_title);
-            eventItemHolder.descr = (TextView) convertView
-                    .findViewById(R.id.calendar_list_item_descr);
-            eventItemHolder.time = (TextView) convertView
-                    .findViewById(R.id.calendar_list_item_time);
-            eventItemHolder.location = (TextView) convertView
-                    .findViewById(R.id.calendar_list_item_location);
+            holder.mTitle.setText(eventItem.getTitle());
 
-            convertView.setTag(eventItemHolder);
+            UIUtils.setTextAndVisibility(holder.mDescr, eventItem.getDescr());
+            UIUtils.setTextAndVisibility(holder.mTime, eventItem.getTime());
+            UIUtils.setTextAndVisibility(holder.mLocation, eventItem.getLocation());
+
         }
 
-        if (eventItemHolder == null) {
-            eventItemHolder = (CalendarListEventHolder) convertView.getTag();
-        }
-
-        eventItemHolder.title.setText(eventItem.getTitle());
-
-        UIUtils.setTextAndVisibility(eventItemHolder.descr, eventItem.getDescr());
-        UIUtils.setTextAndVisibility(eventItemHolder.time, eventItem.getTime());
-        UIUtils.setTextAndVisibility(eventItemHolder.location, eventItem.getLocation());
-
-        return convertView;
-    }
-
-    @Override
-    public int getViewTypeCount() {
-        return 2;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return this.getItem(position).getType();
-    }
-
-    @Override
-    public boolean isEnabled(int position) {
-        return (getItem(position) instanceof CalendarListEvent);
-    }
-
-    @Override
-    public View getHeaderView(int position, View convertView, ViewGroup viewGroup) {
-        // Build your custom HeaderView
-        final View headerView = mInflater.inflate(R.layout.list_header, null);
-
-        final TextView tvHeaderTitle = (TextView) headerView.findViewById(R.id.list_header_text);
-        CalendarListItem card = getItem(position);
-        if (card instanceof CalendarListEvent) {
-            tvHeaderTitle.setText(DateFormat.getDateInstance().format(new Date(((CalendarListEvent) card).getDtStart())));
-        }
-        return headerView;
     }
 
     @Override
     public long getHeaderId(int position) {
-        CalendarListItem card = getItem(position);
-        if (card instanceof CalendarListEvent) {
+        CalendarListEvent e = getItem(position);
 
+        if (e != null) {
             Calendar cal = Calendar.getInstance(); // locale-specific
-            cal.setTimeInMillis(((CalendarListEvent) card).getDtStart());
+            cal.setTimeInMillis(e.getDtStart());
             cal.set(Calendar.HOUR_OF_DAY, 0);
             cal.set(Calendar.MINUTE, 0);
             cal.set(Calendar.SECOND, 0);
@@ -144,16 +134,20 @@ public class CalendarEventAdapter extends ListWithHeaderAdapter<CalendarListItem
         return 0;
     }
 
-    private static class CalendarListEventHolder {
-        private Toolbar toolbar;
-        private TextView title;
-        private TextView descr;
-        private TextView time;
-        private TextView location;
+    @Override
+    public DateHeaderHolder onCreateHeaderViewHolder(ViewGroup viewGroup) {
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_header, viewGroup, false);
+        return new DateHeaderHolder(v);
     }
 
-    private class CalendarListSectionHolder {
-        private TextView text;
-    }
+    @Override
+    public void onBindHeaderViewHolder(DateHeaderHolder dateHeaderHolder, int position) {
+        CalendarListEvent e = getItem(position);
 
+        if (e != null) {
+            dateHeaderHolder.mText.setText(DateFormat.getDateInstance().format(new Date(e.getDtStart())));
+        } else {
+            dateHeaderHolder.mText.setText("");
+        }
+    }
 }

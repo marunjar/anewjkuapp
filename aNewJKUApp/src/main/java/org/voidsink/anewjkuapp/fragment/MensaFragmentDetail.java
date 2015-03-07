@@ -4,11 +4,15 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import org.voidsink.anewjkuapp.MensaInfoItem;
 import org.voidsink.anewjkuapp.MensaItem;
@@ -19,7 +23,6 @@ import org.voidsink.anewjkuapp.mensa.Mensa;
 import org.voidsink.anewjkuapp.mensa.MensaDay;
 import org.voidsink.anewjkuapp.mensa.MensaMenu;
 import org.voidsink.anewjkuapp.mensa.MenuLoader;
-import org.voidsink.anewjkuapp.view.ListViewWithHeader;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,17 +32,18 @@ public abstract class MensaFragmentDetail extends BaseFragment {
 
     public static final String TAG = MensaFragmentDetail.class.getSimpleName();
     private MensaMenuAdapter mAdapter;
-    private ListViewWithHeader mListView;
+    private RecyclerView mRecyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_list_with_header, container,
-                false);
+        View view = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
-        mListView = (ListViewWithHeader) view.findViewById(R.id.list_with_header);
-        mAdapter = new MensaMenuAdapter(getContext(), android.R.layout.simple_list_item_1, true);
-        mListView.setAdapter(mAdapter);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mAdapter = new MensaMenuAdapter(getContext(), true);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mAdapter));
 
         return view;
     }
@@ -117,8 +121,8 @@ public abstract class MensaFragmentDetail extends BaseFragment {
 
                 // scroll to today's menu
                 if (mSelectPosition >= 0 &&
-                        mListView != null) {
-                    mListView.smoothScrollToPosition(mSelectPosition);
+                        mRecyclerView != null) {
+                    mRecyclerView.smoothScrollToPosition(mSelectPosition);
                 }
             }
             super.onPostExecute(result);

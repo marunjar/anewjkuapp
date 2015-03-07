@@ -233,8 +233,8 @@ public class MainActivity extends ThemedActivity implements
             try {
                 Fragment f = startFragment.newInstance();
 
-                Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(ARG_SHOW_FRAGMENT);
-                boolean addToBackstack = (oldFragment != null) && (!oldFragment.getClass().equals(f.getClass()));
+                final Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(ARG_SHOW_FRAGMENT);
+                final boolean addToBackstack = (oldFragment != null) && (!oldFragment.getClass().equals(f.getClass()));
 
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.container, f, ARG_SHOW_FRAGMENT);

@@ -1,12 +1,13 @@
 package org.voidsink.anewjkuapp.fragment;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.UriMatcher;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,12 +15,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
+
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.LvaListAdapter;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
-import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
+import org.voidsink.anewjkuapp.base.TermFragment;
 import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
@@ -27,39 +30,27 @@ import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
-import org.voidsink.anewjkuapp.view.ListViewWithHeader;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LvaDetailFragment extends BaseFragment implements
+public class LvaDetailFragment extends TermFragment implements
         ContentObserverListener {
 
     private BaseContentObserver mLvaObserver;
-    private List<String> mTerms;
     private LvaListAdapter mAdapter;
-
-    public LvaDetailFragment() {
-        this(null);
-    }
-
-    @SuppressLint("ValidFragment")
-    public LvaDetailFragment(List<String> terms) {
-        super();
-
-        this.mTerms = terms;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_list_with_header, container,
-                false);
+        View view = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
-        final ListViewWithHeader mListView = (ListViewWithHeader) view.findViewById(R.id.list_with_header);
+        final RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new LvaListAdapter(getContext());
-        mListView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mAdapter));
 
         return view;
     }
@@ -106,7 +97,7 @@ public class LvaDetailFragment extends BaseFragment implements
             protected void onPostExecute(Void result) {
                 // Log.i(TAG, "loadLvas" + this.terms);
 
-                List<LvaWithGrade> mLvasWithGrades = AppUtils.getLvasWithGrades(mTerms, lvas, grades);
+                List<LvaWithGrade> mLvasWithGrades = AppUtils.getLvasWithGrades(getTerms(), lvas, grades);
 
                 mAdapter.clear();
                 mAdapter.addAll(mLvasWithGrades);
