@@ -4,6 +4,12 @@
 		    - fixed
 		    * changed
 		    + added -->
+    <release version="0.34" versioncode="140034">
+        <change>- KUSSS: Fehler beim Laden von Prüfungen korrigiert</change>
+        <change>- KUSSS: Fehler beim Zuordnen von Noten zu LVAs korrigiert</change>
+        <change>* App: Material App Icon</change>
+        <change>* App: kleine Änderungen an der Oberfläche</change>
+    </release>
     <release version="0.33" versioncode="140033">
         <change>- KUSSS: Laden von LVAs verbessert</change>
         <change>- App: diverse Fehler korrigiert</change>
