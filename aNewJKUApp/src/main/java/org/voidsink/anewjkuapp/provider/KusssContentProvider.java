@@ -354,7 +354,7 @@ public class KusssContentProvider extends ContentProvider {
 
             if (c != null) {
                 while (c.moveToNext()) {
-                    mGrades.add(new ExamGrade(c));
+                    mGrades.add(KusssHelper.createGrade(c));
                 }
                 c.close();
             }

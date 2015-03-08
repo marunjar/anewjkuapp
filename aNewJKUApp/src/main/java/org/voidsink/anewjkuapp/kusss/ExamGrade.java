@@ -1,14 +1,10 @@
 package org.voidsink.anewjkuapp.kusss;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.text.TextUtils;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.voidsink.anewjkuapp.update.ImportGradeTask;
-import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.utils.Analytics;
 
 import java.text.ParseException;
@@ -37,9 +33,9 @@ public class ExamGrade {
     private double ects;
     private double sws;
 
-    private ExamGrade(GradeType type, Date date, String lvaNr, String term,
-                      Grade grade, int skz, String title, String code, double ects,
-                      double sws) {
+    public ExamGrade(GradeType type, Date date, String lvaNr, String term,
+                     Grade grade, int skz, String title, String code, double ects,
+                     double sws) {
         this.gradeType = type;
         this.date = date;
         this.lvaNr = lvaNr;
@@ -130,21 +126,6 @@ public class ExamGrade {
         this.ects = ects;
     }
 
-    public ExamGrade(Cursor c) {
-        this.lvaNr = c.getString(ImportGradeTask.COLUMN_GRADE_LVANR);
-        this.term = c.getString(ImportGradeTask.COLUMN_GRADE_TERM);
-        this.date = new Date(c.getLong(ImportGradeTask.COLUMN_GRADE_DATE));
-        this.gradeType = GradeType.parseGradeType(c
-                .getInt(ImportGradeTask.COLUMN_GRADE_TYPE));
-        this.grade = Grade.parseGradeType(c
-                .getInt(ImportGradeTask.COLUMN_GRADE_GRADE));
-        this.skz = c.getInt(ImportGradeTask.COLUMN_GRADE_SKZ);
-        this.title = c.getString(ImportGradeTask.COLUMN_GRADE_TITLE);
-        this.code = c.getString(ImportGradeTask.COLUMN_GRADE_CODE);
-        this.ects = c.getDouble(ImportGradeTask.COLUMN_GRADE_ECTS);
-        this.sws = c.getDouble(ImportGradeTask.COLUMN_GRADE_SWS);
-    }
-
     private void setCode(String code) {
         this.code = code;
     }
@@ -216,22 +197,6 @@ public class ExamGrade {
 
     public double getSws() {
         return this.sws;
-    }
-
-    public ContentValues getContentValues() {
-        ContentValues cv = new ContentValues();
-        cv.put(KusssContentContract.Grade.GRADE_COL_DATE, getDate().getTime());
-        cv.put(KusssContentContract.Grade.GRADE_COL_GRADE, getGrade().ordinal());
-        cv.put(KusssContentContract.Grade.GRADE_COL_LVANR, getLvaNr());
-        cv.put(KusssContentContract.Grade.GRADE_COL_SKZ, getSkz());
-        cv.put(KusssContentContract.Grade.GRADE_COL_TERM, getTerm());
-        cv.put(KusssContentContract.Grade.GRADE_COL_TYPE, getGradeType()
-                .ordinal());
-        cv.put(KusssContentContract.Grade.GRADE_COL_CODE, getCode());
-        cv.put(KusssContentContract.Grade.GRADE_COL_TITLE, getTitle());
-        cv.put(KusssContentContract.Grade.GRADE_COL_ECTS, getEcts());
-        cv.put(KusssContentContract.Grade.GRADE_COL_SWS, getSws());
-        return cv;
     }
 
 }

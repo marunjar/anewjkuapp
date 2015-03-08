@@ -1,13 +1,10 @@
 package org.voidsink.anewjkuapp.kusss;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.util.Log;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.voidsink.anewjkuapp.KusssContentContract;
-import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
 import org.voidsink.anewjkuapp.utils.Analytics;
 
 import java.text.ParseException;

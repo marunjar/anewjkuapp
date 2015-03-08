@@ -9,6 +9,7 @@ import android.net.Uri;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
 import org.voidsink.anewjkuapp.update.ImportExamTask;
+import org.voidsink.anewjkuapp.update.ImportGradeTask;
 import org.voidsink.anewjkuapp.update.ImportLvaTask;
 import org.voidsink.anewjkuapp.update.ImportStudiesTask;
 
@@ -116,4 +117,34 @@ public class KusssHelper {
         return cv;
     }
 
+
+    public static ExamGrade createGrade(Cursor c) {
+        return new ExamGrade(
+                GradeType.parseGradeType(c.getInt(ImportGradeTask.COLUMN_GRADE_TYPE)),
+                new Date(c.getLong(ImportGradeTask.COLUMN_GRADE_DATE)),
+                c.getString(ImportGradeTask.COLUMN_GRADE_LVANR),
+                c.getString(ImportGradeTask.COLUMN_GRADE_TERM),
+                Grade.parseGradeType(c.getInt(ImportGradeTask.COLUMN_GRADE_GRADE)),
+                c.getInt(ImportGradeTask.COLUMN_GRADE_SKZ),
+                c.getString(ImportGradeTask.COLUMN_GRADE_TITLE),
+                c.getString(ImportGradeTask.COLUMN_GRADE_CODE),
+                c.getDouble(ImportGradeTask.COLUMN_GRADE_ECTS),
+                c.getDouble(ImportGradeTask.COLUMN_GRADE_SWS));
+    }
+
+
+    public static ContentValues getGradeContentValues(ExamGrade grade) {
+        ContentValues cv = new ContentValues();
+        cv.put(KusssContentContract.Grade.GRADE_COL_DATE, grade.getDate().getTime());
+        cv.put(KusssContentContract.Grade.GRADE_COL_GRADE, grade.getGrade().ordinal());
+        cv.put(KusssContentContract.Grade.GRADE_COL_LVANR, grade.getLvaNr());
+        cv.put(KusssContentContract.Grade.GRADE_COL_SKZ, grade.getSkz());
+        cv.put(KusssContentContract.Grade.GRADE_COL_TERM, grade.getTerm());
+        cv.put(KusssContentContract.Grade.GRADE_COL_TYPE, grade.getGradeType().ordinal());
+        cv.put(KusssContentContract.Grade.GRADE_COL_CODE, grade.getCode());
+        cv.put(KusssContentContract.Grade.GRADE_COL_TITLE, grade.getTitle());
+        cv.put(KusssContentContract.Grade.GRADE_COL_ECTS, grade.getEcts());
+        cv.put(KusssContentContract.Grade.GRADE_COL_SWS, grade.getSws());
+        return cv;
+    }
 }

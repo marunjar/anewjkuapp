@@ -18,6 +18,7 @@ import org.voidsink.anewjkuapp.kusss.ExamGrade;
 import org.voidsink.anewjkuapp.kusss.Grade;
 import org.voidsink.anewjkuapp.kusss.GradeType;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
+import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.notification.GradesChangedNotification;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
 import org.voidsink.anewjkuapp.utils.Analytics;
@@ -196,7 +197,7 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
                                             .withValue(
                                                     KusssContentContract.Grade.GRADE_COL_ID,
                                                     Integer.toString(gradeId))
-                                            .withValues(grade.getContentValues())
+                                            .withValues(KusssHelper.getGradeContentValues(grade))
                                             .build());
                                     mSyncResult.stats.numUpdates++;
                                 }
@@ -211,7 +212,7 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
                                                                 examUri,
                                                                 mAccount.name,
                                                                 mAccount.type))
-                                        .withValues(grade.getContentValues())
+                                        .withValues(KusssHelper.getGradeContentValues(grade))
                                         .build());
                                 Log.d(TAG, "Scheduling insert: " + grade.getTerm()
                                         + " " + grade.getLvaNr());
