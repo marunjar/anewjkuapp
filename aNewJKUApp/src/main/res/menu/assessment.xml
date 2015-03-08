@@ -4,7 +4,7 @@
     tools:context="org.voidsink.anewjkuapp.fragment.AssessmentFragment">
 
     <item
-        android:id="@+id/action_refresh_stats"
+        android:id="@+id/action_refresh_assessments"
         android:icon="@drawable/ic_refresh_white_24dp"
         android:title="@string/action_refresh"
         app:showAsAction="ifRoom" />

@@ -11,7 +11,6 @@ import org.jsoup.HttpStatusException;
 import org.voidsink.anewjkuapp.BuildConfig;
 import org.voidsink.anewjkuapp.Globals;
 import org.voidsink.anewjkuapp.Globals.TrackerName;
-import org.voidsink.anewjkuapp.update.UpdateService;
 
 public class Analytics {
 
@@ -22,7 +21,7 @@ public class Analytics {
     // private static final int GA_METRIC_SYNC_INTERVAL = 1;
     // private static final int GA_METRIC_LOAD_EXAM_BY_COURSEID = 2;
     // private static final int GA_METRIC_USE_LIGHT_THEME = 3;
-    // private static final int GA_METRIC_USE_BARCHART_FOR_LVA = 4;
+    // private static final int GA_METRIC_USE_BARCHART_FOR_COURSES = 4;
 
     private static final String GA_EVENT_CATEGORY_UI = "ui_action";
 
@@ -69,9 +68,9 @@ public class Analytics {
         // GA_METRIC_USE_LIGHT_THEME
     }
 
-    public static void sendUseBarchartForLvas(Context context,
-                                              boolean useBarchartForLvas) {
-        // GA_METRIC_USE_BARCHART_FOR_LVA
+    public static void sendUseBarchartForCourses(Context context,
+                                                 boolean useBarchartForCourses) {
+        // GA_METRIC_USE_BARCHART_FOR_COURSES
     }
 
     // }}
@@ -99,16 +98,16 @@ public class Analytics {
 
     // {{ Events
 
-    public static void eventReloadLvas(Context c) {
+    public static void eventReloadCourses(Context c) {
         Tracker t = getAppTracker(c);
         if (t != null) {
             t.send(new HitBuilders.EventBuilder()
                     .setCategory(GA_EVENT_CATEGORY_UI)
-                    .setAction("button_press").setLabel("reload_lvas").build());
+                    .setAction("button_press").setLabel("reload_courses").build());
         }
     }
 
-    public static void eventReloadEventsLva(Context c) {
+    public static void eventReloadEventsCourse(Context c) {
         Tracker t = getAppTracker(c);
         if (t != null) {
             t.send(new HitBuilders.EventBuilder()
@@ -123,7 +122,7 @@ public class Analytics {
         if (t != null) {
             t.send(new HitBuilders.EventBuilder()
                     .setCategory(GA_EVENT_CATEGORY_UI)
-                    .setAction("button_press").setLabel("reload_events_lva")
+                    .setAction("button_press").setLabel("reload_events_course")
                     .build());
         }
     }
@@ -147,22 +146,22 @@ public class Analytics {
         }
     }
 
-    public static void eventReloadGrades(Context c) {
+    public static void eventReloadAssessments(Context c) {
         Tracker t = getAppTracker(c);
         if (t != null) {
             t.send(new HitBuilders.EventBuilder()
                     .setCategory(GA_EVENT_CATEGORY_UI)
-                    .setAction("button_press").setLabel("reload_grades")
+                    .setAction("button_press").setLabel("reload_assessments")
                     .build());
         }
     }
 
-    public static void eventReloadStudies(Context c) {
+    public static void eventReloadCurricula(Context c) {
         Tracker t = getAppTracker(c);
         if (t != null) {
             t.send(new HitBuilders.EventBuilder()
                     .setCategory(GA_EVENT_CATEGORY_UI)
-                    .setAction("button_press").setLabel("reload_studies")
+                    .setAction("button_press").setLabel("reload_curricula")
                     .build());
         }
     }

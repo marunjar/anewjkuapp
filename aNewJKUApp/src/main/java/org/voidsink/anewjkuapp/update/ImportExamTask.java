@@ -52,16 +52,16 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
     private NewExamNotification mNewExamNotification;
 
     public static final String[] EXAM_PROJECTION = new String[]{
-            KusssContentContract.Exam.EXAM_COL_ID,
-            KusssContentContract.Exam.EXAM_COL_TERM,
-            KusssContentContract.Exam.EXAM_COL_COURSEID,
-            KusssContentContract.Exam.EXAM_COL_DTSTART,
-            KusssContentContract.Exam.EXAM_COL_DTEND,
-            KusssContentContract.Exam.EXAM_COL_LOCATION,
-            KusssContentContract.Exam.EXAM_COL_DESCRIPTION,
-            KusssContentContract.Exam.EXAM_COL_INFO,
-            KusssContentContract.Exam.EXAM_COL_IS_REGISTERED,
-            KusssContentContract.Exam.EXAM_COL_TITLE};
+            KusssContentContract.Exam.COL_ID,
+            KusssContentContract.Exam.COL_TERM,
+            KusssContentContract.Exam.COL_COURSEID,
+            KusssContentContract.Exam.COL_DTSTART,
+            KusssContentContract.Exam.COL_DTEND,
+            KusssContentContract.Exam.COL_LOCATION,
+            KusssContentContract.Exam.COL_DESCRIPTION,
+            KusssContentContract.Exam.COL_INFO,
+            KusssContentContract.Exam.COL_IS_REGISTERED,
+            KusssContentContract.Exam.COL_TITLE};
 
     public static final int COLUMN_EXAM_ID = 0;
     public static final int COLUMN_EXAM_TERM = 1;
@@ -214,7 +214,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
                                                                     mAccount.name,
                                                                     mAccount.type))
                                             .withValue(
-                                                    KusssContentContract.Exam.EXAM_COL_ID,
+                                                    KusssContentContract.Exam.COL_ID,
                                                     Integer.toString(examId))
                                             .withValues(KusssHelper.getExamContentValues(exam))
                                             .build());

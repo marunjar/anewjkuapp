@@ -86,7 +86,7 @@ public class CalendarFragment2 extends BaseFragment implements WeekView.MonthCha
                 }
 
                 final String calIDLva = CalendarUtils.getCalIDByName(getContext(),
-                        mAccount, CalendarUtils.ARG_CALENDAR_LVA, true);
+                        mAccount, CalendarUtils.ARG_CALENDAR_COURSE, true);
                 final String calIDExam = CalendarUtils.getCalIDByName(getContext(),
                         mAccount, CalendarUtils.ARG_CALENDAR_EXAM, true);
 
@@ -171,7 +171,7 @@ public class CalendarFragment2 extends BaseFragment implements WeekView.MonthCha
 
         Account account = AppUtils.getAccount(getContext());
 
-        String lvaCalId = CalendarUtils.getCalIDByName(getContext(), account, CalendarUtils.ARG_CALENDAR_LVA, true);
+        String lvaCalId = CalendarUtils.getCalIDByName(getContext(), account, CalendarUtils.ARG_CALENDAR_COURSE, true);
         String examCalId = CalendarUtils.getCalIDByName(getContext(), account, CalendarUtils.ARG_CALENDAR_EXAM, true);
 
         if (lvaCalId == null || examCalId == null) {
@@ -224,7 +224,7 @@ public class CalendarFragment2 extends BaseFragment implements WeekView.MonthCha
         }
 
         final String calIDLva = CalendarUtils.getCalIDByName(getContext(),
-                mAccount, CalendarUtils.ARG_CALENDAR_LVA, true);
+                mAccount, CalendarUtils.ARG_CALENDAR_COURSE, true);
         final String calIDExam = CalendarUtils.getCalIDByName(getContext(),
                 mAccount, CalendarUtils.ARG_CALENDAR_EXAM, true);
 

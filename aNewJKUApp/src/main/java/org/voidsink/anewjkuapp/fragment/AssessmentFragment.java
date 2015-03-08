@@ -11,21 +11,21 @@ import org.voidsink.anewjkuapp.utils.Consts;
 import java.util.Arrays;
 import java.util.List;
 
-public class LvaFragment extends SlidingTabsFragment {
+public class AssessmentFragment extends SlidingTabsFragment {
 
     @Override
     protected void fillTabs(List<SlidingTabItem> mTabs) {
         List<Term> mTerms = KusssContentProvider.getTerms(getContext());
 
-        mTabs.add(new TermTabItem(getString(R.string.all_terms), null, LvaDetailFragment.class));
+        mTabs.add(new TermTabItem(getString(R.string.all_terms), null, AssessmentDetailFragment.class));
 
         for (Term term : mTerms) {
-            mTabs.add(new TermTabItem(term.getTerm(), Arrays.asList(term.getTerm()), LvaDetailFragment.class));
+            mTabs.add(new TermTabItem(term.getTerm(), Arrays.asList(term.getTerm()), AssessmentDetailFragment.class));
         }
     }
 
     @Override
     protected String getScreenName() {
-        return Consts.SCREEN_COURSES;
+        return Consts.SCREEN_ASSESSMENTS;
     }
 }

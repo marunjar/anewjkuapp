@@ -27,7 +27,7 @@ public final class CalendarUtils {
     public static final int COLOR_DEFAULT_EXAM = Consts.COLOR_DEFAULT_EXAM;
     public static final int COLOR_DEFAULT_LVA = Consts.COLOR_DEFAULT_LVA;
     public static final String ARG_CALENDAR_EXAM = "ARG_EXAM_CALENDAR";
-    public static final String ARG_CALENDAR_LVA = "ARG_LVA_CALENDAR";
+    public static final String ARG_CALENDAR_COURSE = "ARG_LVA_CALENDAR";
     // Constants representing column positions from PROJECTION.
     public static final String[] CALENDAR_PROJECTION = new String[]{
             CalendarContractWrapper.Calendars._ID(),
@@ -147,7 +147,7 @@ public final class CalendarUtils {
                 COLOR_DEFAULT_EXAM)) {
             calendarCreated = false;
         }
-        if (!createCalendarIfNecessary(context, account, ARG_CALENDAR_LVA,
+        if (!createCalendarIfNecessary(context, account, ARG_CALENDAR_COURSE,
                 COLOR_DEFAULT_LVA)) {
             calendarCreated = false;
         }
@@ -193,7 +193,7 @@ public final class CalendarUtils {
                     id = PreferenceWrapper.getExamCalendarId(context);
                     break;
                 }
-                case ARG_CALENDAR_LVA: {
+                case ARG_CALENDAR_COURSE: {
                     id = PreferenceWrapper.getLvaCalendarId(context);
                     break;
                 }
@@ -221,7 +221,7 @@ public final class CalendarUtils {
         switch (name) {
             case CalendarUtils.ARG_CALENDAR_EXAM:
                 return context.getString(R.string.calendar_title_exam);
-            case CalendarUtils.ARG_CALENDAR_LVA:
+            case CalendarUtils.ARG_CALENDAR_COURSE:
                 return context.getString(R.string.calendar_title_lva);
             default: {
                 CalendarList calendars = getCalendars(context, false);
@@ -290,7 +290,7 @@ public final class CalendarUtils {
         switch (name) {
             case ARG_CALENDAR_EXAM:
                 return PreferenceWrapper.getSyncCalendarExam(context);
-            case ARG_CALENDAR_LVA:
+            case ARG_CALENDAR_COURSE:
                 return PreferenceWrapper.getSyncCalendarLva(context);
             default:
                 return true;

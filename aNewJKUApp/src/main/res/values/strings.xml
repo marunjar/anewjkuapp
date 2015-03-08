@@ -59,10 +59,10 @@
     <string name="notification_sync_exam_loading">Prüfungen werden geladen</string>
     <string name="notification_sync_exam_updating">Prüfungen werden aktualisiert</string>
     <string name="notification_sync_exam_saving">Prüfungen werden gespeichert</string>
-    <string name="notification_sync_grade">Noten werden synchronisiert</string>
-    <string name="notification_sync_grade_loading">Noten werden geladen</string>
-    <string name="notification_sync_grade_updating">Noten werden aktualisiert</string>
-    <string name="notification_sync_grade_saving">Noten werden gespeichert</string>
+    <string name="notification_sync_assessment">Noten werden synchronisiert</string>
+    <string name="notification_sync_assessment_loading">Noten werden geladen</string>
+    <string name="notification_sync_assessment_updating">Noten werden aktualisiert</string>
+    <string name="notification_sync_assessment_saving">Noten werden gespeichert</string>
     <string name="notification_sync_lva">LVAs werden synchronisiert</string>
     <string name="notification_sync_lva_loading">LVAs werden geladen</string>
     <string name="notification_sync_lva_updating">LVAs werden aktualisiert</string>
@@ -224,16 +224,16 @@
     <string name="feed_title_med" translatable="false">Medizin</string>
 
     <string name="studies_is_standard">Standard</string>
-    <string name="studies_is_standard_yes">Ja</string>
-    <string name="studies_is_standard_no">Nein</string>
+    <string name="curriculum_is_standard_yes">Ja</string>
+    <string name="curriculum_is_standard_no">Nein</string>
     <string name="studies_skz">SKZ</string>
     <string name="studies_title">Studienrichtung</string>
     <string name="studies_steop_done" translatable="false">StEOP</string>
-    <string name="studies_steop_done_yes">Abgeschlossen</string>
-    <string name="studies_steop_done_no">Offen</string>
+    <string name="curriculum_steop_done_yes">Abgeschlossen</string>
+    <string name="curriculum_steop_done_no">Offen</string>
     <string name="studies_active_status">Status</string>
-    <string name="studies_active_status_yes">Aktiv</string>
-    <string name="studies_active_status_no">Inaktiv</string>
+    <string name="curriculum_active_status_yes">Aktiv</string>
+    <string name="curriculum_active_status_no">Inaktiv</string>
     <string name="studies_dt_start">Beginn</string>
     <string name="studies_dt_end">Ende</string>
 

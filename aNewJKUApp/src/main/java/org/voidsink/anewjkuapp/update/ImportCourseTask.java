@@ -45,16 +45,16 @@ public class ImportCourseTask extends BaseAsyncTask<Void, Void, Void> {
     private SyncNotification mUpdateNotification;
 
     public static final String[] COURSE_PROJECTION = new String[]{
-            KusssContentContract.Lva.LVA_COL_ID,
-            KusssContentContract.Lva.LVA_COL_TERM,
-            KusssContentContract.Lva.LVA_COL_COURSEID,
-            KusssContentContract.Lva.LVA_COL_TITLE,
-            KusssContentContract.Lva.LVA_COL_CURRICULA_ID,
-            KusssContentContract.Lva.LVA_COL_TYPE,
-            KusssContentContract.Lva.LVA_COL_TEACHER,
-            KusssContentContract.Lva.LVA_COL_SWS,
-            KusssContentContract.Lva.LVA_COL_ECTS,
-            KusssContentContract.Lva.LVA_COL_CODE};
+            KusssContentContract.Course.COL_ID,
+            KusssContentContract.Course.COL_TERM,
+            KusssContentContract.Course.COL_COURSEID,
+            KusssContentContract.Course.COL_TITLE,
+            KusssContentContract.Course.COL_CURRICULA_ID,
+            KusssContentContract.Course.COL_TYPE,
+            KusssContentContract.Course.COL_LECTURER,
+            KusssContentContract.Course.COL_SWS,
+            KusssContentContract.Course.COL_ECTS,
+            KusssContentContract.Course.COL_CLASS_CODE};
 
     public static final int COLUMN_LVA_ID = 0;
     public static final int COLUMN_LVA_TERM = 1;
@@ -71,7 +71,7 @@ public class ImportCourseTask extends BaseAsyncTask<Void, Void, Void> {
         this(account, null, null, null, null, context);
         this.mProvider = context.getContentResolver()
                 .acquireContentProviderClient(
-                        KusssContentContract.Lva.CONTENT_URI);
+                        KusssContentContract.Course.CONTENT_URI);
         this.mSyncResult = new SyncResult();
         this.mShowProgress = true;
     }
@@ -139,7 +139,7 @@ public class ImportCourseTask extends BaseAsyncTask<Void, Void, Void> {
 
                         ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
 
-                        Uri lvaUri = KusssContentContract.Lva.CONTENT_URI;
+                        Uri lvaUri = KusssContentContract.Course.CONTENT_URI;
                         Cursor c = mProvider.query(lvaUri, COURSE_PROJECTION,
                                 null, null, null);
 
@@ -163,8 +163,7 @@ public class ImportCourseTask extends BaseAsyncTask<Void, Void, Void> {
                                 // update only lvas from loaded terms, ignore all other
                                 Term term = termMap.get(courseTerm);
                                 if (term != null && term.isLoaded()) {
-                                    Course course = lvaMap
-                                            .get(KusssHelper.getCourseKey(courseTerm, courseId));
+                                    Course course = lvaMap.get(KusssHelper.getCourseKey(courseTerm, courseId));
                                     if (course != null) {
                                         lvaMap.remove(KusssHelper.getCourseKey(courseTerm, courseId));
                                         // Check to see if the entry needs to be
@@ -184,7 +183,7 @@ public class ImportCourseTask extends BaseAsyncTask<Void, Void, Void> {
                                                                         mAccount.name,
                                                                         mAccount.type))
                                                 .withValue(
-                                                        KusssContentContract.Lva.LVA_COL_ID,
+                                                        KusssContentContract.Course.COL_ID,
                                                         Integer.toString(_id))
                                                 .withValues(KusssHelper.getLvaContentValues(course))
                                                 .build());
@@ -250,7 +249,7 @@ public class ImportCourseTask extends BaseAsyncTask<Void, Void, Void> {
                                 Log.d(TAG, "Notify resolver");
                                 mResolver
                                         .notifyChange(
-                                                KusssContentContract.Lva.CONTENT_CHANGED_URI,
+                                                KusssContentContract.Course.CONTENT_CHANGED_URI,
                                                 null, // No
                                                 // local
                                                 // observer

@@ -15,11 +15,11 @@ import org.voidsink.anewjkuapp.utils.UIUtils;
 
 import java.text.DateFormat;
 
-public class GradeListAdapter extends RecyclerArrayAdapter<Assessment, GradeListAdapter.GradeViewHolder> implements StickyRecyclerHeadersAdapter<GradeListAdapter.GradeHeaderHolder> {
+public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, AssessmentListAdapter.GradeViewHolder> implements StickyRecyclerHeadersAdapter<AssessmentListAdapter.GradeHeaderHolder> {
 
     private final Context mContext;
 
-    public GradeListAdapter(Context context) {
+    public AssessmentListAdapter(Context context) {
         super();
         this.mContext = context;
     }

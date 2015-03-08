@@ -27,10 +27,10 @@ public class UpdateService extends IntentService {
             final Account account = AppUtils.getAccount(this);
             if (account != null) {
                 if (intent.getBooleanExtra(Consts.ARG_UPDATE_CAL, false) ||
-                        intent.getBooleanExtra(Consts.ARG_UPDATE_CAL_LVA, false)) {
-                    Analytics.eventReloadEventsLva(this);
+                        intent.getBooleanExtra(Consts.ARG_UPDATE_CAL_COURSES, false)) {
+                    Analytics.eventReloadEventsCourse(this);
                     new ImportCalendarTask(account, this,
-                            CalendarUtils.ARG_CALENDAR_LVA, new CalendarBuilder())
+                            CalendarUtils.ARG_CALENDAR_COURSE, new CalendarBuilder())
                             .execute();
                 }
                 if (intent.getBooleanExtra(Consts.ARG_UPDATE_CAL, false) ||
@@ -41,19 +41,19 @@ public class UpdateService extends IntentService {
                             .execute();
                 }
                 if (intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false) ||
-                        intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS_STUDIES, false)) {
-                    Analytics.eventReloadStudies(this);
-                    new ImportStudiesTask(account, this).execute();
+                        intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS_CURRICULA, false)) {
+                    Analytics.eventReloadCurricula(this);
+                    new ImportCurriculaTask(account, this).execute();
                 }
                 if (intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false) ||
-                        intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS_LVAS, false)) {
-                    Analytics.eventReloadLvas(this);
+                        intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS_COURSES, false)) {
+                    Analytics.eventReloadCourses(this);
                     new ImportCourseTask(account, this).execute();
                 }
                 if (intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false) ||
-                        intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS_GRADES, false)) {
-                    Analytics.eventReloadGrades(this);
-                    new ImportGradeTask(account, this).execute();
+                        intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS_ASSESSMENTS, false)) {
+                    Analytics.eventReloadAssessments(this);
+                    new ImportAssessmentTask(account, this).execute();
                 }
                 if (intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false) ||
                         intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS_EXAMS, false)) {

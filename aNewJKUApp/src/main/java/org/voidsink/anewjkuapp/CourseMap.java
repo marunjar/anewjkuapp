@@ -4,8 +4,8 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 
-import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.kusss.Course;
+import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.update.ImportCourseTask;
 
 import java.util.ArrayList;
@@ -29,12 +29,12 @@ public class CourseMap {
     private Map<String, Course> map;
 
     public CourseMap(Context context) {
-        this.map = new HashMap<String, Course>();
+        this.map = new HashMap<>();
 
         ContentResolver cr = context.getContentResolver();
-        Cursor c = cr.query(KusssContentContract.Lva.CONTENT_URI,
+        Cursor c = cr.query(KusssContentContract.Course.CONTENT_URI,
                 ImportCourseTask.COURSE_PROJECTION, null, null,
-                KusssContentContract.Lva.LVA_COL_TERM + " DESC");
+                KusssContentContract.Course.COL_TERM + " DESC");
 
         if (c != null) {
             while (c.moveToNext()) {
@@ -56,7 +56,7 @@ public class CourseMap {
             return course;
         }
 
-        List<Course> courses = new ArrayList<Course>();
+        List<Course> courses = new ArrayList<>();
         for (Course tmp : this.map.values()) {
             if (courseId.equals(tmp.getCourseId())) {
                 courses.add(tmp);

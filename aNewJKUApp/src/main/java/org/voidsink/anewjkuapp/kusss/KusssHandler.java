@@ -294,7 +294,7 @@ public class KusssHandler {
 
         List<Course> courses = new ArrayList<>();
         try {
-            Log.d(TAG, "getLvas");
+            Log.d(TAG, "getCourses");
 
             for (Term term : terms) {
                 term.setLoaded(false); // init loaded flag
@@ -364,7 +364,7 @@ public class KusssHandler {
         return false;
     }
 
-    public List<Assessment> getGrades(Context c) {
+    public List<Assessment> getAssessments(Context c) {
         List<Assessment> grades = new ArrayList<>();
         try {
             Document doc = Jsoup.connect(URL_MY_GRADES).data("months", "0")
@@ -388,7 +388,7 @@ public class KusssHandler {
                 }
             }
         } catch (IOException e) {
-            Log.e(TAG, "getGrades", e);
+            Log.e(TAG, "getAssessments", e);
             Analytics.sendException(c, e, true);
             return null;
         }
@@ -443,7 +443,7 @@ public class KusssHandler {
             if (courses != null && courses.size() > 0) {
                 Map<String, Assessment> gradeCache = new HashMap<>();
 
-                List<Assessment> grades = getGrades(c);
+                List<Assessment> grades = getAssessments(c);
                 if (grades != null) {
                     for (Assessment grade : grades) {
                         if (!grade.getCourseId().isEmpty()) {
@@ -563,20 +563,20 @@ public class KusssHandler {
         }
     }
 
-    public List<Curricula> getStudies(Context c) {
+    public List<Curriculum> getCurricula(Context c) {
         try {
-            List<Curricula> studies = new ArrayList<>();
+            List<Curriculum> mCurricula = new ArrayList<>();
 
             Document doc = Jsoup.connect(URL_MY_STUDIES).get();
 
             Elements rows = doc.select(SELECT_MY_STUDIES);
             for (Element row : rows) {
-                Curricula s = new Curricula(c, row);
+                Curriculum s = new Curriculum(c, row);
                 if (s.isInitialized()) {
-                    studies.add(s);
+                    mCurricula.add(s);
                 }
             }
-            return studies;
+            return mCurricula;
         } catch (Exception e) {
             Analytics.sendException(c, e, true);
             return null;

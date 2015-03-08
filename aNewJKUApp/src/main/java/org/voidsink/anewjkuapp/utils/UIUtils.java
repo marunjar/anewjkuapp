@@ -57,12 +57,12 @@ public class UIUtils {
         }
     }
 
-    public static String getChipGradeText(Assessment grade) {
-        if (grade != null) {
-            if (grade.getGrade().isNumber()) {
-                return String.format("%d", grade.getGrade().getValue());
+    public static String getChipGradeText(Assessment assessment) {
+        if (assessment != null) {
+            if (assessment.getGrade().isNumber()) {
+                return String.format("%d", assessment.getGrade().getValue());
             }
-            if (grade.getGrade().isPositive()) {
+            if (assessment.getGrade().isPositive()) {
                 return "\u2713";
             } else {
                 return "\u2717";
@@ -71,9 +71,9 @@ public class UIUtils {
         return "?";
     }
 
-    public static int getChipGradeColor(Assessment grade) {
-        if (grade != null) {
-            return grade.getGrade().getColor();
+    public static int getChipGradeColor(Assessment assessment) {
+        if (assessment != null) {
+            return assessment.getGrade().getColor();
         }
         return Color.GRAY;
     }

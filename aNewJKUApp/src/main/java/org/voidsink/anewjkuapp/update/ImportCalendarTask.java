@@ -178,7 +178,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                                     mCalendarBuilder);
                             kusssIdPrefix = "at-jku-kusss-exam-";
                             break;
-                        case CalendarUtils.ARG_CALENDAR_LVA:
+                        case CalendarUtils.ARG_CALENDAR_COURSE:
                             iCal = KusssHandler.getInstance().getLVAIcal(mContext,
                                     mCalendarBuilder);
                             kusssIdPrefix = "at-jku-kusss-coursedate-";

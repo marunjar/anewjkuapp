@@ -56,7 +56,7 @@ public enum AssessmentType {
 		}		
 	}
 
-	public static AssessmentType parseGradeType(int ordinal) {
+	public static AssessmentType parseAssessmentType(int ordinal) {
 		return AssessmentType.values()[ordinal];
 	}
 }
