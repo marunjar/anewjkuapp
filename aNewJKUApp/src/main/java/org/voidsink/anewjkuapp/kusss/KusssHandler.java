@@ -1,8 +1,6 @@
 package org.voidsink.anewjkuapp.kusss;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.text.format.DateUtils;
 import android.util.Log;
 
@@ -433,7 +431,7 @@ public class KusssHandler {
         return exams;
     }
 
-    public List<Exam> getNewExamsByLvaNr(Context c, List<Course> courses, List<Term> terms)
+    public List<Exam> getNewExamsByCourseId(Context c, List<Course> courses, List<Term> terms)
             throws IOException {
 
         List<Exam> exams = new ArrayList<>();
@@ -448,20 +446,20 @@ public class KusssHandler {
                 List<Assessment> grades = getGrades(c);
                 if (grades != null) {
                     for (Assessment grade : grades) {
-                        if (!grade.getLvaNr().isEmpty()) {
-                            Assessment existing = gradeCache.get(grade.getLvaNr());
+                        if (!grade.getCourseId().isEmpty()) {
+                            Assessment existing = gradeCache.get(grade.getCourseId());
                             if (existing != null) {
                                 Log.d(TAG,
                                         existing.getTitle() + " --> "
                                                 + grade.getTitle());
                             }
-                            gradeCache.put(grade.getLvaNr(), grade);
+                            gradeCache.put(grade.getCourseId(), grade);
                         }
                     }
                 }
 
                 for (Course course : courses) {
-                    Assessment grade = gradeCache.get(course.getLvaNr());
+                    Assessment grade = gradeCache.get(course.getCourseId());
                     if (grade != null) {
                         if ((grade.getGrade() == Grade.G5)
                                 || (grade.getDate().getTime() > (System
@@ -473,8 +471,8 @@ public class KusssHandler {
                         }
                     }
                     if (grade == null) {
-                        List<Exam> newExams = getNewExamsByLvaNr(c,
-                                course.getLvaNr());
+                        List<Exam> newExams = getNewExamsByCourseId(c,
+                                course.getCourseId());
                         if (newExams != null) {
                             for (Exam newExam : newExams) {
                                 if (newExam != null) {
@@ -489,19 +487,19 @@ public class KusssHandler {
             // add registered exams
             loadExams(c, exams);
         } catch (Exception e) {
-            Log.e(TAG, "getNewExamsByLvaNr", e);
+            Log.e(TAG, "getNewExamsByCourseId", e);
             Analytics.sendException(c, e, true);
             return null;
         }
         return exams;
     }
 
-    private List<Exam> getNewExamsByLvaNr(Context c, String lvaNr) {
+    private List<Exam> getNewExamsByCourseId(Context c, String courseId) {
         List<Exam> exams = new ArrayList<>();
         try {
             final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
 
-            Log.d(TAG, "getNewExamsByLvaNr: " + lvaNr);
+            Log.d(TAG, "getNewExamsByCourseId: " + courseId);
             Document doc = Jsoup
                     .connect(URL_GET_NEW_EXAMS)
                     .timeout(TIMEOUT_SEARCH_EXAM_BY_LVA)
@@ -512,7 +510,7 @@ public class KusssHandler {
                     .data("searchDateTo",
                             df.format(new Date(System.currentTimeMillis()
                                     + DateUtils.YEAR_IN_MILLIS)))
-                    .data("searchLvaNr", lvaNr).data("searchLvaTitle", "")
+                    .data("searchLvaNr", courseId).data("searchLvaTitle", "")
                     .data("searchCourseClass", "").post();
 
             Elements rows = doc.select(SELECT_NEW_EXAMS);
@@ -534,7 +532,7 @@ public class KusssHandler {
                 }
             }
         } catch (IOException e) {
-            Log.e(TAG, "getNewExamsByLvaNr", e);
+            Log.e(TAG, "getNewExamsByCourseId", e);
             Analytics.sendException(c, e, true);
             exams = null;
         }
@@ -585,9 +583,4 @@ public class KusssHandler {
         }
     }
 
-    public void showExamInBrowser(Context c, String lvaNr) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(URL_GET_EXAMS));
-        c.startActivity(intent);
-        // TODO: create activity with webview that uses stored credentials to login and open page with search for lvanr
-    }
 }

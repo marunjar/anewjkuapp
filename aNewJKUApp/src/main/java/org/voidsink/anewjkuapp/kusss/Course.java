@@ -10,11 +10,11 @@ import java.util.regex.Pattern;
 
 public class Course {
 
-    private static final Pattern lvaNrPattern = Pattern
+    private static final Pattern courseIdPattern = Pattern
             .compile(KusssHandler.PATTERN_LVA_NR_WITH_DOT);
 
     private String term;
-    private String lvaNr;
+    private String courseId;
     private String title;
     private int skz;
     private String teacher;
@@ -23,9 +23,9 @@ public class Course {
     private String lvaType;
     private String code;
 
-    public Course(String term, String lvaNr) {
+    public Course(String term, String courseId) {
         this.term = term;
-        this.lvaNr = lvaNr;
+        this.courseId = courseId;
     }
 
     public Course(Context c, String term, Element row) {
@@ -37,9 +37,9 @@ public class Course {
             try {
                 boolean active = columns.get(9)
                         .getElementsByClass("assignment-active").size() == 1;
-                String lvaNrText = columns.get(6).text();
-                if (active && lvaNrPattern.matcher(lvaNrText).matches()) {
-                    this.lvaNr = lvaNrText.toUpperCase().replace(".", "");
+                String courseIdText = columns.get(6).text();
+                if (active && courseIdPattern.matcher(courseIdText).matches()) {
+                    this.courseId = courseIdText.toUpperCase().replace(".", "");
                     setTitle(columns.get(5).text());
                     setLvaType(columns.get(4).text()); // type (UE, ...)
                     setTeacher(columns.get(7).text()); // Leiter
@@ -56,9 +56,9 @@ public class Course {
         }
     }
 
-    public Course(String term, String lvaNr, String title, int skz, String teacher, double sws, double ects, String type, String code) {
+    public Course(String term, String courseId, String title, int skz, String teacher, double sws, double ects, String type, String code) {
         this.term = term;
-        this.lvaNr = lvaNr;
+        this.courseId = courseId;
         this.title = title;
         this.skz = skz;
         this.teacher = teacher;
@@ -124,12 +124,12 @@ public class Course {
         return this.term;
     }
 
-    public String getLvaNr() {
-        return this.lvaNr;
+    public String getCourseId() {
+        return this.courseId;
     }
 
     public boolean isInitialized() {
-        return !term.isEmpty() && !lvaNr.isEmpty();
+        return !term.isEmpty() && !courseId.isEmpty();
     }
 
     public String getCode() {

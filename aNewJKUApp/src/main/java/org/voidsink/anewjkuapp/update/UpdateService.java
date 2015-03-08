@@ -48,7 +48,7 @@ public class UpdateService extends IntentService {
                 if (intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false) ||
                         intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS_LVAS, false)) {
                     Analytics.eventReloadLvas(this);
-                    new ImportLvaTask(account, this).execute();
+                    new ImportCourseTask(account, this).execute();
                 }
                 if (intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false) ||
                         intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS_GRADES, false)) {

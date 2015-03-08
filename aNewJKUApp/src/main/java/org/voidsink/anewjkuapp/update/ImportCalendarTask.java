@@ -52,9 +52,9 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 
     private final CalendarBuilder mCalendarBuilder;
 
-    private static final Pattern lvaNrTermPattern = Pattern
+    private static final Pattern courseIdTermPattern = Pattern
             .compile(KusssHandler.PATTERN_LVA_NR_SLASH_TERM);
-    private static final Pattern lvaLeiterPattern = Pattern
+    private static final Pattern lecturerPattern = Pattern
             .compile("Lva-LeiterIn:\\s+");
     private static final String EXTENDED_PROPERTY_NAME_KUSSS_ID = "kusssId";
 
@@ -204,7 +204,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 
                     ArrayList<ContentProviderOperation> batch = new ArrayList<>();
 
-                    // modify events: move lvanr/term and teacher to description
+                    // modify events: move courseId/term and lecturer to description
                     String lineSeparator = System.getProperty("line.separator");
                     if (lineSeparator == null) lineSeparator = ", ";
 
@@ -218,30 +218,30 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                             String description = ev.getDescription()
                                     .getValue().trim();
 
-                            Matcher lvaNrTermMatcher = lvaNrTermPattern
-                                    .matcher(summary); // (lvaNr/term)
-                            if (lvaNrTermMatcher.find()) {
+                            Matcher courseIdTermMatcher = courseIdTermPattern
+                                    .matcher(summary); // (courseId/term)
+                            if (courseIdTermMatcher.find()) {
                                 if (!description.isEmpty()) {
                                     description += lineSeparator;
                                     description += lineSeparator;
                                 }
                                 description += summary
-                                        .substring(lvaNrTermMatcher.start());
+                                        .substring(courseIdTermMatcher.start());
                                 summary = summary.substring(0,
-                                        lvaNrTermMatcher.start());
+                                        courseIdTermMatcher.start());
                             } else {
-                                Matcher lvaLeiterMatcher = lvaLeiterPattern
+                                Matcher lecturerMatcher = lecturerPattern
                                         .matcher(summary);
-                                if (lvaLeiterMatcher.find()) {
+                                if (lecturerMatcher.find()) {
                                     if (!description.isEmpty()) {
                                         description += lineSeparator;
                                         description += lineSeparator;
                                     }
                                     description += summary
-                                            .substring(lvaLeiterMatcher
+                                            .substring(lecturerMatcher
                                                     .start());
                                     summary = summary.substring(0,
-                                            lvaLeiterMatcher.start());
+                                            lecturerMatcher.start());
                                 }
                             }
 

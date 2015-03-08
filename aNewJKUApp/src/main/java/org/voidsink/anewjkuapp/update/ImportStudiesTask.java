@@ -179,31 +179,7 @@ public class ImportStudiesTask extends BaseAsyncTask<Void, Void, Void> {
                                             .build());
                                     mSyncResult.stats.numUpdates++;
                                 } else {
-                                    /*
                                     // delete
-                                    Log.d(TAG,
-                                            "delete: "
-                                                    + Lva.getKey(lvaTerm, lvaNr));
-                                    // Entry doesn't exist. Remove only
-                                    // newer
-                                    // events from the database.
-                                    Uri deleteUri = lvaUri
-                                            .buildUpon()
-                                            .appendPath(Integer.toString(lvaId))
-                                            .build();
-                                    Log.d(TAG, "Scheduling delete: "
-                                            + deleteUri);
-
-                                    batch.add(ContentProviderOperation
-                                            .newDelete(
-                                                    KusssContentContract
-                                                            .asEventSyncAdapter(
-                                                                    deleteUri,
-                                                                    mAccount.name,
-                                                                    mAccount.type))
-                                            .build());
-                                    mSyncResult.stats.numDeletes++;
-                                    */
                                 }
                             }
                             c.close();

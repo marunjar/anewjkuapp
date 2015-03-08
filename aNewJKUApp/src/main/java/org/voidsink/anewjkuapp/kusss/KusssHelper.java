@@ -10,7 +10,7 @@ import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
 import org.voidsink.anewjkuapp.update.ImportExamTask;
 import org.voidsink.anewjkuapp.update.ImportGradeTask;
-import org.voidsink.anewjkuapp.update.ImportLvaTask;
+import org.voidsink.anewjkuapp.update.ImportCourseTask;
 import org.voidsink.anewjkuapp.update.ImportStudiesTask;
 
 import java.util.Date;
@@ -19,26 +19,26 @@ public class KusssHelper {
 
     private static final String URL_GET_EXAMS = "https://www.kusss.jku.at/kusss/szexaminationlist.action";
 
-    public static void showExamInBrowser(Context context, String lvaNr) {
+    public static void showExamInBrowser(Context context, String courseId) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(URL_GET_EXAMS));
         context.startActivity(intent);
-        // TODO: create activity with webview that uses stored credentials to login and open page with search for lvanr
+        // TODO: create activity with webview that uses stored credentials to login and open page with search for courseId
     }
 
-    public static String getLvaKey(String term, String lvaNr) {
-        return term + "-" + lvaNr;
+    public static String getCourseKey(String term, String courseId) {
+        return term + "-" + courseId;
     }
 
-    public static Course createLva(Cursor c) {
-        return new Course(c.getString(ImportLvaTask.COLUMN_LVA_TERM),
-                c.getString(ImportLvaTask.COLUMN_LVA_LVANR),
-                c.getString(ImportLvaTask.COLUMN_LVA_TITLE),
-                c.getInt(ImportLvaTask.COLUMN_LVA_SKZ),
-                c.getString(ImportLvaTask.COLUMN_LVA_TEACHER),
-                c.getDouble(ImportLvaTask.COLUMN_LVA_SWS),
-                c.getDouble(ImportLvaTask.COLUMN_LVA_ECTS),
-                c.getString(ImportLvaTask.COLUMN_LVA_TYPE),
-                c.getString(ImportLvaTask.COLUMN_LVA_CODE));
+    public static Course createCourse(Cursor c) {
+        return new Course(c.getString(ImportCourseTask.COLUMN_LVA_TERM),
+                c.getString(ImportCourseTask.COLUMN_LVA_COURSEID),
+                c.getString(ImportCourseTask.COLUMN_LVA_TITLE),
+                c.getInt(ImportCourseTask.COLUMN_LVA_SKZ),
+                c.getString(ImportCourseTask.COLUMN_LVA_TEACHER),
+                c.getDouble(ImportCourseTask.COLUMN_LVA_SWS),
+                c.getDouble(ImportCourseTask.COLUMN_LVA_ECTS),
+                c.getString(ImportCourseTask.COLUMN_LVA_TYPE),
+                c.getString(ImportCourseTask.COLUMN_LVA_CODE));
     }
 
     public static ContentValues getLvaContentValues(Course course) {
@@ -46,7 +46,7 @@ public class KusssHelper {
         cv.put(KusssContentContract.Lva.LVA_COL_TITLE, course.getTitle());
         cv.put(KusssContentContract.Lva.LVA_COL_ECTS, course.getEcts());
         cv.put(KusssContentContract.Lva.LVA_COL_SWS, course.getSws());
-        cv.put(KusssContentContract.Lva.LVA_COL_LVANR, course.getLvaNr());
+        cv.put(KusssContentContract.Lva.LVA_COL_COURSEID, course.getCourseId());
         cv.put(KusssContentContract.Lva.LVA_COL_SKZ, course.getSKZ());
         cv.put(KusssContentContract.Lva.LVA_COL_CODE, course.getCode());
         cv.put(KusssContentContract.Lva.LVA_COL_TEACHER, course.getTeacher());
@@ -58,7 +58,7 @@ public class KusssHelper {
 
     public static Exam createExam(Cursor c) {
         return new Exam(
-                c.getString(ImportExamTask.COLUMN_EXAM_LVANR),
+                c.getString(ImportExamTask.COLUMN_EXAM_COURSEID),
                 c.getString(ImportExamTask.COLUMN_EXAM_TERM),
                 new Date(c.getLong(ImportExamTask.COLUMN_EXAM_DTSTART)),
                 new Date(c.getLong(ImportExamTask.COLUMN_EXAM_DTEND)),
@@ -77,7 +77,7 @@ public class KusssHelper {
         cv.put(KusssContentContract.Exam.EXAM_COL_DESCRIPTION, exam.getDescription());
         cv.put(KusssContentContract.Exam.EXAM_COL_INFO, exam.getInfo());
         cv.put(KusssContentContract.Exam.EXAM_COL_LOCATION, exam.getLocation());
-        cv.put(KusssContentContract.Exam.EXAM_COL_LVANR, exam.getLvaNr());
+        cv.put(KusssContentContract.Exam.EXAM_COL_COURSEID, exam.getCourseId());
         cv.put(KusssContentContract.Exam.EXAM_COL_TERM, exam.getTerm());
         cv.put(KusssContentContract.Exam.EXAM_COL_DTEND, exam.getDtEnd().getTime());
         cv.put(KusssContentContract.Exam.EXAM_COL_IS_REGISTERED,
@@ -122,7 +122,7 @@ public class KusssHelper {
         return new Assessment(
                 AssessmentType.parseGradeType(c.getInt(ImportGradeTask.COLUMN_GRADE_TYPE)),
                 new Date(c.getLong(ImportGradeTask.COLUMN_GRADE_DATE)),
-                c.getString(ImportGradeTask.COLUMN_GRADE_LVANR),
+                c.getString(ImportGradeTask.COLUMN_GRADE_COURSEID),
                 c.getString(ImportGradeTask.COLUMN_GRADE_TERM),
                 Grade.parseGradeType(c.getInt(ImportGradeTask.COLUMN_GRADE_GRADE)),
                 c.getInt(ImportGradeTask.COLUMN_GRADE_SKZ),
@@ -137,7 +137,7 @@ public class KusssHelper {
         ContentValues cv = new ContentValues();
         cv.put(KusssContentContract.Grade.GRADE_COL_DATE, grade.getDate().getTime());
         cv.put(KusssContentContract.Grade.GRADE_COL_GRADE, grade.getGrade().ordinal());
-        cv.put(KusssContentContract.Grade.GRADE_COL_LVANR, grade.getLvaNr());
+        cv.put(KusssContentContract.Grade.GRADE_COL_COURSEID, grade.getCourseId());
         cv.put(KusssContentContract.Grade.GRADE_COL_SKZ, grade.getSkz());
         cv.put(KusssContentContract.Grade.GRADE_COL_TERM, grade.getTerm());
         cv.put(KusssContentContract.Grade.GRADE_COL_TYPE, grade.getAssessmentType().ordinal());
@@ -147,4 +147,7 @@ public class KusssHelper {
         cv.put(KusssContentContract.Grade.GRADE_COL_SWS, grade.getSws());
         return cv;
     }
+
 }
+
+

@@ -15,9 +15,9 @@ import java.util.regex.Pattern;
 
 public class Assessment {
 
-    private static final Pattern lvaNrTermPattern = Pattern
+    private static final Pattern courseIdTermPattern = Pattern
             .compile(KusssHandler.PATTERN_LVA_NR_COMMA_TERM);
-    private static final Pattern lvaNrPattern = Pattern
+    private static final Pattern courseIdPattern = Pattern
             .compile(KusssHandler.PATTERN_LVA_NR);
     private static final Pattern termPattern = Pattern
             .compile(KusssHandler.PATTERN_TERM);
@@ -25,7 +25,7 @@ public class Assessment {
     private int skz;
     private Grade grade;
     private String term;
-    private String lvaNr;
+    private String courseId;
     private Date date;
     private final AssessmentType assessmentType;
     private String title;
@@ -33,12 +33,12 @@ public class Assessment {
     private double ects;
     private double sws;
 
-    public Assessment(AssessmentType type, Date date, String lvaNr, String term,
+    public Assessment(AssessmentType type, Date date, String courseId, String term,
                       Grade grade, int skz, String title, String code, double ects,
                       double sws) {
         this.assessmentType = type;
         this.date = date;
-        this.lvaNr = lvaNr;
+        this.courseId = courseId;
         this.term = term;
         this.grade = grade;
         this.skz = skz;
@@ -56,24 +56,24 @@ public class Assessment {
         final Elements columns = row.getElementsByTag("td");
         if (columns.size() >= 7) {
             String title = columns.get(1).text();
-            Matcher lvaNrTermMatcher = lvaNrTermPattern.matcher(title); // (lvaNr,term)
-            if (lvaNrTermMatcher.find()) {
-                String lvaNrTerm = lvaNrTermMatcher.group();
+            Matcher courseIdTermMatcher = courseIdTermPattern.matcher(title); // (courseId,term)
+            if (courseIdTermMatcher.find()) {
+                String courseIdTerm = courseIdTermMatcher.group();
 
-                Matcher lvaNrMatcher = lvaNrPattern.matcher(lvaNrTerm); // lvaNr
-                if (lvaNrMatcher.find()) {
-                    setLvaNr(lvaNrMatcher.group());
+                Matcher courseIdMatcher = courseIdPattern.matcher(courseIdTerm); // courseId
+                if (courseIdMatcher.find()) {
+                    setCourseId(courseIdMatcher.group());
                 }
 
-                Matcher termMatcher = termPattern.matcher(lvaNrTerm); // term
-                if (termMatcher.find(lvaNrMatcher.end())) {
+                Matcher termMatcher = termPattern.matcher(courseIdTerm); // term
+                if (termMatcher.find(courseIdMatcher.end())) {
                     setTerm(termMatcher.group());
                 }
 
-                String tmp = title.substring(0, lvaNrTermMatcher.start());
-                if (lvaNrTermMatcher.end() <= title.length()) {
+                String tmp = title.substring(0, courseIdTermMatcher.start());
+                if (courseIdTermMatcher.end() <= title.length()) {
                     String addition = title
-                            .substring(lvaNrTermMatcher.end(),
+                            .substring(courseIdTermMatcher.end(),
                                     title.length())
                             .replaceAll("(\\(.*?\\))", "").trim();
                     if (addition.length() > 0) {
@@ -146,8 +146,8 @@ public class Assessment {
         this.term = term;
     }
 
-    private void setLvaNr(String lvaNr) {
-        this.lvaNr = lvaNr;
+    private void setCourseId(String courseId) {
+        this.courseId = courseId;
     }
 
     private void setDate(Date date) {
@@ -162,8 +162,8 @@ public class Assessment {
         return this.date;
     }
 
-    public String getLvaNr() {
-        return this.lvaNr;
+    public String getCourseId() {
+        return this.courseId;
     }
 
     public String getTerm() {

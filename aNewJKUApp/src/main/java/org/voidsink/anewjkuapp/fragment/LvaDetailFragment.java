@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import org.voidsink.anewjkuapp.KusssContentContract;
-import org.voidsink.anewjkuapp.LvaListAdapter;
+import org.voidsink.anewjkuapp.CourseListAdapter;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
@@ -38,7 +38,7 @@ public class LvaDetailFragment extends TermFragment implements
         ContentObserverListener {
 
     private BaseContentObserver mLvaObserver;
-    private LvaListAdapter mAdapter;
+    private CourseListAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,7 +48,7 @@ public class LvaDetailFragment extends TermFragment implements
         final RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new LvaListAdapter(getContext());
+        mAdapter = new CourseListAdapter(getContext());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mAdapter));
 

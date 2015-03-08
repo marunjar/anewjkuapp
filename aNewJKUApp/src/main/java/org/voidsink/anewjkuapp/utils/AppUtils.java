@@ -582,7 +582,7 @@ public class AppUtils {
         Assessment finalGrade = null;
 
         for (Assessment grade : grades) {
-            if (grade.getCode().equals(course.getCode()) && grade.getLvaNr().equals(course.getLvaNr())) {
+            if (grade.getCode().equals(course.getCode()) && grade.getCourseId().equals(course.getCourseId())) {
                 if (finalGrade == null || finalGrade.getGrade().getValue() > grade.getGrade().getValue()) {
                     finalGrade = grade;
                 }
@@ -600,10 +600,10 @@ public class AppUtils {
                 }
             }
             if (finalGrade != null) {
-                Log.d(TAG, String.format("found by LvaNr/Title: %s/%s", course.getLvaNr(), course.getTitle()));
+                Log.d(TAG, String.format("found by courseId/title: %s/%s", course.getCourseId(), course.getTitle()));
             }
         } else {
-            Log.d(TAG, String.format("found by LvaNr/Code: %s/%s", course.getLvaNr(), course.getCode()));
+            Log.d(TAG, String.format("found by courseId/code: %s/%s", course.getCourseId(), course.getCode()));
         }
 
         return finalGrade;
@@ -615,7 +615,7 @@ public class AppUtils {
             Assessment g = grades.get(i);
             // check only grades for same lva and term
             if (g.getCode().equals(grade.getCode())
-                    && g.getLvaNr().equals(grade.getLvaNr())) {
+                    && g.getCourseId().equals(grade.getCourseId())) {
                 // keep only recent (best and newest) grade
                 if (g.getDate().before(grade.getDate())) {
                     // remove last grade

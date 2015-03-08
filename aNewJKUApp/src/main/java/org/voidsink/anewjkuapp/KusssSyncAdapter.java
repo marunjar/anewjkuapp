@@ -4,7 +4,7 @@ import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.notification.KusssNotificationBuilder;
 import org.voidsink.anewjkuapp.update.ImportExamTask;
 import org.voidsink.anewjkuapp.update.ImportGradeTask;
-import org.voidsink.anewjkuapp.update.ImportLvaTask;
+import org.voidsink.anewjkuapp.update.ImportCourseTask;
 import org.voidsink.anewjkuapp.update.ImportStudiesTask;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
@@ -106,7 +106,7 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
 
 			Log.d(TAG, "importing LVAs");
 
-			ImportLvaTask lvaTask = new ImportLvaTask(account, extras,
+			ImportCourseTask lvaTask = new ImportCourseTask(account, extras,
 					authority, provider, syncResult, mContext);
 			lvaTask.execute();
 			while (!lvaTask.isDone() && !mSyncCancled) {

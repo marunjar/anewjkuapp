@@ -13,7 +13,7 @@ import android.util.Log;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.voidsink.anewjkuapp.KusssContentContract;
-import org.voidsink.anewjkuapp.LvaMap;
+import org.voidsink.anewjkuapp.CourseMap;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseAsyncTask;
@@ -54,7 +54,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
     public static final String[] EXAM_PROJECTION = new String[]{
             KusssContentContract.Exam.EXAM_COL_ID,
             KusssContentContract.Exam.EXAM_COL_TERM,
-            KusssContentContract.Exam.EXAM_COL_LVANR,
+            KusssContentContract.Exam.EXAM_COL_COURSEID,
             KusssContentContract.Exam.EXAM_COL_DTSTART,
             KusssContentContract.Exam.EXAM_COL_DTEND,
             KusssContentContract.Exam.EXAM_COL_LOCATION,
@@ -65,7 +65,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
 
     public static final int COLUMN_EXAM_ID = 0;
     public static final int COLUMN_EXAM_TERM = 1;
-    public static final int COLUMN_EXAM_LVANR = 2;
+    public static final int COLUMN_EXAM_COURSEID = 2;
     public static final int COLUMN_EXAM_DTSTART = 3;
     public static final int COLUMN_EXAM_DTEND = 4;
     public static final int COLUMN_EXAM_LOCATION = 5;
@@ -129,13 +129,13 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
                     updateNotify(mContext.getString(R.string.notification_sync_exam_loading));
 
                     List<Exam> exams;
-                    if (PreferenceWrapper.getNewExamsByLvaNr(mContext)) {
-                        LvaMap lvaMap = new LvaMap(mContext);
+                    if (PreferenceWrapper.getNewExamsByCourseId(mContext)) {
+                        CourseMap courseMap = new CourseMap(mContext);
                         List<Term> terms = KusssContentProvider.getTerms(mContext);
 
-                        Log.d(TAG, "load exams by lvanr");
-                        exams = KusssHandler.getInstance().getNewExamsByLvaNr(
-                                mContext, lvaMap.getLVAs(), terms);
+                        Log.d(TAG, "load exams by courseId");
+                        exams = KusssHandler.getInstance().getNewExamsByCourseId(
+                                mContext, courseMap.getCourses(), terms);
                     } else {
                         Log.d(TAG, "load exams");
                         exams = KusssHandler.getInstance()
@@ -172,7 +172,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
                                             + " local entries. Computing merge solution...");
                             int examId;
                             String examTerm;
-                            String examLvaNr;
+                            String examCourseId;
                             long examDtStart;
                             long examDtEnd;
                             String examLocation;
@@ -180,14 +180,14 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
                             while (c.moveToNext()) {
                                 examId = c.getInt(COLUMN_EXAM_ID);
                                 examTerm = c.getString(COLUMN_EXAM_TERM);
-                                examLvaNr = c.getString(COLUMN_EXAM_LVANR);
+                                examCourseId = c.getString(COLUMN_EXAM_COURSEID);
                                 examDtStart = c.getLong(COLUMN_EXAM_DTSTART);
                                 examDtEnd = c.getLong(COLUMN_EXAM_DTEND);
                                 examLocation = c
                                         .getString(COLUMN_EXAM_LOCATION);
 
                                 Exam exam = examMap.remove(Exam.getKey(
-                                        examLvaNr, examTerm, examDtStart));
+                                        examCourseId, examTerm, examDtStart));
                                 if (exam != null) {
                                     // Check to see if the entry needs to be
                                     // updated
@@ -255,7 +255,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
                                         .build());
                                 Log.d(TAG,
                                         "Scheduling insert: " + exam.getTerm()
-                                                + " " + exam.getLvaNr());
+                                                + " " + exam.getCourseId());
 
                                 mNewExamNotification.addInsert(getEventString(exam));
 

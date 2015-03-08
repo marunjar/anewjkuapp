@@ -20,7 +20,7 @@ public class Analytics {
     private static final int GA_DIM_EXCEPTION_MESSAGE = 3;
 
     // private static final int GA_METRIC_SYNC_INTERVAL = 1;
-    // private static final int GA_METRIC_LOAD_EXAM_BY_LVANR = 2;
+    // private static final int GA_METRIC_LOAD_EXAM_BY_COURSEID = 2;
     // private static final int GA_METRIC_USE_LIGHT_THEME = 3;
     // private static final int GA_METRIC_USE_BARCHART_FOR_LVA = 4;
 
@@ -61,8 +61,8 @@ public class Analytics {
         // GA_METRIC_SYNC_INTERVAL
     }
 
-    public static void sendLoadExamByLvaNr(Context context, boolean loadByLvaNr) {
-        // GA_METRIC_LOAD_EXAM_BY_LVANR
+    public static void sendLoadExamByCourseId(Context context, boolean loadByCourseId) {
+        // GA_METRIC_LOAD_EXAM_BY_COURSEID
     }
 
     public static void sendUseLightTheme(Context context, boolean useLightTheme) {

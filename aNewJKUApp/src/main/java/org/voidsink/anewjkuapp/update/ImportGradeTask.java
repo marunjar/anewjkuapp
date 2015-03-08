@@ -33,7 +33,7 @@ import java.util.Map;
 
 public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 
-    private static final String TAG = ImportLvaTask.class.getSimpleName();
+    private static final String TAG = ImportCourseTask.class.getSimpleName();
 
     private static final Object sync_lock = new Object();
 
@@ -50,7 +50,7 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
     public static final String[] GRADE_PROJECTION = new String[]{
             KusssContentContract.Grade.GRADE_COL_ID,
             KusssContentContract.Grade.GRADE_COL_TERM,
-            KusssContentContract.Grade.GRADE_COL_LVANR,
+            KusssContentContract.Grade.GRADE_COL_COURSEID,
             KusssContentContract.Grade.GRADE_COL_DATE,
             KusssContentContract.Grade.GRADE_COL_SKZ,
             KusssContentContract.Grade.GRADE_COL_TYPE,
@@ -63,7 +63,7 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
     // Constants representing column positions from PROJECTION.
     public static final int COLUMN_GRADE_ID = 0;
     public static final int COLUMN_GRADE_TERM = 1;
-    public static final int COLUMN_GRADE_LVANR = 2;
+    public static final int COLUMN_GRADE_COURSEID = 2;
     public static final int COLUMN_GRADE_DATE = 3;
     public static final int COLUMN_GRADE_SKZ = 4;
     public static final int COLUMN_GRADE_TYPE = 5;
@@ -215,7 +215,7 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
                                         .withValues(KusssHelper.getGradeContentValues(grade))
                                         .build());
                                 Log.d(TAG, "Scheduling insert: " + grade.getTerm()
-                                        + " " + grade.getLvaNr());
+                                        + " " + grade.getCourseId());
 
                                 mGradeChangeNotification.addInsert(String.format(
                                         "%s: %s", grade.getTitle(), mContext

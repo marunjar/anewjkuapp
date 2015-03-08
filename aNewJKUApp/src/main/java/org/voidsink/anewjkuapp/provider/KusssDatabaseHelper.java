@@ -22,7 +22,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 			+ KusssContentContract.Lva.LVA_COL_ID
 			+ " integer primary key autoincrement not null, "
 			+ KusssContentContract.Lva.LVA_COL_TERM + " text not null, "
-			+ KusssContentContract.Lva.LVA_COL_LVANR + " text not null, "
+			+ KusssContentContract.Lva.LVA_COL_COURSEID + " text not null, "
 			+ KusssContentContract.Lva.LVA_COL_CODE + " text not null, "
 			+ KusssContentContract.Lva.LVA_COL_TITLE + " text not null, "
 			+ KusssContentContract.Lva.LVA_COL_TYPE + " integer not null, "
@@ -36,7 +36,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 			+ KusssContentContract.Exam.EXAM_COL_ID
 			+ " integer primary key autoincrement not null, "
 			+ KusssContentContract.Exam.EXAM_COL_TERM + " text not null, "
-			+ KusssContentContract.Exam.EXAM_COL_LVANR + " text not null, "
+			+ KusssContentContract.Exam.EXAM_COL_COURSEID + " text not null, "
 			+ KusssContentContract.Exam.EXAM_COL_DTSTART + " integer not null, "
 			+ KusssContentContract.Exam.EXAM_COL_DTEND + " integer not null, "
 			+ KusssContentContract.Exam.EXAM_COL_LOCATION + " text, "
@@ -50,7 +50,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 			+ KusssContentContract.Grade.GRADE_COL_ID
 			+ " integer primary key autoincrement not null, "
 			+ KusssContentContract.Grade.GRADE_COL_TERM + " text, "
-			+ KusssContentContract.Grade.GRADE_COL_LVANR + " text, "
+			+ KusssContentContract.Grade.GRADE_COL_COURSEID + " text, "
 			+ KusssContentContract.Grade.GRADE_COL_DATE + " integer not null, "
 			+ KusssContentContract.Grade.GRADE_COL_SKZ + " integer, "
 			+ KusssContentContract.Grade.GRADE_COL_GRADE

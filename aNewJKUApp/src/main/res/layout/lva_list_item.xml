@@ -43,7 +43,7 @@
                 android:gravity="center_vertical" />
 
             <TextView
-                android:id="@+id/lva_list2_item_lvanr"
+                android:id="@+id/lva_list2_item_courseId"
                 style="@style/Text.Body2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -57,10 +57,10 @@
                 style="@style/Text.Body2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/lva_list2_item_lvanr"
+                android:layout_alignBaseline="@id/lva_list2_item_courseId"
                 android:layout_marginRight="@dimen/separator_top_bottom_margin"
-                android:layout_toEndOf="@id/lva_list2_item_lvanr"
-                android:layout_toRightOf="@id/lva_list2_item_lvanr"
+                android:layout_toEndOf="@id/lva_list2_item_courseId"
+                android:layout_toRightOf="@id/lva_list2_item_courseId"
                 android:gravity="center_vertical" />
 
             <include

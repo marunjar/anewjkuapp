@@ -19,7 +19,7 @@ import org.voidsink.anewjkuapp.kusss.Course;
 import org.voidsink.anewjkuapp.kusss.Curricula;
 import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.update.ImportGradeTask;
-import org.voidsink.anewjkuapp.update.ImportLvaTask;
+import org.voidsink.anewjkuapp.update.ImportCourseTask;
 import org.voidsink.anewjkuapp.update.ImportStudiesTask;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
@@ -369,12 +369,12 @@ public class KusssContentProvider extends ContentProvider {
         if (mAccount != null) {
             ContentResolver cr = context.getContentResolver();
             Cursor c = cr.query(KusssContentContract.Lva.CONTENT_URI,
-                    ImportLvaTask.LVA_PROJECTION, null, null,
+                    ImportCourseTask.COURSE_PROJECTION, null, null,
                     KusssContentContract.Lva.LVA_COL_TERM + " DESC");
 
             if (c != null) {
                 while (c.moveToNext()) {
-                    mCourses.add(KusssHelper.createLva(c));
+                    mCourses.add(KusssHelper.createCourse(c));
                 }
                 c.close();
             }

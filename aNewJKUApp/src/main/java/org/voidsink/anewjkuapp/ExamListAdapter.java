@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
-import org.voidsink.anewjkuapp.kusss.KusssHandler;
+import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import java.text.DateFormat;
@@ -45,7 +45,7 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
                 public boolean onMenuItemClick(MenuItem menuItem) {
                     switch (menuItem.getItemId()) {
                         case R.id.menu_exam_register: {
-                            KusssHandler.getInstance().showExamInBrowser(mContext, exam.getLvaNr());
+                            KusssHelper.showExamInBrowser(mContext, exam.getCourseId());
                             return true;
                         }
                     }
@@ -66,7 +66,7 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
             } else {
                 holder.mInfo.setVisibility(View.GONE);
             }
-            holder.mLvaNr.setText(exam.getLvaNr());
+            holder.mCourseId.setText(exam.getCourseId());
             holder.mTerm.setText(exam.getTerm());
 
             if (exam.getSkz() > 0) {
@@ -120,7 +120,7 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
         public final TextView mTime;
         public final TextView mSkz;
         public final TextView mTerm;
-        public final TextView mLvaNr;
+        public final TextView mCourseId;
         public final TextView mInfo;
         public final TextView mDescription;
         public final TextView mTitle;
@@ -134,7 +134,7 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
             mTitle = (TextView) itemView.findViewById(R.id.exam_list_item_title);
             mDescription = (TextView) itemView.findViewById(R.id.exam_list_item_description);
             mInfo = (TextView) itemView.findViewById(R.id.exam_list_item_info);
-            mLvaNr = (TextView) itemView.findViewById(R.id.exam_list_item_lvanr);
+            mCourseId = (TextView) itemView.findViewById(R.id.exam_list_item_courseId);
             mTerm = (TextView) itemView.findViewById(R.id.exam_list_item_term);
             mSkz = (TextView) itemView.findViewById(R.id.exam_list_item_skz);
             mTime = (TextView) itemView.findViewById(R.id.exam_list_item_time);

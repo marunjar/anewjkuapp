@@ -21,16 +21,16 @@ public class Exam {
 
     private static final String TAG = Exam.class.getSimpleName();
 
-    private static final Pattern lvaNrTermPattern = Pattern
+    private static final Pattern courseIdTermPattern = Pattern
             .compile(KusssHandler.PATTERN_LVA_NR_COMMA_TERM);
-    private static final Pattern lvaNrPattern = Pattern
+    private static final Pattern courseIdPattern = Pattern
             .compile(KusssHandler.PATTERN_LVA_NR);
     private static final Pattern termPattern = Pattern
             .compile(KusssHandler.PATTERN_TERM);
     private static final Pattern timePattern = Pattern
             .compile("\\d{2}\\:\\d{2}");
 
-    private String lvaNr = "";
+    private String courseId = "";
     private String term = "";
     private Date dtStart = null;
     private Date dtEnd = null;
@@ -49,20 +49,20 @@ public class Exam {
             if (columns.size() >= 5
                     && columns.get(0).select("input").size() == 1) {
                 try {
-                    Matcher lvaNrTermMatcher = lvaNrTermPattern.matcher(columns
-                            .get(1).text()); // (lvaNr,term)
-                    if (lvaNrTermMatcher.find()) {
-                        String lvaNrTerm = lvaNrTermMatcher.group();
+                    Matcher courseIdTermMatcher = courseIdTermPattern.matcher(columns
+                            .get(1).text()); // (courseId,term)
+                    if (courseIdTermMatcher.find()) {
+                        String courseIdTerm = courseIdTermMatcher.group();
                         setTitle(columns.get(1).text()
-                                .substring(0, lvaNrTermMatcher.start()));
+                                .substring(0, courseIdTermMatcher.start()));
 
-                        Matcher lvaNrMatcher = lvaNrPattern.matcher(lvaNrTerm); // lvaNr
-                        if (lvaNrMatcher.find()) {
-                            setLvaNr(lvaNrMatcher.group());
+                        Matcher courseIdMatcher = courseIdPattern.matcher(courseIdTerm); // courseId
+                        if (courseIdMatcher.find()) {
+                            setCourseId(courseIdMatcher.group());
                         }
 
-                        Matcher termMatcher = termPattern.matcher(lvaNrTerm); // term
-                        if (termMatcher.find(lvaNrMatcher.end())) {
+                        Matcher termMatcher = termPattern.matcher(courseIdTerm); // term
+                        if (termMatcher.find(courseIdMatcher.end())) {
                             setTerm(termMatcher.group());
                         }
 
@@ -81,20 +81,20 @@ public class Exam {
             if (columns.size() >= 5
                     && columns.get(4).select("input").size() == 1) {
                 try {
-                    Matcher lvaNrTermMatcher = lvaNrTermPattern.matcher(columns
-                            .get(0).text()); // (lvaNr,term)
-                    if (lvaNrTermMatcher.find()) {
-                        String lvaNrTerm = lvaNrTermMatcher.group();
+                    Matcher courseIdTermMatcher = courseIdTermPattern.matcher(columns
+                            .get(0).text()); // (courseId,term)
+                    if (courseIdTermMatcher.find()) {
+                        String courseIdTerm = courseIdTermMatcher.group();
                         setTitle(columns.get(0).text()
-                                .substring(0, lvaNrTermMatcher.start()));
+                                .substring(0, courseIdTermMatcher.start()));
 
-                        Matcher lvaNrMatcher = lvaNrPattern.matcher(lvaNrTerm); // lvaNr
-                        if (lvaNrMatcher.find()) {
-                            setLvaNr(lvaNrMatcher.group());
+                        Matcher courseIdMatcher = courseIdPattern.matcher(courseIdTerm); // courseId
+                        if (courseIdMatcher.find()) {
+                            setCourseId(courseIdMatcher.group());
                         }
 
-                        Matcher termMatcher = termPattern.matcher(lvaNrTerm); // term
-                        if (termMatcher.find(lvaNrMatcher.end())) {
+                        Matcher termMatcher = termPattern.matcher(courseIdTerm); // term
+                        if (termMatcher.find(courseIdMatcher.end())) {
                             setTerm(termMatcher.group());
                         }
 
@@ -131,8 +131,8 @@ public class Exam {
         this.dtEnd = cal.getTime();
     }
 
-    public Exam(String lvaNr, String term, Date dtStart, Date dtEnd, String location, String description, String info, String title, boolean isRegistered) {
-        this.lvaNr = lvaNr;
+    public Exam(String courseId, String term, Date dtStart, Date dtEnd, String location, String description, String info, String title, boolean isRegistered) {
+        this.courseId = courseId;
         this.term = term;
         this.dtStart = dtStart;
         this.dtEnd = dtEnd;
@@ -151,8 +151,8 @@ public class Exam {
         this.title = title;
     }
 
-    private void setLvaNr(String lvaNr) {
-        this.lvaNr = lvaNr;
+    private void setCourseId(String courseId) {
+        this.courseId = courseId;
     }
 
     private void setTerm(String term) {
@@ -244,7 +244,7 @@ public class Exam {
     }
 
     public boolean isInitialized() {
-        return !this.lvaNr.isEmpty() && !this.term.isEmpty()
+        return !this.courseId.isEmpty() && !this.term.isEmpty()
                 && this.dtStart != null && this.dtEnd != null;
     }
 
@@ -280,8 +280,8 @@ public class Exam {
         return this.description;
     }
 
-    public String getLvaNr() {
-        return this.lvaNr;
+    public String getCourseId() {
+        return this.courseId;
     }
 
     public String getTerm() {
@@ -301,10 +301,10 @@ public class Exam {
     }
 
     public String getKey() {
-        return getKey(this.lvaNr, this.term, this.dtStart.getTime());
+        return getKey(this.courseId, this.term, this.dtStart.getTime());
     }
 
-    public static String getKey(String lvaNr, String term, long date) {
-        return String.format("%s-%s-%d", lvaNr, term, date);
+    public static String getKey(String courseId, String term, long date) {
+        return String.format("%s-%s-%d", courseId, term, date);
     }
 }

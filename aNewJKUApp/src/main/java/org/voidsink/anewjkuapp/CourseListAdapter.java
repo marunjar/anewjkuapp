@@ -14,11 +14,11 @@ import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.utils.UIUtils;
 
-public class LvaListAdapter extends RecyclerArrayAdapter<LvaWithGrade, LvaListAdapter.LvaViewHolder> implements StickyRecyclerHeadersAdapter<LvaListAdapter.LvaHeaderHolder> {
+public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, CourseListAdapter.LvaViewHolder> implements StickyRecyclerHeadersAdapter<CourseListAdapter.LvaHeaderHolder> {
 
     private final Context mContext;
 
-    public LvaListAdapter(Context context) {
+    public CourseListAdapter(Context context) {
         super();
         this.mContext = context;
     }
@@ -35,7 +35,7 @@ public class LvaListAdapter extends RecyclerArrayAdapter<LvaWithGrade, LvaListAd
 
         holder.mTitle.setText(lva.getCourse().getTitle());
         UIUtils.setTextAndVisibility(holder.mTeacher, lva.getCourse().getTeacher());
-        holder.mLvaNr.setText(lva.getCourse().getLvaNr());
+        holder.mCourseId.setText(lva.getCourse().getCourseId());
         if (lva.getCourse().getSKZ() > 0) {
             holder.mSkz.setText(String.format("[%d]", lva.getCourse().getSKZ()));
             holder.mSkz.setVisibility(View.VISIBLE);
@@ -75,7 +75,7 @@ public class LvaListAdapter extends RecyclerArrayAdapter<LvaWithGrade, LvaListAd
 
     protected static class LvaViewHolder extends RecyclerView.ViewHolder {
         private final TextView mTitle;
-        private final TextView mLvaNr;
+        private final TextView mCourseId;
         private final TextView mCode;
         private final TextView mSkz;
         private final TextView mTeacher;
@@ -87,7 +87,7 @@ public class LvaListAdapter extends RecyclerArrayAdapter<LvaWithGrade, LvaListAd
             super(itemView);
 
             mTitle = (TextView) itemView.findViewById(R.id.lva_list2_item_title);
-            mLvaNr = (TextView) itemView.findViewById(R.id.lva_list2_item_lvanr);
+            mCourseId = (TextView) itemView.findViewById(R.id.lva_list2_item_courseId);
             mSkz = (TextView) itemView.findViewById(R.id.lva_list2_item_skz);
             mCode = (TextView) itemView.findViewById(R.id.lva_list2_item_code);
             mTeacher = (TextView) itemView.findViewById(R.id.lva_list2_item_teacher);

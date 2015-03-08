@@ -26,7 +26,7 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 import org.voidsink.anewjkuapp.ExamListAdapter;
 import org.voidsink.anewjkuapp.ExamListExam;
 import org.voidsink.anewjkuapp.KusssContentContract;
-import org.voidsink.anewjkuapp.LvaMap;
+import org.voidsink.anewjkuapp.CourseMap;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.update.ImportExamTask;
@@ -115,7 +115,7 @@ public class ExamFragment extends BaseFragment {
         protected Void doInBackground(String... urls) {
             Account mAccount = AppUtils.getAccount(mContext);
             if (mAccount != null) {
-                LvaMap map = new LvaMap(mContext);
+                CourseMap map = new CourseMap(mContext);
 
                 ContentResolver cr = mContext.getContentResolver();
                 Cursor c = cr.query(KusssContentContract.Exam.CONTENT_URI,
