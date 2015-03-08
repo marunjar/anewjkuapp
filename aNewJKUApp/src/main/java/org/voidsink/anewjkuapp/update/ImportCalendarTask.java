@@ -36,7 +36,6 @@ import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -415,7 +414,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                                         // notify only future changes
                                         if (eventDTStart > notifyFrom && !eventDeleted) {
                                             mNotification
-                                                    .addDelete(getEventString(
+                                                    .addDelete(AppUtils.getEventString(
                                                             eventDTStart,
                                                             eventDTEnd,
                                                             eventTitle));
@@ -594,26 +593,9 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
     }
 
     private String getEventString(VEvent v) {
-        return getEventString(v.getStartDate().getDate().getTime(), v
+        return AppUtils.getEventString(v.getStartDate().getDate().getTime(), v
                 .getEndDate().getDate().getTime(), v.getSummary().getValue()
                 .trim());
-    }
-
-    private String getEventString(long eventDTStart, long eventDTEnd,
-                                  String eventTitle) {
-        final SimpleDateFormat dfStart = new SimpleDateFormat("dd.MM HH:mm");
-        SimpleDateFormat dfEnd = dfStart;
-
-        if (DateUtils.isSameDay(new Date(eventDTStart), new Date(eventDTEnd))) {
-            dfEnd = new SimpleDateFormat("HH:mm");
-        }
-
-        int index = eventTitle.indexOf(", ");
-        if (index > 1) {
-            eventTitle = eventTitle.substring(0, index);
-        }
-
-        return String.format("%s: %s - %s", eventTitle, dfStart.format(new Date(eventDTStart)), dfEnd.format(new Date(eventDTEnd)));
     }
 
 }

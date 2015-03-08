@@ -14,7 +14,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 	private static final String TAG = KusssDatabaseHelper.class.getSimpleName();
 
 	private static final String DATABASE_NAME = "kusss.db";
-	private static final int DATABASE_VERSION = 10;
+	private static final int DATABASE_VERSION = 11;
 
 	// Database creation sql statement
 	public static final String DB_CREATE_LVA = "create table if not exists "
@@ -37,8 +37,8 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 			+ " integer primary key autoincrement not null, "
 			+ KusssContentContract.Exam.EXAM_COL_TERM + " text not null, "
 			+ KusssContentContract.Exam.EXAM_COL_LVANR + " text not null, "
-			+ KusssContentContract.Exam.EXAM_COL_DATE + " integer not null, "
-			+ KusssContentContract.Exam.EXAM_COL_TIME + " text not null, "
+			+ KusssContentContract.Exam.EXAM_COL_DTSTART + " integer not null, "
+			+ KusssContentContract.Exam.EXAM_COL_DTEND + " integer not null, "
 			+ KusssContentContract.Exam.EXAM_COL_LOCATION + " text, "
 			+ KusssContentContract.Exam.EXAM_COL_DESCRIPTION + " text, "
 			+ KusssContentContract.Exam.EXAM_COL_INFO + " text, "
@@ -120,6 +120,10 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 		}
         if (oldVersion < 10) {
             // try to import studies
+        }
+        if (oldVersion < 11) {
+            db.execSQL("DROP TABLE IF EXISTS "
+                    + KusssContentContract.Exam.EXAM_TABLE_NAME);
         }
 		onCreate(db);
 	}

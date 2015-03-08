@@ -15,11 +15,11 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.github.mikephil.charting.data.Entry;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.voidsink.anewjkuapp.ImportPoiTask;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.KusssContentContract;
@@ -45,8 +45,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import edu.emory.mathcs.backport.java.util.Collections;
@@ -693,7 +696,7 @@ public class AppUtils {
         PendingIntent alarmIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         if (!mIsMasterSyncEnabled || !mIsCalendarSyncEnabled || !mIsKusssSyncEnable) {
             if (reCreateAlarm) {
-                long interval = PreferenceWrapper.getSyncInterval(context) * DateUtils.HOUR_IN_MILLIS;
+                long interval = PreferenceWrapper.getSyncInterval(context) * DateUtils.MILLIS_PER_HOUR;
 
                 // synchronize in half an hour
                 am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + AlarmManager.INTERVAL_HALF_HOUR, interval, alarmIntent);
@@ -732,6 +735,29 @@ public class AppUtils {
         } catch (Exception e) {
             Analytics.sendException(context, e, true);
         }
+    }
+
+    public static String getTimeString(Date dtStart, Date dtEnd) {
+        DateFormat dfStart = DateFormat.getTimeInstance(DateFormat.SHORT);
+        DateFormat dfEnd = DateFormat.getTimeInstance(DateFormat.SHORT);
+        if (!DateUtils.isSameDay(dtStart, dtEnd)) {
+            dfEnd = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+        }
+
+        return String.format("%s - %s", dfStart.format(dtStart),
+                dfEnd.format(dtEnd));
+    }
+
+    public static String getEventString(long eventDTStart, long eventDTEnd,
+                                  String eventTitle) {
+        int index = eventTitle.indexOf(", ");
+        if (index > 1) {
+            eventTitle = eventTitle.substring(0, index);
+        }
+
+        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
+
+        return String.format("%s: %s, %s", eventTitle, df.format(eventDTStart), AppUtils.getTimeString(new Date(eventDTStart), new Date(eventDTEnd)));
     }
 
 }

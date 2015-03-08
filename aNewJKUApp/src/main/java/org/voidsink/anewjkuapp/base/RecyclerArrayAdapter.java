@@ -55,6 +55,9 @@ public abstract class RecyclerArrayAdapter<T, VH extends RecyclerView.ViewHolder
     }
 
     public T getItem(int position) {
+        if (position < 0) return null;
+        if (position >= getItemCount()) return null;
+
         return items.get(position);
     }
 

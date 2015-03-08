@@ -120,7 +120,7 @@ public class ExamFragment extends BaseFragment {
                 ContentResolver cr = mContext.getContentResolver();
                 Cursor c = cr.query(KusssContentContract.Exam.CONTENT_URI,
                         ImportExamTask.EXAM_PROJECTION, null, null,
-                        KusssContentContract.Exam.EXAM_COL_DATE + " ASC");
+                        KusssContentContract.Exam.EXAM_COL_DTSTART + " ASC");
 
                 if (c != null) {
                     while (c.moveToNext()) {

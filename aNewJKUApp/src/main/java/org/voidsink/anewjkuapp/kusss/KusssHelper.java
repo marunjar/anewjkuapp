@@ -7,8 +7,11 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import org.voidsink.anewjkuapp.KusssContentContract;
+import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
+import org.voidsink.anewjkuapp.update.ImportExamTask;
 import org.voidsink.anewjkuapp.update.ImportLvaTask;
-import org.voidsink.kussslib.Course;
+
+import java.util.Date;
 
 public class KusssHelper {
 
@@ -51,5 +54,33 @@ public class KusssHelper {
         return cv;
     }
 
+    public static Exam createExam(Cursor c) {
+        return new Exam(
+                c.getString(ImportExamTask.COLUMN_EXAM_LVANR),
+                c.getString(ImportExamTask.COLUMN_EXAM_TERM),
+                new Date(c.getLong(ImportExamTask.COLUMN_EXAM_DTSTART)),
+                new Date(c.getLong(ImportExamTask.COLUMN_EXAM_DTEND)),
+                c.getString(ImportExamTask.COLUMN_EXAM_LOCATION),
+                c.getString(ImportExamTask.COLUMN_EXAM_DESCRIPTION),
+                c.getString(ImportExamTask.COLUMN_EXAM_INFO),
+                c.getString(ImportExamTask.COLUMN_EXAM_TITLE),
+                KusssDatabaseHelper.toBool(c.getInt(ImportExamTask.COLUMN_EXAM_IS_REGISTERED)));
 
+
+    }
+
+    public static ContentValues getExamContentValues(Exam exam) {
+        ContentValues cv = new ContentValues();
+        cv.put(KusssContentContract.Exam.EXAM_COL_DTSTART, exam.getDtStart().getTime());
+        cv.put(KusssContentContract.Exam.EXAM_COL_DESCRIPTION, exam.getDescription());
+        cv.put(KusssContentContract.Exam.EXAM_COL_INFO, exam.getInfo());
+        cv.put(KusssContentContract.Exam.EXAM_COL_LOCATION, exam.getLocation());
+        cv.put(KusssContentContract.Exam.EXAM_COL_LVANR, exam.getLvaNr());
+        cv.put(KusssContentContract.Exam.EXAM_COL_TERM, exam.getTerm());
+        cv.put(KusssContentContract.Exam.EXAM_COL_DTEND, exam.getDtEnd().getTime());
+        cv.put(KusssContentContract.Exam.EXAM_COL_IS_REGISTERED,
+                KusssDatabaseHelper.toInt(exam.isRegistered()));
+        cv.put(KusssContentContract.Exam.EXAM_COL_TITLE, exam.getTitle());
+        return cv;
+    }
 }

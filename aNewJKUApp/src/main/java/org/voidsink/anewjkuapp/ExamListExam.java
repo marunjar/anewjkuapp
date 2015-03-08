@@ -1,87 +1,71 @@
 package org.voidsink.anewjkuapp;
 
-import java.util.Date;
-
-import org.voidsink.anewjkuapp.kusss.Lva;
-import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
-import org.voidsink.anewjkuapp.update.ImportExamTask;
-
 import android.database.Cursor;
+
+import org.voidsink.anewjkuapp.kusss.Exam;
+import org.voidsink.anewjkuapp.kusss.KusssHelper;
+import org.voidsink.anewjkuapp.kusss.Lva;
+
+import java.util.Date;
 
 public class ExamListExam {
 
-	private String lvaNr;
-	private String info;
-	private String title;
-	private String description;
-	private String term;
-	private int skz;
-	private Date date;
-	private String time;
-	private String location;
-	private boolean isRegistered;
+    private final Exam exam;
+    private final Lva lva;
 
-	public ExamListExam(Cursor c, LvaMap map) {
-		this.lvaNr = c.getString(ImportExamTask.COLUMN_EXAM_LVANR);
-		this.info = c.getString(ImportExamTask.COLUMN_EXAM_INFO);
-		this.description = c.getString(ImportExamTask.COLUMN_EXAM_DESCRIPTION);
-		this.term = c.getString(ImportExamTask.COLUMN_EXAM_TERM);
-		this.date = new Date(c.getLong(ImportExamTask.COLUMN_EXAM_DATE));
-		this.time = c.getString(ImportExamTask.COLUMN_EXAM_TIME);
-		this.location = c.getString(ImportExamTask.COLUMN_EXAM_LOCATION);
-		this.isRegistered = KusssDatabaseHelper.toBool(c.getInt(ImportExamTask.COLUMN_EXAM_IS_REGISTERED));
-		Lva lva = map.getLVA(this.term, this.lvaNr);
-		if (lva != null) {
-			this.title = lva.getTitle();
-			this.skz = lva.getSKZ();
-		} else {
-			// fallback
-			this.title = c.getString(ImportExamTask.COLUMN_EXAM_TITLE);
-		}
-	}
+    public ExamListExam(Cursor c, LvaMap map) {
+        this.exam = KusssHelper.createExam(c);
+        this.lva = map.getLVA(exam.getTerm(), exam.getLvaNr());
+    }
 
-	public boolean mark() {
-		return isRegistered();
-	}
+    public boolean mark() {
+        return isRegistered();
+    }
 
-	public String getTitle() {
-		return this.title;
-	}
+    public String getTitle() {
+        if (lva != null) {
+            return lva.getTitle();
+        }
+        return exam.getTitle();
+    }
 
-	public String getDescription() {
-		return this.description;
-	}
+    public String getDescription() {
+        return exam.getDescription();
+    }
 
-	public String getInfo() {
-		return this.info;
-	}
+    public String getInfo() {
+        return exam.getInfo();
+    }
 
-	public String getLvaNr() {
-		return this.lvaNr;
-	}
+    public String getLvaNr() {
+        return exam.getLvaNr();
+    }
 
-	public String getTerm() {
-		return this.term;
-	}
+    public String getTerm() {
+        return exam.getTerm();
+    }
 
-	public int getSkz() {
-		return this.skz;
-	}
+    public int getSkz() {
+        if (lva != null) {
+            return lva.getSKZ();
+        }
+        return 0;
+    }
 
-	public Date getDate() {
-		return this.date;
-	}
+    public Date getDtStart() {
+        return exam.getDtStart();
+    }
 
-	public String getTime() {
-		return this.time;
-	}
+    public Date getDtEnd() {
+        return exam.getDtEnd();
+    }
 
-	public String getLocation() {
-		return this.location;
-	}
+    public String getLocation() {
+        return exam.getLocation();
+    }
 
-	public boolean isRegistered() {
-		return this.isRegistered;
-	}
-	
+    public boolean isRegistered() {
+        return exam.isRegistered();
+    }
+
 }

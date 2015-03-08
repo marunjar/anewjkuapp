@@ -48,8 +48,8 @@ public class KusssContentContract {
 		public static final String EXAM_COL_ID = "_id";
 		public static final String EXAM_COL_TERM = "term";
 		public static final String EXAM_COL_LVANR = "lvanr";
-		public static final String EXAM_COL_DATE = "date";
-		public static final String EXAM_COL_TIME = "time";
+		public static final String EXAM_COL_DTSTART = "dtstart";
+		public static final String EXAM_COL_DTEND = "dtend";
 		public static final String EXAM_COL_LOCATION = "location";
 		public static final String EXAM_COL_DESCRIPTION = "description";
 		public static final String EXAM_COL_INFO = "info";

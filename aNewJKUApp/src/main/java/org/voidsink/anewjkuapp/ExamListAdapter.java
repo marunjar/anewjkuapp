@@ -13,6 +13,7 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -74,7 +75,7 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
             } else {
                 holder.mSkz.setVisibility(View.GONE);
             }
-            holder.mTime.setText(exam.getTime());
+            holder.mTime.setText(AppUtils.getTimeString(exam.getDtStart(), exam.getDtEnd()));
             holder.mLocation.setText(exam.getLocation());
         }
     }
@@ -85,7 +86,7 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
 
         if (exam != null) {
             Calendar cal = Calendar.getInstance(); // locale-specific
-            cal.setTime(exam.getDate());
+            cal.setTime(exam.getDtStart());
             cal.set(Calendar.HOUR_OF_DAY, 0);
             cal.set(Calendar.MINUTE, 0);
             cal.set(Calendar.SECOND, 0);
@@ -106,7 +107,7 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
         ExamListExam exam = getItem(position);
 
         if (exam != null) {
-            dateHeaderHolder.mText.setText(DateFormat.getDateInstance().format(exam.getDate()));
+            dateHeaderHolder.mText.setText(DateFormat.getDateInstance().format(exam.getDtStart()));
         } else {
             dateHeaderHolder.mText.setText("");
         }
