@@ -12,14 +12,15 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import org.voidsink.anewjkuapp.KusssContentContract;
+import org.voidsink.anewjkuapp.kusss.ExamGrade;
+import org.voidsink.anewjkuapp.kusss.KusssHelper;
+import org.voidsink.anewjkuapp.kusss.Lva;
+import org.voidsink.anewjkuapp.kusss.Studies;
 import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.update.ImportGradeTask;
 import org.voidsink.anewjkuapp.update.ImportLvaTask;
 import org.voidsink.anewjkuapp.update.ImportStudiesTask;
-import org.voidsink.anewjkuapp.KusssContentContract;
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
-import org.voidsink.anewjkuapp.kusss.Lva;
-import org.voidsink.anewjkuapp.kusss.Studies;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
@@ -373,7 +374,7 @@ public class KusssContentProvider extends ContentProvider {
 
             if (c != null) {
                 while (c.moveToNext()) {
-                    mLvas.add(new Lva(c));
+                    mLvas.add(KusssHelper.createLva(c));
                 }
                 c.close();
             }

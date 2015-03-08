@@ -15,6 +15,7 @@ import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseAsyncTask;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
+import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
@@ -125,7 +126,7 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
                     } else {
                         Map<String, Lva> lvaMap = new HashMap<>();
                         for (Lva lva : lvas) {
-                            lvaMap.put(lva.getKey(), lva);
+                            lvaMap.put(KusssHelper.getLvaKey(lva.getTerm(), lva.getLvaNr()), lva);
                         }
                         Map<String, Term> termMap = new HashMap<>();
                         for (Term term : terms) {
@@ -163,9 +164,9 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
                                 Term term = termMap.get(lvaTerm);
                                 if (term != null && term.isLoaded()) {
                                     Lva lva = lvaMap
-                                            .get(Lva.getKey(lvaTerm, lvaNr));
+                                            .get(KusssHelper.getLvaKey(lvaTerm, lvaNr));
                                     if (lva != null) {
-                                        lvaMap.remove(Lva.getKey(lvaTerm, lvaNr));
+                                        lvaMap.remove(KusssHelper.getLvaKey(lvaTerm, lvaNr));
                                         // Check to see if the entry needs to be
                                         // updated
                                         Uri existingUri = lvaUri
@@ -185,14 +186,14 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
                                                 .withValue(
                                                         KusssContentContract.Lva.LVA_COL_ID,
                                                         Integer.toString(lvaId))
-                                                .withValues(lva.getContentValues())
+                                                .withValues(KusssHelper.getLvaContentValues(lva))
                                                 .build());
                                         mSyncResult.stats.numUpdates++;
                                     } else {
                                         // delete
                                         Log.d(TAG,
                                                 "delete: "
-                                                        + Lva.getKey(lvaTerm, lvaNr));
+                                                        + KusssHelper.getLvaKey(lvaTerm, lvaNr));
                                         // Entry doesn't exist. Remove only
                                         // newer
                                         // events from the database.
@@ -230,7 +231,7 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
                                                                     lvaUri,
                                                                     mAccount.name,
                                                                     mAccount.type))
-                                            .withValues(lva.getContentValues())
+                                            .withValues(KusssHelper.getLvaContentValues(lva))
                                             .build());
                                     Log.d(TAG,
                                             "Scheduling insert: " + lva.getTerm()
