@@ -3,9 +3,9 @@ package org.voidsink.anewjkuapp;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.notification.KusssNotificationBuilder;
 import org.voidsink.anewjkuapp.update.ImportExamTask;
-import org.voidsink.anewjkuapp.update.ImportGradeTask;
-import org.voidsink.anewjkuapp.update.ImportLvaTask;
-import org.voidsink.anewjkuapp.update.ImportStudiesTask;
+import org.voidsink.anewjkuapp.update.ImportAssessmentTask;
+import org.voidsink.anewjkuapp.update.ImportCourseTask;
+import org.voidsink.anewjkuapp.update.ImportCurriculaTask;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
@@ -88,41 +88,41 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
 		try {
 			Looper.prepare();
 
-            Log.d(TAG, "importing Studies");
+            Log.d(TAG, "importing curricula");
 
-            ImportStudiesTask studiesTask = new ImportStudiesTask(account, extras,
+            ImportCurriculaTask curriculaTask = new ImportCurriculaTask(account, extras,
                     authority, provider, syncResult, mContext);
-            studiesTask.execute();
-            while (!studiesTask.isDone() && !mSyncCancled) {
+            curriculaTask.execute();
+            while (!curriculaTask.isDone() && !mSyncCancled) {
                 try {
                     Thread.sleep(500);
                 } catch (Exception e) {
                     Analytics.sendException(mContext, e, false);
                 }
                 if (mSyncCancled) {
-                    studiesTask.cancel(true);
+                    curriculaTask.cancel(true);
                 }
             }
 
-			Log.d(TAG, "importing LVAs");
+			Log.d(TAG, "importing courses");
 
-			ImportLvaTask lvaTask = new ImportLvaTask(account, extras,
+			ImportCourseTask courseTask = new ImportCourseTask(account, extras,
 					authority, provider, syncResult, mContext);
-			lvaTask.execute();
-			while (!lvaTask.isDone() && !mSyncCancled) {
+			courseTask.execute();
+			while (!courseTask.isDone() && !mSyncCancled) {
 				try {
 					Thread.sleep(500);
 				} catch (Exception e) {
                     Analytics.sendException(mContext, e, false);
 				}
 				if (mSyncCancled) {
-					lvaTask.cancel(true);
+					courseTask.cancel(true);
 				}
 			}
 
             Log.d(TAG, "importing Grades");
 
-            ImportGradeTask gradeTask = new ImportGradeTask(account, extras,
+            ImportAssessmentTask gradeTask = new ImportAssessmentTask(account, extras,
                     authority, provider, syncResult, mContext);
 
             gradeTask.execute();

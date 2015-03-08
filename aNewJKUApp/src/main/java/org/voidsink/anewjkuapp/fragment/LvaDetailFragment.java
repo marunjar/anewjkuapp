@@ -18,13 +18,13 @@ import android.view.ViewGroup;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import org.voidsink.anewjkuapp.KusssContentContract;
-import org.voidsink.anewjkuapp.LvaListAdapter;
+import org.voidsink.anewjkuapp.CourseListAdapter;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.base.TermFragment;
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
-import org.voidsink.anewjkuapp.kusss.Lva;
+import org.voidsink.anewjkuapp.kusss.Assessment;
+import org.voidsink.anewjkuapp.kusss.Course;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.update.UpdateService;
@@ -38,7 +38,7 @@ public class LvaDetailFragment extends TermFragment implements
         ContentObserverListener {
 
     private BaseContentObserver mLvaObserver;
-    private LvaListAdapter mAdapter;
+    private CourseListAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,7 +48,7 @@ public class LvaDetailFragment extends TermFragment implements
         final RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new LvaListAdapter(getContext());
+        mAdapter = new CourseListAdapter(getContext());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mAdapter));
 
@@ -69,8 +69,8 @@ public class LvaDetailFragment extends TermFragment implements
             private Context mContext = getContext();
 //            private ProgressDialog progressDialog;
 
-            List<Lva> lvas;
-            List<ExamGrade> grades;
+            List<Course> courses;
+            List<Assessment> assessments;
 
             @Override
             protected void onPreExecute() {
@@ -80,15 +80,15 @@ public class LvaDetailFragment extends TermFragment implements
 //                        mContext.getString(R.string.progress_title),
 //                        mContext.getString(R.string.progress_load_lva), true);
 
-                this.lvas = new ArrayList<>();
-                this.grades = new ArrayList<>();
+                this.courses = new ArrayList<>();
+                this.assessments = new ArrayList<>();
             }
 
             @Override
             protected Void doInBackground(Void... params) {
-                this.lvas = KusssContentProvider.getLvas(mContext);
-                this.grades = KusssContentProvider.getGrades(mContext);
-                AppUtils.sortLVAs(this.lvas);
+                this.courses = KusssContentProvider.getCourses(mContext);
+                this.assessments = KusssContentProvider.getAssessments(mContext);
+                AppUtils.sortCourses(this.courses);
 
                 return null;
             }
@@ -97,7 +97,7 @@ public class LvaDetailFragment extends TermFragment implements
             protected void onPostExecute(Void result) {
                 // Log.i(TAG, "loadLvas" + this.terms);
 
-                List<LvaWithGrade> mLvasWithGrades = AppUtils.getLvasWithGrades(getTerms(), lvas, grades);
+                List<LvaWithGrade> mLvasWithGrades = AppUtils.getLvasWithGrades(getTerms(), courses, assessments);
 
                 mAdapter.clear();
                 mAdapter.addAll(mLvasWithGrades);
@@ -122,8 +122,8 @@ public class LvaDetailFragment extends TermFragment implements
         switch (item.getItemId()) {
             case R.id.action_refresh_lvas:
                 Intent mUpdateService = new Intent(getActivity(), UpdateService.class);
-                mUpdateService.putExtra(Consts.ARG_UPDATE_KUSSS_LVAS, true);
-                mUpdateService.putExtra(Consts.ARG_UPDATE_KUSSS_GRADES, true);
+                mUpdateService.putExtra(Consts.ARG_UPDATE_KUSSS_COURSES, true);
+                mUpdateService.putExtra(Consts.ARG_UPDATE_KUSSS_ASSESSMENTS, true);
                 getActivity().startService(mUpdateService);
 
                 return true;
@@ -138,16 +138,16 @@ public class LvaDetailFragment extends TermFragment implements
 
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(KusssContentContract.AUTHORITY,
-                KusssContentContract.Lva.PATH_CONTENT_CHANGED, 0);
+                KusssContentContract.Course.PATH_CONTENT_CHANGED, 0);
         uriMatcher.addURI(KusssContentContract.AUTHORITY,
-                KusssContentContract.Grade.PATH_CONTENT_CHANGED, 1);
+                KusssContentContract.Assessment.PATH_CONTENT_CHANGED, 1);
 
         mLvaObserver = new BaseContentObserver(uriMatcher, this);
         getActivity().getContentResolver().registerContentObserver(
-                KusssContentContract.Lva.CONTENT_CHANGED_URI, false,
+                KusssContentContract.Course.CONTENT_CHANGED_URI, false,
                 mLvaObserver);
         getActivity().getContentResolver().registerContentObserver(
-                KusssContentContract.Grade.CONTENT_CHANGED_URI, false,
+                KusssContentContract.Assessment.CONTENT_CHANGED_URI, false,
                 mLvaObserver);
 
     }

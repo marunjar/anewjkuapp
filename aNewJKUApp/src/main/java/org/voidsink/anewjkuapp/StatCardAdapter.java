@@ -31,9 +31,9 @@ import com.github.mikephil.charting.utils.PercentFormatter;
 import com.github.mikephil.charting.utils.ValueFormatter;
 
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
+import org.voidsink.anewjkuapp.kusss.Assessment;
+import org.voidsink.anewjkuapp.kusss.AssessmentType;
 import org.voidsink.anewjkuapp.kusss.Grade;
-import org.voidsink.anewjkuapp.kusss.GradeType;
 import org.voidsink.anewjkuapp.kusss.LvaState;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.utils.AppUtils;
@@ -214,43 +214,43 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
     private void initGradeListItems(StatViewHolder holder, StatCard card) {
         List<GradeStatItem> gradeStats = new ArrayList<>();
 
-        GradeStatItem grade = new GradeStatItem(GradeType.INTERIM_COURSE_ASSESSMENT, card.getGrades(), card.isWeighted(), card.isPositiveOnly());
+        GradeStatItem grade = new GradeStatItem(AssessmentType.INTERIM_COURSE_ASSESSMENT, card.getAssessments(), card.isWeighted(), card.isPositiveOnly());
         if (grade.getAvgGrade() > 0) {
             gradeStats.add(grade);
         }
 
-        grade = new GradeStatItem(GradeType.FINAL_COURSE_ASSESSMENT, card.getGrades(), card.isWeighted(), card.isPositiveOnly());
+        grade = new GradeStatItem(AssessmentType.FINAL_COURSE_ASSESSMENT, card.getAssessments(), card.isWeighted(), card.isPositiveOnly());
         if (grade.getAvgGrade() > 0) {
             gradeStats.add(grade);
         }
 
-        grade = new GradeStatItem(GradeType.RECOGNIZED_COURSE_CERTIFICATE, card.getGrades(), card.isWeighted(), card.isPositiveOnly());
+        grade = new GradeStatItem(AssessmentType.RECOGNIZED_COURSE_CERTIFICATE, card.getAssessments(), card.isWeighted(), card.isPositiveOnly());
         if (grade.getAvgGrade() > 0) {
             gradeStats.add(grade);
         }
 
-        grade = new GradeStatItem(GradeType.RECOGNIZED_EXAM, card.getGrades(), card.isWeighted(), card.isPositiveOnly());
+        grade = new GradeStatItem(AssessmentType.RECOGNIZED_EXAM, card.getAssessments(), card.isWeighted(), card.isPositiveOnly());
         if (grade.getAvgGrade() > 0) {
             gradeStats.add(grade);
         }
 
-        grade = new GradeStatItem(GradeType.RECOGNIZED_ASSESSMENT, card.getGrades(), card.isWeighted(), card.isPositiveOnly());
+        grade = new GradeStatItem(AssessmentType.RECOGNIZED_ASSESSMENT, card.getAssessments(), card.isWeighted(), card.isPositiveOnly());
         if (grade.getAvgGrade() > 0) {
             gradeStats.add(grade);
         }
 
-        grade = new GradeStatItem(GradeType.FINAL_EXAM, card.getGrades(), card.isWeighted(), card.isPositiveOnly());
+        grade = new GradeStatItem(AssessmentType.FINAL_EXAM, card.getAssessments(), card.isWeighted(), card.isPositiveOnly());
         if (grade.getAvgGrade() > 0) {
             gradeStats.add(grade);
         }
 
-        grade = new GradeStatItem(GradeType.ALL, card.getGrades(), card.isWeighted(), card.isPositiveOnly());
+        grade = new GradeStatItem(AssessmentType.ALL, card.getAssessments(), card.isWeighted(), card.isPositiveOnly());
         if (grade.getAvgGrade() > 0 && gradeStats.size() > 1) {
             gradeStats.add(grade);
         }
 
         if (gradeStats.size() == 0) {
-            gradeStats.add(new GradeStatItem(GradeType.NONE_AVAILABLE, null, card.isWeighted(), card.isPositiveOnly()));
+            gradeStats.add(new GradeStatItem(AssessmentType.NONE_AVAILABLE, null, card.isWeighted(), card.isPositiveOnly()));
         }
 
         holder.mItems.removeAllViews();
@@ -279,12 +279,12 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             ArrayList<Integer> colors = new ArrayList<>();
 
             // add series to bar chart
-            addSerieToBarChart(yVals, captions, colors, mContext.getString(Grade.G1.getStringResID()), AppUtils.getGradePercent(card.getGrades(), Grade.G1, card.isWeighted()), Grade.G1.getColor());
-            addSerieToBarChart(yVals, captions, colors, mContext.getString(Grade.G2.getStringResID()), AppUtils.getGradePercent(card.getGrades(), Grade.G2, card.isWeighted()), Grade.G2.getColor());
-            addSerieToBarChart(yVals, captions, colors, mContext.getString(Grade.G3.getStringResID()), AppUtils.getGradePercent(card.getGrades(), Grade.G3, card.isWeighted()), Grade.G3.getColor());
-            addSerieToBarChart(yVals, captions, colors, mContext.getString(Grade.G4.getStringResID()), AppUtils.getGradePercent(card.getGrades(), Grade.G4, card.isWeighted()), Grade.G4.getColor());
+            addSerieToBarChart(yVals, captions, colors, mContext.getString(Grade.G1.getStringResID()), AppUtils.getGradePercent(card.getAssessments(), Grade.G1, card.isWeighted()), Grade.G1.getColor());
+            addSerieToBarChart(yVals, captions, colors, mContext.getString(Grade.G2.getStringResID()), AppUtils.getGradePercent(card.getAssessments(), Grade.G2, card.isWeighted()), Grade.G2.getColor());
+            addSerieToBarChart(yVals, captions, colors, mContext.getString(Grade.G3.getStringResID()), AppUtils.getGradePercent(card.getAssessments(), Grade.G3, card.isWeighted()), Grade.G3.getColor());
+            addSerieToBarChart(yVals, captions, colors, mContext.getString(Grade.G4.getStringResID()), AppUtils.getGradePercent(card.getAssessments(), Grade.G4, card.isWeighted()), Grade.G4.getColor());
             if (!card.isPositiveOnly()) {
-                addSerieToBarChart(yVals, captions, colors, mContext.getString(Grade.G5.getStringResID()), AppUtils.getGradePercent(card.getGrades(), Grade.G5, card.isWeighted()), Grade.G5.getColor());
+                addSerieToBarChart(yVals, captions, colors, mContext.getString(Grade.G5.getStringResID()), AppUtils.getGradePercent(card.getAssessments(), Grade.G5, card.isWeighted()), Grade.G5.getColor());
             }
 
             // calculate range
@@ -340,29 +340,29 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             // add series to pie chart
             AppUtils.addSerieToPieChart(yVals, captions, colors,
                     mContext.getString(Grade.G1.getStringResID()),
-                    AppUtils.getGradePercent(card.getGrades(), Grade.G1, card.isWeighted()),
-                    AppUtils.getGradeEcts(card.getGrades(), Grade.G1),
+                    AppUtils.getGradePercent(card.getAssessments(), Grade.G1, card.isWeighted()),
+                    AppUtils.getGradeEcts(card.getAssessments(), Grade.G1),
                     Grade.G1.getColor());
             AppUtils.addSerieToPieChart(yVals, captions, colors,
                     mContext.getString(Grade.G2.getStringResID()),
-                    AppUtils.getGradePercent(card.getGrades(), Grade.G2, card.isWeighted()),
-                    AppUtils.getGradeEcts(card.getGrades(), Grade.G2),
+                    AppUtils.getGradePercent(card.getAssessments(), Grade.G2, card.isWeighted()),
+                    AppUtils.getGradeEcts(card.getAssessments(), Grade.G2),
                     Grade.G2.getColor());
             AppUtils.addSerieToPieChart(yVals, captions, colors,
                     mContext.getString(Grade.G3.getStringResID()),
-                    AppUtils.getGradePercent(card.getGrades(), Grade.G3, card.isWeighted()),
-                    AppUtils.getGradeEcts(card.getGrades(), Grade.G3),
+                    AppUtils.getGradePercent(card.getAssessments(), Grade.G3, card.isWeighted()),
+                    AppUtils.getGradeEcts(card.getAssessments(), Grade.G3),
                     Grade.G3.getColor());
             AppUtils.addSerieToPieChart(yVals, captions, colors,
                     mContext.getString(Grade.G4.getStringResID()),
-                    AppUtils.getGradePercent(card.getGrades(), Grade.G4, card.isWeighted()),
-                    AppUtils.getGradeEcts(card.getGrades(), Grade.G4),
+                    AppUtils.getGradePercent(card.getAssessments(), Grade.G4, card.isWeighted()),
+                    AppUtils.getGradeEcts(card.getAssessments(), Grade.G4),
                     Grade.G4.getColor());
             if (!card.isPositiveOnly()) {
                 AppUtils.addSerieToPieChart(yVals, captions, colors,
                         mContext.getString(Grade.G5.getStringResID()),
-                        AppUtils.getGradePercent(card.getGrades(), Grade.G5, card.isWeighted()),
-                        AppUtils.getGradeEcts(card.getGrades(), Grade.G5),
+                        AppUtils.getGradePercent(card.getAssessments(), Grade.G5, card.isWeighted()),
+                        AppUtils.getGradeEcts(card.getAssessments(), Grade.G5),
                         Grade.G5.getColor());
             }
 
@@ -521,15 +521,15 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
     }
 
     private class GradeStatItem {
-        private final GradeType mType;
+        private final AssessmentType mType;
         private final double mAvgGrade;
 
-        public GradeStatItem(GradeType type, List<ExamGrade> grades, boolean isWeighted, boolean positiveOnly) {
+        public GradeStatItem(AssessmentType type, List<Assessment> grades, boolean isWeighted, boolean positiveOnly) {
             this.mType = type;
             this.mAvgGrade = AppUtils.getAvgGrade(grades, isWeighted, type, positiveOnly);
         }
 
-        public GradeType getType() {
+        public AssessmentType getType() {
             return mType;
         }
 

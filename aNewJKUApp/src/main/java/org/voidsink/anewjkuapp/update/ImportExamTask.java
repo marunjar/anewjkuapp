@@ -12,13 +12,14 @@ import android.os.Bundle;
 import android.util.Log;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.voidsink.anewjkuapp.CourseMap;
 import org.voidsink.anewjkuapp.KusssContentContract;
-import org.voidsink.anewjkuapp.LvaMap;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseAsyncTask;
 import org.voidsink.anewjkuapp.kusss.Exam;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
+import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.notification.NewExamNotification;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
@@ -51,22 +52,22 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
     private NewExamNotification mNewExamNotification;
 
     public static final String[] EXAM_PROJECTION = new String[]{
-            KusssContentContract.Exam.EXAM_COL_ID,
-            KusssContentContract.Exam.EXAM_COL_TERM,
-            KusssContentContract.Exam.EXAM_COL_LVANR,
-            KusssContentContract.Exam.EXAM_COL_DATE,
-            KusssContentContract.Exam.EXAM_COL_TIME,
-            KusssContentContract.Exam.EXAM_COL_LOCATION,
-            KusssContentContract.Exam.EXAM_COL_DESCRIPTION,
-            KusssContentContract.Exam.EXAM_COL_INFO,
-            KusssContentContract.Exam.EXAM_COL_IS_REGISTERED,
-            KusssContentContract.Exam.EXAM_COL_TITLE};
+            KusssContentContract.Exam.COL_ID,
+            KusssContentContract.Exam.COL_TERM,
+            KusssContentContract.Exam.COL_COURSEID,
+            KusssContentContract.Exam.COL_DTSTART,
+            KusssContentContract.Exam.COL_DTEND,
+            KusssContentContract.Exam.COL_LOCATION,
+            KusssContentContract.Exam.COL_DESCRIPTION,
+            KusssContentContract.Exam.COL_INFO,
+            KusssContentContract.Exam.COL_IS_REGISTERED,
+            KusssContentContract.Exam.COL_TITLE};
 
     public static final int COLUMN_EXAM_ID = 0;
     public static final int COLUMN_EXAM_TERM = 1;
-    public static final int COLUMN_EXAM_LVANR = 2;
-    public static final int COLUMN_EXAM_DATE = 3;
-    public static final int COLUMN_EXAM_TIME = 4;
+    public static final int COLUMN_EXAM_COURSEID = 2;
+    public static final int COLUMN_EXAM_DTSTART = 3;
+    public static final int COLUMN_EXAM_DTEND = 4;
     public static final int COLUMN_EXAM_LOCATION = 5;
     public static final int COLUMN_EXAM_DESCRIPTION = 6;
     public static final int COLUMN_EXAM_INFO = 7;
@@ -128,13 +129,13 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
                     updateNotify(mContext.getString(R.string.notification_sync_exam_loading));
 
                     List<Exam> exams;
-                    if (PreferenceWrapper.getNewExamsByLvaNr(mContext)) {
-                        LvaMap lvaMap = new LvaMap(mContext);
+                    if (PreferenceWrapper.getNewExamsByCourseId(mContext)) {
+                        CourseMap courseMap = new CourseMap(mContext);
                         List<Term> terms = KusssContentProvider.getTerms(mContext);
 
-                        Log.d(TAG, "load exams by lvanr");
-                        exams = KusssHandler.getInstance().getNewExamsByLvaNr(
-                                mContext, lvaMap.getLVAs(), terms);
+                        Log.d(TAG, "load exams by courseId");
+                        exams = KusssHandler.getInstance().getNewExamsByCourseId(
+                                mContext, courseMap.getCourses(), terms);
                     } else {
                         Log.d(TAG, "load exams");
                         exams = KusssHandler.getInstance()
@@ -145,10 +146,10 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
                     } else {
                         Map<String, Exam> examMap = new HashMap<>();
                         for (Exam exam : exams) {
-                            Exam old = examMap.put(exam.getKey(), exam);
+                            Exam old = examMap.put(KusssHelper.getExamKey(exam.getCourseId(), exam.getTerm(), exam.getDtStart().getTime()), exam);
                             if (old != null) {
                                 Log.w(TAG,
-                                        "exam alread loaded: " + old.getKey());
+                                        "exam alread loaded: " + KusssHelper.getExamKey(old.getCourseId(), old.getTerm(), old.getDtStart().getTime()));
                             }
                         }
 
@@ -171,22 +172,22 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
                                             + " local entries. Computing merge solution...");
                             int examId;
                             String examTerm;
-                            String examLvaNr;
-                            long examDate;
-                            String examTime;
+                            String examCourseId;
+                            long examDtStart;
+                            long examDtEnd;
                             String examLocation;
 
                             while (c.moveToNext()) {
                                 examId = c.getInt(COLUMN_EXAM_ID);
                                 examTerm = c.getString(COLUMN_EXAM_TERM);
-                                examLvaNr = c.getString(COLUMN_EXAM_LVANR);
-                                examDate = c.getLong(COLUMN_EXAM_DATE);
-                                examTime = c.getString(COLUMN_EXAM_TIME);
+                                examCourseId = c.getString(COLUMN_EXAM_COURSEID);
+                                examDtStart = c.getLong(COLUMN_EXAM_DTSTART);
+                                examDtEnd = c.getLong(COLUMN_EXAM_DTEND);
                                 examLocation = c
                                         .getString(COLUMN_EXAM_LOCATION);
 
-                                Exam exam = examMap.remove(Exam.getKey(
-                                        examLvaNr, examTerm, examDate));
+                                Exam exam = examMap.remove(KusssHelper.getExamKey(
+                                        examCourseId, examTerm, examDtStart));
                                 if (exam != null) {
                                     // Check to see if the entry needs to be
                                     // updated
@@ -199,17 +200,10 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
                                             + existingUri);
 
                                     if (!DateUtils.isSameDay(
-                                            new Date(examDate), exam.getDate())
-                                            || !examTime.equals(exam.getTime())
-                                            || !examLocation.equals(exam
-                                            .getLocation())) {
-                                        mNewExamNotification.addUpdate(String
-                                                .format("%s: %s, %s, %s",
-                                                        df.format(exam
-                                                                .getDate()),
-                                                        exam.getTitle(), exam
-                                                                .getTime(),
-                                                        exam.getLocation()));
+                                            new Date(examDtStart), exam.getDtStart())
+                                            || !new Date(examDtEnd).equals(exam.getDtEnd())
+                                            || !examLocation.equals(exam.getLocation())) {
+                                        mNewExamNotification.addUpdate(getEventString(exam));
                                     }
 
                                     batch.add(ContentProviderOperation
@@ -220,12 +214,12 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
                                                                     mAccount.name,
                                                                     mAccount.type))
                                             .withValue(
-                                                    KusssContentContract.Exam.EXAM_COL_ID,
+                                                    KusssContentContract.Exam.COL_ID,
                                                     Integer.toString(examId))
-                                            .withValues(exam.getContentValues())
+                                            .withValues(KusssHelper.getExamContentValues(exam))
                                             .build());
                                     mSyncResult.stats.numUpdates++;
-                                } else if (examDate > mSyncFromNow - DateUtils.MILLIS_PER_DAY) {
+                                } else if (examDtStart > mSyncFromNow - DateUtils.MILLIS_PER_DAY) {
                                     // Entry doesn't exist. Remove only newer
                                     // events from the database.
                                     Uri deleteUri = examUri
@@ -257,17 +251,13 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
                                                                 examUri,
                                                                 mAccount.name,
                                                                 mAccount.type))
-                                        .withValues(exam.getContentValues())
+                                        .withValues(KusssHelper.getExamContentValues(exam))
                                         .build());
                                 Log.d(TAG,
                                         "Scheduling insert: " + exam.getTerm()
-                                                + " " + exam.getLvaNr());
+                                                + " " + exam.getCourseId());
 
-                                mNewExamNotification.addUpdate(String.format(
-                                        "%s: %s, %s, %s",
-                                        df.format(exam.getDate()),
-                                        exam.getTitle(), exam.getTime(),
-                                        exam.getLocation()));
+                                mNewExamNotification.addInsert(getEventString(exam));
 
                                 mSyncResult.stats.numInserts++;
                             }
@@ -322,6 +312,11 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
         if (mUpdateNotification != null) {
             mUpdateNotification.update(string);
         }
+    }
+
+
+    private String getEventString(Exam exam) {
+        return AppUtils.getEventString(exam.getDtStart().getTime(), exam.getDtEnd().getTime(), exam.getTitle());
     }
 
 }

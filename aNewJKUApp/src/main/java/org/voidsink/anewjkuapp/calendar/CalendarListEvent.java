@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.fragment.MapFragment;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -40,14 +41,7 @@ public class CalendarListEvent implements CalendarListItem {
         Date mDtStart = new Date(dtStart);
         Date mDtEnd = new Date(dtEnd);
 
-        DateFormat dfStart = DateFormat.getTimeInstance(DateFormat.SHORT);
-        DateFormat dfEnd = DateFormat.getTimeInstance(DateFormat.SHORT);
-        if (!DateUtils.isSameDay(mDtStart, mDtEnd)) {
-            dfEnd = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-        }
-
-        this.mTime = String.format("%s - %s", dfStart.format(mDtStart),
-                dfEnd.format(mDtEnd));
+        this.mTime = AppUtils.getTimeString(mDtStart, mDtEnd);
     }
 
     @Override

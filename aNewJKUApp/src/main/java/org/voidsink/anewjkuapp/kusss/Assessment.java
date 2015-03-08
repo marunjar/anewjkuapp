@@ -1,14 +1,10 @@
 package org.voidsink.anewjkuapp.kusss;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.text.TextUtils;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.voidsink.anewjkuapp.update.ImportGradeTask;
-import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.utils.Analytics;
 
 import java.text.ParseException;
@@ -17,42 +13,42 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ExamGrade {
+public class Assessment {
 
-    private static final Pattern lvaNrTermPattern = Pattern
+    private static final Pattern courseIdTermPattern = Pattern
             .compile(KusssHandler.PATTERN_LVA_NR_COMMA_TERM);
-    private static final Pattern lvaNrPattern = Pattern
+    private static final Pattern courseIdPattern = Pattern
             .compile(KusssHandler.PATTERN_LVA_NR);
     private static final Pattern termPattern = Pattern
             .compile(KusssHandler.PATTERN_TERM);
 
-    private int skz;
+    private int cid;
     private Grade grade;
     private String term;
-    private String lvaNr;
+    private String courseId;
     private Date date;
-    private final GradeType gradeType;
+    private final AssessmentType assessmentType;
     private String title;
     private String code;
     private double ects;
     private double sws;
 
-    private ExamGrade(GradeType type, Date date, String lvaNr, String term,
-                      Grade grade, int skz, String title, String code, double ects,
+    public Assessment(AssessmentType type, Date date, String courseId, String term,
+                      Grade grade, int cid, String title, String code, double ects,
                       double sws) {
-        this.gradeType = type;
+        this.assessmentType = type;
         this.date = date;
-        this.lvaNr = lvaNr;
+        this.courseId = courseId;
         this.term = term;
         this.grade = grade;
-        this.skz = skz;
+        this.cid = cid;
         this.title = title;
         this.code = code;
         this.ects = ects;
         this.sws = sws;
     }
 
-    public ExamGrade(Context c, GradeType type, Element row) {
+    public Assessment(Context c, AssessmentType type, Element row) {
         this(type, null, "", "", null, 0, "", "", 0, 0);
 
         final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
@@ -60,24 +56,24 @@ public class ExamGrade {
         final Elements columns = row.getElementsByTag("td");
         if (columns.size() >= 7) {
             String title = columns.get(1).text();
-            Matcher lvaNrTermMatcher = lvaNrTermPattern.matcher(title); // (lvaNr,term)
-            if (lvaNrTermMatcher.find()) {
-                String lvaNrTerm = lvaNrTermMatcher.group();
+            Matcher courseIdTermMatcher = courseIdTermPattern.matcher(title); // (courseId,term)
+            if (courseIdTermMatcher.find()) {
+                String courseIdTerm = courseIdTermMatcher.group();
 
-                Matcher lvaNrMatcher = lvaNrPattern.matcher(lvaNrTerm); // lvaNr
-                if (lvaNrMatcher.find()) {
-                    setLvaNr(lvaNrMatcher.group());
+                Matcher courseIdMatcher = courseIdPattern.matcher(courseIdTerm); // courseId
+                if (courseIdMatcher.find()) {
+                    setCourseId(courseIdMatcher.group());
                 }
 
-                Matcher termMatcher = termPattern.matcher(lvaNrTerm); // term
-                if (termMatcher.find(lvaNrMatcher.end())) {
+                Matcher termMatcher = termPattern.matcher(courseIdTerm); // term
+                if (termMatcher.find(courseIdMatcher.end())) {
                     setTerm(termMatcher.group());
                 }
 
-                String tmp = title.substring(0, lvaNrTermMatcher.start());
-                if (lvaNrTermMatcher.end() <= title.length()) {
+                String tmp = title.substring(0, courseIdTermMatcher.start());
+                if (courseIdTermMatcher.end() <= title.length()) {
                     String addition = title
-                            .substring(lvaNrTermMatcher.end(),
+                            .substring(courseIdTermMatcher.end(),
                                     title.length())
                             .replaceAll("(\\(.*?\\))", "").trim();
                     if (addition.length() > 0) {
@@ -111,9 +107,9 @@ public class ExamGrade {
             }
 
             try {
-                String skzText = columns.get(6).text();
-                if (!TextUtils.isEmpty(skzText)) {
-                    setSKZ(Integer.parseInt(skzText)); // grade
+                String cidText = columns.get(6).text();
+                if (!TextUtils.isEmpty(cidText)) {
+                    setCid(Integer.parseInt(cidText)); // grade
                 }
             } catch (NumberFormatException e) {
                 Analytics.sendException(c, e, false, columns.get(6).text());
@@ -130,21 +126,6 @@ public class ExamGrade {
         this.ects = ects;
     }
 
-    public ExamGrade(Cursor c) {
-        this.lvaNr = c.getString(ImportGradeTask.COLUMN_GRADE_LVANR);
-        this.term = c.getString(ImportGradeTask.COLUMN_GRADE_TERM);
-        this.date = new Date(c.getLong(ImportGradeTask.COLUMN_GRADE_DATE));
-        this.gradeType = GradeType.parseGradeType(c
-                .getInt(ImportGradeTask.COLUMN_GRADE_TYPE));
-        this.grade = Grade.parseGradeType(c
-                .getInt(ImportGradeTask.COLUMN_GRADE_GRADE));
-        this.skz = c.getInt(ImportGradeTask.COLUMN_GRADE_SKZ);
-        this.title = c.getString(ImportGradeTask.COLUMN_GRADE_TITLE);
-        this.code = c.getString(ImportGradeTask.COLUMN_GRADE_CODE);
-        this.ects = c.getDouble(ImportGradeTask.COLUMN_GRADE_ECTS);
-        this.sws = c.getDouble(ImportGradeTask.COLUMN_GRADE_SWS);
-    }
-
     private void setCode(String code) {
         this.code = code;
     }
@@ -153,8 +134,8 @@ public class ExamGrade {
         this.title = title.trim();
     }
 
-    private void setSKZ(int skz) {
-        this.skz = skz;
+    private void setCid(int cid) {
+        this.cid = cid;
     }
 
     private void setGrade(Grade grade) {
@@ -165,8 +146,8 @@ public class ExamGrade {
         this.term = term;
     }
 
-    private void setLvaNr(String lvaNr) {
-        this.lvaNr = lvaNr;
+    private void setCourseId(String courseId) {
+        this.courseId = courseId;
     }
 
     private void setDate(Date date) {
@@ -181,8 +162,8 @@ public class ExamGrade {
         return this.date;
     }
 
-    public String getLvaNr() {
-        return this.lvaNr;
+    public String getCourseId() {
+        return this.courseId;
     }
 
     public String getTerm() {
@@ -193,16 +174,16 @@ public class ExamGrade {
         return this.grade;
     }
 
-    public int getSkz() {
-        return this.skz;
+    public int getCid() {
+        return this.cid;
     }
 
-    public GradeType getGradeType() {
-        return this.gradeType;
+    public AssessmentType getAssessmentType() {
+        return this.assessmentType;
     }
 
     public boolean isInitialized() {
-        return this.gradeType != null && this.date != null
+        return this.assessmentType != null && this.date != null
                 && this.grade != null;
     }
 
@@ -216,22 +197,6 @@ public class ExamGrade {
 
     public double getSws() {
         return this.sws;
-    }
-
-    public ContentValues getContentValues() {
-        ContentValues cv = new ContentValues();
-        cv.put(KusssContentContract.Grade.GRADE_COL_DATE, getDate().getTime());
-        cv.put(KusssContentContract.Grade.GRADE_COL_GRADE, getGrade().ordinal());
-        cv.put(KusssContentContract.Grade.GRADE_COL_LVANR, getLvaNr());
-        cv.put(KusssContentContract.Grade.GRADE_COL_SKZ, getSkz());
-        cv.put(KusssContentContract.Grade.GRADE_COL_TERM, getTerm());
-        cv.put(KusssContentContract.Grade.GRADE_COL_TYPE, getGradeType()
-                .ordinal());
-        cv.put(KusssContentContract.Grade.GRADE_COL_CODE, getCode());
-        cv.put(KusssContentContract.Grade.GRADE_COL_TITLE, getTitle());
-        cv.put(KusssContentContract.Grade.GRADE_COL_ECTS, getEcts());
-        cv.put(KusssContentContract.Grade.GRADE_COL_SWS, getSws());
-        return cv;
     }
 
 }

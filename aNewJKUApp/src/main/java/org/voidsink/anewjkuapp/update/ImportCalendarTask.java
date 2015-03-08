@@ -36,7 +36,6 @@ import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -53,9 +52,9 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 
     private final CalendarBuilder mCalendarBuilder;
 
-    private static final Pattern lvaNrTermPattern = Pattern
+    private static final Pattern courseIdTermPattern = Pattern
             .compile(KusssHandler.PATTERN_LVA_NR_SLASH_TERM);
-    private static final Pattern lvaLeiterPattern = Pattern
+    private static final Pattern lecturerPattern = Pattern
             .compile("Lva-LeiterIn:\\s+");
     private static final String EXTENDED_PROPERTY_NAME_KUSSS_ID = "kusssId";
 
@@ -179,7 +178,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                                     mCalendarBuilder);
                             kusssIdPrefix = "at-jku-kusss-exam-";
                             break;
-                        case CalendarUtils.ARG_CALENDAR_LVA:
+                        case CalendarUtils.ARG_CALENDAR_COURSE:
                             iCal = KusssHandler.getInstance().getLVAIcal(mContext,
                                     mCalendarBuilder);
                             kusssIdPrefix = "at-jku-kusss-coursedate-";
@@ -205,7 +204,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
 
                     ArrayList<ContentProviderOperation> batch = new ArrayList<>();
 
-                    // modify events: move lvanr/term and teacher to description
+                    // modify events: move courseId/term and lecturer to description
                     String lineSeparator = System.getProperty("line.separator");
                     if (lineSeparator == null) lineSeparator = ", ";
 
@@ -219,30 +218,30 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                             String description = ev.getDescription()
                                     .getValue().trim();
 
-                            Matcher lvaNrTermMatcher = lvaNrTermPattern
-                                    .matcher(summary); // (lvaNr/term)
-                            if (lvaNrTermMatcher.find()) {
+                            Matcher courseIdTermMatcher = courseIdTermPattern
+                                    .matcher(summary); // (courseId/term)
+                            if (courseIdTermMatcher.find()) {
                                 if (!description.isEmpty()) {
                                     description += lineSeparator;
                                     description += lineSeparator;
                                 }
                                 description += summary
-                                        .substring(lvaNrTermMatcher.start());
+                                        .substring(courseIdTermMatcher.start());
                                 summary = summary.substring(0,
-                                        lvaNrTermMatcher.start());
+                                        courseIdTermMatcher.start());
                             } else {
-                                Matcher lvaLeiterMatcher = lvaLeiterPattern
+                                Matcher lecturerMatcher = lecturerPattern
                                         .matcher(summary);
-                                if (lvaLeiterMatcher.find()) {
+                                if (lecturerMatcher.find()) {
                                     if (!description.isEmpty()) {
                                         description += lineSeparator;
                                         description += lineSeparator;
                                     }
                                     description += summary
-                                            .substring(lvaLeiterMatcher
+                                            .substring(lecturerMatcher
                                                     .start());
                                     summary = summary.substring(0,
-                                            lvaLeiterMatcher.start());
+                                            lecturerMatcher.start());
                                 }
                             }
 
@@ -415,7 +414,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                                         // notify only future changes
                                         if (eventDTStart > notifyFrom && !eventDeleted) {
                                             mNotification
-                                                    .addDelete(getEventString(
+                                                    .addDelete(AppUtils.getEventString(
                                                             eventDTStart,
                                                             eventDTEnd,
                                                             eventTitle));
@@ -594,26 +593,9 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
     }
 
     private String getEventString(VEvent v) {
-        return getEventString(v.getStartDate().getDate().getTime(), v
+        return AppUtils.getEventString(v.getStartDate().getDate().getTime(), v
                 .getEndDate().getDate().getTime(), v.getSummary().getValue()
                 .trim());
-    }
-
-    private String getEventString(long eventDTStart, long eventDTEnd,
-                                  String eventTitle) {
-        final SimpleDateFormat dfStart = new SimpleDateFormat("dd.MM HH:mm");
-        SimpleDateFormat dfEnd = dfStart;
-
-        if (DateUtils.isSameDay(new Date(eventDTStart), new Date(eventDTEnd))) {
-            dfEnd = new SimpleDateFormat("HH:mm");
-        }
-
-        int index = eventTitle.indexOf(", ");
-        if (index > 1) {
-            eventTitle = eventTitle.substring(0, index);
-        }
-
-        return String.format("%s: %s - %s", eventTitle, dfStart.format(new Date(eventDTStart)), dfEnd.format(new Date(eventDTEnd)));
     }
 
 }

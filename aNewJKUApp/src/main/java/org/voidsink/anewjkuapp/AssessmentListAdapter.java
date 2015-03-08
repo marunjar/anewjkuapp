@@ -10,16 +10,16 @@ import android.widget.TextView;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
+import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.utils.UIUtils;
 
 import java.text.DateFormat;
 
-public class GradeListAdapter extends RecyclerArrayAdapter<ExamGrade, GradeListAdapter.GradeViewHolder> implements StickyRecyclerHeadersAdapter<GradeListAdapter.GradeHeaderHolder> {
+public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, AssessmentListAdapter.GradeViewHolder> implements StickyRecyclerHeadersAdapter<AssessmentListAdapter.GradeHeaderHolder> {
 
     private final Context mContext;
 
-    public GradeListAdapter(Context context) {
+    public AssessmentListAdapter(Context context) {
         super();
         this.mContext = context;
     }
@@ -32,33 +32,33 @@ public class GradeListAdapter extends RecyclerArrayAdapter<ExamGrade, GradeListA
 
     @Override
     public void onBindViewHolder(GradeViewHolder holder, int position) {
-        ExamGrade grade = getItem(position);
-        holder.mTitle.setText(grade.getTitle());
+        Assessment assessment = getItem(position);
+        holder.mTitle.setText(assessment.getTitle());
 
-        UIUtils.setTextAndVisibility(holder.mLvaNr, grade.getLvaNr());
-        UIUtils.setTextAndVisibility(holder.mTerm, grade.getTerm());
+        UIUtils.setTextAndVisibility(holder.mCourseId, assessment.getCourseId());
+        UIUtils.setTextAndVisibility(holder.mTerm, assessment.getTerm());
 
-        if (grade.getSkz() > 0) {
-            holder.mSkz.setText(String.format("[%d]", grade.getSkz()));
-            holder.mSkz.setVisibility(View.VISIBLE);
+        if (assessment.getCid() > 0) {
+            holder.mCid.setText(String.format("[%d]", assessment.getCid()));
+            holder.mCid.setVisibility(View.VISIBLE);
         } else {
-            holder.mSkz.setVisibility(View.GONE);
+            holder.mCid.setVisibility(View.GONE);
         }
 
-        holder.mChipBack.setBackgroundColor(UIUtils.getChipGradeColor(grade));
-        holder.mChipGrade.setText(UIUtils.getChipGradeText(grade));
-        holder.mChipInfo.setText(UIUtils.getChipGradeEcts(grade.getEcts()));
+        holder.mChipBack.setBackgroundColor(UIUtils.getChipGradeColor(assessment));
+        holder.mChipGrade.setText(UIUtils.getChipGradeText(assessment));
+        holder.mChipInfo.setText(UIUtils.getChipGradeEcts(assessment.getEcts()));
 
-        holder.mDate.setText(DateFormat.getDateInstance().format(grade.getDate()));
-        holder.mGrade.setText(mContext.getString(grade.getGrade()
+        holder.mDate.setText(DateFormat.getDateInstance().format(assessment.getDate()));
+        holder.mGrade.setText(mContext.getString(assessment.getGrade()
                 .getStringResID()));
     }
 
     @Override
     public long getHeaderId(int position) {
-        ExamGrade grade = getItem(position);
+        Assessment grade = getItem(position);
         if (grade != null) {
-            return grade.getGradeType().getStringResID();
+            return grade.getAssessmentType().getStringResID();
         }
         return 0;
     }
@@ -71,9 +71,9 @@ public class GradeListAdapter extends RecyclerArrayAdapter<ExamGrade, GradeListA
 
     @Override
     public void onBindHeaderViewHolder(GradeHeaderHolder gradeHeaderHolder, int position) {
-        ExamGrade grade = getItem(position);
+        Assessment grade = getItem(position);
         if (grade != null) {
-            gradeHeaderHolder.mText.setText(mContext.getString(grade.getGradeType().getStringResID()));
+            gradeHeaderHolder.mText.setText(mContext.getString(grade.getAssessmentType().getStringResID()));
 
         }
     }
@@ -81,9 +81,9 @@ public class GradeListAdapter extends RecyclerArrayAdapter<ExamGrade, GradeListA
     public static class GradeViewHolder extends RecyclerView.ViewHolder {
         public final TextView mTitle;
         public final TextView mGrade;
-        public final TextView mLvaNr;
+        public final TextView mCourseId;
         public final TextView mTerm;
-        public final TextView mSkz;
+        public final TextView mCid;
         public final TextView mDate;
         public final View mChipBack;
         public final TextView mChipGrade;
@@ -93,9 +93,9 @@ public class GradeListAdapter extends RecyclerArrayAdapter<ExamGrade, GradeListA
             super(itemView);
 
             mTitle = (TextView) itemView.findViewById(R.id.grade_list_grade_title);
-            mLvaNr = (TextView) itemView.findViewById(R.id.grade_list_grade_lvanr);
+            mCourseId = (TextView) itemView.findViewById(R.id.grade_list_grade_courseId);
             mTerm = (TextView) itemView.findViewById(R.id.grade_list_grade_term);
-            mSkz = (TextView) itemView.findViewById(R.id.grade_list_grade_skz);
+            mCid = (TextView) itemView.findViewById(R.id.grade_list_grade_cid);
             mDate = (TextView) itemView.findViewById(R.id.grade_list_grade_date);
             mGrade = (TextView) itemView.findViewById(R.id.grade_list_grade_grade);
             mChipBack = itemView.findViewById(R.id.grade_chip);

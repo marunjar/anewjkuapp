@@ -26,6 +26,6 @@ public class LvaFragment extends SlidingTabsFragment {
 
     @Override
     protected String getScreenName() {
-        return Consts.SCREEN_LVAS;
+        return Consts.SCREEN_COURSES;
     }
 }

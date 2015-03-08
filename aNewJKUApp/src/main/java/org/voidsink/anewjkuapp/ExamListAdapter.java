@@ -12,7 +12,8 @@ import android.widget.TextView;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
-import org.voidsink.anewjkuapp.kusss.KusssHandler;
+import org.voidsink.anewjkuapp.kusss.KusssHelper;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -44,7 +45,7 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
                 public boolean onMenuItemClick(MenuItem menuItem) {
                     switch (menuItem.getItemId()) {
                         case R.id.menu_exam_register: {
-                            KusssHandler.getInstance().showExamInBrowser(mContext, exam.getLvaNr());
+                            KusssHelper.showExamInBrowser(mContext, exam.getCourseId());
                             return true;
                         }
                     }
@@ -65,16 +66,16 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
             } else {
                 holder.mInfo.setVisibility(View.GONE);
             }
-            holder.mLvaNr.setText(exam.getLvaNr());
+            holder.mCourseId.setText(exam.getCourseId());
             holder.mTerm.setText(exam.getTerm());
 
-            if (exam.getSkz() > 0) {
-                holder.mSkz.setText(String.format("[%d]", exam.getSkz()));
-                holder.mSkz.setVisibility(View.VISIBLE);
+            if (exam.getCid() > 0) {
+                holder.mCid.setText(String.format("[%d]", exam.getCid()));
+                holder.mCid.setVisibility(View.VISIBLE);
             } else {
-                holder.mSkz.setVisibility(View.GONE);
+                holder.mCid.setVisibility(View.GONE);
             }
-            holder.mTime.setText(exam.getTime());
+            holder.mTime.setText(AppUtils.getTimeString(exam.getDtStart(), exam.getDtEnd()));
             holder.mLocation.setText(exam.getLocation());
         }
     }
@@ -85,7 +86,7 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
 
         if (exam != null) {
             Calendar cal = Calendar.getInstance(); // locale-specific
-            cal.setTime(exam.getDate());
+            cal.setTime(exam.getDtStart());
             cal.set(Calendar.HOUR_OF_DAY, 0);
             cal.set(Calendar.MINUTE, 0);
             cal.set(Calendar.SECOND, 0);
@@ -106,7 +107,7 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
         ExamListExam exam = getItem(position);
 
         if (exam != null) {
-            dateHeaderHolder.mText.setText(DateFormat.getDateInstance().format(exam.getDate()));
+            dateHeaderHolder.mText.setText(DateFormat.getDateInstance().format(exam.getDtStart()));
         } else {
             dateHeaderHolder.mText.setText("");
         }
@@ -117,9 +118,9 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
         public final View mChip;
         public final TextView mLocation;
         public final TextView mTime;
-        public final TextView mSkz;
+        public final TextView mCid;
         public final TextView mTerm;
-        public final TextView mLvaNr;
+        public final TextView mCourseId;
         public final TextView mInfo;
         public final TextView mDescription;
         public final TextView mTitle;
@@ -133,9 +134,9 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
             mTitle = (TextView) itemView.findViewById(R.id.exam_list_item_title);
             mDescription = (TextView) itemView.findViewById(R.id.exam_list_item_description);
             mInfo = (TextView) itemView.findViewById(R.id.exam_list_item_info);
-            mLvaNr = (TextView) itemView.findViewById(R.id.exam_list_item_lvanr);
+            mCourseId = (TextView) itemView.findViewById(R.id.exam_list_item_courseId);
             mTerm = (TextView) itemView.findViewById(R.id.exam_list_item_term);
-            mSkz = (TextView) itemView.findViewById(R.id.exam_list_item_skz);
+            mCid = (TextView) itemView.findViewById(R.id.exam_list_item_cid);
             mTime = (TextView) itemView.findViewById(R.id.exam_list_item_time);
             mLocation = (TextView) itemView.findViewById(R.id.exam_list_item_location);
             mChip = itemView.findViewById(R.id.empty_chip_background);

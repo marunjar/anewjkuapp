@@ -14,11 +14,12 @@ import android.util.Log;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseAsyncTask;
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
+import org.voidsink.anewjkuapp.kusss.Assessment;
+import org.voidsink.anewjkuapp.kusss.AssessmentType;
 import org.voidsink.anewjkuapp.kusss.Grade;
-import org.voidsink.anewjkuapp.kusss.GradeType;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
-import org.voidsink.anewjkuapp.notification.GradesChangedNotification;
+import org.voidsink.anewjkuapp.kusss.KusssHelper;
+import org.voidsink.anewjkuapp.notification.AssessmentChangedNotification;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
@@ -30,9 +31,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
+public class ImportAssessmentTask extends BaseAsyncTask<Void, Void, Void> {
 
-    private static final String TAG = ImportLvaTask.class.getSimpleName();
+    private static final String TAG = ImportCourseTask.class.getSimpleName();
 
     private static final Object sync_lock = new Object();
 
@@ -44,35 +45,35 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
 
     private boolean mShowProgress;
     private SyncNotification mUpdateNotification;
-    private GradesChangedNotification mGradeChangeNotification;
+    private AssessmentChangedNotification mAssessmentChangeNotification;
 
-    public static final String[] GRADE_PROJECTION = new String[]{
-            KusssContentContract.Grade.GRADE_COL_ID,
-            KusssContentContract.Grade.GRADE_COL_TERM,
-            KusssContentContract.Grade.GRADE_COL_LVANR,
-            KusssContentContract.Grade.GRADE_COL_DATE,
-            KusssContentContract.Grade.GRADE_COL_SKZ,
-            KusssContentContract.Grade.GRADE_COL_TYPE,
-            KusssContentContract.Grade.GRADE_COL_GRADE,
-            KusssContentContract.Grade.GRADE_COL_TITLE,
-            KusssContentContract.Grade.GRADE_COL_CODE,
-            KusssContentContract.Grade.GRADE_COL_ECTS,
-            KusssContentContract.Grade.GRADE_COL_SWS};
+    public static final String[] ASSESSMENT_PROJECTION = new String[]{
+            KusssContentContract.Assessment.COL_ID,
+            KusssContentContract.Assessment.COL_TERM,
+            KusssContentContract.Assessment.COL_COURSEID,
+            KusssContentContract.Assessment.COL_DATE,
+            KusssContentContract.Assessment.COL_CURRICULA_ID,
+            KusssContentContract.Assessment.COL_TYPE,
+            KusssContentContract.Assessment.COL_GRADE,
+            KusssContentContract.Assessment.COL_TITLE,
+            KusssContentContract.Assessment.COL_CODE,
+            KusssContentContract.Assessment.COL_ECTS,
+            KusssContentContract.Assessment.COL_SWS};
 
     // Constants representing column positions from PROJECTION.
-    public static final int COLUMN_GRADE_ID = 0;
-    public static final int COLUMN_GRADE_TERM = 1;
-    public static final int COLUMN_GRADE_LVANR = 2;
-    public static final int COLUMN_GRADE_DATE = 3;
-    public static final int COLUMN_GRADE_SKZ = 4;
-    public static final int COLUMN_GRADE_TYPE = 5;
-    public static final int COLUMN_GRADE_GRADE = 6;
-    public static final int COLUMN_GRADE_TITLE = 7;
-    public static final int COLUMN_GRADE_CODE = 8;
-    public static final int COLUMN_GRADE_ECTS = 9;
-    public static final int COLUMN_GRADE_SWS = 10;
+    public static final int COLUMN_ASSESSMENT_ID = 0;
+    public static final int COLUMN_ASSESSMENT_TERM = 1;
+    public static final int COLUMN_ASSESSMENT_COURSEID = 2;
+    public static final int COLUMN_ASSESSMENT_DATE = 3;
+    public static final int COLUMN_ASSESSMENT_CURRICULA_ID = 4;
+    public static final int COLUMN_ASSESSMENT_TYPE = 5;
+    public static final int COLUMN_ASSESSMENT_GRADE = 6;
+    public static final int COLUMN_ASSESSMENT_TITLE = 7;
+    public static final int COLUMN_ASSESSMENT_CODE = 8;
+    public static final int COLUMN_ASSESSMENT_ECTS = 9;
+    public static final int COLUMN_ASSESSMENT_SWS = 10;
 
-    public ImportGradeTask(Account account, Context context) {
+    public ImportAssessmentTask(Account account, Context context) {
         this(account, null, null, null, null, context);
         this.mProvider = context.getContentResolver()
                 .acquireContentProviderClient(
@@ -81,9 +82,9 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
         this.mShowProgress = true;
     }
 
-    public ImportGradeTask(Account account, Bundle extras, String authority,
-                           ContentProviderClient provider, SyncResult syncResult,
-                           Context context) {
+    public ImportAssessmentTask(Account account, Bundle extras, String authority,
+                                ContentProviderClient provider, SyncResult syncResult,
+                                Context context) {
         this.mAccount = account;
         this.mProvider = provider;
         this.mSyncResult = syncResult;
@@ -96,19 +97,19 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
     protected void onPreExecute() {
         super.onPreExecute();
 
-        Log.d(TAG, "prepare importing grades");
+        Log.d(TAG, "prepare importing assessments");
 
         if (mShowProgress) {
             mUpdateNotification = new SyncNotification(mContext,
-                    R.string.notification_sync_grade);
-            mUpdateNotification.show(mContext.getString(R.string.notification_sync_grade_loading));
+                    R.string.notification_sync_assessment);
+            mUpdateNotification.show(mContext.getString(R.string.notification_sync_assessment_loading));
         }
-        mGradeChangeNotification = new GradesChangedNotification(mContext);
+        mAssessmentChangeNotification = new AssessmentChangedNotification(mContext);
     }
 
     @Override
     protected Void doInBackground(Void... params) {
-        Log.d(TAG, "Start importing grades");
+        Log.d(TAG, "Start importing assessments");
 
         synchronized (sync_lock) {
             updateNotify(mContext.getString(R.string.notification_sync_connect));
@@ -121,28 +122,27 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
                         AppUtils.getAccountName(mContext, mAccount),
                         AppUtils.getAccountPassword(mContext, mAccount))) {
 
-                    updateNotify(mContext.getString(R.string.notification_sync_grade_loading));
-                    Log.d(TAG, "load grades");
+                    updateNotify(mContext.getString(R.string.notification_sync_assessment_loading));
+                    Log.d(TAG, "load assessments");
 
-                    List<ExamGrade> grades = KusssHandler.getInstance()
-                            .getGrades(mContext);
-                    if (grades == null) {
+                    List<Assessment> assessments = KusssHandler.getInstance()
+                            .getAssessments(mContext);
+                    if (assessments == null) {
                         mSyncResult.stats.numParseExceptions++;
                     } else {
-                        Map<String, ExamGrade> gradeMap = new HashMap<String, ExamGrade>();
-                        for (ExamGrade grade : grades) {
-                            gradeMap.put(String.format("%s-%d", grade.getCode(),
-                                    grade.getDate().getTime()), grade);
+                        Map<String, Assessment> assessmentMap = new HashMap<>();
+                        for (Assessment assessment : assessments) {
+                            assessmentMap.put(KusssHelper.getAssessmentKey(assessment.getCode(), assessment.getCourseId(), assessment.getDate().getTime()), assessment);
                         }
 
-                        Log.d(TAG, String.format("got %s grades", grades.size()));
+                        Log.d(TAG, String.format("got %s assessments", assessments.size()));
 
-                        updateNotify(mContext.getString(R.string.notification_sync_grade_updating));
+                        updateNotify(mContext.getString(R.string.notification_sync_assessment_updating));
 
                         ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
 
-                        Uri examUri = KusssContentContract.Grade.CONTENT_URI;
-                        Cursor c = mProvider.query(examUri, GRADE_PROJECTION, null,
+                        Uri examUri = KusssContentContract.Assessment.CONTENT_URI;
+                        Cursor c = mProvider.query(examUri, ASSESSMENT_PROJECTION, null,
                                 null, null);
 
                         if (c == null) {
@@ -151,37 +151,36 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
                             Log.d(TAG, "Found " + c.getCount()
                                     + " local entries. Computing merge solution...");
 
-                            int gradeId;
-                            String gradeCode;
-                            Date gradeDate;
-                            GradeType gradeType;
-                            Grade gradeGrade;
+                            int _Id;
+                            String assessmentCode;
+                            String assessmentCourseId;
+                            Date assessmentDate;
+                            AssessmentType assessmentType;
+                            Grade assessmentGrade;
                             while (c.moveToNext()) {
-                                gradeId = c.getInt(COLUMN_GRADE_ID);
-                                gradeCode = c.getString(COLUMN_GRADE_CODE);
-                                gradeDate = new Date(c.getLong(COLUMN_GRADE_DATE));
-                                gradeType = GradeType.parseGradeType(c
-                                        .getInt(COLUMN_GRADE_TYPE));
-                                gradeGrade = Grade.parseGradeType(c
-                                        .getInt(COLUMN_GRADE_GRADE));
+                                _Id = c.getInt(COLUMN_ASSESSMENT_ID);
+                                assessmentCode = c.getString(COLUMN_ASSESSMENT_CODE);
+                                assessmentDate = new Date(c.getLong(COLUMN_ASSESSMENT_DATE));
+                                assessmentType = AssessmentType.parseAssessmentType(c
+                                        .getInt(COLUMN_ASSESSMENT_TYPE));
+                                assessmentGrade = Grade.parseGradeType(c
+                                        .getInt(COLUMN_ASSESSMENT_GRADE));
+                                assessmentCourseId = c.getString(COLUMN_ASSESSMENT_COURSEID);
 
-                                ExamGrade grade = gradeMap.get(String.format(
-                                        "%s-%d", gradeCode, gradeDate.getTime()));
-                                if (grade != null) {
-                                    gradeMap.remove(String.format("%s-%d",
-                                            gradeCode, gradeDate.getTime()));
+                                Assessment assessment = assessmentMap.remove(KusssHelper.getAssessmentKey(assessmentCode, assessmentCourseId, assessmentDate.getTime()));
+                                if (assessment != null) {
                                     // Check to see if the entry needs to be updated
                                     Uri existingUri = examUri.buildUpon()
-                                            .appendPath(Integer.toString(gradeId))
+                                            .appendPath(Integer.toString(_Id))
                                             .build();
                                     Log.d(TAG, "Scheduling update: " + existingUri);
 
-                                    if (!gradeType.equals(grade.getGradeType())
-                                            || !gradeGrade.equals(grade.getGrade())) {
-                                        mGradeChangeNotification
+                                    if (!assessmentType.equals(assessment.getAssessmentType())
+                                            || !assessmentGrade.equals(assessment.getGrade())) {
+                                        mAssessmentChangeNotification
                                                 .addUpdate(String.format("%s: %s",
-                                                        grade.getTitle(),
-                                                        mContext.getString(grade
+                                                        assessment.getTitle(),
+                                                        mContext.getString(assessment
                                                                 .getGrade()
                                                                 .getStringResID())));
                                     }
@@ -194,16 +193,16 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
                                                                     mAccount.name,
                                                                     mAccount.type))
                                             .withValue(
-                                                    KusssContentContract.Grade.GRADE_COL_ID,
-                                                    Integer.toString(gradeId))
-                                            .withValues(grade.getContentValues())
+                                                    KusssContentContract.Assessment.COL_ID,
+                                                    Integer.toString(_Id))
+                                            .withValues(KusssHelper.getAssessmentContentValues(assessment))
                                             .build());
                                     mSyncResult.stats.numUpdates++;
                                 }
                             }
                             c.close();
 
-                            for (ExamGrade grade : gradeMap.values()) {
+                            for (Assessment assessment : assessmentMap.values()) {
                                 batch.add(ContentProviderOperation
                                         .newInsert(
                                                 KusssContentContract
@@ -211,28 +210,28 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
                                                                 examUri,
                                                                 mAccount.name,
                                                                 mAccount.type))
-                                        .withValues(grade.getContentValues())
+                                        .withValues(KusssHelper.getAssessmentContentValues(assessment))
                                         .build());
-                                Log.d(TAG, "Scheduling insert: " + grade.getTerm()
-                                        + " " + grade.getLvaNr());
+                                Log.d(TAG, "Scheduling insert: " + assessment.getTerm()
+                                        + " " + assessment.getCourseId());
 
-                                mGradeChangeNotification.addInsert(String.format(
-                                        "%s: %s", grade.getTitle(), mContext
-                                                .getString(grade.getGrade()
+                                mAssessmentChangeNotification.addInsert(String.format(
+                                        "%s: %s", assessment.getTitle(), mContext
+                                                .getString(assessment.getGrade()
                                                         .getStringResID())));
 
                                 mSyncResult.stats.numInserts++;
                             }
 
                             if (batch.size() > 0) {
-                                updateNotify(mContext.getString(R.string.notification_sync_grade_saving));
+                                updateNotify(mContext.getString(R.string.notification_sync_assessment_saving));
 
                                 Log.d(TAG, "Applying batch update");
                                 mProvider.applyBatch(batch);
                                 Log.d(TAG, "Notify resolver");
                                 mResolver
                                         .notifyChange(
-                                                KusssContentContract.Grade.CONTENT_CHANGED_URI,
+                                                KusssContentContract.Assessment.CONTENT_CHANGED_URI,
                                                 null, // No
                                                 // local
                                                 // observer
@@ -264,7 +263,7 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
         if (mUpdateNotification != null) {
             mUpdateNotification.cancel();
         }
-        mGradeChangeNotification.show();
+        mAssessmentChangeNotification.show();
     }
 
     private void updateNotify(String string) {

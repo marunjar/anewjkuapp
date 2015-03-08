@@ -148,7 +148,7 @@ public class CalendarFragment extends BaseFragment {
 
         Account account = AppUtils.getAccount(getContext());
 
-        String lvaCalId = CalendarUtils.getCalIDByName(getContext(), account, CalendarUtils.ARG_CALENDAR_LVA, true);
+        String lvaCalId = CalendarUtils.getCalIDByName(getContext(), account, CalendarUtils.ARG_CALENDAR_COURSE, true);
         String examCalId = CalendarUtils.getCalIDByName(getContext(), account, CalendarUtils.ARG_CALENDAR_EXAM, true);
 
         if (lvaCalId == null || examCalId == null) {
@@ -207,7 +207,7 @@ public class CalendarFragment extends BaseFragment {
                 }
 
                 String calIDLva = CalendarUtils.getCalIDByName(mContext,
-                        mAccount, CalendarUtils.ARG_CALENDAR_LVA, true);
+                        mAccount, CalendarUtils.ARG_CALENDAR_COURSE, true);
                 String calIDExam = CalendarUtils.getCalIDByName(mContext,
                         mAccount, CalendarUtils.ARG_CALENDAR_EXAM, true);
 

@@ -1,7 +1,7 @@
 package org.voidsink.anewjkuapp;
 
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
-import org.voidsink.anewjkuapp.kusss.Lva;
+import org.voidsink.anewjkuapp.kusss.Assessment;
+import org.voidsink.anewjkuapp.kusss.Course;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
@@ -16,28 +16,28 @@ public class StatCard {
     public static final int TYPE_GRADE = 1;
 
     private final int mType;
-    private final List<Lva> mLvas;
-    private final List<ExamGrade> mGrades;
+    private final List<Course> mCourses;
+    private final List<Assessment> mAssessments;
     private final boolean mWeighted;
     private final boolean mPositiveOnly;
     private final List<String> mTerms;
 
-    public StatCard(int type, List<String> terms, List<Lva> lvas, List<ExamGrade> grades, boolean weighted, boolean positiveOnly) {
+    public StatCard(int type, List<String> terms, List<Course> courses, List<Assessment> assessments, boolean weighted, boolean positiveOnly) {
         this.mType = type;
         this.mTerms = terms;
-        this.mLvas = lvas;
-        this.mGrades = grades;
+        this.mCourses = courses;
+        this.mAssessments = assessments;
         this.mWeighted = weighted;
         this.mPositiveOnly = positiveOnly;
     }
 
-    public static StatCard getLvaInstance(List<String> terms, List<Lva> lvas, List<ExamGrade> grades) {
-        return new StatCard(TYPE_LVA, terms, lvas, grades, false, false);
+    public static StatCard getLvaInstance(List<String> terms, List<Course> courses, List<Assessment> assessments) {
+        return new StatCard(TYPE_LVA, terms, courses, assessments, false, false);
     }
 
 
-    public static StatCard getGradeInstance(List<String> terms, List<ExamGrade> grades, boolean weighted, boolean positiveOnly) {
-        return new StatCard(TYPE_GRADE, terms, null, grades, weighted, positiveOnly);
+    public static StatCard getAssessmentInstance(List<String> terms, List<Assessment> assessments, boolean weighted, boolean positiveOnly) {
+        return new StatCard(TYPE_GRADE, terms, null, assessments, weighted, positiveOnly);
     }
 
     public int getType() {
@@ -48,12 +48,12 @@ public class StatCard {
         return mTerms;
     }
 
-    public List<Lva> getLvas() {
-        return mLvas;
+    public List<Course> getLvas() {
+        return mCourses;
     }
 
-    public List<ExamGrade> getGrades() {
-        return mGrades;
+    public List<Assessment> getAssessments() {
+        return mAssessments;
     }
 
     public boolean isWeighted() {
@@ -65,6 +65,6 @@ public class StatCard {
     }
 
     public List<LvaWithGrade> getLvasWithGrades() {
-        return AppUtils.getLvasWithGrades(getTerms(), getLvas(), getGrades());
+        return AppUtils.getLvasWithGrades(getTerms(), getLvas(), getAssessments());
     }
 }

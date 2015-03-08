@@ -23,8 +23,8 @@ import org.voidsink.anewjkuapp.StatCardAdapter;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.base.TermFragment;
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
-import org.voidsink.anewjkuapp.kusss.Lva;
+import org.voidsink.anewjkuapp.kusss.Assessment;
+import org.voidsink.anewjkuapp.kusss.Course;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
@@ -68,8 +68,8 @@ public class StatFragmentDetail extends TermFragment implements
         switch (item.getItemId()) {
             case R.id.action_refresh_stats:
                 Intent mUpdateService = new Intent(getActivity(), UpdateService.class);
-                mUpdateService.putExtra(Consts.ARG_UPDATE_KUSSS_LVAS, true);
-                mUpdateService.putExtra(Consts.ARG_UPDATE_KUSSS_GRADES, true);
+                mUpdateService.putExtra(Consts.ARG_UPDATE_KUSSS_COURSES, true);
+                mUpdateService.putExtra(Consts.ARG_UPDATE_KUSSS_ASSESSMENTS, true);
                 getActivity().startService(mUpdateService);
 
                 return true;
@@ -89,8 +89,8 @@ public class StatFragmentDetail extends TermFragment implements
         new AsyncTask<Void, Void, Void>() {
 
             //            private ProgressDialog progressDialog;
-            private List<Lva> lvas;
-            private List<ExamGrade> grades;
+            private List<Course> courses;
+            private List<Assessment> assessments;
             private Context mContext = getContext();
 
             @Override
@@ -104,9 +104,9 @@ public class StatFragmentDetail extends TermFragment implements
 
             @Override
             protected Void doInBackground(Void... params) {
-                this.lvas = KusssContentProvider.getLvas(mContext);
-                this.grades = AppUtils.filterGrades(getTerms(), KusssContentProvider.getGrades(mContext));
-                AppUtils.sortLVAs(this.lvas);
+                this.courses = KusssContentProvider.getCourses(mContext);
+                this.assessments = AppUtils.filterAssessments(getTerms(), KusssContentProvider.getAssessments(mContext));
+                AppUtils.sortCourses(this.courses);
                 return null;
             }
 
@@ -117,9 +117,9 @@ public class StatFragmentDetail extends TermFragment implements
 
                     boolean mPositiveOnly = PreferenceWrapper.getPositiveGradesOnly(getContext());
 
-                    mAdapter.add(StatCard.getGradeInstance(getTerms(), this.grades, true, mPositiveOnly));
-                    mAdapter.add(StatCard.getGradeInstance(getTerms(), this.grades, false, mPositiveOnly));
-                    mAdapter.add(StatCard.getLvaInstance(getTerms(), this.lvas, this.grades));
+                    mAdapter.add(StatCard.getAssessmentInstance(getTerms(), this.assessments, true, mPositiveOnly));
+                    mAdapter.add(StatCard.getAssessmentInstance(getTerms(), this.assessments, false, mPositiveOnly));
+                    mAdapter.add(StatCard.getLvaInstance(getTerms(), this.courses, this.assessments));
 
                     mAdapter.notifyDataSetChanged();
                 }
@@ -136,16 +136,16 @@ public class StatFragmentDetail extends TermFragment implements
 
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(KusssContentContract.AUTHORITY,
-                KusssContentContract.Lva.PATH_CONTENT_CHANGED, 0);
+                KusssContentContract.Course.PATH_CONTENT_CHANGED, 0);
         uriMatcher.addURI(KusssContentContract.AUTHORITY,
-                KusssContentContract.Grade.PATH_CONTENT_CHANGED, 1);
+                KusssContentContract.Assessment.PATH_CONTENT_CHANGED, 1);
 
         mDataObserver = new BaseContentObserver(uriMatcher, this);
         getActivity().getContentResolver().registerContentObserver(
-                KusssContentContract.Lva.CONTENT_CHANGED_URI, false,
+                KusssContentContract.Course.CONTENT_CHANGED_URI, false,
                 mDataObserver);
         getActivity().getContentResolver().registerContentObserver(
-                KusssContentContract.Grade.CONTENT_CHANGED_URI, false,
+                KusssContentContract.Assessment.CONTENT_CHANGED_URI, false,
                 mDataObserver);
     }
 
