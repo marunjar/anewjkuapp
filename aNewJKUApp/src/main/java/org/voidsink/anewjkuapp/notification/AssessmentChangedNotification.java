@@ -6,17 +6,16 @@ import java.util.List;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
-import org.voidsink.anewjkuapp.fragment.GradeFragment;
+import org.voidsink.anewjkuapp.fragment.AssessmentFragment;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import edu.emory.mathcs.backport.java.util.Collections;
 
-public class GradesChangedNotification {
+public class AssessmentChangedNotification {
 	private static int NOTIFICATION_GRADES_CHANGED = R.string.notification_grades_changed;
 
 	private Context mContext;
@@ -24,7 +23,7 @@ public class GradesChangedNotification {
 	private List<String> mInserts;
 	private List<String> mUpdates;
 
-	public GradesChangedNotification(Context mContext) {
+	public AssessmentChangedNotification(Context mContext) {
 		this.mContext = mContext;
 		this.mInserts = new ArrayList<String>();
 		this.mUpdates = new ArrayList<String>();
@@ -43,7 +42,7 @@ public class GradesChangedNotification {
 				&& (mInserts.size() > 0 || mUpdates.size() > 0)) {
 			PendingIntent pendingIntent = PendingIntent
 					.getActivity(mContext, NOTIFICATION_GRADES_CHANGED, new Intent(mContext,
-							MainActivity.class).putExtra(MainActivity.ARG_SHOW_FRAGMENT, GradeFragment.class.getName())
+							MainActivity.class).putExtra(MainActivity.ARG_SHOW_FRAGMENT, AssessmentFragment.class.getName())
 							.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
 
 			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(

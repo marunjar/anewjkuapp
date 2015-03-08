@@ -104,11 +104,11 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 				}
 			}
 
-			Log.d(TAG, "importing: " + CalendarUtils.ARG_CALENDAR_LVA);
+			Log.d(TAG, "importing: " + CalendarUtils.ARG_CALENDAR_COURSE);
 
 			task = new ImportCalendarTask(account, extras, authority, provider,
 					syncResult, getContext(),
-					CalendarUtils.ARG_CALENDAR_LVA, mCalendarBuilder);
+					CalendarUtils.ARG_CALENDAR_COURSE, mCalendarBuilder);
 
 			task.execute();
 			while (!task.isDone() && !mSyncCancled) {

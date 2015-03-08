@@ -1,8 +1,6 @@
 package org.voidsink.anewjkuapp.kusss;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.text.format.DateUtils;
 import android.util.Log;
 
@@ -31,7 +29,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -290,14 +287,14 @@ public class KusssHandler {
         return true;
     }
 
-    public List<Lva> getLvas(Context c, List<Term> terms) {
+    public List<Course> getLvas(Context c, List<Term> terms) {
         if (terms == null || terms.size() == 0) {
             return null;
         }
 
-        List<Lva> lvas = new ArrayList<>();
+        List<Course> courses = new ArrayList<>();
         try {
-            Log.d(TAG, "getLvas");
+            Log.d(TAG, "getCourses");
 
             for (Term term : terms) {
                 term.setLoaded(false); // init loaded flag
@@ -309,9 +306,9 @@ public class KusssHandler {
                             // .select("body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > table > tbody > tr");
                             Elements rows = doc.select(SELECT_MY_LVAS);
                             for (Element row : rows) {
-                                Lva lva = new Lva(c, term.getTerm(), row);
-                                if (lva.isInitialized()) {
-                                    lvas.add(lva);
+                                Course course = new Course(c, term.getTerm(), row);
+                                if (course.isInitialized()) {
+                                    courses.add(course);
                                 }
                             }
                             term.setLoaded(true);
@@ -324,7 +321,7 @@ public class KusssHandler {
                     throw new IOException(String.format("cannot select term: %s", term));
                 }
             }
-            if (lvas != null && lvas.size() == 0) {
+            if (courses != null && courses.size() == 0) {
                 // break if no lvas found, a student without courses is a quite impossible case
                 throw new IOException("no lvas found");
             }
@@ -332,7 +329,7 @@ public class KusssHandler {
             Analytics.sendException(c, e, true);
             return null;
         }
-        return lvas;
+        return courses;
     }
 
     private boolean isSelectable(Context c, Document doc, String term) {
@@ -367,23 +364,23 @@ public class KusssHandler {
         return false;
     }
 
-    public List<ExamGrade> getGrades(Context c) {
-        List<ExamGrade> grades = new ArrayList<>();
+    public List<Assessment> getAssessments(Context c) {
+        List<Assessment> grades = new ArrayList<>();
         try {
             Document doc = Jsoup.connect(URL_MY_GRADES).data("months", "0")
                     .get();
 
             Elements rows = doc.select(SELECT_MY_GRADES);
 
-            GradeType type = null;
+            AssessmentType type = null;
             for (Element row : rows) {
                 if (row.tag().toString().equals("h3")) {
-                    type = GradeType.parseGradeType(row.text());
+                    type = AssessmentType.parseGradeType(row.text());
                 } else if (row.tag().toString().equals("table")) {
                     Elements gradeRows = row
                             .select("tbody > tr[class]:has(td)");
                     for (Element gradeRow : gradeRows) {
-                        ExamGrade grade = new ExamGrade(c, type, gradeRow);
+                        Assessment grade = new Assessment(c, type, gradeRow);
                         if (grade.isInitialized()) {
                             grades.add(grade);
                         }
@@ -391,7 +388,7 @@ public class KusssHandler {
                 }
             }
         } catch (IOException e) {
-            Log.e(TAG, "getGrades", e);
+            Log.e(TAG, "getAssessments", e);
             Analytics.sendException(c, e, true);
             return null;
         }
@@ -434,35 +431,35 @@ public class KusssHandler {
         return exams;
     }
 
-    public List<Exam> getNewExamsByLvaNr(Context c, List<Lva> lvas, List<Term> terms)
+    public List<Exam> getNewExamsByCourseId(Context c, List<Course> courses, List<Term> terms)
             throws IOException {
 
         List<Exam> exams = new ArrayList<>();
         try {
-            if (lvas == null || lvas.size() == 0) {
+            if (courses == null || courses.size() == 0) {
                 Log.d(TAG, "no lvas found, reload");
-                lvas = getLvas(c, terms);
+                courses = getLvas(c, terms);
             }
-            if (lvas != null && lvas.size() > 0) {
-                Map<String, ExamGrade> gradeCache = new HashMap<>();
+            if (courses != null && courses.size() > 0) {
+                Map<String, Assessment> gradeCache = new HashMap<>();
 
-                List<ExamGrade> grades = getGrades(c);
+                List<Assessment> grades = getAssessments(c);
                 if (grades != null) {
-                    for (ExamGrade grade : grades) {
-                        if (!grade.getLvaNr().isEmpty()) {
-                            ExamGrade existing = gradeCache.get(grade.getLvaNr());
+                    for (Assessment grade : grades) {
+                        if (!grade.getCourseId().isEmpty()) {
+                            Assessment existing = gradeCache.get(grade.getCourseId());
                             if (existing != null) {
                                 Log.d(TAG,
                                         existing.getTitle() + " --> "
                                                 + grade.getTitle());
                             }
-                            gradeCache.put(grade.getLvaNr(), grade);
+                            gradeCache.put(grade.getCourseId(), grade);
                         }
                     }
                 }
 
-                for (Lva lva : lvas) {
-                    ExamGrade grade = gradeCache.get(lva.getLvaNr());
+                for (Course course : courses) {
+                    Assessment grade = gradeCache.get(course.getCourseId());
                     if (grade != null) {
                         if ((grade.getGrade() == Grade.G5)
                                 || (grade.getDate().getTime() > (System
@@ -474,8 +471,8 @@ public class KusssHandler {
                         }
                     }
                     if (grade == null) {
-                        List<Exam> newExams = getNewExamsByLvaNr(c,
-                                lva.getLvaNr());
+                        List<Exam> newExams = getNewExamsByCourseId(c,
+                                course.getCourseId());
                         if (newExams != null) {
                             for (Exam newExam : newExams) {
                                 if (newExam != null) {
@@ -490,19 +487,19 @@ public class KusssHandler {
             // add registered exams
             loadExams(c, exams);
         } catch (Exception e) {
-            Log.e(TAG, "getNewExamsByLvaNr", e);
+            Log.e(TAG, "getNewExamsByCourseId", e);
             Analytics.sendException(c, e, true);
             return null;
         }
         return exams;
     }
 
-    private List<Exam> getNewExamsByLvaNr(Context c, String lvaNr) {
+    private List<Exam> getNewExamsByCourseId(Context c, String courseId) {
         List<Exam> exams = new ArrayList<>();
         try {
             final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
 
-            Log.d(TAG, "getNewExamsByLvaNr: " + lvaNr);
+            Log.d(TAG, "getNewExamsByCourseId: " + courseId);
             Document doc = Jsoup
                     .connect(URL_GET_NEW_EXAMS)
                     .timeout(TIMEOUT_SEARCH_EXAM_BY_LVA)
@@ -513,7 +510,7 @@ public class KusssHandler {
                     .data("searchDateTo",
                             df.format(new Date(System.currentTimeMillis()
                                     + DateUtils.YEAR_IN_MILLIS)))
-                    .data("searchLvaNr", lvaNr).data("searchLvaTitle", "")
+                    .data("searchLvaNr", courseId).data("searchLvaTitle", "")
                     .data("searchCourseClass", "").post();
 
             Elements rows = doc.select(SELECT_NEW_EXAMS);
@@ -535,7 +532,7 @@ public class KusssHandler {
                 }
             }
         } catch (IOException e) {
-            Log.e(TAG, "getNewExamsByLvaNr", e);
+            Log.e(TAG, "getNewExamsByCourseId", e);
             Analytics.sendException(c, e, true);
             exams = null;
         }
@@ -566,29 +563,24 @@ public class KusssHandler {
         }
     }
 
-    public List<Studies> getStudies(Context c) {
+    public List<Curriculum> getCurricula(Context c) {
         try {
-            List<Studies> studies = new ArrayList<>();
+            List<Curriculum> mCurricula = new ArrayList<>();
 
             Document doc = Jsoup.connect(URL_MY_STUDIES).get();
 
             Elements rows = doc.select(SELECT_MY_STUDIES);
             for (Element row : rows) {
-                Studies s = new Studies(c, row);
+                Curriculum s = new Curriculum(c, row);
                 if (s.isInitialized()) {
-                    studies.add(s);
+                    mCurricula.add(s);
                 }
             }
-            return studies;
+            return mCurricula;
         } catch (Exception e) {
             Analytics.sendException(c, e, true);
             return null;
         }
     }
 
-    public void showExamInBrowser(Context c, String lvaNr) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(URL_GET_EXAMS));
-        c.startActivity(intent);
-        // TODO: create activity with webview that uses stored credentials to login and open page with search for lvanr
-    }
 }

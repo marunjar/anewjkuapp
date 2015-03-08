@@ -1,20 +1,19 @@
 package org.voidsink.anewjkuapp.kusss;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.util.Log;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.voidsink.anewjkuapp.utils.Analytics;
-import org.voidsink.anewjkuapp.KusssContentContract;
-import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,19 +21,19 @@ public class Exam {
 
     private static final String TAG = Exam.class.getSimpleName();
 
-    private static final Pattern lvaNrTermPattern = Pattern
+    private static final Pattern courseIdTermPattern = Pattern
             .compile(KusssHandler.PATTERN_LVA_NR_COMMA_TERM);
-    private static final Pattern lvaNrPattern = Pattern
+    private static final Pattern courseIdPattern = Pattern
             .compile(KusssHandler.PATTERN_LVA_NR);
     private static final Pattern termPattern = Pattern
             .compile(KusssHandler.PATTERN_TERM);
     private static final Pattern timePattern = Pattern
             .compile("\\d{2}\\:\\d{2}");
 
-    private String lvaNr = "";
+    private String courseId = "";
     private String term = "";
-    private Date date = null;
-    private String time = "";
+    private Date dtStart = null;
+    private Date dtEnd = null;
     private String location = "";
     private String description = "";
     private String info = "";
@@ -50,26 +49,26 @@ public class Exam {
             if (columns.size() >= 5
                     && columns.get(0).select("input").size() == 1) {
                 try {
-                    Matcher lvaNrTermMatcher = lvaNrTermPattern.matcher(columns
-                            .get(1).text()); // (lvaNr,term)
-                    if (lvaNrTermMatcher.find()) {
-                        String lvaNrTerm = lvaNrTermMatcher.group();
+                    Matcher courseIdTermMatcher = courseIdTermPattern.matcher(columns
+                            .get(1).text()); // (courseId,term)
+                    if (courseIdTermMatcher.find()) {
+                        String courseIdTerm = courseIdTermMatcher.group();
                         setTitle(columns.get(1).text()
-                                .substring(0, lvaNrTermMatcher.start()));
+                                .substring(0, courseIdTermMatcher.start()));
 
-                        Matcher lvaNrMatcher = lvaNrPattern.matcher(lvaNrTerm); // lvaNr
-                        if (lvaNrMatcher.find()) {
-                            setLvaNr(lvaNrMatcher.group());
+                        Matcher courseIdMatcher = courseIdPattern.matcher(courseIdTerm); // courseId
+                        if (courseIdMatcher.find()) {
+                            setCourseId(courseIdMatcher.group());
                         }
 
-                        Matcher termMatcher = termPattern.matcher(lvaNrTerm); // term
-                        if (termMatcher.find(lvaNrMatcher.end())) {
+                        Matcher termMatcher = termPattern.matcher(courseIdTerm); // term
+                        if (termMatcher.find(courseIdMatcher.end())) {
                             setTerm(termMatcher.group());
                         }
 
-                        setDate(dateFormat.parse(columns.get(2).text())); // date
+                        initDates(dateFormat.parse(columns.get(2).text()));
 
-                        setTimeLocation(c, columns.get(3).text());
+                        initTimeLocation(c, columns.get(3).text());
 
                         setRegistered(false);
                     }
@@ -82,26 +81,26 @@ public class Exam {
             if (columns.size() >= 5
                     && columns.get(4).select("input").size() == 1) {
                 try {
-                    Matcher lvaNrTermMatcher = lvaNrTermPattern.matcher(columns
-                            .get(0).text()); // (lvaNr,term)
-                    if (lvaNrTermMatcher.find()) {
-                        String lvaNrTerm = lvaNrTermMatcher.group();
+                    Matcher courseIdTermMatcher = courseIdTermPattern.matcher(columns
+                            .get(0).text()); // (courseId,term)
+                    if (courseIdTermMatcher.find()) {
+                        String courseIdTerm = courseIdTermMatcher.group();
                         setTitle(columns.get(0).text()
-                                .substring(0, lvaNrTermMatcher.start()));
+                                .substring(0, courseIdTermMatcher.start()));
 
-                        Matcher lvaNrMatcher = lvaNrPattern.matcher(lvaNrTerm); // lvaNr
-                        if (lvaNrMatcher.find()) {
-                            setLvaNr(lvaNrMatcher.group());
+                        Matcher courseIdMatcher = courseIdPattern.matcher(courseIdTerm); // courseId
+                        if (courseIdMatcher.find()) {
+                            setCourseId(courseIdMatcher.group());
                         }
 
-                        Matcher termMatcher = termPattern.matcher(lvaNrTerm); // term
-                        if (termMatcher.find(lvaNrMatcher.end())) {
+                        Matcher termMatcher = termPattern.matcher(courseIdTerm); // term
+                        if (termMatcher.find(courseIdMatcher.end())) {
                             setTerm(termMatcher.group());
                         }
 
-                        setDate(dateFormat.parse(columns.get(1).text())); // date
+                        initDates(dateFormat.parse(columns.get(1).text())); // date
 
-                        setTimeLocation(c, columns.get(2).text());
+                        initTimeLocation(c, columns.get(2).text());
 
                         setRegistered(columns.get(0)
                                 .getElementsByClass("assignment-inactive")
@@ -115,6 +114,35 @@ public class Exam {
         }
     }
 
+    private void initDates(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        this.dtStart = cal.getTime();
+
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        cal.add(Calendar.SECOND, -1);
+
+        this.dtEnd = cal.getTime();
+    }
+
+    public Exam(String courseId, String term, Date dtStart, Date dtEnd, String location, String description, String info, String title, boolean isRegistered) {
+        this.courseId = courseId;
+        this.term = term;
+        this.dtStart = dtStart;
+        this.dtEnd = dtEnd;
+        this.location = location;
+        this.description = description;
+        this.info = info;
+        this.title = title;
+        this.isRegistered = isRegistered;
+    }
+
     private void setRegistered(boolean isRegistered) {
         this.isRegistered = isRegistered;
     }
@@ -123,22 +151,18 @@ public class Exam {
         this.title = title;
     }
 
-    private void setLvaNr(String lvaNr) {
-        this.lvaNr = lvaNr;
+    private void setCourseId(String courseId) {
+        this.courseId = courseId;
     }
 
     private void setTerm(String term) {
         this.term = term;
     }
 
-    private void setDate(Date date) {
-        this.date = date;
-    }
-
-    private String extractTimeString(String time) {
+    private void initDateTimes(String timeStr) {
         List<String> times = new ArrayList<>();
         // extract times
-        Matcher timeMatcher = timePattern.matcher(time);
+        Matcher timeMatcher = timePattern.matcher(timeStr);
         while (timeMatcher.find()) {
             times.add(timeMatcher.group());
         }
@@ -152,36 +176,62 @@ public class Exam {
             }
         }
 
-        // create new time string
-        String result = "";
-        for (String s : times) {
-            if (!result.isEmpty()) {
-                result += " - ";
+        final SimpleDateFormat dfTime = new SimpleDateFormat("HH:mm", Locale.GERMAN);
+        // initialize dtStart, dtEnd
+        if (times.size() == 1) {
+            try {
+                Date time = dfTime.parse(times.get(0));
+                applyTime(dtStart, time);
+                applyTime(dtEnd, time);
+            } catch (ParseException e) {
+                Analytics.sendException(null, e, false);
             }
-            result += s;
-        }
+        } else if (times.size() == 2) {
+            try {
+                Date timeStart = dfTime.parse(times.get(0));
+                Date timeEnd = dfTime.parse(times.get(1));
 
-        return result;
+                if (timeEnd.before(timeStart)) {
+                    timeEnd = timeStart;
+                }
+
+                applyTime(dtStart, timeStart);
+                applyTime(dtEnd, timeEnd);
+            } catch (ParseException e) {
+                Analytics.sendException(null, e, false);
+            }
+        }
     }
 
-    private void setTimeLocation(Context c, String timeLocation) {
+    private void applyTime(Date date, Date time) {
+        Calendar calDate = Calendar.getInstance();
+        calDate.setTime(date);
+
+        Calendar calTime = Calendar.getInstance();
+        calTime.setTime(time);
+        calTime.set(Calendar.YEAR, calDate.get(Calendar.YEAR));
+        calTime.set(Calendar.MONTH, calDate.get(Calendar.MONTH));
+        calTime.set(Calendar.DAY_OF_YEAR, calDate.get(Calendar.DAY_OF_YEAR));
+
+        date.setTime(calTime.getTimeInMillis());
+    }
+
+    private void initTimeLocation(Context c, String timeLocation) {
         String[] splitted = timeLocation.split("\\/");
 
-        String time = "";
         String location = "";
 
         try {
             if (splitted.length > 1) {
-                time = extractTimeString(splitted[0]);
+                initDateTimes(splitted[0]);
                 location = splitted[1];
             } else {
-                time = extractTimeString(splitted[0]);
+                initDateTimes(splitted[0]);
             }
         } catch (Exception e) {
             Log.e(TAG, "cant parse string", e);
             Analytics.sendException(c, e, false, timeLocation);
         }
-        this.time = time;
         this.location = location;
     }
 
@@ -194,8 +244,8 @@ public class Exam {
     }
 
     public boolean isInitialized() {
-        return !this.lvaNr.isEmpty() && !this.term.isEmpty()
-                && this.date != null;
+        return !this.courseId.isEmpty() && !this.term.isEmpty()
+                && this.dtStart != null && this.dtEnd != null;
     }
 
     public void addAdditionalInfo(Element row) {
@@ -214,8 +264,8 @@ public class Exam {
         }
     }
 
-    public String getTime() {
-        return this.time;
+    public Date getDtEnd() {
+        return this.dtEnd;
     }
 
     public String getLocation() {
@@ -230,31 +280,16 @@ public class Exam {
         return this.description;
     }
 
-    public String getLvaNr() {
-        return this.lvaNr;
+    public String getCourseId() {
+        return this.courseId;
     }
 
     public String getTerm() {
         return this.term;
     }
 
-    public Date getDate() {
-        return this.date;
-    }
-
-    public ContentValues getContentValues() {
-        ContentValues cv = new ContentValues();
-        cv.put(KusssContentContract.Exam.EXAM_COL_DATE, getDate().getTime());
-        cv.put(KusssContentContract.Exam.EXAM_COL_DESCRIPTION, getDescription());
-        cv.put(KusssContentContract.Exam.EXAM_COL_INFO, getInfo());
-        cv.put(KusssContentContract.Exam.EXAM_COL_LOCATION, getLocation());
-        cv.put(KusssContentContract.Exam.EXAM_COL_LVANR, getLvaNr());
-        cv.put(KusssContentContract.Exam.EXAM_COL_TERM, getTerm());
-        cv.put(KusssContentContract.Exam.EXAM_COL_TIME, getTime());
-        cv.put(KusssContentContract.Exam.EXAM_COL_IS_REGISTERED,
-                KusssDatabaseHelper.toInt(isRegistered()));
-        cv.put(KusssContentContract.Exam.EXAM_COL_TITLE, getTitle());
-        return cv;
+    public Date getDtStart() {
+        return this.dtStart;
     }
 
     public boolean isRegistered() {
@@ -265,11 +300,4 @@ public class Exam {
         return title;
     }
 
-    public String getKey() {
-        return getKey(this.lvaNr, this.term, this.date.getTime());
-    }
-
-    public static String getKey(String lvaNr, String term, long date) {
-        return String.format("%s-%s-%d", lvaNr, term, date);
-    }
 }

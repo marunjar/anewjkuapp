@@ -127,7 +127,7 @@ public final class PreferenceWrapper {
         }
     }
 
-    public static boolean getNewExamsByLvaNr(Context mContext) {
+    public static boolean getNewExamsByCourseId(Context mContext) {
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(mContext);
         try {

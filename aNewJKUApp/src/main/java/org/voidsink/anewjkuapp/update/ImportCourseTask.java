@@ -14,8 +14,9 @@ import android.util.Log;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseAsyncTask;
+import org.voidsink.anewjkuapp.kusss.Course;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
-import org.voidsink.anewjkuapp.kusss.Lva;
+import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
@@ -28,9 +29,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
+public class ImportCourseTask extends BaseAsyncTask<Void, Void, Void> {
 
-    private static final String TAG = ImportLvaTask.class.getSimpleName();
+    private static final String TAG = ImportCourseTask.class.getSimpleName();
 
     private static final Object sync_lock = new Object();
 
@@ -43,41 +44,41 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
     private boolean mShowProgress;
     private SyncNotification mUpdateNotification;
 
-    public static final String[] LVA_PROJECTION = new String[]{
-            KusssContentContract.Lva.LVA_COL_ID,
-            KusssContentContract.Lva.LVA_COL_TERM,
-            KusssContentContract.Lva.LVA_COL_LVANR,
-            KusssContentContract.Lva.LVA_COL_TITLE,
-            KusssContentContract.Lva.LVA_COL_SKZ,
-            KusssContentContract.Lva.LVA_COL_TYPE,
-            KusssContentContract.Lva.LVA_COL_TEACHER,
-            KusssContentContract.Lva.LVA_COL_SWS,
-            KusssContentContract.Lva.LVA_COL_ECTS,
-            KusssContentContract.Lva.LVA_COL_CODE};
+    public static final String[] COURSE_PROJECTION = new String[]{
+            KusssContentContract.Course.COL_ID,
+            KusssContentContract.Course.COL_TERM,
+            KusssContentContract.Course.COL_COURSEID,
+            KusssContentContract.Course.COL_TITLE,
+            KusssContentContract.Course.COL_CURRICULA_ID,
+            KusssContentContract.Course.COL_TYPE,
+            KusssContentContract.Course.COL_LECTURER,
+            KusssContentContract.Course.COL_SWS,
+            KusssContentContract.Course.COL_ECTS,
+            KusssContentContract.Course.COL_CLASS_CODE};
 
     public static final int COLUMN_LVA_ID = 0;
     public static final int COLUMN_LVA_TERM = 1;
-    public static final int COLUMN_LVA_LVANR = 2;
+    public static final int COLUMN_LVA_COURSEID = 2;
     public static final int COLUMN_LVA_TITLE = 3;
-    public static final int COLUMN_LVA_SKZ = 4;
+    public static final int COLUMN_LVA_CURRICULA_ID = 4;
     public static final int COLUMN_LVA_TYPE = 5;
     public static final int COLUMN_LVA_TEACHER = 6;
     public static final int COLUMN_LVA_SWS = 7;
     public static final int COLUMN_LVA_ECTS = 8;
     public static final int COLUMN_LVA_CODE = 9;
 
-    public ImportLvaTask(Account account, Context context) {
+    public ImportCourseTask(Account account, Context context) {
         this(account, null, null, null, null, context);
         this.mProvider = context.getContentResolver()
                 .acquireContentProviderClient(
-                        KusssContentContract.Lva.CONTENT_URI);
+                        KusssContentContract.Course.CONTENT_URI);
         this.mSyncResult = new SyncResult();
         this.mShowProgress = true;
     }
 
-    public ImportLvaTask(Account account, Bundle extras, String authority,
-                         ContentProviderClient provider, SyncResult syncResult,
-                         Context context) {
+    public ImportCourseTask(Account account, Bundle extras, String authority,
+                            ContentProviderClient provider, SyncResult syncResult,
+                            Context context) {
         this.mAccount = account;
         this.mProvider = provider;
         this.mSyncResult = syncResult;
@@ -119,27 +120,27 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
                     Log.d(TAG, "load lvas");
 
                     List<Term> terms = KusssContentProvider.getTerms(mContext);
-                    List<Lva> lvas = KusssHandler.getInstance().getLvas(mContext, terms);
-                    if (lvas == null) {
+                    List<Course> courses = KusssHandler.getInstance().getLvas(mContext, terms);
+                    if (courses == null) {
                         mSyncResult.stats.numParseExceptions++;
                     } else {
-                        Map<String, Lva> lvaMap = new HashMap<>();
-                        for (Lva lva : lvas) {
-                            lvaMap.put(lva.getKey(), lva);
+                        Map<String, Course> lvaMap = new HashMap<>();
+                        for (Course course : courses) {
+                            lvaMap.put(KusssHelper.getCourseKey(course.getTerm(), course.getCourseId()), course);
                         }
                         Map<String, Term> termMap = new HashMap<>();
                         for (Term term : terms) {
                             termMap.put(term.getTerm(), term);
                         }
 
-                        Log.d(TAG, String.format("got %s lvas", lvas.size()));
+                        Log.d(TAG, String.format("got %s lvas", courses.size()));
 
                         updateNotify(mContext.getString(R.string.notification_sync_lva_updating));
 
                         ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
 
-                        Uri lvaUri = KusssContentContract.Lva.CONTENT_URI;
-                        Cursor c = mProvider.query(lvaUri, LVA_PROJECTION,
+                        Uri lvaUri = KusssContentContract.Course.CONTENT_URI;
+                        Cursor c = mProvider.query(lvaUri, COURSE_PROJECTION,
                                 null, null, null);
 
                         if (c == null) {
@@ -150,27 +151,26 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
                                             + c.getCount()
                                             + " local entries. Computing merge solution...");
 
-                            int lvaId;
-                            String lvaTerm;
-                            String lvaNr;
+                            int _id;
+                            String courseTerm;
+                            String courseId;
 
                             while (c.moveToNext()) {
-                                lvaId = c.getInt(COLUMN_LVA_ID);
-                                lvaTerm = c.getString(COLUMN_LVA_TERM);
-                                lvaNr = c.getString(COLUMN_LVA_LVANR);
+                                _id = c.getInt(COLUMN_LVA_ID);
+                                courseTerm = c.getString(COLUMN_LVA_TERM);
+                                courseId = c.getString(COLUMN_LVA_COURSEID);
 
                                 // update only lvas from loaded terms, ignore all other
-                                Term term = termMap.get(lvaTerm);
+                                Term term = termMap.get(courseTerm);
                                 if (term != null && term.isLoaded()) {
-                                    Lva lva = lvaMap
-                                            .get(Lva.getKey(lvaTerm, lvaNr));
-                                    if (lva != null) {
-                                        lvaMap.remove(Lva.getKey(lvaTerm, lvaNr));
+                                    Course course = lvaMap.get(KusssHelper.getCourseKey(courseTerm, courseId));
+                                    if (course != null) {
+                                        lvaMap.remove(KusssHelper.getCourseKey(courseTerm, courseId));
                                         // Check to see if the entry needs to be
                                         // updated
                                         Uri existingUri = lvaUri
                                                 .buildUpon()
-                                                .appendPath(Integer.toString(lvaId))
+                                                .appendPath(Integer.toString(_id))
                                                 .build();
                                         Log.d(TAG, "Scheduling update: "
                                                 + existingUri);
@@ -183,22 +183,22 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
                                                                         mAccount.name,
                                                                         mAccount.type))
                                                 .withValue(
-                                                        KusssContentContract.Lva.LVA_COL_ID,
-                                                        Integer.toString(lvaId))
-                                                .withValues(lva.getContentValues())
+                                                        KusssContentContract.Course.COL_ID,
+                                                        Integer.toString(_id))
+                                                .withValues(KusssHelper.getLvaContentValues(course))
                                                 .build());
                                         mSyncResult.stats.numUpdates++;
                                     } else {
                                         // delete
                                         Log.d(TAG,
                                                 "delete: "
-                                                        + Lva.getKey(lvaTerm, lvaNr));
+                                                        + KusssHelper.getCourseKey(courseTerm, courseId));
                                         // Entry doesn't exist. Remove only
                                         // newer
                                         // events from the database.
                                         Uri deleteUri = lvaUri
                                                 .buildUpon()
-                                                .appendPath(Integer.toString(lvaId))
+                                                .appendPath(Integer.toString(_id))
                                                 .build();
                                         Log.d(TAG, "Scheduling delete: "
                                                 + deleteUri);
@@ -219,9 +219,9 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
                             }
                             c.close();
 
-                            for (Lva lva : lvaMap.values()) {
+                            for (Course course : lvaMap.values()) {
                                 // insert only lvas from loaded terms, ignore all other
-                                Term term = termMap.get(lva.getTerm());
+                                Term term = termMap.get(course.getTerm());
                                 if (term != null && term.isLoaded()) {
                                     batch.add(ContentProviderOperation
                                             .newInsert(
@@ -230,11 +230,11 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
                                                                     lvaUri,
                                                                     mAccount.name,
                                                                     mAccount.type))
-                                            .withValues(lva.getContentValues())
+                                            .withValues(KusssHelper.getLvaContentValues(course))
                                             .build());
                                     Log.d(TAG,
-                                            "Scheduling insert: " + lva.getTerm()
-                                                    + " " + lva.getLvaNr());
+                                            "Scheduling insert: " + course.getTerm()
+                                                    + " " + course.getCourseId());
                                     mSyncResult.stats.numInserts++;
                                 } else {
                                     mSyncResult.stats.numSkippedEntries++;
@@ -249,7 +249,7 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
                                 Log.d(TAG, "Notify resolver");
                                 mResolver
                                         .notifyChange(
-                                                KusssContentContract.Lva.CONTENT_CHANGED_URI,
+                                                KusssContentContract.Course.CONTENT_CHANGED_URI,
                                                 null, // No
                                                 // local
                                                 // observer

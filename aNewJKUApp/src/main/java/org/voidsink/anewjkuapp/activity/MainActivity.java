@@ -30,7 +30,7 @@ import org.voidsink.anewjkuapp.base.ThemedActivity;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.fragment.CalendarFragment;
 import org.voidsink.anewjkuapp.fragment.NavigationDrawerFragment;
-import org.voidsink.anewjkuapp.fragment.StudiesFragment;
+import org.voidsink.anewjkuapp.fragment.CurriculaFragment;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
@@ -71,10 +71,10 @@ public class MainActivity extends ThemedActivity implements
         }
     }
 
-    public static void StartMyStudies(Context context) {
+    public static void StartMyCurricula(Context context) {
         //
         Intent i = new Intent(context, MainActivity.class)
-                .putExtra(MainActivity.ARG_SHOW_FRAGMENT, StudiesFragment.class.getName())
+                .putExtra(MainActivity.ARG_SHOW_FRAGMENT, CurriculaFragment.class.getName())
                 .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivity(i);
     }

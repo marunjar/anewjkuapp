@@ -57,7 +57,7 @@ public class NavigationDrawerFragment extends BaseFragment {
             new DrawerMenuSection(R.string.title_kusss),
             new DrawerMenuItem(R.string.title_calendar, CalendarFragment.class),
             new DrawerMenuItem(R.string.title_exams, ExamFragment.class),
-            new DrawerMenuItem(R.string.title_grades, GradeFragment.class),
+            new DrawerMenuItem(R.string.title_grades, AssessmentFragment.class),
             new DrawerMenuItem(R.string.title_lvas, LvaFragment.class),
             new DrawerMenuItem(R.string.title_stats, StatFragment.class),
             new DrawerMenuSection(R.string.title_campus),
@@ -180,7 +180,7 @@ public class NavigationDrawerFragment extends BaseFragment {
             mUser.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MainActivity.StartMyStudies(getContext());
+                    MainActivity.StartMyCurricula(getContext());
                 }
             });
         }

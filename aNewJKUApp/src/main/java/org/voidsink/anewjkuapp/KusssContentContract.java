@@ -14,7 +14,7 @@ public class KusssContentContract {
 	public static Uri CONTENT_URI = Uri.parse(String.format("content://%1$s",
 			AUTHORITY));
 
-	public static class Lva {
+	public static class Course {
 		public static final String PATH = "lva";
 		public static final String PATH_CONTENT_CHANGED = "lva_changed";
 		public static final Uri CONTENT_URI = KusssContentContract.CONTENT_URI
@@ -23,17 +23,17 @@ public class KusssContentContract {
 				.buildUpon().appendPath(PATH_CONTENT_CHANGED).build();
 
 		// DB Table consts
-		public static final String LVA_TABLE_NAME = "lva";
-		public static final String LVA_COL_ID = "_id";
-		public static final String LVA_COL_TERM = "term";
-		public static final String LVA_COL_LVANR = "lvanr";
-		public static final String LVA_COL_TITLE = "title";
-		public static final String LVA_COL_TYPE = "type";
-		public static final String LVA_COL_TEACHER = "teacher";
-		public static final String LVA_COL_SKZ = "skz";
-		public static final String LVA_COL_ECTS = "ects";
-		public static final String LVA_COL_SWS = "sws";
-		public static final String LVA_COL_CODE = "code";
+		public static final String TABLE_NAME = "lva";
+		public static final String COL_ID = "_id";
+		public static final String COL_TERM = "term";
+		public static final String COL_COURSEID = "lvanr";
+		public static final String COL_TITLE = "title";
+		public static final String COL_TYPE = "type";
+		public static final String COL_LECTURER = "teacher";
+		public static final String COL_CURRICULA_ID = "skz";
+		public static final String COL_ECTS = "ects";
+		public static final String COL_SWS = "sws";
+		public static final String COL_CLASS_CODE = "code";
 	}
 
 	public static class Exam {
@@ -44,20 +44,20 @@ public class KusssContentContract {
 		public static final Uri CONTENT_CHANGED_URI = KusssContentContract.CONTENT_URI
 				.buildUpon().appendPath(PATH_CONTENT_CHANGED).build();
 
-		public static final String EXAM_TABLE_NAME = "exam";
-		public static final String EXAM_COL_ID = "_id";
-		public static final String EXAM_COL_TERM = "term";
-		public static final String EXAM_COL_LVANR = "lvanr";
-		public static final String EXAM_COL_DATE = "date";
-		public static final String EXAM_COL_TIME = "time";
-		public static final String EXAM_COL_LOCATION = "location";
-		public static final String EXAM_COL_DESCRIPTION = "description";
-		public static final String EXAM_COL_INFO = "info";
-		public static final String EXAM_COL_IS_REGISTERED = "registered";
-		public static final String EXAM_COL_TITLE = "title";
+		public static final String TABLE_NAME = "exam";
+		public static final String COL_ID = "_id";
+		public static final String COL_TERM = "term";
+		public static final String COL_COURSEID = "lvanr";
+		public static final String COL_DTSTART = "dtstart";
+		public static final String COL_DTEND = "dtend";
+		public static final String COL_LOCATION = "location";
+		public static final String COL_DESCRIPTION = "description";
+		public static final String COL_INFO = "info";
+		public static final String COL_IS_REGISTERED = "registered";
+		public static final String COL_TITLE = "title";
 	}
 
-	public static class Grade {
+	public static class Assessment {
 		public static final String PATH = "grade";
 		public static final String PATH_CONTENT_CHANGED = "grade_changed";
 		public static final Uri CONTENT_URI = KusssContentContract.CONTENT_URI
@@ -65,21 +65,21 @@ public class KusssContentContract {
 		public static final Uri CONTENT_CHANGED_URI = KusssContentContract.CONTENT_URI
 				.buildUpon().appendPath(PATH_CONTENT_CHANGED).build();
 
-		public static final String GRADE_TABLE_NAME = "grade";
-		public static final String GRADE_COL_ID = "_id";
-		public static final String GRADE_COL_TERM = "term";
-		public static final String GRADE_COL_LVANR = "lvanr";
-		public static final String GRADE_COL_DATE = "date";
-		public static final String GRADE_COL_SKZ = "skz";
-		public static final String GRADE_COL_GRADE = "grade";
-		public static final String GRADE_COL_TYPE = "type";
-		public static final String GRADE_COL_TITLE = "title";
-		public static final String GRADE_COL_CODE = "code";
-		public static final String GRADE_COL_ECTS = "ects";
-		public static final String GRADE_COL_SWS = "sws";
+		public static final String TABLE_NAME = "grade";
+		public static final String COL_ID = "_id";
+		public static final String COL_TERM = "term";
+		public static final String COL_COURSEID = "lvanr";
+		public static final String COL_DATE = "date";
+		public static final String COL_CURRICULA_ID = "skz";
+		public static final String COL_GRADE = "grade";
+		public static final String COL_TYPE = "type";
+		public static final String COL_TITLE = "title";
+		public static final String COL_CODE = "code";
+		public static final String COL_ECTS = "ects";
+		public static final String COL_SWS = "sws";
 	}
 
-    public static class Studies {
+    public static class Curricula {
         public static final String PATH = "studies";
         public static final String PATH_CONTENT_CHANGED = "studies_changed";
         public static final Uri CONTENT_URI = KusssContentContract.CONTENT_URI
@@ -90,7 +90,7 @@ public class KusssContentContract {
         public static final String TABLE_NAME = "studies";
         public static final String COL_ID = "_id";
         public static final String COL_IS_STD = "std";
-        public static final String COL_SKZ = "skz";
+        public static final String COL_CURRICULUM_ID = "skz";
         public static final String COL_TITLE = "title";
         public static final String COL_STEOP_DONE = "steopDone";
         public static final String COL_ACTIVE_STATE = "active";

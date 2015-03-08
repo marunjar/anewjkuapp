@@ -17,13 +17,13 @@ import android.view.ViewGroup;
 
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
-import org.voidsink.anewjkuapp.GradeListAdapter;
+import org.voidsink.anewjkuapp.AssessmentListAdapter;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.base.TermFragment;
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
+import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
@@ -32,13 +32,13 @@ import org.voidsink.anewjkuapp.utils.Consts;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GradeDetailFragment extends TermFragment implements
+public class AssessmentDetailFragment extends TermFragment implements
         ContentObserverListener {
 
-    public static final String TAG = GradeDetailFragment.class.getSimpleName();
+    public static final String TAG = AssessmentDetailFragment.class.getSimpleName();
 
-    private BaseContentObserver mGradeObserver;
-    private GradeListAdapter mAdapter;
+    private BaseContentObserver mObserver;
+    private AssessmentListAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,7 +49,7 @@ public class GradeDetailFragment extends TermFragment implements
         final RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new GradeListAdapter(getContext());
+        mAdapter = new AssessmentListAdapter(getContext());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mAdapter));
 
@@ -60,15 +60,15 @@ public class GradeDetailFragment extends TermFragment implements
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
-        inflater.inflate(R.menu.grade, menu);
+        inflater.inflate(R.menu.assessment, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_refresh_grades:
+            case R.id.action_refresh_assessments:
                 Intent mUpdateService = new Intent(getActivity(), UpdateService.class);
-                mUpdateService.putExtra(Consts.ARG_UPDATE_KUSSS_GRADES, true);
+                mUpdateService.putExtra(Consts.ARG_UPDATE_KUSSS_ASSESSMENTS, true);
                 getActivity().startService(mUpdateService);
 
                 return true;
@@ -89,7 +89,7 @@ public class GradeDetailFragment extends TermFragment implements
         new AsyncTask<Void, Void, Void>() {
 
             //            private ProgressDialog progressDialog;
-            private List<ExamGrade> grades;
+            private List<Assessment> assessments;
             private Context mContext = getContext();
 
             @Override
@@ -98,16 +98,16 @@ public class GradeDetailFragment extends TermFragment implements
 
 //                progressDialog = ProgressDialog.show(context,
 //                        context.getString(R.string.progress_title),
-//                        context.getString(R.string.progress_load_grade), true);
+//                        context.getString(R.string.progress_load_assessments), true);
 
-                grades = new ArrayList<>();
+                assessments = new ArrayList<>();
             }
 
             @Override
             protected Void doInBackground(Void... params) {
-                this.grades = AppUtils.filterGrades(getTerms(), KusssContentProvider.getGrades(mContext));
+                this.assessments = AppUtils.filterAssessments(getTerms(), KusssContentProvider.getAssessments(mContext));
 
-                AppUtils.sortGrades(grades);
+                AppUtils.sortAssessments(assessments);
 
                 return null;
             }
@@ -117,7 +117,7 @@ public class GradeDetailFragment extends TermFragment implements
 //                progressDialog.dismiss();
                 if (mAdapter != null) {
                     mAdapter.clear();
-                    mAdapter.addAll(this.grades);
+                    mAdapter.addAll(this.assessments);
                     mAdapter.notifyDataSetChanged();
                 }
 
@@ -139,18 +139,18 @@ public class GradeDetailFragment extends TermFragment implements
 
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(KusssContentContract.AUTHORITY,
-                KusssContentContract.Grade.PATH_CONTENT_CHANGED, 0);
+                KusssContentContract.Assessment.PATH_CONTENT_CHANGED, 0);
 
-        mGradeObserver = new BaseContentObserver(uriMatcher, this);
+        mObserver = new BaseContentObserver(uriMatcher, this);
         getActivity().getContentResolver().registerContentObserver(
-                KusssContentContract.Grade.CONTENT_CHANGED_URI, false,
-                mGradeObserver);
+                KusssContentContract.Assessment.CONTENT_CHANGED_URI, false,
+                mObserver);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
 
-        getActivity().getContentResolver().unregisterContentObserver(mGradeObserver);
+        getActivity().getContentResolver().unregisterContentObserver(mObserver);
     }
 }

@@ -9,12 +9,12 @@ public class Consts {
 
     public static final String ARG_RECREATE_SYNC_ALARM = "RECREATE_SYNC_ALARM";
     public static final String ARG_UPDATE_CAL = "UPDATE_CAL";
-    public static final String ARG_UPDATE_CAL_LVA = "UPDATE_CAL_LVA";
+    public static final String ARG_UPDATE_CAL_COURSES = "UPDATE_CAL_LVA";
     public static final String ARG_UPDATE_CAL_EXAM = "UPDATE_CAL_EXAM";
     public static final String ARG_UPDATE_KUSSS = "UPDATE_KUSSS";
-    public static final String ARG_UPDATE_KUSSS_STUDIES = "UPDATE_KUSSS_STUDIES";
-    public static final String ARG_UPDATE_KUSSS_LVAS = "UPDATE_KUSSS_LVAS";
-    public static final String ARG_UPDATE_KUSSS_GRADES = "UPDATE_KUSSS_GRADES";
+    public static final String ARG_UPDATE_KUSSS_CURRICULA = "UPDATE_KUSSS_CURRICULA";
+    public static final String ARG_UPDATE_KUSSS_COURSES = "UPDATE_KUSSS_COURSES";
+    public static final String ARG_UPDATE_KUSSS_ASSESSMENTS = "UPDATE_KUSSS_ASSESSMENTS";
     public static final String ARG_UPDATE_KUSSS_EXAMS = "UPDATE_KUSSS_EXAMS";
     public static final String ARG_TERMS = "TERMS";
 
@@ -40,13 +40,14 @@ public class Consts {
 
     public static final String SCREEN_CALENDAR = "/calendar";
     public static final String SCREEN_EXAMS = "/exams";
-    public static final String SCREEN_GRADES = "/grades";
-    public static final String SCREEN_LVAS = "/lvas";
+    public static final String SCREEN_ASSESSMENTS = "/assessments";
+    public static final String SCREEN_COURSES = "/courses";
     public static final String SCREEN_STAT = "/stat";
     public static final String SCREEN_MENSA = "/mensa";
     public static final String SCREEN_MAP = "/map";
     public static final String SCREEN_OEH_INFO = "/info";
     public static final String SCREEN_OEH_RIGHTS = "/rights";
+    public static final String SCREEN_CURRICULA = "/curricula";
 
     public static final String SCREEN_ABOUT = "/about";
     public static final String SCREEN_SETTINGS = "/settings";
