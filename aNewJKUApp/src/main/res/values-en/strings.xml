@@ -164,10 +164,10 @@
     <string name="progress_load_feed">Loading news...</string>
     <string name="pref_stats_positive_grades_only_title">Improved grade point average</string>
     <string name="pref_stats_positive_grades_only_summary">Grade point average is calculated for positive grades only</string>
-    <string name="notification_sync_studies">Synchronizing curricula</string>
-    <string name="notification_sync_studies_loading">Loading curricula</string>
-    <string name="notification_sync_studies_saving">Saving curricula</string>
-    <string name="notification_sync_studies_updating">Updating curricula</string>
+    <string name="notification_sync_curricula">Synchronizing curricula</string>
+    <string name="notification_sync_curricula_loading">Loading curricula</string>
+    <string name="notification_sync_curricula_saving">Saving curricula</string>
+    <string name="notification_sync_curricula_updating">Updating curricula</string>
     <string name="studies_active_status">Status</string>
     <string name="studies_dt_end">End</string>
     <string name="studies_dt_start">Begin</string>

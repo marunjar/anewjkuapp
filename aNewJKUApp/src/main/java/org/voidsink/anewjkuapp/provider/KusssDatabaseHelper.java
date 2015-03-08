@@ -79,7 +79,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
             + KusssContentContract.Curricula.COL_ID
             + " integer primary key autoincrement not null, "
             + KusssContentContract.Curricula.COL_IS_STD + " integer, "
-            + KusssContentContract.Curricula.COL_CURRICULA_ID + " integer, "
+            + KusssContentContract.Curricula.COL_CURRICULUM_ID + " integer, "
             + KusssContentContract.Curricula.COL_TITLE + " text, "
             + KusssContentContract.Curricula.COL_STEOP_DONE + " integer, "
             + KusssContentContract.Curricula.COL_ACTIVE_STATE + " integer, "

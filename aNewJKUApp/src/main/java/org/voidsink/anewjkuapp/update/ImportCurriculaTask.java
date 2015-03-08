@@ -46,7 +46,7 @@ public class ImportCurriculaTask extends BaseAsyncTask<Void, Void, Void> {
     public static final String[] CURRICULA_PROJECTION = new String[]{
             KusssContentContract.Curricula.COL_ID,
             KusssContentContract.Curricula.COL_IS_STD,
-            KusssContentContract.Curricula.COL_CURRICULA_ID,
+            KusssContentContract.Curricula.COL_CURRICULUM_ID,
             KusssContentContract.Curricula.COL_TITLE,
             KusssContentContract.Curricula.COL_STEOP_DONE,
             KusssContentContract.Curricula.COL_ACTIVE_STATE,
@@ -54,15 +54,15 @@ public class ImportCurriculaTask extends BaseAsyncTask<Void, Void, Void> {
             KusssContentContract.Curricula.COL_DT_START,
             KusssContentContract.Curricula.COL_DT_END};
 
-    public static final int COLUMN_STUDIES_ID = 0;
-    public static final int COLUMN_STUDIES_IS_STD = 1;
-    public static final int COLUMN_STUDIES_CURRICULA_ID = 2;
-    public static final int COLUMN_STUDIES_TITLE = 3;
-    public static final int COLUMN_STUDIES_STEOP_DONE = 4;
-    public static final int COLUMN_STUDIES_ACTIVE_STATE = 5;
-    public static final int COLUMN_STUDIES_UNI = 6;
-    public static final int COLUMN_STUDIES_DT_START = 7;
-    public static final int COLUMN_STUDIES_DT_END = 8;
+    public static final int COLUMN_CURRICULUM_ID = 0;
+    public static final int COLUMN_CURRICULUM_IS_STD = 1;
+    public static final int COLUMN_CURRICULUM_CURRICULUM_ID = 2;
+    public static final int COLUMN_CURRICULUM_TITLE = 3;
+    public static final int COLUMN_CURRICULUM_STEOP_DONE = 4;
+    public static final int COLUMN_CURRICULUM_ACTIVE_STATE = 5;
+    public static final int COLUMN_CURRICULUM_UNI = 6;
+    public static final int COLUMN_CURRICULUM_DT_START = 7;
+    public static final int COLUMN_CURRICULUM_DT_END = 8;
 
     public ImportCurriculaTask(Account account, Context context) {
         this(account, null, null, null, null, context);
@@ -92,14 +92,14 @@ public class ImportCurriculaTask extends BaseAsyncTask<Void, Void, Void> {
 
         if (mShowProgress) {
             mUpdateNotification = new SyncNotification(mContext,
-                    R.string.notification_sync_studies);
-            mUpdateNotification.show(mContext.getString(R.string.notification_sync_studies_loading));
+                    R.string.notification_sync_curricula);
+            mUpdateNotification.show(mContext.getString(R.string.notification_sync_curricula_loading));
         }
     }
 
     @Override
     protected Void doInBackground(Void... params) {
-        Log.d(TAG, "Start importing studies");
+        Log.d(TAG, "Start importing curricula");
 
         synchronized (sync_lock) {
             try {
@@ -112,27 +112,27 @@ public class ImportCurriculaTask extends BaseAsyncTask<Void, Void, Void> {
                         AppUtils.getAccountName(mContext, mAccount),
                         AppUtils.getAccountPassword(mContext, mAccount))) {
 
-                    updateNotify(mContext.getString(R.string.notification_sync_studies_loading));
+                    updateNotify(mContext.getString(R.string.notification_sync_curricula_loading));
 
                     Log.d(TAG, "load lvas");
 
-                    List<Curriculum> studies = KusssHandler.getInstance().getCurricula(mContext);
-                    if (studies == null) {
+                    List<Curriculum> curricula = KusssHandler.getInstance().getCurricula(mContext);
+                    if (curricula == null) {
                         mSyncResult.stats.numParseExceptions++;
                     } else {
-                        Map<String, Curriculum> studiesMap = new HashMap<>();
-                        for (Curriculum studie : studies) {
-                            studiesMap.put(studie.getKey(), studie);
+                        Map<String, Curriculum> curriculaMap = new HashMap<>();
+                        for (Curriculum curriculum : curricula) {
+                            curriculaMap.put(KusssHelper.getCurriculumKey(curriculum.getCid(), curriculum.getDtStart()), curriculum);
                         }
 
-                        Log.d(TAG, String.format("got %s lvas", studies.size()));
+                        Log.d(TAG, String.format("got %s lvas", curricula.size()));
 
-                        updateNotify(mContext.getString(R.string.notification_sync_studies_updating));
+                        updateNotify(mContext.getString(R.string.notification_sync_curricula_updating));
 
-                        ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
+                        ArrayList<ContentProviderOperation> batch = new ArrayList<>();
 
-                        Uri studiesUri = KusssContentContract.Curricula.CONTENT_URI;
-                        Cursor c = mProvider.query(studiesUri, CURRICULA_PROJECTION,
+                        Uri curriculaUri = KusssContentContract.Curricula.CONTENT_URI;
+                        Cursor c = mProvider.query(curriculaUri, CURRICULA_PROJECTION,
                                 null, null, null);
 
                         if (c == null) {
@@ -144,21 +144,19 @@ public class ImportCurriculaTask extends BaseAsyncTask<Void, Void, Void> {
                                             + " local entries. Computing merge solution...");
 
                             int _Id;
-                            String studiesCid;
-                            Date studiesDtStart;
+                            String curriculumCid;
+                            Date curriculumDtStart;
 
                             while (c.moveToNext()) {
-                                _Id = c.getInt(COLUMN_STUDIES_ID);
-                                studiesCid = c.getString(COLUMN_STUDIES_CURRICULA_ID);
-                                studiesDtStart = new Date(c.getLong(COLUMN_STUDIES_DT_START));
+                                _Id = c.getInt(COLUMN_CURRICULUM_ID);
+                                curriculumCid = c.getString(COLUMN_CURRICULUM_CURRICULUM_ID);
+                                curriculumDtStart = new Date(c.getLong(COLUMN_CURRICULUM_DT_START));
 
-                                Curriculum studie = studiesMap
-                                        .get(Curriculum.getKey(studiesCid, studiesDtStart));
-                                if (studie != null) {
-                                    studiesMap.remove(Curriculum.getKey(studiesCid, studiesDtStart));
+                                Curriculum curriculum = curriculaMap.remove(KusssHelper.getCurriculumKey(curriculumCid, curriculumDtStart));
+                                if (curriculum != null) {
                                     // Check to see if the entry needs to be
                                     // updated
-                                    Uri existingUri = studiesUri
+                                    Uri existingUri = curriculaUri
                                             .buildUpon()
                                             .appendPath(Integer.toString(_Id))
                                             .build();
@@ -175,7 +173,7 @@ public class ImportCurriculaTask extends BaseAsyncTask<Void, Void, Void> {
                                             .withValue(
                                                     KusssContentContract.Curricula.COL_ID,
                                                     Integer.toString(_Id))
-                                            .withValues(KusssHelper.getStudiesContentValues(studie))
+                                            .withValues(KusssHelper.getCurriculumContentValues(curriculum))
                                             .build());
                                     mSyncResult.stats.numUpdates++;
                                 } else {
@@ -184,24 +182,24 @@ public class ImportCurriculaTask extends BaseAsyncTask<Void, Void, Void> {
                             }
                             c.close();
 
-                            for (Curriculum studie : studiesMap.values()) {
+                            for (Curriculum curriculum : curriculaMap.values()) {
                                 batch.add(ContentProviderOperation
                                         .newInsert(
                                                 KusssContentContract
                                                         .asEventSyncAdapter(
-                                                                studiesUri,
+                                                                curriculaUri,
                                                                 mAccount.name,
                                                                 mAccount.type))
-                                        .withValues(KusssHelper.getStudiesContentValues(studie))
+                                        .withValues(KusssHelper.getCurriculumContentValues(curriculum))
                                         .build());
                                 Log.d(TAG,
-                                        "Scheduling insert: " + studie.getCid()
-                                                + " " + studie.getDtStart().toString());
+                                        "Scheduling insert: " + curriculum.getCid()
+                                                + " " + curriculum.getDtStart().toString());
                                 mSyncResult.stats.numInserts++;
                             }
 
                             if (batch.size() > 0) {
-                                updateNotify(mContext.getString(R.string.notification_sync_studies_saving));
+                                updateNotify(mContext.getString(R.string.notification_sync_curricula_saving));
 
                                 Log.d(TAG, "Applying batch update");
                                 mProvider.applyBatch(batch);

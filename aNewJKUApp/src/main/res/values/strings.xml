@@ -67,10 +67,10 @@
     <string name="notification_sync_lva_loading">LVAs werden geladen</string>
     <string name="notification_sync_lva_updating">LVAs werden aktualisiert</string>
     <string name="notification_sync_lva_saving">LVAs werden gespeichert</string>
-    <string name="notification_sync_studies">Studienrichtungen werden synchronisiert</string>
-    <string name="notification_sync_studies_loading">Studienrichtungen werden geladen</string>
-    <string name="notification_sync_studies_updating">Studienrichtungen werden aktualisiert</string>
-    <string name="notification_sync_studies_saving">Studienrichtungen werden gespeichert</string>
+    <string name="notification_sync_curricula">Studienrichtungen werden synchronisiert</string>
+    <string name="notification_sync_curricula_loading">Studienrichtungen werden geladen</string>
+    <string name="notification_sync_curricula_updating">Studienrichtungen werden aktualisiert</string>
+    <string name="notification_sync_curricula_saving">Studienrichtungen werden gespeichert</string>
     <string name="notification_events_changed_title" formatted="false">Termin(e) in "%s" geändert</string>
     <string name="notification_events_changed" formatted="false">%d Termin(e) in "%s" geändert</string>
     <string name="notification_new_exams_title">neue Prüfung(en) gefunden</string>

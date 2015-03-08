@@ -29,11 +29,13 @@ import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.Consts;
 
+import java.text.DateFormat;
 import java.util.List;
 
 public class CurriculaFragment extends BaseFragment implements
         ContentObserverListener {
 
+    private static final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
     private CurriculaAdapter mAdapter;
     private BaseContentObserver mObserver;
 
@@ -162,10 +164,10 @@ public class CurriculaFragment extends BaseFragment implements
             holder.steopDone.setText(item.isSteopDone() ? mContext.getString(R.string.curriculum_steop_done_yes) : mContext.getString(R.string.curriculum_steop_done_no));
             holder.activeStatus.setText(item.isActive() ? mContext.getString(R.string.curriculum_active_status_yes) : mContext.getString(R.string.curriculum_active_status_no));
             if (item.getDtStart() != null) {
-                holder.dtStart.setText(item.dateFormat.format(item.getDtStart()));
+                holder.dtStart.setText(dateFormat.format(item.getDtStart()));
             }
             if (item.getDtEnd() != null) {
-                holder.dtEnd.setText(item.dateFormat.format(item.getDtEnd()));
+                holder.dtEnd.setText(dateFormat.format(item.getDtEnd()));
             }
         }
 

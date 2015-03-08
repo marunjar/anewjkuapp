@@ -14,7 +14,6 @@ import java.util.Locale;
 
 public class Curriculum {
 
-    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
     private static final String TAG = Curriculum.class.getSimpleName();
 
     private boolean mIsStandard;
@@ -67,6 +66,7 @@ public class Curriculum {
     private Date parseDate(Context c, String text) {
         try {
             if (!TextUtils.isEmpty(text)) {
+                final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
                 return dateFormat.parse(text);
             }
             return null;
@@ -150,14 +150,6 @@ public class Curriculum {
 
     public Date getDtEnd() {
         return mDtEnd;
-    }
-
-    public String getKey() {
-        return getKey(getCid(), getDtStart());
-    }
-
-    public static String getKey(String cid, Date dtStart) {
-        return cid + "-" + dateFormat.format(dtStart);
     }
 
     public boolean dateInRange(Date date) {

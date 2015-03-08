@@ -90,7 +90,7 @@ public class KusssContentContract {
         public static final String TABLE_NAME = "studies";
         public static final String COL_ID = "_id";
         public static final String COL_IS_STD = "std";
-        public static final String COL_CURRICULA_ID = "skz";
+        public static final String COL_CURRICULUM_ID = "skz";
         public static final String COL_TITLE = "title";
         public static final String COL_STEOP_DONE = "steopDone";
         public static final String COL_ACTIVE_STATE = "active";

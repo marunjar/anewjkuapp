@@ -15,8 +15,8 @@ import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseAsyncTask;
 import org.voidsink.anewjkuapp.kusss.Assessment;
-import org.voidsink.anewjkuapp.kusss.Grade;
 import org.voidsink.anewjkuapp.kusss.AssessmentType;
+import org.voidsink.anewjkuapp.kusss.Grade;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.notification.AssessmentChangedNotification;
@@ -132,8 +132,7 @@ public class ImportAssessmentTask extends BaseAsyncTask<Void, Void, Void> {
                     } else {
                         Map<String, Assessment> assessmentMap = new HashMap<>();
                         for (Assessment assessment : assessments) {
-                            assessmentMap.put(String.format("%s-%d", assessment.getCode(),
-                                    assessment.getDate().getTime()), assessment);
+                            assessmentMap.put(KusssHelper.getAssessmentKey(assessment.getCode(), assessment.getCourseId(), assessment.getDate().getTime()), assessment);
                         }
 
                         Log.d(TAG, String.format("got %s assessments", assessments.size()));
@@ -154,6 +153,7 @@ public class ImportAssessmentTask extends BaseAsyncTask<Void, Void, Void> {
 
                             int _Id;
                             String assessmentCode;
+                            String assessmentCourseId;
                             Date assessmentDate;
                             AssessmentType assessmentType;
                             Grade assessmentGrade;
@@ -165,12 +165,10 @@ public class ImportAssessmentTask extends BaseAsyncTask<Void, Void, Void> {
                                         .getInt(COLUMN_ASSESSMENT_TYPE));
                                 assessmentGrade = Grade.parseGradeType(c
                                         .getInt(COLUMN_ASSESSMENT_GRADE));
+                                assessmentCourseId = c.getString(COLUMN_ASSESSMENT_COURSEID);
 
-                                Assessment assessment = assessmentMap.get(String.format(
-                                        "%s-%d", assessmentCode, assessmentDate.getTime()));
+                                Assessment assessment = assessmentMap.remove(KusssHelper.getAssessmentKey(assessmentCode, assessmentCourseId, assessmentDate.getTime()));
                                 if (assessment != null) {
-                                    assessmentMap.remove(String.format("%s-%d",
-                                            assessmentCode, assessmentDate.getTime()));
                                     // Check to see if the entry needs to be updated
                                     Uri existingUri = examUri.buildUpon()
                                             .appendPath(Integer.toString(_Id))

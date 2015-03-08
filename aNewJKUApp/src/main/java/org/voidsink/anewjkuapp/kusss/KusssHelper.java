@@ -9,15 +9,17 @@ import android.net.Uri;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
 import org.voidsink.anewjkuapp.update.ImportAssessmentTask;
+import org.voidsink.anewjkuapp.update.ImportCourseTask;
 import org.voidsink.anewjkuapp.update.ImportCurriculaTask;
 import org.voidsink.anewjkuapp.update.ImportExamTask;
-import org.voidsink.anewjkuapp.update.ImportCourseTask;
 
+import java.text.DateFormat;
 import java.util.Date;
 
 public class KusssHelper {
 
     private static final String URL_GET_EXAMS = "https://www.kusss.jku.at/kusss/szexaminationlist.action";
+    public static final DateFormat dateFormat = DateFormat.getDateTimeInstance();
 
     public static void showExamInBrowser(Context context, String courseId) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(URL_GET_EXAMS));
@@ -56,6 +58,11 @@ public class KusssHelper {
         return cv;
     }
 
+    public static String getExamKey(String courseId, String term, long date) {
+        return String.format("%s-%s-%d", courseId, term, date);
+    }
+
+
     public static Exam createExam(Cursor c) {
         return new Exam(
                 c.getString(ImportExamTask.COLUMN_EXAM_COURSEID),
@@ -86,21 +93,25 @@ public class KusssHelper {
         return cv;
     }
 
-    public static Curriculum createCurricula(Cursor c) {
-        return new Curriculum(KusssDatabaseHelper.toBool(c.getInt(ImportCurriculaTask.COLUMN_STUDIES_IS_STD)),
-                c.getString(ImportCurriculaTask.COLUMN_STUDIES_CURRICULA_ID),
-                c.getString(ImportCurriculaTask.COLUMN_STUDIES_TITLE),
-                KusssDatabaseHelper.toBool(c.getInt(ImportCurriculaTask.COLUMN_STUDIES_STEOP_DONE)),
-                KusssDatabaseHelper.toBool(c.getInt(ImportCurriculaTask.COLUMN_STUDIES_ACTIVE_STATE)),
-                c.getString(ImportCurriculaTask.COLUMN_STUDIES_UNI),
-                new Date(c.getLong(ImportCurriculaTask.COLUMN_STUDIES_DT_START)),
-                !c.isNull(ImportCurriculaTask.COLUMN_STUDIES_DT_END) ? new Date(c.getLong(ImportCurriculaTask.COLUMN_STUDIES_DT_END)) : null);
+    public static String getCurriculumKey(String cid, Date dtStart) {
+        return cid + "-" + dateFormat.format(dtStart);
     }
 
-    public static ContentValues getStudiesContentValues(Curriculum curriculum) {
+    public static Curriculum createCurricula(Cursor c) {
+        return new Curriculum(KusssDatabaseHelper.toBool(c.getInt(ImportCurriculaTask.COLUMN_CURRICULUM_IS_STD)),
+                c.getString(ImportCurriculaTask.COLUMN_CURRICULUM_CURRICULUM_ID),
+                c.getString(ImportCurriculaTask.COLUMN_CURRICULUM_TITLE),
+                KusssDatabaseHelper.toBool(c.getInt(ImportCurriculaTask.COLUMN_CURRICULUM_STEOP_DONE)),
+                KusssDatabaseHelper.toBool(c.getInt(ImportCurriculaTask.COLUMN_CURRICULUM_ACTIVE_STATE)),
+                c.getString(ImportCurriculaTask.COLUMN_CURRICULUM_UNI),
+                new Date(c.getLong(ImportCurriculaTask.COLUMN_CURRICULUM_DT_START)),
+                !c.isNull(ImportCurriculaTask.COLUMN_CURRICULUM_DT_END) ? new Date(c.getLong(ImportCurriculaTask.COLUMN_CURRICULUM_DT_END)) : null);
+    }
+
+    public static ContentValues getCurriculumContentValues(Curriculum curriculum) {
         ContentValues cv = new ContentValues();
         cv.put(KusssContentContract.Curricula.COL_IS_STD, KusssDatabaseHelper.toInt(curriculum.isStandard()));
-        cv.put(KusssContentContract.Curricula.COL_CURRICULA_ID, curriculum.getCid());
+        cv.put(KusssContentContract.Curricula.COL_CURRICULUM_ID, curriculum.getCid());
         cv.put(KusssContentContract.Curricula.COL_TITLE, curriculum.getTitle());
         cv.put(KusssContentContract.Curricula.COL_STEOP_DONE, KusssDatabaseHelper.toInt(curriculum.isSteopDone()));
         cv.put(KusssContentContract.Curricula.COL_ACTIVE_STATE, KusssDatabaseHelper.toInt(curriculum.isActive()));
@@ -117,8 +128,11 @@ public class KusssHelper {
         return cv;
     }
 
+    public static String getAssessmentKey(String classCode, String courseId, long date) {
+        return String.format("%s-%s-%d", classCode, courseId, date);
+    }
 
-    public static Assessment createGrade(Cursor c) {
+    public static Assessment createAssessment(Cursor c) {
         return new Assessment(
                 AssessmentType.parseAssessmentType(c.getInt(ImportAssessmentTask.COLUMN_ASSESSMENT_TYPE)),
                 new Date(c.getLong(ImportAssessmentTask.COLUMN_ASSESSMENT_DATE)),

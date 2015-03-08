@@ -300,11 +300,4 @@ public class Exam {
         return title;
     }
 
-    public String getKey() {
-        return getKey(this.courseId, this.term, this.dtStart.getTime());
-    }
-
-    public static String getKey(String courseId, String term, long date) {
-        return String.format("%s-%s-%d", courseId, term, date);
-    }
 }
