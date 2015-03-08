@@ -23,8 +23,8 @@ import org.voidsink.anewjkuapp.StatCardAdapter;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.base.TermFragment;
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
-import org.voidsink.anewjkuapp.kusss.Lva;
+import org.voidsink.anewjkuapp.kusss.Assessment;
+import org.voidsink.anewjkuapp.kusss.Course;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
@@ -89,8 +89,8 @@ public class StatFragmentDetail extends TermFragment implements
         new AsyncTask<Void, Void, Void>() {
 
             //            private ProgressDialog progressDialog;
-            private List<Lva> lvas;
-            private List<ExamGrade> grades;
+            private List<Course> courses;
+            private List<Assessment> grades;
             private Context mContext = getContext();
 
             @Override
@@ -104,9 +104,9 @@ public class StatFragmentDetail extends TermFragment implements
 
             @Override
             protected Void doInBackground(Void... params) {
-                this.lvas = KusssContentProvider.getLvas(mContext);
+                this.courses = KusssContentProvider.getLvas(mContext);
                 this.grades = AppUtils.filterGrades(getTerms(), KusssContentProvider.getGrades(mContext));
-                AppUtils.sortLVAs(this.lvas);
+                AppUtils.sortLVAs(this.courses);
                 return null;
             }
 
@@ -119,7 +119,7 @@ public class StatFragmentDetail extends TermFragment implements
 
                     mAdapter.add(StatCard.getGradeInstance(getTerms(), this.grades, true, mPositiveOnly));
                     mAdapter.add(StatCard.getGradeInstance(getTerms(), this.grades, false, mPositiveOnly));
-                    mAdapter.add(StatCard.getLvaInstance(getTerms(), this.lvas, this.grades));
+                    mAdapter.add(StatCard.getLvaInstance(getTerms(), this.courses, this.grades));
 
                     mAdapter.notifyDataSetChanged();
                 }

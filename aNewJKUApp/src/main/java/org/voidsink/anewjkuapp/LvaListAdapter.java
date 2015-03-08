@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
+import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.utils.UIUtils;
 
@@ -33,21 +33,21 @@ public class LvaListAdapter extends RecyclerArrayAdapter<LvaWithGrade, LvaListAd
     public void onBindViewHolder(LvaViewHolder holder, int position) {
         LvaWithGrade lva = getItem(position);
 
-        holder.mTitle.setText(lva.getLva().getTitle());
-        UIUtils.setTextAndVisibility(holder.mTeacher, lva.getLva().getTeacher());
-        holder.mLvaNr.setText(lva.getLva().getLvaNr());
-        if (lva.getLva().getSKZ() > 0) {
-            holder.mSkz.setText(String.format("[%d]", lva.getLva().getSKZ()));
+        holder.mTitle.setText(lva.getCourse().getTitle());
+        UIUtils.setTextAndVisibility(holder.mTeacher, lva.getCourse().getTeacher());
+        holder.mLvaNr.setText(lva.getCourse().getLvaNr());
+        if (lva.getCourse().getSKZ() > 0) {
+            holder.mSkz.setText(String.format("[%d]", lva.getCourse().getSKZ()));
             holder.mSkz.setVisibility(View.VISIBLE);
         } else {
             holder.mSkz.setVisibility(View.GONE);
         }
-        holder.mCode.setText(lva.getLva().getCode());
+        holder.mCode.setText(lva.getCourse().getCode());
 
-        ExamGrade grade = lva.getGrade();
+        Assessment grade = lva.getGrade();
         holder.mChipBack.setBackgroundColor(UIUtils.getChipGradeColor(grade));
         holder.mChipGrade.setText(UIUtils.getChipGradeText(grade));
-        holder.mChipEcts.setText(UIUtils.getChipGradeEcts(lva.getLva().getEcts()));
+        holder.mChipEcts.setText(UIUtils.getChipGradeEcts(lva.getCourse().getEcts()));
     }
 
     @Override

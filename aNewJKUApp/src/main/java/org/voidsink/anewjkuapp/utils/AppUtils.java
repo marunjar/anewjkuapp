@@ -28,13 +28,13 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.fragment.MapFragment;
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
+import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.kusss.Grade;
-import org.voidsink.anewjkuapp.kusss.GradeType;
-import org.voidsink.anewjkuapp.kusss.Lva;
+import org.voidsink.anewjkuapp.kusss.AssessmentType;
+import org.voidsink.anewjkuapp.kusss.Course;
 import org.voidsink.anewjkuapp.kusss.LvaState;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
-import org.voidsink.anewjkuapp.kusss.Studies;
+import org.voidsink.anewjkuapp.kusss.Curricula;
 import org.voidsink.anewjkuapp.service.SyncAlarmService;
 import org.voidsink.anewjkuapp.update.ImportStudiesTask;
 
@@ -46,7 +46,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -59,9 +58,9 @@ public class AppUtils {
     private static final String DEFAULT_POI_FILE_NAME = "JKU.gpx";
     private static final String TAG = AppUtils.class.getSimpleName();
 
-    private static final Comparator<Lva> LvaComparator = new Comparator<Lva>() {
+    private static final Comparator<Course> LvaComparator = new Comparator<Course>() {
         @Override
-        public int compare(Lva lhs, Lva rhs) {
+        public int compare(Course lhs, Course rhs) {
             int value = lhs.getTitle().compareTo(rhs.getTitle());
             if (value == 0) {
                 value = lhs.getTerm().compareTo(rhs.getTerm());
@@ -75,21 +74,21 @@ public class AppUtils {
         public int compare(LvaWithGrade lhs, LvaWithGrade rhs) {
             int value = lhs.getState().compareTo(rhs.getState());
             if (value == 0) {
-                value = lhs.getLva().getTitle()
-                        .compareTo(rhs.getLva().getTitle());
+                value = lhs.getCourse().getTitle()
+                        .compareTo(rhs.getCourse().getTitle());
             }
             if (value == 0) {
-                value = lhs.getLva().getTerm()
-                        .compareTo(rhs.getLva().getTerm());
+                value = lhs.getCourse().getTerm()
+                        .compareTo(rhs.getCourse().getTerm());
             }
             return value;
         }
     };
 
-    private static final Comparator<Studies> StudiesComparator = new Comparator<Studies>() {
+    private static final Comparator<Curricula> StudiesComparator = new Comparator<Curricula>() {
 
         @Override
-        public int compare(Studies lhs, Studies rhs) {
+        public int compare(Curricula lhs, Curricula rhs) {
             int value = lhs.getUni().compareToIgnoreCase(rhs.getUni());
             if (value == 0) {
                 value = lhs.getDtStart().compareTo(rhs.getDtStart());
@@ -101,10 +100,10 @@ public class AppUtils {
         }
     };
 
-    private static final Comparator<ExamGrade> ExamGradeComparator = new Comparator<ExamGrade>() {
+    private static final Comparator<Assessment> ExamGradeComparator = new Comparator<Assessment>() {
         @Override
-        public int compare(ExamGrade lhs, ExamGrade rhs) {
-            int value = lhs.getGradeType().compareTo(rhs.getGradeType());
+        public int compare(Assessment lhs, Assessment rhs) {
+            int value = lhs.getAssessmentType().compareTo(rhs.getAssessmentType());
             if (value == 0) {
                 value = rhs.getDate().compareTo(lhs.getDate());
             }
@@ -298,14 +297,14 @@ public class AppUtils {
         double sum = 0;
         for (LvaWithGrade lva : lvas) {
             if (state == LvaState.ALL || state == lva.getState()) {
-                sum += lva.getLva().getEcts();
+                sum += lva.getCourse().getEcts();
             }
         }
         return sum;
     }
 
-    public static void sortLVAs(List<Lva> lvas) {
-        Collections.sort(lvas, LvaComparator);
+    public static void sortLVAs(List<Course> courses) {
+        Collections.sort(courses, LvaComparator);
     }
 
     public static void sortLVAsWithGrade(List<LvaWithGrade> lvas) {
@@ -313,7 +312,7 @@ public class AppUtils {
 
     }
 
-    public static void sortGrades(List<ExamGrade> grades) {
+    public static void sortGrades(List<Assessment> grades) {
         Collections.sort(grades, ExamGradeComparator);
     }
 
@@ -322,17 +321,17 @@ public class AppUtils {
         int i = 0;
         while (i < mLvas.size()) {
             if (mLvas.get(i).getState() == LvaState.DONE) {
-                Lva lva = mLvas.get(i).getLva();
+                Course course = mLvas.get(i).getCourse();
                 int j = i + 1;
 
                 while (j < mLvas.size()) {
-                    Lva nextLva = mLvas.get(j).getLva();
-                    if (lva.getCode().equals(nextLva.getCode())
-                            && lva.getTitle().equals(nextLva.getTitle())) {
+                    Course nextCourse = mLvas.get(j).getCourse();
+                    if (course.getCode().equals(nextCourse.getCode())
+                            && course.getTitle().equals(nextCourse.getTitle())) {
                         mLvas.remove(j);
                         Log.d("removeDuplicates",
-                                "remove from done " + nextLva.getCode() + " "
-                                        + nextLva.getTitle());
+                                "remove from done " + nextCourse.getCode() + " "
+                                        + nextCourse.getTitle());
                     } else {
                         j++;
                     }
@@ -345,17 +344,17 @@ public class AppUtils {
         i = 0;
         while (i < mLvas.size()) {
             if (mLvas.get(i).getState() != LvaState.DONE) {
-                Lva lva = mLvas.get(i).getLva();
+                Course course = mLvas.get(i).getCourse();
                 int j = i + 1;
 
                 while (j < mLvas.size()) {
-                    Lva nextLva = mLvas.get(j).getLva();
-                    if (lva.getCode().equals(nextLva.getCode())
-                            && lva.getTitle().equals(nextLva.getTitle())) {
+                    Course nextCourse = mLvas.get(j).getCourse();
+                    if (course.getCode().equals(nextCourse.getCode())
+                            && course.getTitle().equals(nextCourse.getTitle())) {
                         mLvas.remove(j);
                         Log.d("removeDuplicates",
-                                "remove from other " + nextLva.getCode() + " "
-                                        + nextLva.getTitle());
+                                "remove from other " + nextCourse.getCode() + " "
+                                        + nextCourse.getTitle());
                     } else {
                         j++;
                     }
@@ -381,17 +380,17 @@ public class AppUtils {
 
         int i = 0;
         while (i < mDoneLvas.size()) {
-            Lva lva = mDoneLvas.get(i).getLva();
+            Course course = mDoneLvas.get(i).getCourse();
             int j = i + 1;
 
             while (j < mDoneLvas.size()) {
-                Lva nextLva = mDoneLvas.get(j).getLva();
-                if (lva.getCode().equals(nextLva.getCode())
-                        && lva.getTitle().equals(nextLva.getTitle())) {
+                Course nextCourse = mDoneLvas.get(j).getCourse();
+                if (course.getCode().equals(nextCourse.getCode())
+                        && course.getTitle().equals(nextCourse.getTitle())) {
                     mDoneLvas.remove(j);
                     Log.d("removeDuplicates",
-                            "remove from done " + nextLva.getCode() + " "
-                                    + nextLva.getTitle());
+                            "remove from done " + nextCourse.getCode() + " "
+                                    + nextCourse.getTitle());
                 } else {
                     j++;
                 }
@@ -399,13 +398,13 @@ public class AppUtils {
 
             j = 0;
             while (j < mOpenLvas.size()) {
-                Lva nextLva = mOpenLvas.get(j).getLva();
-                if (lva.getCode().equals(nextLva.getCode())
-                        && lva.getTitle().equals(nextLva.getTitle())) {
+                Course nextCourse = mOpenLvas.get(j).getCourse();
+                if (course.getCode().equals(nextCourse.getCode())
+                        && course.getTitle().equals(nextCourse.getTitle())) {
                     mOpenLvas.remove(j);
                     Log.d("removeDuplicates",
-                            "remove from open " + nextLva.getCode() + " "
-                                    + nextLva.getTitle());
+                            "remove from open " + nextCourse.getCode() + " "
+                                    + nextCourse.getTitle());
                 } else {
                     j++;
                 }
@@ -416,17 +415,17 @@ public class AppUtils {
 
         i = 0;
         while (i < mOpenLvas.size()) {
-            Lva lva = mOpenLvas.get(i).getLva();
+            Course course = mOpenLvas.get(i).getCourse();
             int j = i + 1;
 
             while (j < mOpenLvas.size()) {
-                Lva nextLva = mOpenLvas.get(j).getLva();
-                if (lva.getCode().equals(nextLva.getCode())
-                        && lva.getTitle().equals(nextLva.getTitle())) {
+                Course nextCourse = mOpenLvas.get(j).getCourse();
+                if (course.getCode().equals(nextCourse.getCode())
+                        && course.getTitle().equals(nextCourse.getTitle())) {
                     mOpenLvas.remove(j);
                     Log.d("removeDuplicates",
-                            "remove from open " + nextLva.getCode() + " "
-                                    + nextLva.getTitle());
+                            "remove from open " + nextCourse.getCode() + " "
+                                    + nextCourse.getTitle());
                 } else {
                     j++;
                 }
@@ -435,14 +434,14 @@ public class AppUtils {
         }
     }
 
-    public static double getAvgGrade(List<ExamGrade> grades,
-                                     boolean ectsWeighting, GradeType type, boolean positiveOnly) {
+    public static double getAvgGrade(List<Assessment> grades,
+                                     boolean ectsWeighting, AssessmentType type, boolean positiveOnly) {
         double sum = 0;
         double count = 0;
 
         if (grades != null) {
-            for (ExamGrade grade : grades) {
-                if (type == GradeType.ALL || type == grade.getGradeType()) {
+            for (Assessment grade : grades) {
+                if (type == AssessmentType.ALL || type == grade.getAssessmentType()) {
                     if (!positiveOnly || grade.getGrade().isPositive()) {
                         if (!ectsWeighting) {
                             sum += grade.getGrade().getValue();
@@ -526,21 +525,21 @@ public class AppUtils {
         }
     }
 
-    public static double getGradePercent(List<ExamGrade> grades, Grade grade, boolean ectsWeighting) {
+    public static double getGradePercent(List<Assessment> grades, Grade grade, boolean ectsWeighting) {
         if (grades == null || grades.size() == 0) return 0;
 
         double count = 0;
         double sum = 0;
         double value;
 
-        for (ExamGrade examGrade : grades) {
+        for (Assessment assessment : grades) {
             if (!ectsWeighting) {
                 value = 1;
             } else {
-                value = examGrade.getEcts();
+                value = assessment.getEcts();
             }
 
-            if (examGrade.getGrade().equals(grade)) {
+            if (assessment.getGrade().equals(grade)) {
                 count += value;
             }
             sum += value;
@@ -549,26 +548,26 @@ public class AppUtils {
         return count / sum * 100;
     }
 
-    public static double getGradeEcts(List<ExamGrade> grades, Grade grade) {
+    public static double getGradeEcts(List<Assessment> grades, Grade grade) {
         if (grades == null || grades.size() == 0) return 0;
 
         double sum = 0;
-        for (ExamGrade examGrade : grades) {
-            if (examGrade.getGrade().equals(grade)) {
-                sum += examGrade.getEcts();
+        for (Assessment assessment : grades) {
+            if (assessment.getGrade().equals(grade)) {
+                sum += assessment.getEcts();
             }
         }
         return sum;
     }
 
 
-    public static List<LvaWithGrade> getLvasWithGrades(List<String> terms, List<Lva> lvas, List<ExamGrade> grades) {
+    public static List<LvaWithGrade> getLvasWithGrades(List<String> terms, List<Course> courses, List<Assessment> grades) {
         List<LvaWithGrade> result = new ArrayList<LvaWithGrade>();
 
-        for (Lva lva : lvas) {
-            if (terms == null || terms.contains(lva.getTerm())) {
-                ExamGrade grade = findGrade(grades, lva);
-                result.add(new LvaWithGrade(lva, grade));
+        for (Course course : courses) {
+            if (terms == null || terms.contains(course.getTerm())) {
+                Assessment grade = findGrade(grades, course);
+                result.add(new LvaWithGrade(course, grade));
             }
         }
 
@@ -579,11 +578,11 @@ public class AppUtils {
         return result;
     }
 
-    private static ExamGrade findGrade(List<ExamGrade> grades, Lva lva) {
-        ExamGrade finalGrade = null;
+    private static Assessment findGrade(List<Assessment> grades, Course course) {
+        Assessment finalGrade = null;
 
-        for (ExamGrade grade : grades) {
-            if (grade.getCode().equals(lva.getCode()) && grade.getLvaNr().equals(lva.getLvaNr())) {
+        for (Assessment grade : grades) {
+            if (grade.getCode().equals(course.getCode()) && grade.getLvaNr().equals(course.getLvaNr())) {
                 if (finalGrade == null || finalGrade.getGrade().getValue() > grade.getGrade().getValue()) {
                     finalGrade = grade;
                 }
@@ -591,29 +590,29 @@ public class AppUtils {
         }
 
         if (finalGrade == null) {
-            for (ExamGrade grade : grades) {
-                if (grade.getCode().equals(lva.getCode()) &&
-                        (grade.getTitle().contains(lva.getTitle()) ||
-                                lva.getTitle().contains(grade.getTitle()))) {
+            for (Assessment grade : grades) {
+                if (grade.getCode().equals(course.getCode()) &&
+                        (grade.getTitle().contains(course.getTitle()) ||
+                                course.getTitle().contains(grade.getTitle()))) {
                     if (finalGrade == null || finalGrade.getGrade().getValue() > grade.getGrade().getValue()) {
                         finalGrade = grade;
                     }
                 }
             }
             if (finalGrade != null) {
-                Log.d(TAG, String.format("found by LvaNr/Title: %s/%s", lva.getLvaNr(), lva.getTitle()));
+                Log.d(TAG, String.format("found by LvaNr/Title: %s/%s", course.getLvaNr(), course.getTitle()));
             }
         } else {
-            Log.d(TAG, String.format("found by LvaNr/Code: %s/%s", lva.getLvaNr(), lva.getCode()));
+            Log.d(TAG, String.format("found by LvaNr/Code: %s/%s", course.getLvaNr(), course.getCode()));
         }
 
         return finalGrade;
     }
 
-    private static void addIfRecent(List<ExamGrade> grades, ExamGrade grade) {
+    private static void addIfRecent(List<Assessment> grades, Assessment grade) {
         int i = 0;
         while (i < grades.size()) {
-            ExamGrade g = grades.get(i);
+            Assessment g = grades.get(i);
             // check only grades for same lva and term
             if (g.getCode().equals(grade.getCode())
                     && g.getLvaNr().equals(grade.getLvaNr())) {
@@ -633,10 +632,10 @@ public class AppUtils {
         grades.add(grade);
     }
 
-    public static List<ExamGrade> filterGrades(List<String> terms, List<ExamGrade> grades) {
-        List<ExamGrade> result = new ArrayList<ExamGrade>();
+    public static List<Assessment> filterGrades(List<String> terms, List<Assessment> grades) {
+        List<Assessment> result = new ArrayList<Assessment>();
         if (grades != null) {
-            for (ExamGrade grade : grades) {
+            for (Assessment grade : grades) {
                 if (terms == null || (terms.indexOf(grade.getTerm()) >= 0)) {
                     addIfRecent(result, grade);
                 }
@@ -647,7 +646,7 @@ public class AppUtils {
         return result;
     }
 
-    public static void sortStudies(List<Studies> mStudies) {
+    public static void sortStudies(List<Curricula> mStudies) {
         Collections.sort(mStudies, StudiesComparator);
     }
 

@@ -4,18 +4,18 @@ import android.database.Cursor;
 
 import org.voidsink.anewjkuapp.kusss.Exam;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
-import org.voidsink.anewjkuapp.kusss.Lva;
+import org.voidsink.anewjkuapp.kusss.Course;
 
 import java.util.Date;
 
 public class ExamListExam {
 
     private final Exam exam;
-    private final Lva lva;
+    private final Course course;
 
     public ExamListExam(Cursor c, LvaMap map) {
         this.exam = KusssHelper.createExam(c);
-        this.lva = map.getLVA(exam.getTerm(), exam.getLvaNr());
+        this.course = map.getLVA(exam.getTerm(), exam.getLvaNr());
     }
 
     public boolean mark() {
@@ -23,8 +23,8 @@ public class ExamListExam {
     }
 
     public String getTitle() {
-        if (lva != null) {
-            return lva.getTitle();
+        if (course != null) {
+            return course.getTitle();
         }
         return exam.getTitle();
     }
@@ -46,8 +46,8 @@ public class ExamListExam {
     }
 
     public int getSkz() {
-        if (lva != null) {
-            return lva.getSKZ();
+        if (course != null) {
+            return course.getSKZ();
         }
         return 0;
     }

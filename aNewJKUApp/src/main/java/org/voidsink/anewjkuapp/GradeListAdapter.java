@@ -10,12 +10,12 @@ import android.widget.TextView;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
+import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.utils.UIUtils;
 
 import java.text.DateFormat;
 
-public class GradeListAdapter extends RecyclerArrayAdapter<ExamGrade, GradeListAdapter.GradeViewHolder> implements StickyRecyclerHeadersAdapter<GradeListAdapter.GradeHeaderHolder> {
+public class GradeListAdapter extends RecyclerArrayAdapter<Assessment, GradeListAdapter.GradeViewHolder> implements StickyRecyclerHeadersAdapter<GradeListAdapter.GradeHeaderHolder> {
 
     private final Context mContext;
 
@@ -32,7 +32,7 @@ public class GradeListAdapter extends RecyclerArrayAdapter<ExamGrade, GradeListA
 
     @Override
     public void onBindViewHolder(GradeViewHolder holder, int position) {
-        ExamGrade grade = getItem(position);
+        Assessment grade = getItem(position);
         holder.mTitle.setText(grade.getTitle());
 
         UIUtils.setTextAndVisibility(holder.mLvaNr, grade.getLvaNr());
@@ -56,9 +56,9 @@ public class GradeListAdapter extends RecyclerArrayAdapter<ExamGrade, GradeListA
 
     @Override
     public long getHeaderId(int position) {
-        ExamGrade grade = getItem(position);
+        Assessment grade = getItem(position);
         if (grade != null) {
-            return grade.getGradeType().getStringResID();
+            return grade.getAssessmentType().getStringResID();
         }
         return 0;
     }
@@ -71,9 +71,9 @@ public class GradeListAdapter extends RecyclerArrayAdapter<ExamGrade, GradeListA
 
     @Override
     public void onBindHeaderViewHolder(GradeHeaderHolder gradeHeaderHolder, int position) {
-        ExamGrade grade = getItem(position);
+        Assessment grade = getItem(position);
         if (grade != null) {
-            gradeHeaderHolder.mText.setText(mContext.getString(grade.getGradeType().getStringResID()));
+            gradeHeaderHolder.mText.setText(mContext.getString(grade.getAssessmentType().getStringResID()));
 
         }
     }

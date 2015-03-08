@@ -29,8 +29,8 @@ public class KusssHelper {
         return term + "-" + lvaNr;
     }
 
-    public static Lva createLva(Cursor c) {
-        return new Lva(c.getString(ImportLvaTask.COLUMN_LVA_TERM),
+    public static Course createLva(Cursor c) {
+        return new Course(c.getString(ImportLvaTask.COLUMN_LVA_TERM),
                 c.getString(ImportLvaTask.COLUMN_LVA_LVANR),
                 c.getString(ImportLvaTask.COLUMN_LVA_TITLE),
                 c.getInt(ImportLvaTask.COLUMN_LVA_SKZ),
@@ -41,17 +41,17 @@ public class KusssHelper {
                 c.getString(ImportLvaTask.COLUMN_LVA_CODE));
     }
 
-    public static ContentValues getLvaContentValues(Lva lva) {
+    public static ContentValues getLvaContentValues(Course course) {
         ContentValues cv = new ContentValues();
-        cv.put(KusssContentContract.Lva.LVA_COL_TITLE, lva.getTitle());
-        cv.put(KusssContentContract.Lva.LVA_COL_ECTS, lva.getEcts());
-        cv.put(KusssContentContract.Lva.LVA_COL_SWS, lva.getSws());
-        cv.put(KusssContentContract.Lva.LVA_COL_LVANR, lva.getLvaNr());
-        cv.put(KusssContentContract.Lva.LVA_COL_SKZ, lva.getSKZ());
-        cv.put(KusssContentContract.Lva.LVA_COL_CODE, lva.getCode());
-        cv.put(KusssContentContract.Lva.LVA_COL_TEACHER, lva.getTeacher());
-        cv.put(KusssContentContract.Lva.LVA_COL_TERM, lva.getTerm());
-        cv.put(KusssContentContract.Lva.LVA_COL_TYPE, lva.getLvaType());
+        cv.put(KusssContentContract.Lva.LVA_COL_TITLE, course.getTitle());
+        cv.put(KusssContentContract.Lva.LVA_COL_ECTS, course.getEcts());
+        cv.put(KusssContentContract.Lva.LVA_COL_SWS, course.getSws());
+        cv.put(KusssContentContract.Lva.LVA_COL_LVANR, course.getLvaNr());
+        cv.put(KusssContentContract.Lva.LVA_COL_SKZ, course.getSKZ());
+        cv.put(KusssContentContract.Lva.LVA_COL_CODE, course.getCode());
+        cv.put(KusssContentContract.Lva.LVA_COL_TEACHER, course.getTeacher());
+        cv.put(KusssContentContract.Lva.LVA_COL_TERM, course.getTerm());
+        cv.put(KusssContentContract.Lva.LVA_COL_TYPE, course.getLvaType());
 
         return cv;
     }
@@ -86,8 +86,8 @@ public class KusssHelper {
         return cv;
     }
 
-    public static Studies createStudies(Cursor c) {
-        return new Studies(KusssDatabaseHelper.toBool(c.getInt(ImportStudiesTask.COLUMN_STUDIES_IS_STD)),
+    public static Curricula createStudies(Cursor c) {
+        return new Curricula(KusssDatabaseHelper.toBool(c.getInt(ImportStudiesTask.COLUMN_STUDIES_IS_STD)),
                 c.getString(ImportStudiesTask.COLUMN_STUDIES_SKZ),
                 c.getString(ImportStudiesTask.COLUMN_STUDIES_TITLE),
                 KusssDatabaseHelper.toBool(c.getInt(ImportStudiesTask.COLUMN_STUDIES_STEOP_DONE)),
@@ -97,17 +97,17 @@ public class KusssHelper {
                 !c.isNull(ImportStudiesTask.COLUMN_STUDIES_DT_END) ? new Date(c.getLong(ImportStudiesTask.COLUMN_STUDIES_DT_END)) : null);
     }
 
-    public static ContentValues getStudiesContentValues(Studies studies) {
+    public static ContentValues getStudiesContentValues(Curricula curricula) {
         ContentValues cv = new ContentValues();
-        cv.put(KusssContentContract.Studies.COL_IS_STD, KusssDatabaseHelper.toInt(studies.isStandard()));
-        cv.put(KusssContentContract.Studies.COL_SKZ, studies.getSkz());
-        cv.put(KusssContentContract.Studies.COL_TITLE, studies.getTitle());
-        cv.put(KusssContentContract.Studies.COL_STEOP_DONE, KusssDatabaseHelper.toInt(studies.isSteopDone()));
-        cv.put(KusssContentContract.Studies.COL_ACTIVE_STATE, KusssDatabaseHelper.toInt(studies.isActive()));
-        cv.put(KusssContentContract.Studies.COL_UNI, studies.getUni());
-        cv.put(KusssContentContract.Studies.COL_DT_START, studies.getDtStart().getTime());
+        cv.put(KusssContentContract.Studies.COL_IS_STD, KusssDatabaseHelper.toInt(curricula.isStandard()));
+        cv.put(KusssContentContract.Studies.COL_SKZ, curricula.getSkz());
+        cv.put(KusssContentContract.Studies.COL_TITLE, curricula.getTitle());
+        cv.put(KusssContentContract.Studies.COL_STEOP_DONE, KusssDatabaseHelper.toInt(curricula.isSteopDone()));
+        cv.put(KusssContentContract.Studies.COL_ACTIVE_STATE, KusssDatabaseHelper.toInt(curricula.isActive()));
+        cv.put(KusssContentContract.Studies.COL_UNI, curricula.getUni());
+        cv.put(KusssContentContract.Studies.COL_DT_START, curricula.getDtStart().getTime());
 
-        Date date = studies.getDtEnd();
+        Date date = curricula.getDtEnd();
         if (date != null) {
             cv.put(KusssContentContract.Studies.COL_DT_END, date.getTime());
         } else {
@@ -118,9 +118,9 @@ public class KusssHelper {
     }
 
 
-    public static ExamGrade createGrade(Cursor c) {
-        return new ExamGrade(
-                GradeType.parseGradeType(c.getInt(ImportGradeTask.COLUMN_GRADE_TYPE)),
+    public static Assessment createGrade(Cursor c) {
+        return new Assessment(
+                AssessmentType.parseGradeType(c.getInt(ImportGradeTask.COLUMN_GRADE_TYPE)),
                 new Date(c.getLong(ImportGradeTask.COLUMN_GRADE_DATE)),
                 c.getString(ImportGradeTask.COLUMN_GRADE_LVANR),
                 c.getString(ImportGradeTask.COLUMN_GRADE_TERM),
@@ -133,14 +133,14 @@ public class KusssHelper {
     }
 
 
-    public static ContentValues getGradeContentValues(ExamGrade grade) {
+    public static ContentValues getGradeContentValues(Assessment grade) {
         ContentValues cv = new ContentValues();
         cv.put(KusssContentContract.Grade.GRADE_COL_DATE, grade.getDate().getTime());
         cv.put(KusssContentContract.Grade.GRADE_COL_GRADE, grade.getGrade().ordinal());
         cv.put(KusssContentContract.Grade.GRADE_COL_LVANR, grade.getLvaNr());
         cv.put(KusssContentContract.Grade.GRADE_COL_SKZ, grade.getSkz());
         cv.put(KusssContentContract.Grade.GRADE_COL_TERM, grade.getTerm());
-        cv.put(KusssContentContract.Grade.GRADE_COL_TYPE, grade.getGradeType().ordinal());
+        cv.put(KusssContentContract.Grade.GRADE_COL_TYPE, grade.getAssessmentType().ordinal());
         cv.put(KusssContentContract.Grade.GRADE_COL_CODE, grade.getCode());
         cv.put(KusssContentContract.Grade.GRADE_COL_TITLE, grade.getTitle());
         cv.put(KusssContentContract.Grade.GRADE_COL_ECTS, grade.getEcts());

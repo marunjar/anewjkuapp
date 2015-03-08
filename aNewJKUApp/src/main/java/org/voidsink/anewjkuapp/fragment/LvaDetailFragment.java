@@ -23,8 +23,8 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.base.TermFragment;
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
-import org.voidsink.anewjkuapp.kusss.Lva;
+import org.voidsink.anewjkuapp.kusss.Assessment;
+import org.voidsink.anewjkuapp.kusss.Course;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.update.UpdateService;
@@ -69,8 +69,8 @@ public class LvaDetailFragment extends TermFragment implements
             private Context mContext = getContext();
 //            private ProgressDialog progressDialog;
 
-            List<Lva> lvas;
-            List<ExamGrade> grades;
+            List<Course> courses;
+            List<Assessment> grades;
 
             @Override
             protected void onPreExecute() {
@@ -80,15 +80,15 @@ public class LvaDetailFragment extends TermFragment implements
 //                        mContext.getString(R.string.progress_title),
 //                        mContext.getString(R.string.progress_load_lva), true);
 
-                this.lvas = new ArrayList<>();
+                this.courses = new ArrayList<>();
                 this.grades = new ArrayList<>();
             }
 
             @Override
             protected Void doInBackground(Void... params) {
-                this.lvas = KusssContentProvider.getLvas(mContext);
+                this.courses = KusssContentProvider.getLvas(mContext);
                 this.grades = KusssContentProvider.getGrades(mContext);
-                AppUtils.sortLVAs(this.lvas);
+                AppUtils.sortLVAs(this.courses);
 
                 return null;
             }
@@ -97,7 +97,7 @@ public class LvaDetailFragment extends TermFragment implements
             protected void onPostExecute(Void result) {
                 // Log.i(TAG, "loadLvas" + this.terms);
 
-                List<LvaWithGrade> mLvasWithGrades = AppUtils.getLvasWithGrades(getTerms(), lvas, grades);
+                List<LvaWithGrade> mLvasWithGrades = AppUtils.getLvasWithGrades(getTerms(), courses, grades);
 
                 mAdapter.clear();
                 mAdapter.addAll(mLvasWithGrades);

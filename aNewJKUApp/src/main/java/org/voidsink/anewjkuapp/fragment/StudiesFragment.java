@@ -24,7 +24,7 @@ import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
-import org.voidsink.anewjkuapp.kusss.Studies;
+import org.voidsink.anewjkuapp.kusss.Curricula;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.Consts;
@@ -105,7 +105,7 @@ public class StudiesFragment extends BaseFragment implements
 
         new AsyncTask<Void, Void, Void>() {
 
-            public List<Studies> mStudies;
+            public List<Curricula> mStudies;
 
             @Override
             protected void onPreExecute() {
@@ -137,7 +137,7 @@ public class StudiesFragment extends BaseFragment implements
         loadData();
     }
 
-    private static class StudiesAdapter extends RecyclerArrayAdapter<Studies, StudiesFragment.StudiesViewHolder> implements StickyRecyclerHeadersAdapter<StudiesFragment.StudiesHeaderHolder> {
+    private static class StudiesAdapter extends RecyclerArrayAdapter<Curricula, StudiesFragment.StudiesViewHolder> implements StickyRecyclerHeadersAdapter<StudiesFragment.StudiesHeaderHolder> {
 
         private final Context mContext;
 
@@ -154,7 +154,7 @@ public class StudiesFragment extends BaseFragment implements
 
         @Override
         public void onBindViewHolder(StudiesViewHolder holder, int position) {
-            Studies item = getItem(position);
+            Curricula item = getItem(position);
 
             holder.isStandard.setText(item.isStandard() ? mContext.getString(R.string.studies_is_standard_yes) : mContext.getString(R.string.studies_is_standard_no));
             holder.skz.setText(item.getSkz());
@@ -171,9 +171,9 @@ public class StudiesFragment extends BaseFragment implements
 
         @Override
         public long getHeaderId(int i) {
-            Studies studies = getItem(i);
-            if (studies != null) {
-                return (long)studies.getUni().hashCode() + (long)Integer.MAX_VALUE; // header id has to be > 0???
+            Curricula curricula = getItem(i);
+            if (curricula != null) {
+                return (long) curricula.getUni().hashCode() + (long)Integer.MAX_VALUE; // header id has to be > 0???
             }
             return 0;
         }
@@ -186,8 +186,8 @@ public class StudiesFragment extends BaseFragment implements
 
         @Override
         public void onBindHeaderViewHolder(StudiesHeaderHolder studiesHeaderHolder, int position) {
-            Studies studies = getItem(position);
-            studiesHeaderHolder.mText.setText(studies.getUni());
+            Curricula curricula = getItem(position);
+            studiesHeaderHolder.mText.setText(curricula.getUni());
         }
     }
 

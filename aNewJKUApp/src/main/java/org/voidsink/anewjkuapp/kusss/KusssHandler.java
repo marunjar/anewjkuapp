@@ -31,7 +31,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -290,12 +289,12 @@ public class KusssHandler {
         return true;
     }
 
-    public List<Lva> getLvas(Context c, List<Term> terms) {
+    public List<Course> getLvas(Context c, List<Term> terms) {
         if (terms == null || terms.size() == 0) {
             return null;
         }
 
-        List<Lva> lvas = new ArrayList<>();
+        List<Course> courses = new ArrayList<>();
         try {
             Log.d(TAG, "getLvas");
 
@@ -309,9 +308,9 @@ public class KusssHandler {
                             // .select("body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > table > tbody > tr");
                             Elements rows = doc.select(SELECT_MY_LVAS);
                             for (Element row : rows) {
-                                Lva lva = new Lva(c, term.getTerm(), row);
-                                if (lva.isInitialized()) {
-                                    lvas.add(lva);
+                                Course course = new Course(c, term.getTerm(), row);
+                                if (course.isInitialized()) {
+                                    courses.add(course);
                                 }
                             }
                             term.setLoaded(true);
@@ -324,7 +323,7 @@ public class KusssHandler {
                     throw new IOException(String.format("cannot select term: %s", term));
                 }
             }
-            if (lvas != null && lvas.size() == 0) {
+            if (courses != null && courses.size() == 0) {
                 // break if no lvas found, a student without courses is a quite impossible case
                 throw new IOException("no lvas found");
             }
@@ -332,7 +331,7 @@ public class KusssHandler {
             Analytics.sendException(c, e, true);
             return null;
         }
-        return lvas;
+        return courses;
     }
 
     private boolean isSelectable(Context c, Document doc, String term) {
@@ -367,23 +366,23 @@ public class KusssHandler {
         return false;
     }
 
-    public List<ExamGrade> getGrades(Context c) {
-        List<ExamGrade> grades = new ArrayList<>();
+    public List<Assessment> getGrades(Context c) {
+        List<Assessment> grades = new ArrayList<>();
         try {
             Document doc = Jsoup.connect(URL_MY_GRADES).data("months", "0")
                     .get();
 
             Elements rows = doc.select(SELECT_MY_GRADES);
 
-            GradeType type = null;
+            AssessmentType type = null;
             for (Element row : rows) {
                 if (row.tag().toString().equals("h3")) {
-                    type = GradeType.parseGradeType(row.text());
+                    type = AssessmentType.parseGradeType(row.text());
                 } else if (row.tag().toString().equals("table")) {
                     Elements gradeRows = row
                             .select("tbody > tr[class]:has(td)");
                     for (Element gradeRow : gradeRows) {
-                        ExamGrade grade = new ExamGrade(c, type, gradeRow);
+                        Assessment grade = new Assessment(c, type, gradeRow);
                         if (grade.isInitialized()) {
                             grades.add(grade);
                         }
@@ -434,23 +433,23 @@ public class KusssHandler {
         return exams;
     }
 
-    public List<Exam> getNewExamsByLvaNr(Context c, List<Lva> lvas, List<Term> terms)
+    public List<Exam> getNewExamsByLvaNr(Context c, List<Course> courses, List<Term> terms)
             throws IOException {
 
         List<Exam> exams = new ArrayList<>();
         try {
-            if (lvas == null || lvas.size() == 0) {
+            if (courses == null || courses.size() == 0) {
                 Log.d(TAG, "no lvas found, reload");
-                lvas = getLvas(c, terms);
+                courses = getLvas(c, terms);
             }
-            if (lvas != null && lvas.size() > 0) {
-                Map<String, ExamGrade> gradeCache = new HashMap<>();
+            if (courses != null && courses.size() > 0) {
+                Map<String, Assessment> gradeCache = new HashMap<>();
 
-                List<ExamGrade> grades = getGrades(c);
+                List<Assessment> grades = getGrades(c);
                 if (grades != null) {
-                    for (ExamGrade grade : grades) {
+                    for (Assessment grade : grades) {
                         if (!grade.getLvaNr().isEmpty()) {
-                            ExamGrade existing = gradeCache.get(grade.getLvaNr());
+                            Assessment existing = gradeCache.get(grade.getLvaNr());
                             if (existing != null) {
                                 Log.d(TAG,
                                         existing.getTitle() + " --> "
@@ -461,8 +460,8 @@ public class KusssHandler {
                     }
                 }
 
-                for (Lva lva : lvas) {
-                    ExamGrade grade = gradeCache.get(lva.getLvaNr());
+                for (Course course : courses) {
+                    Assessment grade = gradeCache.get(course.getLvaNr());
                     if (grade != null) {
                         if ((grade.getGrade() == Grade.G5)
                                 || (grade.getDate().getTime() > (System
@@ -475,7 +474,7 @@ public class KusssHandler {
                     }
                     if (grade == null) {
                         List<Exam> newExams = getNewExamsByLvaNr(c,
-                                lva.getLvaNr());
+                                course.getLvaNr());
                         if (newExams != null) {
                             for (Exam newExam : newExams) {
                                 if (newExam != null) {
@@ -566,15 +565,15 @@ public class KusssHandler {
         }
     }
 
-    public List<Studies> getStudies(Context c) {
+    public List<Curricula> getStudies(Context c) {
         try {
-            List<Studies> studies = new ArrayList<>();
+            List<Curricula> studies = new ArrayList<>();
 
             Document doc = Jsoup.connect(URL_MY_STUDIES).get();
 
             Elements rows = doc.select(SELECT_MY_STUDIES);
             for (Element row : rows) {
-                Studies s = new Studies(c, row);
+                Curricula s = new Curricula(c, row);
                 if (s.isInitialized()) {
                     studies.add(s);
                 }

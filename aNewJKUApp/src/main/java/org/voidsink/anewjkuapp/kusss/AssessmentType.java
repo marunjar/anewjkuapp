@@ -4,7 +4,7 @@ import org.voidsink.anewjkuapp.R;
 
 import android.annotation.SuppressLint;
 
-public enum GradeType {
+public enum AssessmentType {
 	INTERIM_COURSE_ASSESSMENT, FINAL_COURSE_ASSESSMENT, RECOGNIZED_COURSE_CERTIFICATE, RECOGNIZED_EXAM, RECOGNIZED_ASSESSMENT, FINAL_EXAM, ALL, NONE_AVAILABLE;
 
 	public int getStringResID() {
@@ -31,7 +31,7 @@ public enum GradeType {
 	}
 
 	@SuppressLint("DefaultLocale")
-	public static GradeType parseGradeType(String text) {
+	public static AssessmentType parseGradeType(String text) {
 		text = text.trim().toLowerCase();
 		if (text.equals("vorläufige lehrveranstaltungsbeurteilungen")
 				|| text.equals("interim course assessments")) {
@@ -56,7 +56,7 @@ public enum GradeType {
 		}		
 	}
 
-	public static GradeType parseGradeType(int ordinal) {
-		return GradeType.values()[ordinal];
+	public static AssessmentType parseGradeType(int ordinal) {
+		return AssessmentType.values()[ordinal];
 	}
 }

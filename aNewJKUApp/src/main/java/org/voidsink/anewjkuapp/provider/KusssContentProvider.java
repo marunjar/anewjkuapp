@@ -13,10 +13,10 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import org.voidsink.anewjkuapp.KusssContentContract;
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
+import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
-import org.voidsink.anewjkuapp.kusss.Lva;
-import org.voidsink.anewjkuapp.kusss.Studies;
+import org.voidsink.anewjkuapp.kusss.Course;
+import org.voidsink.anewjkuapp.kusss.Curricula;
 import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.update.ImportGradeTask;
 import org.voidsink.anewjkuapp.update.ImportLvaTask;
@@ -337,8 +337,8 @@ public class KusssContentProvider extends ContentProvider {
         }
     }
 
-    public static List<ExamGrade> getGrades(Context context) {
-        List<ExamGrade> mGrades = new ArrayList<ExamGrade>();
+    public static List<Assessment> getGrades(Context context) {
+        List<Assessment> mGrades = new ArrayList<Assessment>();
 
         Account mAccount = AppUtils.getAccount(context);
         if (mAccount != null) {
@@ -363,8 +363,8 @@ public class KusssContentProvider extends ContentProvider {
         return mGrades;
     }
 
-    public static List<Lva> getLvas(Context context) {
-        List<Lva> mLvas = new ArrayList<>();
+    public static List<Course> getLvas(Context context) {
+        List<Course> mCourses = new ArrayList<>();
         Account mAccount = AppUtils.getAccount(context);
         if (mAccount != null) {
             ContentResolver cr = context.getContentResolver();
@@ -374,16 +374,16 @@ public class KusssContentProvider extends ContentProvider {
 
             if (c != null) {
                 while (c.moveToNext()) {
-                    mLvas.add(KusssHelper.createLva(c));
+                    mCourses.add(KusssHelper.createLva(c));
                 }
                 c.close();
             }
         }
-        return mLvas;
+        return mCourses;
     }
 
-    public static List<Studies> getStudies(Context context) {
-        List<Studies> mStudies = new ArrayList<>();
+    public static List<Curricula> getStudies(Context context) {
+        List<Curricula> mStudies = new ArrayList<>();
         Account mAccount = AppUtils.getAccount(context);
         if (mAccount != null) {
             ContentResolver cr = context.getContentResolver();
@@ -407,7 +407,7 @@ public class KusssContentProvider extends ContentProvider {
         List<String> terms = new ArrayList<>();
         Calendar cal = Calendar.getInstance();
 
-        List<Studies> studies = getStudies(context);
+        List<Curricula> studies = getStudies(context);
 
         if (studies == null) {
             studies = new ArrayList<>();
@@ -417,11 +417,11 @@ public class KusssContentProvider extends ContentProvider {
             new ImportStudiesTask(AppUtils.getAccount(context), context).execute();
 
             try {
-                List<ExamGrade> grades = getGrades(context);
+                List<Assessment> grades = getGrades(context);
 
                 Date dtStart = null;
 
-                for (ExamGrade grade : grades) {
+                for (Assessment grade : grades) {
                     Date date = grade.getDate();
                     if (date != null) {
                         if (dtStart == null || date.before(dtStart)) {
@@ -436,7 +436,7 @@ public class KusssContentProvider extends ContentProvider {
                     cal.add(Calendar.MONTH, -6);
                     dtStart = cal.getTime();
 
-                    studies.add(new Studies(dtStart, null));
+                    studies.add(new Curricula(dtStart, null));
                 }
             } catch (Exception e) {
                 Analytics.sendException(context, e, false);
@@ -446,7 +446,7 @@ public class KusssContentProvider extends ContentProvider {
         // always load current term, subtract -1 term for sure
         cal.setTime(new Date());
         cal.add(Calendar.MONTH, -6);
-        studies.add(new Studies(cal.getTime(), null));
+        studies.add(new Curricula(cal.getTime(), null));
 
         if (studies.size() > 0) {
             // calculate terms from studies duration
@@ -506,8 +506,8 @@ public class KusssContentProvider extends ContentProvider {
         return Collections.unmodifiableList(objects);
     }
 
-    private static boolean dateInRange(Date date, List<Studies> studies) {
-        for (Studies studie : studies) {
+    private static boolean dateInRange(Date date, List<Curricula> studies) {
+        for (Curricula studie : studies) {
             if (studie.dateInRange(date)) {
                 return true;
             }

@@ -23,7 +23,7 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.base.TermFragment;
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
+import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
@@ -89,7 +89,7 @@ public class GradeDetailFragment extends TermFragment implements
         new AsyncTask<Void, Void, Void>() {
 
             //            private ProgressDialog progressDialog;
-            private List<ExamGrade> grades;
+            private List<Assessment> grades;
             private Context mContext = getContext();
 
             @Override

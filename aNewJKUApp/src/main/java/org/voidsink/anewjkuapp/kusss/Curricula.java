@@ -12,10 +12,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class Studies {
+public class Curricula {
 
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
-    private static final String TAG = Studies.class.getSimpleName();
+    private static final String TAG = Curricula.class.getSimpleName();
 
     private boolean mIsStandard;
     private String mSkz;
@@ -26,7 +26,7 @@ public class Studies {
     private Date mDtStart;
     private Date mDtEnd;
 
-    public Studies(Context c, Element row) {
+    public Curricula(Context c, Element row) {
         Elements columns = row.getElementsByTag("td");
         if (columns.size() >= 8) {
             setIsStandard(columns.get(0).getElementsByAttributeValue("checked", "checked").size() > 0);
@@ -47,12 +47,12 @@ public class Studies {
         }
     }
 
-    public Studies(Date dtStart, Date dtEnd) {
+    public Curricula(Date dtStart, Date dtEnd) {
         this.mDtStart = dtStart;
         this.mDtEnd = dtEnd;
     }
 
-    public Studies(boolean isStandard, String skz, String title, boolean steopDone, boolean isActive, String uni, Date dtStart, Date dtEnd) {
+    public Curricula(boolean isStandard, String skz, String title, boolean steopDone, boolean isActive, String uni, Date dtStart, Date dtEnd) {
         this(dtStart, dtEnd);
 
         this.mIsStandard = isStandard;

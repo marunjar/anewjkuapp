@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
-import org.voidsink.anewjkuapp.kusss.Lva;
+import org.voidsink.anewjkuapp.kusss.Course;
 import org.voidsink.anewjkuapp.update.ImportLvaTask;
 
 import java.util.ArrayList;
@@ -18,18 +18,18 @@ import edu.emory.mathcs.backport.java.util.Collections;
 
 public class LvaMap {
 
-    private static final Comparator<Lva> LvaTermComparator = new Comparator<Lva>() {
+    private static final Comparator<Course> LvaTermComparator = new Comparator<Course>() {
         @Override
-        public int compare(Lva lhs, Lva rhs) {
+        public int compare(Course lhs, Course rhs) {
             // sort lvas by term desc
             return rhs.getTerm().compareTo(lhs.getTerm());
         }
     };
 
-    private Map<String, Lva> map;
+    private Map<String, Course> map;
 
     public LvaMap(Context context) {
-        this.map = new HashMap<String, Lva>();
+        this.map = new HashMap<String, Course>();
 
         ContentResolver cr = context.getContentResolver();
         Cursor c = cr.query(KusssContentContract.Lva.CONTENT_URI,
@@ -38,41 +38,41 @@ public class LvaMap {
 
         if (c != null) {
             while (c.moveToNext()) {
-                Lva lva = KusssHelper.createLva(c);
-                this.map.put(KusssHelper.getLvaKey(lva.getTerm(), lva.getLvaNr()), lva);
+                Course course = KusssHelper.createLva(c);
+                this.map.put(KusssHelper.getLvaKey(course.getTerm(), course.getLvaNr()), course);
             }
             c.close();
         }
 
     }
 
-    public Lva getExactLVA(String term, String lvaNr) {
+    public Course getExactLVA(String term, String lvaNr) {
         return this.map.get(KusssHelper.getLvaKey(term, lvaNr));
     }
 
-    public Lva getLVA(String term, String lvaNr) {
-        Lva lva = this.map.get(KusssHelper.getLvaKey(term, lvaNr));
-        if (lva != null) {
-            return lva;
+    public Course getLVA(String term, String lvaNr) {
+        Course course = this.map.get(KusssHelper.getLvaKey(term, lvaNr));
+        if (course != null) {
+            return course;
         }
 
-        List<Lva> lvas = new ArrayList<Lva>();
-        for (Lva tmp : this.map.values()) {
+        List<Course> courses = new ArrayList<Course>();
+        for (Course tmp : this.map.values()) {
             if (lvaNr.equals(tmp.getLvaNr())) {
-                lvas.add(tmp);
+                courses.add(tmp);
             }
         }
 
-        if (lvas.size() == 0) {
+        if (courses.size() == 0) {
             return null;
         }
 
-        Collections.sort(lvas, LvaTermComparator);
-        return lvas.get(0);
+        Collections.sort(courses, LvaTermComparator);
+        return courses.get(0);
     }
 
-    public List<Lva> getLVAs() {
-        return new ArrayList<Lva>(this.map.values());
+    public List<Course> getLVAs() {
+        return new ArrayList<Course>(this.map.values());
     }
 
 }

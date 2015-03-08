@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
+import org.voidsink.anewjkuapp.kusss.Assessment;
 
 public class UIUtils {
 
@@ -57,7 +57,7 @@ public class UIUtils {
         }
     }
 
-    public static String getChipGradeText(ExamGrade grade) {
+    public static String getChipGradeText(Assessment grade) {
         if (grade != null) {
             if (grade.getGrade().isNumber()) {
                 return String.format("%d", grade.getGrade().getValue());
@@ -71,7 +71,7 @@ public class UIUtils {
         return "?";
     }
 
-    public static int getChipGradeColor(ExamGrade grade) {
+    public static int getChipGradeColor(Assessment grade) {
         if (grade != null) {
             return grade.getGrade().getColor();
         }

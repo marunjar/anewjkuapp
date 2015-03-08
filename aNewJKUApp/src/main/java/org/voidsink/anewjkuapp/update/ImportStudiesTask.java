@@ -16,7 +16,7 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseAsyncTask;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
-import org.voidsink.anewjkuapp.kusss.Studies;
+import org.voidsink.anewjkuapp.kusss.Curricula;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
@@ -116,12 +116,12 @@ public class ImportStudiesTask extends BaseAsyncTask<Void, Void, Void> {
 
                     Log.d(TAG, "load lvas");
 
-                    List<Studies> studies = KusssHandler.getInstance().getStudies(mContext);
+                    List<Curricula> studies = KusssHandler.getInstance().getStudies(mContext);
                     if (studies == null) {
                         mSyncResult.stats.numParseExceptions++;
                     } else {
-                        Map<String, Studies> studiesMap = new HashMap<>();
-                        for (Studies studie : studies) {
+                        Map<String, Curricula> studiesMap = new HashMap<>();
+                        for (Curricula studie : studies) {
                             studiesMap.put(studie.getKey(), studie);
                         }
 
@@ -152,10 +152,10 @@ public class ImportStudiesTask extends BaseAsyncTask<Void, Void, Void> {
                                 studiesSkz = c.getString(COLUMN_STUDIES_SKZ);
                                 studiesDtStart = new Date(c.getLong(COLUMN_STUDIES_DT_START));
 
-                                Studies studie = studiesMap
-                                        .get(Studies.getKey(studiesSkz, studiesDtStart));
+                                Curricula studie = studiesMap
+                                        .get(Curricula.getKey(studiesSkz, studiesDtStart));
                                 if (studie != null) {
-                                    studiesMap.remove(Studies.getKey(studiesSkz, studiesDtStart));
+                                    studiesMap.remove(Curricula.getKey(studiesSkz, studiesDtStart));
                                     // Check to see if the entry needs to be
                                     // updated
                                     Uri existingUri = studiesUri
@@ -208,7 +208,7 @@ public class ImportStudiesTask extends BaseAsyncTask<Void, Void, Void> {
                             }
                             c.close();
 
-                            for (Studies studie : studiesMap.values()) {
+                            for (Curricula studie : studiesMap.values()) {
                                 batch.add(ContentProviderOperation
                                         .newInsert(
                                                 KusssContentContract

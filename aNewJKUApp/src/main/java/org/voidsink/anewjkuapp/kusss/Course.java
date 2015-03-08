@@ -8,7 +8,7 @@ import org.voidsink.anewjkuapp.utils.Analytics;
 
 import java.util.regex.Pattern;
 
-public class Lva {
+public class Course {
 
     private static final Pattern lvaNrPattern = Pattern
             .compile(KusssHandler.PATTERN_LVA_NR_WITH_DOT);
@@ -23,12 +23,12 @@ public class Lva {
     private String lvaType;
     private String code;
 
-    public Lva(String term, String lvaNr) {
+    public Course(String term, String lvaNr) {
         this.term = term;
         this.lvaNr = lvaNr;
     }
 
-    public Lva(Context c, String term, Element row) {
+    public Course(Context c, String term, Element row) {
         this(term, "");
 
         Elements columns = row.getElementsByTag("td");
@@ -56,7 +56,7 @@ public class Lva {
         }
     }
 
-    public Lva(String term, String lvaNr, String title, int skz, String teacher, double sws, double ects, String type, String code) {
+    public Course(String term, String lvaNr, String title, int skz, String teacher, double sws, double ects, String type, String code) {
         this.term = term;
         this.lvaNr = lvaNr;
         this.title = title;

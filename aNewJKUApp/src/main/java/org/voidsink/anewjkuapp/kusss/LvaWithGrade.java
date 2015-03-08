@@ -2,11 +2,11 @@ package org.voidsink.anewjkuapp.kusss;
 
 public class LvaWithGrade {
 
-	private Lva lva;
-	private ExamGrade grade;
+	private Course course;
+	private Assessment grade;
 
-	public LvaWithGrade(Lva lva, ExamGrade grade) {
-		this.lva = lva;
+	public LvaWithGrade(Course course, Assessment grade) {
+		this.course = course;
 		this.grade = grade;
 	}
 
@@ -16,11 +16,11 @@ public class LvaWithGrade {
         return LvaState.DONE;
     }
 	
-	public Lva getLva() {
-		return lva;
+	public Course getCourse() {
+		return course;
 	}
 	
-	public ExamGrade getGrade() {
+	public Assessment getGrade() {
 		return grade;
 	}
 	

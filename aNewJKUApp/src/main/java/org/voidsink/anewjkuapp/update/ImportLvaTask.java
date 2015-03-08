@@ -14,9 +14,9 @@ import android.util.Log;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseAsyncTask;
+import org.voidsink.anewjkuapp.kusss.Course;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
-import org.voidsink.anewjkuapp.kusss.Lva;
 import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
@@ -120,20 +120,20 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
                     Log.d(TAG, "load lvas");
 
                     List<Term> terms = KusssContentProvider.getTerms(mContext);
-                    List<Lva> lvas = KusssHandler.getInstance().getLvas(mContext, terms);
-                    if (lvas == null) {
+                    List<Course> courses = KusssHandler.getInstance().getLvas(mContext, terms);
+                    if (courses == null) {
                         mSyncResult.stats.numParseExceptions++;
                     } else {
-                        Map<String, Lva> lvaMap = new HashMap<>();
-                        for (Lva lva : lvas) {
-                            lvaMap.put(KusssHelper.getLvaKey(lva.getTerm(), lva.getLvaNr()), lva);
+                        Map<String, Course> lvaMap = new HashMap<>();
+                        for (Course course : courses) {
+                            lvaMap.put(KusssHelper.getLvaKey(course.getTerm(), course.getLvaNr()), course);
                         }
                         Map<String, Term> termMap = new HashMap<>();
                         for (Term term : terms) {
                             termMap.put(term.getTerm(), term);
                         }
 
-                        Log.d(TAG, String.format("got %s lvas", lvas.size()));
+                        Log.d(TAG, String.format("got %s lvas", courses.size()));
 
                         updateNotify(mContext.getString(R.string.notification_sync_lva_updating));
 
@@ -163,9 +163,9 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
                                 // update only lvas from loaded terms, ignore all other
                                 Term term = termMap.get(lvaTerm);
                                 if (term != null && term.isLoaded()) {
-                                    Lva lva = lvaMap
+                                    Course course = lvaMap
                                             .get(KusssHelper.getLvaKey(lvaTerm, lvaNr));
-                                    if (lva != null) {
+                                    if (course != null) {
                                         lvaMap.remove(KusssHelper.getLvaKey(lvaTerm, lvaNr));
                                         // Check to see if the entry needs to be
                                         // updated
@@ -186,7 +186,7 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
                                                 .withValue(
                                                         KusssContentContract.Lva.LVA_COL_ID,
                                                         Integer.toString(lvaId))
-                                                .withValues(KusssHelper.getLvaContentValues(lva))
+                                                .withValues(KusssHelper.getLvaContentValues(course))
                                                 .build());
                                         mSyncResult.stats.numUpdates++;
                                     } else {
@@ -220,9 +220,9 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
                             }
                             c.close();
 
-                            for (Lva lva : lvaMap.values()) {
+                            for (Course course : lvaMap.values()) {
                                 // insert only lvas from loaded terms, ignore all other
-                                Term term = termMap.get(lva.getTerm());
+                                Term term = termMap.get(course.getTerm());
                                 if (term != null && term.isLoaded()) {
                                     batch.add(ContentProviderOperation
                                             .newInsert(
@@ -231,11 +231,11 @@ public class ImportLvaTask extends BaseAsyncTask<Void, Void, Void> {
                                                                     lvaUri,
                                                                     mAccount.name,
                                                                     mAccount.type))
-                                            .withValues(KusssHelper.getLvaContentValues(lva))
+                                            .withValues(KusssHelper.getLvaContentValues(course))
                                             .build());
                                     Log.d(TAG,
-                                            "Scheduling insert: " + lva.getTerm()
-                                                    + " " + lva.getLvaNr());
+                                            "Scheduling insert: " + course.getTerm()
+                                                    + " " + course.getLvaNr());
                                     mSyncResult.stats.numInserts++;
                                 } else {
                                     mSyncResult.stats.numSkippedEntries++;

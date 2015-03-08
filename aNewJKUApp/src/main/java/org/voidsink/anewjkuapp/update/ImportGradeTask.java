@@ -14,9 +14,9 @@ import android.util.Log;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseAsyncTask;
-import org.voidsink.anewjkuapp.kusss.ExamGrade;
+import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.kusss.Grade;
-import org.voidsink.anewjkuapp.kusss.GradeType;
+import org.voidsink.anewjkuapp.kusss.AssessmentType;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.notification.GradesChangedNotification;
@@ -125,13 +125,13 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
                     updateNotify(mContext.getString(R.string.notification_sync_grade_loading));
                     Log.d(TAG, "load grades");
 
-                    List<ExamGrade> grades = KusssHandler.getInstance()
+                    List<Assessment> grades = KusssHandler.getInstance()
                             .getGrades(mContext);
                     if (grades == null) {
                         mSyncResult.stats.numParseExceptions++;
                     } else {
-                        Map<String, ExamGrade> gradeMap = new HashMap<String, ExamGrade>();
-                        for (ExamGrade grade : grades) {
+                        Map<String, Assessment> gradeMap = new HashMap<String, Assessment>();
+                        for (Assessment grade : grades) {
                             gradeMap.put(String.format("%s-%d", grade.getCode(),
                                     grade.getDate().getTime()), grade);
                         }
@@ -155,18 +155,18 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
                             int gradeId;
                             String gradeCode;
                             Date gradeDate;
-                            GradeType gradeType;
+                            AssessmentType assessmentType;
                             Grade gradeGrade;
                             while (c.moveToNext()) {
                                 gradeId = c.getInt(COLUMN_GRADE_ID);
                                 gradeCode = c.getString(COLUMN_GRADE_CODE);
                                 gradeDate = new Date(c.getLong(COLUMN_GRADE_DATE));
-                                gradeType = GradeType.parseGradeType(c
+                                assessmentType = AssessmentType.parseGradeType(c
                                         .getInt(COLUMN_GRADE_TYPE));
                                 gradeGrade = Grade.parseGradeType(c
                                         .getInt(COLUMN_GRADE_GRADE));
 
-                                ExamGrade grade = gradeMap.get(String.format(
+                                Assessment grade = gradeMap.get(String.format(
                                         "%s-%d", gradeCode, gradeDate.getTime()));
                                 if (grade != null) {
                                     gradeMap.remove(String.format("%s-%d",
@@ -177,7 +177,7 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
                                             .build();
                                     Log.d(TAG, "Scheduling update: " + existingUri);
 
-                                    if (!gradeType.equals(grade.getGradeType())
+                                    if (!assessmentType.equals(grade.getAssessmentType())
                                             || !gradeGrade.equals(grade.getGrade())) {
                                         mGradeChangeNotification
                                                 .addUpdate(String.format("%s: %s",
@@ -204,7 +204,7 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
                             }
                             c.close();
 
-                            for (ExamGrade grade : gradeMap.values()) {
+                            for (Assessment grade : gradeMap.values()) {
                                 batch.add(ContentProviderOperation
                                         .newInsert(
                                                 KusssContentContract
