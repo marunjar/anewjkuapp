@@ -31,7 +31,7 @@ public class Exam {
             .compile("\\d{2}\\:\\d{2}");
 
     private String courseId = "";
-    private String term = "";
+    private Term term = null;
     private Date dtStart = null;
     private Date dtEnd = null;
     private String location = "";
@@ -63,7 +63,7 @@ public class Exam {
 
                         Matcher termMatcher = termPattern.matcher(courseIdTerm); // term
                         if (termMatcher.find(courseIdMatcher.end())) {
-                            setTerm(termMatcher.group());
+                            setTerm(Term.parseTerm(termMatcher.group()));
                         }
 
                         initDates(dateFormat.parse(columns.get(2).text()));
@@ -95,7 +95,7 @@ public class Exam {
 
                         Matcher termMatcher = termPattern.matcher(courseIdTerm); // term
                         if (termMatcher.find(courseIdMatcher.end())) {
-                            setTerm(termMatcher.group());
+                            setTerm(Term.parseTerm(termMatcher.group()));
                         }
 
                         initDates(dateFormat.parse(columns.get(1).text())); // date
@@ -131,7 +131,7 @@ public class Exam {
         this.dtEnd = cal.getTime();
     }
 
-    public Exam(String courseId, String term, Date dtStart, Date dtEnd, String location, String description, String info, String title, boolean isRegistered) {
+    public Exam(String courseId, Term term, Date dtStart, Date dtEnd, String location, String description, String info, String title, boolean isRegistered) {
         this.courseId = courseId;
         this.term = term;
         this.dtStart = dtStart;
@@ -155,7 +155,7 @@ public class Exam {
         this.courseId = courseId;
     }
 
-    private void setTerm(String term) {
+    private void setTerm(Term term) {
         this.term = term;
     }
 
@@ -284,7 +284,7 @@ public class Exam {
         return this.courseId;
     }
 
-    public String getTerm() {
+    public Term getTerm() {
         return this.term;
     }
 

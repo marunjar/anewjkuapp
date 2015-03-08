@@ -36,7 +36,7 @@ public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, Asse
         holder.mTitle.setText(assessment.getTitle());
 
         UIUtils.setTextAndVisibility(holder.mCourseId, assessment.getCourseId());
-        UIUtils.setTextAndVisibility(holder.mTerm, assessment.getTerm());
+        UIUtils.setTextAndVisibility(holder.mTerm, assessment.getTerm().toString());
 
         if (assessment.getCid() > 0) {
             holder.mCid.setText(String.format("[%d]", assessment.getCid()));

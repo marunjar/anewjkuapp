@@ -13,7 +13,7 @@ public class Course {
     private static final Pattern courseIdPattern = Pattern
             .compile(KusssHandler.PATTERN_LVA_NR_WITH_DOT);
 
-    private String term;
+    private Term term;
     private String courseId;
     private String title;
     private int cid;
@@ -23,12 +23,12 @@ public class Course {
     private String lvaType;
     private String code;
 
-    public Course(String term, String courseId) {
+    public Course(Term term, String courseId) {
         this.term = term;
         this.courseId = courseId;
     }
 
-    public Course(Context c, String term, Element row) {
+    public Course(Context c, Term term, Element row) {
         this(term, "");
 
         Elements columns = row.getElementsByTag("td");
@@ -56,7 +56,7 @@ public class Course {
         }
     }
 
-    public Course(String term, String courseId, String title, int cid, String teacher, double sws, double ects, String type, String code) {
+    public Course(Term term, String courseId, String title, int cid, String teacher, double sws, double ects, String type, String code) {
         this.term = term;
         this.courseId = courseId;
         this.title = title;
@@ -120,7 +120,7 @@ public class Course {
         return this.title;
     }
 
-    public String getTerm() {
+    public Term getTerm() {
         return this.term;
     }
 

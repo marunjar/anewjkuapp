@@ -20,7 +20,7 @@ public class LvaFragment extends SlidingTabsFragment {
         mTabs.add(new TermTabItem(getString(R.string.all_terms), null, LvaDetailFragment.class));
 
         for (Term term : mTerms) {
-            mTabs.add(new TermTabItem(term.getTerm(), Arrays.asList(term.getTerm()), LvaDetailFragment.class));
+            mTabs.add(new TermTabItem(term.toString(), Arrays.asList(term), LvaDetailFragment.class));
         }
     }
 

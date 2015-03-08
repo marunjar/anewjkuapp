@@ -146,10 +146,10 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
                     } else {
                         Map<String, Exam> examMap = new HashMap<>();
                         for (Exam exam : exams) {
-                            Exam old = examMap.put(KusssHelper.getExamKey(exam.getCourseId(), exam.getTerm(), exam.getDtStart().getTime()), exam);
+                            Exam old = examMap.put(KusssHelper.getExamKey(exam.getCourseId(), exam.getTerm().toString(), exam.getDtStart().getTime()), exam);
                             if (old != null) {
                                 Log.w(TAG,
-                                        "exam alread loaded: " + KusssHelper.getExamKey(old.getCourseId(), old.getTerm(), old.getDtStart().getTime()));
+                                        "exam alread loaded: " + KusssHelper.getExamKey(old.getCourseId(), old.getTerm().toString(), old.getDtStart().getTime()));
                             }
                         }
 
@@ -186,8 +186,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
                                 examLocation = c
                                         .getString(COLUMN_EXAM_LOCATION);
 
-                                Exam exam = examMap.remove(KusssHelper.getExamKey(
-                                        examCourseId, examTerm, examDtStart));
+                                Exam exam = examMap.remove(KusssHelper.getExamKey(examCourseId, examTerm, examDtStart));
                                 if (exam != null) {
                                     // Check to see if the entry needs to be
                                     // updated

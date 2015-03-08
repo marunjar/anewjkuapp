@@ -5,7 +5,9 @@ import android.database.Cursor;
 import org.voidsink.anewjkuapp.kusss.Course;
 import org.voidsink.anewjkuapp.kusss.Exam;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
+import org.voidsink.anewjkuapp.kusss.Term;
 
+import java.text.ParseException;
 import java.util.Date;
 
 public class ExamListExam {
@@ -13,13 +15,9 @@ public class ExamListExam {
     private final Exam exam;
     private final Course course;
 
-    public ExamListExam(Cursor c, CourseMap map) {
+    public ExamListExam(Cursor c, CourseMap map) throws ParseException {
         this.exam = KusssHelper.createExam(c);
         this.course = map.getCourse(exam.getTerm(), exam.getCourseId());
-    }
-
-    public boolean mark() {
-        return isRegistered();
     }
 
     public String getTitle() {
@@ -41,7 +39,7 @@ public class ExamListExam {
         return exam.getCourseId();
     }
 
-    public String getTerm() {
+    public Term getTerm() {
         return exam.getTerm();
     }
 

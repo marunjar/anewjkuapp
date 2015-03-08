@@ -274,9 +274,9 @@ public class KusssHandler {
         return terms;
     }
 
-    public boolean selectTerm(Context c, String term) throws IOException {
+    public boolean selectTerm(Context c, Term term) throws IOException {
         Document doc = Jsoup.connect(URL_SELECT_TERM)
-                .data("term", term)
+                .data("term", term.toString())
                 .data("previousQueryString", "")
                 .data("reloadAction", "coursecatalogue-start.action").post();
 
@@ -298,15 +298,15 @@ public class KusssHandler {
 
             for (Term term : terms) {
                 term.setLoaded(false); // init loaded flag
-                if (selectTerm(c, term.getTerm())) {
+                if (selectTerm(c, term)) {
                     Document doc = Jsoup.connect(URL_MY_LVAS).get();
 
-                    if (isSelectable(c, doc, term.getTerm())) {
-                        if (isSelected(c, doc, term.getTerm())) {
+                    if (isSelectable(c, doc, term)) {
+                        if (isSelected(c, doc, term)) {
                             // .select("body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > table > tbody > tr");
                             Elements rows = doc.select(SELECT_MY_LVAS);
                             for (Element row : rows) {
-                                Course course = new Course(c, term.getTerm(), row);
+                                Course course = new Course(c, term, row);
                                 if (course.isInitialized()) {
                                     courses.add(course);
                                 }
@@ -332,12 +332,12 @@ public class KusssHandler {
         return courses;
     }
 
-    private boolean isSelectable(Context c, Document doc, String term) {
+    private boolean isSelectable(Context c, Document doc, Term term) {
         try {
             Element termSelector = doc.getElementById("term");
             if (termSelector == null) return false;
 
-            Elements selectable = termSelector.getElementsByAttributeValue("value", term);
+            Elements selectable = termSelector.getElementsByAttributeValue("value", term.toString());
             if (selectable.size() != 1) return false;
 
             return true;
@@ -347,13 +347,13 @@ public class KusssHandler {
         }
     }
 
-    private boolean isSelected(Context c, Document doc, String term) {
+    private boolean isSelected(Context c, Document doc, Term term) {
         try {
             Elements terms = doc.getElementById("term").getElementsByAttribute(
                     "selected");
 
             for (Element termEntry : terms) {
-                if (termEntry.attr("value").equals(term)) {
+                if (termEntry.attr("value").equals(term.toString())) {
                     return true;
                 }
             }

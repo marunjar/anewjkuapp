@@ -67,7 +67,7 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
                 holder.mInfo.setVisibility(View.GONE);
             }
             holder.mCourseId.setText(exam.getCourseId());
-            holder.mTerm.setText(exam.getTerm());
+            holder.mTerm.setText(exam.getTerm().toString());
 
             if (exam.getCid() > 0) {
                 holder.mCid.setText(String.format("[%d]", exam.getCid()));

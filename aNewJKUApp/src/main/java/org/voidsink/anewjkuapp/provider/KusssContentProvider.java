@@ -24,6 +24,7 @@ import org.voidsink.anewjkuapp.update.ImportCurriculaTask;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -353,8 +354,13 @@ public class KusssContentProvider extends ContentProvider {
                             + " DESC");
 
             if (c != null) {
-                while (c.moveToNext()) {
-                    mAssessments.add(KusssHelper.createAssessment(c));
+                try {
+                    while (c.moveToNext()) {
+                        mAssessments.add(KusssHelper.createAssessment(c));
+                    }
+                } catch (ParseException e) {
+                    Analytics.sendException(context, e, false);
+                    mAssessments.clear();
                 }
                 c.close();
             }
@@ -373,8 +379,13 @@ public class KusssContentProvider extends ContentProvider {
                     KusssContentContract.Course.COL_TERM + " DESC");
 
             if (c != null) {
-                while (c.moveToNext()) {
-                    mCourses.add(KusssHelper.createCourse(c));
+                try {
+                    while (c.moveToNext()) {
+                        mCourses.add(KusssHelper.createCourse(c));
+                    }
+                } catch (ParseException e) {
+                    Analytics.sendException(context, e, false);
+                    mCourses.clear();
                 }
                 c.close();
             }
@@ -499,8 +510,13 @@ public class KusssContentProvider extends ContentProvider {
         Collections.sort(terms, TermComparator);
 
         List<Term> objects = new ArrayList<>();
-        for (String term : terms) {
-            objects.add(new Term(term));
+        try {
+            for (String term : terms) {
+                objects.add(Term.parseTerm(term));
+            }
+        } catch (ParseException e) {
+            Analytics.sendException(context, e, true);
+            objects.clear();
         }
 
         return Collections.unmodifiableList(objects);

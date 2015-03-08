@@ -20,7 +20,7 @@ public class StatFragment extends SlidingTabsFragment {
         mTabs.add(new TermTabItem(getString(R.string.all_terms), null, StatFragmentDetail.class));
 
         for (Term term : mTerms) {
-            mTabs.add(new TermTabItem(term.getTerm(), Arrays.asList(term.getTerm()), StatFragmentDetail.class));
+            mTabs.add(new TermTabItem(term.toString(), Arrays.asList(term), StatFragmentDetail.class));
         }
     }
 

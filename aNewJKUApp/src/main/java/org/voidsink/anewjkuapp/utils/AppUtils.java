@@ -35,6 +35,7 @@ import org.voidsink.anewjkuapp.kusss.Curriculum;
 import org.voidsink.anewjkuapp.kusss.Grade;
 import org.voidsink.anewjkuapp.kusss.LvaState;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
+import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.service.SyncAlarmService;
 import org.voidsink.anewjkuapp.update.ImportCurriculaTask;
 
@@ -561,7 +562,7 @@ public class AppUtils {
     }
 
 
-    public static List<LvaWithGrade> getLvasWithGrades(List<String> terms, List<Course> courses, List<Assessment> assessments) {
+    public static List<LvaWithGrade> getLvasWithGrades(List<Term> terms, List<Course> courses, List<Assessment> assessments) {
         List<LvaWithGrade> result = new ArrayList<LvaWithGrade>();
 
         for (Course course : courses) {
@@ -632,7 +633,7 @@ public class AppUtils {
         assessments.add(assessment);
     }
 
-    public static List<Assessment> filterAssessments(List<String> terms, List<Assessment> assessments) {
+    public static List<Assessment> filterAssessments(List<Term> terms, List<Assessment> assessments) {
         List<Assessment> result = new ArrayList<>();
         if (assessments != null) {
             for (Assessment assessment : assessments) {
