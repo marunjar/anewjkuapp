@@ -550,6 +550,7 @@ public class ImportCalendarTask extends BaseAsyncTask<Void, Void, Void> {
                                     "No batch operations found! Do nothing");
                         }
                     }
+                    KusssHandler.getInstance().logout(mContext);
                 } else {
                     mSyncResult.stats.numAuthExceptions++;
                 }

@@ -282,6 +282,7 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
                             }
                         }
                     }
+                    KusssHandler.getInstance().logout(mContext);
                 } else {
                     mSyncResult.stats.numAuthExceptions++;
                 }

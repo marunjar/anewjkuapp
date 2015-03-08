@@ -154,6 +154,8 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
                 try {
                     final String authtoken = KusssHandler.getInstance().login(KusssAuthenticatorActivity.this, userName, userPass);
 
+                    KusssHandler.getInstance().logout(KusssAuthenticatorActivity.this);
+
                     data.putString(AccountManager.KEY_ACCOUNT_NAME, userName);
                     data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
                     data.putString(AccountManager.KEY_AUTHTOKEN, authtoken);
