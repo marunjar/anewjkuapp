@@ -49,7 +49,7 @@ public class ImportCourseTask extends BaseAsyncTask<Void, Void, Void> {
             KusssContentContract.Lva.LVA_COL_TERM,
             KusssContentContract.Lva.LVA_COL_COURSEID,
             KusssContentContract.Lva.LVA_COL_TITLE,
-            KusssContentContract.Lva.LVA_COL_SKZ,
+            KusssContentContract.Lva.LVA_COL_CURRICULA_ID,
             KusssContentContract.Lva.LVA_COL_TYPE,
             KusssContentContract.Lva.LVA_COL_TEACHER,
             KusssContentContract.Lva.LVA_COL_SWS,
@@ -60,7 +60,7 @@ public class ImportCourseTask extends BaseAsyncTask<Void, Void, Void> {
     public static final int COLUMN_LVA_TERM = 1;
     public static final int COLUMN_LVA_COURSEID = 2;
     public static final int COLUMN_LVA_TITLE = 3;
-    public static final int COLUMN_LVA_SKZ = 4;
+    public static final int COLUMN_LVA_CURRICULA_ID = 4;
     public static final int COLUMN_LVA_TYPE = 5;
     public static final int COLUMN_LVA_TEACHER = 6;
     public static final int COLUMN_LVA_SWS = 7;

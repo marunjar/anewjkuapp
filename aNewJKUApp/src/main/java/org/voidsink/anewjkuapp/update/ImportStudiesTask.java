@@ -46,7 +46,7 @@ public class ImportStudiesTask extends BaseAsyncTask<Void, Void, Void> {
     public static final String[] STUDIES_PROJECTION = new String[]{
             KusssContentContract.Studies.COL_ID,
             KusssContentContract.Studies.COL_IS_STD,
-            KusssContentContract.Studies.COL_SKZ,
+            KusssContentContract.Studies.COL_CURRICULA_ID,
             KusssContentContract.Studies.COL_TITLE,
             KusssContentContract.Studies.COL_STEOP_DONE,
             KusssContentContract.Studies.COL_ACTIVE_STATE,
@@ -56,7 +56,7 @@ public class ImportStudiesTask extends BaseAsyncTask<Void, Void, Void> {
 
     public static final int COLUMN_STUDIES_ID = 0;
     public static final int COLUMN_STUDIES_IS_STD = 1;
-    public static final int COLUMN_STUDIES_SKZ = 2;
+    public static final int COLUMN_STUDIES_CURRICULA_ID = 2;
     public static final int COLUMN_STUDIES_TITLE = 3;
     public static final int COLUMN_STUDIES_STEOP_DONE = 4;
     public static final int COLUMN_STUDIES_ACTIVE_STATE = 5;
@@ -143,24 +143,24 @@ public class ImportStudiesTask extends BaseAsyncTask<Void, Void, Void> {
                                             + c.getCount()
                                             + " local entries. Computing merge solution...");
 
-                            int studiesId;
-                            String studiesSkz;
+                            int _Id;
+                            String studiesCid;
                             Date studiesDtStart;
 
                             while (c.moveToNext()) {
-                                studiesId = c.getInt(COLUMN_STUDIES_ID);
-                                studiesSkz = c.getString(COLUMN_STUDIES_SKZ);
+                                _Id = c.getInt(COLUMN_STUDIES_ID);
+                                studiesCid = c.getString(COLUMN_STUDIES_CURRICULA_ID);
                                 studiesDtStart = new Date(c.getLong(COLUMN_STUDIES_DT_START));
 
                                 Curricula studie = studiesMap
-                                        .get(Curricula.getKey(studiesSkz, studiesDtStart));
+                                        .get(Curricula.getKey(studiesCid, studiesDtStart));
                                 if (studie != null) {
-                                    studiesMap.remove(Curricula.getKey(studiesSkz, studiesDtStart));
+                                    studiesMap.remove(Curricula.getKey(studiesCid, studiesDtStart));
                                     // Check to see if the entry needs to be
                                     // updated
                                     Uri existingUri = studiesUri
                                             .buildUpon()
-                                            .appendPath(Integer.toString(studiesId))
+                                            .appendPath(Integer.toString(_Id))
                                             .build();
                                     Log.d(TAG, "Scheduling update: "
                                             + existingUri);
@@ -174,7 +174,7 @@ public class ImportStudiesTask extends BaseAsyncTask<Void, Void, Void> {
                                                                     mAccount.type))
                                             .withValue(
                                                     KusssContentContract.Studies.COL_ID,
-                                                    Integer.toString(studiesId))
+                                                    Integer.toString(_Id))
                                             .withValues(KusssHelper.getStudiesContentValues(studie))
                                             .build());
                                     mSyncResult.stats.numUpdates++;
@@ -195,7 +195,7 @@ public class ImportStudiesTask extends BaseAsyncTask<Void, Void, Void> {
                                         .withValues(KusssHelper.getStudiesContentValues(studie))
                                         .build());
                                 Log.d(TAG,
-                                        "Scheduling insert: " + studie.getSkz()
+                                        "Scheduling insert: " + studie.getCid()
                                                 + " " + studie.getDtStart().toString());
                                 mSyncResult.stats.numInserts++;
                             }

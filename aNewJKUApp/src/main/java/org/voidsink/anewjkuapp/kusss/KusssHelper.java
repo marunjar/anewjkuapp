@@ -33,7 +33,7 @@ public class KusssHelper {
         return new Course(c.getString(ImportCourseTask.COLUMN_LVA_TERM),
                 c.getString(ImportCourseTask.COLUMN_LVA_COURSEID),
                 c.getString(ImportCourseTask.COLUMN_LVA_TITLE),
-                c.getInt(ImportCourseTask.COLUMN_LVA_SKZ),
+                c.getInt(ImportCourseTask.COLUMN_LVA_CURRICULA_ID),
                 c.getString(ImportCourseTask.COLUMN_LVA_TEACHER),
                 c.getDouble(ImportCourseTask.COLUMN_LVA_SWS),
                 c.getDouble(ImportCourseTask.COLUMN_LVA_ECTS),
@@ -47,7 +47,7 @@ public class KusssHelper {
         cv.put(KusssContentContract.Lva.LVA_COL_ECTS, course.getEcts());
         cv.put(KusssContentContract.Lva.LVA_COL_SWS, course.getSws());
         cv.put(KusssContentContract.Lva.LVA_COL_COURSEID, course.getCourseId());
-        cv.put(KusssContentContract.Lva.LVA_COL_SKZ, course.getSKZ());
+        cv.put(KusssContentContract.Lva.LVA_COL_CURRICULA_ID, course.getCid());
         cv.put(KusssContentContract.Lva.LVA_COL_CODE, course.getCode());
         cv.put(KusssContentContract.Lva.LVA_COL_TEACHER, course.getTeacher());
         cv.put(KusssContentContract.Lva.LVA_COL_TERM, course.getTerm());
@@ -88,7 +88,7 @@ public class KusssHelper {
 
     public static Curricula createStudies(Cursor c) {
         return new Curricula(KusssDatabaseHelper.toBool(c.getInt(ImportStudiesTask.COLUMN_STUDIES_IS_STD)),
-                c.getString(ImportStudiesTask.COLUMN_STUDIES_SKZ),
+                c.getString(ImportStudiesTask.COLUMN_STUDIES_CURRICULA_ID),
                 c.getString(ImportStudiesTask.COLUMN_STUDIES_TITLE),
                 KusssDatabaseHelper.toBool(c.getInt(ImportStudiesTask.COLUMN_STUDIES_STEOP_DONE)),
                 KusssDatabaseHelper.toBool(c.getInt(ImportStudiesTask.COLUMN_STUDIES_ACTIVE_STATE)),
@@ -100,7 +100,7 @@ public class KusssHelper {
     public static ContentValues getStudiesContentValues(Curricula curricula) {
         ContentValues cv = new ContentValues();
         cv.put(KusssContentContract.Studies.COL_IS_STD, KusssDatabaseHelper.toInt(curricula.isStandard()));
-        cv.put(KusssContentContract.Studies.COL_SKZ, curricula.getSkz());
+        cv.put(KusssContentContract.Studies.COL_CURRICULA_ID, curricula.getCid());
         cv.put(KusssContentContract.Studies.COL_TITLE, curricula.getTitle());
         cv.put(KusssContentContract.Studies.COL_STEOP_DONE, KusssDatabaseHelper.toInt(curricula.isSteopDone()));
         cv.put(KusssContentContract.Studies.COL_ACTIVE_STATE, KusssDatabaseHelper.toInt(curricula.isActive()));
@@ -125,7 +125,7 @@ public class KusssHelper {
                 c.getString(ImportGradeTask.COLUMN_GRADE_COURSEID),
                 c.getString(ImportGradeTask.COLUMN_GRADE_TERM),
                 Grade.parseGradeType(c.getInt(ImportGradeTask.COLUMN_GRADE_GRADE)),
-                c.getInt(ImportGradeTask.COLUMN_GRADE_SKZ),
+                c.getInt(ImportGradeTask.COLUMN_GRADE_CURRICULA_ID),
                 c.getString(ImportGradeTask.COLUMN_GRADE_TITLE),
                 c.getString(ImportGradeTask.COLUMN_GRADE_CODE),
                 c.getDouble(ImportGradeTask.COLUMN_GRADE_ECTS),
@@ -138,7 +138,7 @@ public class KusssHelper {
         cv.put(KusssContentContract.Grade.GRADE_COL_DATE, grade.getDate().getTime());
         cv.put(KusssContentContract.Grade.GRADE_COL_GRADE, grade.getGrade().ordinal());
         cv.put(KusssContentContract.Grade.GRADE_COL_COURSEID, grade.getCourseId());
-        cv.put(KusssContentContract.Grade.GRADE_COL_SKZ, grade.getSkz());
+        cv.put(KusssContentContract.Grade.GRADE_COL_CURRICULA_ID, grade.getCid());
         cv.put(KusssContentContract.Grade.GRADE_COL_TERM, grade.getTerm());
         cv.put(KusssContentContract.Grade.GRADE_COL_TYPE, grade.getAssessmentType().ordinal());
         cv.put(KusssContentContract.Grade.GRADE_COL_CODE, grade.getCode());

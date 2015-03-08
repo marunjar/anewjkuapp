@@ -16,7 +16,7 @@ public class Course {
     private String term;
     private String courseId;
     private String title;
-    private int skz;
+    private int cid;
     private String teacher;
     private double sws;
     private double ects;
@@ -43,7 +43,7 @@ public class Course {
                     setTitle(columns.get(5).text());
                     setLvaType(columns.get(4).text()); // type (UE, ...)
                     setTeacher(columns.get(7).text()); // Leiter
-                    setSKZ(Integer.parseInt(columns.get(2).text())); // SKZ
+                    setCid(Integer.parseInt(columns.get(2).text())); // curricula id
                     setECTS(Double.parseDouble(columns.get(8).text()
                             .replace(",", "."))); // ECTS
                     // setSWS(Double.parseDouble(columns.get.child(6).text()
@@ -56,11 +56,11 @@ public class Course {
         }
     }
 
-    public Course(String term, String courseId, String title, int skz, String teacher, double sws, double ects, String type, String code) {
+    public Course(String term, String courseId, String title, int cid, String teacher, double sws, double ects, String type, String code) {
         this.term = term;
         this.courseId = courseId;
         this.title = title;
-        this.skz = skz;
+        this.cid = cid;
         this.teacher = teacher;
         this.ects = ects;
         this.sws = sws;
@@ -72,12 +72,12 @@ public class Course {
         this.code = code;
     }
 
-    private void setSKZ(int skz) {
-        this.skz = skz;
+    private void setCid(int cid) {
+        this.cid = cid;
     }
 
-    public int getSKZ() {
-        return this.skz;
+    public int getCid() {
+        return this.cid;
     }
 
     private void setTeacher(String teacher) {

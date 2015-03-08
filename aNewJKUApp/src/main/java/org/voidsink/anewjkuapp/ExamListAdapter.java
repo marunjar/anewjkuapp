@@ -69,11 +69,11 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
             holder.mCourseId.setText(exam.getCourseId());
             holder.mTerm.setText(exam.getTerm());
 
-            if (exam.getSkz() > 0) {
-                holder.mSkz.setText(String.format("[%d]", exam.getSkz()));
-                holder.mSkz.setVisibility(View.VISIBLE);
+            if (exam.getCid() > 0) {
+                holder.mCid.setText(String.format("[%d]", exam.getCid()));
+                holder.mCid.setVisibility(View.VISIBLE);
             } else {
-                holder.mSkz.setVisibility(View.GONE);
+                holder.mCid.setVisibility(View.GONE);
             }
             holder.mTime.setText(AppUtils.getTimeString(exam.getDtStart(), exam.getDtEnd()));
             holder.mLocation.setText(exam.getLocation());
@@ -118,7 +118,7 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
         public final View mChip;
         public final TextView mLocation;
         public final TextView mTime;
-        public final TextView mSkz;
+        public final TextView mCid;
         public final TextView mTerm;
         public final TextView mCourseId;
         public final TextView mInfo;
@@ -136,7 +136,7 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
             mInfo = (TextView) itemView.findViewById(R.id.exam_list_item_info);
             mCourseId = (TextView) itemView.findViewById(R.id.exam_list_item_courseId);
             mTerm = (TextView) itemView.findViewById(R.id.exam_list_item_term);
-            mSkz = (TextView) itemView.findViewById(R.id.exam_list_item_skz);
+            mCid = (TextView) itemView.findViewById(R.id.exam_list_item_cid);
             mTime = (TextView) itemView.findViewById(R.id.exam_list_item_time);
             mLocation = (TextView) itemView.findViewById(R.id.exam_list_item_location);
             mChip = itemView.findViewById(R.id.empty_chip_background);

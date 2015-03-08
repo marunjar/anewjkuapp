@@ -94,7 +94,7 @@ public class AppUtils {
                 value = lhs.getDtStart().compareTo(rhs.getDtStart());
             }
             if (value == 0) {
-                value = lhs.getSkz().compareTo(rhs.getSkz());
+                value = lhs.getCid().compareTo(rhs.getCid());
             }
             return value;
         }

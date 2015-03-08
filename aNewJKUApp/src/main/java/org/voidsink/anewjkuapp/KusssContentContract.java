@@ -30,7 +30,7 @@ public class KusssContentContract {
 		public static final String LVA_COL_TITLE = "title";
 		public static final String LVA_COL_TYPE = "type";
 		public static final String LVA_COL_TEACHER = "teacher";
-		public static final String LVA_COL_SKZ = "skz";
+		public static final String LVA_COL_CURRICULA_ID = "skz";
 		public static final String LVA_COL_ECTS = "ects";
 		public static final String LVA_COL_SWS = "sws";
 		public static final String LVA_COL_CODE = "code";
@@ -70,7 +70,7 @@ public class KusssContentContract {
 		public static final String GRADE_COL_TERM = "term";
 		public static final String GRADE_COL_COURSEID = "lvanr";
 		public static final String GRADE_COL_DATE = "date";
-		public static final String GRADE_COL_SKZ = "skz";
+		public static final String GRADE_COL_CURRICULA_ID = "skz";
 		public static final String GRADE_COL_GRADE = "grade";
 		public static final String GRADE_COL_TYPE = "type";
 		public static final String GRADE_COL_TITLE = "title";
@@ -90,7 +90,7 @@ public class KusssContentContract {
         public static final String TABLE_NAME = "studies";
         public static final String COL_ID = "_id";
         public static final String COL_IS_STD = "std";
-        public static final String COL_SKZ = "skz";
+        public static final String COL_CURRICULA_ID = "skz";
         public static final String COL_TITLE = "title";
         public static final String COL_STEOP_DONE = "steopDone";
         public static final String COL_ACTIVE_STATE = "active";

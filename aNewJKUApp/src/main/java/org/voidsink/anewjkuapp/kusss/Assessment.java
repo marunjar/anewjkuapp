@@ -22,7 +22,7 @@ public class Assessment {
     private static final Pattern termPattern = Pattern
             .compile(KusssHandler.PATTERN_TERM);
 
-    private int skz;
+    private int cid;
     private Grade grade;
     private String term;
     private String courseId;
@@ -34,14 +34,14 @@ public class Assessment {
     private double sws;
 
     public Assessment(AssessmentType type, Date date, String courseId, String term,
-                      Grade grade, int skz, String title, String code, double ects,
+                      Grade grade, int cid, String title, String code, double ects,
                       double sws) {
         this.assessmentType = type;
         this.date = date;
         this.courseId = courseId;
         this.term = term;
         this.grade = grade;
-        this.skz = skz;
+        this.cid = cid;
         this.title = title;
         this.code = code;
         this.ects = ects;
@@ -107,9 +107,9 @@ public class Assessment {
             }
 
             try {
-                String skzText = columns.get(6).text();
-                if (!TextUtils.isEmpty(skzText)) {
-                    setSKZ(Integer.parseInt(skzText)); // grade
+                String cidText = columns.get(6).text();
+                if (!TextUtils.isEmpty(cidText)) {
+                    setCid(Integer.parseInt(cidText)); // grade
                 }
             } catch (NumberFormatException e) {
                 Analytics.sendException(c, e, false, columns.get(6).text());
@@ -134,8 +134,8 @@ public class Assessment {
         this.title = title.trim();
     }
 
-    private void setSKZ(int skz) {
-        this.skz = skz;
+    private void setCid(int cid) {
+        this.cid = cid;
     }
 
     private void setGrade(Grade grade) {
@@ -174,8 +174,8 @@ public class Assessment {
         return this.grade;
     }
 
-    public int getSkz() {
-        return this.skz;
+    public int getCid() {
+        return this.cid;
     }
 
     public AssessmentType getAssessmentType() {

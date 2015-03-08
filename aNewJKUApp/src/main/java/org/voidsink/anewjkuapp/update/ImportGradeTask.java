@@ -52,7 +52,7 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
             KusssContentContract.Grade.GRADE_COL_TERM,
             KusssContentContract.Grade.GRADE_COL_COURSEID,
             KusssContentContract.Grade.GRADE_COL_DATE,
-            KusssContentContract.Grade.GRADE_COL_SKZ,
+            KusssContentContract.Grade.GRADE_COL_CURRICULA_ID,
             KusssContentContract.Grade.GRADE_COL_TYPE,
             KusssContentContract.Grade.GRADE_COL_GRADE,
             KusssContentContract.Grade.GRADE_COL_TITLE,
@@ -65,7 +65,7 @@ public class ImportGradeTask extends BaseAsyncTask<Void, Void, Void> {
     public static final int COLUMN_GRADE_TERM = 1;
     public static final int COLUMN_GRADE_COURSEID = 2;
     public static final int COLUMN_GRADE_DATE = 3;
-    public static final int COLUMN_GRADE_SKZ = 4;
+    public static final int COLUMN_GRADE_CURRICULA_ID = 4;
     public static final int COLUMN_GRADE_TYPE = 5;
     public static final int COLUMN_GRADE_GRADE = 6;
     public static final int COLUMN_GRADE_TITLE = 7;

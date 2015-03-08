@@ -38,11 +38,11 @@ public class GradeListAdapter extends RecyclerArrayAdapter<Assessment, GradeList
         UIUtils.setTextAndVisibility(holder.mCourseId, assessment.getCourseId());
         UIUtils.setTextAndVisibility(holder.mTerm, assessment.getTerm());
 
-        if (assessment.getSkz() > 0) {
-            holder.mSkz.setText(String.format("[%d]", assessment.getSkz()));
-            holder.mSkz.setVisibility(View.VISIBLE);
+        if (assessment.getCid() > 0) {
+            holder.mCid.setText(String.format("[%d]", assessment.getCid()));
+            holder.mCid.setVisibility(View.VISIBLE);
         } else {
-            holder.mSkz.setVisibility(View.GONE);
+            holder.mCid.setVisibility(View.GONE);
         }
 
         holder.mChipBack.setBackgroundColor(UIUtils.getChipGradeColor(assessment));
@@ -83,7 +83,7 @@ public class GradeListAdapter extends RecyclerArrayAdapter<Assessment, GradeList
         public final TextView mGrade;
         public final TextView mCourseId;
         public final TextView mTerm;
-        public final TextView mSkz;
+        public final TextView mCid;
         public final TextView mDate;
         public final View mChipBack;
         public final TextView mChipGrade;
@@ -95,7 +95,7 @@ public class GradeListAdapter extends RecyclerArrayAdapter<Assessment, GradeList
             mTitle = (TextView) itemView.findViewById(R.id.grade_list_grade_title);
             mCourseId = (TextView) itemView.findViewById(R.id.grade_list_grade_courseId);
             mTerm = (TextView) itemView.findViewById(R.id.grade_list_grade_term);
-            mSkz = (TextView) itemView.findViewById(R.id.grade_list_grade_skz);
+            mCid = (TextView) itemView.findViewById(R.id.grade_list_grade_cid);
             mDate = (TextView) itemView.findViewById(R.id.grade_list_grade_date);
             mGrade = (TextView) itemView.findViewById(R.id.grade_list_grade_grade);
             mChipBack = itemView.findViewById(R.id.grade_chip);

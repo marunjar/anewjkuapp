@@ -82,7 +82,7 @@
                     tools:text="2014S" />
 
                 <TextView
-                    android:id="@+id/exam_list_item_skz"
+                    android:id="@+id/exam_list_item_cid"
                     style="@style/Text.Body2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

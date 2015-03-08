@@ -18,7 +18,7 @@ public class Curricula {
     private static final String TAG = Curricula.class.getSimpleName();
 
     private boolean mIsStandard;
-    private String mSkz;
+    private String mCid;
     private String mTitle;
     private boolean mSteopDone;
     private boolean mActive;
@@ -31,7 +31,7 @@ public class Curricula {
         if (columns.size() >= 8) {
             setIsStandard(columns.get(0).getElementsByAttributeValue("checked", "checked").size() > 0);
 
-            setSkz(columns.get(1).text());
+            setCid(columns.get(1).text());
 
             setTitle(columns.get(2).text());
 
@@ -52,11 +52,11 @@ public class Curricula {
         this.mDtEnd = dtEnd;
     }
 
-    public Curricula(boolean isStandard, String skz, String title, boolean steopDone, boolean isActive, String uni, Date dtStart, Date dtEnd) {
+    public Curricula(boolean isStandard, String cid, String title, boolean steopDone, boolean isActive, String uni, Date dtStart, Date dtEnd) {
         this(dtStart, dtEnd);
 
         this.mIsStandard = isStandard;
-        this.mSkz = skz;
+        this.mCid = cid;
         this.mTitle = title;
         this.mSteopDone = steopDone;
         this.mActive = isActive;
@@ -89,11 +89,11 @@ public class Curricula {
     }
 
     public boolean isInitialized() {
-        return !TextUtils.isEmpty(mSkz) && !TextUtils.isEmpty(mUni) && (mDtStart != null);
+        return !TextUtils.isEmpty(mCid) && !TextUtils.isEmpty(mUni) && (mDtStart != null);
     }
 
-    private void setSkz(String skz) {
-        this.mSkz = skz;
+    private void setCid(String cid) {
+        this.mCid = cid;
     }
 
     private void setTitle(String title) {
@@ -124,8 +124,8 @@ public class Curricula {
         return mIsStandard;
     }
 
-    public String getSkz() {
-        return mSkz;
+    public String getCid() {
+        return mCid;
     }
 
     public String getTitle() {
@@ -153,11 +153,11 @@ public class Curricula {
     }
 
     public String getKey() {
-        return getKey(getSkz(), getDtStart());
+        return getKey(getCid(), getDtStart());
     }
 
-    public static String getKey(String skz, Date dtStart) {
-        return skz + "-" + dateFormat.format(dtStart);
+    public static String getKey(String cid, Date dtStart) {
+        return cid + "-" + dateFormat.format(dtStart);
     }
 
     public boolean dateInRange(Date date) {

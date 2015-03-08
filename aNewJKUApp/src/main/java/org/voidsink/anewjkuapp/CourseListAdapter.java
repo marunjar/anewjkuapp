@@ -36,11 +36,11 @@ public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, Course
         holder.mTitle.setText(lva.getCourse().getTitle());
         UIUtils.setTextAndVisibility(holder.mTeacher, lva.getCourse().getTeacher());
         holder.mCourseId.setText(lva.getCourse().getCourseId());
-        if (lva.getCourse().getSKZ() > 0) {
-            holder.mSkz.setText(String.format("[%d]", lva.getCourse().getSKZ()));
-            holder.mSkz.setVisibility(View.VISIBLE);
+        if (lva.getCourse().getCid() > 0) {
+            holder.mCid.setText(String.format("[%d]", lva.getCourse().getCid()));
+            holder.mCid.setVisibility(View.VISIBLE);
         } else {
-            holder.mSkz.setVisibility(View.GONE);
+            holder.mCid.setVisibility(View.GONE);
         }
         holder.mCode.setText(lva.getCourse().getCode());
 
@@ -77,7 +77,7 @@ public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, Course
         private final TextView mTitle;
         private final TextView mCourseId;
         private final TextView mCode;
-        private final TextView mSkz;
+        private final TextView mCid;
         private final TextView mTeacher;
         private final View mChipBack;
         private final TextView mChipEcts;
@@ -88,7 +88,7 @@ public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, Course
 
             mTitle = (TextView) itemView.findViewById(R.id.lva_list2_item_title);
             mCourseId = (TextView) itemView.findViewById(R.id.lva_list2_item_courseId);
-            mSkz = (TextView) itemView.findViewById(R.id.lva_list2_item_skz);
+            mCid = (TextView) itemView.findViewById(R.id.lva_list2_item_cid);
             mCode = (TextView) itemView.findViewById(R.id.lva_list2_item_code);
             mTeacher = (TextView) itemView.findViewById(R.id.lva_list2_item_teacher);
 

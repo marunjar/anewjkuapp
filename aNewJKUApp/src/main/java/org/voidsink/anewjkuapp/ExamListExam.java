@@ -45,9 +45,9 @@ public class ExamListExam {
         return exam.getTerm();
     }
 
-    public int getSkz() {
+    public int getCid() {
         if (course != null) {
-            return course.getSKZ();
+            return course.getCid();
         }
         return 0;
     }

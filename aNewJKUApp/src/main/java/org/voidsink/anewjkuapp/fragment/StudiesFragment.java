@@ -157,7 +157,7 @@ public class StudiesFragment extends BaseFragment implements
             Curricula item = getItem(position);
 
             holder.isStandard.setText(item.isStandard() ? mContext.getString(R.string.studies_is_standard_yes) : mContext.getString(R.string.studies_is_standard_no));
-            holder.skz.setText(item.getSkz());
+            holder.cid.setText(item.getCid());
             holder.title.setText(item.getTitle());
             holder.steopDone.setText(item.isSteopDone() ? mContext.getString(R.string.studies_steop_done_yes) : mContext.getString(R.string.studies_steop_done_no));
             holder.activeStatus.setText(item.isActive() ? mContext.getString(R.string.studies_active_status_yes) : mContext.getString(R.string.studies_active_status_no));
@@ -193,7 +193,7 @@ public class StudiesFragment extends BaseFragment implements
 
     public static class StudiesViewHolder extends RecyclerView.ViewHolder {
         public TextView isStandard;
-        public TextView skz;
+        public TextView cid;
         public TextView title;
         public TextView steopDone;
         public TextView activeStatus;
@@ -204,7 +204,7 @@ public class StudiesFragment extends BaseFragment implements
             super(itemView);
 
             isStandard = (TextView) itemView.findViewById(R.id.studies_is_standard);
-            skz = (TextView) itemView.findViewById(R.id.studies_skz);
+            cid = (TextView) itemView.findViewById(R.id.studies_cid);
             title = (TextView) itemView.findViewById(R.id.studies_title);
             steopDone = (TextView) itemView.findViewById(R.id.studies_steop_done);
             activeStatus = (TextView) itemView.findViewById(R.id.studies_active_status);
