@@ -16,10 +16,12 @@ import org.voidsink.anewjkuapp.utils.Analytics;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
+import java.net.CookieStore;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
@@ -103,15 +105,38 @@ public class KusssHandler {
         if (user == null || password == null) {
             return null;
         }
+
         try {
             if ((user.length() > 0) && (user.charAt(0) != 'k')) {
                 user = "k" + user;
             }
 
-            Document doc = Jsoup.connect(URL_LOGIN).timeout(TIMEOUT_LOGIN).data("j_username", user)
-                    .data("j_password", password).post();
+            URL security = new URL("https://www.kusss.jku.at/kusss/j_security_check");
+            HttpURLConnection connection = (HttpURLConnection) security.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:36.0) Gecko/20100101 Firefox/36.0");
+            connection.setDoOutput(true);
+            connection.setInstanceFollowRedirects(true);
+            //connection.setRequestProperty("Accept-Charset", "ISO-8859-1");
+            //connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + "ISO-8859-1");
 
-            //TODO: check document for successful login message
+            writeParams(connection, new String[]{"j_username", "j_password"},
+                    new String[]{user, password});
+            // Make request
+            connection.connect();
+            // THIS LINE OF CODE IS SO IMPORTANT FOR SAVE THE COOKIES IN THE COOKIESTORE [*]
+            connection.getHeaderFields().get("Set-Cookie");
+            // Detect if the user and password are correct
+            CookieStore cookieStore = mCookies.getCookieStore();
+            List<HttpCookie> cookies = cookieStore.getCookies();
+            connection.disconnect();
+            for (HttpCookie cookie : cookies) {
+                Log.d("TAG", cookie.getName() + " --> " + cookie.getValue());
+            }
+            // The cookies for session has been saved by the cookie manager.
+            // Now the application make a request to another URL
+
+            Document doc = Jsoup.connect(URL_START_PAGE).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true).post();
 
             String sessionId = getSessionIDFromCookie();
 
@@ -128,6 +153,23 @@ public class KusssHandler {
             return null;
         }
     }
+
+    private Map<String, String> getCookieMap() {
+        Map<String, String> cookies = new HashMap<>();
+        for (HttpCookie cookie : mCookies.getCookieStore().getCookies()) {
+            cookies.put(cookie.getName(), cookie.getValue());
+        }
+        return cookies;
+    }
+
+    private String getCookieString() {
+        String cookies = "";
+        for (HttpCookie cookie : mCookies.getCookieStore().getCookies()) {
+            cookies += String.format("%s=%s;", cookie.getName(), cookie.getValue());
+        }
+        return cookies;
+    }
+
 
     private void writeParams(URLConnection conn, String[] keys, String[] values)
             throws IOException {
@@ -148,13 +190,17 @@ public class KusssHandler {
 
     public synchronized boolean logout(Context c) {
         try {
-            Connection.Response r = Jsoup.connect(URL_LOGOUT).method(Connection.Method.GET).execute();
+            Connection.Response r = Jsoup.connect(URL_LOGOUT).cookies(getCookieMap()).method(Connection.Method.GET).execute();
 
             if (r == null) {
                 return false;
             }
 
-            return !isLoggedIn(c, null);
+            if (!isLoggedIn(c, null)) {
+                mCookies.getCookieStore().removeAll();
+                return true;
+            }
+            return false;
         } catch (Exception e) {
             Log.w(TAG, "logout failed", e);
             Analytics.sendException(c, e, true);
@@ -171,7 +217,7 @@ public class KusssHandler {
                 return false;
             }
 
-            Document doc = Jsoup.connect(URL_START_PAGE).timeout(TIMEOUT_LOGIN).get();
+            Document doc = Jsoup.connect(URL_START_PAGE).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true).get();
 
             Elements notLoggedIn = doc.select(SELECT_NOT_LOGGED_IN);
             if (notLoggedIn.size() > 0) {
@@ -205,6 +251,7 @@ public class KusssHandler {
             URL url = new URL(URL_GET_ICAL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
+            conn.setRequestProperty("Cookie", getCookieString());
             conn.setConnectTimeout(5000);
             conn.setReadTimeout(15000);
 
@@ -232,6 +279,7 @@ public class KusssHandler {
             URL url = new URL(URL_GET_ICAL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
+            conn.setRequestProperty("Cookie", getCookieString());
             conn.setConnectTimeout(5000);
             conn.setReadTimeout(15000);
 
@@ -255,7 +303,7 @@ public class KusssHandler {
     public Map<String, String> getTerms(Context c) {
         Map<String, String> terms = new HashMap<>();
         try {
-            Document doc = Jsoup.connect(URL_GET_TERMS).get();
+            Document doc = Jsoup.connect(URL_GET_TERMS).cookies(getCookieMap()).get();
             Element termDropdown = doc.getElementById("term");
             if (termDropdown != null) {
                 Elements termDropdownEntries = termDropdown
@@ -276,6 +324,7 @@ public class KusssHandler {
 
     public boolean selectTerm(Context c, Term term) throws IOException {
         Document doc = Jsoup.connect(URL_SELECT_TERM)
+                .cookies(getCookieMap())
                 .data("term", term.toString())
                 .data("previousQueryString", "")
                 .data("reloadAction", "coursecatalogue-start.action").post();
@@ -299,7 +348,7 @@ public class KusssHandler {
             for (Term term : terms) {
                 term.setLoaded(false); // init loaded flag
                 if (selectTerm(c, term)) {
-                    Document doc = Jsoup.connect(URL_MY_LVAS).get();
+                    Document doc = Jsoup.connect(URL_MY_LVAS).cookies(getCookieMap()).get();
 
                     if (isSelectable(c, doc, term)) {
                         if (isSelected(c, doc, term)) {
@@ -367,7 +416,7 @@ public class KusssHandler {
     public List<Assessment> getAssessments(Context c) {
         List<Assessment> grades = new ArrayList<>();
         try {
-            Document doc = Jsoup.connect(URL_MY_GRADES).data("months", "0")
+            Document doc = Jsoup.connect(URL_MY_GRADES).cookies(getCookieMap()).data("months", "0")
                     .get();
 
             Elements rows = doc.select(SELECT_MY_GRADES);
@@ -400,6 +449,7 @@ public class KusssHandler {
         List<Exam> exams = new ArrayList<>();
         try {
             Document doc = Jsoup.connect(URL_GET_NEW_EXAMS)
+                    .cookies(getCookieMap())
                     .data("search", "true").data("searchType", "mylvas").get();
 
             Elements rows = doc.select(SELECT_NEW_EXAMS);
@@ -542,7 +592,7 @@ public class KusssHandler {
     private void loadExams(Context c, List<Exam> exams) throws IOException {
         Log.d(TAG, "loadExams");
 
-        Document doc = Jsoup.connect(URL_GET_EXAMS).get();
+        Document doc = Jsoup.connect(URL_GET_EXAMS).cookies(getCookieMap()).get();
 
         Elements rows = doc.select(SELECT_EXAMS);
 
@@ -567,7 +617,7 @@ public class KusssHandler {
         try {
             List<Curriculum> mCurricula = new ArrayList<>();
 
-            Document doc = Jsoup.connect(URL_MY_STUDIES).get();
+            Document doc = Jsoup.connect(URL_MY_STUDIES).cookies(getCookieMap()).get();
 
             Elements rows = doc.select(SELECT_MY_STUDIES);
             for (Element row : rows) {

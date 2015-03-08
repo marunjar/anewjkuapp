@@ -79,8 +79,7 @@ public class AppUtils {
                         .compareTo(rhs.getCourse().getTitle());
             }
             if (value == 0) {
-                value = lhs.getCourse().getTerm()
-                        .compareTo(rhs.getCourse().getTerm());
+                value = TermComparator.compare(lhs.getCourse().getTerm(), rhs.getCourse().getTerm());
             }
             return value;
         }
@@ -109,12 +108,23 @@ public class AppUtils {
                 value = rhs.getDate().compareTo(lhs.getDate());
             }
             if (value == 0) {
-                value = rhs.getTerm().compareTo(lhs.getTerm());
+                value = TermComparator.compare(rhs.getTerm(), lhs.getTerm());
             }
             if (value == 0) {
                 value = lhs.getTitle().compareTo(rhs.getTitle());
             }
             return value;
+        }
+    };
+
+    private static final Comparator<Term> TermComparator = new Comparator<Term>() {
+        @Override
+        public int compare(Term lhs, Term rhs) {
+            if (lhs == null && rhs == null) return 0;
+            if (lhs == null) return -1;
+            if (rhs == null) return 1;
+
+            return rhs.compareTo(lhs);
         }
     };
 
@@ -760,4 +770,10 @@ public class AppUtils {
         return String.format("%s: %s, %s", eventTitle, df.format(eventDTStart), AppUtils.getTimeString(new Date(eventDTStart), new Date(eventDTEnd)));
     }
 
+    public static String termToString(Term term) {
+        if (term != null) {
+            return term.toString();
+        }
+        return "";
+    }
 }

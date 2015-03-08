@@ -12,6 +12,7 @@ import org.voidsink.anewjkuapp.update.ImportAssessmentTask;
 import org.voidsink.anewjkuapp.update.ImportCourseTask;
 import org.voidsink.anewjkuapp.update.ImportCurriculaTask;
 import org.voidsink.anewjkuapp.update.ImportExamTask;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -53,7 +54,7 @@ public class KusssHelper {
         cv.put(KusssContentContract.Course.COL_CURRICULA_ID, course.getCid());
         cv.put(KusssContentContract.Course.COL_CLASS_CODE, course.getCode());
         cv.put(KusssContentContract.Course.COL_LECTURER, course.getTeacher());
-        cv.put(KusssContentContract.Course.COL_TERM, course.getTerm().toString());
+        cv.put(KusssContentContract.Course.COL_TERM, AppUtils.termToString(course.getTerm()));
         cv.put(KusssContentContract.Course.COL_TYPE, course.getLvaType());
 
         return cv;
@@ -86,7 +87,7 @@ public class KusssHelper {
         cv.put(KusssContentContract.Exam.COL_INFO, exam.getInfo());
         cv.put(KusssContentContract.Exam.COL_LOCATION, exam.getLocation());
         cv.put(KusssContentContract.Exam.COL_COURSEID, exam.getCourseId());
-        cv.put(KusssContentContract.Exam.COL_TERM, exam.getTerm().toString());
+        cv.put(KusssContentContract.Exam.COL_TERM, AppUtils.termToString(exam.getTerm()));
         cv.put(KusssContentContract.Exam.COL_DTEND, exam.getDtEnd().getTime());
         cv.put(KusssContentContract.Exam.COL_IS_REGISTERED,
                 KusssDatabaseHelper.toInt(exam.isRegistered()));
@@ -134,11 +135,13 @@ public class KusssHelper {
     }
 
     public static Assessment createAssessment(Cursor c) throws ParseException {
+        String termStr = c.getString(ImportAssessmentTask.COLUMN_ASSESSMENT_TERM);
+
         return new Assessment(
                 AssessmentType.parseAssessmentType(c.getInt(ImportAssessmentTask.COLUMN_ASSESSMENT_TYPE)),
                 new Date(c.getLong(ImportAssessmentTask.COLUMN_ASSESSMENT_DATE)),
                 c.getString(ImportAssessmentTask.COLUMN_ASSESSMENT_COURSEID),
-                Term.parseTerm(c.getString(ImportAssessmentTask.COLUMN_ASSESSMENT_TERM)),
+                (termStr == null) ? null : Term.parseTerm(termStr),
                 Grade.parseGradeType(c.getInt(ImportAssessmentTask.COLUMN_ASSESSMENT_GRADE)),
                 c.getInt(ImportAssessmentTask.COLUMN_ASSESSMENT_CURRICULA_ID),
                 c.getString(ImportAssessmentTask.COLUMN_ASSESSMENT_TITLE),
@@ -153,7 +156,7 @@ public class KusssHelper {
         cv.put(KusssContentContract.Assessment.COL_GRADE, assessment.getGrade().ordinal());
         cv.put(KusssContentContract.Assessment.COL_COURSEID, assessment.getCourseId());
         cv.put(KusssContentContract.Assessment.COL_CURRICULA_ID, assessment.getCid());
-        cv.put(KusssContentContract.Assessment.COL_TERM, assessment.getTerm().toString());
+        cv.put(KusssContentContract.Assessment.COL_TERM, AppUtils.termToString(assessment.getTerm()));
         cv.put(KusssContentContract.Assessment.COL_TYPE, assessment.getAssessmentType().ordinal());
         cv.put(KusssContentContract.Assessment.COL_CODE, assessment.getCode());
         cv.put(KusssContentContract.Assessment.COL_TITLE, assessment.getTitle());

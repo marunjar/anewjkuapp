@@ -146,10 +146,10 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
                     } else {
                         Map<String, Exam> examMap = new HashMap<>();
                         for (Exam exam : exams) {
-                            Exam old = examMap.put(KusssHelper.getExamKey(exam.getCourseId(), exam.getTerm().toString(), exam.getDtStart().getTime()), exam);
+                            Exam old = examMap.put(KusssHelper.getExamKey(exam.getCourseId(), AppUtils.termToString(exam.getTerm()), exam.getDtStart().getTime()), exam);
                             if (old != null) {
                                 Log.w(TAG,
-                                        "exam alread loaded: " + KusssHelper.getExamKey(old.getCourseId(), old.getTerm().toString(), old.getDtStart().getTime()));
+                                        "exam alread loaded: " + KusssHelper.getExamKey(old.getCourseId(), AppUtils.termToString(old.getTerm()), old.getDtStart().getTime()));
                             }
                         }
 
