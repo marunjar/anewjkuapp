@@ -10,6 +10,7 @@ import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
 import org.voidsink.anewjkuapp.update.ImportExamTask;
 import org.voidsink.anewjkuapp.update.ImportLvaTask;
+import org.voidsink.anewjkuapp.update.ImportStudiesTask;
 
 import java.util.Date;
 
@@ -83,4 +84,36 @@ public class KusssHelper {
         cv.put(KusssContentContract.Exam.EXAM_COL_TITLE, exam.getTitle());
         return cv;
     }
+
+    public static Studies createStudies(Cursor c) {
+        return new Studies(KusssDatabaseHelper.toBool(c.getInt(ImportStudiesTask.COLUMN_STUDIES_IS_STD)),
+                c.getString(ImportStudiesTask.COLUMN_STUDIES_SKZ),
+                c.getString(ImportStudiesTask.COLUMN_STUDIES_TITLE),
+                KusssDatabaseHelper.toBool(c.getInt(ImportStudiesTask.COLUMN_STUDIES_STEOP_DONE)),
+                KusssDatabaseHelper.toBool(c.getInt(ImportStudiesTask.COLUMN_STUDIES_ACTIVE_STATE)),
+                c.getString(ImportStudiesTask.COLUMN_STUDIES_UNI),
+                new Date(c.getLong(ImportStudiesTask.COLUMN_STUDIES_DT_START)),
+                !c.isNull(ImportStudiesTask.COLUMN_STUDIES_DT_END) ? new Date(c.getLong(ImportStudiesTask.COLUMN_STUDIES_DT_END)) : null);
+    }
+
+    public static ContentValues getStudiesContentValues(Studies studies) {
+        ContentValues cv = new ContentValues();
+        cv.put(KusssContentContract.Studies.COL_IS_STD, KusssDatabaseHelper.toInt(studies.isStandard()));
+        cv.put(KusssContentContract.Studies.COL_SKZ, studies.getSkz());
+        cv.put(KusssContentContract.Studies.COL_TITLE, studies.getTitle());
+        cv.put(KusssContentContract.Studies.COL_STEOP_DONE, KusssDatabaseHelper.toInt(studies.isSteopDone()));
+        cv.put(KusssContentContract.Studies.COL_ACTIVE_STATE, KusssDatabaseHelper.toInt(studies.isActive()));
+        cv.put(KusssContentContract.Studies.COL_UNI, studies.getUni());
+        cv.put(KusssContentContract.Studies.COL_DT_START, studies.getDtStart().getTime());
+
+        Date date = studies.getDtEnd();
+        if (date != null) {
+            cv.put(KusssContentContract.Studies.COL_DT_END, date.getTime());
+        } else {
+            cv.putNull(KusssContentContract.Studies.COL_DT_END);
+        }
+
+        return cv;
+    }
+
 }

@@ -1,27 +1,20 @@
 package org.voidsink.anewjkuapp.kusss;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.text.TextUtils;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.voidsink.anewjkuapp.update.ImportStudiesTask;
-import org.voidsink.anewjkuapp.KusssContentContract;
-import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
 import org.voidsink.anewjkuapp.utils.Analytics;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
-/**
- * Created by paul on 24.11.2014.
- */
 public class Studies {
 
-    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
     private static final String TAG = Studies.class.getSimpleName();
 
     private boolean mIsStandard;
@@ -59,38 +52,17 @@ public class Studies {
         this.mDtEnd = dtEnd;
     }
 
-    public Studies(Cursor c) {
-        this.mIsStandard = KusssDatabaseHelper.toBool(c.getInt(ImportStudiesTask.COLUMN_STUDIES_IS_STD));
-        this.mSkz = c.getString(ImportStudiesTask.COLUMN_STUDIES_SKZ);
-        this.mTitle = c.getString(ImportStudiesTask.COLUMN_STUDIES_TITLE);
-        this.mSteopDone = KusssDatabaseHelper.toBool(c.getInt(ImportStudiesTask.COLUMN_STUDIES_STEOP_DONE));
-        this.mActive = KusssDatabaseHelper.toBool(c.getInt(ImportStudiesTask.COLUMN_STUDIES_ACTIVE_STATE));
-        this.mUni = c.getString(ImportStudiesTask.COLUMN_STUDIES_UNI);
-        this.mDtStart = new Date(c.getLong(ImportStudiesTask.COLUMN_STUDIES_DT_START));
-        if (!c.isNull(ImportStudiesTask.COLUMN_STUDIES_DT_END)) {
-            this.mDtEnd = new Date(c.getLong(ImportStudiesTask.COLUMN_STUDIES_DT_END));
-        }
+    public Studies(boolean isStandard, String skz, String title, boolean steopDone, boolean isActive, String uni, Date dtStart, Date dtEnd) {
+        this(dtStart, dtEnd);
+
+        this.mIsStandard = isStandard;
+        this.mSkz = skz;
+        this.mTitle = title;
+        this.mSteopDone = steopDone;
+        this.mActive = isActive;
+        this.mUni = uni;
     }
 
-    public ContentValues getContentValues() {
-        ContentValues cv = new ContentValues();
-        cv.put(KusssContentContract.Studies.COL_IS_STD, KusssDatabaseHelper.toInt(isStandard()));
-        cv.put(KusssContentContract.Studies.COL_SKZ, getSkz());
-        cv.put(KusssContentContract.Studies.COL_TITLE, getTitle());
-        cv.put(KusssContentContract.Studies.COL_STEOP_DONE, KusssDatabaseHelper.toInt(isSteopDone()));
-        cv.put(KusssContentContract.Studies.COL_ACTIVE_STATE, KusssDatabaseHelper.toInt(isActive()));
-        cv.put(KusssContentContract.Studies.COL_UNI, getUni());
-        cv.put(KusssContentContract.Studies.COL_DT_START, getDtStart().getTime());
-
-        Date date = getDtEnd();
-        if (date != null) {
-            cv.put(KusssContentContract.Studies.COL_DT_END, date.getTime());
-        } else {
-            cv.putNull(KusssContentContract.Studies.COL_DT_END);
-        }
-
-        return cv;
-    }
 
     private Date parseDate(Context c, String text) {
         try {

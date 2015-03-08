@@ -1,21 +1,5 @@
 package org.voidsink.anewjkuapp.update;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.voidsink.anewjkuapp.KusssContentContract;
-import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.base.BaseAsyncTask;
-import org.voidsink.anewjkuapp.kusss.KusssHandler;
-import org.voidsink.anewjkuapp.kusss.Studies;
-import org.voidsink.anewjkuapp.notification.SyncNotification;
-import org.voidsink.anewjkuapp.utils.Analytics;
-import org.voidsink.anewjkuapp.utils.AppUtils;
-import org.voidsink.anewjkuapp.utils.Consts;
-
 import android.accounts.Account;
 import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
@@ -26,6 +10,23 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+
+import org.voidsink.anewjkuapp.KusssContentContract;
+import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.base.BaseAsyncTask;
+import org.voidsink.anewjkuapp.kusss.KusssHandler;
+import org.voidsink.anewjkuapp.kusss.KusssHelper;
+import org.voidsink.anewjkuapp.kusss.Studies;
+import org.voidsink.anewjkuapp.notification.SyncNotification;
+import org.voidsink.anewjkuapp.utils.Analytics;
+import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.utils.Consts;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ImportStudiesTask extends BaseAsyncTask<Void, Void, Void> {
 
@@ -42,7 +43,7 @@ public class ImportStudiesTask extends BaseAsyncTask<Void, Void, Void> {
     private boolean mShowProgress;
     private SyncNotification mUpdateNotification;
 
-    public static final String[] STUDIES_PROJECTION = new String[] {
+    public static final String[] STUDIES_PROJECTION = new String[]{
             KusssContentContract.Studies.COL_ID,
             KusssContentContract.Studies.COL_IS_STD,
             KusssContentContract.Studies.COL_SKZ,
@@ -73,8 +74,8 @@ public class ImportStudiesTask extends BaseAsyncTask<Void, Void, Void> {
     }
 
     public ImportStudiesTask(Account account, Bundle extras, String authority,
-                         ContentProviderClient provider, SyncResult syncResult,
-                         Context context) {
+                             ContentProviderClient provider, SyncResult syncResult,
+                             Context context) {
         this.mAccount = account;
         this.mProvider = provider;
         this.mSyncResult = syncResult;
@@ -174,7 +175,7 @@ public class ImportStudiesTask extends BaseAsyncTask<Void, Void, Void> {
                                             .withValue(
                                                     KusssContentContract.Studies.COL_ID,
                                                     Integer.toString(studiesId))
-                                            .withValues(studie.getContentValues())
+                                            .withValues(KusssHelper.getStudiesContentValues(studie))
                                             .build());
                                     mSyncResult.stats.numUpdates++;
                                 } else {
@@ -207,7 +208,7 @@ public class ImportStudiesTask extends BaseAsyncTask<Void, Void, Void> {
                             }
                             c.close();
 
-                            for (Studies studie: studiesMap.values()) {
+                            for (Studies studie : studiesMap.values()) {
                                 batch.add(ContentProviderOperation
                                         .newInsert(
                                                 KusssContentContract
@@ -215,7 +216,7 @@ public class ImportStudiesTask extends BaseAsyncTask<Void, Void, Void> {
                                                                 studiesUri,
                                                                 mAccount.name,
                                                                 mAccount.type))
-                                        .withValues(studie.getContentValues())
+                                        .withValues(KusssHelper.getStudiesContentValues(studie))
                                         .build());
                                 Log.d(TAG,
                                         "Scheduling insert: " + studie.getSkz()

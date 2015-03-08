@@ -364,7 +364,7 @@ public class KusssContentProvider extends ContentProvider {
     }
 
     public static List<Lva> getLvas(Context context) {
-        List<Lva> mLvas = new ArrayList<Lva>();
+        List<Lva> mLvas = new ArrayList<>();
         Account mAccount = AppUtils.getAccount(context);
         if (mAccount != null) {
             ContentResolver cr = context.getContentResolver();
@@ -393,7 +393,7 @@ public class KusssContentProvider extends ContentProvider {
 
             if (c != null) {
                 while (c.moveToNext()) {
-                    mStudies.add(new Studies(c));
+                    mStudies.add(KusssHelper.createStudies(c));
                 }
                 c.close();
             }
