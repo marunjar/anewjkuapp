@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.text.TextUtils;
 
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
@@ -76,8 +77,6 @@ public class KusssHelper {
                 c.getString(ImportExamTask.COLUMN_EXAM_INFO),
                 c.getString(ImportExamTask.COLUMN_EXAM_TITLE),
                 KusssDatabaseHelper.toBool(c.getInt(ImportExamTask.COLUMN_EXAM_IS_REGISTERED)));
-
-
     }
 
     public static ContentValues getExamContentValues(Exam exam) {
@@ -141,7 +140,7 @@ public class KusssHelper {
                 AssessmentType.parseAssessmentType(c.getInt(ImportAssessmentTask.COLUMN_ASSESSMENT_TYPE)),
                 new Date(c.getLong(ImportAssessmentTask.COLUMN_ASSESSMENT_DATE)),
                 c.getString(ImportAssessmentTask.COLUMN_ASSESSMENT_COURSEID),
-                (termStr == null) ? null : Term.parseTerm(termStr),
+                TextUtils.isEmpty(termStr) ? null : Term.parseTerm(termStr),
                 Grade.parseGradeType(c.getInt(ImportAssessmentTask.COLUMN_ASSESSMENT_GRADE)),
                 c.getInt(ImportAssessmentTask.COLUMN_ASSESSMENT_CURRICULA_ID),
                 c.getString(ImportAssessmentTask.COLUMN_ASSESSMENT_TITLE),

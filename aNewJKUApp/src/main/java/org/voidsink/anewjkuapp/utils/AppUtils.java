@@ -50,7 +50,9 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 
@@ -573,10 +575,18 @@ public class AppUtils {
 
 
     public static List<LvaWithGrade> getLvasWithGrades(List<Term> terms, List<Course> courses, List<Assessment> assessments) {
-        List<LvaWithGrade> result = new ArrayList<LvaWithGrade>();
+        List<LvaWithGrade> result = new ArrayList<>();
+
+        Map<String, Term> termMap = null;
+        if (terms != null){
+            termMap = new HashMap<>();
+            for (Term term : terms) {
+                termMap.put(term.toString(), term);
+            }
+        }
 
         for (Course course : courses) {
-            if (terms == null || terms.contains(course.getTerm())) {
+            if (termMap == null || termMap.containsKey(course.getTerm().toString())) {
                 Assessment assessment = findAssessment(assessments, course);
                 result.add(new LvaWithGrade(course, assessment));
             }
@@ -645,9 +655,17 @@ public class AppUtils {
 
     public static List<Assessment> filterAssessments(List<Term> terms, List<Assessment> assessments) {
         List<Assessment> result = new ArrayList<>();
+        Map<String, Term> termMap = null;
+        if (terms != null) {
+            termMap = new HashMap<>();
+            for (Term term : terms) {
+                termMap.put(term.toString(), term);
+            }
+        }
+
         if (assessments != null) {
             for (Assessment assessment : assessments) {
-                if (terms == null || (terms.indexOf(assessment.getTerm()) >= 0)) {
+                if (termMap == null || (assessment.getTerm() != null && termMap.containsKey(assessment.getTerm().toString()))) {
                     addIfRecent(result, assessment);
                 }
             }
