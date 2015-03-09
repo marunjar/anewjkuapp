@@ -130,7 +130,7 @@ public class ImportCourseTask extends BaseAsyncTask<Void, Void, Void> {
                         }
                         Map<String, Term> termMap = new HashMap<>();
                         for (Term term : terms) {
-                            termMap.put(term.getTerm(), term);
+                            termMap.put(term.toString(), term);
                         }
 
                         Log.d(TAG, String.format("got %s lvas", courses.size()));
@@ -163,9 +163,8 @@ public class ImportCourseTask extends BaseAsyncTask<Void, Void, Void> {
                                 // update only lvas from loaded terms, ignore all other
                                 Term term = termMap.get(courseTerm);
                                 if (term != null && term.isLoaded()) {
-                                    Course course = lvaMap.get(KusssHelper.getCourseKey(courseTerm, courseId));
+                                    Course course = lvaMap.remove(KusssHelper.getCourseKey(term, courseId));
                                     if (course != null) {
-                                        lvaMap.remove(KusssHelper.getCourseKey(courseTerm, courseId));
                                         // Check to see if the entry needs to be
                                         // updated
                                         Uri existingUri = lvaUri
@@ -192,7 +191,7 @@ public class ImportCourseTask extends BaseAsyncTask<Void, Void, Void> {
                                         // delete
                                         Log.d(TAG,
                                                 "delete: "
-                                                        + KusssHelper.getCourseKey(courseTerm, courseId));
+                                                        + KusssHelper.getCourseKey(term, courseId));
                                         // Entry doesn't exist. Remove only
                                         // newer
                                         // events from the database.
@@ -262,6 +261,7 @@ public class ImportCourseTask extends BaseAsyncTask<Void, Void, Void> {
                             }
                         }
                     }
+                    KusssHandler.getInstance().logout(mContext);
                 } else {
                     mSyncResult.stats.numAuthExceptions++;
                 }

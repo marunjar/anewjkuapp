@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.text.TextUtils;
 
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
@@ -12,8 +13,10 @@ import org.voidsink.anewjkuapp.update.ImportAssessmentTask;
 import org.voidsink.anewjkuapp.update.ImportCourseTask;
 import org.voidsink.anewjkuapp.update.ImportCurriculaTask;
 import org.voidsink.anewjkuapp.update.ImportExamTask;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Date;
 
 public class KusssHelper {
@@ -27,12 +30,12 @@ public class KusssHelper {
         // TODO: create activity with webview that uses stored credentials to login and open page with search for courseId
     }
 
-    public static String getCourseKey(String term, String courseId) {
-        return term + "-" + courseId;
+    public static String getCourseKey(Term term, String courseId) {
+        return term.toString() + "-" + courseId;
     }
 
-    public static Course createCourse(Cursor c) {
-        return new Course(c.getString(ImportCourseTask.COLUMN_LVA_TERM),
+    public static Course createCourse(Cursor c) throws ParseException {
+        return new Course(Term.parseTerm(c.getString(ImportCourseTask.COLUMN_LVA_TERM)),
                 c.getString(ImportCourseTask.COLUMN_LVA_COURSEID),
                 c.getString(ImportCourseTask.COLUMN_LVA_TITLE),
                 c.getInt(ImportCourseTask.COLUMN_LVA_CURRICULA_ID),
@@ -52,7 +55,7 @@ public class KusssHelper {
         cv.put(KusssContentContract.Course.COL_CURRICULA_ID, course.getCid());
         cv.put(KusssContentContract.Course.COL_CLASS_CODE, course.getCode());
         cv.put(KusssContentContract.Course.COL_LECTURER, course.getTeacher());
-        cv.put(KusssContentContract.Course.COL_TERM, course.getTerm());
+        cv.put(KusssContentContract.Course.COL_TERM, AppUtils.termToString(course.getTerm()));
         cv.put(KusssContentContract.Course.COL_TYPE, course.getLvaType());
 
         return cv;
@@ -63,10 +66,10 @@ public class KusssHelper {
     }
 
 
-    public static Exam createExam(Cursor c) {
+    public static Exam createExam(Cursor c) throws ParseException {
         return new Exam(
                 c.getString(ImportExamTask.COLUMN_EXAM_COURSEID),
-                c.getString(ImportExamTask.COLUMN_EXAM_TERM),
+                Term.parseTerm(c.getString(ImportExamTask.COLUMN_EXAM_TERM)),
                 new Date(c.getLong(ImportExamTask.COLUMN_EXAM_DTSTART)),
                 new Date(c.getLong(ImportExamTask.COLUMN_EXAM_DTEND)),
                 c.getString(ImportExamTask.COLUMN_EXAM_LOCATION),
@@ -74,8 +77,6 @@ public class KusssHelper {
                 c.getString(ImportExamTask.COLUMN_EXAM_INFO),
                 c.getString(ImportExamTask.COLUMN_EXAM_TITLE),
                 KusssDatabaseHelper.toBool(c.getInt(ImportExamTask.COLUMN_EXAM_IS_REGISTERED)));
-
-
     }
 
     public static ContentValues getExamContentValues(Exam exam) {
@@ -85,7 +86,7 @@ public class KusssHelper {
         cv.put(KusssContentContract.Exam.COL_INFO, exam.getInfo());
         cv.put(KusssContentContract.Exam.COL_LOCATION, exam.getLocation());
         cv.put(KusssContentContract.Exam.COL_COURSEID, exam.getCourseId());
-        cv.put(KusssContentContract.Exam.COL_TERM, exam.getTerm());
+        cv.put(KusssContentContract.Exam.COL_TERM, AppUtils.termToString(exam.getTerm()));
         cv.put(KusssContentContract.Exam.COL_DTEND, exam.getDtEnd().getTime());
         cv.put(KusssContentContract.Exam.COL_IS_REGISTERED,
                 KusssDatabaseHelper.toInt(exam.isRegistered()));
@@ -132,12 +133,14 @@ public class KusssHelper {
         return String.format("%s-%s-%d", classCode, courseId, date);
     }
 
-    public static Assessment createAssessment(Cursor c) {
+    public static Assessment createAssessment(Cursor c) throws ParseException {
+        String termStr = c.getString(ImportAssessmentTask.COLUMN_ASSESSMENT_TERM);
+
         return new Assessment(
                 AssessmentType.parseAssessmentType(c.getInt(ImportAssessmentTask.COLUMN_ASSESSMENT_TYPE)),
                 new Date(c.getLong(ImportAssessmentTask.COLUMN_ASSESSMENT_DATE)),
                 c.getString(ImportAssessmentTask.COLUMN_ASSESSMENT_COURSEID),
-                c.getString(ImportAssessmentTask.COLUMN_ASSESSMENT_TERM),
+                TextUtils.isEmpty(termStr) ? null : Term.parseTerm(termStr),
                 Grade.parseGradeType(c.getInt(ImportAssessmentTask.COLUMN_ASSESSMENT_GRADE)),
                 c.getInt(ImportAssessmentTask.COLUMN_ASSESSMENT_CURRICULA_ID),
                 c.getString(ImportAssessmentTask.COLUMN_ASSESSMENT_TITLE),
@@ -146,14 +149,13 @@ public class KusssHelper {
                 c.getDouble(ImportAssessmentTask.COLUMN_ASSESSMENT_SWS));
     }
 
-
     public static ContentValues getAssessmentContentValues(Assessment assessment) {
         ContentValues cv = new ContentValues();
         cv.put(KusssContentContract.Assessment.COL_DATE, assessment.getDate().getTime());
         cv.put(KusssContentContract.Assessment.COL_GRADE, assessment.getGrade().ordinal());
         cv.put(KusssContentContract.Assessment.COL_COURSEID, assessment.getCourseId());
         cv.put(KusssContentContract.Assessment.COL_CURRICULA_ID, assessment.getCid());
-        cv.put(KusssContentContract.Assessment.COL_TERM, assessment.getTerm());
+        cv.put(KusssContentContract.Assessment.COL_TERM, AppUtils.termToString(assessment.getTerm()));
         cv.put(KusssContentContract.Assessment.COL_TYPE, assessment.getAssessmentType().ordinal());
         cv.put(KusssContentContract.Assessment.COL_CODE, assessment.getCode());
         cv.put(KusssContentContract.Assessment.COL_TITLE, assessment.getTitle());

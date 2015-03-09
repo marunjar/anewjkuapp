@@ -31,9 +31,11 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.update.ImportExamTask;
 import org.voidsink.anewjkuapp.update.UpdateService;
+import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,7 +126,11 @@ public class ExamFragment extends BaseFragment {
 
                 if (c != null) {
                     while (c.moveToNext()) {
-                        mExams.add(new ExamListExam(c, map));
+                        try {
+                            mExams.add(new ExamListExam(c, map));
+                        } catch (ParseException e) {
+                            Analytics.sendException(mContext, e, false);
+                        }
                     }
                     c.close();
                 }

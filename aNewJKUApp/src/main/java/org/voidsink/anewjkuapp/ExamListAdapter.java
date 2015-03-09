@@ -14,6 +14,7 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.utils.UIUtils;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -54,20 +55,10 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
             });
 
             holder.mTitle.setText(exam.getTitle());
-            if (!exam.getDescription().isEmpty()) {
-                holder.mDescription.setText(exam.getDescription());
-                holder.mDescription.setVisibility(View.VISIBLE);
-            } else {
-                holder.mDescription.setVisibility(View.GONE);
-            }
-            if (!exam.getInfo().isEmpty()) {
-                holder.mInfo.setText(exam.getInfo());
-                holder.mInfo.setVisibility(View.VISIBLE);
-            } else {
-                holder.mInfo.setVisibility(View.GONE);
-            }
+            UIUtils.setTextAndVisibility(holder.mDescription, exam.getDescription());
+            UIUtils.setTextAndVisibility(holder.mInfo, exam.getInfo());
             holder.mCourseId.setText(exam.getCourseId());
-            holder.mTerm.setText(exam.getTerm());
+            UIUtils.setTextAndVisibility(holder.mTerm, AppUtils.termToString(exam.getTerm()));
 
             if (exam.getCid() > 0) {
                 holder.mCid.setText(String.format("[%d]", exam.getCid()));

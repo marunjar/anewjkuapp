@@ -24,7 +24,7 @@ public class Assessment {
 
     private int cid;
     private Grade grade;
-    private String term;
+    private Term term;
     private String courseId;
     private Date date;
     private final AssessmentType assessmentType;
@@ -33,7 +33,7 @@ public class Assessment {
     private double ects;
     private double sws;
 
-    public Assessment(AssessmentType type, Date date, String courseId, String term,
+    public Assessment(AssessmentType type, Date date, String courseId, Term term,
                       Grade grade, int cid, String title, String code, double ects,
                       double sws) {
         this.assessmentType = type;
@@ -49,7 +49,7 @@ public class Assessment {
     }
 
     public Assessment(Context c, AssessmentType type, Element row) {
-        this(type, null, "", "", null, 0, "", "", 0, 0);
+        this(type, null, "", null, null, 0, "", "", 0, 0);
 
         final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
@@ -67,7 +67,11 @@ public class Assessment {
 
                 Matcher termMatcher = termPattern.matcher(courseIdTerm); // term
                 if (termMatcher.find(courseIdMatcher.end())) {
-                    setTerm(termMatcher.group());
+                    try {
+                        setTerm(Term.parseTerm(termMatcher.group()));
+                    } catch (ParseException e) {
+                        Analytics.sendException(c, e, true);
+                    }
                 }
 
                 String tmp = title.substring(0, courseIdTermMatcher.start());
@@ -142,7 +146,7 @@ public class Assessment {
         this.grade = grade;
     }
 
-    private void setTerm(String term) {
+    private void setTerm(Term term) {
         this.term = term;
     }
 
@@ -166,7 +170,7 @@ public class Assessment {
         return this.courseId;
     }
 
-    public String getTerm() {
+    public Term getTerm() {
         return this.term;
     }
 

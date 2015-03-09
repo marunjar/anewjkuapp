@@ -20,7 +20,7 @@ public class AssessmentFragment extends SlidingTabsFragment {
         mTabs.add(new TermTabItem(getString(R.string.all_terms), null, AssessmentDetailFragment.class));
 
         for (Term term : mTerms) {
-            mTabs.add(new TermTabItem(term.getTerm(), Arrays.asList(term.getTerm()), AssessmentDetailFragment.class));
+            mTabs.add(new TermTabItem(term.toString(), Arrays.asList(term), AssessmentDetailFragment.class));
         }
     }
 

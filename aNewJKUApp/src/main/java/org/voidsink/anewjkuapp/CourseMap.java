@@ -6,8 +6,11 @@ import android.database.Cursor;
 
 import org.voidsink.anewjkuapp.kusss.Course;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
+import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.update.ImportCourseTask;
+import org.voidsink.anewjkuapp.utils.Analytics;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -38,19 +41,23 @@ public class CourseMap {
 
         if (c != null) {
             while (c.moveToNext()) {
-                Course course = KusssHelper.createCourse(c);
-                this.map.put(KusssHelper.getCourseKey(course.getTerm(), course.getCourseId()), course);
+                try {
+                    Course course = KusssHelper.createCourse(c);
+                    this.map.put(KusssHelper.getCourseKey(course.getTerm(), course.getCourseId()), course);
+                } catch (ParseException e) {
+                    Analytics.sendException(context, e, true);
+                }
             }
             c.close();
         }
 
     }
 
-    public Course getExactCourse(String term, String courseId) {
+    public Course getExactCourse(Term term, String courseId) {
         return this.map.get(KusssHelper.getCourseKey(term, courseId));
     }
 
-    public Course getCourse(String term, String courseId) {
+    public Course getCourse(Term term, String courseId) {
         Course course = this.map.get(KusssHelper.getCourseKey(term, courseId));
         if (course != null) {
             return course;

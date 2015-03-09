@@ -84,6 +84,7 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
 			syncResult.stats.numAuthExceptions++;
 			return;
 		}
+
 		// TODO Download data here
 		try {
 			Looper.prepare();
@@ -160,7 +161,7 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
 			KusssNotificationBuilder.showErrorNotification(mContext,
 					R.string.notification_error, e);
 		} finally {
-			// mNotification.show();
+			KusssHandler.getInstance().logout(mContext);
 		}
 	}
 
