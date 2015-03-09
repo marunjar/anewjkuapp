@@ -35,6 +35,7 @@ import org.voidsink.anewjkuapp.kusss.Curriculum;
 import org.voidsink.anewjkuapp.kusss.Grade;
 import org.voidsink.anewjkuapp.kusss.LvaState;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
+import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.service.SyncAlarmService;
 import org.voidsink.anewjkuapp.update.ImportCurriculaTask;
 
@@ -49,7 +50,9 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 
@@ -78,8 +81,7 @@ public class AppUtils {
                         .compareTo(rhs.getCourse().getTitle());
             }
             if (value == 0) {
-                value = lhs.getCourse().getTerm()
-                        .compareTo(rhs.getCourse().getTerm());
+                value = TermComparator.compare(lhs.getCourse().getTerm(), rhs.getCourse().getTerm());
             }
             return value;
         }
@@ -108,12 +110,23 @@ public class AppUtils {
                 value = rhs.getDate().compareTo(lhs.getDate());
             }
             if (value == 0) {
-                value = rhs.getTerm().compareTo(lhs.getTerm());
+                value = TermComparator.compare(rhs.getTerm(), lhs.getTerm());
             }
             if (value == 0) {
                 value = lhs.getTitle().compareTo(rhs.getTitle());
             }
             return value;
+        }
+    };
+
+    private static final Comparator<Term> TermComparator = new Comparator<Term>() {
+        @Override
+        public int compare(Term lhs, Term rhs) {
+            if (lhs == null && rhs == null) return 0;
+            if (lhs == null) return -1;
+            if (rhs == null) return 1;
+
+            return rhs.compareTo(lhs);
         }
     };
 
@@ -561,11 +574,19 @@ public class AppUtils {
     }
 
 
-    public static List<LvaWithGrade> getLvasWithGrades(List<String> terms, List<Course> courses, List<Assessment> assessments) {
-        List<LvaWithGrade> result = new ArrayList<LvaWithGrade>();
+    public static List<LvaWithGrade> getLvasWithGrades(List<Term> terms, List<Course> courses, List<Assessment> assessments) {
+        List<LvaWithGrade> result = new ArrayList<>();
+
+        Map<String, Term> termMap = null;
+        if (terms != null){
+            termMap = new HashMap<>();
+            for (Term term : terms) {
+                termMap.put(term.toString(), term);
+            }
+        }
 
         for (Course course : courses) {
-            if (terms == null || terms.contains(course.getTerm())) {
+            if (termMap == null || termMap.containsKey(course.getTerm().toString())) {
                 Assessment assessment = findAssessment(assessments, course);
                 result.add(new LvaWithGrade(course, assessment));
             }
@@ -632,11 +653,19 @@ public class AppUtils {
         assessments.add(assessment);
     }
 
-    public static List<Assessment> filterAssessments(List<String> terms, List<Assessment> assessments) {
+    public static List<Assessment> filterAssessments(List<Term> terms, List<Assessment> assessments) {
         List<Assessment> result = new ArrayList<>();
+        Map<String, Term> termMap = null;
+        if (terms != null) {
+            termMap = new HashMap<>();
+            for (Term term : terms) {
+                termMap.put(term.toString(), term);
+            }
+        }
+
         if (assessments != null) {
             for (Assessment assessment : assessments) {
-                if (terms == null || (terms.indexOf(assessment.getTerm()) >= 0)) {
+                if (termMap == null || (assessment.getTerm() != null && termMap.containsKey(assessment.getTerm().toString()))) {
                     addIfRecent(result, assessment);
                 }
             }
@@ -759,4 +788,10 @@ public class AppUtils {
         return String.format("%s: %s, %s", eventTitle, df.format(eventDTStart), AppUtils.getTimeString(new Date(eventDTStart), new Date(eventDTEnd)));
     }
 
+    public static String termToString(Term term) {
+        if (term != null) {
+            return term.toString();
+        }
+        return "";
+    }
 }

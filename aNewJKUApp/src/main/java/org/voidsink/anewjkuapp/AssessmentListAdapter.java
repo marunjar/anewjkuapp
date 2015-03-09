@@ -11,6 +11,7 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.kusss.Assessment;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.UIUtils;
 
 import java.text.DateFormat;
@@ -36,7 +37,7 @@ public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, Asse
         holder.mTitle.setText(assessment.getTitle());
 
         UIUtils.setTextAndVisibility(holder.mCourseId, assessment.getCourseId());
-        UIUtils.setTextAndVisibility(holder.mTerm, assessment.getTerm());
+        UIUtils.setTextAndVisibility(holder.mTerm, AppUtils.termToString(assessment.getTerm()));
 
         if (assessment.getCid() > 0) {
             holder.mCid.setText(String.format("[%d]", assessment.getCid()));

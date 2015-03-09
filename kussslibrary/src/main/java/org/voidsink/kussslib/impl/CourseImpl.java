@@ -11,7 +11,7 @@ import org.voidsink.kussslib.Term;
 public class CourseImpl implements Course {
 
 	private static final Pattern courseIdPattern = Pattern
-			.compile(KusssHandlerImpl.PATTERN_LVA_NR_WITH_DOT);
+			.compile(Parser.PATTERN_LVA_NR_WITH_DOT);
 
 	private Term term;
 	private String courseId;
@@ -35,9 +35,9 @@ public class CourseImpl implements Course {
 		if (columns.size() >= 11) {
 			boolean active = columns.get(9)
 					.getElementsByClass("assignment-active").size() == 1;
-			String lvaNrText = columns.get(6).text();
-			if (active && courseIdPattern.matcher(lvaNrText).matches()) {
-				this.courseId = lvaNrText.toUpperCase().replace(".", "");
+			String courseIdText = columns.get(6).text();
+			if (active && courseIdPattern.matcher(courseIdText).matches()) {
+				this.courseId = courseIdText.toUpperCase().replace(".", "");
 				title = columns.get(5).text();
 				courseType = CourseType.parseCourseType(columns.get(4).text()); // type (UE, ...)
 				lecturer = columns.get(7).text(); // lecturer
@@ -109,9 +109,7 @@ public class CourseImpl implements Course {
 	
 	
 	public boolean isInitialized() {
-		//TODO: Prüfen
-		//return !term.isEmpty() && !lvaNr.isEmpty();
-		return (term != null) && (courseId != null);
+		return !TextUtils.isEmpty(term) && !TextUtils.isEmpty(courseId);
 	}
 }
 	

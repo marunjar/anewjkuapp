@@ -127,6 +127,8 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 			KusssNotificationBuilder.showErrorNotification(mContext,
 					R.string.notification_error, e);
 		}
+
+        KusssHandler.getInstance().logout(mContext);
 	}
 
 	@Override

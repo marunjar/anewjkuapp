@@ -3,6 +3,7 @@ package org.voidsink.anewjkuapp;
 import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.kusss.Course;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
+import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import java.util.List;
@@ -20,9 +21,9 @@ public class StatCard {
     private final List<Assessment> mAssessments;
     private final boolean mWeighted;
     private final boolean mPositiveOnly;
-    private final List<String> mTerms;
+    private final List<Term> mTerms;
 
-    public StatCard(int type, List<String> terms, List<Course> courses, List<Assessment> assessments, boolean weighted, boolean positiveOnly) {
+    public StatCard(int type, List<Term> terms, List<Course> courses, List<Assessment> assessments, boolean weighted, boolean positiveOnly) {
         this.mType = type;
         this.mTerms = terms;
         this.mCourses = courses;
@@ -31,12 +32,12 @@ public class StatCard {
         this.mPositiveOnly = positiveOnly;
     }
 
-    public static StatCard getLvaInstance(List<String> terms, List<Course> courses, List<Assessment> assessments) {
+    public static StatCard getLvaInstance(List<Term> terms, List<Course> courses, List<Assessment> assessments) {
         return new StatCard(TYPE_LVA, terms, courses, assessments, false, false);
     }
 
 
-    public static StatCard getAssessmentInstance(List<String> terms, List<Assessment> assessments, boolean weighted, boolean positiveOnly) {
+    public static StatCard getAssessmentInstance(List<Term> terms, List<Assessment> assessments, boolean weighted, boolean positiveOnly) {
         return new StatCard(TYPE_GRADE, terms, null, assessments, weighted, positiveOnly);
     }
 
@@ -44,7 +45,7 @@ public class StatCard {
         return mType;
     }
 
-    public List<String> getTerms() {
+    public List<Term> getTerms() {
         return mTerms;
     }
 

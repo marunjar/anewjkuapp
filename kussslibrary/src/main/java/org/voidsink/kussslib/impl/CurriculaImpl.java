@@ -1,7 +1,6 @@
 package org.voidsink.kussslib.impl;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.jsoup.nodes.Element;
@@ -9,8 +8,6 @@ import org.jsoup.select.Elements;
 import org.voidsink.kussslib.Curricula;
 
 public class CurriculaImpl implements Curricula {
-
-	public static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
     private boolean isStandard;
     private int cid;
@@ -73,9 +70,7 @@ public class CurriculaImpl implements Curricula {
 
     
 	boolean isInitialized() {
-		//TODO: isEmpty Method in TextUtils auch für Zahlenwerte wie cid?
-		//return !TextUtils.isEmpty(cid) && !TextUtils.isEmpty(uni) && (dtStart != null);
-		return false;
+		return !TextUtils.isEmpty(cid) && !TextUtils.isEmpty(uni) && (dtStart != null);
 	}
 
 	
