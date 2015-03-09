@@ -4,6 +4,9 @@
 		    - fixed
 		    * changed
 		    + added -->
+    <release version="0.35" versioncode="140035">
+        <change>- KUSSS: Fehler beim Login behoben, Daten können wieder geladen werden</change>
+    </release>
     <release version="0.34" versioncode="140034">
         <change>- KUSSS: Fehler beim Laden von Prüfungen korrigiert</change>
         <change>- KUSSS: Fehler beim Zuordnen von Noten zu LVAs korrigiert</change>
