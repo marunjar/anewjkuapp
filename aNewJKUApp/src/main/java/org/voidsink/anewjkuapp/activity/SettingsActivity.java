@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBar;
 import android.util.Log;
 
 import org.voidsink.anewjkuapp.PreferenceWrapper;
+import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.ThemedActivity;
 import org.voidsink.anewjkuapp.fragment.SettingsFragment;
 import org.voidsink.anewjkuapp.update.UpdateService;
@@ -31,11 +32,13 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.activity_toolbar_content);
+
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(ARG_SHOW_FRAGMENT);
         if (fragment == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(android.R.id.content, new SettingsFragment(), ARG_SHOW_FRAGMENT)
+                    .add(R.id.content_container, new SettingsFragment(), ARG_SHOW_FRAGMENT)
                     .commit();
         }
     }
@@ -62,7 +65,7 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
                 if (oldFragment == null || !fragment.getClass().equals(oldFragment.getClass())) {
                     getSupportFragmentManager()
                             .beginTransaction()
-                            .replace(android.R.id.content, fragment, ARG_SHOW_FRAGMENT)
+                            .replace(R.id.content_container, fragment, ARG_SHOW_FRAGMENT)
                             .addToBackStack(fragment.getClass().getCanonicalName())
                             .commit();
                 }

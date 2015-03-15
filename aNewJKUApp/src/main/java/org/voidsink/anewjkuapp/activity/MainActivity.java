@@ -29,8 +29,8 @@ import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.base.ThemedActivity;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.fragment.CalendarFragment;
-import org.voidsink.anewjkuapp.fragment.NavigationDrawerFragment;
 import org.voidsink.anewjkuapp.fragment.CurriculaFragment;
+import org.voidsink.anewjkuapp.fragment.NavigationDrawerFragment;
 import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
@@ -116,6 +116,9 @@ public class MainActivity extends ThemedActivity implements
         DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
                 GravityCompat.START);
+
+        //mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color));
+
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, mDrawerLayout);
@@ -271,7 +274,6 @@ public class MainActivity extends ThemedActivity implements
 
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
         if (mNavigationDrawerFragment != null &&
                 !mNavigationDrawerFragment.isDrawerOpen()) {
             actionBar.setTitle(mTitle);
@@ -301,6 +303,15 @@ public class MainActivity extends ThemedActivity implements
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mNavigationDrawerFragment.isDrawerOpen()) {
+            mNavigationDrawerFragment.closeDrawer();
+        } else {
+            super.onBackPressed();
         }
     }
 

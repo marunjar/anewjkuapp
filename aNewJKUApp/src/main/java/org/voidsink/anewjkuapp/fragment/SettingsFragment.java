@@ -45,7 +45,7 @@ public class SettingsFragment extends PreferenceFragment {
                             Fragment pf = (Fragment) clazz.newInstance();
                             getActivity().getSupportFragmentManager()
                                     .beginTransaction()
-                                    .replace(android.R.id.content, pf, SettingsActivity.ARG_SHOW_FRAGMENT)
+                                    .replace(R.id.content_container, pf, SettingsActivity.ARG_SHOW_FRAGMENT)
                                     .addToBackStack(pf.getClass().getCanonicalName())
                                     .commit();
                             return true;

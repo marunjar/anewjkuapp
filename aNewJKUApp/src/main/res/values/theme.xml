@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme_Light" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme_Light" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Apptheme</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="actionBarItemBackground">@drawable/selectable_background_apptheme</item>
@@ -22,7 +22,7 @@
         <item name="colorAccent">@color/default_accent</item>
     </style>
 
-    <style name="AppTheme" parent="@style/Theme.AppCompat">
+    <style name="AppTheme" parent="@style/Theme.AppCompat.NoActionBar">
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Apptheme</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="actionBarItemBackground">@drawable/selectable_background_apptheme</item>
