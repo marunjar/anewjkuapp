@@ -1,50 +1,59 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawer"
+<org.voidsink.anewjkuapp.view.ScrimInsetsFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="start"
     android:background="@android:color/white"
-    android:divider="@android:color/transparent"
-    android:dividerHeight="0dp"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true"
+    app:insetForeground="#4000">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="72dip"
-        android:background="@drawable/drawer_image"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/drawer_menu_item_icon"
-            android:layout_width="40dip"
-            android:layout_height="40dip"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:contentDescription="@string/drawer_menu_item_icon"
-            android:scaleType="fitXY"
-            android:src="@drawable/person_image_empty" />
-
-        <TextView
-            android:id="@+id/drawer_user"
-            style="@style/Text.Title"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/text_size_drawer_item" />
-
-    </LinearLayout>
-
-    <ListView
-        android:id="@+id/drawer_list"
+        android:id="@+id/drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false"
+        android:layout_gravity="start"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"
-        android:paddingTop="8dip"
-        android:scrollbarStyle="outsideOverlay" />
+        android:orientation="vertical">
 
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/drawer_header_height"
+            android:background="@drawable/drawer_image"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/main_toolbar_padding">
+
+            <ImageView
+                android:id="@+id/drawer_menu_item_icon"
+                android:layout_width="40dip"
+                android:layout_height="40dip"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:contentDescription="@string/drawer_menu_item_icon"
+                android:scaleType="fitXY"
+                android:src="@drawable/person_image_empty" />
+
+            <TextView
+                android:id="@+id/drawer_user"
+                style="@style/Text.Title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_drawer_item" />
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/drawer_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp"
+            android:paddingTop="8dip"
+            android:scrollbarStyle="outsideOverlay" />
+
+    </LinearLayout>
+</org.voidsink.anewjkuapp.view.ScrimInsetsFrameLayout>
