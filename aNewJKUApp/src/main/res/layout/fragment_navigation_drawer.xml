@@ -35,13 +35,13 @@
 
             <TextView
                 android:id="@+id/drawer_user"
-                style="@style/Text.Title"
+                fontPath="fonts/Roboto-Medium.ttf"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/text_size_drawer_item" />
+                android:textSize="14sp" />
 
         </LinearLayout>
 
@@ -49,10 +49,9 @@
             android:id="@+id/drawer_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipToPadding="false"
             android:divider="@android:color/transparent"
             android:dividerHeight="0dp"
-            android:paddingTop="8dip"
+            android:paddingTop="3dp"
             android:scrollbarStyle="outsideOverlay" />
 
     </LinearLayout>
