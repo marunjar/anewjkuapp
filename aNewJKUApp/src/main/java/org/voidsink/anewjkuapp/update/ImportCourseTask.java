@@ -220,7 +220,7 @@ public class ImportCourseTask extends BaseAsyncTask<Void, Void, Void> {
 
                             for (Course course : lvaMap.values()) {
                                 // insert only lvas from loaded terms, ignore all other
-                                Term term = termMap.get(course.getTerm());
+                                Term term = termMap.get(course.getTerm().toString());
                                 if (term != null && term.isLoaded()) {
                                     batch.add(ContentProviderOperation
                                             .newInsert(
