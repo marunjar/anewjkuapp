@@ -74,8 +74,8 @@ public final class PreferenceWrapper {
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(mContext);
         try {
-            return Integer.parseInt(sp.getString(PREF_SYNC_INTERVAL_KEY,
-                    Integer.toString(PREF_SYNC_INTERVAL_DEFAULT)));
+            return Math.max(Integer.parseInt(sp.getString(PREF_SYNC_INTERVAL_KEY,
+                    Integer.toString(PREF_SYNC_INTERVAL_DEFAULT))), 12); // min. 12h interval
         } catch (Exception e) {
             Log.e(TAG, "Failure", e);
             return PREF_SYNC_INTERVAL_DEFAULT;

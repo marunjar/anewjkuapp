@@ -135,7 +135,7 @@
     <string name="title_oeh_rights">Right</string>
     <string name="title_stats">Statistics</string>
     <string name="interval_1d">Every day</string>
-    <string name="interval_1h">Every hour</string>
+    <string name="interval_12h">Twice a day</string>
     <string name="interval_7d">Weekly</string>
     <string name="interval_3.5d">Twice a week</string>
     <string name="lva_state_unknown">TODO</string>

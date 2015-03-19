@@ -207,7 +207,7 @@
     <string name="calendar_action_show_in_calendar">in Kalender anzeigen</string>
     <string name="calendar_action_show_on_map">auf Karte anzeigen</string>
 
-    <string name="interval_1h">Jede Stunde</string>
+    <string name="interval_12h">Zweimal Täglich</string>
     <string name="interval_1d">Jeden Tag</string>
     <string name="interval_3.5d">Zweimal Wöchentlich</string>
     <string name="interval_7d">Wöchentlich</string>

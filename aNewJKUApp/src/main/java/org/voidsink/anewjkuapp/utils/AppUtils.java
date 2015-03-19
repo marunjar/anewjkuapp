@@ -167,6 +167,8 @@ public class AppUtils {
                         errorOccured = true;
                     }
                 }
+
+                PreferenceWrapper.applySyncInterval(context);
             } catch (Exception e) {
                 Log.e(TAG, "doOnNewVersion failed", e);
                 Analytics.sendException(context, e, false);
