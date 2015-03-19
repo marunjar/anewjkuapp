@@ -2,41 +2,48 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:paddingLeft="17dp"
-    android:paddingRight="17dp">
+    android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/accountName"
+    <include layout="@layout/main_toolbar" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:hint="@string/pref_kusss_user_title"
-        android:inputType="number"
-        android:padding="10dp" />
+        android:orientation="vertical"
+        android:padding="@dimen/card_content_padding">
 
-    <EditText
-        android:id="@+id/accountPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="@string/pref_kusss_pw_title"
-        android:inputType="textPassword"
-        android:padding="10dp" />
+        <EditText
+            android:id="@+id/accountName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="@string/pref_kusss_user_title"
+            android:inputType="number"
+            android:padding="10dp" />
 
-    <CheckBox
-        android:id="@+id/accountPasswordShow"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/account_show_password"
-        android:padding="10dp" />
+        <EditText
+            android:id="@+id/accountPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="@string/pref_kusss_pw_title"
+            android:inputType="textPassword"
+            android:padding="10dp" />
 
-    <Button
-        android:id="@+id/accountLogin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:padding="10dp"
-        android:text="@string/account_login" />
+        <CheckBox
+            android:id="@+id/accountPasswordShow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/account_show_password" />
 
+        <Button
+            android:id="@+id/accountLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:text="@string/account_login" />
+
+    </LinearLayout>
 </LinearLayout>

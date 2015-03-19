@@ -345,6 +345,10 @@ public class NavigationDrawerFragment extends BaseFragment {
         return ((ActionBarActivity) getActivity()).getSupportActionBar();
     }
 
+    public void closeDrawer() {
+        mDrawerLayout.closeDrawers();
+    }
+
     /**
      * Callbacks interface that all activities using this fragment must
      * implement.

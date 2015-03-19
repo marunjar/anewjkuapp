@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="pref_kusss_sync_interval_entries">
-        <item name="1h">@string/interval_1h</item>
+        <item name="12h">@string/interval_12h</item>
         <item name="1d">@string/interval_1d</item>
         <item name="3.5d">@string/interval_3.5d</item>
         <item name="7d">@string/interval_7d</item>
     </array>
     
     <string-array name="pref_kusss_sync_interval_values" translatable="false" >
-        <item name="1h">1</item>
+        <item name="12h">12</item>
         <item name="1d">24</item>
         <item name="3.5d">85</item>
         <item name="7d">169</item>

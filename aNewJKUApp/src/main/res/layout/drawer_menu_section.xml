@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/drawer_section_height">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <include layout="@layout/separator" />
 
     <TextView
         android:id="@+id/navmenusection_label"
-        style="@style/Text.Body2"
+        fontPath="fonts/Roboto-Medium.ttf"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/drawer_section_height"
+        android:layout_marginLeft="@dimen/drawer_margin_horizontal"
+        android:layout_marginRight="@dimen/drawer_margin_horizontal"
+        android:ellipsize="end"
         android:gravity="center_vertical"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:maxLines="1"
         android:textColor="?android:attr/textColorSecondary"
-        android:textSize="@dimen/text_size_drawer_section" />
+        android:textSize="@dimen/text_size_drawer_section"
+        tools:text="Section Item, a very long title that will truncate if the text is too long to show in one line." />
 
-</RelativeLayout>
+</LinearLayout>

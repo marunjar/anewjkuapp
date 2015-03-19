@@ -9,7 +9,7 @@
          https://developer.android.com/design/patterns/navigation-drawer.html
 
     -->
-    <dimen name="navigation_drawer_width">280dp</dimen>
+    <dimen name="navigation_drawer_width">240dp</dimen>
     <dimen name="text_size_large">22dp</dimen>
     <dimen name="text_size_medium">18dp</dimen>
     <dimen name="text_size_small">14dp</dimen>
@@ -28,11 +28,11 @@
     <dimen name="text_left_icon_margin">16dp</dimen>
     <dimen name="icon_size">48dp</dimen>
     <dimen name="icon_padding">4dp</dimen>
-    <dimen name="drawer_section_height">36dp</dimen>
-    <dimen name="drawer_item_height">50dp</dimen>
+    <dimen name="drawer_section_height">48dp</dimen>
+    <dimen name="drawer_item_height">48dp</dimen>
     <dimen name="separator_top_bottom_margin">4dp</dimen>
-    <dimen name="text_size_drawer_item">20sp</dimen>
-    <dimen name="text_size_drawer_section">16sp</dimen>
+    <dimen name="text_size_drawer_item">14sp</dimen>
+    <dimen name="text_size_drawer_section">14sp</dimen>
     <dimen name="text_size_headline">20sp</dimen>
     <dimen name="text_size_title">16sp</dimen>
     <dimen name="text_size_subtitle">14sp</dimen>
@@ -40,4 +40,6 @@
     <dimen name="text_size_caption">12sp</dimen>
     <dimen name="text_size_button">14sp</dimen>
     <dimen name="grid_entry_width">280dp</dimen>
+
+    <dimen name="drawer_margin_horizontal">16dp</dimen>
 </resources>

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
@@ -53,9 +54,12 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 
         super.onCreate(savedInstanceState);
 
-        initActionBar();
-
         setContentView(R.layout.activity_login);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
+
+        initActionBar();
 
         mAccountManager = AccountManager.get(this);
 
