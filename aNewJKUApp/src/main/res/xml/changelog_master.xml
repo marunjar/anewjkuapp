@@ -4,6 +4,11 @@
 		    - fixed
 		    * changed
 		    + added -->
+    <release version="0.36" versioncode="140036">
+        <change>- KUSSS: Fehler beim Laden von LVAs behoben</change>
+        <change>* App: Material Design für Navigation</change>
+        <change>* App: Synchronisationsintervall "1h" entfernt</change>
+    </release>
     <release version="0.35" versioncode="140035">
         <change>- KUSSS: Fehler beim Login behoben, Daten können wieder geladen werden</change>
     </release>
