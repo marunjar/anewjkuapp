@@ -76,9 +76,13 @@ public class KusssHandler {
         CookieHandler.setDefault(mCookies);
     }
 
-    public static synchronized KusssHandler getInstance() {
+    public static KusssHandler getInstance() {
         if (handler == null) {
-            handler = new KusssHandler();
+            synchronized(KusssHandler.class) {
+                if (handler == null) {
+                    handler = new KusssHandler();
+                }
+            }
         }
         return handler;
     }
