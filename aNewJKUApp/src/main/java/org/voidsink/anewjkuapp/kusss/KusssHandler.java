@@ -362,7 +362,7 @@ public class KusssHandler {
                     throw new IOException(String.format("cannot select term: %s", term));
                 }
             }
-            if (courses != null && courses.size() == 0) {
+            if (courses.size() == 0) {
                 // break if no lvas found, a student without courses is a quite impossible case
                 return null;
             }
