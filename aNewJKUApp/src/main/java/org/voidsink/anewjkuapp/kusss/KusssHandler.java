@@ -89,8 +89,7 @@ public class KusssHandler {
 
     public String getSessionIDFromCookie() {
         try {
-            List<HttpCookie> cookies = mCookies.getCookieStore().get(
-                    new URI("https://www.kusss.jku.at/"));
+            List<HttpCookie> cookies = mCookies.getCookieStore().get(new URI("https://www.kusss.jku.at/"));
 
             for (HttpCookie cookie : cookies) {
                 if (cookie.getName().equals("JSESSIONID")) {
@@ -117,13 +116,22 @@ public class KusssHandler {
             mCookies.getCookieStore().removeAll();
 
             Jsoup.connect(URL_KUSSS_INDEX).timeout(TIMEOUT_LOGIN).followRedirects(true).get();
-
-            Connection.Response r = Jsoup.connect(URL_LOGIN).cookies(getCookieMap()).data("j_username", user).data("j_password", password).timeout(TIMEOUT_LOGIN).followRedirects(true).method(Connection.Method.POST).execute();
+            Connection.Response r = Jsoup
+                    .connect(URL_LOGIN)
+                    .cookies(getCookieMap())
+                    .data("j_username", user)
+                    .data("j_password", password)
+                    .timeout(TIMEOUT_LOGIN)
+                    .followRedirects(true)
+                    .method(Connection.Method.POST).execute();
 
             if (r.url() != null) {
-                r = Jsoup.connect(r.url().toString()).cookies(getCookieMap()).method(Connection.Method.GET).execute();
+                r = Jsoup
+                        .connect(r.url().toString())
+                        .cookies(getCookieMap())
+                        .method(Connection.Method.GET)
+                        .execute();
             }
-
             Document doc = r.parse();
 
             String sessionId = getSessionIDFromCookie();
@@ -165,15 +173,14 @@ public class KusssHandler {
     }
 
 
-    private void writeParams(URLConnection conn, String[] keys, String[] values)
-            throws IOException {
+    private void writeParams(URLConnection conn, String[] keys, String[] values) throws IOException {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < keys.length; i++) {
             builder.append(keys[i]);
-            builder.append("=");
+            builder.append('=');
             builder.append(values[i]);
             if (i < keys.length - 1) {
-                builder.append("&");
+                builder.append('&');
             }
         }
 
@@ -184,7 +191,11 @@ public class KusssHandler {
 
     public synchronized boolean logout(Context c) {
         try {
-            Connection.Response r = Jsoup.connect(URL_LOGOUT).cookies(getCookieMap()).method(Connection.Method.GET).execute();
+            Connection.Response r = Jsoup
+                    .connect(URL_LOGOUT)
+                    .cookies(getCookieMap())
+                    .method(Connection.Method.GET)
+                    .execute();
 
             if (r == null) {
                 return false;
@@ -204,8 +215,12 @@ public class KusssHandler {
 
     public synchronized boolean isLoggedIn(Context c, String sessionId) {
         try {
-            Document doc = Jsoup.connect(URL_START_PAGE).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true).get();
-
+            Document doc = Jsoup
+                    .connect(URL_START_PAGE)
+                    .cookies(getCookieMap())
+                    .timeout(TIMEOUT_LOGIN)
+                    .followRedirects(true)
+                    .get();
             return isLoggedIn(c, doc);
         } catch (SocketTimeoutException e) {
             // bad connection, timeout
@@ -219,15 +234,10 @@ public class KusssHandler {
 
     private boolean isLoggedIn(Context c, Document doc) {
         Elements logoutAction = doc.select(SELECT_LOGOUT);
-        if (logoutAction.size() > 0) {
-            return true;
-        }
-
-        return false;
+        return logoutAction.size() > 0;
     }
 
-    public synchronized boolean isAvailable(Context c, String sessionId,
-                                            String user, String password) {
+    public synchronized boolean isAvailable(Context c, String sessionId, String user, String password) {
         if (!isLoggedIn(c, sessionId)) {
             return login(c, user, password) != null;
         }
@@ -235,11 +245,7 @@ public class KusssHandler {
     }
 
     public Calendar getLVAIcal(Context c, CalendarBuilder mCalendarBuilder) {
-
-        Calendar iCal = null;
-
         try {
-
             URL url = new URL(URL_GET_ICAL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
@@ -247,26 +253,20 @@ public class KusssHandler {
             conn.setConnectTimeout(5000);
             conn.setReadTimeout(15000);
 
-            writeParams(conn, new String[]{"selectAll"},
-                    new String[]{"ical.category.mycourses"});
+            writeParams(conn, new String[]{"selectAll"}, new String[]{"ical.category.mycourses"});
 
             BufferedInputStream in = new BufferedInputStream(conn.getInputStream());
-
-            iCal = mCalendarBuilder.build(in);
-
+            Calendar iCal = mCalendarBuilder.build(in);
             conn.disconnect();
+            return iCal;
         } catch (Exception e) {
             Log.e(TAG, "getLVAIcal", e);
             Analytics.sendException(c, e, true);
-            iCal = null;
+            return null;
         }
-
-        return iCal;
     }
 
     public Calendar getExamIcal(Context c, CalendarBuilder mCalendarBuilder) {
-        Calendar iCal = null;
-
         try {
             URL url = new URL(URL_GET_ICAL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -275,21 +275,17 @@ public class KusssHandler {
             conn.setConnectTimeout(5000);
             conn.setReadTimeout(15000);
 
-            writeParams(conn, new String[]{"selectAll"},
-                    new String[]{"ical.category.examregs"});
+            writeParams(conn, new String[]{"selectAll"}, new String[]{"ical.category.examregs"});
 
             BufferedInputStream in = new BufferedInputStream(conn.getInputStream());
-
-            iCal = mCalendarBuilder.build(in);
-
+            Calendar iCal = mCalendarBuilder.build(in);
             conn.disconnect();
+            return iCal;
         } catch (Exception e) {
             Log.e(TAG, "getExamIcal", e);
             Analytics.sendException(c, e, true);
-            iCal = null;
+            return null;
         }
-
-        return iCal;
     }
 
     public Map<String, String> getTerms(Context c) {
@@ -298,12 +294,10 @@ public class KusssHandler {
             Document doc = Jsoup.connect(URL_GET_TERMS).cookies(getCookieMap()).get();
             Element termDropdown = doc.getElementById("term");
             if (termDropdown != null) {
-                Elements termDropdownEntries = termDropdown
-                        .getElementsByClass("dropdownentry");
+                Elements termDropdownEntries = termDropdown.getElementsByClass("dropdownentry");
 
                 for (Element termDropdownEntry : termDropdownEntries) {
-                    terms.put(termDropdownEntry.attr("value"),
-                            termDropdownEntry.text());
+                    terms.put(termDropdownEntry.attr("value"), termDropdownEntry.text());
                 }
             }
         } catch (Exception e) {
@@ -390,8 +384,7 @@ public class KusssHandler {
 
     private boolean isSelected(Context c, Document doc, Term term) {
         try {
-            Elements terms = doc.getElementById("term").getElementsByAttribute(
-                    "selected");
+            Elements terms = doc.getElementById("term").getElementsByAttribute("selected");
 
             for (Element termEntry : terms) {
                 if (termEntry.attr("value").equals(term.toString())) {
@@ -408,9 +401,7 @@ public class KusssHandler {
     public List<Assessment> getAssessments(Context c) {
         List<Assessment> grades = new ArrayList<>();
         try {
-            Document doc = Jsoup.connect(URL_MY_GRADES).cookies(getCookieMap()).data("months", "0")
-                    .get();
-
+            Document doc = Jsoup.connect(URL_MY_GRADES).cookies(getCookieMap()).data("months", "0").get();
             Elements rows = doc.select(SELECT_MY_GRADES);
 
             AssessmentType type = null;
@@ -443,7 +434,6 @@ public class KusssHandler {
             Document doc = Jsoup.connect(URL_GET_NEW_EXAMS)
                     .cookies(getCookieMap())
                     .data("search", "true").data("searchType", "mylvas").get();
-
             Elements rows = doc.select(SELECT_NEW_EXAMS);
 
             int i = 0;
@@ -506,15 +496,12 @@ public class KusssHandler {
                         if ((grade.getGrade() == Grade.G5)
                                 || (grade.getDate().getTime() > (System
                                 .currentTimeMillis() - (182 * DateUtils.DAY_IN_MILLIS)))) {
-                            Log.d(TAG,
-                                    "positive in last 6 Months: "
-                                            + grade.getTitle());
+                            Log.d(TAG, "positive in last 6 Months: " + grade.getTitle());
                             grade = null;
                         }
                     }
                     if (grade == null) {
-                        List<Exam> newExams = getNewExamsByCourseId(c,
-                                course.getCourseId());
+                        List<Exam> newExams = getNewExamsByCourseId(c, course.getCourseId());
                         if (newExams != null) {
                             for (Exam newExam : newExams) {
                                 if (newExam != null) {
@@ -585,7 +572,6 @@ public class KusssHandler {
         Log.d(TAG, "loadExams");
 
         Document doc = Jsoup.connect(URL_GET_EXAMS).cookies(getCookieMap()).get();
-
         Elements rows = doc.select(SELECT_EXAMS);
 
         int i = 0;
@@ -595,8 +581,7 @@ public class KusssHandler {
             i++;
 
             if (exam.isInitialized()) {
-                while (i < rows.size()
-                        && rows.get(i).attr("class").equals(row.attr("class"))) {
+                while (i < rows.size() && rows.get(i).attr("class").equals(row.attr("class"))) {
                     exam.addAdditionalInfo(rows.get(i));
                     i++;
                 }
@@ -607,11 +592,10 @@ public class KusssHandler {
 
     public List<Curriculum> getCurricula(Context c) {
         try {
-            List<Curriculum> mCurricula = new ArrayList<>();
-
             Document doc = Jsoup.connect(URL_MY_STUDIES).cookies(getCookieMap()).get();
-
             Elements rows = doc.select(SELECT_MY_STUDIES);
+
+            List<Curriculum> mCurricula = new ArrayList<>();
             for (Element row : rows) {
                 Curriculum s = new Curriculum(c, row);
                 if (s.isInitialized()) {
@@ -624,5 +608,4 @@ public class KusssHandler {
             return null;
         }
     }
-
 }
