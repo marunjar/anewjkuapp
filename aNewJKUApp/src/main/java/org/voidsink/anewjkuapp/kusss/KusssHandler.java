@@ -360,7 +360,7 @@ public class KusssHandler {
             }
             if (courses != null && courses.size() == 0) {
                 // break if no lvas found, a student without courses is a quite impossible case
-                throw new IOException("no lvas found");
+                return null;
             }
         } catch (Exception e) {
             Analytics.sendException(c, e, true);
