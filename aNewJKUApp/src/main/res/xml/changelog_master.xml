@@ -4,6 +4,10 @@
 		    - fixed
 		    * changed
 		    + added -->
+    <release version="0.37" versioncode="140037">
+        <change>- Karte: Fehler bei Anzeige von MT 226/1 behoben</change>
+        <change>* Karte: neue Farben und Symbole</change>
+    </release>
     <release version="0.36" versioncode="140036">
         <change>- KUSSS: Fehler beim Laden von LVAs behoben</change>
         <change>* App: Material Design für Navigation</change>
@@ -72,7 +76,7 @@
     <release version="0.23" versioncode="140023">
         <change>- KUSSS: Fehler beim Laden der Semester</change>
         <change>- Mensa: Menü von Freitag wurde nicht angezeigt</change>
-        <change>* Map: größere Karte damit auch PE001, PE002 und PE003 zu finden sind</change>
+        <change>* Karte: größere Karte damit auch PE001, PE002 und PE003 zu finden sind</change>
         <change>* App: Material Design</change>
         <change>* App: neue Icons</change>
         <change>* App: dunkles Design ist wieder aktivierbar</change>
