@@ -77,10 +77,11 @@ dependencies {
         transitive = true
     }
 
+    compile 'com.github.PhilJay:MPAndroidChart:v2.0.8'
+
     compile project(':voidsinkContributors')
     compile project(':android-support-v4-preferencefragment')
     //compile project(':kussslibrary')
-    compile files('libs/mpandroidchartlibrary-2-0-8.jar')
 }
 
 def appendVersionNameVersionCode(variant, defaultConfig) {
