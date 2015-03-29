@@ -73,7 +73,9 @@ dependencies {
     compile 'com.timehop.stickyheadersrecyclerview:library:0.3.6'
 
     compile 'de.cketti.library.changelog:ckchangelog:1.2.2'
-    compile 'com.mikepenz.aboutlibraries:library:4.5.8'
+    compile('com.mikepenz.aboutlibraries:library:4.5.9@aar') {
+        transitive = true
+    }
 
     compile project(':voidsinkContributors')
     compile project(':android-support-v4-preferencefragment')
