@@ -60,9 +60,9 @@ dependencies {
     compile 'com.google.android.gms:play-services-base:6.5.87'
     compile 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
 
-    compile 'org.mapsforge:mapsforge-core:0.5.0'
-    compile 'org.mapsforge:mapsforge-map:0.5.0'
-    compile 'org.mapsforge:mapsforge-map-android:0.5.0'
+    compile 'org.mapsforge:mapsforge-core:0.5.1'
+    compile 'org.mapsforge:mapsforge-map:0.5.1'
+    compile 'org.mapsforge:mapsforge-map-android:0.5.1'
 
     compile 'org.jsoup:jsoup:1.8.1'
     compile 'org.mnode.ical4j:ical4j:1.0.6'
