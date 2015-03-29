@@ -143,7 +143,7 @@ public class PoiContentProvider extends ContentProvider {
 					null, null, sortOrder);
 		case CODE_POI_BY_NAME:
 			builder.appendWhere(PoiContentContract.Poi.COL_NAME + "='"
-					+ uri.getLastPathSegment() + "'");
+					+ Uri.decode(uri.getLastPathSegment()) + "'");
 			if (TextUtils.isEmpty(sortOrder))
 				sortOrder = PoiContentContract.Poi.COL_NAME + " ASC";
 			builder.setTables(PoiContentContract.Poi.TABLE_NAME);
@@ -157,7 +157,7 @@ public class PoiContentProvider extends ContentProvider {
 
 			if (selection == null) {
 				selection = PoiContentContract.Poi.TABLE_NAME + " MATCH ?";
-				selectionArgs = new String[] { uri.getLastPathSegment() + "*" };
+				selectionArgs = new String[] { Uri.decode(uri.getLastPathSegment()) + "*" };
 			}
 			if (sortOrder == null || TextUtils.isEmpty(sortOrder)) {
 				sortOrder = PoiContentContract.Poi.COL_NAME + " ASC";

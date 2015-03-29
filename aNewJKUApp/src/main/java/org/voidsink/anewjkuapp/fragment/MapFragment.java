@@ -48,6 +48,7 @@ import org.mapsforge.core.util.LatLongUtils;
 import org.mapsforge.core.util.MercatorProjection;
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.mapsforge.map.android.graphics.AndroidResourceBitmap;
+import org.mapsforge.map.android.rendertheme.AssetsRenderTheme;
 import org.mapsforge.map.android.util.AndroidUtil;
 import org.mapsforge.map.android.view.MapView;
 import org.mapsforge.map.layer.Layers;
@@ -56,9 +57,8 @@ import org.mapsforge.map.layer.labels.LabelLayer;
 import org.mapsforge.map.layer.overlay.Marker;
 import org.mapsforge.map.layer.renderer.TileRendererLayer;
 import org.mapsforge.map.model.MapViewPosition;
-import org.mapsforge.map.reader.MapDatabase;
-import org.mapsforge.map.reader.header.FileOpenResult;
-import org.mapsforge.map.reader.header.MapFileInfo;
+import org.mapsforge.map.reader.MapDataStore;
+import org.mapsforge.map.reader.MapFile;
 import org.mapsforge.map.rendertheme.InternalRenderTheme;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
 import org.voidsink.anewjkuapp.ImportPoiTask;
@@ -153,7 +153,7 @@ public class MapFragment extends BaseFragment implements
         ContentResolver cr = getContext().getContentResolver();
         Uri searchUri = PoiContentContract.CONTENT_URI.buildUpon()
                 .appendPath(SearchManager.SUGGEST_URI_PATH_QUERY)
-                .appendEncodedPath(query).build();
+                .appendPath(query).build();
         Cursor c = cr.query(searchUri, ImportPoiTask.POI_PROJECTION, null,
                 null, null);
         while (c.moveToNext()) {
@@ -412,8 +412,7 @@ public class MapFragment extends BaseFragment implements
 
     private XmlRenderTheme getRenderTheme() {
         try {
-            // TODO: use own rendertheme here
-            //return new AssetsRenderTheme(getContext(), "", "renderthemes/rendertheme-v4.xml");
+            return new AssetsRenderTheme(getContext(), "", "renderthemes/rendertheme-v4.xml");
         } catch (Exception e) {
             Analytics.sendException(getContext(), e, false);
         }
@@ -449,8 +448,10 @@ public class MapFragment extends BaseFragment implements
     private TileRendererLayer createTileRendererLayer(TileCache tileCache,
                                                       MapViewPosition mapViewPosition, File mapFile,
                                                       XmlRenderTheme renderTheme, boolean hasAlpha) {
+        MapDataStore mapDataStore = new MapFile(mapFile);
+
         TileRendererLayer tileRendererLayer = AndroidUtil.createTileRendererLayer(tileCache,
-                mapViewPosition, mapFile, renderTheme, hasAlpha, false);
+                mapViewPosition, mapDataStore, renderTheme, hasAlpha, false);
         tileRendererLayer.setTextScale(1.5f);
 
         return tileRendererLayer;
@@ -469,34 +470,24 @@ public class MapFragment extends BaseFragment implements
 
     protected MapPosition getInitialPosition() {
         File mapFile = getMapFile();
-        MapDatabase mapDatabase = new MapDatabase();
-        final FileOpenResult result = mapDatabase.openFile(mapFile);
-        if (result.isSuccess()) {
-            final LatLong uniteich = new LatLong(48.33706, 14.31960);
-            final MapFileInfo mapFileInfo = mapDatabase.getMapFileInfo();
-            if (mapFileInfo != null) {
-                if (mapFileInfo.boundingBox.contains(uniteich)) {
-                    // Insel im Uniteich
-                    return new MapPosition(uniteich, DEFAULT_ZOOM_LEVEL);
-                } else if (mapFileInfo.startPosition != null) {
-                    // given start position, zoom in range
-                    return new MapPosition(mapFileInfo.startPosition,
-                            (byte) Math.max(
-                                    Math.min(mapFileInfo.startZoomLevel,
-                                            MAX_ZOOM_LEVEL), MIN_ZOOM_LEVEL));
-                } else {
-                    // center of the map
-                    return new MapPosition(
-                            mapFileInfo.boundingBox.getCenterPoint(),
-                            DEFAULT_ZOOM_LEVEL);
-                }
-            } else {
-                // Insel im Uniteich
-                return new MapPosition(uniteich, DEFAULT_ZOOM_LEVEL);
-            }
+        MapDataStore mapDataStore = new MapFile(mapFile);
+
+        final LatLong uniteich = new LatLong(48.33706, 14.31960);
+        final byte zoomLevel = (byte) Math.max(Math.min(DEFAULT_ZOOM_LEVEL /*mapDataStore.startZoomLevel()*/, MAX_ZOOM_LEVEL), MIN_ZOOM_LEVEL);
+
+        if (mapDataStore.boundingBox().contains(uniteich)) {
+            // Insel im Uniteich
+            return new MapPosition(uniteich, zoomLevel);
+        } else if (mapDataStore.startPosition() != null &&
+                mapDataStore.boundingBox().contains(mapDataStore.startPosition())) {
+            // given start position, zoom in range
+            return new MapPosition(mapDataStore.startPosition(), zoomLevel);
+        } else {
+            // center of the map
+            return new MapPosition(
+                    mapDataStore.boundingBox().getCenterPoint(),
+                    zoomLevel);
         }
-        throw new IllegalArgumentException("Invalid Map File "
-                + mapFile.toString());
     }
 
     @Override
