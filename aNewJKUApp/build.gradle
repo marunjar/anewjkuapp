@@ -36,6 +36,7 @@ android {
             proguardFile 'proguard-rules-keep-names.txt'
             proguardFile getDefaultProguardFile('proguard-android.txt')
         }
+        fdroid {
             minifyEnabled false
             shrinkResources true
             proguardFile 'proguard-rules.txt'
