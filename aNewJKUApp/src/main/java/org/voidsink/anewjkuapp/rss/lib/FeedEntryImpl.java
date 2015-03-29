@@ -1,3 +1,27 @@
+/*******************************************************************************
+ *      ____.____  __.____ ___     _____
+ *     |    |    |/ _|    |   \   /  _  \ ______ ______
+ *     |    |      < |    |   /  /  /_\  \\____ \\____ \
+ * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ * \________|____|__ \______/   \____|__  /   __/|   __/
+ *                  \/                  \/|__|   |__|
+ *
+ * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ ******************************************************************************/
+
 package org.voidsink.anewjkuapp.rss.lib;
 
 import android.net.Uri;
@@ -16,9 +40,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by paul on 17.11.2014.
- */
 public class FeedEntryImpl implements FeedEntry {
 
     protected Uri source;
@@ -172,7 +193,7 @@ public class FeedEntryImpl implements FeedEntry {
         } else {
             out.writeInt(0);
         }
-        if (feedInfo != null){
+        if (feedInfo != null) {
             out.writeInt(1);
             out.writeParcelable(feedInfo, flags);
         } else {

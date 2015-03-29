@@ -1,4 +1,40 @@
+/*******************************************************************************
+ *      ____.____  __.____ ___     _____
+ *     |    |    |/ _|    |   \   /  _  \ ______ ______
+ *     |    |      < |    |   /  /  /_\  \\____ \\____ \
+ * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ * \________|____|__ \______/   \____|__  /   __/|   __/
+ *                  \/                  \/|__|   |__|
+ *
+ * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ ******************************************************************************/
+
 package org.voidsink.anewjkuapp.mensa;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.preference.PreferenceManager;
+import android.text.format.DateUtils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.utils.Analytics;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -7,126 +43,112 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.utils.Analytics;
-
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.preference.PreferenceManager;
-import android.text.format.DateUtils;
-import android.util.Log;
-
 public abstract class JSONMenuLoader implements MenuLoader {
-	protected abstract String getUrl();
+    protected abstract String getUrl();
 
-	private static final String PREF_DATA_PREFIX = "MENSA_DATA_";
-	private static final String PREF_DATE_PREFIX = "MENSA_DATE_";
+    private static final String PREF_DATA_PREFIX = "MENSA_DATA_";
+    private static final String PREF_DATE_PREFIX = "MENSA_DATE_";
 
     protected abstract String getCacheKey();
 
     private String getData(Context context) {
-		String result = null;
-		String cacheDateKey = PREF_DATE_PREFIX + getCacheKey();
-		String cacheDataKey = PREF_DATA_PREFIX + getCacheKey();
+        String result = null;
+        String cacheDateKey = PREF_DATE_PREFIX + getCacheKey();
+        String cacheDataKey = PREF_DATA_PREFIX + getCacheKey();
 
-		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(context);
-		if (sp.getLong(cacheDateKey, 0) > (System.currentTimeMillis() - 6 * DateUtils.HOUR_IN_MILLIS)) {
-			result = sp.getString(cacheDataKey, null);
-		}
+        SharedPreferences sp = PreferenceManager
+                .getDefaultSharedPreferences(context);
+        if (sp.getLong(cacheDateKey, 0) > (System.currentTimeMillis() - 6 * DateUtils.HOUR_IN_MILLIS)) {
+            result = sp.getString(cacheDataKey, null);
+        }
 
-		if (result == null) {
-			try {
-				URL url = new URL(getUrl());
-				HttpURLConnection conn = (HttpURLConnection) url
+        if (result == null) {
+            try {
+                URL url = new URL(getUrl());
+                HttpURLConnection conn = (HttpURLConnection) url
                         .openConnection();
                 conn.setConnectTimeout(5000);
                 conn.setReadTimeout(15000);
 
-				Writer writer = new StringWriter();
+                Writer writer = new StringWriter();
 
-				char[] buffer = new char[1024];
-				Reader reader = new BufferedReader(new InputStreamReader(
-						conn.getInputStream(), "UTF-8"));
-				int n;
-				while ((n = reader.read(buffer)) != -1) {
-					writer.write(buffer, 0, n);
-				}
-				result = writer.toString();
+                char[] buffer = new char[1024];
+                Reader reader = new BufferedReader(new InputStreamReader(
+                        conn.getInputStream(), "UTF-8"));
+                int n;
+                while ((n = reader.read(buffer)) != -1) {
+                    writer.write(buffer, 0, n);
+                }
+                result = writer.toString();
 
                 conn.disconnect();
 
-				Editor editor = sp.edit();
-				editor.putString(cacheDataKey, result);
-				editor.putLong(cacheDateKey, System.currentTimeMillis());
-				editor.apply();
-			} catch (Exception e) {
+                Editor editor = sp.edit();
+                editor.putString(cacheDataKey, result);
+                editor.putLong(cacheDateKey, System.currentTimeMillis());
+                editor.apply();
+            } catch (Exception e) {
                 Analytics.sendException(context, e, false);
-				result = sp.getString(cacheDataKey, null);
-			}
-		}
+                result = sp.getString(cacheDataKey, null);
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	private String getLocation(Context c, int nr) {
-		switch (nr) {
-		case 1:
-			return c.getString(R.string.mensa_title_classic);
-		case 2:
-			return c.getString(R.string.mensa_title_choice);
-		case 3:
-			return c.getString(R.string.mensa_title_khg);
-		case 4:
-			return c.getString(R.string.mensa_title_raab);
-		default:
-			return c.getString(R.string.mensa_title_unknown);
-		}
-	}
+    private String getLocation(Context c, int nr) {
+        switch (nr) {
+            case 1:
+                return c.getString(R.string.mensa_title_classic);
+            case 2:
+                return c.getString(R.string.mensa_title_choice);
+            case 3:
+                return c.getString(R.string.mensa_title_khg);
+            case 4:
+                return c.getString(R.string.mensa_title_raab);
+            default:
+                return c.getString(R.string.mensa_title_unknown);
+        }
+    }
 
-	public Mensa getMensa(Context context) {
-		Mensa mensa = null;
-		try {
-			String data = getData(context);
-			if (data != null) {
-				JSONObject jsonData = new JSONObject(data);
-				if (jsonData.getString("success").equals("true")) {
-					JSONObject jsonMensa = jsonData.getJSONObject("result");
+    public Mensa getMensa(Context context) {
+        Mensa mensa = null;
+        try {
+            String data = getData(context);
+            if (data != null) {
+                JSONObject jsonData = new JSONObject(data);
+                if (jsonData.getString("success").equals("true")) {
+                    JSONObject jsonMensa = jsonData.getJSONObject("result");
 
-					mensa = new Mensa(getLocation(context, Integer.parseInt(jsonMensa
-							.getString("location"))));
-					JSONArray jsonDays = jsonMensa.getJSONArray("offers");
-					for (int i = 0; i < jsonDays.length(); i++) {
-						JSONObject jsonDay = jsonDays.getJSONObject(i);
-						MensaDay day = new MensaDay(jsonDay);
+                    mensa = new Mensa(getLocation(context, Integer.parseInt(jsonMensa
+                            .getString("location"))));
+                    JSONArray jsonDays = jsonMensa.getJSONArray("offers");
+                    for (int i = 0; i < jsonDays.length(); i++) {
+                        JSONObject jsonDay = jsonDays.getJSONObject(i);
+                        MensaDay day = new MensaDay(jsonDay);
 
-						onNewDay(day);
+                        onNewDay(day);
 
-						mensa.addDay(day);
-						JSONArray jsonMenus = jsonDay.getJSONArray("menus");
+                        mensa.addDay(day);
+                        JSONArray jsonMenus = jsonDay.getJSONArray("menus");
                         checkName(jsonMenus);
                         normalize(context, jsonMenus);
-						for (int j = 0; j < jsonMenus.length(); j++) {
-							day.addMenu(new MensaMenu(jsonMenus
-									.getJSONObject(j)));
-						}
-					}
-				}
-			}
-		} catch (Exception e) {
+                        for (int j = 0; j < jsonMenus.length(); j++) {
+                            day.addMenu(new MensaMenu(jsonMenus
+                                    .getJSONObject(j)));
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
             Analytics.sendException(context, e, false);
             return null;
-		}
-		return mensa;
-	}
+        }
+        return mensa;
+    }
 
     private void checkName(JSONArray jsonMenus) throws JSONException {
         if (getNameFromMeal()) {
@@ -154,7 +176,7 @@ public abstract class JSONMenuLoader implements MenuLoader {
 
     //push every followup-element one position later
     protected void insert(JSONArray a, Object o, int index) throws JSONException {
-        if(index >= a.length() || index < 0) { //just for some cornercases
+        if (index >= a.length() || index < 0) { //just for some cornercases
             a.put(o);
         } else {
             Object tmp = a.get(index);
@@ -212,9 +234,9 @@ public abstract class JSONMenuLoader implements MenuLoader {
 
     protected void onNewDay(MensaDay day) {
 
-	}
+    }
 
-	protected boolean getNameFromMeal() {
-		return false;
-	}
+    protected boolean getNameFromMeal() {
+        return false;
+    }
 }

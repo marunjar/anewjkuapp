@@ -1,4 +1,46 @@
+/*******************************************************************************
+ *      ____.____  __.____ ___     _____
+ *     |    |    |/ _|    |   \   /  _  \ ______ ______
+ *     |    |      < |    |   /  /  /_\  \\____ \\____ \
+ * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ * \________|____|__ \______/   \____|__  /   __/|   __/
+ *                  \/                  \/|__|   |__|
+ *
+ * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ ******************************************************************************/
+
 package org.voidsink.anewjkuapp;
+
+import android.content.ContentProviderClient;
+import android.content.ContentProviderOperation;
+import android.content.Context;
+import android.content.OperationApplicationException;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.RemoteException;
+import android.util.Log;
+
+import org.voidsink.anewjkuapp.base.BaseAsyncTask;
+import org.voidsink.anewjkuapp.notification.PoiNotification;
+import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
+import org.voidsink.anewjkuapp.utils.Analytics;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,216 +57,198 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.voidsink.anewjkuapp.base.BaseAsyncTask;
-import org.voidsink.anewjkuapp.notification.PoiNotification;
-import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
-import org.voidsink.anewjkuapp.utils.Analytics;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-import android.content.ContentProviderClient;
-import android.content.ContentProviderOperation;
-import android.content.Context;
-import android.content.OperationApplicationException;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.RemoteException;
-import android.util.Log;
-
 public class ImportPoiTask extends BaseAsyncTask<Void, Void, Void> {
-	
-	private static final String TAG = ImportPoiTask.class.getSimpleName();
 
-	private ContentProviderClient mProvider;
-	private Context mContext;
-	private File mFile;
-	private boolean mIsDefault;
+    private static final String TAG = ImportPoiTask.class.getSimpleName();
 
-	public static final String[] POI_PROJECTION = new String[] {
-			PoiContentContract.Poi.COL_ROWID, 
-			PoiContentContract.Poi.COL_NAME,
-			PoiContentContract.Poi.COL_LON, 
-			PoiContentContract.Poi.COL_LAT,
-			PoiContentContract.Poi.COL_DESCR,
-			PoiContentContract.Poi.COL_IS_DEFAULT };
+    private ContentProviderClient mProvider;
+    private Context mContext;
+    private File mFile;
+    private boolean mIsDefault;
 
-	public static final int COLUMN_POI_ID = 0;
-	public static final int COLUMN_POI_NAME = 1;
-	public static final int COLUMN_POI_LON = 2;
-	public static final int COLUMN_POI_LAT = 3;
-	public static final int COLUMN_POI_DESCR = 4;
-	public static final int COLUMN_POI_IS_DEFAULT = 5;
+    public static final String[] POI_PROJECTION = new String[]{
+            PoiContentContract.Poi.COL_ROWID,
+            PoiContentContract.Poi.COL_NAME,
+            PoiContentContract.Poi.COL_LON,
+            PoiContentContract.Poi.COL_LAT,
+            PoiContentContract.Poi.COL_DESCR,
+            PoiContentContract.Poi.COL_IS_DEFAULT};
 
-	public ImportPoiTask(Context context, File file, boolean isDefault) {
-		this.mProvider = context.getContentResolver()
-				.acquireContentProviderClient(PoiContentContract.CONTENT_URI);
-		this.mContext = context;
-		this.mFile = file;
-		this.mIsDefault = isDefault;
-	}
+    public static final int COLUMN_POI_ID = 0;
+    public static final int COLUMN_POI_NAME = 1;
+    public static final int COLUMN_POI_LON = 2;
+    public static final int COLUMN_POI_LAT = 3;
+    public static final int COLUMN_POI_DESCR = 4;
+    public static final int COLUMN_POI_IS_DEFAULT = 5;
 
-	@Override
-	protected Void doInBackground(Void... params) {
+    public ImportPoiTask(Context context, File file, boolean isDefault) {
+        this.mProvider = context.getContentResolver()
+                .acquireContentProviderClient(PoiContentContract.CONTENT_URI);
+        this.mContext = context;
+        this.mFile = file;
+        this.mIsDefault = isDefault;
+    }
 
-		Log.d(TAG, "start importing POIs");
-		PoiNotification mNotification = new PoiNotification(mContext);
-		try {
-			Map<String, Poi> poiMap = new HashMap<String, Poi>();
+    @Override
+    protected Void doInBackground(Void... params) {
 
-			try {
-				DocumentBuilderFactory factory = DocumentBuilderFactory
-						.newInstance();
-				DocumentBuilder builder = factory.newDocumentBuilder();
+        Log.d(TAG, "start importing POIs");
+        PoiNotification mNotification = new PoiNotification(mContext);
+        try {
+            Map<String, Poi> poiMap = new HashMap<String, Poi>();
 
-				Document gpx = builder.parse(mFile);
+            try {
+                DocumentBuilderFactory factory = DocumentBuilderFactory
+                        .newInstance();
+                DocumentBuilder builder = factory.newDocumentBuilder();
 
-				XPath xpath = XPathFactory.newInstance().newXPath();
-				XPathExpression wpt_path = xpath
-						.compile("//gpx/wpt[name][@lat][@lon]");
-				// XPathExpression wpt_address =
-				// xpath.compile("/*/extensions/gpxx:WaypointExtension/gpxx:Address");
-				NodeList wpts = (NodeList) wpt_path.evaluate(gpx,
-						XPathConstants.NODESET);
-				for (int i = 0; i < wpts.getLength(); i++) {
-					Element wpt = (Element) wpts.item(i);
-					double lat = Double.parseDouble(wpt.getAttribute("lat"));
-					double lon = Double.parseDouble(wpt.getAttribute("lon"));
+                Document gpx = builder.parse(mFile);
 
-					NodeList names = wpt.getElementsByTagName("name");
-					if (names.getLength() == 1) {
-						String name = ((Element) names.item(0))
-								.getTextContent();
+                XPath xpath = XPathFactory.newInstance().newXPath();
+                XPathExpression wpt_path = xpath
+                        .compile("//gpx/wpt[name][@lat][@lon]");
+                // XPathExpression wpt_address =
+                // xpath.compile("/*/extensions/gpxx:WaypointExtension/gpxx:Address");
+                NodeList wpts = (NodeList) wpt_path.evaluate(gpx,
+                        XPathConstants.NODESET);
+                for (int i = 0; i < wpts.getLength(); i++) {
+                    Element wpt = (Element) wpts.item(i);
+                    double lat = Double.parseDouble(wpt.getAttribute("lat"));
+                    double lon = Double.parseDouble(wpt.getAttribute("lon"));
 
-						Poi poi = new Poi(name, lat, lon);
-						if (!poiMap.containsKey(poi.getName())) {
-							Log.d(TAG, "poi found: " + poi.getName());
+                    NodeList names = wpt.getElementsByTagName("name");
+                    if (names.getLength() == 1) {
+                        String name = ((Element) names.item(0))
+                                .getTextContent();
 
-							poiMap.put(poi.getName(), poi);
-							poi.parse(wpt);
+                        Poi poi = new Poi(name, lat, lon);
+                        if (!poiMap.containsKey(poi.getName())) {
+                            Log.d(TAG, "poi found: " + poi.getName());
 
-						}
-					}
-				}
-			} catch (ParserConfigurationException | SAXException | IOException
-					| XPathExpressionException e) {
-				poiMap.clear();
-				Log.e(TAG, "parse failed", e);
-				Analytics.sendException(mContext, e, true);
-			}
+                            poiMap.put(poi.getName(), poi);
+                            poi.parse(wpt);
 
-			if (!poiMap.isEmpty()) {
-				Log.i(TAG, String.format("got %s pois", poiMap.size()));
+                        }
+                    }
+                }
+            } catch (ParserConfigurationException | SAXException | IOException
+                    | XPathExpressionException e) {
+                poiMap.clear();
+                Log.e(TAG, "parse failed", e);
+                Analytics.sendException(mContext, e, true);
+            }
 
-				ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
+            if (!poiMap.isEmpty()) {
+                Log.i(TAG, String.format("got %s pois", poiMap.size()));
 
-				Uri poiUri = PoiContentContract.Poi.CONTENT_URI;
-				Cursor c = mProvider.query(poiUri, POI_PROJECTION, null, null,
-						null);
+                ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
 
-				if (c != null) {
-					Log.d(TAG, "Found " + c.getCount()
-							+ " local entries. Computing merge solution...");
+                Uri poiUri = PoiContentContract.Poi.CONTENT_URI;
+                Cursor c = mProvider.query(poiUri, POI_PROJECTION, null, null,
+                        null);
 
-					int poiId;
-					String poiName;
-					boolean poiIsDefault;
+                if (c != null) {
+                    Log.d(TAG, "Found " + c.getCount()
+                            + " local entries. Computing merge solution...");
 
-					// TODO
-					while (c.moveToNext()) {
-						poiId = c.getInt(COLUMN_POI_ID);
-						poiName = c.getString(COLUMN_POI_NAME);
-						poiIsDefault = KusssDatabaseHelper.toBool(c
-								.getInt(COLUMN_POI_IS_DEFAULT));
+                    int poiId;
+                    String poiName;
+                    boolean poiIsDefault;
 
-						Poi poi = poiMap.get(poiName);
-						if (poi != null) {
-							poiMap.remove(poiName);
+                    // TODO
+                    while (c.moveToNext()) {
+                        poiId = c.getInt(COLUMN_POI_ID);
+                        poiName = c.getString(COLUMN_POI_NAME);
+                        poiIsDefault = KusssDatabaseHelper.toBool(c
+                                .getInt(COLUMN_POI_IS_DEFAULT));
 
-							if (mIsDefault || !poiIsDefault) {
-								// Check to see if the entry needs to be updated
-								Uri existingUri = poiUri.buildUpon()
-										.appendPath(Integer.toString(poiId))
-										.build();
-								Log.d(TAG, String.format("Scheduling update: %s (%s)", poiName, existingUri));
+                        Poi poi = poiMap.get(poiName);
+                        if (poi != null) {
+                            poiMap.remove(poiName);
 
-								batch.add(ContentProviderOperation
-										.newUpdate(existingUri)
-										// PoiContentContract
-										// .asEventSyncAdapter(
-										// existingUri,
-										// mAccount.name,
-										// mAccount.type))
-										.withValue(
-												PoiContentContract.Poi.COL_ROWID,
-												Integer.toString(poiId))
-										.withValues(
-												poi.getContentValues(
-														poiIsDefault,
-														mIsDefault)).build());
-								// mSyncResult.stats.numUpdates++;
-							}
-						} else {
-							if (poiIsDefault && mIsDefault) {
-								// Entry doesn't exist.
-								Uri deleteUri = poiUri.buildUpon()
-										.appendPath(Integer.toString(poiId))
-										.build();
-								Log.d(TAG, String.format("Scheduling delete: %s (%s)", poiName, deleteUri));
+                            if (mIsDefault || !poiIsDefault) {
+                                // Check to see if the entry needs to be updated
+                                Uri existingUri = poiUri.buildUpon()
+                                        .appendPath(Integer.toString(poiId))
+                                        .build();
+                                Log.d(TAG, String.format("Scheduling update: %s (%s)", poiName, existingUri));
 
-								batch.add(ContentProviderOperation.newDelete(
-										deleteUri)
-								// PoiContentContract
-								// .asEventSyncAdapter(
-								// deleteUri,
-								// mAccount.name,
-								// mAccount.type))
-										.build());
-								// mSyncResult.stats.numDeletes++;
-							}
-						}
-					}
-					c.close();
+                                batch.add(ContentProviderOperation
+                                        .newUpdate(existingUri)
+                                                // PoiContentContract
+                                                // .asEventSyncAdapter(
+                                                // existingUri,
+                                                // mAccount.name,
+                                                // mAccount.type))
+                                        .withValue(
+                                                PoiContentContract.Poi.COL_ROWID,
+                                                Integer.toString(poiId))
+                                        .withValues(
+                                                poi.getContentValues(
+                                                        poiIsDefault,
+                                                        mIsDefault)).build());
+                                // mSyncResult.stats.numUpdates++;
+                            }
+                        } else {
+                            if (poiIsDefault && mIsDefault) {
+                                // Entry doesn't exist.
+                                Uri deleteUri = poiUri.buildUpon()
+                                        .appendPath(Integer.toString(poiId))
+                                        .build();
+                                Log.d(TAG, String.format("Scheduling delete: %s (%s)", poiName, deleteUri));
 
-					for (Poi poi : poiMap.values()) {
-						batch.add(ContentProviderOperation
-								.newInsert(poiUri)
-								// PoiContentContract
-								// .asEventSyncAdapter(poiUri,
-								// mAccount.name,
-								// mAccount.type))
-								.withValues(poi.getContentValues(mIsDefault))
-								.build());
-						Log.d(TAG, "Scheduling insert: " + poi.getName());
-						// mSyncResult.stats.numInserts++;
-					}
+                                batch.add(ContentProviderOperation.newDelete(
+                                        deleteUri)
+                                        // PoiContentContract
+                                        // .asEventSyncAdapter(
+                                        // deleteUri,
+                                        // mAccount.name,
+                                        // mAccount.type))
+                                        .build());
+                                // mSyncResult.stats.numDeletes++;
+                            }
+                        }
+                    }
+                    c.close();
 
-					if (batch.size() > 0) {
-						// mSyncNotification.update("LVAs werden gespeichert");
+                    for (Poi poi : poiMap.values()) {
+                        batch.add(ContentProviderOperation
+                                .newInsert(poiUri)
+                                        // PoiContentContract
+                                        // .asEventSyncAdapter(poiUri,
+                                        // mAccount.name,
+                                        // mAccount.type))
+                                .withValues(poi.getContentValues(mIsDefault))
+                                .build());
+                        Log.d(TAG, "Scheduling insert: " + poi.getName());
+                        // mSyncResult.stats.numInserts++;
+                    }
 
-						Log.d(TAG, "Applying batch update");
-						mProvider.applyBatch(batch);
-						Log.d(TAG, "Notify resolver");
-						mContext.getContentResolver().notifyChange(
-								PoiContentContract.Poi.CONTENT_URI, null, // No
-																			// local
-																			// observer
-								false); // IMPORTANT: Do not sync to network
-					} else {
-						Log.w(TAG, "No batch operations found! Do nothing");
-					}
+                    if (batch.size() > 0) {
+                        // mSyncNotification.update("LVAs werden gespeichert");
 
-				} else {
-					Log.w(TAG, "selection failed");
-				}
-			}
-		} catch (RemoteException | OperationApplicationException e) {
-			Analytics.sendException(mContext, e, true);
-		} finally {
-			mNotification.show();
-		}
+                        Log.d(TAG, "Applying batch update");
+                        mProvider.applyBatch(batch);
+                        Log.d(TAG, "Notify resolver");
+                        mContext.getContentResolver().notifyChange(
+                                PoiContentContract.Poi.CONTENT_URI, null, // No
+                                // local
+                                // observer
+                                false); // IMPORTANT: Do not sync to network
+                    } else {
+                        Log.w(TAG, "No batch operations found! Do nothing");
+                    }
 
-		return null;
-	}
+                } else {
+                    Log.w(TAG, "selection failed");
+                }
+            }
+        } catch (RemoteException | OperationApplicationException e) {
+            Analytics.sendException(mContext, e, true);
+        } finally {
+            mNotification.show();
+        }
+
+        return null;
+    }
 }
