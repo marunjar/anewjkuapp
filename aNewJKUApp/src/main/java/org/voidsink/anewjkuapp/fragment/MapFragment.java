@@ -48,6 +48,7 @@ import org.mapsforge.core.util.LatLongUtils;
 import org.mapsforge.core.util.MercatorProjection;
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.mapsforge.map.android.graphics.AndroidResourceBitmap;
+import org.mapsforge.map.android.rendertheme.AssetsRenderTheme;
 import org.mapsforge.map.android.util.AndroidUtil;
 import org.mapsforge.map.android.view.MapView;
 import org.mapsforge.map.layer.Layers;
@@ -411,8 +412,7 @@ public class MapFragment extends BaseFragment implements
 
     private XmlRenderTheme getRenderTheme() {
         try {
-            // TODO: use own rendertheme here
-            //return new AssetsRenderTheme(getContext(), "", "renderthemes/rendertheme-v4.xml");
+            return new AssetsRenderTheme(getContext(), "", "renderthemes/rendertheme-v4.xml");
         } catch (Exception e) {
             Analytics.sendException(getContext(), e, false);
         }
