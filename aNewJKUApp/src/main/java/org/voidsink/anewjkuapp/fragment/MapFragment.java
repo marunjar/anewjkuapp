@@ -153,7 +153,7 @@ public class MapFragment extends BaseFragment implements
         ContentResolver cr = getContext().getContentResolver();
         Uri searchUri = PoiContentContract.CONTENT_URI.buildUpon()
                 .appendPath(SearchManager.SUGGEST_URI_PATH_QUERY)
-                .appendEncodedPath(query).build();
+                .appendPath(query).build();
         Cursor c = cr.query(searchUri, ImportPoiTask.POI_PROJECTION, null,
                 null, null);
         while (c.moveToNext()) {
