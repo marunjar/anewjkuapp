@@ -12,16 +12,19 @@ android {
         versionName "0.37"
         minSdkVersion 14
         targetSdkVersion 22
+
+        proguardFile 'proguard-rules.txt'
+        proguardFile 'proguard-rules-google-play-services.txt'
+        proguardFile 'proguard-rules-ical4j.txt'
+        proguardFile 'proguard-rules-keep-names.txt'
+        proguardFile getDefaultProguardFile('proguard-android.txt')
+
+        buildConfigField "boolean", "FDROID", "false"
     }
     buildTypes {
         release {
             minifyEnabled false
             shrinkResources true
-            proguardFile 'proguard-rules.txt'
-            proguardFile 'proguard-rules-google-play-services.txt'
-            proguardFile 'proguard-rules-ical4j.txt'
-            proguardFile 'proguard-rules-keep-names.txt'
-            proguardFile getDefaultProguardFile('proguard-android.txt')
 
             applicationVariants.all { variant ->
                 appendVersionNameVersionCode(variant, defaultConfig)
@@ -30,20 +33,12 @@ android {
         debug {
             minifyEnabled false
             shrinkResources true
-            proguardFile 'proguard-rules.txt'
-            proguardFile 'proguard-rules-google-play-services.txt'
-            proguardFile 'proguard-rules-ical4j.txt'
-            proguardFile 'proguard-rules-keep-names.txt'
-            proguardFile getDefaultProguardFile('proguard-android.txt')
         }
         fdroid {
             minifyEnabled false
             shrinkResources true
-            proguardFile 'proguard-rules.txt'
-            proguardFile 'proguard-rules-google-play-services.txt'
-            proguardFile 'proguard-rules-ical4j.txt'
-            proguardFile 'proguard-rules-keep-names.txt'
-            proguardFile getDefaultProguardFile('proguard-android.txt')
+
+            buildConfigField "boolean", "FDROID", "true"
 
             applicationVariants.all { variant ->
                 appendVersionNameVersionCode(variant, defaultConfig)
