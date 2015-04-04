@@ -4,6 +4,9 @@
 		    - fixed
 		    * changed
 		    + added -->
+    <release version="0.38" versioncode="140038">
+        <change>+ Einstellungen: Tracking von Fehlern kann deaktiviert werden</change>
+    </release>
     <release version="0.37" versioncode="140037">
         <change>- Karte: Fehler bei Anzeige von MT 226/1 behoben</change>
         <change>* Karte: neue Farben und Symbole</change>
