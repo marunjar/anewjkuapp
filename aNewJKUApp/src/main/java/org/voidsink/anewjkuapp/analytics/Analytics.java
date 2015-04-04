@@ -88,4 +88,11 @@ public class Analytics {
         getAnalytics().sendButtonEvent("reload_curricula");
     }
 
+    public static void sendPreferenceChanged(String key, String value) {
+        getAnalytics().sendPreferenceChanged(key, value);
+    }
+
+    public static void setEnabled(boolean enabled) {
+        getAnalytics().setEnabled(enabled);
+    }
 }

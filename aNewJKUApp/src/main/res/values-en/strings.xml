@@ -193,4 +193,7 @@
     <string name="pref_kusss_calendar_sync_title">Synchronisation</string>
     <string name="notification_sync_connect">Connecting</string>
     <string name="map_select_location">Select lecture room</string>
+    <string name="pref_cat_tracking">Tracking</string>
+    <string name="pref_tracking_errors_summary">Send errors to developer automatically for fixing them immediately.</string>
+    <string name="pref_tracking_errors_title">Errors</string>
 </resources>

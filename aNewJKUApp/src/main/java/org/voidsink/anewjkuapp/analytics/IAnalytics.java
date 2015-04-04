@@ -36,4 +36,8 @@ public interface IAnalytics {
     public void sendScreen(Context c, String screenName);
 
     public void sendButtonEvent(String label);
+
+    public void sendPreferenceChanged(String key, String value);
+
+    public void setEnabled(boolean enabled);
 }

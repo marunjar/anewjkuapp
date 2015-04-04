@@ -26,7 +26,10 @@ package org.voidsink.anewjkuapp.analytics;
 
 import android.app.Application;
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
+
+import org.voidsink.anewjkuapp.BuildConfig;
 
 public class AnalyticsFlavor implements IAnalytics {
 
@@ -40,7 +43,9 @@ public class AnalyticsFlavor implements IAnalytics {
 
     @Override
     public void sendException(Context c, Exception e, boolean fatal, String additionalData) {
-        Log.d(TAG, String.format("%s (%s)", e.toString(), additionalData));
+        if (e != null) {
+            Log.d(TAG, String.format("%s (%s)", e.getMessage(), additionalData));
+        }
     }
 
     @Override
@@ -51,5 +56,19 @@ public class AnalyticsFlavor implements IAnalytics {
     @Override
     public void sendButtonEvent(String label) {
         Log.d(TAG, String.format("buttonEvent: %s", label));
+    }
+
+    @Override
+    public void sendPreferenceChanged(String key, String value) {
+        if (!TextUtils.isEmpty(key)) {
+            Log.d(TAG, String.format("preferenceChanged: %s=%s", key, value));
+        }
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, String.format("setEnabled: %s", enabled));
+        }
     }
 }

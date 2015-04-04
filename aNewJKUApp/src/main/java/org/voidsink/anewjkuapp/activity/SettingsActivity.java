@@ -38,6 +38,7 @@ import android.util.Log;
 
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.base.ThemedActivity;
 import org.voidsink.anewjkuapp.fragment.SettingsFragment;
 import org.voidsink.anewjkuapp.update.UpdateService;
@@ -143,6 +144,19 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
                 break;
             case PreferenceWrapper.PREF_USE_LIGHT_THEME:
                 mThemeChanged = true;
+                break;
+            case PreferenceWrapper.PREF_TRACKING_ERRORS:
+                boolean trackingErrors = sharedPreferences.getBoolean(key, PreferenceWrapper.PREF_TRACKING_ERRORS_DEFAULT);
+                if (trackingErrors) {
+                    // track opting in
+                    Analytics.setEnabled(trackingErrors);
+                    Analytics.sendPreferenceChanged(key, Boolean.toString(trackingErrors));
+                } else {
+                    // track opting out
+                    Analytics.sendPreferenceChanged(key, Boolean.toString(trackingErrors));
+                    Analytics.setEnabled(trackingErrors);
+                }
+
                 break;
             default:
                 break;

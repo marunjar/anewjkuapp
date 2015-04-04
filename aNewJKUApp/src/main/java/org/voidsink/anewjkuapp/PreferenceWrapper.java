@@ -90,6 +90,9 @@ public final class PreferenceWrapper {
     private static final String PREF_SYNC_CALENDAR_EXAM = "pref_key_sync_calendar_exam";
     private static final boolean PREF_SYNC_CALENDAR_EXAM_DEFAULT = true;
 
+    public static final String PREF_TRACKING_ERRORS = "pref_key_tracking_errors";
+    public static final boolean PREF_TRACKING_ERRORS_DEFAULT = true;
+
     private PreferenceWrapper() {
 
     }
@@ -401,6 +404,19 @@ public final class PreferenceWrapper {
         } catch (Exception e) {
             Log.e(TAG, "Failure", e);
             return PREF_SYNC_CALENDAR_EXAM_DEFAULT;
+        }
+    }
+
+    public static boolean trackingErrors(Context context) {
+        try {
+            SharedPreferences sp = PreferenceManager
+                    .getDefaultSharedPreferences(context);
+
+            return !sp.getBoolean(PREF_TRACKING_ERRORS,
+                    PREF_TRACKING_ERRORS_DEFAULT);
+        } catch (Exception e) {
+            Log.e(TAG, "Failure", e);
+            return PREF_TRACKING_ERRORS_DEFAULT;
         }
     }
 }

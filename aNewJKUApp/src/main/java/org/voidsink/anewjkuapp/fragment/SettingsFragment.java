@@ -26,6 +26,7 @@ package org.voidsink.anewjkuapp.fragment;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
@@ -34,6 +35,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.preference.PreferenceFragment;
 import android.text.TextUtils;
 
+import org.voidsink.anewjkuapp.BuildConfig;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.SettingsActivity;
@@ -118,6 +120,13 @@ public class SettingsFragment extends PreferenceFragment {
 
             // Load the preferences from an XML resource
             addPreferencesFromResource(R.xml.preference_app);
+
+            if (BuildConfig.FOSS_ONLY) {
+                // disable tracking if GA is not used
+                CheckBoxPreference trackingErrors = (CheckBoxPreference) findPreference(PreferenceWrapper.PREF_TRACKING_ERRORS);
+                trackingErrors.setEnabled(false);
+                trackingErrors.setChecked(false);
+            }
         }
 
         @Override

@@ -121,6 +121,9 @@
     <string name="pref_cat_mensa">Mensa</string>
     <string name="pref_mensa_group_menu_by_day_title">nach Tag gruppieren</string>
     <string name="pref_mensa_group_menu_by_day_summary">Alle Menüs nach Tag gruppieren</string>
+    <string name="pref_cat_tracking">Tracking</string>
+    <string name="pref_tracking_errors_title">Fehler</string>
+    <string name="pref_tracking_errors_summary">Fehler automatisch an Entwickler senden damit schneller darauf reagiert werden kann.</string>
 
     <string name="group_user">User</string>
     <string name="group_oeh">ÖH</string>
@@ -237,7 +240,7 @@
     <string name="studies_dt_start">Beginn</string>
     <string name="studies_dt_end">Ende</string>
 
-    <string name="default_chip_color" translatable="false" >#ff2b7fc2</string>
+    <string name="default_chip_color" translatable="false">#ff2b7fc2</string>
     <string name="drawer_menu_item_icon">Icon</string>
     <string name="kusss_service_title">KUSSS Service</string>
     <string name="kusss_provider_name">KUSSS</string>

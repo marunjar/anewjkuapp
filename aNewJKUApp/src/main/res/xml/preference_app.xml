@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    <PreferenceCategory android:title="@string/pref_cat_app_main" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/pref_cat_app_main">
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="pref_key_use_light_theme"
             android:summary="@string/pref_app_use_light_theme_summary"
-            android:title="@string/pref_app_use_light_theme_title"/>
+            android:title="@string/pref_app_use_light_theme_title" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_cat_app_map" >
+    <PreferenceCategory android:title="@string/pref_cat_app_map">
         <org.voidsink.anewjkuapp.base.MapFilePreference
             android:key="pref_key_map_file"
             android:summary=""
             android:title="@string/pref_app_map_file_title" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_cat_stats" >
+    <PreferenceCategory android:title="@string/pref_cat_stats">
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="pref_key_use_lva_bar_chart"
@@ -25,12 +25,19 @@
             android:summary="@string/pref_stats_positive_grades_only_summary"
             android:title="@string/pref_stats_positive_grades_only_title" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_cat_mensa" >
+    <PreferenceCategory android:title="@string/pref_cat_mensa">
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="pref_key_group_menu_by_day"
             android:summary="@string/pref_mensa_group_menu_by_day_summary"
             android:title="@string/pref_mensa_group_menu_by_day_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_cat_tracking">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_key_tracking_errors"
+            android:summary="@string/pref_tracking_errors_summary"
+            android:title="@string/pref_tracking_errors_title" />
     </PreferenceCategory>
 
 </PreferenceScreen>
