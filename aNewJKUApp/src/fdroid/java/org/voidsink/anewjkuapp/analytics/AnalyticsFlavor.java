@@ -22,37 +22,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  ******************************************************************************/
 
-package org.voidsink.anewjkuapp;
+package org.voidsink.anewjkuapp.analytics;
 
 import android.app.Application;
+import android.content.Context;
+import android.util.Log;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+public class AnalyticsFlavor implements IAnalytics {
 
-import org.voidsink.anewjkuapp.analytics.Analytics;
-import org.voidsink.anewjkuapp.utils.AppUtils;
 
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
-
-public class Globals extends Application {
+    private static final String TAG = AnalyticsFlavor.class.getSimpleName();
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/Roboto-Regular.ttf")
-                .setFontAttrId(R.attr.fontPath)
-                .build());
-
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
-                .build();
-        ImageLoader.getInstance().init(config);
-
-        // initialize analytics
-        Analytics.init(this);
-
-        AppUtils.updateSyncAlarm(this, false);
+    public void init(Application app) {
+        Log.d(TAG, "init");
     }
 
+    @Override
+    public void sendException(Context c, Exception e, boolean fatal, String additionalData) {
+        Log.d(TAG, String.format("%s (%s)", e.toString(), additionalData));
+    }
+
+    @Override
+    public void sendScreen(Context c, String screenName) {
+        Log.d(TAG, String.format("screen: %s", screenName));
+    }
+
+    @Override
+    public void sendButtonEvent(String label) {
+        Log.d(TAG, String.format("buttonEvent: %s", label));
+    }
 }

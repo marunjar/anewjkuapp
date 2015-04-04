@@ -26,8 +26,8 @@ package org.voidsink.anewjkuapp.base;
 
 import android.os.Bundle;
 
+import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.kusss.Term;
-import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.text.ParseException;

@@ -34,7 +34,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.utils.Analytics;
+import org.voidsink.anewjkuapp.analytics.Analytics;
 
 public class BaseFragment extends Fragment {
 

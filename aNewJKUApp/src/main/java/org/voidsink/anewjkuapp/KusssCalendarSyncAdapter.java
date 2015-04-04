@@ -37,11 +37,11 @@ import android.util.Log;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 
+import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.notification.KusssNotificationBuilder;
 import org.voidsink.anewjkuapp.update.ImportCalendarTask;
-import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
 public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
@@ -62,7 +62,7 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
     public KusssCalendarSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
         /*
-		 * If your app uses a content resolver, get an instance of it from the
+         * If your app uses a content resolver, get an instance of it from the
 		 * incoming Context
 		 */
         this.mSyncCancled = false;

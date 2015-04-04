@@ -29,8 +29,8 @@ import android.support.v4.preference.PreferenceFragment;
 import android.util.Log;
 
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.base.ThemedActivity;
-import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 public class MensaDashclockSettings extends ThemedActivity {

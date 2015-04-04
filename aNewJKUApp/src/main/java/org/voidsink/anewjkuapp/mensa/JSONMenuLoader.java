@@ -34,7 +34,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.utils.Analytics;
+import org.voidsink.anewjkuapp.analytics.Analytics;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

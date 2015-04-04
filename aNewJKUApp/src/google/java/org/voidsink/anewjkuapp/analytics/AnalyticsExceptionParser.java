@@ -22,37 +22,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  ******************************************************************************/
 
-package org.voidsink.anewjkuapp;
+package org.voidsink.anewjkuapp.analytics;
 
-import android.app.Application;
+import android.content.Context;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.google.android.gms.analytics.StandardExceptionParser;
 
-import org.voidsink.anewjkuapp.analytics.Analytics;
-import org.voidsink.anewjkuapp.utils.AppUtils;
+import java.util.Collection;
 
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+public class AnalyticsExceptionParser extends StandardExceptionParser {
 
-public class Globals extends Application {
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/Roboto-Regular.ttf")
-                .setFontAttrId(R.attr.fontPath)
-                .build());
-
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
-                .build();
-        ImageLoader.getInstance().init(config);
-
-        // initialize analytics
-        Analytics.init(this);
-
-        AppUtils.updateSyncAlarm(this, false);
+    public AnalyticsExceptionParser(Context context, Collection<String> additionalPackages) {
+        super(context, additionalPackages);
     }
 
+    @Override
+    public String getDescription(String threadName, Throwable t) {
+        return super.getDescription(threadName, t);
+    }
 }

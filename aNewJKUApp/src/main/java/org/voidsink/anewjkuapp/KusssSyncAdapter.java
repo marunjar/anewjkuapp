@@ -36,13 +36,13 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
 
+import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.notification.KusssNotificationBuilder;
 import org.voidsink.anewjkuapp.update.ImportAssessmentTask;
 import org.voidsink.anewjkuapp.update.ImportCourseTask;
 import org.voidsink.anewjkuapp.update.ImportCurriculaTask;
 import org.voidsink.anewjkuapp.update.ImportExamTask;
-import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
 public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
@@ -61,7 +61,7 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
     public KusssSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
         /*
-		 * If your app uses a content resolver, get an instance of it from the
+         * If your app uses a content resolver, get an instance of it from the
 		 * incoming Context
 		 */
         this.mSyncCancled = false;

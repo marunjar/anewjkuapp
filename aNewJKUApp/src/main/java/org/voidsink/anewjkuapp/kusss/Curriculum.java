@@ -29,7 +29,7 @@ import android.text.TextUtils;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.voidsink.anewjkuapp.utils.Analytics;
+import org.voidsink.anewjkuapp.analytics.Analytics;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

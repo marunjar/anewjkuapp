@@ -31,7 +31,7 @@ import android.util.Log;
 
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.PoiContentContract;
-import org.voidsink.anewjkuapp.utils.Analytics;
+import org.voidsink.anewjkuapp.analytics.Analytics;
 
 public class KusssDatabaseHelper extends SQLiteOpenHelper {
 

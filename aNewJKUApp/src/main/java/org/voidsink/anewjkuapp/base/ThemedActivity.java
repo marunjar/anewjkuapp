@@ -31,7 +31,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.utils.Analytics;
+import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.utils.UIUtils;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;

@@ -22,37 +22,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  ******************************************************************************/
 
-package org.voidsink.anewjkuapp;
+package org.voidsink.anewjkuapp.analytics;
 
 import android.app.Application;
+import android.content.Context;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+public interface IAnalytics {
 
-import org.voidsink.anewjkuapp.analytics.Analytics;
-import org.voidsink.anewjkuapp.utils.AppUtils;
+    public void init(Application app);
 
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+    public void sendException(Context c, Exception e, boolean fatal, String additionalData);
 
-public class Globals extends Application {
+    public void sendScreen(Context c, String screenName);
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/Roboto-Regular.ttf")
-                .setFontAttrId(R.attr.fontPath)
-                .build());
-
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
-                .build();
-        ImageLoader.getInstance().init(config);
-
-        // initialize analytics
-        Analytics.init(this);
-
-        AppUtils.updateSyncAlarm(this, false);
-    }
-
+    public void sendButtonEvent(String label);
 }

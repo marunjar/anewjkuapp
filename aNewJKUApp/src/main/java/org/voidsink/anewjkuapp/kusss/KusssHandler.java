@@ -36,7 +36,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.voidsink.anewjkuapp.utils.Analytics;
+import org.voidsink.anewjkuapp.analytics.Analytics;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -100,9 +100,13 @@ public class KusssHandler {
         CookieHandler.setDefault(mCookies);
     }
 
+    private static Object mutex = new Object();
+
     public static synchronized KusssHandler getInstance() {
         if (handler == null) {
-            handler = new KusssHandler();
+            synchronized (mutex) {
+                if (handler==null) handler= new KusssHandler();
+            }
         }
         return handler;
     }

@@ -28,11 +28,11 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 
+import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.kusss.Course;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.update.ImportCourseTask;
-import org.voidsink.anewjkuapp.utils.Analytics;
 
 import java.text.ParseException;
 import java.util.ArrayList;

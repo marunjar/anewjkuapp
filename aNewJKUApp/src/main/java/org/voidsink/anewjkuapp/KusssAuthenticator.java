@@ -37,10 +37,10 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import org.voidsink.anewjkuapp.activity.KusssAuthenticatorActivity;
+import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
-import org.voidsink.anewjkuapp.utils.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
 public class KusssAuthenticator extends AbstractAccountAuthenticator {
@@ -166,7 +166,7 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
     @Override
     public String getAuthTokenLabel(String authTokenType) {
         /*
-		 * if (AUTHTOKEN_TYPE_FULL_ACCESS.equals(authTokenType)) return
+         * if (AUTHTOKEN_TYPE_FULL_ACCESS.equals(authTokenType)) return
 		 * AUTHTOKEN_TYPE_FULL_ACCESS_LABEL; else
 		 */
         if (AUTHTOKEN_TYPE_READ_ONLY.equals(authTokenType))
