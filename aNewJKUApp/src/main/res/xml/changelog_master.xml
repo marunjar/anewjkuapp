@@ -4,6 +4,10 @@
 		    - fixed
 		    * changed
 		    + added -->
+    <release version="0.39" versioncode="140039">
+        <change>* Karte: neue Daten von OpenStreetMap</change>
+        <change>+ App: ist jetzt auch über F-Droid verfügbar</change>
+    </release>
     <release version="0.38" versioncode="140038">
         <change>+ Einstellungen: Tracking von Fehlern kann deaktiviert werden</change>
     </release>
