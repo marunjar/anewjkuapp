@@ -29,7 +29,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -46,8 +46,8 @@ public class UIUtils {
     public static boolean handleUpNavigation(Activity activity, MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                if (activity instanceof ActionBarActivity) {
-                    ActionBar actionBar = ((ActionBarActivity) activity).getSupportActionBar();
+                if (activity instanceof AppCompatActivity) {
+                    ActionBar actionBar = ((AppCompatActivity) activity).getSupportActionBar();
                     if (actionBar != null && (actionBar.getDisplayOptions() & ActionBar.DISPLAY_HOME_AS_UP) != 0) {
                         // app icon in action bar clicked; goto parent activity.
                         NavUtils.navigateUpFromSameTask(activity);
