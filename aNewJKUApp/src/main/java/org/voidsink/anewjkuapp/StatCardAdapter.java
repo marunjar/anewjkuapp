@@ -484,6 +484,8 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
 
     private void initBaseChart(Chart chart) {
         chart.setDescription("");
+        chart.setNoDataText("");
+        chart.setNoDataTextDescription("");
     }
 
     @Override
