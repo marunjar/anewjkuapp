@@ -4,6 +4,9 @@
 		    - fixed
 		    * changed
 		    + added -->
+    <release version="0.40" versioncode="140040">
+        <change>* Fehler in Statistik behoben</change>
+    </release>
     <release version="0.39" versioncode="140039">
         <change>* Karte: neue Daten von OpenStreetMap</change>
         <change>+ App: ist jetzt auch über F-Droid verfügbar</change>
