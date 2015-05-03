@@ -123,7 +123,7 @@ public class AnalyticsFlavor implements IAnalytics {
 
             final GoogleAnalytics analytics = GoogleAnalytics.getInstance(mApp);
             if (BuildConfig.DEBUG) {
-                //analytics.setDryRun(true);
+                analytics.setDryRun(true);
                 analytics.setAppOptOut(!PreferenceWrapper.trackingErrors(mApp));
                 analytics.getLogger().setLogLevel(Logger.LogLevel.VERBOSE);
                 Log.i(TAG, "debug enabled");

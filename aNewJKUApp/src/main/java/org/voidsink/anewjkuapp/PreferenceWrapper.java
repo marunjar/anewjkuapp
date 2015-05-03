@@ -412,7 +412,7 @@ public final class PreferenceWrapper {
             SharedPreferences sp = PreferenceManager
                     .getDefaultSharedPreferences(context);
 
-            return !sp.getBoolean(PREF_TRACKING_ERRORS,
+            return sp.getBoolean(PREF_TRACKING_ERRORS,
                     PREF_TRACKING_ERRORS_DEFAULT);
         } catch (Exception e) {
             Log.e(TAG, "Failure", e);
