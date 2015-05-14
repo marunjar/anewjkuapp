@@ -4,6 +4,9 @@
 		    - fixed
 		    * changed
 		    + added -->
+    <release version="0.41" versioncode="140041">
+        <change>* App: Schriftarten und Farben angepasst</change>
+    </release>
     <release version="0.40" versioncode="140040">
         <change>* Fehler in Statistik behoben</change>
     </release>
