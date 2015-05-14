@@ -87,7 +87,7 @@ dependencies {
         transitive = true
     }
 
-    compile 'com.github.PhilJay:MPAndroidChart:v2.0.9'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.1.0'
 
     compile project(':voidsinkContributors')
     compile project(':android-support-v4-preferencefragment')
