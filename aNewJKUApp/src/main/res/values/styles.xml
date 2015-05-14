@@ -128,17 +128,15 @@
 
     <attr name="cardToolbarTheme" format="reference" />
 
-    <style name="cardToolbar" parent="@style/Theme.AppCompat">
+    <style name="cardToolbar" parent="AppTheme">
         <item name="colorPrimary">@android:color/transparent</item>
         <item name="colorPrimaryDark">@android:color/transparent</item>
-        <item name="colorAccent">?attr/colorAccent</item>
         <item name="actionOverflowButtonStyle">@style/cardToolbar.ActionButton.Overflow</item>
     </style>
 
-    <style name="cardToolbar.light" parent="@style/Theme.AppCompat.Light">
+    <style name="cardToolbar.light" parent="AppTheme.Light">
         <item name="colorPrimary">@android:color/transparent</item>
         <item name="colorPrimaryDark">@android:color/transparent</item>
-        <item name="colorAccent">?attr/colorAccent</item>
         <item name="actionOverflowButtonStyle">@style/cardToolbar.light.ActionButton.Overflow</item>
     </style>
 
