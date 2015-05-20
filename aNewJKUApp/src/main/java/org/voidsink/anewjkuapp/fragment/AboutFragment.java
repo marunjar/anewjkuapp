@@ -29,7 +29,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mikepenz.aboutlibraries.Libs;
+import com.mikepenz.aboutlibraries.LibsBuilder;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
@@ -61,7 +61,7 @@ public class AboutFragment extends BaseFragment {
                     @Override
                     public void onClick(View v) {
 
-                        new Libs.Builder()
+                        new LibsBuilder()
                                 .withFields(R.string.class.getFields()) // pass the fields of your application to the lib so it can find all external lib information
                                 .withLibraries("jsoup")
                                 .withAutoDetect(true)
