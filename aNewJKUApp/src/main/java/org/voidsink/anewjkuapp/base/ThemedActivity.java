@@ -26,12 +26,14 @@ package org.voidsink.anewjkuapp.base;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.anewjkuapp.utils.UIUtils;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -65,7 +67,19 @@ public class ThemedActivity extends AppCompatActivity {
     protected final void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
+            Fragment f = getSupportFragmentManager().findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
+            if (f instanceof StackedFragment) {
+                actionBar.setDisplayHomeAsUpEnabled(((StackedFragment) f).getDisplayHomeAsUpEnabled());
+                CharSequence title = ((StackedFragment) f).getTitle(this);
+                if (title != null) {
+                    actionBar.setTitle(title);
+                } else {
+                    actionBar.setTitle(R.string.app_name);
+                }
+            } else {
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
+
             onInitActionBar(actionBar);
         }
     }

@@ -196,4 +196,5 @@
     <string name="pref_cat_tracking">Tracking</string>
     <string name="pref_tracking_errors_summary">Send errors to developer automatically for fixing them immediately.</string>
     <string name="pref_tracking_errors_title">Errors</string>
+    <string name="title_curricula">Curricula</string>
 </resources>

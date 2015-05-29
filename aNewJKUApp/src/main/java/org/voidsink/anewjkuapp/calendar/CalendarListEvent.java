@@ -32,8 +32,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
 
+import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
-import org.voidsink.anewjkuapp.fragment.MapFragment;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import java.util.Date;
@@ -110,7 +110,7 @@ public class CalendarListEvent implements CalendarListItem {
 
     public void showOnMap(Context context) {
         Intent intent = new Intent(context, MainActivity.class)
-                .putExtra(MainActivity.ARG_SHOW_FRAGMENT, MapFragment.class.getName())
+                .putExtra(MainActivity.ARG_SHOW_FRAGMENT_ID, R.id.nav_map)
                 .putExtra(MainActivity.ARG_SAVE_LAST_FRAGMENT, false)
                 .setAction(Intent.ACTION_SEARCH)
                 .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);

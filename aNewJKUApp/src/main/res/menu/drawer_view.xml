@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/title_kusss">
+        <menu>
+            <item
+                android:id="@+id/nav_cal"
+                android:icon="@drawable/ic_event_white_24dp"
+                android:title="@string/title_calendar" />
+            <item
+                android:id="@+id/nav_exams"
+                android:icon="@drawable/ic_list_white_24dp"
+                android:title="@string/title_exams" />
+            <item
+                android:id="@+id/nav_grades"
+                android:icon="@drawable/ic_list_white_24dp"
+                android:title="@string/title_grades" />
+            <item
+                android:id="@+id/nav_courses"
+                android:icon="@drawable/ic_list_white_24dp"
+                android:title="@string/title_lvas" />
+            <item
+                android:id="@+id/nav_stats"
+                android:icon="@drawable/ic_insert_chart_white_24dp"
+                android:title="@string/title_stats" />
+            <item
+                android:id="@+id/nav_curricula"
+                android:title="@string/title_curricula"
+                android:visible="false" />
+        </menu>
+    </item>
+
+    <item android:title="@string/title_campus">
+        <menu>
+            <item
+                android:id="@+id/nav_mensa"
+                android:icon="@drawable/ic_food"
+                android:title="@string/title_mensa" />
+            <item
+                android:id="@+id/nav_map"
+                android:icon="@drawable/ic_menu_mylocation"
+                android:title="@string/title_map" />
+        </menu>
+    </item>
+
+    <item android:title="@string/title_oeh">
+        <menu>
+            <item
+                android:id="@+id/nav_oeh_news"
+                android:icon="@drawable/ic_message_white_24dp"
+                android:title="@string/title_oeh_news" />
+            <item
+                android:id="@+id/nav_oeh_info"
+                android:icon="@drawable/ic_info_outline_white_24dp"
+                android:title="@string/title_oeh_info" />
+            <item
+                android:id="@+id/nav_oeh_rigths"
+                android:icon="@drawable/ic_rights"
+                android:title="@string/title_oeh_rights" />
+        </menu>
+    </item>
+</menu>

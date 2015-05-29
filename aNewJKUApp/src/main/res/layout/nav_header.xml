@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/drawer_header_height"
+    android:background="@drawable/drawer_image"
+    android:orientation="horizontal"
+    android:paddingTop="@dimen/main_toolbar_padding">
+
+    <ImageView
+        android:id="@+id/drawer_menu_item_icon"
+        android:layout_width="40dip"
+        android:layout_height="40dip"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:contentDescription="@string/drawer_menu_item_icon"
+        android:scaleType="fitXY"
+        android:src="@drawable/person_image_empty" />
+
+    <TextView
+        android:id="@+id/drawer_user"
+        fontPath="fonts/Roboto-Medium.ttf"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
+
+</LinearLayout>

@@ -24,12 +24,14 @@
 
 package org.voidsink.anewjkuapp.activity;
 
+import android.accounts.Account;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -45,7 +47,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
-import org.voidsink.anewjkuapp.DrawerItem;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
@@ -53,17 +54,25 @@ import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.base.ThemedActivity;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
+import org.voidsink.anewjkuapp.fragment.AssessmentFragment;
 import org.voidsink.anewjkuapp.fragment.CalendarFragment;
 import org.voidsink.anewjkuapp.fragment.CurriculaFragment;
-import org.voidsink.anewjkuapp.fragment.NavigationDrawerFragment;
+import org.voidsink.anewjkuapp.fragment.ExamFragment;
+import org.voidsink.anewjkuapp.fragment.LvaFragment;
+import org.voidsink.anewjkuapp.fragment.MapFragment;
+import org.voidsink.anewjkuapp.fragment.MensaFragment;
+import org.voidsink.anewjkuapp.fragment.OehInfoFragment;
+import org.voidsink.anewjkuapp.fragment.OehNewsFragment;
+import org.voidsink.anewjkuapp.fragment.OehRightsFragment;
+import org.voidsink.anewjkuapp.fragment.StatFragment;
 import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import de.cketti.library.changelog.ChangeLog;
 
-public class MainActivity extends ThemedActivity implements
-        NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class MainActivity extends ThemedActivity {
 
-    public static final String ARG_SHOW_FRAGMENT = "show_fragment";
+    public static final String ARG_SHOW_FRAGMENT_ID = "show_fragment_id";
     public static final String ARG_EXACT_LOCATION = "exact_location";
     public static final String ARG_SAVE_LAST_FRAGMENT = "save_last_fragment";
 
@@ -73,13 +82,9 @@ public class MainActivity extends ThemedActivity implements
      * Fragment managing the behaviors, interactions and presentation of the
      * navigation drawer.
      */
-    private NavigationDrawerFragment mNavigationDrawerFragment;
-
-    /**
-     * Used to store the last screen title. For use in
-     * {@link #initActionBar()}.
-     */
-    private CharSequence mTitle;
+    private DrawerLayout mDrawerLayout;
+    private NavigationView mNavigationView;
+    private boolean mUserLearnedDrawer;
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public static void StartCreateAccount(Context context) {
@@ -98,7 +103,7 @@ public class MainActivity extends ThemedActivity implements
     public static void StartMyCurricula(Context context) {
         //
         Intent i = new Intent(context, MainActivity.class)
-                .putExtra(MainActivity.ARG_SHOW_FRAGMENT, CurriculaFragment.class.getName())
+                .putExtra(MainActivity.ARG_SHOW_FRAGMENT_ID, R.id.nav_curricula)
                 .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivity(i);
     }
@@ -106,12 +111,6 @@ public class MainActivity extends ThemedActivity implements
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(
-                ARG_SHOW_FRAGMENT);
-        if (fragment != null) {
-            outState.putString(ARG_SHOW_FRAGMENT, fragment.getClass().getName());
-        }
     }
 
     @Override
@@ -127,36 +126,32 @@ public class MainActivity extends ThemedActivity implements
         getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
-                mTitle = getTitleFromFragment(null);
                 initActionBar();
             }
         });
 
         setContentView(R.layout.activity_main);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.navigation_drawer);
+        // set up drawer
+        mUserLearnedDrawer = PreferenceWrapper.getUserLearnedDrawer(this);
 
-        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
                 GravityCompat.START);
 
-        //mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color));
-
-
-        // Set up the drawer.
-        mNavigationDrawerFragment.setUp(R.id.navigation_drawer, mDrawerLayout);
+        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        if (mNavigationView != null) {
+            setupDrawerContent(mNavigationView);
+        }
 
         Intent intent = getIntent();
 
         Fragment f = attachFragment(intent, savedInstanceState, true);
         // attach calendar fragment as default
         if (f == null) {
-            f = attachFragmentByClassName(CalendarFragment.class.getName());
+            f = attachFragmentById(R.id.nav_cal, true);
         }
         handleIntent(f, intent);
-
-        mTitle = getTitleFromFragment(f);
 
         if (AppUtils.getAccount(this) == null) {
             StartCreateAccount(this);
@@ -168,30 +163,101 @@ public class MainActivity extends ThemedActivity implements
         }
     }
 
+    private Fragment attachFragmentById(int id, boolean saveLastFragment) {
+        if (mNavigationView != null) {
+            MenuItem mMenuItem = mNavigationView.getMenu().findItem(id);
+
+            return attachFragment(mMenuItem, saveLastFragment);
+        }
+        return null;
+    }
+
+    private void setupDrawerContent(NavigationView navigationView) {
+        // set a custom shadow that overlays the main content when the drawer
+        // opens
+        // mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
+        // GravityCompat.START);
+        // set up the drawer's list view with items and click listener
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        actionBar.setHomeButtonEnabled(true);
+
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        attachFragment(menuItem, true);
+
+                        mDrawerLayout.closeDrawers();
+                        return true;
+                    }
+                });
+
+        if (!mUserLearnedDrawer) {
+            mDrawerLayout.openDrawer(navigationView);
+        }
+
+        mDrawerLayout.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                if (!mUserLearnedDrawer) {
+                    PreferenceWrapper.setPrefUserLearnedDrawer(MainActivity.this, true);
+                }
+
+                TextView mDrawerUser = (TextView) mNavigationView.findViewById(R.id.drawer_user);
+
+                if (mDrawerUser != null) {
+                    Account account = AppUtils.getAccount(MainActivity.this);
+                    if (account == null) {
+                        mDrawerUser.setText("Click to login");
+                        mDrawerUser.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                MainActivity.StartCreateAccount(MainActivity.this);
+                            }
+                        });
+                    } else {
+                        mDrawerUser.setText(account.name);
+                        mDrawerUser.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                MainActivity.StartMyCurricula(MainActivity.this);
+                            }
+                        });
+                    }
+                }
+
+                super.onDrawerOpened(drawerView);
+            }
+        });
+    }
+
     private Fragment attachFragment(Intent intent, Bundle savedInstanceState,
                                     boolean attachStored) {
-        if (intent != null && intent.hasExtra(ARG_SHOW_FRAGMENT)) {
+        if (intent != null && intent.hasExtra(ARG_SHOW_FRAGMENT_ID)) {
             // show fragment from intent
-            return attachFragmentByClassName(
-                    intent.getStringExtra(ARG_SHOW_FRAGMENT),
+            return attachFragmentById(
+                    intent.getIntExtra(ARG_SHOW_FRAGMENT_ID, 0),
                     intent.getBooleanExtra(ARG_SAVE_LAST_FRAGMENT, true));
         } else if (savedInstanceState != null) {
             // restore saved fragment
-            return attachFragmentByClassName(savedInstanceState
-                    .getString(ARG_SHOW_FRAGMENT));
+            return attachFragmentById(savedInstanceState
+                    .getInt(ARG_SHOW_FRAGMENT_ID), true);
         } else if (attachStored) {
-            return attachFragmentByClassName(PreferenceWrapper
-                    .getLastFragment(this));
+            return attachFragmentById(PreferenceWrapper
+                    .getLastFragment(this), true);
         } else {
             return getSupportFragmentManager().findFragmentByTag(
-                    ARG_SHOW_FRAGMENT);
+                    Consts.ARG_FRAGMENT_TAG);
         }
     }
 
     private void handleIntent(Fragment f, Intent intent) {
         if (f == null) {
             f = getSupportFragmentManager()
-                    .findFragmentByTag(ARG_SHOW_FRAGMENT);
+                    .findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
         }
 
         if (f != null) {
@@ -210,70 +276,74 @@ public class MainActivity extends ThemedActivity implements
         handleIntent(f, intent);
     }
 
-    private Fragment attachFragmentByClassName(final String clazzname) {
-        return attachFragmentByClassName(clazzname, true);
-    }
+    private Fragment attachFragment(MenuItem menuItem, boolean saveLastFragment) {
 
-    private Fragment attachFragmentByClassName(final String clazzname, final boolean saveLastFragment) {
-        if (clazzname != null && !clazzname.isEmpty()) {
-            try {
-                Class<?> clazz = getClassLoader().loadClass(clazzname);
-                if (Fragment.class.isAssignableFrom(clazz)) {
-                    return attachFragment((Class<? extends Fragment>) clazz, saveLastFragment);
-                }
-            } catch (ClassNotFoundException e) {
-                Log.w(TAG, "fragment instantiation failed", e);
-                Analytics.sendException(this, e, false);
-                PreferenceWrapper.setLastFragment(this, PreferenceWrapper.PREF_LAST_FRAGMENT_DEFAULT);
-            }
+        if (menuItem == null) {
+            return null;
         }
-        return null;
-    }
 
-    @Override
-    public void onNavigationDrawerItemSelected(int position, DrawerItem item) {
-        if (item.isEnabled()) {
-            // update the main content by replacing fragments
-            if ((item.getStartFragment() != null)) {
-                attachFragment(item.getStartFragment());
-            }
+        Class<? extends Fragment> startFragment = null;
+
+        switch (menuItem.getItemId()) {
+            case R.id.nav_cal:
+                startFragment = CalendarFragment.class;
+                break;
+            case R.id.nav_exams:
+                startFragment = ExamFragment.class;
+                break;
+            case R.id.nav_grades:
+                startFragment = AssessmentFragment.class;
+                break;
+            case R.id.nav_courses:
+                startFragment = LvaFragment.class;
+                break;
+            case R.id.nav_stats:
+                startFragment = StatFragment.class;
+                break;
+            case R.id.nav_mensa:
+                startFragment = MensaFragment.class;
+                break;
+            case R.id.nav_map:
+                startFragment = MapFragment.class;
+                break;
+            case R.id.nav_oeh_news:
+                startFragment = OehNewsFragment.class;
+                break;
+            case R.id.nav_oeh_info:
+                startFragment = OehInfoFragment.class;
+                break;
+            case R.id.nav_oeh_rigths:
+                startFragment = OehRightsFragment.class;
+                break;
+            case R.id.nav_curricula:
+                startFragment = CurriculaFragment.class;
+                break;
+            default:
+                break;
         }
-    }
 
-    public String getTitleFromFragment(Fragment f) {
-        if (f == null) {
-            f = getSupportFragmentManager()
-                    .findFragmentByTag(ARG_SHOW_FRAGMENT);
-        }
-        if (f != null) {
-            return NavigationDrawerFragment.getLabel(this, f.getClass());
-        }
-        return getString(R.string.app_name);
-    }
-
-    private Fragment attachFragment(Class<? extends Fragment> startFragment) {
-        return attachFragment(startFragment, true);
-    }
-
-    private Fragment attachFragment(Class<? extends Fragment> startFragment, boolean saveLastFragment) {
         if (startFragment != null) {
             try {
+                menuItem.setChecked(true);
+
                 Fragment f = startFragment.newInstance();
 
-                final Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(ARG_SHOW_FRAGMENT);
+                Bundle b = new Bundle();
+                b.putCharSequence(Consts.ARG_FRAGMENT_TITLE, menuItem.getTitle());
+                f.setArguments(b);
+
+                final Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
                 final boolean addToBackstack = (oldFragment != null) && (!oldFragment.getClass().equals(f.getClass()));
 
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.container, f, ARG_SHOW_FRAGMENT);
+                ft.replace(R.id.container, f, Consts.ARG_FRAGMENT_TAG);
                 if (addToBackstack) {
                     ft.addToBackStack(f.getClass().getCanonicalName());
                 }
                 ft.commit();
 
-                mTitle = getTitleFromFragment(f);
                 if (saveLastFragment) {
-                    PreferenceWrapper.setLastFragment(this,
-                            f.getClass().getCanonicalName());
+                    PreferenceWrapper.setLastFragment(this, menuItem.getItemId());
                 }
 
                 initActionBar();
@@ -298,12 +368,6 @@ public class MainActivity extends ThemedActivity implements
 
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
-        if (mNavigationDrawerFragment != null &&
-                !mNavigationDrawerFragment.isDrawerOpen()) {
-            actionBar.setTitle(mTitle);
-        } else {
-            actionBar.setTitle(getString(R.string.app_name));
-        }
     }
 
     @Override
@@ -319,6 +383,9 @@ public class MainActivity extends ThemedActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
@@ -332,8 +399,8 @@ public class MainActivity extends ThemedActivity implements
 
     @Override
     public void onBackPressed() {
-        if (mNavigationDrawerFragment.isDrawerOpen()) {
-            mNavigationDrawerFragment.closeDrawer();
+        if (mDrawerLayout.isDrawerOpen(mNavigationView)) {
+            mDrawerLayout.closeDrawers();
         } else {
             super.onBackPressed();
         }
