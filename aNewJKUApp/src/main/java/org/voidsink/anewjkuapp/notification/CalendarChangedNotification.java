@@ -33,7 +33,6 @@ import android.support.v4.app.NotificationCompat;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
-import org.voidsink.anewjkuapp.fragment.CalendarFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,8 +77,8 @@ public class CalendarChangedNotification {
                     mContext,
                     NOTIFICATION_CALENDAR_CHANGED,
                     new Intent(mContext, MainActivity.class).putExtra(
-                            MainActivity.ARG_SHOW_FRAGMENT,
-                            CalendarFragment.class.getName()).addFlags(
+                            MainActivity.ARG_SHOW_FRAGMENT_ID,
+                            R.id.nav_cal).addFlags(
                             Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(

@@ -62,7 +62,7 @@ public final class PreferenceWrapper {
 
     public static final String PREF_MAP_FILE = "pref_key_map_file";
     public static final String PREF_MAP_FILE_DEFAULT = "";
-    public static final String PREF_LAST_FRAGMENT_DEFAULT = "";
+    public static final int PREF_LAST_FRAGMENT_DEFAULT = 0;
     public static final String PREF_GET_NEW_EXAMS = "pref_key_get_exams_from_lva";
     public static final int PREF_LAST_VERSION_NONE = -1;
     public static final String PREF_USE_LVA_BAR_CHART = "pref_key_use_lva_bar_chart";
@@ -92,6 +92,8 @@ public final class PreferenceWrapper {
 
     public static final String PREF_TRACKING_ERRORS = "pref_key_tracking_errors";
     public static final boolean PREF_TRACKING_ERRORS_DEFAULT = true;
+
+    private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
 
     private PreferenceWrapper() {
 
@@ -218,26 +220,24 @@ public final class PreferenceWrapper {
         return mapFile;
     }
 
-    public static String getLastFragment(Context mContext) {
+    public static int getLastFragment(Context mContext) {
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(mContext);
         try {
-            return sp.getString(PREF_LAST_FRAGMENT, PREF_LAST_FRAGMENT_DEFAULT);
+            return sp.getInt(PREF_LAST_FRAGMENT, PREF_LAST_FRAGMENT_DEFAULT);
         } catch (Exception e) {
             Log.e(TAG, "Failure", e);
             return PREF_LAST_FRAGMENT_DEFAULT;
         }
     }
 
-    public static void setLastFragment(Context mContext, String clazzname) {
-        if (clazzname != null) {
-            try {
-                SharedPreferences sp = PreferenceManager
-                        .getDefaultSharedPreferences(mContext);
-                sp.edit().putString(PREF_LAST_FRAGMENT, clazzname).commit();
-            } catch (Exception e) {
-                Analytics.sendException(mContext, e, false);
-            }
+    public static void setLastFragment(Context mContext, int id) {
+        try {
+            SharedPreferences sp = PreferenceManager
+                    .getDefaultSharedPreferences(mContext);
+            sp.edit().putInt(PREF_LAST_FRAGMENT, id).commit();
+        } catch (Exception e) {
+            Analytics.sendException(mContext, e, false);
         }
     }
 
@@ -419,4 +419,28 @@ public final class PreferenceWrapper {
             return PREF_TRACKING_ERRORS_DEFAULT;
         }
     }
+
+    public static boolean getUserLearnedDrawer(Context context) {
+        try {
+            SharedPreferences sp = PreferenceManager
+                    .getDefaultSharedPreferences(context);
+
+            return sp.getBoolean(PREF_USER_LEARNED_DRAWER,
+                    false);
+        } catch (Exception e) {
+            Log.e(TAG, "Failure", e);
+            return false;
+        }
+    }
+
+    public static void setPrefUserLearnedDrawer(Context c, boolean b) {
+        try {
+            SharedPreferences sp = PreferenceManager
+                    .getDefaultSharedPreferences(c);
+            sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, b).apply();
+        } catch (Exception e) {
+            Analytics.sendException(c, e, false);
+        }
+    }
+
 }

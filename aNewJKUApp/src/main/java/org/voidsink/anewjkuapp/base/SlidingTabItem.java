@@ -30,20 +30,12 @@ import android.support.v4.app.Fragment;
 
 public class SlidingTabItem {
     private final CharSequence mTitle;
-    private final int mIndicatorColor;
-    private final int mDividerColor;
 
     protected final Class<? extends Fragment> mFragment;
 
-    public SlidingTabItem(CharSequence title, Class<? extends Fragment> fragment, int indicatorColor, int dividerColor) {
-        mTitle = title;
-        mIndicatorColor = indicatorColor;
-        mDividerColor = dividerColor;
-        mFragment = fragment;
-    }
-
     public SlidingTabItem(CharSequence title, Class<? extends Fragment> fragment) {
-        this(title, fragment, Color.WHITE, Color.WHITE);
+        mTitle = title;
+        mFragment = fragment;
     }
 
     /**
@@ -76,19 +68,4 @@ public class SlidingTabItem {
     CharSequence getTitle() {
         return mTitle;
     }
-
-    /**
-     * @return the color to be used for indicator on the {@link org.voidsink.anewjkuapp.view.SlidingTabLayout}
-     */
-    int getIndicatorColor() {
-        return mIndicatorColor;
-    }
-
-    /**
-     * @return the color to be used for right divider on the {@link org.voidsink.anewjkuapp.view.SlidingTabLayout}
-     */
-    int getDividerColor() {
-        return mDividerColor;
-    }
-
 }

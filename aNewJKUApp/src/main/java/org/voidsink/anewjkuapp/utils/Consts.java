@@ -42,6 +42,9 @@ public class Consts {
     public static final String ARG_UPDATE_KUSSS_EXAMS = "UPDATE_KUSSS_EXAMS";
     public static final String ARG_TERMS = "TERMS";
 
+    public static final String ARG_FRAGMENT_TITLE = "TITLE";
+    public static final String ARG_FRAGMENT_TAG = "show_fragment";
+
     public static final String SYNC_SHOW_PROGRESS = "showProgress";
 
     public static final String ARG_FEED_URL = "feedURL";

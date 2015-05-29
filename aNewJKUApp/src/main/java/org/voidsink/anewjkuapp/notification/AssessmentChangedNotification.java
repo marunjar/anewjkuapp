@@ -33,7 +33,6 @@ import android.support.v4.app.NotificationCompat;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
-import org.voidsink.anewjkuapp.fragment.AssessmentFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +66,7 @@ public class AssessmentChangedNotification {
                 && (mInserts.size() > 0 || mUpdates.size() > 0)) {
             PendingIntent pendingIntent = PendingIntent
                     .getActivity(mContext, NOTIFICATION_GRADES_CHANGED, new Intent(mContext,
-                            MainActivity.class).putExtra(MainActivity.ARG_SHOW_FRAGMENT, AssessmentFragment.class.getName())
+                            MainActivity.class).putExtra(MainActivity.ARG_SHOW_FRAGMENT_ID, R.id.nav_grades)
                             .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(

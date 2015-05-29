@@ -25,6 +25,7 @@
 package org.voidsink.anewjkuapp.base;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -34,7 +35,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.view.SlidingTabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,19 +43,13 @@ public abstract class SlidingTabsFragment extends BaseFragment {
 
     /**
      * This class represents a tab to be displayed by {@link android.support.v4.view.ViewPager} and it's associated
-     * {@link org.voidsink.anewjkuapp.view.SlidingTabLayout}.
+     * {@link TabLayout}.
      */
 
     static final String TAG = SlidingTabsFragment.class.getSimpleName();
 
     /**
-     * A custom {@link android.support.v4.view.ViewPager} title strip which looks much like Tabs present in Android v4.0 and
-     * above, but is designed to give continuous feedback to the user when scrolling.
-     */
-    private SlidingTabLayout mSlidingTabLayout;
-
-    /**
-     * A {@link android.support.v4.view.ViewPager} which will be used in conjunction with the {@link SlidingTabLayout} above.
+     * A {@link android.support.v4.view.ViewPager} which will be used in conjunction with the {@link TabLayout} above.
      */
     private ViewPager mViewPager;
 
@@ -86,7 +80,7 @@ public abstract class SlidingTabsFragment extends BaseFragment {
      * Here we can pick out the {@link View}s we need to configure from the content view.
      * <p/>
      * We set the {@link ViewPager}'s adapter to be an instance of
-     * {@link org.voidsink.anewjkuapp.base.SlidingTabsFragment.SlidingFragmentPagerAdapter}. The {@link SlidingTabLayout} is then given the
+     * {@link org.voidsink.anewjkuapp.base.SlidingTabsFragment.SlidingFragmentPagerAdapter}. The {@link TabLayout} is then given the
      * {@link ViewPager} so that it can populate itself.
      *
      * @param view View created in {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}
@@ -102,51 +96,17 @@ public abstract class SlidingTabsFragment extends BaseFragment {
         // BEGIN_INCLUDE (setup_slidingtablayout)
         // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
         // it's PagerAdapter set.
-        mSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
-        mSlidingTabLayout.setViewPager(mViewPager);
-
-        SlidingTabLayout.TabColorizer tc = createTabColorizer();
-
-        if (tc != null) {
-            // BEGIN_INCLUDE (tab_colorizer)
-            // Set a TabColorizer to customize the indicator and divider colors. Here we just retrieve
-            // the tab at the position, and return it's set color
-            mSlidingTabLayout.setCustomTabColorizer(tc);
-
-//            mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-//
-//                @Override
-//                public int getIndicatorColor(int position) {
-//                    return mTabs.get(position).getIndicatorColor();
-//                }
-//
-//                @Override
-//                public int getDividerColor(int position) {
-//                    return mTabs.get(position).getDividerColor();
-//                }
-//
-//            });
-        }
+        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(mViewPager);
         // END_INCLUDE (tab_colorizer)
         // END_INCLUDE (setup_slidingtablayout)
     }
-
-    /**
-     * use this to create your own TabColorizer
-     */
-    protected SlidingTabLayout.TabColorizer createTabColorizer() {
-        return null;
-    }
-    // END_INCLUDE (fragment_onviewcreated)
 
     public void notifyDataSetChanged() {
         if (mViewPager != null) {
 //        Log.i(LOG_TAG, "notifyDataSetChanged");
             if (mViewPager.getAdapter() != null) {
                 mViewPager.getAdapter().notifyDataSetChanged();
-            }
-            if (mSlidingTabLayout != null) {
-                mSlidingTabLayout.setViewPager(mViewPager);
             }
         }
     }
@@ -157,7 +117,7 @@ public abstract class SlidingTabsFragment extends BaseFragment {
      * created by the relevant {@link SlidingTabItem} for the requested position.
      * <p/>
      * The important section of this class is the {@link #getPageTitle(int)} method which controls
-     * what is displayed in the {@link SlidingTabLayout}.
+     * what is displayed in the {@link TabLayout}.
      */
     class SlidingFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -202,7 +162,7 @@ public abstract class SlidingTabsFragment extends BaseFragment {
 
         /**
          * Return the title of the item at {@code position}. This is important as what this method
-         * returns is what is displayed in the {@link SlidingTabLayout}.
+         * returns is what is displayed in the {@link TabLayout}.
          * <p/>
          * Here we return the value returned from {@link SlidingTabItem#getTitle()}.
          */

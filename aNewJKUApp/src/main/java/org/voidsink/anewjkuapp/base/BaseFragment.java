@@ -35,11 +35,13 @@ import android.view.MenuItem;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.utils.Consts;
 
-public class BaseFragment extends Fragment {
+public class BaseFragment extends Fragment implements StackedFragment {
 
     private static final String TAG = BaseFragment.class.getSimpleName();
     private Intent mPendingIntent = null;
+    private CharSequence mTitle = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,6 +102,15 @@ public class BaseFragment extends Fragment {
     }
 
     @Override
+    public void setArguments(Bundle args) {
+        super.setArguments(args);
+
+        if (args != null && args.containsKey(Consts.ARG_FRAGMENT_TITLE)) {
+            mTitle = args.getCharSequence(Consts.ARG_FRAGMENT_TITLE);
+        }
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
 
@@ -125,4 +136,13 @@ public class BaseFragment extends Fragment {
         return null;
     }
 
+    @Override
+    public boolean getDisplayHomeAsUpEnabled() {
+        return true;
+    }
+
+    @Override
+    public CharSequence getTitle(Context context) {
+        return mTitle;
+    }
 }

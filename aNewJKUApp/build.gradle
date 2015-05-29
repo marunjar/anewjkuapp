@@ -69,6 +69,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:22.2.0'
     googleCompile 'com.google.android.gms:play-services-analytics:7.5.0'
     compile 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
+    compile 'com.android.support:design:22.2.0'
 
     compile 'org.mapsforge:mapsforge-core:0.5.1'
     compile 'org.mapsforge:mapsforge-map:0.5.1'

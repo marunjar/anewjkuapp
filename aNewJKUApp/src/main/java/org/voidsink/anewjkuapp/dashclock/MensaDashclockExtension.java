@@ -34,7 +34,6 @@ import com.google.android.apps.dashclock.api.ExtensionData;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
-import org.voidsink.anewjkuapp.fragment.MensaFragment;
 import org.voidsink.anewjkuapp.mensa.ChoiceMenuLoader;
 import org.voidsink.anewjkuapp.mensa.ClassicMenuLoader;
 import org.voidsink.anewjkuapp.mensa.KHGMenuLoader;
@@ -156,8 +155,8 @@ public class MensaDashclockExtension extends DashClockExtension {
                     .clickIntent(
                             new Intent(getApplicationContext(),
                                     MainActivity.class).putExtra(
-                                    MainActivity.ARG_SHOW_FRAGMENT,
-                                    MensaFragment.class.getName()).addFlags(
+                                    MainActivity.ARG_SHOW_FRAGMENT_ID,
+                                    R.id.nav_mensa).addFlags(
                                     Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)));
         } else {
             publishUpdate(new ExtensionData().visible(false));
