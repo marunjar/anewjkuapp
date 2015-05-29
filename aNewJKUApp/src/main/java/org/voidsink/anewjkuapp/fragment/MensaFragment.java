@@ -54,7 +54,7 @@ public class MensaFragment extends SlidingTabsFragment {
             do {
                 // do not add weekend (no menu)
                 if (cal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && cal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
-                    mTabs.add(new MensaDayTabItem(getTabTitle(cal), cal.getTime(), CalendarUtils.COLOR_DEFAULT_EXAM, Color.GRAY));
+                    mTabs.add(new MensaDayTabItem(getTabTitle(cal), cal.getTime()));
                 }
                 // increment day
                 cal.add(Calendar.DATE, 1);

@@ -36,8 +36,8 @@ public class MensaDayTabItem extends SlidingTabItem {
     private static final String DATE_PATTERN = "EEEE";
     private final Date mDate;
 
-    public MensaDayTabItem(String title, Date date, int indicatorColor, int dividerColor) {
-        super(title, null, indicatorColor, dividerColor);
+    public MensaDayTabItem(String title, Date date) {
+        super(title, null);
 
         this.mDate = date;
     }
