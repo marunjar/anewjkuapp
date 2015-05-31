@@ -24,20 +24,17 @@
 
 package org.voidsink.anewjkuapp.fragment;
 
-import android.accounts.Account;
-import android.app.ProgressDialog;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -63,32 +60,34 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExamFragment extends BaseFragment {
+public class ExamFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = ExamFragment.class.getSimpleName();
 
     private ExamListAdapter mAdapter;
     private ContentObserver mNewExamObserver;
+    private RecyclerView mRecyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
-        final RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        mAdapter = new ExamListAdapter(getContext());
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mAdapter));
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
         return view;
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        new ExamLoadTask().execute();
+        mAdapter = new ExamListAdapter(getContext());
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mAdapter));
+
+        getLoaderManager().initLoader(0, null, this);
     }
 
     @Override
@@ -132,62 +131,40 @@ public class ExamFragment extends BaseFragment {
         return Consts.SCREEN_EXAMS;
     }
 
-    private class ExamLoadTask extends AsyncTask<String, Void, Void> {
-        private ProgressDialog progressDialog;
-        private List<ExamListExam> mExams;
-        private Context mContext;
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(getContext(), KusssContentContract.Exam.CONTENT_URI,
+                ImportExamTask.EXAM_PROJECTION, null, null,
+                KusssContentContract.Exam.COL_DTSTART + " ASC");
 
-        @Override
-        protected Void doInBackground(String... urls) {
-            Account mAccount = AppUtils.getAccount(mContext);
-            if (mAccount != null) {
-                CourseMap map = new CourseMap(mContext);
+    }
 
-                ContentResolver cr = mContext.getContentResolver();
-                Cursor c = cr.query(KusssContentContract.Exam.CONTENT_URI,
-                        ImportExamTask.EXAM_PROJECTION, null, null,
-                        KusssContentContract.Exam.COL_DTSTART + " ASC");
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mAdapter.clear();
 
-                if (c != null) {
-                    while (c.moveToNext()) {
-                        try {
-                            mExams.add(new ExamListExam(c, map));
-                        } catch (ParseException e) {
-                            Analytics.sendException(mContext, e, false);
-                        }
+        if (data != null) {
+            if (AppUtils.getAccount(getContext()) != null) {
+                CourseMap map = new CourseMap(getContext());
+                List<ExamListExam> mExams = new ArrayList<>();
+
+                while (data.moveToNext()) {
+                    try {
+                        mExams.add(new ExamListExam(data, map));
+                    } catch (ParseException e) {
+                        Analytics.sendException(getContext(), e, false);
                     }
-                    c.close();
                 }
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mContext = ExamFragment.this.getContext();
-            if (mContext == null) {
-                Log.e(TAG, "context is null");
-            }
-            mExams = new ArrayList<>();
-            progressDialog = ProgressDialog.show(mContext,
-                    mContext.getString(R.string.progress_title),
-                    mContext.getString(R.string.progress_load_exam), true); //!!
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            if (mAdapter != null) {
-                mAdapter.clear();
                 mAdapter.addAll(mExams);
-                mAdapter.notifyDataSetChanged();
             }
-
-            progressDialog.dismiss();
-
-            super.onPostExecute(result);
         }
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mAdapter.clear();
+        mAdapter.notifyDataSetChanged();
     }
 
     private class NewExamContentObserver extends ContentObserver {
@@ -199,7 +176,8 @@ public class ExamFragment extends BaseFragment {
         @Override
         public void onChange(boolean selfChange) {
             super.onChange(selfChange);
-            new ExamLoadTask().execute();
+
+            getLoaderManager().restartLoader(0, null, ExamFragment.this);
         }
     }
 }

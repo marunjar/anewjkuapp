@@ -146,8 +146,6 @@ public class AssessmentDetailFragment extends TermFragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Log.d(TAG, "onCreateLoader");
-
         return new CursorLoader(getContext(), KusssContentContract.Assessment.CONTENT_URI,
                 ImportAssessmentTask.ASSESSMENT_PROJECTION, null, null,
                 KusssContentContract.Assessment.TABLE_NAME + "."
@@ -169,15 +167,11 @@ public class AssessmentDetailFragment extends TermFragment implements
         mAdapter.addAll(assessments);
 
         mAdapter.notifyDataSetChanged();
-
-        Log.d(TAG, "onLoaderFinished");
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.clear();
         mAdapter.notifyDataSetChanged();
-
-        Log.d(TAG, "onLoaderReset");
     }
 }
