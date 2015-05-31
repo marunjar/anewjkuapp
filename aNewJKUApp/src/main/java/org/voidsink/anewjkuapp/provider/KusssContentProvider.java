@@ -425,6 +425,17 @@ public class KusssContentProvider extends ContentProvider {
         return mCourses;
     }
 
+    public static List<Curriculum> getCurriculaFromCursor(Context context, Cursor c) {
+        List<Curriculum> mCurriculum = new ArrayList<>();
+        if (c != null) {
+            while (c.moveToNext()) {
+                mCurriculum.add(KusssHelper.createCurricula(c));
+            }
+            AppUtils.sortCurricula(mCurriculum);
+        }
+        return mCurriculum;
+    }
+
     public static List<Curriculum> getCurricula(Context context) {
         List<Curriculum> mCurriculum = new ArrayList<>();
         Account mAccount = AppUtils.getAccount(context);
@@ -435,13 +446,10 @@ public class KusssContentProvider extends ContentProvider {
                     KusssContentContract.Curricula.COL_DT_START + " DESC");
 
             if (c != null) {
-                while (c.moveToNext()) {
-                    mCurriculum.add(KusssHelper.createCurricula(c));
-                }
+                mCurriculum = getCurriculaFromCursor(context, c);
                 c.close();
             }
         }
-        AppUtils.sortCurricula(mCurriculum);
 
         return mCurriculum;
     }
