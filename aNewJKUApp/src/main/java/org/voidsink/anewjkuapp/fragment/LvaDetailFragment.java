@@ -68,9 +68,6 @@ import java.util.List;
 public class LvaDetailFragment extends TermFragment implements
         ContentObserverListener, LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final int LOADER_ID_COURSES = 1;
-    private static final int LOADER_ID_ASSESSMENTS = 2;
-
     private BaseContentObserver mLvaObserver;
     private CourseListAdapter mAdapter;
 
@@ -98,8 +95,8 @@ public class LvaDetailFragment extends TermFragment implements
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mAdapter));
 
-        getLoaderManager().initLoader(LOADER_ID_COURSES, null, this);
-        getLoaderManager().initLoader(LOADER_ID_ASSESSMENTS, null, this);
+        getLoaderManager().initLoader(Consts.LOADER_ID_COURSES, null, this);
+        getLoaderManager().initLoader(Consts.LOADER_ID_ASSESSMENTS, null, this);
     }
 
     @Override
@@ -154,19 +151,19 @@ public class LvaDetailFragment extends TermFragment implements
 
     @Override
     public void onContentChanged(boolean selfChange) {
-        getLoaderManager().restartLoader(LOADER_ID_COURSES, null, this);
-        getLoaderManager().restartLoader(LOADER_ID_ASSESSMENTS, null, this);
+        getLoaderManager().restartLoader(Consts.LOADER_ID_COURSES, null, this);
+        getLoaderManager().restartLoader(Consts.LOADER_ID_ASSESSMENTS, null, this);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id) {
-            case LOADER_ID_COURSES: {
+            case Consts.LOADER_ID_COURSES: {
                 return new CursorLoader(getContext(), KusssContentContract.Course.CONTENT_URI,
                         ImportCourseTask.COURSE_PROJECTION, null, null,
                         KusssContentContract.Course.COL_TERM + " DESC");
             }
-            case LOADER_ID_ASSESSMENTS: {
+            case Consts.LOADER_ID_ASSESSMENTS: {
                 return new CursorLoader(getContext(), KusssContentContract.Assessment.CONTENT_URI,
                         ImportAssessmentTask.ASSESSMENT_PROJECTION, null, null,
                         KusssContentContract.Assessment.TABLE_NAME + "."
@@ -183,11 +180,11 @@ public class LvaDetailFragment extends TermFragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         switch (loader.getId()) {
-            case LOADER_ID_COURSES: {
+            case Consts.LOADER_ID_COURSES: {
                 mCourseCursor = data;
                 break;
             }
-            case LOADER_ID_ASSESSMENTS: {
+            case Consts.LOADER_ID_ASSESSMENTS: {
                 mAssessmentCursor = data;
                 break;
             }
@@ -199,11 +196,11 @@ public class LvaDetailFragment extends TermFragment implements
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         switch (loader.getId()) {
-            case LOADER_ID_COURSES: {
+            case Consts.LOADER_ID_COURSES: {
                 mCourseCursor = null;
                 break;
             }
-            case LOADER_ID_ASSESSMENTS: {
+            case Consts.LOADER_ID_ASSESSMENTS: {
                 mAssessmentCursor = null;
                 break;
             }
@@ -215,17 +212,8 @@ public class LvaDetailFragment extends TermFragment implements
         adapter.clear();
 
         if (courseCursor != null) {
-            List<Course> courses = new ArrayList<>();
-
-            courseCursor.moveToFirst();
-            try {
-                while (courseCursor.moveToNext()) {
-                    courses.add(KusssHelper.createCourse(courseCursor));
-                }
-            } catch (ParseException e) {
-                Analytics.sendException(getContext(), e, false);
-                courses.clear();
-            }
+            // load courses
+            List<Course> courses = KusssContentProvider.getCoursesFromCursor(getContext(), courseCursor);
 
             // sort courses
             AppUtils.sortCourses(courses);

@@ -402,8 +402,25 @@ public class KusssContentProvider extends ContentProvider {
         return mAssessments;
     }
 
+    public static List<Course> getCoursesFromCursor(Context context, Cursor c) {
+        List<Course> courses = new ArrayList<>();
+
+        if (c != null) {
+            c.moveToFirst();
+            try {
+                while (c.moveToNext()) {
+                    courses.add(KusssHelper.createCourse(c));
+                }
+            } catch (ParseException e) {
+                Analytics.sendException(context, e, false);
+                courses.clear();
+            }
+        }
+        return courses;
+    }
+
     public static List<Course> getCourses(Context context) {
-        List<Course> mCourses = new ArrayList<>();
+        List<Course> courses = new ArrayList<>();
         Account mAccount = AppUtils.getAccount(context);
         if (mAccount != null) {
             ContentResolver cr = context.getContentResolver();
@@ -412,18 +429,11 @@ public class KusssContentProvider extends ContentProvider {
                     KusssContentContract.Course.COL_TERM + " DESC");
 
             if (c != null) {
-                try {
-                    while (c.moveToNext()) {
-                        mCourses.add(KusssHelper.createCourse(c));
-                    }
-                } catch (ParseException e) {
-                    Analytics.sendException(context, e, false);
-                    mCourses.clear();
-                }
+                courses = getCoursesFromCursor(context, c);
                 c.close();
             }
         }
-        return mCourses;
+        return courses;
     }
 
     public static List<Curriculum> getCurriculaFromCursor(Context context, Cursor c) {

@@ -88,6 +88,10 @@ public class Consts {
     public static final String SCREEN_RSS_FEED = "/rssFeed";
     public static final String SCREEN_RSS_FEED_ENTRY = "/rssFeed/entry";
 
+    // Laoder IDs
+    public static final int LOADER_ID_COURSES = 1;
+    public static final int LOADER_ID_ASSESSMENTS = 2;
+
     private Consts() {
     }
 }
