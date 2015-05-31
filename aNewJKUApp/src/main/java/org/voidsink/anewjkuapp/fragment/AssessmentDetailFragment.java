@@ -24,14 +24,17 @@
 
 package org.voidsink.anewjkuapp.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.UriMatcher;
-import android.os.AsyncTask;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -49,20 +52,21 @@ import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.base.TermFragment;
 import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
+import org.voidsink.anewjkuapp.update.ImportAssessmentTask;
 import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AssessmentDetailFragment extends TermFragment implements
-        ContentObserverListener {
+        ContentObserverListener, LoaderManager.LoaderCallbacks<Cursor>{
 
     public static final String TAG = AssessmentDetailFragment.class.getSimpleName();
 
     private BaseContentObserver mObserver;
     private AssessmentListAdapter mAdapter;
+    private RecyclerView mRecyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,12 +74,9 @@ public class AssessmentDetailFragment extends TermFragment implements
         View view = inflater.inflate(R.layout.fragment_recycler_view, container,
                 false);
 
-        final RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new AssessmentListAdapter(getContext());
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mAdapter));
 
         return view;
     }
@@ -85,6 +86,17 @@ public class AssessmentDetailFragment extends TermFragment implements
         super.onCreateOptionsMenu(menu, inflater);
 
         inflater.inflate(R.menu.assessment, menu);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mAdapter = new AssessmentListAdapter(getContext());
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mAdapter));
+
+        getLoaderManager().initLoader(0, null, this);
     }
 
     @Override
@@ -104,57 +116,11 @@ public class AssessmentDetailFragment extends TermFragment implements
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        loadData();
-    }
-
-    private void loadData() {
-
-        new AsyncTask<Void, Void, Void>() {
-
-            //            private ProgressDialog progressDialog;
-            private List<Assessment> assessments;
-            private Context mContext = getContext();
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-
-//                progressDialog = ProgressDialog.show(context,
-//                        context.getString(R.string.progress_title),
-//                        context.getString(R.string.progress_load_assessments), true);
-
-                assessments = new ArrayList<>();
-            }
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                this.assessments = AppUtils.filterAssessments(getTerms(), KusssContentProvider.getAssessments(mContext));
-
-                AppUtils.sortAssessments(assessments);
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void result) {
-//                progressDialog.dismiss();
-                if (mAdapter != null) {
-                    mAdapter.clear();
-                    mAdapter.addAll(this.assessments);
-                    mAdapter.notifyDataSetChanged();
-                }
-
-                super.onPostExecute(result);
-            }
-        }.execute();
-
-
     }
 
     @Override
     public void onContentChanged(boolean selfChange) {
-        loadData();
+        getLoaderManager().restartLoader(0, null, this);
     }
 
     @Override
@@ -176,5 +142,42 @@ public class AssessmentDetailFragment extends TermFragment implements
         super.onDestroy();
 
         getActivity().getContentResolver().unregisterContentObserver(mObserver);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Log.d(TAG, "onCreateLoader");
+
+        return new CursorLoader(getContext(), KusssContentContract.Assessment.CONTENT_URI,
+                ImportAssessmentTask.ASSESSMENT_PROJECTION, null, null,
+                KusssContentContract.Assessment.TABLE_NAME + "."
+                        + KusssContentContract.Assessment.COL_TYPE
+                        + " ASC,"
+                        + KusssContentContract.Assessment.TABLE_NAME + "."
+                        + KusssContentContract.Assessment.COL_DATE
+                        + " DESC");
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mAdapter.clear();
+
+        List<Assessment> assessments = AppUtils.filterAssessments(getTerms(), KusssContentProvider.getAssessmentsFromCursor(getContext(), data));
+
+        AppUtils.sortAssessments(assessments);
+
+        mAdapter.addAll(assessments);
+
+        mAdapter.notifyDataSetChanged();
+
+        Log.d(TAG, "onLoaderFinished");
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mAdapter.clear();
+        mAdapter.notifyDataSetChanged();
+
+        Log.d(TAG, "onLoaderReset");
     }
 }

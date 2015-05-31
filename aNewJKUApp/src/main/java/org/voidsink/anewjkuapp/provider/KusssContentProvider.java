@@ -362,6 +362,22 @@ public class KusssContentProvider extends ContentProvider {
         }
     }
 
+    public static List<Assessment> getAssessmentsFromCursor(Context context, Cursor data) {
+        List<Assessment> mAssessments = new ArrayList<>();
+
+        if (data != null) {
+            try {
+                while (data.moveToNext()) {
+                    mAssessments.add(KusssHelper.createAssessment(data));
+                }
+            } catch (ParseException e) {
+                Analytics.sendException(context, e, false);
+                mAssessments.clear();
+            }
+        }
+        return mAssessments;
+    }
+
     public static List<Assessment> getAssessments(Context context) {
         List<Assessment> mAssessments = new ArrayList<>();
 
@@ -378,17 +394,9 @@ public class KusssContentProvider extends ContentProvider {
                             + " DESC");
 
             if (c != null) {
-                try {
-                    while (c.moveToNext()) {
-                        mAssessments.add(KusssHelper.createAssessment(c));
-                    }
-                } catch (ParseException e) {
-                    Analytics.sendException(context, e, false);
-                    mAssessments.clear();
-                }
+                mAssessments = getAssessmentsFromCursor(context, c);
                 c.close();
             }
-            c = null;
         }
         return mAssessments;
     }
