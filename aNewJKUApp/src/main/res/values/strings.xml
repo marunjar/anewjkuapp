@@ -245,7 +245,7 @@
     <string name="kusss_service_title">KUSSS Service</string>
     <string name="kusss_provider_name">KUSSS</string>
     <string name="poi_provider_name">POIs</string>
-    <string name="listview_footer_button">Mehr anzeigen</string>
+    <string name="listview_footer_button">Antippen für Termine nach dem %s</string>
     <string name="all_terms">alle Semester</string>
     <string name="about_force_logout">Ausloggen</string>
     <string name="menu_exam_register">in KUSSS anzeigen</string>

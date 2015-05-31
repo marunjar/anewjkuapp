@@ -43,7 +43,7 @@
     <string name="group_user">User</string>
     <string name="kusss_provider_name">KUSSS</string>
     <string name="kusss_service_title">KUSSS service</string>
-    <string name="listview_footer_button">Show more</string>
+    <string name="listview_footer_button">Touch to view events after %s</string>
     <string name="lva_state_ext_all">All courses</string>
     <string name="lva_state_ext_open">Open courses</string>
     <string name="lva_state_ext_done">Completed courses</string>
