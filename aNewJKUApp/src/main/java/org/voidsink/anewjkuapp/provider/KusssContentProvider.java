@@ -366,6 +366,7 @@ public class KusssContentProvider extends ContentProvider {
         List<Assessment> mAssessments = new ArrayList<>();
 
         if (data != null) {
+            data.moveToFirst();
             try {
                 while (data.moveToNext()) {
                     mAssessments.add(KusssHelper.createAssessment(data));

@@ -24,12 +24,14 @@
 
 package org.voidsink.anewjkuapp.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.UriMatcher;
-import android.os.AsyncTask;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -44,94 +46,60 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 import org.voidsink.anewjkuapp.CourseListAdapter;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.base.TermFragment;
 import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.kusss.Course;
+import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
+import org.voidsink.anewjkuapp.update.ImportAssessmentTask;
+import org.voidsink.anewjkuapp.update.ImportCourseTask;
 import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LvaDetailFragment extends TermFragment implements
-        ContentObserverListener {
+        ContentObserverListener, LoaderManager.LoaderCallbacks<Cursor> {
+
+    private static final int LOADER_ID_COURSES = 1;
+    private static final int LOADER_ID_ASSESSMENTS = 2;
 
     private BaseContentObserver mLvaObserver;
     private CourseListAdapter mAdapter;
+
+    private Cursor mAssessmentCursor = null;
+    private Cursor mCourseCursor = null;
+    private RecyclerView mRecyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
-        final RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new CourseListAdapter(getContext());
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mAdapter));
 
         return view;
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        loadData();
-    }
+        mAdapter = new CourseListAdapter(getContext());
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mAdapter));
 
-    private void loadData() {
-
-        new AsyncTask<Void, Void, Void>() {
-
-            private Context mContext = getContext();
-//            private ProgressDialog progressDialog;
-
-            List<Course> courses;
-            List<Assessment> assessments;
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-
-//                progressDialog = ProgressDialog.show(mContext,
-//                        mContext.getString(R.string.progress_title),
-//                        mContext.getString(R.string.progress_load_lva), true);
-
-                this.courses = new ArrayList<>();
-                this.assessments = new ArrayList<>();
-            }
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                this.courses = KusssContentProvider.getCourses(mContext);
-                this.assessments = KusssContentProvider.getAssessments(mContext);
-                AppUtils.sortCourses(this.courses);
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void result) {
-                // Log.i(TAG, "loadLvas" + this.terms);
-
-                List<LvaWithGrade> mLvasWithGrades = AppUtils.getLvasWithGrades(getTerms(), courses, assessments);
-
-                mAdapter.clear();
-                mAdapter.addAll(mLvasWithGrades);
-                mAdapter.notifyDataSetChanged();
-
-//                progressDialog.dismiss();
-
-                super.onPostExecute(result);
-            }
-        }.execute();
+        getLoaderManager().initLoader(LOADER_ID_COURSES, null, this);
+        getLoaderManager().initLoader(LOADER_ID_ASSESSMENTS, null, this);
     }
 
     @Override
@@ -186,6 +154,92 @@ public class LvaDetailFragment extends TermFragment implements
 
     @Override
     public void onContentChanged(boolean selfChange) {
-        loadData();
+        getLoaderManager().restartLoader(LOADER_ID_COURSES, null, this);
+        getLoaderManager().restartLoader(LOADER_ID_ASSESSMENTS, null, this);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        switch (id) {
+            case LOADER_ID_COURSES: {
+                return new CursorLoader(getContext(), KusssContentContract.Course.CONTENT_URI,
+                        ImportCourseTask.COURSE_PROJECTION, null, null,
+                        KusssContentContract.Course.COL_TERM + " DESC");
+            }
+            case LOADER_ID_ASSESSMENTS: {
+                return new CursorLoader(getContext(), KusssContentContract.Assessment.CONTENT_URI,
+                        ImportAssessmentTask.ASSESSMENT_PROJECTION, null, null,
+                        KusssContentContract.Assessment.TABLE_NAME + "."
+                                + KusssContentContract.Assessment.COL_TYPE
+                                + " ASC,"
+                                + KusssContentContract.Assessment.TABLE_NAME + "."
+                                + KusssContentContract.Assessment.COL_DATE
+                                + " DESC");
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        switch (loader.getId()) {
+            case LOADER_ID_COURSES: {
+                mCourseCursor = data;
+                break;
+            }
+            case LOADER_ID_ASSESSMENTS: {
+                mAssessmentCursor = data;
+                break;
+            }
+        }
+        // fill adapter
+        setData(mAdapter, mCourseCursor, mAssessmentCursor);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        switch (loader.getId()) {
+            case LOADER_ID_COURSES: {
+                mCourseCursor = null;
+                break;
+            }
+            case LOADER_ID_ASSESSMENTS: {
+                mAssessmentCursor = null;
+                break;
+            }
+        }
+        setData(mAdapter, mCourseCursor, mAssessmentCursor);
+    }
+
+    private void setData(CourseListAdapter adapter, Cursor courseCursor, Cursor assessmentCursor) {
+        adapter.clear();
+
+        if (courseCursor != null) {
+            List<Course> courses = new ArrayList<>();
+
+            courseCursor.moveToFirst();
+            try {
+                while (courseCursor.moveToNext()) {
+                    courses.add(KusssHelper.createCourse(courseCursor));
+                }
+            } catch (ParseException e) {
+                Analytics.sendException(getContext(), e, false);
+                courses.clear();
+            }
+
+            // sort courses
+            AppUtils.sortCourses(courses);
+
+            // load assessments
+            List<Assessment> assessments = KusssContentProvider.getAssessmentsFromCursor(getContext(), assessmentCursor);
+
+            // generate data
+            List<LvaWithGrade> lvasWithGrades = AppUtils.getLvasWithGrades(getTerms(), courses, assessments);
+
+            // set data
+            adapter.addAll(lvasWithGrades);
+        }
+
+        adapter.notifyDataSetChanged();
     }
 }
