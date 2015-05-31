@@ -32,5 +32,7 @@ public interface StackedFragment {
     public boolean getDisplayHomeAsUpEnabled();
     //Return title to be shown on ActionBar when fragment added
     public CharSequence getTitle(Context context);
+    //Return menu id to be selected in drawer when fragment added
+    public int getId(Context context);
 
 }

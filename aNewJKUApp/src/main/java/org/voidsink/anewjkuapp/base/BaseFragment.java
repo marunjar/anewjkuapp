@@ -42,6 +42,7 @@ public class BaseFragment extends Fragment implements StackedFragment {
     private static final String TAG = BaseFragment.class.getSimpleName();
     private Intent mPendingIntent = null;
     private CharSequence mTitle = null;
+    private int mId = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,8 +106,13 @@ public class BaseFragment extends Fragment implements StackedFragment {
     public void setArguments(Bundle args) {
         super.setArguments(args);
 
-        if (args != null && args.containsKey(Consts.ARG_FRAGMENT_TITLE)) {
-            mTitle = args.getCharSequence(Consts.ARG_FRAGMENT_TITLE);
+        if (args != null) {
+            if (args.containsKey(Consts.ARG_FRAGMENT_TITLE)) {
+                mTitle = args.getCharSequence(Consts.ARG_FRAGMENT_TITLE);
+            }
+            if (args.containsKey(Consts.ARG_FRAGMENT_ID)) {
+                mId = args.getInt(Consts.ARG_FRAGMENT_ID);
+            }
         }
     }
 
@@ -144,5 +150,10 @@ public class BaseFragment extends Fragment implements StackedFragment {
     @Override
     public CharSequence getTitle(Context context) {
         return mTitle;
+    }
+
+    @Override
+    public int getId(Context context) {
+        return mId;
     }
 }

@@ -1,12 +1,14 @@
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android"
-    android:title="@string/action_settings" >
+    android:title="@string/title_settings" >
 
     <!--
     <header
         android:fragment="org.voidsink.anewjkuapp.activity.SettingsActivity$SyncSettingsFragment"
         android:summary="@string/settings_kusss_summary"
         android:title="@string/settings_kusss_title" >
-    </header>
+    </header>
+
+
     -->
 
     <header
@@ -20,7 +22,8 @@
              
         <extra
             android:name="someKey"
-            android:value="someHeaderValue" />
+            android:value="someHeaderValue" />
+
         -->
     </header>
     <header
@@ -34,7 +37,8 @@
              
         <extra
             android:name="someKey"
-            android:value="someHeaderValue" />
+            android:value="someHeaderValue" />
+
         -->
     </header>
 

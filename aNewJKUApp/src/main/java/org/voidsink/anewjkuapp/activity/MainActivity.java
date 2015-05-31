@@ -52,6 +52,7 @@ import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.base.BaseFragment;
+import org.voidsink.anewjkuapp.base.StackedFragment;
 import org.voidsink.anewjkuapp.base.ThemedActivity;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.fragment.AssessmentFragment;
@@ -188,10 +189,24 @@ public class MainActivity extends ThemedActivity {
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        attachFragment(menuItem, true);
+                        checkNavItem(menuItem);
+
+                        switch (menuItem.getItemId()) {
+                            case R.id.nav_settings: {
+                                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                                break;
+                            }
+                            case R.id.nav_about: {
+                                startActivity(new Intent(MainActivity.this, AboutActivity.class));
+                                break;
+                            }
+                            default:
+                                attachFragment(menuItem, true);
+                                break;
+                        }
 
                         mDrawerLayout.closeDrawers();
-                        return true;
+                        return menuItem.isCheckable();
                     }
                 });
 
@@ -324,8 +339,6 @@ public class MainActivity extends ThemedActivity {
 
         if (startFragment != null) {
             try {
-                menuItem.setChecked(true);
-
                 Fragment f = startFragment.newInstance();
 
                 Bundle b = new Bundle();
@@ -368,6 +381,40 @@ public class MainActivity extends ThemedActivity {
 
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
+
+        Fragment f = getSupportFragmentManager().findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
+        if (f instanceof StackedFragment) {
+            MenuItem menuItem = mNavigationView.getMenu().findItem(((StackedFragment) f).getId(this));
+            checkNavItem(menuItem);
+        }
+
+    }
+
+    private void uncheckMenuItems(Menu menu) {
+        if (menu != null) {
+            for (int i = 0; i < menu.size(); i++) {
+                MenuItem item = menu.getItem(i);
+
+                if (item.isCheckable()) {
+                    item.setChecked(false);
+                }
+
+                if (item.hasSubMenu()) {
+                    uncheckMenuItems(item.getSubMenu());
+                }
+            }
+        }
+    }
+
+    private void checkNavItem(MenuItem menuItem) {
+        if (menuItem != null) {
+            if (menuItem.isCheckable() && !menuItem.isChecked()) {
+                // iterate over all items and uncheck them, groups doesn't work with submenus for grouping entries in NavigationView
+                uncheckMenuItems(mNavigationView.getMenu());
+
+                menuItem.setChecked(true);
+            }
+        }
     }
 
     @Override
@@ -385,12 +432,6 @@ public class MainActivity extends ThemedActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
-            case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
-                return true;
-            case R.id.action_about:
-                startActivity(new Intent(this, AboutActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
