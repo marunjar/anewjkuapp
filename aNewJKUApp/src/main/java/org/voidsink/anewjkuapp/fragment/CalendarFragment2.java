@@ -31,7 +31,6 @@ import android.content.res.TypedArray;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.RectF;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.format.DateFormat;
@@ -60,7 +59,6 @@ import org.voidsink.anewjkuapp.utils.Consts;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,79 +89,12 @@ public class CalendarFragment2 extends BaseFragment implements WeekView.MonthCha
         // Set formatter for Date/Time
         mWeekView.setDateTimeInterpreter(this);
 
-        goToFirstEvent(mWeekView);
+        // goto now
+        mWeekView.goToToday();
+        Calendar cal = Calendar.getInstance();
+        mWeekView.goToHour(cal.get(Calendar.HOUR_OF_DAY));
 
         return view;
-    }
-
-    private void goToFirstEvent(final WeekView weekView) {
-
-        new AsyncTask<Void, Void, Void>() {
-
-            Date mDate = null;
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                Account mAccount = AppUtils.getAccount(getContext());
-                if (mAccount == null) {
-                    return null;
-                }
-
-                final String calIDLva = CalendarUtils.getCalIDByName(getContext(),
-                        mAccount, CalendarUtils.ARG_CALENDAR_COURSE, true);
-                final String calIDExam = CalendarUtils.getCalIDByName(getContext(),
-                        mAccount, CalendarUtils.ARG_CALENDAR_EXAM, true);
-
-                if (calIDLva == null || calIDExam == null) {
-                    Log.w(TAG, "no events loaded, calendars not found");
-                    return null;
-                }
-
-                ContentResolver cr = getContext().getContentResolver();
-                Cursor c = cr.query(
-                        CalendarContractWrapper.Events.CONTENT_URI(),
-                        ImportCalendarTask.EVENT_PROJECTION,
-                        "("
-                                + CalendarContractWrapper.Events
-                                .CALENDAR_ID()
-                                + " = ? or "
-                                + CalendarContractWrapper.Events
-                                .CALENDAR_ID() + " = ? ) and "
-                                + CalendarContractWrapper.Events.DTEND()
-                                + " >= ? and "
-                                + CalendarContractWrapper.Events.DELETED()
-                                + " != 1",
-                        new String[]{calIDExam, calIDLva,
-                                Long.toString(new Date().getTime())},
-                        CalendarContractWrapper.Events.DTSTART() + " ASC");
-                if (c != null) {
-                    if (c.moveToNext()) {
-                        mDate = new Date(c.getLong(ImportCalendarTask.COLUMN_EVENT_DTSTART));
-                    }
-                    c.close();
-                }
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-
-                Calendar cal = Calendar.getInstance();
-                if (mDate != null) {
-                    cal.setTime(mDate);
-                    weekView.goToDate(cal);
-
-                    // set date again, weekView.goToDate modifies date
-                    cal.setTime(mDate);
-                    weekView.goToHour(Math.max(cal.get(Calendar.HOUR_OF_DAY) - 1, 0));
-                } else {
-                    weekView.goToToday();
-                    weekView.goToHour(Math.max(cal.get(Calendar.HOUR_OF_DAY) - 1, 0));
-                }
-            }
-        }.execute();
     }
 
     @Override
