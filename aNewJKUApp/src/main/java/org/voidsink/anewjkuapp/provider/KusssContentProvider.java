@@ -379,7 +379,7 @@ public class KusssContentProvider extends ContentProvider {
         return mAssessments;
     }
 
-    public static List<Assessment> getAssessments(Context context) {
+    private static List<Assessment> getAssessments(Context context) {
         List<Assessment> mAssessments = new ArrayList<>();
 
         Account mAccount = AppUtils.getAccount(context);
@@ -419,23 +419,6 @@ public class KusssContentProvider extends ContentProvider {
         return courses;
     }
 
-    public static List<Course> getCourses(Context context) {
-        List<Course> courses = new ArrayList<>();
-        Account mAccount = AppUtils.getAccount(context);
-        if (mAccount != null) {
-            ContentResolver cr = context.getContentResolver();
-            Cursor c = cr.query(KusssContentContract.Course.CONTENT_URI,
-                    ImportCourseTask.COURSE_PROJECTION, null, null,
-                    KusssContentContract.Course.COL_TERM + " DESC");
-
-            if (c != null) {
-                courses = getCoursesFromCursor(context, c);
-                c.close();
-            }
-        }
-        return courses;
-    }
-
     public static List<Curriculum> getCurriculaFromCursor(Context context, Cursor c) {
         List<Curriculum> mCurriculum = new ArrayList<>();
         if (c != null) {
@@ -447,7 +430,7 @@ public class KusssContentProvider extends ContentProvider {
         return mCurriculum;
     }
 
-    public static List<Curriculum> getCurricula(Context context) {
+    private static List<Curriculum> getCurricula(Context context) {
         List<Curriculum> mCurriculum = new ArrayList<>();
         Account mAccount = AppUtils.getAccount(context);
         if (mAccount != null) {
