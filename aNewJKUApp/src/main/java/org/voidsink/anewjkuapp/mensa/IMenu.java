@@ -26,7 +26,7 @@ package org.voidsink.anewjkuapp.mensa;
 
 public interface IMenu {
 
-    String getCategory();
+    String getName();
 
     String getSoup();
 

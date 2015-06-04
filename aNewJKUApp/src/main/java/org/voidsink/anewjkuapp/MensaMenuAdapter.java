@@ -85,7 +85,7 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
                 MenuViewHolder mensaMenuItemHolder = (MenuViewHolder) holder;
                 IMenu menu = getItem(position).getMenu();
 
-                UIUtils.setTextAndVisibility(mensaMenuItemHolder.mName, menu.getCategory());
+                UIUtils.setTextAndVisibility(mensaMenuItemHolder.mName, menu.getName());
                 UIUtils.setTextAndVisibility(mensaMenuItemHolder.mSoup, menu.getSoup());
 
                 mensaMenuItemHolder.mMeal.setText(menu.getMeal());

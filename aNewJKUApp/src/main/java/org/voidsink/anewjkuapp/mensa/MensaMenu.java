@@ -29,7 +29,7 @@ import org.json.JSONObject;
 
 public class MensaMenu implements IMenu {
 
-    private String category;
+    private String name;
     private String soup;
     private String meal;
     private double price;
@@ -38,7 +38,7 @@ public class MensaMenu implements IMenu {
 
     public MensaMenu(JSONObject jsonObject) {
         try {
-            this.category = jsonObject.getString("name").trim();
+            this.name = jsonObject.getString("name").trim();
             if (jsonObject.isNull("soup")) {
                 this.soup = "";
             } else {
@@ -49,14 +49,17 @@ public class MensaMenu implements IMenu {
             this.priceBig = jsonObject.getInt("priceBig") / 100f;
             this.oehBonus = jsonObject.getInt("oeh_bonus") / 100f;
 
+            if (this.priceBig < this.price) {
+                this.priceBig = this.price + this.oehBonus;
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public String getCategory() {
-        return this.category;
+    public String getName() {
+        return this.name;
     }
 
     public String getSoup() {
