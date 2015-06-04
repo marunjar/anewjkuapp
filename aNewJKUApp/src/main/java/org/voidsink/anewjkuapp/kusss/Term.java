@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp.kusss;
 
@@ -85,6 +85,14 @@ public class Term implements Comparable<Term> {
         }
 
         return this.type.compareTo(o.getType());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof Term)) return false;
+        Term t = (Term) o;
+        return this.compareTo(t) == 0;
     }
 
     public int getYear() {

@@ -124,6 +124,9 @@
     <string name="pref_cat_tracking">Tracking</string>
     <string name="pref_tracking_errors_title">Fehler</string>
     <string name="pref_tracking_errors_summary">Fehler automatisch an Entwickler senden damit schneller darauf reagiert werden kann.</string>
+    <string name="pref_cat_app_courses">LVAs</string>
+    <string name="pref_courses_show_with_assessment_only_title">nur LVAs mit Noten anzeigen</string>
+    <string name="pref_courses_show_with_assessment_only_summary">Für vergangene Semester werden nur LVAs angezeigt die bereits benotet wurden.</string>
 
     <string name="group_user">User</string>
     <string name="group_oeh">ÖH</string>

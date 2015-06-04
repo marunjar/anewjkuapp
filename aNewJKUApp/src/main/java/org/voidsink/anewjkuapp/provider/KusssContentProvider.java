@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp.provider;
 
@@ -44,7 +44,6 @@ import org.voidsink.anewjkuapp.kusss.Curriculum;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.update.ImportAssessmentTask;
-import org.voidsink.anewjkuapp.update.ImportCourseTask;
 import org.voidsink.anewjkuapp.update.ImportCurriculaTask;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
@@ -556,6 +555,14 @@ public class KusssContentProvider extends ContentProvider {
         return Collections.unmodifiableList(objects);
     }
 
+    public static Term getLastTerm(Context c) {
+        List<Term> terms = getTerms(c);
+        if (terms.size() == 0) {
+            return null;
+        }
+        return terms.get(0);
+    }
+
     private static boolean dateInRange(Date date, List<Curriculum> curricula) {
         for (Curriculum curriculum : curricula) {
             if (curriculum.dateInRange(date)) {
@@ -564,5 +571,4 @@ public class KusssContentProvider extends ContentProvider {
         }
         return false;
     }
-
 }

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp;
 
@@ -62,6 +62,7 @@ public final class PreferenceWrapper {
 
     public static final String PREF_MAP_FILE = "pref_key_map_file";
     public static final String PREF_MAP_FILE_DEFAULT = "";
+
     public static final int PREF_LAST_FRAGMENT_DEFAULT = 0;
     public static final String PREF_GET_NEW_EXAMS = "pref_key_get_exams_from_lva";
     public static final int PREF_LAST_VERSION_NONE = -1;
@@ -94,6 +95,9 @@ public final class PreferenceWrapper {
     public static final boolean PREF_TRACKING_ERRORS_DEFAULT = true;
 
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
+
+    public static final String PREF_COURSES_SHOW_WITH_ASSESSMENT_ONLY = "pref_key_courses_show_with_assessment_only";
+    private static final boolean PREF_COURSES_SHOW_WITH_ASSESSMENT_ONLY_DEFAULT = false;
 
     private PreferenceWrapper() {
 
@@ -442,5 +446,28 @@ public final class PreferenceWrapper {
             Analytics.sendException(c, e, false);
         }
     }
+
+    public static boolean getShowCoursesWithAssessmentOnly(Context mContext) {
+        try {
+            SharedPreferences sp = PreferenceManager
+                    .getDefaultSharedPreferences(mContext);
+            return sp.getBoolean(PREF_COURSES_SHOW_WITH_ASSESSMENT_ONLY,
+                    PREF_COURSES_SHOW_WITH_ASSESSMENT_ONLY_DEFAULT);
+        } catch (Exception e) {
+            Log.e(TAG, "Failure", e);
+            return PREF_COURSES_SHOW_WITH_ASSESSMENT_ONLY_DEFAULT;
+        }
+    }
+
+    public static void setShowCoursesWithAssessmentOnly(Context mContext, boolean value) {
+        try {
+            SharedPreferences sp = PreferenceManager
+                    .getDefaultSharedPreferences(mContext);
+            sp.edit().putBoolean(PREF_COURSES_SHOW_WITH_ASSESSMENT_ONLY, value).commit();
+        } catch (Exception e) {
+            Analytics.sendException(mContext, e, false);
+        }
+    }
+
 
 }

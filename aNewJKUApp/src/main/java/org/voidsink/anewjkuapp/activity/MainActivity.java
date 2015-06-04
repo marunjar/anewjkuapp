@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp.activity;
 
@@ -382,12 +382,13 @@ public class MainActivity extends ThemedActivity {
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
 
-        Fragment f = getSupportFragmentManager().findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
-        if (f instanceof StackedFragment) {
-            MenuItem menuItem = mNavigationView.getMenu().findItem(((StackedFragment) f).getId(this));
-            checkNavItem(menuItem);
+        if (mNavigationView != null) {
+            Fragment f = getSupportFragmentManager().findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
+            if (f instanceof StackedFragment) {
+                MenuItem menuItem = mNavigationView.getMenu().findItem(((StackedFragment) f).getId(this));
+                checkNavItem(menuItem);
+            }
         }
-
     }
 
     private void uncheckMenuItems(Menu menu) {

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,14 +20,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp.fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -45,14 +47,13 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import org.voidsink.anewjkuapp.CourseListAdapter;
 import org.voidsink.anewjkuapp.KusssContentContract;
+import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.base.TermFragment;
 import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.kusss.Course;
-import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.update.ImportAssessmentTask;
@@ -61,12 +62,10 @@ import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
-import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class LvaDetailFragment extends TermFragment implements
-        ContentObserverListener, LoaderManager.LoaderCallbacks<Cursor> {
+        ContentObserverListener, LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private BaseContentObserver mLvaObserver;
     private CourseListAdapter mAdapter;
@@ -104,6 +103,11 @@ public class LvaDetailFragment extends TermFragment implements
         super.onCreateOptionsMenu(menu, inflater);
 
         inflater.inflate(R.menu.lva, menu);
+
+        MenuItem item = menu.findItem(R.id.action_toggle_visible_lvas);
+        if (item != null) {
+            item.setChecked(item.isCheckable() && PreferenceWrapper.getShowCoursesWithAssessmentOnly(getContext()));
+        }
     }
 
     @Override
@@ -115,6 +119,10 @@ public class LvaDetailFragment extends TermFragment implements
                 mUpdateService.putExtra(Consts.ARG_UPDATE_KUSSS_ASSESSMENTS, true);
                 getActivity().startService(mUpdateService);
 
+                return true;
+            case R.id.action_toggle_visible_lvas:
+                item.setChecked(item.isCheckable() && !item.isChecked());
+                PreferenceWrapper.setShowCoursesWithAssessmentOnly(getContext(), item.isChecked());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -139,11 +147,16 @@ public class LvaDetailFragment extends TermFragment implements
                 KusssContentContract.Assessment.CONTENT_CHANGED_URI, false,
                 mLvaObserver);
 
+        PreferenceManager.getDefaultSharedPreferences(getContext())
+                .registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        PreferenceManager.getDefaultSharedPreferences(getContext())
+                .unregisterOnSharedPreferenceChangeListener(this);
 
         getActivity().getContentResolver().unregisterContentObserver(
                 mLvaObserver);
@@ -212,6 +225,7 @@ public class LvaDetailFragment extends TermFragment implements
         adapter.clear();
 
         if (courseCursor != null) {
+            boolean withAssessmentOnly = PreferenceWrapper.getShowCoursesWithAssessmentOnly(getContext());
             // load courses
             List<Course> courses = KusssContentProvider.getCoursesFromCursor(getContext(), courseCursor);
 
@@ -222,12 +236,20 @@ public class LvaDetailFragment extends TermFragment implements
             List<Assessment> assessments = KusssContentProvider.getAssessmentsFromCursor(getContext(), assessmentCursor);
 
             // generate data
-            List<LvaWithGrade> lvasWithGrades = AppUtils.getLvasWithGrades(getTerms(), courses, assessments);
+            List<LvaWithGrade> lvasWithGrades = AppUtils.getLvasWithGrades(getTerms(), courses, assessments, withAssessmentOnly, KusssContentProvider.getLastTerm(getContext()));
 
             // set data
             adapter.addAll(lvasWithGrades);
         }
 
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(PreferenceWrapper.PREF_COURSES_SHOW_WITH_ASSESSMENT_ONLY)) {
+            getLoaderManager().restartLoader(Consts.LOADER_ID_COURSES, null, this);
+            getLoaderManager().restartLoader(Consts.LOADER_ID_ASSESSMENTS, null, this);
+        }
     }
 }

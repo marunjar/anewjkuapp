@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp.utils;
 
@@ -601,7 +601,7 @@ public class AppUtils {
     }
 
 
-    public static List<LvaWithGrade> getLvasWithGrades(List<Term> terms, List<Course> courses, List<Assessment> assessments) {
+    public static List<LvaWithGrade> getLvasWithGrades(List<Term> terms, List<Course> courses, List<Assessment> assessments, boolean withAssessmentOnly, Term forLastTerm) {
         List<LvaWithGrade> result = new ArrayList<>();
 
         Map<String, Term> termMap = null;
@@ -615,7 +615,9 @@ public class AppUtils {
         for (Course course : courses) {
             if (termMap == null || termMap.containsKey(course.getTerm().toString())) {
                 Assessment assessment = findAssessment(assessments, course);
-                result.add(new LvaWithGrade(course, assessment));
+                if (!withAssessmentOnly || assessment != null || (forLastTerm != null && forLastTerm.equals(course.getTerm()))) {
+                    result.add(new LvaWithGrade(course, assessment));
+                }
             }
         }
 
