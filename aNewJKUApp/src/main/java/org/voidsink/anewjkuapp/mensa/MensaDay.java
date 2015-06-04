@@ -57,7 +57,6 @@ public class MensaDay implements IDay {
 
     public void addMenu(MensaMenu menu) {
         this.menus.add(menu);
-        menu.setDay(this);
     }
 
     public List<IMenu> getMenus() {
