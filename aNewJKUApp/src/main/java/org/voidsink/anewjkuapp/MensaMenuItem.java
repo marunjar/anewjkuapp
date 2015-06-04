@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -6,7 +6,7 @@
  * \________|____|__ \______/   \____|__  /   __/|   __/
  *                  \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ * Copyright (c) 2015 Paul "Marunjar" Pretsch
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,26 +20,44 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
-package org.voidsink.anewjkuapp.mensa;
+package org.voidsink.anewjkuapp;
 
-public class KHGMenuLoader extends JSONMenuLoader {
+import org.voidsink.anewjkuapp.mensa.IDay;
+import org.voidsink.anewjkuapp.mensa.IMensa;
+import org.voidsink.anewjkuapp.mensa.IMenu;
 
-    @Override
-    public String getUrl() {
-        return "http://oehjku.appspot.com/rest/mensa?location=3";
+public class MensaMenuItem implements MensaItem {
+
+    private final IMensa mensa;
+    private final IDay day;
+    private final IMenu menu;
+
+    public MensaMenuItem(IMensa mensa, IDay day, IMenu menu) {
+        this.mensa = mensa;
+        this.day = day;
+        this.menu = menu;
     }
 
     @Override
-    protected String getCacheKey() {
-        return "KHG";
+    public int getType() {
+        return MensaItem.TYPE_MENU;
     }
 
     @Override
-    protected String getMensaKey() {
-        return Mensen.MENSA_KHG;
+    public IMensa getMensa() {
+        return this.mensa;
     }
 
+    @Override
+    public IDay getDay() {
+        return this.day;
+    }
 
+    @Override
+    public IMenu getMenu() {
+        return this.menu;
+    }
 }

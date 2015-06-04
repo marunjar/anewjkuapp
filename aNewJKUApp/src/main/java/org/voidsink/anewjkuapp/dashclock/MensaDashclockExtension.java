@@ -36,6 +36,9 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.mensa.ChoiceMenuLoader;
 import org.voidsink.anewjkuapp.mensa.ClassicMenuLoader;
+import org.voidsink.anewjkuapp.mensa.IDay;
+import org.voidsink.anewjkuapp.mensa.IMensa;
+import org.voidsink.anewjkuapp.mensa.IMenu;
 import org.voidsink.anewjkuapp.mensa.KHGMenuLoader;
 import org.voidsink.anewjkuapp.mensa.Mensa;
 import org.voidsink.anewjkuapp.mensa.MensaDay;
@@ -95,7 +98,7 @@ public class MensaDashclockExtension extends DashClockExtension {
                 + mToTime + "(" + mNow + ")");
 
         if (mShowAlays || (mNow >= mFromTime && mNow <= mToTime)) {
-            List<Mensa> mensaList = new ArrayList<Mensa>();
+            List<IMensa> mensaList = new ArrayList<>();
 
             if (sp.getBoolean("pref_key_dashclock_ext_mensa_classic", false)) {
                 mensaList.add(new ClassicMenuLoader()
@@ -114,10 +117,10 @@ public class MensaDashclockExtension extends DashClockExtension {
                         .getMensa(getApplicationContext()));
             }
 
-            for (Mensa mensa : mensaList) {
+            for (IMensa mensa : mensaList) {
                 if (mensa != null && !mensa.isEmpty()) {
                     // get menu for today
-                    MensaDay mensaDay = mensa.getDay(now);
+                    IDay mensaDay = mensa.getDay(now);
                     if (mensaDay != null) {
                         if (!status.isEmpty()) {
                             status += ", ";
@@ -127,7 +130,7 @@ public class MensaDashclockExtension extends DashClockExtension {
                         }
                         status += mensa.getName();
 
-                        for (MensaMenu mensaMenu : mensaDay.getMenus()) {
+                        for (IMenu mensaMenu : mensaDay.getMenus()) {
                             // show menu if found
                             mShowMenu = true;
 

@@ -41,11 +41,12 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 import org.voidsink.anewjkuapp.MensaInfoItem;
 import org.voidsink.anewjkuapp.MensaItem;
 import org.voidsink.anewjkuapp.MensaMenuAdapter;
+import org.voidsink.anewjkuapp.MensaMenuItem;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
-import org.voidsink.anewjkuapp.mensa.Mensa;
-import org.voidsink.anewjkuapp.mensa.MensaDay;
-import org.voidsink.anewjkuapp.mensa.MensaMenu;
+import org.voidsink.anewjkuapp.mensa.IDay;
+import org.voidsink.anewjkuapp.mensa.IMensa;
+import org.voidsink.anewjkuapp.mensa.IMenu;
 import org.voidsink.anewjkuapp.mensa.MenuLoader;
 
 import java.util.ArrayList;
@@ -104,7 +105,7 @@ public abstract class MensaFragmentDetail extends BaseFragment {
 
         @Override
         protected Void doInBackground(String... urls) {
-            final Mensa mensa = createLoader().getMensa(mContext);
+            final IMensa mensa = createLoader().getMensa(mContext);
 
             Calendar cal = Calendar.getInstance();
             cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -115,11 +116,11 @@ public abstract class MensaFragmentDetail extends BaseFragment {
             cal.add(Calendar.DAY_OF_YEAR, -cal.get(Calendar.DAY_OF_WEEK) + cal.getFirstDayOfWeek());
 
             if (mensa != null) {
-                for (MensaDay day : mensa.getDays()) {
+                for (IDay day : mensa.getDays()) {
                     // allow only menus >= start of this week
                     if ((day.getDate() != null) && (day.getDate().getTime() >= cal.getTimeInMillis())) {
-                        for (MensaMenu menu : day.getMenus()) {
-                            mMenus.add(menu);
+                        for (IMenu menu : day.getMenus()) {
+                            mMenus.add(new MensaMenuItem(mensa, day, menu));
                             // remember position of menu for today for scrolling to item after update
                             if (mSelectPosition == -1 &&
                                     DateUtils.isToday(day.getDate().getTime())) {

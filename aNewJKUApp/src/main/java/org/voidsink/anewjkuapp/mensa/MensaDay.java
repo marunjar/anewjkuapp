@@ -33,10 +33,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class MensaDay {
+public class MensaDay implements IDay {
 
     private Date date;
-    private List<MensaMenu> menus;
+    private List<IMenu> menus;
     private boolean isModified = false;
     private Mensa mensa;
 
@@ -60,7 +60,7 @@ public class MensaDay {
         menu.setDay(this);
     }
 
-    public List<MensaMenu> getMenus() {
+    public List<IMenu> getMenus() {
         return this.menus;
     }
 

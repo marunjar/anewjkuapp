@@ -36,4 +36,9 @@ public class RaabMenuLoader extends JSONMenuLoader {
         return "Raab";
     }
 
+    @Override
+    protected String getMensaKey() {
+        return Mensen.MENSA_RAAB;
+    }
+
 }

@@ -53,6 +53,7 @@ public abstract class JSONMenuLoader implements MenuLoader {
     private static final String PREF_DATE_PREFIX = "MENSA_DATE_";
 
     protected abstract String getCacheKey();
+    protected abstract String getMensaKey();
 
     private String getData(Context context) {
         String result = null;
@@ -114,7 +115,7 @@ public abstract class JSONMenuLoader implements MenuLoader {
         }
     }
 
-    public Mensa getMensa(Context context) {
+    public IMensa getMensa(Context context) {
         Mensa mensa = null;
         try {
             String data = getData(context);
@@ -123,7 +124,7 @@ public abstract class JSONMenuLoader implements MenuLoader {
                 if (jsonData.getString("success").equals("true")) {
                     JSONObject jsonMensa = jsonData.getJSONObject("result");
 
-                    mensa = new Mensa(getLocation(context, Integer.parseInt(jsonMensa
+                    mensa = new Mensa(getMensaKey(), getLocation(context, Integer.parseInt(jsonMensa
                             .getString("location"))));
                     JSONArray jsonDays = jsonMensa.getJSONArray("offers");
                     for (int i = 0; i < jsonDays.length(); i++) {

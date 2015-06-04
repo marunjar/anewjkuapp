@@ -1,10 +1,11 @@
-/*******************************************************************************
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
+/**
+ * ****************************************************************************
+ * ____.____  __.____ ___     _____
+ * |    |    |/ _|    |   \   /  _  \ ______ ______
+ * |    |      < |    |   /  /  /_\  \\____ \\____ \
  * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
  * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
+ * \/                  \/|__|   |__|
  *
  * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
  *
@@ -20,12 +21,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ * ****************************************************************************
+ */
 
 package org.voidsink.anewjkuapp;
 
-import org.voidsink.anewjkuapp.mensa.Mensa;
-import org.voidsink.anewjkuapp.mensa.MensaDay;
+import org.voidsink.anewjkuapp.mensa.IDay;
+import org.voidsink.anewjkuapp.mensa.IMensa;
+import org.voidsink.anewjkuapp.mensa.IMenu;
 
 public interface MensaItem {
 
@@ -34,8 +37,8 @@ public interface MensaItem {
 
     public int getType();
 
-    public MensaDay getDay();
-
-    public Mensa getMensa();
+    public IMensa getMensa();
+    public IDay getDay();
+    public IMenu getMenu();
 
 }

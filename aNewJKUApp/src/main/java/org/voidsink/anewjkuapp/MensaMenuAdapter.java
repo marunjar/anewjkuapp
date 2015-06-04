@@ -34,9 +34,9 @@ import android.widget.TextView;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
-import org.voidsink.anewjkuapp.mensa.Mensa;
-import org.voidsink.anewjkuapp.mensa.MensaDay;
-import org.voidsink.anewjkuapp.mensa.MensaMenu;
+import org.voidsink.anewjkuapp.mensa.IDay;
+import org.voidsink.anewjkuapp.mensa.IMensa;
+import org.voidsink.anewjkuapp.mensa.IMenu;
 import org.voidsink.anewjkuapp.utils.UIUtils;
 
 import java.text.DateFormat;
@@ -83,20 +83,20 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
             }
             case MensaItem.TYPE_MENU: {
                 MenuViewHolder mensaMenuItemHolder = (MenuViewHolder) holder;
-                MensaMenu mensaMenuItem = (MensaMenu) getItem(position);
+                IMenu menu = getItem(position).getMenu();
 
-                UIUtils.setTextAndVisibility(mensaMenuItemHolder.mName, mensaMenuItem.getName());
-                UIUtils.setTextAndVisibility(mensaMenuItemHolder.mSoup, mensaMenuItem.getSoup());
+                UIUtils.setTextAndVisibility(mensaMenuItemHolder.mName, menu.getCategory());
+                UIUtils.setTextAndVisibility(mensaMenuItemHolder.mSoup, menu.getSoup());
 
-                mensaMenuItemHolder.mMeal.setText(mensaMenuItem.getMeal());
-                if (mensaMenuItem.getPrice() > 0) {
+                mensaMenuItemHolder.mMeal.setText(menu.getMeal());
+                if (menu.getPrice() > 0) {
                     mensaMenuItemHolder.mPrice.setText(String.format("%.2f €",
-                            mensaMenuItem.getPrice()));
+                            menu.getPrice()));
                     mensaMenuItemHolder.mPrice.setVisibility(View.VISIBLE);
 
-                    if (mensaMenuItem.getOehBonus() > 0) {
+                    if (menu.getOehBonus() > 0) {
                         mensaMenuItemHolder.mOehBonus.setText(String.format(
-                                "inkl %.2f € ÖH Bonus", mensaMenuItem.getOehBonus()));
+                                "inkl %.2f € ÖH Bonus", menu.getOehBonus()));
                         mensaMenuItemHolder.mOehBonus.setVisibility(View.VISIBLE);
                     } else {
                         mensaMenuItemHolder.mOehBonus.setVisibility(View.GONE);
@@ -120,7 +120,7 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
         MensaItem item = getItem(position);
         if (item != null) {
             if (mUseDateHeader) {
-                final MensaDay day = item.getDay();
+                final IDay day = item.getDay();
                 if (day != null) {
                     Calendar cal = Calendar.getInstance(); // locale-specific
                     cal.setTimeInMillis(day.getDate().getTime());
@@ -131,7 +131,7 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
                     return cal.getTimeInMillis();
                 }
             } else {
-                final Mensa mensa = item.getMensa();
+                final IMensa mensa = item.getMensa();
                 if (mensa != null) {
                     return (long) mensa.getName().hashCode() + (long) Integer.MAX_VALUE; // header id has to be > 0???
                 }
@@ -151,12 +151,12 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
         MensaItem item = getItem(position);
         if (item != null) {
             if (mUseDateHeader) {
-                final MensaDay day = item.getDay();
+                final IDay day = item.getDay();
                 if (day != null) {
                     menuHeaderHolder.mText.setText(df.format(day.getDate()));
                 }
             } else {
-                Mensa mensa = item.getMensa();
+                IMensa mensa = item.getMensa();
                 if (mensa != null) {
                     menuHeaderHolder.mText.setText(mensa.getName());
                 }

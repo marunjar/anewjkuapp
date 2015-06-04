@@ -1,11 +1,10 @@
 /**
- * ****************************************************************************
- * ____.____  __.____ ___     _____
- * |    |    |/ _|    |   \   /  _  \ ______ ______
- * |    |      < |    |   /  /  /_\  \\____ \\____ \
+ *      ____.____  __.____ ___     _____
+ *     |    |    |/ _|    |   \   /  _  \ ______ ______
+ *     |    |      < |    |   /  /  /_\  \\____ \\____ \
  * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
  * \________|____|__ \______/   \____|__  /   __/|   __/
- * \/                  \/|__|   |__|
+ *                  \/                  \/|__|   |__|
  *
  * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
  *
@@ -21,25 +20,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- * ****************************************************************************
  */
 
 package org.voidsink.anewjkuapp.mensa;
 
-public class ClassicMenuLoader extends JSONMenuLoader {
+public class Mensen {
 
-    @Override
-    public String getUrl() {
-        return "http://oehjku.appspot.com/rest/mensa?location=1";
-    }
-
-    @Override
-    protected String getCacheKey() {
-        return "Classic";
-    }
-
-    @Override
-    protected String getMensaKey() {
-        return Mensen.MENSA_CLASSIC;
-    }
+    public static final String MENSA_CHOICE = "CHOICE";
+    public static final String MENSA_CLASSIC = "CLASSIC";
+    public static final String MENSA_KHG = "KHG";
+    public static final String MENSA_RAAB = "RAAB";
 }

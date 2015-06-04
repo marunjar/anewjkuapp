@@ -28,6 +28,6 @@ import android.content.Context;
 
 public interface MenuLoader {
 
-    public Mensa getMensa(Context context);
+    IMensa getMensa(Context context);
 
 }

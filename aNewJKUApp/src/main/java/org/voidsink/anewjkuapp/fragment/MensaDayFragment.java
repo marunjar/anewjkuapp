@@ -40,10 +40,14 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 import org.voidsink.anewjkuapp.MensaInfoItem;
 import org.voidsink.anewjkuapp.MensaItem;
 import org.voidsink.anewjkuapp.MensaMenuAdapter;
+import org.voidsink.anewjkuapp.MensaMenuItem;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.mensa.ChoiceMenuLoader;
 import org.voidsink.anewjkuapp.mensa.ClassicMenuLoader;
+import org.voidsink.anewjkuapp.mensa.IDay;
+import org.voidsink.anewjkuapp.mensa.IMensa;
+import org.voidsink.anewjkuapp.mensa.IMenu;
 import org.voidsink.anewjkuapp.mensa.KHGMenuLoader;
 import org.voidsink.anewjkuapp.mensa.Mensa;
 import org.voidsink.anewjkuapp.mensa.MensaDay;
@@ -58,7 +62,7 @@ import java.util.List;
 public class MensaDayFragment extends BaseFragment {
 
     public static final String TAG = MensaDayFragment.class.getSimpleName();
-    private static final List<Mensa> mMensen = new ArrayList<>();
+    private static final List<IMensa> mMensen = new ArrayList<>();
     private Date mDate;
     private MensaMenuAdapter mAdapter;
 
@@ -97,7 +101,7 @@ public class MensaDayFragment extends BaseFragment {
         this.mDate = mDate;
     }
 
-    private synchronized void setMensa(Mensa mensa, int index) {
+    private synchronized void setMensa(IMensa mensa, int index) {
         while (index >= mMensen.size()) {
             mMensen.add(null);
         }
@@ -109,7 +113,7 @@ public class MensaDayFragment extends BaseFragment {
         private Context mContext;
         private MenuLoader mLoader;
         private int mIndex;
-        private Mensa mMensa;
+        private IMensa mMensa;
 
         public MenuLoadTask(MenuLoader loader, int index) {
             super();
@@ -144,12 +148,12 @@ public class MensaDayFragment extends BaseFragment {
             List<MensaItem> menus = new ArrayList<>();
             int noMenuCount = 0;
 
-            for (Mensa mensa : mMensen) {
+            for (IMensa mensa : mMensen) {
                 if (mensa != null) {
-                    MensaDay day = mensa.getDay(mDate);
+                    IDay day = mensa.getDay(mDate);
                     if (day != null && !day.isEmpty()) {
-                        for (MensaMenu menu : day.getMenus()) {
-                            menus.add(menu);
+                        for (IMenu menu : day.getMenus()) {
+                            menus.add(new MensaMenuItem(mensa, day, menu));
                         }
                     } else {
                         // add no menu card

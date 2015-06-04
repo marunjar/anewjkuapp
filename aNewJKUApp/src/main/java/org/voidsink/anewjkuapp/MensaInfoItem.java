@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,20 +20,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp;
 
-import org.voidsink.anewjkuapp.mensa.Mensa;
-import org.voidsink.anewjkuapp.mensa.MensaDay;
+import org.voidsink.anewjkuapp.mensa.IDay;
+import org.voidsink.anewjkuapp.mensa.IMensa;
+import org.voidsink.anewjkuapp.mensa.IMenu;
 
 public class MensaInfoItem implements MensaItem {
-    protected final MensaDay mDay;
+    protected final IDay mDay;
     protected String title;
     protected String descr;
-    protected Mensa mMensa;
+    protected IMensa mMensa;
 
-    public MensaInfoItem(Mensa mensa, MensaDay day, String title, String descr) {
+    public MensaInfoItem(IMensa mensa, IDay day, String title, String descr) {
         this.mDay = day;
         this.descr = descr;
         this.mMensa = mensa;
@@ -46,12 +47,17 @@ public class MensaInfoItem implements MensaItem {
     }
 
     @Override
-    public MensaDay getDay() {
+    public IDay getDay() {
         return mDay;
     }
 
     @Override
-    public Mensa getMensa() {
+    public IMenu getMenu() {
+        return null;
+    }
+
+    @Override
+    public IMensa getMensa() {
         return mMensa;
     }
 
