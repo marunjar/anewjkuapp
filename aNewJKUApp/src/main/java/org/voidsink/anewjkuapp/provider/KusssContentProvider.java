@@ -54,6 +54,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import edu.emory.mathcs.backport.java.util.concurrent.Executor;
 
 public class KusssContentProvider extends ContentProvider {
 
@@ -458,7 +463,15 @@ public class KusssContentProvider extends ContentProvider {
         }
 
         if (mCurriculum.size() == 0) {
-            new ImportCurriculaTask(AppUtils.getAccount(context), context).execute();
+
+            ExecutorService es = Executors.newFixedThreadPool(1);
+            try {
+                es.submit(new ImportCurriculaTask(AppUtils.getAccount(context), context)).get();
+            } catch (InterruptedException | ExecutionException e) {
+                Analytics.sendException(context, e, true);
+            } finally {
+                es.shutdown();
+            }
 
             try {
                 List<Assessment> assessments = getAssessments(context);

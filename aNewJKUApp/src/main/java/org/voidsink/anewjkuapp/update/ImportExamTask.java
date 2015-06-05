@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp.update;
 
@@ -41,7 +41,6 @@ import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
-import org.voidsink.anewjkuapp.base.BaseAsyncTask;
 import org.voidsink.anewjkuapp.kusss.Exam;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
@@ -58,11 +57,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
-public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
+public class ImportExamTask implements Callable<Void> {
 
     private static final String TAG = ImportExamTask.class.getSimpleName();
-    private static final Object sync_lock = new Object();
     private final long mSyncFromNow;
 
     private ContentProviderClient mProvider;
@@ -119,219 +118,6 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
         this.mSyncFromNow = System.currentTimeMillis();
     }
 
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-
-        Log.d(TAG, "prepare importing exams");
-
-        if (mShowProgress) {
-            mUpdateNotification = new SyncNotification(mContext,
-                    R.string.notification_sync_exam);
-            mUpdateNotification.show(mContext.getString(R.string.notification_sync_exam_loading));
-        }
-        mNewExamNotification = new NewExamNotification(mContext);
-    }
-
-    @Override
-    protected Void doInBackground(Void... params) {
-        Log.d(TAG, "Start importing exams");
-
-        synchronized (sync_lock) {
-            final DateFormat df = DateFormat.getDateInstance();
-
-            try {
-                Log.d(TAG, "setup connection");
-
-                updateNotify(mContext.getString(R.string.notification_sync_connect));
-
-                if (KusssHandler.getInstance().isAvailable(mContext,
-                        AppUtils.getAccountAuthToken(mContext, mAccount),
-                        AppUtils.getAccountName(mContext, mAccount),
-                        AppUtils.getAccountPassword(mContext, mAccount))) {
-
-                    updateNotify(mContext.getString(R.string.notification_sync_exam_loading));
-
-                    List<Exam> exams;
-                    if (PreferenceWrapper.getNewExamsByCourseId(mContext)) {
-                        CourseMap courseMap = new CourseMap(mContext);
-                        List<Term> terms = KusssContentProvider.getTerms(mContext);
-
-                        Log.d(TAG, "load exams by courseId");
-                        exams = KusssHandler.getInstance().getNewExamsByCourseId(
-                                mContext, courseMap.getCourses(), terms);
-                    } else {
-                        Log.d(TAG, "load exams");
-                        exams = KusssHandler.getInstance()
-                                .getNewExams(mContext);
-                    }
-                    if (exams == null) {
-                        mSyncResult.stats.numParseExceptions++;
-                    } else {
-                        Map<String, Exam> examMap = new HashMap<>();
-                        for (Exam exam : exams) {
-                            Exam old = examMap.put(KusssHelper.getExamKey(exam.getCourseId(), AppUtils.termToString(exam.getTerm()), exam.getDtStart().getTime()), exam);
-                            if (old != null) {
-                                Log.w(TAG,
-                                        "exam alread loaded: " + KusssHelper.getExamKey(old.getCourseId(), AppUtils.termToString(old.getTerm()), old.getDtStart().getTime()));
-                            }
-                        }
-
-                        Log.d(TAG, String.format("got %s exams", exams.size()));
-
-                        updateNotify(mContext.getString(R.string.notification_sync_exam_updating));
-
-                        ArrayList<ContentProviderOperation> batch = new ArrayList<>();
-
-                        Uri examUri = KusssContentContract.Exam.CONTENT_URI;
-                        Cursor c = mProvider.query(examUri, EXAM_PROJECTION,
-                                null, null, null);
-
-                        if (c == null) {
-                            Log.w(TAG, "selection failed");
-                        } else {
-                            Log.d(TAG,
-                                    "Found "
-                                            + c.getCount()
-                                            + " local entries. Computing merge solution...");
-                            int examId;
-                            String examTerm;
-                            String examCourseId;
-                            long examDtStart;
-                            long examDtEnd;
-                            String examLocation;
-
-                            while (c.moveToNext()) {
-                                examId = c.getInt(COLUMN_EXAM_ID);
-                                examTerm = c.getString(COLUMN_EXAM_TERM);
-                                examCourseId = c.getString(COLUMN_EXAM_COURSEID);
-                                examDtStart = c.getLong(COLUMN_EXAM_DTSTART);
-                                examDtEnd = c.getLong(COLUMN_EXAM_DTEND);
-                                examLocation = c
-                                        .getString(COLUMN_EXAM_LOCATION);
-
-                                Exam exam = examMap.remove(KusssHelper.getExamKey(examCourseId, examTerm, examDtStart));
-                                if (exam != null) {
-                                    // Check to see if the entry needs to be
-                                    // updated
-                                    Uri existingUri = examUri
-                                            .buildUpon()
-                                            .appendPath(
-                                                    Integer.toString(examId))
-                                            .build();
-                                    Log.d(TAG, "Scheduling update: "
-                                            + existingUri);
-
-                                    if (!DateUtils.isSameDay(
-                                            new Date(examDtStart), exam.getDtStart())
-                                            || !new Date(examDtEnd).equals(exam.getDtEnd())
-                                            || !examLocation.equals(exam.getLocation())) {
-                                        mNewExamNotification.addUpdate(getEventString(exam));
-                                    }
-
-                                    batch.add(ContentProviderOperation
-                                            .newUpdate(
-                                                    KusssContentContract
-                                                            .asEventSyncAdapter(
-                                                                    existingUri,
-                                                                    mAccount.name,
-                                                                    mAccount.type))
-                                            .withValue(
-                                                    KusssContentContract.Exam.COL_ID,
-                                                    Integer.toString(examId))
-                                            .withValues(KusssHelper.getExamContentValues(exam))
-                                            .build());
-                                    mSyncResult.stats.numUpdates++;
-                                } else if (examDtStart > mSyncFromNow - DateUtils.MILLIS_PER_DAY) {
-                                    // Entry doesn't exist. Remove only newer
-                                    // events from the database.
-                                    Uri deleteUri = examUri
-                                            .buildUpon()
-                                            .appendPath(
-                                                    Integer.toString(examId))
-                                            .build();
-                                    Log.d(TAG, "Scheduling delete: "
-                                            + deleteUri);
-
-                                    batch.add(ContentProviderOperation
-                                            .newDelete(
-                                                    KusssContentContract
-                                                            .asEventSyncAdapter(
-                                                                    deleteUri,
-                                                                    mAccount.name,
-                                                                    mAccount.type))
-                                            .build());
-                                    mSyncResult.stats.numDeletes++;
-                                }
-                            }
-                            c.close();
-
-                            for (Exam exam : examMap.values()) {
-                                batch.add(ContentProviderOperation
-                                        .newInsert(
-                                                KusssContentContract
-                                                        .asEventSyncAdapter(
-                                                                examUri,
-                                                                mAccount.name,
-                                                                mAccount.type))
-                                        .withValues(KusssHelper.getExamContentValues(exam))
-                                        .build());
-                                Log.d(TAG,
-                                        "Scheduling insert: " + exam.getTerm()
-                                                + " " + exam.getCourseId());
-
-                                mNewExamNotification.addInsert(getEventString(exam));
-
-                                mSyncResult.stats.numInserts++;
-                            }
-
-                            if (batch.size() > 0) {
-                                updateNotify(mContext.getString(R.string.notification_sync_exam_saving));
-
-                                Log.d(TAG, "Applying batch update");
-                                mProvider.applyBatch(batch);
-                                Log.d(TAG, "Notify resolver");
-                                mResolver
-                                        .notifyChange(
-                                                KusssContentContract.Exam.CONTENT_CHANGED_URI,
-                                                null, // No
-                                                // local
-                                                // observer
-                                                false); // IMPORTANT: Do not
-                                // sync to
-                                // network
-                            } else {
-                                Log.w(TAG,
-                                        "No batch operations found! Do nothing");
-                            }
-                        }
-                    }
-                    KusssHandler.getInstance().logout(mContext);
-                } else {
-                    mSyncResult.stats.numAuthExceptions++;
-                }
-            } catch (Exception e) {
-                Analytics.sendException(mContext, e, true);
-                Log.e(TAG, "import failed", e);
-            }
-        }
-
-        setImportDone();
-
-        return null;
-    }
-
-
-    @Override
-    protected void onPostExecute(Void result) {
-        super.onPostExecute(result);
-
-        if (mUpdateNotification != null) {
-            mUpdateNotification.cancel();
-        }
-        mNewExamNotification.show();
-    }
-
     private void updateNotify(String string) {
         if (mUpdateNotification != null) {
             mUpdateNotification.update(string);
@@ -343,4 +129,198 @@ public class ImportExamTask extends BaseAsyncTask<Void, Void, Void> {
         return AppUtils.getEventString(exam.getDtStart().getTime(), exam.getDtEnd().getTime(), exam.getTitle());
     }
 
+    @Override
+    public Void call() throws Exception {
+        if (mShowProgress) {
+            mUpdateNotification = new SyncNotification(mContext,
+                    R.string.notification_sync_exam);
+            mUpdateNotification.show(mContext.getString(R.string.notification_sync_exam_loading));
+        }
+        mNewExamNotification = new NewExamNotification(mContext);
+
+
+        final DateFormat df = DateFormat.getDateInstance();
+
+        try {
+            Log.d(TAG, "setup connection");
+
+            updateNotify(mContext.getString(R.string.notification_sync_connect));
+
+            if (KusssHandler.getInstance().isAvailable(mContext,
+                    AppUtils.getAccountAuthToken(mContext, mAccount),
+                    AppUtils.getAccountName(mContext, mAccount),
+                    AppUtils.getAccountPassword(mContext, mAccount))) {
+
+                updateNotify(mContext.getString(R.string.notification_sync_exam_loading));
+
+                List<Exam> exams;
+                if (PreferenceWrapper.getNewExamsByCourseId(mContext)) {
+                    CourseMap courseMap = new CourseMap(mContext);
+                    List<Term> terms = KusssContentProvider.getTerms(mContext);
+
+                    Log.d(TAG, "load exams by courseId");
+                    exams = KusssHandler.getInstance().getNewExamsByCourseId(
+                            mContext, courseMap.getCourses(), terms);
+                } else {
+                    Log.d(TAG, "load exams");
+                    exams = KusssHandler.getInstance()
+                            .getNewExams(mContext);
+                }
+                if (exams == null) {
+                    mSyncResult.stats.numParseExceptions++;
+                } else {
+                    Map<String, Exam> examMap = new HashMap<>();
+                    for (Exam exam : exams) {
+                        Exam old = examMap.put(KusssHelper.getExamKey(exam.getCourseId(), AppUtils.termToString(exam.getTerm()), exam.getDtStart().getTime()), exam);
+                        if (old != null) {
+                            Log.w(TAG,
+                                    "exam alread loaded: " + KusssHelper.getExamKey(old.getCourseId(), AppUtils.termToString(old.getTerm()), old.getDtStart().getTime()));
+                        }
+                    }
+
+                    Log.d(TAG, String.format("got %s exams", exams.size()));
+
+                    updateNotify(mContext.getString(R.string.notification_sync_exam_updating));
+
+                    ArrayList<ContentProviderOperation> batch = new ArrayList<>();
+
+                    Uri examUri = KusssContentContract.Exam.CONTENT_URI;
+                    Cursor c = mProvider.query(examUri, EXAM_PROJECTION,
+                            null, null, null);
+
+                    if (c == null) {
+                        Log.w(TAG, "selection failed");
+                    } else {
+                        Log.d(TAG,
+                                "Found "
+                                        + c.getCount()
+                                        + " local entries. Computing merge solution...");
+                        int examId;
+                        String examTerm;
+                        String examCourseId;
+                        long examDtStart;
+                        long examDtEnd;
+                        String examLocation;
+
+                        while (c.moveToNext()) {
+                            examId = c.getInt(COLUMN_EXAM_ID);
+                            examTerm = c.getString(COLUMN_EXAM_TERM);
+                            examCourseId = c.getString(COLUMN_EXAM_COURSEID);
+                            examDtStart = c.getLong(COLUMN_EXAM_DTSTART);
+                            examDtEnd = c.getLong(COLUMN_EXAM_DTEND);
+                            examLocation = c
+                                    .getString(COLUMN_EXAM_LOCATION);
+
+                            Exam exam = examMap.remove(KusssHelper.getExamKey(examCourseId, examTerm, examDtStart));
+                            if (exam != null) {
+                                // Check to see if the entry needs to be
+                                // updated
+                                Uri existingUri = examUri
+                                        .buildUpon()
+                                        .appendPath(
+                                                Integer.toString(examId))
+                                        .build();
+                                Log.d(TAG, "Scheduling update: "
+                                        + existingUri);
+
+                                if (!DateUtils.isSameDay(
+                                        new Date(examDtStart), exam.getDtStart())
+                                        || !new Date(examDtEnd).equals(exam.getDtEnd())
+                                        || !examLocation.equals(exam.getLocation())) {
+                                    mNewExamNotification.addUpdate(getEventString(exam));
+                                }
+
+                                batch.add(ContentProviderOperation
+                                        .newUpdate(
+                                                KusssContentContract
+                                                        .asEventSyncAdapter(
+                                                                existingUri,
+                                                                mAccount.name,
+                                                                mAccount.type))
+                                        .withValue(
+                                                KusssContentContract.Exam.COL_ID,
+                                                Integer.toString(examId))
+                                        .withValues(KusssHelper.getExamContentValues(exam))
+                                        .build());
+                                mSyncResult.stats.numUpdates++;
+                            } else if (examDtStart > mSyncFromNow - DateUtils.MILLIS_PER_DAY) {
+                                // Entry doesn't exist. Remove only newer
+                                // events from the database.
+                                Uri deleteUri = examUri
+                                        .buildUpon()
+                                        .appendPath(
+                                                Integer.toString(examId))
+                                        .build();
+                                Log.d(TAG, "Scheduling delete: "
+                                        + deleteUri);
+
+                                batch.add(ContentProviderOperation
+                                        .newDelete(
+                                                KusssContentContract
+                                                        .asEventSyncAdapter(
+                                                                deleteUri,
+                                                                mAccount.name,
+                                                                mAccount.type))
+                                        .build());
+                                mSyncResult.stats.numDeletes++;
+                            }
+                        }
+                        c.close();
+
+                        for (Exam exam : examMap.values()) {
+                            batch.add(ContentProviderOperation
+                                    .newInsert(
+                                            KusssContentContract
+                                                    .asEventSyncAdapter(
+                                                            examUri,
+                                                            mAccount.name,
+                                                            mAccount.type))
+                                    .withValues(KusssHelper.getExamContentValues(exam))
+                                    .build());
+                            Log.d(TAG,
+                                    "Scheduling insert: " + exam.getTerm()
+                                            + " " + exam.getCourseId());
+
+                            mNewExamNotification.addInsert(getEventString(exam));
+
+                            mSyncResult.stats.numInserts++;
+                        }
+
+                        if (batch.size() > 0) {
+                            updateNotify(mContext.getString(R.string.notification_sync_exam_saving));
+
+                            Log.d(TAG, "Applying batch update");
+                            mProvider.applyBatch(batch);
+                            Log.d(TAG, "Notify resolver");
+                            mResolver
+                                    .notifyChange(
+                                            KusssContentContract.Exam.CONTENT_CHANGED_URI,
+                                            null, // No
+                                            // local
+                                            // observer
+                                            false); // IMPORTANT: Do not
+                            // sync to
+                            // network
+                        } else {
+                            Log.w(TAG,
+                                    "No batch operations found! Do nothing");
+                        }
+                    }
+                }
+                KusssHandler.getInstance().logout(mContext);
+            } else {
+                mSyncResult.stats.numAuthExceptions++;
+            }
+        } catch (Exception e) {
+            Analytics.sendException(mContext, e, true);
+            Log.e(TAG, "import failed", e);
+        }
+
+        if (mUpdateNotification != null) {
+            mUpdateNotification.cancel();
+        }
+        mNewExamNotification.show();
+
+        return null;
+    }
 }

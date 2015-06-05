@@ -1,10 +1,11 @@
-/*******************************************************************************
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
+/**
+ * ****************************************************************************
+ * ____.____  __.____ ___     _____
+ * |    |    |/ _|    |   \   /  _  \ ______ ______
+ * |    |      < |    |   /  /  /_\  \\____ \\____ \
  * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
  * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
+ * \/                  \/|__|   |__|
  *
  * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
  *
@@ -20,7 +21,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ * ****************************************************************************
+ */
 
 package org.voidsink.anewjkuapp.notification;
 
@@ -52,13 +54,16 @@ public class SyncNotification {
 //						BitmapFactory.decodeResource(
 //								this.mContext.getResources(),
 //								R.drawable.ic_refresh_white_24dp))
-                .setContentTitle(mTitle).setProgress(0, 0, true);
+                .setContentTitle(mTitle)
+                .setProgress(0, 0, true);
 
         // contenIntent required for all Versions before ICS
         PendingIntent pendingIntent = PendingIntent.getActivity(this.mContext,
                 0, new Intent(), 0);
         this.mBuilder.setContentIntent(pendingIntent);
 
+        ((NotificationManager) mContext
+                .getSystemService(Context.NOTIFICATION_SERVICE)).cancel(id);
         ((NotificationManager) mContext
                 .getSystemService(Context.NOTIFICATION_SERVICE)).notify(id,
                 mBuilder.build());
@@ -76,7 +81,7 @@ public class SyncNotification {
 
     public void cancel() {
         if (this.mBuilder != null) {
-            this.mBuilder.setProgress(0, 0, false);
+            this.mBuilder.setProgress(100, 100, false);
             ((NotificationManager) mContext
                     .getSystemService(Context.NOTIFICATION_SERVICE)).cancel(id);
             this.mBuilder = null;

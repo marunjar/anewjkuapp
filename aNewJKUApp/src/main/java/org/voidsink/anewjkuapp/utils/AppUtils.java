@@ -80,6 +80,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 
@@ -236,14 +241,7 @@ public class AppUtils {
 
     private static boolean importCurricula(Context context) {
         Account account = getAccount(context);
-        if (account != null) {
-            try {
-                new ImportCurriculaTask(account, context).execute();
-            } catch (Exception e) {
-                Analytics.sendException(context, e, false);
-            }
-        }
-        return true;
+        return account == null || executeEm(context, new Callable<?>[]{new ImportCurriculaTask(account, context)}, false);
     }
 
     private static boolean removeAccount(Context context) {
@@ -323,16 +321,12 @@ public class AppUtils {
             mapFileWriter.close();
 
             // import file
-            new ImportPoiTask(context, new File(context.getFilesDir(),
-                    DEFAULT_POI_FILE_NAME), true).execute();
-        } catch (FileNotFoundException e) {
-            Log.e(TAG, "importDefaultPois", e);
-            return false;
+            return executeEm(context, new Callable<?>[]{new ImportPoiTask(context, new File(context.getFilesDir(),
+                    DEFAULT_POI_FILE_NAME), true)}, false);
         } catch (IOException e) {
-            Log.e(TAG, "importDefaultPois", e);
+            Analytics.sendException(context, e, false);
             return false;
         }
-        return true;
     }
 
     public static double getECTS(LvaState state, List<LvaWithGrade> lvas) {
@@ -841,4 +835,39 @@ public class AppUtils {
             context.startActivity(intent);
         }
     }
+
+    public static boolean executeEm(Context context, Callable<?>[] callables, boolean wait) {
+        boolean result = true;
+
+        ExecutorService es = Executors.newSingleThreadExecutor();
+        try {
+            result = executeEm(es, context, callables, wait);
+        } finally {
+            es.shutdown();
+        }
+        return result;
+    }
+
+    public static boolean executeEm(ExecutorService es, Context context, Callable<?>[] callables, boolean wait) {
+        boolean result = true;
+
+        List<Future<?>> futures = new ArrayList<>();
+
+        for (Callable c : callables) {
+            futures.add(es.submit(c));
+        }
+
+        if (wait) {
+            for (Future f : futures) {
+                try {
+                    f.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    Analytics.sendException(context, e, false);
+                    result = false;
+                }
+            }
+        }
+        return result;
+    }
+
 }

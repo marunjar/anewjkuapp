@@ -1,5 +1,5 @@
-/*******************************************************************************
- *      ____.____  __.____ ___     _____
+/*
+ *     ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
  * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp;
 
@@ -37,12 +37,15 @@ import android.util.Log;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 
-import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.notification.KusssNotificationBuilder;
 import org.voidsink.anewjkuapp.update.ImportCalendarTask;
 import org.voidsink.anewjkuapp.utils.AppUtils;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 
@@ -51,10 +54,9 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 
     // Global variables
     // Define a variable to contain a content resolver instance
-    private boolean mSyncCancled;
     private Context mContext;
-
     private CalendarBuilder mCalendarBuilder;
+    private ExecutorService mExecutorService = null;
 
     /**
      * Set up the sync adapter
@@ -65,7 +67,6 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
          * If your app uses a content resolver, get an instance of it from the
 		 * incoming Context
 		 */
-        this.mSyncCancled = false;
         this.mContext = context;
         this.mCalendarBuilder = new CalendarBuilder(); // must create in main
     }
@@ -78,11 +79,10 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
     public KusssCalendarSyncAdapter(Context context, boolean autoInitialize,
                                     boolean allowParallelSyncs) {
         super(context, autoInitialize, allowParallelSyncs);
-		/*
-		 * If your app uses a content resolver, get an instance of it from the
+        /*
+         * If your app uses a content resolver, get an instance of it from the
 		 * incoming Context
 		 */
-        this.mSyncCancled = false;
         this.mContext = context;
         this.mCalendarBuilder = new CalendarBuilder(); // must create in main
     }
@@ -108,57 +108,31 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
             return;
         }
 
-        try {
-            Looper.prepare();
+        mExecutorService = Executors.newSingleThreadExecutor();
 
-            Log.d(TAG, "importing: " + CalendarUtils.ARG_CALENDAR_EXAM);
+        Looper.prepare();
 
-            ImportCalendarTask task = new ImportCalendarTask(account, extras,
-                    authority, provider, syncResult, getContext(),
-                    CalendarUtils.ARG_CALENDAR_EXAM, mCalendarBuilder);
-            task.execute();
-            while (!task.isDone() && !mSyncCancled) {
-                try {
-                    Thread.sleep(600);
-                } catch (Exception e) {
-                    Analytics.sendException(mContext, e, false);
-                }
-                if (mSyncCancled) {
-                    task.cancel(true);
-                }
-            }
-
-            Log.d(TAG, "importing: " + CalendarUtils.ARG_CALENDAR_COURSE);
-
-            task = new ImportCalendarTask(account, extras, authority, provider,
-                    syncResult, getContext(),
-                    CalendarUtils.ARG_CALENDAR_COURSE, mCalendarBuilder);
-
-            task.execute();
-            while (!task.isDone() && !mSyncCancled) {
-                try {
-                    Thread.sleep(600);
-                } catch (Exception e) {
-                    Analytics.sendException(mContext, e, false);
-                }
-                if (mSyncCancled) {
-                    task.cancel(true);
-                }
-            }
-        } catch (Exception e) {
-            Analytics.sendException(mContext, e, true);
-            Log.e(TAG, "onPerformSync", e);
-            KusssNotificationBuilder.showErrorNotification(mContext,
-                    R.string.notification_error, e);
-        }
+        AppUtils.executeEm(mExecutorService, mContext,
+                new Callable[]{
+                        new ImportCalendarTask(account, extras,
+                                authority, provider, syncResult, getContext(),
+                                CalendarUtils.ARG_CALENDAR_EXAM, mCalendarBuilder),
+                        new ImportCalendarTask(account, extras, authority, provider,
+                                syncResult, getContext(),
+                                CalendarUtils.ARG_CALENDAR_COURSE, mCalendarBuilder)
+                },
+                true
+        );
 
         KusssHandler.getInstance().logout(mContext);
+
+        mExecutorService.shutdown();
     }
 
     @Override
     public void onSyncCanceled() {
-        Log.d(TAG, "Canceled Sync");
-        mSyncCancled = true;
+        if (this.mExecutorService != null) {
+            this.mExecutorService.shutdownNow();
+        }
     }
-
 }

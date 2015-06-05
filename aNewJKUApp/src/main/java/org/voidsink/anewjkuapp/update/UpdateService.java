@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp.update;
 
@@ -34,6 +34,10 @@ import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
 
 public class UpdateService extends IntentService {
 
@@ -50,39 +54,41 @@ public class UpdateService extends IntentService {
         if (intent != null) {
             final Account account = AppUtils.getAccount(this);
             if (account != null) {
+                List<Callable<?>> callables = new ArrayList<>();
+
                 if (intent.getBooleanExtra(Consts.ARG_UPDATE_CAL, false) ||
                         intent.getBooleanExtra(Consts.ARG_UPDATE_CAL_COURSES, false)) {
                     Analytics.eventReloadEventsCourse(this);
-                    new ImportCalendarTask(account, this,
-                            CalendarUtils.ARG_CALENDAR_COURSE, new CalendarBuilder())
-                            .execute();
+                    callables.add(new ImportCalendarTask(account, this, CalendarUtils.ARG_CALENDAR_COURSE, new CalendarBuilder()));
                 }
                 if (intent.getBooleanExtra(Consts.ARG_UPDATE_CAL, false) ||
                         intent.getBooleanExtra(Consts.ARG_UPDATE_CAL_EXAM, false)) {
                     Analytics.eventReloadEventsExam(this);
-                    new ImportCalendarTask(account, this,
-                            CalendarUtils.ARG_CALENDAR_EXAM, new CalendarBuilder())
-                            .execute();
+                    callables.add(new ImportCalendarTask(account, this,
+                            CalendarUtils.ARG_CALENDAR_EXAM, new CalendarBuilder()));
                 }
                 if (intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false) ||
                         intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS_CURRICULA, false)) {
                     Analytics.eventReloadCurricula(this);
-                    new ImportCurriculaTask(account, this).execute();
+                    callables.add(new ImportCurriculaTask(account, this));
                 }
                 if (intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false) ||
                         intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS_COURSES, false)) {
                     Analytics.eventReloadCourses(this);
-                    new ImportCourseTask(account, this).execute();
+                    callables.add(new ImportCourseTask(account, this));
                 }
                 if (intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false) ||
                         intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS_ASSESSMENTS, false)) {
                     Analytics.eventReloadAssessments(this);
-                    new ImportAssessmentTask(account, this).execute();
+                    callables.add(new ImportAssessmentTask(account, this));
                 }
                 if (intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false) ||
                         intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS_EXAMS, false)) {
                     Analytics.eventReloadExams(this);
-                    new ImportExamTask(account, this).execute();
+                    callables.add(new ImportExamTask(account, this));
+                }
+                if (callables.size() > 0) {
+                    AppUtils.executeEm(this, callables.toArray(new Callable<?>[]{}), false);
                 }
             }
         }
