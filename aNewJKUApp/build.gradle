@@ -20,6 +20,8 @@ android {
         proguardFile getDefaultProguardFile('proguard-android.txt')
 
         buildConfigField "boolean", "FOSS_ONLY", "false"
+
+        initProvider(defaultConfig, "")
     }
 
     productFlavors {
@@ -46,7 +48,8 @@ android {
             debuggable true
 
             applicationIdSuffix ".debug"
-            versionNameSuffix ".debug"
+            versionNameSuffix "-debug"
+            initProvider(defaultConfig, ".debug")
         }
     }
     compileOptions {
@@ -104,4 +107,15 @@ def appendVersionNameVersionCode(variant, defaultConfig) {
                 file.parent,
                 file.name.replace(".apk", "-${variant.versionName}.apk"))
     }
+}
+
+def initProvider(defaultConfig, suffix) {
+    defaultConfig.resValue "string", "config_kusss_provider", defaultConfig.applicationId + suffix + '.provider'
+    defaultConfig.resValue "string", "config_kusss_account_type", defaultConfig.applicationId + suffix + '.account'
+    defaultConfig.resValue "string", "config_poi_provider", defaultConfig.applicationId + suffix + '.provider.poi'
+    defaultConfig.resValue "string", "config_poi_content_uri", "content://" + defaultConfig.applicationId + suffix + ".provider.poi/poi"
+
+    defaultConfig.buildConfigField "String", "CONFIG_KUSSS_PROVIDER", '"' + defaultConfig.applicationId + suffix + '.provider"'
+    defaultConfig.buildConfigField "String", "CONFIG_KUSSS_ACCOUNT_TYPE", '"' + defaultConfig.applicationId + suffix + '.account"'
+    defaultConfig.buildConfigField "String", "CONFIG_POI_PROVIDER", '"' + defaultConfig.applicationId + suffix + '.provider.poi"'
 }

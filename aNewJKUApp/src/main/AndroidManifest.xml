@@ -175,13 +175,13 @@
 
         <provider
             android:name="org.voidsink.anewjkuapp.provider.KusssContentProvider"
-            android:authorities="${applicationId}.provider"
+            android:authorities="@string/config_kusss_provider"
             android:exported="false"
             android:label="@string/kusss_provider_name"
             android:syncable="true" />
         <provider
             android:name="org.voidsink.anewjkuapp.provider.PoiContentProvider"
-            android:authorities="${applicationId}.provider.poi"
+            android:authorities="@string/config_poi_provider"
             android:exported="false" />
 
         <receiver android:name=".utils.BootReceiver">

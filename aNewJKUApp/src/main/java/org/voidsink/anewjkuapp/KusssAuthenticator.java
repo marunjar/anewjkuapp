@@ -49,7 +49,7 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
     // public static final String AUTHORITY_CALENDAR =
     // "org.voidsink.anewjkuapp.calendar.provider";
     // An account type, in the form of a domain name
-    public static final String ACCOUNT_TYPE = "org.voidsink.anewjkuapp.account";
+    public static final String ACCOUNT_TYPE = BuildConfig.CONFIG_KUSSS_ACCOUNT_TYPE;
 
     public static final String AUTHTOKEN_TYPE_READ_ONLY = "Read only";
     public static final String AUTHTOKEN_TYPE_READ_ONLY_LABEL = "Read only access to a KUSSS account";
