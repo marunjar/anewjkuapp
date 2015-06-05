@@ -112,6 +112,16 @@ public class MainActivity extends ThemedActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
+        if (mNavigationView != null) {
+            Fragment f = getSupportFragmentManager().findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
+            if (f instanceof StackedFragment) {
+                int id = ((StackedFragment) f).getId(this);
+                if (id > 0) {
+                    outState.putInt(ARG_SHOW_FRAGMENT_ID, id);
+                }
+            }
+        }
     }
 
     @Override
@@ -339,13 +349,21 @@ public class MainActivity extends ThemedActivity {
 
         if (startFragment != null) {
             try {
+                final Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
+
+                if (oldFragment != null) {
+                    if (oldFragment.getClass().getCanonicalName().equals(startFragment.getCanonicalName())) {
+                        return oldFragment;
+                    }
+                }
+
                 Fragment f = startFragment.newInstance();
 
                 Bundle b = new Bundle();
                 b.putCharSequence(Consts.ARG_FRAGMENT_TITLE, menuItem.getTitle());
+                b.putInt(Consts.ARG_FRAGMENT_ID, menuItem.getItemId());
                 f.setArguments(b);
 
-                final Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
                 final boolean addToBackstack = (oldFragment != null) && (!oldFragment.getClass().equals(f.getClass()));
 
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -385,8 +403,11 @@ public class MainActivity extends ThemedActivity {
         if (mNavigationView != null) {
             Fragment f = getSupportFragmentManager().findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
             if (f instanceof StackedFragment) {
-                MenuItem menuItem = mNavigationView.getMenu().findItem(((StackedFragment) f).getId(this));
-                checkNavItem(menuItem);
+                int id = ((StackedFragment) f).getId(this);
+                if (id > 0) {
+                    MenuItem menuItem = mNavigationView.getMenu().findItem(id);
+                    checkNavItem(menuItem);
+                }
             }
         }
     }

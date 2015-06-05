@@ -124,18 +124,6 @@ public class CalendarListEvent implements CalendarListItem {
     }
 
     public void showInCalendar(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            Uri.Builder builder = CalendarContractWrapper.CONTENT_URI().buildUpon();
-            builder.appendPath("time");
-            ContentUris.appendId(builder, getDtStart());
-            Intent intent = new Intent(Intent.ACTION_VIEW)
-                    .setData(builder.build());
-            context.startActivity(intent);
-        } else {
-            Uri uri = ContentUris.withAppendedId(CalendarContractWrapper.Events.CONTENT_URI(), getEventId());
-            Intent intent = new Intent(Intent.ACTION_VIEW)
-                    .setData(uri);
-            context.startActivity(intent);
-        }
+        AppUtils.showEventInCalendar(context, getEventId(), getDtStart());
     }
 }

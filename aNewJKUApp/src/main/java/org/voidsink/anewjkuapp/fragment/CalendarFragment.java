@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp.fragment;
 
@@ -109,6 +109,13 @@ public class CalendarFragment extends BaseFragment implements LoaderManager.Load
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        if (savedInstanceState != null) {
+            now = savedInstanceState.getLong(Consts.ARG_CALENDAR_NOW, now);
+            then = savedInstanceState.getLong(Consts.ARG_CALENDAR_THEN, then);
+
+            setButtonLoadText();
+        }
+
         mAdapter = new CalendarEventAdapter(getContext());
 
 //		mListView.addFooterView(loadMore);
@@ -140,6 +147,14 @@ public class CalendarFragment extends BaseFragment implements LoaderManager.Load
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putLong(Consts.ARG_CALENDAR_NOW, now);
+        outState.putLong(Consts.ARG_CALENDAR_THEN, then);
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.calendar, menu);
@@ -153,6 +168,9 @@ public class CalendarFragment extends BaseFragment implements LoaderManager.Load
                 mUpdateService.putExtra(Consts.ARG_UPDATE_CAL, true);
                 getActivity().startService(mUpdateService);
 
+                return true;
+            case R.id.action_cal_goto_today:
+                mRecyclerView.smoothScrollToPosition(0);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

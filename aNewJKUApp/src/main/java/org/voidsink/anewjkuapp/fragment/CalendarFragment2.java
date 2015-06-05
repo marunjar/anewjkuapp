@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp.fragment;
 
@@ -64,7 +64,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CalendarFragment2 extends BaseFragment implements WeekView.MonthChangeListener,
-        WeekView.EventClickListener, WeekView.EventLongPressListener, DateTimeInterpreter {
+        WeekView.EventClickListener, DateTimeInterpreter {
 
     private static final String TAG = CalendarFragment2.class.getSimpleName();
     private static final SimpleDateFormat COLUMN_TITLE = new SimpleDateFormat("EEE dd.MM.");
@@ -85,14 +85,12 @@ public class CalendarFragment2 extends BaseFragment implements WeekView.MonthCha
         // month every time the month changes on the week view.
         mWeekView.setMonthChangeListener(this);
         // Set long press listener for events.
-        mWeekView.setEventLongPressListener(this);
+        //mWeekView.setEventLongPressListener(this);
         // Set formatter for Date/Time
         mWeekView.setDateTimeInterpreter(this);
 
         // goto now
-        mWeekView.goToToday();
-        Calendar cal = Calendar.getInstance();
-        mWeekView.goToHour(cal.get(Calendar.HOUR_OF_DAY));
+        goToDate(System.currentTimeMillis());
 
         return view;
     }
@@ -112,6 +110,9 @@ public class CalendarFragment2 extends BaseFragment implements WeekView.MonthCha
                 mUpdateService.putExtra(Consts.ARG_UPDATE_CAL, true);
                 getActivity().startService(mUpdateService);
 
+                return true;
+            case R.id.action_cal_goto_today:
+                goToDate(System.currentTimeMillis());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -160,13 +161,7 @@ public class CalendarFragment2 extends BaseFragment implements WeekView.MonthCha
 
     @Override
     public void onEventClick(WeekViewEvent weekViewEvent, RectF rectF) {
-
-    }
-
-    @Override
-    public void onEventLongPress(WeekViewEvent weekViewEvent, RectF rectF) {
-        // show context menu
-
+        AppUtils.showEventInCalendar(getContext(), weekViewEvent.getId(), weekViewEvent.getStartTime().getTimeInMillis());
     }
 
     @Override
@@ -308,5 +303,47 @@ public class CalendarFragment2 extends BaseFragment implements WeekView.MonthCha
 
             mWeekView.notifyDatasetChanged();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (mWeekView != null) {
+            Calendar day = mWeekView.getFirstVisibleDay();
+            if (day != null) {
+                double hour = mWeekView.getFirstVisibleHour();
+
+                // check range
+                if (hour < 0) hour = 0;
+                else if (hour >= 23.99) hour = 23.99; //~23:59
+
+                int iHour = (int) hour;
+                int iMinute = (int) ((hour - iHour) * 60);
+
+                day.set(Calendar.HOUR_OF_DAY, iHour);
+                day.set(Calendar.MINUTE, iMinute);
+
+                outState.putLong(Consts.ARG_CALENDAR_NOW, day.getTimeInMillis());
+            }
+        }
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(Consts.ARG_CALENDAR_NOW)) {
+            goToDate(savedInstanceState.getLong(Consts.ARG_CALENDAR_NOW));
+        }
+    }
+
+    private void goToDate(long time) {
+        Calendar day = Calendar.getInstance();
+        day.setTimeInMillis(time);
+        double hour = day.get(Calendar.HOUR_OF_DAY) + (day.get(Calendar.MINUTE) / 60);
+
+        mWeekView.goToDate(day);
+        mWeekView.goToHour(hour);
     }
 }

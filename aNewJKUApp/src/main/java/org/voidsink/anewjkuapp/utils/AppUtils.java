@@ -33,9 +33,11 @@ import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -822,5 +824,21 @@ public class AppUtils {
             return term.toString();
         }
         return "";
+    }
+
+    public static void showEventInCalendar(Context context, long eventId, long dtStart) {
+        if (eventId > 0) {
+            Uri uri = ContentUris.withAppendedId(CalendarContractWrapper.Events.CONTENT_URI(), eventId);
+            Intent intent = new Intent(Intent.ACTION_VIEW)
+                    .setData(uri);
+            context.startActivity(intent);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            Uri.Builder builder = CalendarContractWrapper.CONTENT_URI().buildUpon();
+            builder.appendPath("time");
+            ContentUris.appendId(builder, dtStart);
+            Intent intent = new Intent(Intent.ACTION_VIEW)
+                    .setData(builder.build());
+            context.startActivity(intent);
+        }
     }
 }

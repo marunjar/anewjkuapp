@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp.utils;
 
@@ -47,6 +47,12 @@ public class Consts {
     public static final String ARG_FRAGMENT_TAG = "show_fragment";
 
     public static final String SYNC_SHOW_PROGRESS = "showProgress";
+
+    public static final String ARG_CALENDAR_NOW = "cal_now";
+    public static final String ARG_CALENDAR_THEN = "cal_then";
+
+    public static final String ARG_TAB_FRAGMENT_TITLE = "st_title";
+    public static final String ARG_TAB_FRAGMENT_POS = "st_pos";
 
     public static final String ARG_FEED_URL = "feedURL";
     public static final String ARG_FEED_ID = "feedID";

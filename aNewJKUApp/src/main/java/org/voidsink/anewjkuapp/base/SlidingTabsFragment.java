@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp.base;
 
@@ -35,6 +35,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -174,5 +175,16 @@ public abstract class SlidingTabsFragment extends BaseFragment {
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
 
+        if (mViewPager != null) {
+            int pos = mViewPager.getCurrentItem();
+            if (pos >= 0) {
+                outState.putCharSequence(Consts.ARG_TAB_FRAGMENT_TITLE, mViewPager.getAdapter().getPageTitle(pos));
+                outState.putInt(Consts.ARG_TAB_FRAGMENT_POS, pos);
+            }
+        }
+    }
 }
