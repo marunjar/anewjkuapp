@@ -298,6 +298,8 @@ public class CalendarFragment extends BaseFragment implements LoaderManager.Load
             List<CalendarListEvent> mEvents = new ArrayList<>();
 
             if (data != null) {
+                data.moveToFirst();
+                data.moveToPrevious();
                 while (data.moveToNext()) {
                     mEvents.add(new CalendarListEvent(
                             data.getLong(ImportCalendarTask.COLUMN_EVENT_ID),

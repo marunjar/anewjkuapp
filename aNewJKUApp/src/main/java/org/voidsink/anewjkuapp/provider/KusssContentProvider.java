@@ -371,6 +371,7 @@ public class KusssContentProvider extends ContentProvider {
 
         if (data != null) {
             data.moveToFirst();
+            data.moveToPrevious();
             try {
                 while (data.moveToNext()) {
                     mAssessments.add(KusssHelper.createAssessment(data));
@@ -411,6 +412,7 @@ public class KusssContentProvider extends ContentProvider {
 
         if (c != null) {
             c.moveToFirst();
+            c.moveToPrevious();
             try {
                 while (c.moveToNext()) {
                     courses.add(KusssHelper.createCourse(c));
@@ -426,6 +428,8 @@ public class KusssContentProvider extends ContentProvider {
     public static List<Curriculum> getCurriculaFromCursor(Context context, Cursor c) {
         List<Curriculum> mCurriculum = new ArrayList<>();
         if (c != null) {
+            c.moveToFirst();
+            c.moveToPrevious();
             while (c.moveToNext()) {
                 mCurriculum.add(KusssHelper.createCurricula(c));
             }
