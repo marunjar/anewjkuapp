@@ -28,7 +28,6 @@ android {
         fdroid {
             buildConfigField "boolean", "FOSS_ONLY", "true"
         }
-
     }
 
     buildTypes {
@@ -45,6 +44,9 @@ android {
             minifyEnabled false
             shrinkResources true
             debuggable true
+
+            applicationIdSuffix ".debug"
+            versionNameSuffix ".debug"
         }
     }
     compileOptions {
