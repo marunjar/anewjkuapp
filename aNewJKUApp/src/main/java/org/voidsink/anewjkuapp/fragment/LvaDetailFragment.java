@@ -130,8 +130,8 @@ public class LvaDetailFragment extends TermFragment implements
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onStart() {
+        super.onStart();
 
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(KusssContentContract.AUTHORITY,
@@ -152,14 +152,15 @@ public class LvaDetailFragment extends TermFragment implements
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onStop() {
+        super.onStop();
 
         PreferenceManager.getDefaultSharedPreferences(getContext())
                 .unregisterOnSharedPreferenceChangeListener(this);
 
         getActivity().getContentResolver().unregisterContentObserver(
                 mLvaObserver);
+        mLvaObserver = null;
     }
 
     @Override

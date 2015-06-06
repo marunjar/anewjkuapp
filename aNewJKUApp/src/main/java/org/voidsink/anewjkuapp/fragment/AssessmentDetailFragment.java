@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp.fragment;
 
@@ -34,7 +34,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -60,7 +59,7 @@ import org.voidsink.anewjkuapp.utils.Consts;
 import java.util.List;
 
 public class AssessmentDetailFragment extends TermFragment implements
-        ContentObserverListener, LoaderManager.LoaderCallbacks<Cursor>{
+        ContentObserverListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String TAG = AssessmentDetailFragment.class.getSimpleName();
 
@@ -124,8 +123,8 @@ public class AssessmentDetailFragment extends TermFragment implements
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onStart() {
+        super.onStart();
 
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(KusssContentContract.AUTHORITY,
@@ -138,10 +137,11 @@ public class AssessmentDetailFragment extends TermFragment implements
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onStop() {
+        super.onStop();
 
         getActivity().getContentResolver().unregisterContentObserver(mObserver);
+        mObserver = null;
     }
 
     @Override

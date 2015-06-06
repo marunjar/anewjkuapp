@@ -148,10 +148,11 @@ public class CalendarFragment2 extends BaseFragment implements WeekView.MonthCha
 
     @Override
     public void onStop() {
+        super.onStop();
+
         getActivity().getContentResolver().unregisterContentObserver(
                 mCalendarObserver);
-
-        super.onStop();
+        mCalendarObserver = null;
     }
 
     @Override

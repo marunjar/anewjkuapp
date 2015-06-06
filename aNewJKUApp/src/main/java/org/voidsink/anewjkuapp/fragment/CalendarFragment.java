@@ -227,10 +227,11 @@ public class CalendarFragment extends BaseFragment implements LoaderManager.Load
 
     @Override
     public void onStop() {
+        super.onStop();
+
         getActivity().getContentResolver().unregisterContentObserver(
                 mCalendarObserver);
-
-        super.onStop();
+        mCalendarObserver = null;
     }
 
     @Override

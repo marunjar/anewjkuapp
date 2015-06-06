@@ -97,8 +97,8 @@ public class ExamFragment extends BaseFragment implements LoaderManager.LoaderCa
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onStart() {
+        super.onStart();
 
         mNewExamObserver = new NewExamContentObserver(new Handler());
         getActivity().getContentResolver().registerContentObserver(
@@ -106,11 +106,12 @@ public class ExamFragment extends BaseFragment implements LoaderManager.LoaderCa
     }
 
     @Override
-    public void onDestroy() {
+    public void onStop() {
+        super.onStop();
+
         getActivity().getContentResolver().unregisterContentObserver(
                 mNewExamObserver);
-
-        super.onDestroy();
+        mNewExamObserver = null;
     }
 
     @Override
