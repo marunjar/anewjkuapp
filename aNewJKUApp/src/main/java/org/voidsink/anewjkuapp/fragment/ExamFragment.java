@@ -41,8 +41,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
-
 import org.voidsink.anewjkuapp.CourseMap;
 import org.voidsink.anewjkuapp.ExamListAdapter;
 import org.voidsink.anewjkuapp.ExamListExam;
@@ -56,6 +54,7 @@ import org.voidsink.anewjkuapp.update.ImportExamTask;
 import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
+import org.voidsink.sectionedrecycleradapter.SectionedRecyclerViewAdapter;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -84,9 +83,9 @@ public class ExamFragment extends BaseFragment implements ContentObserverListene
         super.onActivityCreated(savedInstanceState);
 
         mAdapter = new ExamListAdapter(getContext());
-        mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mAdapter));
+        mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter(mRecyclerView, mAdapter));
+        //mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mAdapter));
 
         getLoaderManager().initLoader(0, null, this);
     }

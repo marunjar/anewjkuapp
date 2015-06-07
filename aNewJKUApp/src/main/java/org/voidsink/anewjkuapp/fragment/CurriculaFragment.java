@@ -43,9 +43,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
-
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
@@ -58,6 +55,8 @@ import org.voidsink.anewjkuapp.update.ImportCurriculaTask;
 import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
+import org.voidsink.sectionedrecycleradapter.SectionedAdapter;
+import org.voidsink.sectionedrecycleradapter.SectionedRecyclerViewAdapter;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -108,9 +107,8 @@ public class CurriculaFragment extends BaseFragment implements
         super.onActivityCreated(savedInstanceState);
 
         mAdapter = new CurriculaAdapter(getContext());
-        mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mAdapter));
+        mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter(mRecyclerView, mAdapter));
 
         getLoaderManager().initLoader(0, null, this);
     }
@@ -170,7 +168,7 @@ public class CurriculaFragment extends BaseFragment implements
         mAdapter.notifyDataSetChanged();
     }
 
-    private static class CurriculaAdapter extends RecyclerArrayAdapter<Curriculum, CurriculumViewHolder> implements StickyRecyclerHeadersAdapter<CurriculumHeaderHolder> {
+    private static class CurriculaAdapter extends RecyclerArrayAdapter<Curriculum, CurriculumViewHolder> implements SectionedAdapter<CurriculumHeaderHolder> {
 
         private final Context mContext;
 

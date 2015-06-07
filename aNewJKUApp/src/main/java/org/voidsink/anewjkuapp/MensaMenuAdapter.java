@@ -31,19 +31,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
-
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.mensa.IDay;
 import org.voidsink.anewjkuapp.mensa.IMensa;
 import org.voidsink.anewjkuapp.mensa.IMenu;
 import org.voidsink.anewjkuapp.utils.UIUtils;
+import org.voidsink.sectionedrecycleradapter.SectionedAdapter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerView.ViewHolder> implements StickyRecyclerHeadersAdapter<MensaMenuAdapter.MenuHeaderHolder> {
+public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerView.ViewHolder> implements SectionedAdapter<MensaMenuAdapter.MenuHeaderHolder> {
 
     private static final DateFormat df = SimpleDateFormat.getDateInstance();
 

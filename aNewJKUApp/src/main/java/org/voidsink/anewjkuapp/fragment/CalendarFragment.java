@@ -46,8 +46,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
-
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
@@ -62,6 +60,7 @@ import org.voidsink.anewjkuapp.update.ImportCalendarTask;
 import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
+import org.voidsink.sectionedrecycleradapter.SectionedRecyclerViewAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -121,8 +120,7 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
 
 //		mListView.addFooterView(loadMore);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mAdapter));
+        mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter(mRecyclerView, mAdapter));
 
         mAdapter.setOnItemClickListener(new CalendarEventAdapter.OnItemClickListener() {
 

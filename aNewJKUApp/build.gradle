@@ -86,7 +86,6 @@ dependencies {
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
     compile 'com.github.alamkanak:android-week-view:1.2.3'
-    compile 'com.timehop.stickyheadersrecyclerview:library:0.4.0'
 
     compile 'de.cketti.library.changelog:ckchangelog:1.2.2'
     compile('com.mikepenz:aboutlibraries:5.0.1@aar') {
@@ -97,6 +96,7 @@ dependencies {
 
     compile project(':voidsinkContributors')
     compile project(':android-support-v4-preferencefragment')
+    compile project(':sectionedRecyclerAdapter')
     //compile project(':kussslibrary')
 }
 

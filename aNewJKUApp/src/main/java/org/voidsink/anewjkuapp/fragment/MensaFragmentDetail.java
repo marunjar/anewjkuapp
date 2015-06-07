@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ * ****************************************************************************
+ */
 
 package org.voidsink.anewjkuapp.fragment;
 
@@ -36,8 +37,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
-
 import org.voidsink.anewjkuapp.MensaInfoItem;
 import org.voidsink.anewjkuapp.MensaItem;
 import org.voidsink.anewjkuapp.MensaMenuAdapter;
@@ -48,6 +47,7 @@ import org.voidsink.anewjkuapp.mensa.IDay;
 import org.voidsink.anewjkuapp.mensa.IMensa;
 import org.voidsink.anewjkuapp.mensa.IMenu;
 import org.voidsink.anewjkuapp.mensa.MenuLoader;
+import org.voidsink.sectionedrecycleradapter.SectionedRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -67,8 +67,7 @@ public abstract class MensaFragmentDetail extends BaseFragment {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new MensaMenuAdapter(getContext(), true);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mAdapter));
+        mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter(mRecyclerView, mAdapter));
 
         return view;
     }

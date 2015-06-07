@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp;
 
@@ -33,17 +33,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
-
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.UIUtils;
+import org.voidsink.sectionedrecycleradapter.SectionedAdapter;
 
 import java.text.DateFormat;
 import java.util.Calendar;
 
-public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamListAdapter.ExamViewHolder> implements StickyRecyclerHeadersAdapter<ExamListAdapter.DateHeaderHolder> {
+public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamListAdapter.ExamViewHolder> implements SectionedAdapter<ExamListAdapter.DateHeaderHolder> {
 
     private final Context mContext;
 

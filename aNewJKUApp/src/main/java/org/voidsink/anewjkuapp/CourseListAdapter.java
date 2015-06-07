@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp;
 
@@ -31,14 +31,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
-
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.utils.UIUtils;
+import org.voidsink.sectionedrecycleradapter.SectionedAdapter;
 
-public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, CourseListAdapter.LvaViewHolder> implements StickyRecyclerHeadersAdapter<CourseListAdapter.LvaHeaderHolder> {
+public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, CourseListAdapter.LvaViewHolder> implements SectionedAdapter<CourseListAdapter.LvaHeaderHolder> {
 
     private final Context mContext;
 

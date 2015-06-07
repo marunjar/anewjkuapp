@@ -41,8 +41,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
-
 import org.voidsink.anewjkuapp.AssessmentListAdapter;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
@@ -55,6 +53,7 @@ import org.voidsink.anewjkuapp.update.ImportAssessmentTask;
 import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
+import org.voidsink.sectionedrecycleradapter.SectionedRecyclerViewAdapter;
 
 import java.util.List;
 
@@ -92,8 +91,7 @@ public class AssessmentDetailFragment extends TermFragment implements
         super.onActivityCreated(savedInstanceState);
 
         mAdapter = new AssessmentListAdapter(getContext());
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mAdapter));
+        mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter(mRecyclerView, mAdapter));
 
         getLoaderManager().initLoader(0, null, this);
     }

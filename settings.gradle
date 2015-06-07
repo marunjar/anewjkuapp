@@ -1,2 +1,2 @@
-include ':voidsinkContributors', ':android-support-v4-preferencefragment', ':kussslibrary'
+include ':voidsinkContributors', ':android-support-v4-preferencefragment', ':kussslibrary', ':sectionedRecyclerAdapter'
 include ':aNewJKUApp'

@@ -33,17 +33,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
-
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.utils.UIUtils;
+import org.voidsink.sectionedrecycleradapter.SectionedAdapter;
 
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent, CalendarEventAdapter.EventItemHolder> implements StickyRecyclerHeadersAdapter<CalendarEventAdapter.DateHeaderHolder> {
+public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent, CalendarEventAdapter.EventItemHolder> implements SectionedAdapter<CalendarEventAdapter.DateHeaderHolder> {
 
     private final Context mContext;
     private OnItemClickListener mItemClickListener;

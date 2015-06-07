@@ -6,7 +6,7 @@
  * \________|____|__ \______/   \____|__  /   __/|   __/
  *                  \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ * Copyright (c) 2015 Paul "Marunjar" Pretsch
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,23 +20,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
 
-package org.voidsink.anewjkuapp;
+package org.voidsink.sectionedrecycleradapter;
 
-import org.voidsink.anewjkuapp.mensa.IDay;
-import org.voidsink.anewjkuapp.mensa.IMensa;
-import org.voidsink.anewjkuapp.mensa.IMenu;
+import android.app.Application;
+import android.test.ApplicationTestCase;
 
-public interface MensaItem {
-
-    public static final int TYPE_MENU = 0;
-    public static final int TYPE_INFO = 1;
-
-    public int getType();
-
-    public IMensa getMensa();
-    public IDay getDay();
-    public IMenu getMenu();
-
+/**
+ * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
+ */
+public class ApplicationTest extends ApplicationTestCase<Application> {
+    public ApplicationTest() {
+        super(Application.class);
+    }
 }
