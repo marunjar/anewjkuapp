@@ -22,7 +22,7 @@
     <!-- dimension for grade chip -->
     <dimen name="grade_chip_info_size">12sp</dimen>
     <dimen name="grade_chip_grade_size">28sp</dimen>
-    <dimen name="card_content_padding">6dp</dimen>
+    <dimen name="card_content_padding">3dp</dimen>
 
     <!-- Material Design -->
     <dimen name="text_left_icon_margin">16dp</dimen>

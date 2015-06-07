@@ -6,7 +6,7 @@
     android:layout_width="30dp"
     android:minHeight="30dp"
     android:minWidth="30dp"
-    android:layout_margin="8dp"
+    android:layout_margin="3dp"
     android:id="@+id/empty_chip_background"
     android:background="@color/color_chip_grade_back_default">
 </View>
