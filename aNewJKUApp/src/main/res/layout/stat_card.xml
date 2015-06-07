@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v7.widget.CardView
     style="@style/card"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -15,32 +16,29 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-
             <TextView
                 android:id="@+id/stat_card_title"
                 style="@style/Text.ItemTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/separator_top_bottom_margin"
-                android:gravity="center_vertical" />
+                android:gravity="center_vertical"
+                tools:text="Title"/>
 
-            <android.support.v7.widget.GridLayout
+            <LinearLayout
                 android:id="@+id/stat_card_items"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:stretchMode="columnWidth"
-                app:alignmentMode="alignBounds"
-                app:columnCount="1"
-                app:orientation="vertical" />
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                tools:layout_height="20dp"/>
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/stat_card_diagram_pie"
-                style="@style/plotStyle" />
+                style="@style/plotStyle"/>
 
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/stat_card_diagram_bar"
-                style="@style/plotStyle" />
-
+                style="@style/plotStyle"/>
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
 </android.support.v7.widget.CardView>

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,19 +20,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -568,7 +569,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
 
         public Toolbar mToolbar;
         public TextView mTitle;
-        public GridLayout mItems;
+        public LinearLayout mItems;
         public BarChart mBarChart;
         public PieChart mPieChart;
 
@@ -577,7 +578,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
 
             mToolbar = (Toolbar) itemView.findViewById(R.id.stat_card_toolbar);
             mTitle = (TextView) itemView.findViewById(R.id.stat_card_title);
-            mItems = (GridLayout) itemView.findViewById(R.id.stat_card_items);
+            mItems = (LinearLayout) itemView.findViewById(R.id.stat_card_items);
             mBarChart = (BarChart) itemView.findViewById(R.id.stat_card_diagram_bar);
             mPieChart = (PieChart) itemView.findViewById(R.id.stat_card_diagram_pie);
 
