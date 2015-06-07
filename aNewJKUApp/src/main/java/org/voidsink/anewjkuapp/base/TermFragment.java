@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.base;
 
@@ -38,25 +39,36 @@ public class TermFragment extends BaseFragment {
 
     private List<Term> mTerms;
 
+    private void fillTermArray(String[] termArray) {
+        if (termArray != null && termArray.length > 0) {
+
+            try {
+                mTerms = new ArrayList<>();
+                for (String termStr : termArray) {
+                    mTerms.add(Term.parseTerm(termStr));
+                }
+            } catch (ParseException e) {
+                mTerms = null;
+                Analytics.sendException(getContext(), e, true);
+            }
+        }
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            fillTermArray(savedInstanceState.getStringArray(Consts.ARG_TERMS));
+        }
+    }
+
     @Override
     public void setArguments(Bundle args) {
         super.setArguments(args);
 
         if (args != null) {
-            String[] termArray = args.getStringArray(Consts.ARG_TERMS);
-
-            if (termArray != null && termArray.length > 0) {
-
-                try {
-                    mTerms = new ArrayList<>();
-                    for (String termStr : termArray) {
-                        mTerms.add(Term.parseTerm(termStr));
-                    }
-                } catch (ParseException e) {
-                    mTerms = null;
-                    Analytics.sendException(getContext(), e, true);
-                }
-            }
+            fillTermArray(args.getStringArray(Consts.ARG_TERMS));
         }
     }
 
@@ -64,4 +76,16 @@ public class TermFragment extends BaseFragment {
         return mTerms;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (mTerms != null) {
+            String[] termArray = new String[mTerms.size()];
+            for (int i = 0; i < mTerms.size(); i++) {
+                termArray[i] = mTerms.get(i).toString();
+            }
+            outState.putStringArray(Consts.ARG_TERMS, termArray);
+        }
+    }
 }

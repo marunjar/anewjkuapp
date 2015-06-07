@@ -32,6 +32,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
@@ -57,6 +58,16 @@ public class BaseFragment extends Fragment implements StackedFragment {
     }
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mId = savedInstanceState.getInt(Consts.ARG_FRAGMENT_ID, mId);
+            mTitle = savedInstanceState.getCharSequence(Consts.ARG_FRAGMENT_TITLE);
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.i(TAG, "onOptionsItemSelected");
 
@@ -76,7 +87,9 @@ public class BaseFragment extends Fragment implements StackedFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        // Log.i(getClass().getSimpleName(), "onSaveInstanceState");
+
+        outState.putInt(Consts.ARG_FRAGMENT_ID, mId);
+        outState.putCharSequence(Consts.ARG_FRAGMENT_TITLE, mTitle);
     }
 
     @Override
