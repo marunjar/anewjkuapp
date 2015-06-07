@@ -27,12 +27,11 @@ package org.voidsink.anewjkuapp.fragment;
 import android.accounts.Account;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.UriMatcher;
 import android.content.res.TypedArray;
-import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.RectF;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,7 +47,9 @@ import com.alamkanak.weekview.WeekViewEvent;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.BaseFragment;
+import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.update.ImportCalendarTask;
@@ -63,12 +64,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CalendarFragment2 extends BaseFragment implements WeekView.MonthChangeListener,
+public class CalendarFragment2 extends BaseFragment implements ContentObserverListener, WeekView.MonthChangeListener,
         WeekView.EventClickListener, DateTimeInterpreter {
 
     private static final String TAG = CalendarFragment2.class.getSimpleName();
     private static final SimpleDateFormat COLUMN_TITLE = new SimpleDateFormat("EEE dd.MM.");
-    private ContentObserver mCalendarObserver;
+    private BaseContentObserver mDataObserver;
     private WeekView mWeekView;
 
     @Override
@@ -123,27 +124,19 @@ public class CalendarFragment2 extends BaseFragment implements WeekView.MonthCha
     public void onStart() {
         super.onStart();
 
-        mCalendarObserver = new CalendarContentObserver(new Handler());
-
         Account account = AppUtils.getAccount(getContext());
-
         String lvaCalId = CalendarUtils.getCalIDByName(getContext(), account, CalendarUtils.ARG_CALENDAR_COURSE, true);
         String examCalId = CalendarUtils.getCalIDByName(getContext(), account, CalendarUtils.ARG_CALENDAR_EXAM, true);
 
-        if (lvaCalId == null || examCalId == null) {
-            // listen to all changes
-            getActivity().getContentResolver().registerContentObserver(
-                    CalendarContractWrapper.Events.CONTENT_URI().buildUpon()
-                            .appendPath("#").build(), false, mCalendarObserver);
-        } else {
-            getActivity().getContentResolver().registerContentObserver(
-                    CalendarContractWrapper.Events.CONTENT_URI().buildUpon()
-                            .appendPath(lvaCalId).build(), false, mCalendarObserver);
-            getActivity().getContentResolver().registerContentObserver(
-                    CalendarContractWrapper.Events.CONTENT_URI().buildUpon()
-                            .appendPath(examCalId).build(), false, mCalendarObserver);
-        }
+        UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+        uriMatcher.addURI(CalendarContractWrapper.AUTHORITY(), CalendarContractWrapper.Events.CONTENT_URI().buildUpon().appendPath("#").build().toString(), 0);
 
+        mDataObserver = new BaseContentObserver(uriMatcher, this);
+
+        // listen to all changes
+        getActivity().getContentResolver().registerContentObserver(
+                CalendarContractWrapper.Events.CONTENT_URI().buildUpon()
+                        .appendPath("#").build(), false, mDataObserver);
     }
 
     @Override
@@ -151,8 +144,8 @@ public class CalendarFragment2 extends BaseFragment implements WeekView.MonthCha
         super.onStop();
 
         getActivity().getContentResolver().unregisterContentObserver(
-                mCalendarObserver);
-        mCalendarObserver = null;
+                mDataObserver);
+        mDataObserver = null;
     }
 
     @Override
@@ -292,18 +285,9 @@ public class CalendarFragment2 extends BaseFragment implements WeekView.MonthCha
         return timeFormat.format(calendar.getTime());
     }
 
-    private class CalendarContentObserver extends ContentObserver {
-
-        public CalendarContentObserver(Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        public void onChange(boolean selfChange) {
-            super.onChange(selfChange);
-
-            mWeekView.notifyDatasetChanged();
-        }
+    @Override
+    public void onContentChanged(boolean selfChange) {
+        mWeekView.notifyDatasetChanged();
     }
 
     @Override

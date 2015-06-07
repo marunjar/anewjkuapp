@@ -25,10 +25,9 @@
 package org.voidsink.anewjkuapp.fragment;
 
 import android.content.Intent;
-import android.database.ContentObserver;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -50,7 +49,9 @@ import org.voidsink.anewjkuapp.ExamListExam;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.BaseFragment;
+import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.update.ImportExamTask;
 import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
@@ -60,12 +61,12 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExamFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ExamFragment extends BaseFragment implements ContentObserverListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = ExamFragment.class.getSimpleName();
 
     private ExamListAdapter mAdapter;
-    private ContentObserver mNewExamObserver;
+    private BaseContentObserver mDataObserver;
     private RecyclerView mRecyclerView;
 
     @Override
@@ -100,9 +101,14 @@ public class ExamFragment extends BaseFragment implements LoaderManager.LoaderCa
     public void onStart() {
         super.onStart();
 
-        mNewExamObserver = new NewExamContentObserver(new Handler());
+        UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+        uriMatcher.addURI(KusssContentContract.AUTHORITY,
+                KusssContentContract.Exam.PATH_CONTENT_CHANGED, 0);
+
+        mDataObserver = new BaseContentObserver(uriMatcher, this);
         getActivity().getContentResolver().registerContentObserver(
-                KusssContentContract.Exam.CONTENT_CHANGED_URI, false, mNewExamObserver);
+                KusssContentContract.Exam.CONTENT_CHANGED_URI, false,
+                mDataObserver);
     }
 
     @Override
@@ -110,8 +116,8 @@ public class ExamFragment extends BaseFragment implements LoaderManager.LoaderCa
         super.onStop();
 
         getActivity().getContentResolver().unregisterContentObserver(
-                mNewExamObserver);
-        mNewExamObserver = null;
+                mDataObserver);
+        mDataObserver = null;
     }
 
     @Override
@@ -170,17 +176,8 @@ public class ExamFragment extends BaseFragment implements LoaderManager.LoaderCa
         mAdapter.notifyDataSetChanged();
     }
 
-    private class NewExamContentObserver extends ContentObserver {
-
-        public NewExamContentObserver(Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        public void onChange(boolean selfChange) {
-            super.onChange(selfChange);
-
-            getLoaderManager().restartLoader(0, null, ExamFragment.this);
-        }
+    @Override
+    public void onContentChanged(boolean selfChange) {
+        getLoaderManager().restartLoader(0, null, this);
     }
 }

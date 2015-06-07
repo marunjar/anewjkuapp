@@ -27,10 +27,9 @@ package org.voidsink.anewjkuapp.fragment;
 import android.accounts.Account;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.database.ContentObserver;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -51,7 +50,9 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.BaseFragment;
+import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarEventAdapter;
 import org.voidsink.anewjkuapp.calendar.CalendarListEvent;
@@ -69,13 +70,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CalendarFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class CalendarFragment extends BaseFragment implements ContentObserverListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = CalendarFragment.class.getSimpleName();
     long now = 0, then = 0;
 
     private CalendarEventAdapter mAdapter;
-    private ContentObserver mCalendarObserver;
+    private BaseContentObserver mDataObserver;
     private RecyclerView mRecyclerView;
     private Button mLoadMoreButton;
 
@@ -202,27 +203,19 @@ public class CalendarFragment extends BaseFragment implements LoaderManager.Load
     public void onStart() {
         super.onStart();
 
-        mCalendarObserver = new CalendarContentObserver(new Handler());
-
         Account account = AppUtils.getAccount(getContext());
-
         String lvaCalId = CalendarUtils.getCalIDByName(getContext(), account, CalendarUtils.ARG_CALENDAR_COURSE, true);
         String examCalId = CalendarUtils.getCalIDByName(getContext(), account, CalendarUtils.ARG_CALENDAR_EXAM, true);
 
-        if (lvaCalId == null || examCalId == null) {
-            // listen to all changes
-            getActivity().getContentResolver().registerContentObserver(
-                    CalendarContractWrapper.Events.CONTENT_URI().buildUpon()
-                            .appendPath("#").build(), false, mCalendarObserver);
-        } else {
-            getActivity().getContentResolver().registerContentObserver(
-                    CalendarContractWrapper.Events.CONTENT_URI().buildUpon()
-                            .appendPath(lvaCalId).build(), false, mCalendarObserver);
-            getActivity().getContentResolver().registerContentObserver(
-                    CalendarContractWrapper.Events.CONTENT_URI().buildUpon()
-                            .appendPath(examCalId).build(), false, mCalendarObserver);
-        }
+        UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+        uriMatcher.addURI(CalendarContractWrapper.AUTHORITY(), CalendarContractWrapper.Events.CONTENT_URI().buildUpon().appendPath("#").build().toString(), 0);
 
+        mDataObserver = new BaseContentObserver(uriMatcher, this);
+
+        // listen to all changes
+        getActivity().getContentResolver().registerContentObserver(
+                CalendarContractWrapper.Events.CONTENT_URI().buildUpon()
+                        .appendPath("#").build(), false, mDataObserver);
     }
 
     @Override
@@ -230,8 +223,8 @@ public class CalendarFragment extends BaseFragment implements LoaderManager.Load
         super.onStop();
 
         getActivity().getContentResolver().unregisterContentObserver(
-                mCalendarObserver);
-        mCalendarObserver = null;
+                mDataObserver);
+        mDataObserver = null;
     }
 
     @Override
@@ -326,16 +319,8 @@ public class CalendarFragment extends BaseFragment implements LoaderManager.Load
         mAdapter.notifyDataSetChanged();
     }
 
-    private class CalendarContentObserver extends ContentObserver {
-
-        public CalendarContentObserver(Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        public void onChange(boolean selfChange) {
-            super.onChange(selfChange);
-            loadData();
-        }
+    @Override
+    public void onContentChanged(boolean selfChange) {
+        loadData();
     }
 }
