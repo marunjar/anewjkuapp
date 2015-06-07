@@ -74,7 +74,7 @@ public class StatFragmentDetail extends TermFragment implements
         View view = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         return view;
     }
