@@ -20,6 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
 
 package org.voidsink.anewjkuapp;
@@ -94,7 +95,7 @@ public class ImportPoiTask implements Callable<Void> {
         Log.d(TAG, "start importing POIs");
         PoiNotification mNotification = new PoiNotification(mContext);
         try {
-            Map<String, Poi> poiMap = new HashMap<String, Poi>();
+            Map<String, Poi> poiMap = new HashMap<>();
 
             try {
                 DocumentBuilderFactory factory = DocumentBuilderFactory

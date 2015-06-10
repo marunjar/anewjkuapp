@@ -39,6 +39,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -66,9 +67,7 @@ import org.voidsink.sectionedrecycleradapter.SectionedRecyclerViewAdapter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CalendarFragment extends BaseFragment implements ContentObserverListener, LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -271,7 +270,7 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
         Account mAccount = AppUtils.getAccount(getContext());
         if (mAccount != null) {
             // fetch calendar colors
-            final Map<String, Integer> mColors = new HashMap<>();
+            final SparseArray<Integer> mColors = new SparseArray<>();
             ContentResolver cr = getContext().getContentResolver();
             Cursor cursor = cr
                     .query(CalendarContractWrapper.Calendars.CONTENT_URI(),
@@ -282,7 +281,7 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
                             null);
             if (cursor != null) {
                 while (cursor.moveToNext()) {
-                    mColors.put(cursor.getString(0), cursor.getInt(1));
+                    mColors.put(cursor.getInt(0), cursor.getInt(1));
                 }
                 cursor.close();
             }
@@ -297,7 +296,7 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
                     mEvents.add(new CalendarListEvent(
                             data.getLong(ImportCalendarTask.COLUMN_EVENT_ID),
                             mColors.get(data
-                                    .getString(ImportCalendarTask.COLUMN_EVENT_CAL_ID)),
+                                    .getInt(ImportCalendarTask.COLUMN_EVENT_CAL_ID)),
                             data.getString(ImportCalendarTask.COLUMN_EVENT_TITLE),
                             data.getString(ImportCalendarTask.COLUMN_EVENT_DESCRIPTION),
                             data.getString(ImportCalendarTask.COLUMN_EVENT_LOCATION),

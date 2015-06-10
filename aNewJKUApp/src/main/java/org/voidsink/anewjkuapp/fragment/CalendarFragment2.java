@@ -34,6 +34,7 @@ import android.graphics.RectF;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -60,9 +61,7 @@ import org.voidsink.anewjkuapp.utils.Consts;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CalendarFragment2 extends BaseFragment implements ContentObserverListener, WeekView.MonthChangeListener,
         WeekView.EventClickListener, DateTimeInterpreter {
@@ -178,7 +177,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         }
 
         // fetch calendar colors
-        final Map<String, Integer> mColors = new HashMap<>();
+        final SparseArray<Integer> mColors = new SparseArray<>();
         final ContentResolver cr = getContext().getContentResolver();
 
         Cursor c = cr.query(CalendarContractWrapper.Calendars.CONTENT_URI(),
@@ -188,7 +187,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
                 null, null, null);
         if (c != null) {
             while (c.moveToNext()) {
-                mColors.put(c.getString(0), c.getInt(1));
+                mColors.put(c.getInt(0), c.getInt(1));
             }
             c.close();
         }
@@ -240,14 +239,9 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
 
                 // get accent color from theme
                 TypedArray themeArray = getContext().getTheme().obtainStyledAttributes(new int[]{android.R.attr.colorAccent});
-                int color = themeArray.getColor(0, getContext().getResources().getColor(R.color.default_accent));
                 themeArray.recycle();
 
-                final String key = c.getString(ImportCalendarTask.COLUMN_EVENT_CAL_ID);
-                if (mColors.containsKey(key)) {
-                    color = mColors.get(key);
-                }
-                event.setColor(color);
+                event.setColor(mColors.get(c.getInt(ImportCalendarTask.COLUMN_EVENT_CAL_ID)));
 
                 events.add(event);
             }
