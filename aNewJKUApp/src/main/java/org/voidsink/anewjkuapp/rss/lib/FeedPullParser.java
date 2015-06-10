@@ -63,8 +63,8 @@ public class FeedPullParser implements FeedParser {
         try {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestProperty("Cache-Control", "public, max-age=" + 7200);
-            connection.setConnectTimeout((int) 3000);
-            connection.setReadTimeout((int) 3000);
+            connection.setConnectTimeout(3000);
+            connection.setReadTimeout(3000);
 
             entries = parse(new BufferedInputStream(connection.getInputStream()));
             connection.disconnect();

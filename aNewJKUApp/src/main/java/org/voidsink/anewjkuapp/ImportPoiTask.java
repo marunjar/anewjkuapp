@@ -118,8 +118,7 @@ public class ImportPoiTask implements Callable<Void> {
 
                     NodeList names = wpt.getElementsByTagName("name");
                     if (names.getLength() == 1) {
-                        String name = ((Element) names.item(0))
-                                .getTextContent();
+                        String name = names.item(0).getTextContent();
 
                         Poi poi = new Poi(name, lat, lon);
                         if (!poiMap.containsKey(poi.getName())) {
