@@ -128,6 +128,12 @@ public class MainActivity extends ThemedActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // set Statusbar color to transparent if a drawer exists
+            // in this case status bar is colored by DrawerLayout.setStatusBarBackgroundColor(). which is default primaryDark
+            getWindow().setStatusBarColor(getResources().getColor(android.R.color.transparent));
+        }
+
         // do things if new version was installed
         AppUtils.doOnNewVersion(this);
 
