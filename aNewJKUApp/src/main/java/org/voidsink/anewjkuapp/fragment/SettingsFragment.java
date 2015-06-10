@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.fragment;
 
@@ -76,8 +77,12 @@ public class SettingsFragment extends PreferenceFragment {
                                     .commit();
                             return true;
                         }
-                    } catch (ClassNotFoundException | java.lang.InstantiationException | IllegalAccessException e) {
-                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        Analytics.sendException(getActivity(), e, false);
+                    } catch (java.lang.InstantiationException e) {
+                        Analytics.sendException(getActivity(), e, false);
+                    } catch (IllegalAccessException e) {
+                        Analytics.sendException(getActivity(), e, false);
                     }
                 }
             }
@@ -203,9 +208,9 @@ public class SettingsFragment extends PreferenceFragment {
         }
 
         private void setEntries(CalendarUtils.CalendarList calendars, TwoLinesListPreference preference) {
-            preference.setEntries(calendars.getDisplayNames().toArray(new String[0]));
+            preference.setEntries(calendars.getDisplayNames().toArray(new String[calendars.getDisplayNames().size()]));
             preference.setEntryValues(calendars.getIdsAsStrings());
-            preference.setEntriesSubtitles(calendars.getAccountNames().toArray(new String[0]));
+            preference.setEntriesSubtitles(calendars.getAccountNames().toArray(new String[calendars.getAccountNames().size()]));
         }
 
         @Override

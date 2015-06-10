@@ -98,6 +98,8 @@ public class Consts {
     public static final int LOADER_ID_COURSES = 1;
     public static final int LOADER_ID_ASSESSMENTS = 2;
 
+    public static final String PROPERTY_ID = "UA-51633871-1";
+
     private Consts() {
     }
 }

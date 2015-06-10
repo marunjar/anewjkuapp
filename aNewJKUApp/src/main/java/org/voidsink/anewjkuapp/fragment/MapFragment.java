@@ -230,6 +230,8 @@ public class MapFragment extends BaseFragment implements
 
             setNewGoal(new LatLong(lat, lon), name);
         }
+        c.close();
+        
         if (mSearchView != null) {
             mSearchView.setQuery("", false);
         }
@@ -412,7 +414,6 @@ public class MapFragment extends BaseFragment implements
         layers.add(this.goalLocationOverlay);
 
         // overlay with a marker to show the actual position
-        //TODO: find a way to colorize and use R.drawable.ic_marker_position instead of R.drawable.ic_marker_own_position
         Drawable drawable = getContext().getResources().getDrawable(R.drawable.ic_marker_own_position);
         Bitmap bitmap = AndroidGraphicFactory.convertToBitmap(drawable);
 

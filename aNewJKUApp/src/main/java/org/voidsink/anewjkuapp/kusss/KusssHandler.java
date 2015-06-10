@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.kusss;
 
@@ -56,6 +57,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class KusssHandler {
@@ -563,7 +565,7 @@ public class KusssHandler {
     private List<Exam> getNewExamsByCourseId(Context c, String courseId) {
         List<Exam> exams = new ArrayList<>();
         try {
-            final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+            final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 
             Log.d(TAG, "getNewExamsByCourseId: " + courseId);
             Document doc = Jsoup

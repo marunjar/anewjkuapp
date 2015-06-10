@@ -88,7 +88,7 @@ public class UpdateService extends IntentService {
                     callables.add(new ImportExamTask(account, this));
                 }
                 if (callables.size() > 0) {
-                    AppUtils.executeEm(this, callables.toArray(new Callable<?>[]{}), false);
+                    AppUtils.executeEm(this, callables.toArray(new Callable<?>[callables.size()]), false);
                 }
             }
         }

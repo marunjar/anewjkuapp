@@ -20,6 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
 
 package org.voidsink.anewjkuapp.fragment;
@@ -28,11 +29,9 @@ import android.accounts.Account;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.UriMatcher;
-import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.RectF;
 import android.os.Bundle;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -67,7 +66,6 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         WeekView.EventClickListener, DateTimeInterpreter {
 
     private static final String TAG = CalendarFragment2.class.getSimpleName();
-    private static final SimpleDateFormat COLUMN_TITLE = new SimpleDateFormat("EEE dd.MM.");
     private BaseContentObserver mDataObserver;
     private WeekView mWeekView;
 
@@ -237,10 +235,6 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
 
                 WeekViewEvent event = new WeekViewEvent(c.getLong(ImportCalendarTask.COLUMN_EVENT_ID), c.getString(ImportCalendarTask.COLUMN_EVENT_TITLE), startTime, endTime);
 
-                // get accent color from theme
-                TypedArray themeArray = getContext().getTheme().obtainStyledAttributes(new int[]{android.R.attr.colorAccent});
-                themeArray.recycle();
-
                 event.setColor(mColors.get(c.getInt(ImportCalendarTask.COLUMN_EVENT_CAL_ID)));
 
                 events.add(event);
@@ -256,7 +250,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
 
     @Override
     public String interpretDate(Calendar calendar) {
-        return COLUMN_TITLE.format(calendar.getTime());
+        return SimpleDateFormat.getDateInstance().format(calendar.getTime());
     }
 
     @Override
@@ -267,16 +261,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
 
-        SimpleDateFormat timeFormat;
-
-        boolean is24h = DateFormat.is24HourFormat(getContext());
-        if (is24h) {
-            timeFormat = new SimpleDateFormat("HH:mm");
-        } else {
-            timeFormat = new SimpleDateFormat("hh a");
-        }
-
-        return timeFormat.format(calendar.getTime());
+        return SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(calendar.getTime());
     }
 
     @Override

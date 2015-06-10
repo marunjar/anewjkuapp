@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.analytics;
 
@@ -43,6 +44,7 @@ import com.google.android.gms.analytics.Tracker;
 import org.jsoup.HttpStatusException;
 import org.voidsink.anewjkuapp.BuildConfig;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.HashMap;
 
@@ -54,8 +56,6 @@ public class AnalyticsFlavor implements IAnalytics {
     public enum TrackerName {
         APP_TRACKER
     }
-
-    private static String PROPERTY_ID = "UA-51633871-1";
 
     private static final int GA_DIM_EXCEPTION_NAME = 1;
     private static final int GA_DIM_ADDITIONAL_DATA = 2;
@@ -78,7 +78,7 @@ public class AnalyticsFlavor implements IAnalytics {
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(mApp);
             switch (trackerId) {
                 case APP_TRACKER:
-                    Tracker t = analytics.newTracker(PROPERTY_ID);
+                    Tracker t = analytics.newTracker(Consts.PROPERTY_ID);
                     mTrackers.put(trackerId, t);
 
                     Thread.UncaughtExceptionHandler myHandler = new ExceptionReporter(t,

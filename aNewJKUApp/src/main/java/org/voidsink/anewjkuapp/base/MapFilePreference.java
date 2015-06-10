@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.base;
 
@@ -57,8 +58,8 @@ public class MapFilePreference extends ListPreference {
 
         CollectMapFiles(entries, entryValues);
 
-        setEntries(entries.toArray(new CharSequence[]{}));
-        setEntryValues(entryValues.toArray(new CharSequence[]{}));
+        setEntries(entries.toArray(new CharSequence[entries.size()]));
+        setEntryValues(entryValues.toArray(new CharSequence[entryValues.size()]));
 
         int index = Math
                 .max(findIndexOfValue(getSharedPreferences().getString(

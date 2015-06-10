@@ -72,7 +72,6 @@ public class ImportExamTask implements Callable<Void> {
 
     private boolean mShowProgress;
     private SyncNotification mUpdateNotification;
-    private NewExamNotification mNewExamNotification;
 
     public static final String[] EXAM_PROJECTION = new String[]{
             KusssContentContract.Exam.COL_ID,
@@ -136,7 +135,7 @@ public class ImportExamTask implements Callable<Void> {
                     R.string.notification_sync_exam);
             mUpdateNotification.show(mContext.getString(R.string.notification_sync_exam_loading));
         }
-        mNewExamNotification = new NewExamNotification(mContext);
+        NewExamNotification mNewExamNotification = new NewExamNotification(mContext);
 
 
         final DateFormat df = DateFormat.getDateInstance();

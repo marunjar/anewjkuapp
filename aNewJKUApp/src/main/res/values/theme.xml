@@ -80,7 +80,6 @@
     </style>
 
     <style name="ActionBarTabStyle.Apptheme" parent="@style/Widget.AppCompat.ActionBar.TabView">
-        <item name="android:background">@drawable/tab_indicator_ab_apptheme</item>
     </style>
 
     <style name="DropDownNav.Apptheme" parent="@style/Widget.AppCompat.Spinner.DropDown.ActionBar">

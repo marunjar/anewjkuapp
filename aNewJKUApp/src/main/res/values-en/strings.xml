@@ -2,7 +2,7 @@
 <resources>
     <string name="mensa_menu_today">Today</string>
     <string name="mensa_menu_tomorrow">Tomorrow</string>
-    <string name="about_app_summary">This is a new JKU, KUSSS, ÖH, ... App for the students of JKU Linz.\n\nThe developement is still in progress but the most needed functions are already implemented.\n\nIf you have any questions, problems or feature requests, write an email to the developer!\nIf you have an existing GitHub account you can also post here: https://github.com/marunjar/anewjkuapp/issues</string>
+    <string name="about_app_summary">This is a new JKU, KUSSS, ÖH, ... App for the students of JKU Linz.\n\nThe development is still in progress but the most needed functions are already implemented.\n\nIf you have any questions, problems or feature requests, write an email to the developer!\nIf you have an existing GitHub account you can also post here: https://github.com/marunjar/anewjkuapp/issues</string>
     <string name="about_credits_title">Credits</string>
     <string name="about_force_logout">Logout</string>
     <string name="about_libraries_title">Libraries</string>
@@ -35,10 +35,6 @@
     <string name="grade_type_recognized_exam">Recognized assessments</string>
     <string name="grade_type_unknown">TODO</string>
     <string name="grade_unknown">Not rated</string>
-    <string name="group_kusss">KUSSS</string>
-    <string name="group_oeh">ÖH</string>
-    <string name="group_other">Miscellaneous</string>
-    <string name="group_user">User</string>
     <string name="kusss_provider_name">KUSSS</string>
     <string name="kusss_service_title">KUSSS service</string>
     <string name="listview_footer_button">Touch to view events after %s</string>
@@ -51,8 +47,6 @@
     <string name="mensa_menu_not_available">Menu not available</string>
     <string name="mensa_title_unknown">Just another cafeteria</string>
     <string name="menu_exam_register">Show in KUSSS</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="notification_error">"JKU App" error</string>
     <string name="notification_error_account_is_null">Account not found</string>
     <string name="notification_error_account_not_available">Account not accessible</string>
@@ -200,4 +194,5 @@
     <string name="pref_cat_app_courses">Courses</string>
     <string name="pref_courses_show_with_assessment_only_summary">Show courses for last terms only if assessments exists.</string>
     <string name="pref_courses_show_with_assessment_only_title">Only courses with assessments</string>
+    <string name="content_descr_rss_feed_item_image">The first image of the news entry</string>
 </resources>

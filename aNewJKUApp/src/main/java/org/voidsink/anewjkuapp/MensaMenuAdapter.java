@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp;
 
@@ -46,12 +47,10 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
 
     private static final DateFormat df = SimpleDateFormat.getDateInstance();
 
-    private final Context mContext;
     protected boolean mUseDateHeader;
 
     public MensaMenuAdapter(Context context, boolean useDateHeader) {
         super();
-        this.mContext = context;
         this.mUseDateHeader = useDateHeader;
     }
 

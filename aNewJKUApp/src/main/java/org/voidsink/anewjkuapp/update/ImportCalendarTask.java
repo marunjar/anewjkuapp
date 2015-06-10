@@ -93,7 +93,6 @@ public class ImportCalendarTask implements Callable<Void> {
 
     private boolean mShowProgress;
     private SyncNotification mUpdateNotification;
-    private CalendarChangedNotification mNotification;
 
     public static final String[] EVENT_PROJECTION = new String[]{
             CalendarContractWrapper.Events._ID(), //
@@ -185,7 +184,7 @@ public class ImportCalendarTask implements Callable<Void> {
                             mContext.getString(R.string.notification_sync_calendar_loading),
                             CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
         }
-        mNotification = new CalendarChangedNotification(mContext,
+        CalendarChangedNotification mNotification = new CalendarChangedNotification(mContext,
                 CalendarUtils.getCalendarName(mContext, this.mCalendarName));
 
         if (!CalendarUtils.getSyncCalendar(mContext, this.mCalendarName)) {

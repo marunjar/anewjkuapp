@@ -1,19 +1,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="org.voidsink.anewjkuapp.fragment.MapFragment">
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="org.voidsink.anewjkuapp.fragment.MapFragment">
 
     <item
         android:id="@+id/action_search_poi"
-        app:actionViewClass="android.support.v7.widget.SearchView"
-        android:icon="@drawable/ic_menu_search"
+        android:icon="@drawable/ic_search_white_24dp"
         android:queryHint="@string/map_search_poi_hint"
         android:title="@string/map_search_poi_title"
-        app:showAsAction="ifRoom|collapseActionView" />
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView"/>
     <item
         android:id="@+id/action_snap_to_location"
         android:checkable="true"
         android:icon="@drawable/ic_menu_mylocation"
         android:title="@string/action_snap_to_location"
-        app:showAsAction="always" />
+        app:showAsAction="always"/>
 </menu>

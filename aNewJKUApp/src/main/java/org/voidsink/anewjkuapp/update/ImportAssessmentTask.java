@@ -67,7 +67,6 @@ public class ImportAssessmentTask implements Callable<Void> {
 
     private boolean mShowProgress;
     private SyncNotification mUpdateNotification;
-    private AssessmentChangedNotification mAssessmentChangeNotification;
 
     public static final String[] ASSESSMENT_PROJECTION = new String[]{
             KusssContentContract.Assessment.COL_ID,
@@ -128,7 +127,7 @@ public class ImportAssessmentTask implements Callable<Void> {
                     R.string.notification_sync_assessment);
             mUpdateNotification.show(mContext.getString(R.string.notification_sync_assessment_loading));
         }
-        mAssessmentChangeNotification = new AssessmentChangedNotification(mContext);
+        AssessmentChangedNotification mAssessmentChangeNotification = new AssessmentChangedNotification(mContext);
 
         updateNotify(mContext.getString(R.string.notification_sync_connect));
 

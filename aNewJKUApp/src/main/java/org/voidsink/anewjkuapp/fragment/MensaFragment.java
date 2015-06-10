@@ -39,6 +39,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class MensaFragment extends SlidingTabsFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -92,7 +93,7 @@ public class MensaFragment extends SlidingTabsFragment implements SharedPreferen
         } else if (cal.get(Calendar.DATE) - now.get(Calendar.DATE) == 1) {
             return getResources().getString(R.string.mensa_menu_tomorrow);
         }
-        return new SimpleDateFormat("EEEE").format(cal.getTime());
+        return new SimpleDateFormat("EEEE", Locale.getDefault()).format(cal.getTime());
     }
 
     @Override

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp;
 
@@ -73,7 +74,7 @@ public class LocationOverlay extends MyLocationOverlay {
             if (isSnapToLocationEnabled()) {
 
                 // get accent color from theme
-                TypedArray themeArray = mContext.getTheme().obtainStyledAttributes(new int[]{android.R.attr.colorAccent});
+                TypedArray themeArray = mContext.getTheme().obtainStyledAttributes(new int[]{R.attr.colorAccent});
                 int mColorAccent = themeArray.getColor(0, mContext.getResources().getColor(R.color.default_accent));
                 themeArray.recycle();
 

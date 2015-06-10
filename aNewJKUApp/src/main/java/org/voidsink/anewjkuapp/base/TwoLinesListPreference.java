@@ -24,6 +24,7 @@
 
 package org.voidsink.anewjkuapp.base;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -76,6 +77,7 @@ public class TwoLinesListPreference extends ListPreference {
                 public RadioButton radio;
             }
 
+            @SuppressLint("InflateParams")
             public View getView(int position, View convertView, ViewGroup parent) {
                 final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 

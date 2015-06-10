@@ -20,9 +20,6 @@
     <string name="title_settings">Einstellungen</string>
     <string name="title_about">About</string>
 
-    <string name="navigation_drawer_open">Navigation anzeigen</string>
-    <string name="navigation_drawer_close">Navigation ausblenden</string>
-
     <string name="action_refresh">Aktualisieren</string>
     <string name="action_changelog">Change Log</string>
     <string name="action_settings_summary">Einstellungen von KUSSS, Benachrichtigungen, ...</string>
@@ -127,11 +124,6 @@
     <string name="pref_cat_app_courses">LVAs</string>
     <string name="pref_courses_show_with_assessment_only_title">nur LVAs mit Noten anzeigen</string>
     <string name="pref_courses_show_with_assessment_only_summary">Für vergangene Semester werden nur LVAs angezeigt die bereits benotet wurden.</string>
-
-    <string name="group_user">User</string>
-    <string name="group_oeh">ÖH</string>
-    <string name="group_kusss">KUSSS</string>
-    <string name="group_other">Sonstiges</string>
 
     <string name="settings_kusss_title">KUSSS</string>
     <string name="settings_kusss_summary">Einstellungen für KUSSS</string>
@@ -254,4 +246,5 @@
     <string name="menu_exam_register">in KUSSS anzeigen</string>
     <string name="action_show_rss_entry_in_browser">in Browser anzeigen</string>
     <string name="title_curricula">Studienrichtungen</string>
+    <string name="content_descr_rss_feed_item_image">Das erste Bild das in dem News-Eintrag vorkommt.</string>
 </resources>
