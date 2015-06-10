@@ -70,7 +70,7 @@ public class AnalyticsFlavor implements IAnalytics {
 
     // private static final String GA_EVENT_CATEGORY_SERVICE = "service_action";
 
-    HashMap<TrackerName, Tracker> mTrackers = new HashMap<>();
+    private HashMap<TrackerName, Tracker> mTrackers = new HashMap<>();
 
     private synchronized Tracker getTracker(TrackerName trackerId) {
         if (!mTrackers.containsKey(trackerId)) {

@@ -343,7 +343,7 @@ public class AppUtils {
         Collections.sort(courses, CourseComparator);
     }
 
-    public static void sortLVAsWithGrade(List<LvaWithGrade> mCourses) {
+    private static void sortLVAsWithGrade(List<LvaWithGrade> mCourses) {
         Collections.sort(mCourses, LvaWithGradeComparator);
 
     }
@@ -352,7 +352,7 @@ public class AppUtils {
         Collections.sort(assessments, AssessmentComparator);
     }
 
-    public static void removeDuplicates(List<LvaWithGrade> mCourses) {
+    private static void removeDuplicates(List<LvaWithGrade> mCourses) {
         // remove done duplicates
         int i = 0;
         while (i < mCourses.size()) {

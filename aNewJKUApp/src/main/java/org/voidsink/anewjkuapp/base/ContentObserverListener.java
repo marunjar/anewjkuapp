@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,12 +20,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.base;
 
 public interface ContentObserverListener {
 
-    public void onContentChanged(boolean selfChange);
+    void onContentChanged(boolean selfChange);
 
 }

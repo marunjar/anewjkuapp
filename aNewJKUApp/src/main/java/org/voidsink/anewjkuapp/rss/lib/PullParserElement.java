@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.rss.lib;
 
@@ -30,11 +31,12 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 
 public interface PullParserElement {
-    public String getTag();
 
-    public void processEndElement(String mTag, XmlPullParser mXmlParser) throws IOException, XmlPullParserException;
+    String getTag();
 
-    public void processStartElement(String mTag, XmlPullParser mXmlParser) throws IOException, XmlPullParserException;
+    void processEndElement(String mTag, XmlPullParser mXmlParser) throws IOException, XmlPullParserException;
 
-    public void processText(String mTag, XmlPullParser mXmlParser) throws IOException, XmlPullParserException;
+    void processStartElement(String mTag, XmlPullParser mXmlParser) throws IOException, XmlPullParserException;
+
+    void processText(String mTag, XmlPullParser mXmlParser) throws IOException, XmlPullParserException;
 }

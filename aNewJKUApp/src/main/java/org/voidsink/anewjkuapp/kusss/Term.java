@@ -39,7 +39,7 @@ public class Term implements Comparable<Term> {
 
         private final String value;
 
-        private TermType(String value) {
+        TermType(String value) {
             this.value = value;
         }
 
@@ -60,8 +60,6 @@ public class Term implements Comparable<Term> {
             }
         }
     }
-
-    ;
 
     private final int year;
     private final TermType type;

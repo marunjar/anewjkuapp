@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.rss;
 
@@ -56,7 +57,7 @@ public class RssListAdapter extends RecyclerArrayAdapter<FeedEntry, RssListAdapt
     private OnItemClickListener mItemClickListener;
 
     public interface OnItemClickListener {
-        public void onItemClick(View view, int viewType, int position);
+        void onItemClick(View view, int viewType, int position);
     }
 
     public void SetOnItemClickListener(final OnItemClickListener mItemClickListener) {

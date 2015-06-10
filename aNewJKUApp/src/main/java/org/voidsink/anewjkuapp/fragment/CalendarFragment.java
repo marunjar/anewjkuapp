@@ -72,7 +72,7 @@ import java.util.List;
 public class CalendarFragment extends BaseFragment implements ContentObserverListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = CalendarFragment.class.getSimpleName();
-    long now = 0, then = 0;
+    private long now = 0, then = 0;
 
     private CalendarEventAdapter mAdapter;
     private BaseContentObserver mDataObserver;

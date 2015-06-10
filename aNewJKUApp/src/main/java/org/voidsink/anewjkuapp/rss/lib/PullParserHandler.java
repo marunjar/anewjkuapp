@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.rss.lib;
 
@@ -30,19 +31,19 @@ import java.util.List;
 
 public interface PullParserHandler {
 
-    public void processEndDocument(String tag, XmlPullParser mXmlParser);
+    void processEndDocument(String tag, XmlPullParser mXmlParser);
 
-    public void processStartDocument(String tag, XmlPullParser mXmlParser);
+    void processStartDocument(String tag, XmlPullParser mXmlParser);
 
-    public List<FeedEntry> getFeedEntries();
+    List<FeedEntry> getFeedEntries();
 
-    public FeedInfo getFeedInfo();
+    FeedInfo getFeedInfo();
 
-    public PullParserElement createElement(String mTag, XmlPullParser mXmlParser);
+    PullParserElement createElement(String mTag, XmlPullParser mXmlParser);
 
-    public void finishElement(String mTag, PullParserElement p);
+    void finishElement(String mTag, PullParserElement p);
 
-    public void start();
+    void start();
 
-    public void finish();
+    void finish();
 }

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.rss.lib;
 
@@ -30,9 +31,9 @@ import java.util.List;
 
 public interface FeedParser {
 
-    public List<FeedEntry> parse(String xml);
+    List<FeedEntry> parse(String xml);
 
-    public List<FeedEntry> parse(URL url);
+    List<FeedEntry> parse(URL url);
 
-    public List<FeedEntry> parse(InputStream is);
+    List<FeedEntry> parse(InputStream is);
 }

@@ -52,7 +52,7 @@ public class FeedEntryImpl implements FeedEntry {
     protected String guid = "";
     protected Uri enclosure;
     protected Uri comments;
-    protected List<String> categories = new ArrayList<>();
+    private List<String> categories = new ArrayList<>();
     protected Uri mImage;
 
     public FeedEntryImpl() {

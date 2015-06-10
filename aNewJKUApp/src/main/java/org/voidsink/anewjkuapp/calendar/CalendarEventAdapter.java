@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.calendar;
 
@@ -54,7 +55,7 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
     }
 
     public interface OnItemClickListener {
-        public void onItemClick(View view, int viewType, int position);
+        void onItemClick(View view, int viewType, int position);
     }
 
     protected static class EventItemHolder extends RecyclerView.ViewHolder {

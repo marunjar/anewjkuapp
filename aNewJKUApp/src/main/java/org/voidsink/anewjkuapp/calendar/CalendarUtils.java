@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.calendar;
 
@@ -48,7 +49,7 @@ import java.util.Map;
 
 public final class CalendarUtils {
 
-    public static final int COLOR_DEFAULT_EXAM = Consts.COLOR_DEFAULT_EXAM;
+    private static final int COLOR_DEFAULT_EXAM = Consts.COLOR_DEFAULT_EXAM;
     public static final int COLOR_DEFAULT_LVA = Consts.COLOR_DEFAULT_LVA;
     public static final String ARG_CALENDAR_EXAM = "ARG_EXAM_CALENDAR";
     public static final String ARG_CALENDAR_COURSE = "ARG_LVA_CALENDAR";
@@ -61,17 +62,17 @@ public final class CalendarUtils {
             CalendarContractWrapper.Calendars.ACCOUNT_TYPE(),
             CalendarContractWrapper.Calendars.CALENDAR_ACCESS_LEVEL()};
     public static final int COLUMN_CAL_ID = 0;
-    public static final int COLUMN_CAL_NAME = 1;
-    public static final int COLUMN_CAL_DISPLAY_NAME = 2;
+    private static final int COLUMN_CAL_NAME = 1;
+    private static final int COLUMN_CAL_DISPLAY_NAME = 2;
     public static final int COLUMN_CAL_ACCOUNT_NAME = 3;
     public static final int COLUMN_CAL_ACCOUNT_TYPE = 4;
-    public static final int COLUMN_CAL_ACCESS_LEVEL = 5;
+    private static final int COLUMN_CAL_ACCESS_LEVEL = 5;
     private static final String TAG = CalendarUtils.class.getSimpleName();
 
     private CalendarUtils() {
     }
 
-    public static Uri createCalendar(Context context, Account account,
+    private static Uri createCalendar(Context context, Account account,
                                      String name, int color) {
         try {
             String accountName = account.name;

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.base;
 
@@ -112,7 +113,7 @@ public class BaseFragment extends Fragment implements StackedFragment {
         }
     }
 
-    public void handlePendingIntent(Intent intent) {
+    protected void handlePendingIntent(Intent intent) {
     }
 
     @Override
