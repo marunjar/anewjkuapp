@@ -102,11 +102,9 @@ public class KusssHandler {
         CookieHandler.setDefault(mCookies);
     }
 
-    private static Object mutex = new Object();
-
     public static synchronized KusssHandler getInstance() {
         if (handler == null) {
-            synchronized (mutex) {
+            synchronized (KusssHandler.class) {
                 if (handler == null) handler = new KusssHandler();
             }
         }
