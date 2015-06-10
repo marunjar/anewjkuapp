@@ -96,8 +96,6 @@ public class Poi {
             // no way back
             newIsDefault = oldIsDefault;
         }
-        ContentValues cv = getContentValues(newIsDefault);
-
-        return cv;
+        return getContentValues(newIsDefault);
     }
 }

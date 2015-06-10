@@ -1,10 +1,11 @@
-/*******************************************************************************
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
+/**
+ * ****************************************************************************
+ * ____.____  __.____ ___     _____
+ * |    |    |/ _|    |   \   /  _  \ ______ ______
+ * |    |      < |    |   /  /  /_\  \\____ \\____ \
  * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
  * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
+ * \/                  \/|__|   |__|
  *
  * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
  *
@@ -20,12 +21,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ * ****************************************************************************
+ */
 
 package org.voidsink.anewjkuapp.rss;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -72,13 +75,22 @@ public class RssFeedFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mOptions = new DisplayImageOptions.Builder()
+        DisplayImageOptions.Builder builder = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
-                .displayer(new SimpleBitmapDisplayer())
-                .showImageOnLoading(getResources().getDrawable(R.mipmap.ic_launcher))
-                .showImageForEmptyUri(getResources().getDrawable(R.mipmap.ic_launcher))
-                .showImageOnFail(getResources().getDrawable(R.mipmap.ic_launcher))
-                .build();
+                .displayer(new SimpleBitmapDisplayer());
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder.showImageOnLoading(getResources().getDrawable(R.mipmap.ic_launcher, getContext().getTheme()))
+                    .showImageForEmptyUri(getResources().getDrawable(R.mipmap.ic_launcher, getContext().getTheme()))
+                    .showImageOnFail(getResources().getDrawable(R.mipmap.ic_launcher, getContext().getTheme()));
+        } else {
+            builder.showImageOnLoading(getResources().getDrawable(R.mipmap.ic_launcher))
+                    .showImageForEmptyUri(getResources().getDrawable(R.mipmap.ic_launcher))
+                    .showImageOnFail(getResources().getDrawable(R.mipmap.ic_launcher));
+
+        }
+
+        mOptions = builder.build();
     }
 
     @Override

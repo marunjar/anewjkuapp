@@ -13,7 +13,7 @@
     <item
         android:id="@+id/action_snap_to_location"
         android:checkable="true"
-        android:icon="@drawable/ic_menu_mylocation"
+        android:icon="@drawable/ic_place_white_24dp"
         android:title="@string/action_snap_to_location"
         app:showAsAction="always"/>
 </menu>

@@ -41,7 +41,6 @@ import java.util.List;
 import edu.emory.mathcs.backport.java.util.Collections;
 
 public class CalendarChangedNotification {
-    private static int NOTIFICATION_CALENDAR_CHANGED = R.string.notification_events_changed;
 
     private Context mContext;
 
@@ -74,6 +73,8 @@ public class CalendarChangedNotification {
         if (PreferenceWrapper.getNotifyCalendar(mContext)
                 && (mInserts.size() > 0 || mUpdates.size() > 0 || mDeletes
                 .size() > 0)) {
+            int NOTIFICATION_CALENDAR_CHANGED = R.string.notification_events_changed;
+
             PendingIntent pendingIntent = PendingIntent.getActivity(
                     mContext,
                     NOTIFICATION_CALENDAR_CHANGED,

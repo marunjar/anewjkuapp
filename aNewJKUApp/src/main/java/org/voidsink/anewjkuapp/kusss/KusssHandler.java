@@ -252,10 +252,7 @@ public class KusssHandler {
 
     public synchronized boolean isAvailable(Context c, String sessionId,
                                             String user, String password) {
-        if (!isLoggedIn(c, sessionId)) {
-            return login(c, user, password) != null;
-        }
-        return true;
+        return isLoggedIn(c, sessionId) || login(c, user, password) != null;
     }
 
     public Calendar getLVAIcal(Context c, CalendarBuilder mCalendarBuilder) {

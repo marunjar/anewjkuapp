@@ -41,7 +41,6 @@ import java.util.List;
 import edu.emory.mathcs.backport.java.util.Collections;
 
 public class AssessmentChangedNotification {
-    private static int NOTIFICATION_GRADES_CHANGED = R.string.notification_grades_changed;
 
     private Context mContext;
 
@@ -65,6 +64,8 @@ public class AssessmentChangedNotification {
     public void show() {
         if (PreferenceWrapper.getNotifyGrade(mContext)
                 && (mInserts.size() > 0 || mUpdates.size() > 0)) {
+            int NOTIFICATION_GRADES_CHANGED = R.string.notification_grades_changed;
+
             PendingIntent pendingIntent = PendingIntent
                     .getActivity(mContext, NOTIFICATION_GRADES_CHANGED, new Intent(mContext,
                             MainActivity.class).putExtra(MainActivity.ARG_SHOW_FRAGMENT_ID, R.id.nav_grades)

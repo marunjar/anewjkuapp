@@ -40,7 +40,6 @@ import java.util.List;
 import edu.emory.mathcs.backport.java.util.Collections;
 
 public class PoiNotification {
-    private static int NOTIFICATION_POI_CHANGED = R.string.notification_poi_changed;
 
     private Context mContext;
 
@@ -63,6 +62,8 @@ public class PoiNotification {
 
     public void show() {
         if (mInserts.size() > 0 || mUpdates.size() > 0) {
+            int NOTIFICATION_POI_CHANGED = R.string.notification_poi_changed;
+
             PendingIntent pendingIntent = PendingIntent
                     .getActivity(mContext, NOTIFICATION_POI_CHANGED, new Intent(mContext,
                             MainActivity.class).putExtra(MainActivity.ARG_SHOW_FRAGMENT_ID, R.id.nav_map)

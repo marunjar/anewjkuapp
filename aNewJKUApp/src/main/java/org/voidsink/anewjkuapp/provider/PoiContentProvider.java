@@ -197,10 +197,8 @@ public class PoiContentProvider extends ContentProvider {
                             PoiContentContract.Poi.COL_ROWID + " AS "
                                     + SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID};
                 }
-                Cursor c = builder.query(db, projection, selection, selectionArgs,
+                return builder.query(db, projection, selection, selectionArgs,
                         null, null, sortOrder, limit);
-
-                return c;
             default:
                 throw new IllegalArgumentException("URI " + uri
                         + " is not supported.");

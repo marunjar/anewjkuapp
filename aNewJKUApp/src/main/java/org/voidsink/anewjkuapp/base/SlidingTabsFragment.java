@@ -141,9 +141,8 @@ public abstract class SlidingTabsFragment extends BaseFragment {
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            Object o = super.instantiateItem(container, position);
+            return super.instantiateItem(container, position);
 //            Log.i(LOG_TAG, "instantiateItem() [position: " + position + "]");
-            return o;
         }
 
         @Override

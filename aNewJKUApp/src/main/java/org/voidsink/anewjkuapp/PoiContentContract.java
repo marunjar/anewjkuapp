@@ -39,7 +39,7 @@ public class PoiContentContract {
     public static Uri CONTENT_URI = Uri.parse(String.format("content://%1$s",
             AUTHORITY));
 
-    public static final String getFTS() {
+    public static String getFTS() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             return "fts4";
         } else {

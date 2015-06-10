@@ -45,7 +45,7 @@
                     android:title="@string/title_mensa" />
                 <item
                     android:id="@+id/nav_map"
-                    android:icon="@drawable/ic_menu_mylocation"
+                    android:icon="@drawable/ic_place_white_24dp"
                     android:title="@string/title_map" />
             </group>
         </menu>

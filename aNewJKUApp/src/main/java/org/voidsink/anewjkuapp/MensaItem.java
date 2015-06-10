@@ -30,13 +30,13 @@ import org.voidsink.anewjkuapp.mensa.IMenu;
 
 public interface MensaItem {
 
-    public static final int TYPE_MENU = 0;
-    public static final int TYPE_INFO = 1;
+    int TYPE_MENU = 0;
+    int TYPE_INFO = 1;
 
-    public int getType();
+    int getType();
 
-    public IMensa getMensa();
-    public IDay getDay();
-    public IMenu getMenu();
+    IMensa getMensa();
+    IDay getDay();
+    IMenu getMenu();
 
 }
