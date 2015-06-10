@@ -31,6 +31,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Environment;
 import android.preference.ListPreference;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -52,7 +53,7 @@ public class MapFilePreference extends ListPreference {
     }
 
     @Override
-    protected void onPrepareDialogBuilder(Builder builder) {
+    protected void onPrepareDialogBuilder(@NonNull Builder builder) {
         ArrayList<String> entries = new ArrayList<>();
         ArrayList<String> entryValues = new ArrayList<>();
 
@@ -109,11 +110,6 @@ public class MapFilePreference extends ListPreference {
     }
 
     @Override
-    protected void onBindDialogView(View v) {
-        super.onBindDialogView(v);
-    }
-
-    @Override
     protected void onDialogClosed(boolean positiveResult) {
         if (positiveResult) {
             setSummary(getSummary());
@@ -122,7 +118,7 @@ public class MapFilePreference extends ListPreference {
     }
 
     @Override
-    protected Object onGetDefaultValue(TypedArray a, int index) {
+    protected Object onGetDefaultValue(@NonNull TypedArray a, int index) {
         return (a.getString(index));
     }
 

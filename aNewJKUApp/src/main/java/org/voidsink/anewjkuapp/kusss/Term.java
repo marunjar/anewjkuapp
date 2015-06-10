@@ -24,6 +24,7 @@
 
 package org.voidsink.anewjkuapp.kusss;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.text.ParseException;

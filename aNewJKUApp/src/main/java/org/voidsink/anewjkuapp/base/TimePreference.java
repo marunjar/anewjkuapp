@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,13 +20,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.base;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.preference.DialogPreference;
+import android.support.annotation.NonNull;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.view.View;
@@ -64,7 +66,7 @@ public class TimePreference extends DialogPreference {
     }
 
     @Override
-    protected void onBindDialogView(View v) {
+    protected void onBindDialogView(@NonNull View v) {
         super.onBindDialogView(v);
         picker.setCurrentHour(calendar.get(Calendar.HOUR_OF_DAY));
         picker.setCurrentMinute(calendar.get(Calendar.MINUTE));

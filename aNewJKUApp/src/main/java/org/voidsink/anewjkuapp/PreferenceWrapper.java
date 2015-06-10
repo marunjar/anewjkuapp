@@ -213,7 +213,10 @@ public final class PreferenceWrapper {
                 .getDefaultSharedPreferences(mContext);
         File mapFile = null;
         try {
-            mapFile = new File(sp.getString(PREF_MAP_FILE, PREF_MAP_FILE_DEFAULT));
+            String file = sp.getString(PREF_MAP_FILE, PREF_MAP_FILE_DEFAULT);
+            if (file != null) {
+                mapFile = new File(file);
+            }
         } catch (Exception e) {
             Log.e(TAG, "Failure", e);
             mapFile = null;

@@ -107,7 +107,7 @@ public class KusssHandler {
     public static synchronized KusssHandler getInstance() {
         if (handler == null) {
             synchronized (mutex) {
-                if (handler==null) handler= new KusssHandler();
+                if (handler == null) handler = new KusssHandler();
             }
         }
         return handler;
@@ -262,7 +262,7 @@ public class KusssHandler {
 
     public Calendar getLVAIcal(Context c, CalendarBuilder mCalendarBuilder) {
 
-        Calendar iCal = null;
+        Calendar iCal;
 
         try {
 
@@ -291,7 +291,7 @@ public class KusssHandler {
     }
 
     public Calendar getExamIcal(Context c, CalendarBuilder mCalendarBuilder) {
-        Calendar iCal = null;
+        Calendar iCal;
 
         try {
             URL url = new URL(URL_GET_ICAL);
@@ -341,7 +341,7 @@ public class KusssHandler {
     }
 
     public boolean selectTerm(Context c, Term term) throws IOException {
-        Document doc = Jsoup.connect(URL_SELECT_TERM)
+        Jsoup.connect(URL_SELECT_TERM)
                 .cookies(getCookieMap())
                 .data("term", term.toString())
                 .data("previousQueryString", "")
@@ -359,7 +359,7 @@ public class KusssHandler {
             return null;
         }
 
-        List<Course> courses = new ArrayList<>();
+        ArrayList<Course> courses = new ArrayList<>();
         try {
             Log.d(TAG, "getCourses");
 
@@ -388,7 +388,7 @@ public class KusssHandler {
                     throw new IOException(String.format("cannot select term: %s", term));
                 }
             }
-            if (courses != null && courses.size() == 0) {
+            if (courses.size() == 0) {
                 // break if no lvas found, a student without courses is a quite impossible case
                 return null;
             }

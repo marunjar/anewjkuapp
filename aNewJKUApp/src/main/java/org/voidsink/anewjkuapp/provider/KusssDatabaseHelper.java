@@ -140,9 +140,11 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS "
                     + KusssContentContract.Course.TABLE_NAME);
         }
+        /*
         if (oldVersion < 10) {
             // try to import curricula
         }
+        */
         if (oldVersion < 11) {
             db.execSQL("DROP TABLE IF EXISTS "
                     + KusssContentContract.Exam.TABLE_NAME);

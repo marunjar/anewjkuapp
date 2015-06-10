@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.base;
 
@@ -29,6 +30,7 @@ import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.preference.ListPreference;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,7 +53,7 @@ public class TwoLinesListPreference extends ListPreference {
     }
 
     @Override
-    protected void onPrepareDialogBuilder(Builder builder) {
+    protected void onPrepareDialogBuilder(@NonNull Builder builder) {
         super.onPrepareDialogBuilder(builder);
 
         if (mEntriesSubtitles == null) {

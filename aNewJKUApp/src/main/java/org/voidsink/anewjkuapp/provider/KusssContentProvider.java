@@ -58,8 +58,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import edu.emory.mathcs.backport.java.util.concurrent.Executor;
-
 public class KusssContentProvider extends ContentProvider {
 
     private static final int CODE_COURSE = 1;
@@ -106,8 +104,8 @@ public class KusssContentProvider extends ContentProvider {
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        String whereIdClause = "";
-        int rowsDeleted = -1;
+        String whereIdClause;
+        int rowsDeleted;
         switch (sUriMatcher.match(uri)) {
             case CODE_COURSE:
                 rowsDeleted = db.delete(KusssContentContract.Course.TABLE_NAME,
@@ -309,7 +307,6 @@ public class KusssContentProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        String whereIdClause = "";
 
         switch (sUriMatcher.match(uri)) {
             case CODE_COURSE: {
@@ -329,7 +326,7 @@ public class KusssContentProvider extends ContentProvider {
                         values, selection, selectionArgs);
             }
             case CODE_COURSE_ID: {
-                whereIdClause = KusssContentContract.Course.COL_ID + "="
+                String whereIdClause = KusssContentContract.Course.COL_ID + "="
                         + uri.getLastPathSegment();
                 if (!TextUtils.isEmpty(selection))
                     whereIdClause += " AND " + selection;
@@ -337,7 +334,7 @@ public class KusssContentProvider extends ContentProvider {
                         whereIdClause, selectionArgs);
             }
             case CODE_EXAM_ID: {
-                whereIdClause = KusssContentContract.Exam.COL_ID + "="
+                String whereIdClause = KusssContentContract.Exam.COL_ID + "="
                         + uri.getLastPathSegment();
                 if (!TextUtils.isEmpty(selection))
                     whereIdClause += " AND " + selection;
@@ -345,7 +342,7 @@ public class KusssContentProvider extends ContentProvider {
                         whereIdClause, selectionArgs);
             }
             case CODE_GRADE_ID: {
-                whereIdClause = KusssContentContract.Assessment.COL_ID + "="
+                String whereIdClause = KusssContentContract.Assessment.COL_ID + "="
                         + uri.getLastPathSegment();
                 if (!TextUtils.isEmpty(selection))
                     whereIdClause += " AND " + selection;
@@ -353,7 +350,7 @@ public class KusssContentProvider extends ContentProvider {
                         values, whereIdClause, selectionArgs);
             }
             case CODE_CURRICULA_ID: {
-                whereIdClause = KusssContentContract.Curricula.COL_ID + "="
+                String whereIdClause = KusssContentContract.Curricula.COL_ID + "="
                         + uri.getLastPathSegment();
                 if (!TextUtils.isEmpty(selection))
                     whereIdClause += " AND " + selection;
@@ -553,9 +550,11 @@ public class KusssContentProvider extends ContentProvider {
             }
         }
 
+        /*
         if (terms.size() == 0) {
             // get Terms from Data, may take a little bit longer
         }
+        */
 
         Collections.sort(terms, TermComparator);
 

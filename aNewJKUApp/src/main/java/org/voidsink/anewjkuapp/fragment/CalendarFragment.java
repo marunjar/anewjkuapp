@@ -127,7 +127,7 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
             @Override
             public void onItemClick(View view, int viewType, int position) {
                 CalendarListItem item = mAdapter.getItem(position);
-                if (item instanceof CalendarListEvent) {
+                if (item != null) {
                     ((CalendarListEvent) item).showOnMap(getContext());
                 }
             }
@@ -200,10 +200,6 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
     @Override
     public void onStart() {
         super.onStart();
-
-        Account account = AppUtils.getAccount(getContext());
-        String lvaCalId = CalendarUtils.getCalIDByName(getContext(), account, CalendarUtils.ARG_CALENDAR_COURSE, true);
-        String examCalId = CalendarUtils.getCalIDByName(getContext(), account, CalendarUtils.ARG_CALENDAR_EXAM, true);
 
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(CalendarContractWrapper.AUTHORITY(), CalendarContractWrapper.Events.CONTENT_URI().buildUpon().appendPath("#").build().toString(), 0);

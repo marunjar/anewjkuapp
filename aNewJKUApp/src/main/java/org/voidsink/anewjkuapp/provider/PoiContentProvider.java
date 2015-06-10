@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.provider;
 
@@ -77,15 +78,14 @@ public class PoiContentProvider extends ContentProvider {
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        String whereIdClause = "";
-        int rowsDeleted = -1;
+        int rowsDeleted;
         switch (sUriMatcher.match(uri)) {
             case CODE_POI:
                 rowsDeleted = db.delete(PoiContentContract.Poi.TABLE_NAME,
                         selection, selectionArgs);
                 break;
             case CODE_POI_ID:
-                whereIdClause = PoiContentContract.Poi.COL_ROWID + "="
+                String whereIdClause = PoiContentContract.Poi.COL_ROWID + "="
                         + uri.getLastPathSegment();
                 if (!TextUtils.isEmpty(selection))
                     whereIdClause += " AND " + selection;
@@ -211,7 +211,6 @@ public class PoiContentProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        String whereIdClause = "";
 
         switch (sUriMatcher.match(uri)) {
             case CODE_POI: {
@@ -219,7 +218,7 @@ public class PoiContentProvider extends ContentProvider {
                         selection, selectionArgs);
             }
             case CODE_POI_ID: {
-                whereIdClause = PoiContentContract.Poi.COL_ROWID + "="
+                String whereIdClause = PoiContentContract.Poi.COL_ROWID + "="
                         + uri.getLastPathSegment();
                 if (!TextUtils.isEmpty(selection))
                     whereIdClause += " AND " + selection;
