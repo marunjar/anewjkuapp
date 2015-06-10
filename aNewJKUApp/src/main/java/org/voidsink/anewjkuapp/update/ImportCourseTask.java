@@ -156,7 +156,7 @@ public class ImportCourseTask implements Callable<Void> {
 
                     updateNotify(mContext.getString(R.string.notification_sync_lva_updating));
 
-                    ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
+                    ArrayList<ContentProviderOperation> batch = new ArrayList<>();
 
                     Uri lvaUri = KusssContentContract.Course.CONTENT_URI;
                     Cursor c = mProvider.query(lvaUri, COURSE_PROJECTION,

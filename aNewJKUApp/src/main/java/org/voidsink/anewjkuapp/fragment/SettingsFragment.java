@@ -77,11 +77,7 @@ public class SettingsFragment extends PreferenceFragment {
                                     .commit();
                             return true;
                         }
-                    } catch (ClassNotFoundException e) {
-                        Analytics.sendException(getActivity(), e, false);
-                    } catch (java.lang.InstantiationException e) {
-                        Analytics.sendException(getActivity(), e, false);
-                    } catch (IllegalAccessException e) {
+                    } catch (Exception e) {
                         Analytics.sendException(getActivity(), e, false);
                     }
                 }

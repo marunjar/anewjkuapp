@@ -141,7 +141,7 @@ public class ImportPoiTask implements Callable<Void> {
             if (!poiMap.isEmpty()) {
                 Log.i(TAG, String.format("got %s pois", poiMap.size()));
 
-                ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
+                ArrayList<ContentProviderOperation> batch = new ArrayList<>();
 
                 Uri poiUri = PoiContentContract.Poi.CONTENT_URI;
                 Cursor c = mProvider.query(poiUri, POI_PROJECTION, null, null,

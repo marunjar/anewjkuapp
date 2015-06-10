@@ -214,10 +214,11 @@ public class RssHandler implements PullParserHandler {
             for (int n = 0; n < TIMEZONES.length; n++) {
                 text = text.replace(TIMEZONES[n], TIMEZONES_REPLACE[n]);
             }
-            for (int n = 0; n < PUBDATE_FORMATS.length; n++) {
+            for (SimpleDateFormat PUBDATE_FORMAT : PUBDATE_FORMATS) {
                 try {
-                    return PUBDATE_FORMATS[n].parse(text);
+                    return PUBDATE_FORMAT.parse(text);
                 } catch (ParseException e) {
+                    e.printStackTrace();
                 }
             }
             return null;

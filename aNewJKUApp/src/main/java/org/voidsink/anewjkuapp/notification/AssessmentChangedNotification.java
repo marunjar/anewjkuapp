@@ -50,8 +50,8 @@ public class AssessmentChangedNotification {
 
     public AssessmentChangedNotification(Context mContext) {
         this.mContext = mContext;
-        this.mInserts = new ArrayList<String>();
-        this.mUpdates = new ArrayList<String>();
+        this.mInserts = new ArrayList<>();
+        this.mUpdates = new ArrayList<>();
     }
 
     public void addInsert(String text) {

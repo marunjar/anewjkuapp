@@ -156,7 +156,7 @@ public class ImportAssessmentTask implements Callable<Void> {
 
                     updateNotify(mContext.getString(R.string.notification_sync_assessment_updating));
 
-                    ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
+                    ArrayList<ContentProviderOperation> batch = new ArrayList<>();
 
                     Uri examUri = KusssContentContract.Assessment.CONTENT_URI;
                     Cursor c = mProvider.query(examUri, ASSESSMENT_PROJECTION, null,

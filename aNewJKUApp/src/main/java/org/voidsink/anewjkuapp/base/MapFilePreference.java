@@ -53,8 +53,8 @@ public class MapFilePreference extends ListPreference {
 
     @Override
     protected void onPrepareDialogBuilder(Builder builder) {
-        List<String> entries = new ArrayList<String>();
-        List<String> entryValues = new ArrayList<String>();
+        ArrayList<String> entries = new ArrayList<>();
+        ArrayList<String> entryValues = new ArrayList<>();
 
         CollectMapFiles(entries, entryValues);
 

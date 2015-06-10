@@ -53,9 +53,9 @@ public class CalendarChangedNotification {
     public CalendarChangedNotification(Context mContext, String name) {
         this.mName = name;
         this.mContext = mContext;
-        this.mInserts = new ArrayList<String>();
-        this.mUpdates = new ArrayList<String>();
-        this.mDeletes = new ArrayList<String>();
+        this.mInserts = new ArrayList<>();
+        this.mUpdates = new ArrayList<>();
+        this.mDeletes = new ArrayList<>();
     }
 
     public void addInsert(String text) {

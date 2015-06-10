@@ -73,7 +73,7 @@ public final class CalendarUtils {
     }
 
     private static Uri createCalendar(Context context, Account account,
-                                     String name, int color) {
+                                      String name, int color) {
         try {
             String accountName = account.name;
             String accountType = account.type;
@@ -183,7 +183,7 @@ public final class CalendarUtils {
     private static Map<String, String> getCalIDs(Context context,
                                                  Account account) {
         // get map with calendar ids and names for specific account
-        Map<String, String> ids = new HashMap<String, String>();
+        HashMap<String, String> ids = new HashMap<>();
 
         // nothing to do if there's no account
         if (context == null || account == null) {
