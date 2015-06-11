@@ -88,13 +88,12 @@ dependencies {
     compile 'com.github.alamkanak:android-week-view:1.2.3'
 
     compile 'de.cketti.library.changelog:ckchangelog:1.2.2'
-    compile('com.mikepenz:aboutlibraries:5.0.1@aar') {
+    compile('com.mikepenz:aboutlibraries:5.0.2@aar') {
         transitive = true
     }
 
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.0'
 
-    compile project(':voidsinkContributors')
     compile project(':android-support-v4-preferencefragment')
     compile project(':sectionedRecyclerAdapter')
     //compile project(':kussslibrary')

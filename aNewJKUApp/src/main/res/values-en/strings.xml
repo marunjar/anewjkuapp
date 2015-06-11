@@ -3,7 +3,6 @@
     <string name="mensa_menu_today">Today</string>
     <string name="mensa_menu_tomorrow">Tomorrow</string>
     <string name="about_app_summary">This is a new JKU, KUSSS, ÖH, ... App for the students of JKU Linz.\n\nThe development is still in progress but the most needed functions are already implemented.\n\nIf you have any questions, problems or feature requests, write an email to the developer!\nIf you have an existing GitHub account you can also post here: https://github.com/marunjar/anewjkuapp/issues</string>
-    <string name="about_credits_title">Credits</string>
     <string name="about_force_logout">Logout</string>
     <string name="about_libraries_title">Libraries</string>
     <string name="action_changelog">Change Log</string>

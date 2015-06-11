@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.fragment;
 
@@ -35,7 +36,6 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.anewjkuapp.utils.UIUtils;
-import org.voidsink.library.contributors.Contributors;
 
 import de.cketti.library.changelog.ChangeLog;
 
@@ -45,16 +45,6 @@ public class AboutFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_about, container, false);
-
-        (view.findViewById(R.id.about_credits))
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Contributors contributors = new Contributors(
-                                getContext());
-                        contributors.getDialog(R.xml.credits).show();
-                    }
-                });
 
         (view.findViewById(R.id.about_libraries))
                 .setOnClickListener(new View.OnClickListener() {
