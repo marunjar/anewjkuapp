@@ -25,21 +25,33 @@
 
 package org.voidsink.anewjkuapp.fragment;
 
+import android.content.Context;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
+import com.mikepenz.aboutlibraries.util.Colors;
 
+import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.utils.Consts;
-import org.voidsink.anewjkuapp.utils.UIUtils;
 
 import de.cketti.library.changelog.ChangeLog;
 
 public class AboutFragment extends BaseFragment {
+
+    private Libs.ActivityStyle getActivityStyle(Context context) {
+        if (PreferenceWrapper.getUseLightDesign(context)) {
+            return Libs.ActivityStyle.LIGHT_DARK_TOOLBAR;
+        } else {
+            return Libs.ActivityStyle.DARK;
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,7 +69,9 @@ public class AboutFragment extends BaseFragment {
                                 .withAutoDetect(true)
                                 .withVersionShown(false)
                                 .withLicenseShown(true)
-                                .withActivityTheme(UIUtils.getAppThemeResId(getActivity())) // must be AppCompat theme
+                                .withActivityStyle(getActivityStyle(getActivity()))
+                                .withActivityColor(getActivityColor(getActivity()))
+                                .withActivityTitle(getActivity().getString(R.string.title_about))
                                 .withAboutAppName(getString(R.string.app_name))
                                 .withAboutIconShown(true)
                                 .withAboutVersionShown(true)
@@ -83,8 +97,23 @@ public class AboutFragment extends BaseFragment {
         return view;
     }
 
+    private Colors getActivityColor(Context context) {
+
+        TypedArray themeArray = context.getTheme().obtainStyledAttributes(new int[]{R.attr.colorPrimary, R.attr.colorPrimaryDark});
+        int colorPrimary = themeArray.getColor(0, context.getResources().getColor(R.color.default_primary));
+        int colorPrimaryDark = themeArray.getColor(1, context.getResources().getColor(R.color.default_primaryDark));
+        themeArray.recycle();
+
+        return new Colors(colorPrimary, colorPrimaryDark);
+    }
+
     @Override
     protected String getScreenName() {
         return Consts.SCREEN_ABOUT;
+    }
+
+    @Override
+    public CharSequence getTitle(Context context) {
+        return context.getString(R.string.title_about);
     }
 }
