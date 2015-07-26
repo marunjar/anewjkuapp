@@ -67,14 +67,14 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:22.2.0'
-    compile 'com.android.support:appcompat-v7:22.2.0'
-    compile 'com.android.support:gridlayout-v7:22.2.0'
-    compile 'com.android.support:cardview-v7:22.2.0'
-    compile 'com.android.support:recyclerview-v7:22.2.0'
+    compile 'com.android.support:support-v4:22.2.1'
+    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:gridlayout-v7:22.2.1'
+    compile 'com.android.support:cardview-v7:22.2.1'
+    compile 'com.android.support:recyclerview-v7:22.2.1'
     googleCompile 'com.google.android.gms:play-services-analytics:7.5.0'
     compile 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
-    compile 'com.android.support:design:22.2.0'
+    compile 'com.android.support:design:22.2.1'
 
     compile 'org.mapsforge:mapsforge-core:0.5.1'
     compile 'org.mapsforge:mapsforge-map:0.5.1'
@@ -88,7 +88,7 @@ dependencies {
     compile 'com.github.alamkanak:android-week-view:1.2.3'
 
     compile 'de.cketti.library.changelog:ckchangelog:1.2.2'
-    compile('com.mikepenz:aboutlibraries:5.0.6@aar') {
+    compile('com.mikepenz:aboutlibraries:5.0.9@aar') {
         transitive = true
     }
 

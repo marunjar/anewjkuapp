@@ -109,13 +109,12 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="jsoup-1.8.2" level="project" />
     <orderEntry type="library" exported="" name="backport-util-concurrent-3.1" level="project" />
-    <orderEntry type="library" exported="" name="recyclerview-v7-22.2.0" level="project" />
     <orderEntry type="library" exported="" name="mapsforge-map-0.5.1" level="project" />
-    <orderEntry type="library" exported="" name="support-annotations-22.2.0" level="project" />
+    <orderEntry type="library" exported="" name="recyclerview-v7-22.2.1" level="project" />
+    <orderEntry type="library" exported="" name="support-annotations-22.2.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-analytics-7.5.0" level="project" />
     <orderEntry type="library" exported="" name="ical4j-1.0.6" level="project" />
-    <orderEntry type="library" exported="" name="appcompat-v7-22.2.0" level="project" />
-    <orderEntry type="library" exported="" name="aboutlibraries-5.0.6" level="project" />
+    <orderEntry type="library" exported="" name="appcompat-v7-22.2.1" level="project" />
     <orderEntry type="library" exported="" name="ckchangelog-1.2.2" level="project" />
     <orderEntry type="library" exported="" name="mapsforge-map-android-0.5.1" level="project" />
     <orderEntry type="library" exported="" name="mapsforge-core-0.5.1" level="project" />
@@ -124,16 +123,17 @@
     <orderEntry type="library" exported="" name="androidsvg-1.2.2-beta-1" level="project" />
     <orderEntry type="library" exported="" name="dashclock-api-2.0.0" level="project" />
     <orderEntry type="library" exported="" name="commons-lang-2.6" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-22.2.1" level="project" />
     <orderEntry type="library" exported="" name="android-week-view-1.2.3" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-22.2.0" level="project" />
     <orderEntry type="library" exported="" name="universal-image-loader-1.9.4" level="project" />
+    <orderEntry type="library" exported="" name="aboutlibraries-5.0.9" level="project" />
     <orderEntry type="library" exported="" name="kxml2-2.3.0" level="project" />
-    <orderEntry type="library" exported="" name="gridlayout-v7-22.2.0" level="project" />
+    <orderEntry type="library" exported="" name="gridlayout-v7-22.2.1" level="project" />
     <orderEntry type="library" exported="" name="calligraphy-2.1.0" level="project" />
     <orderEntry type="library" exported="" name="MPAndroidChart-v2.1.0" level="project" />
     <orderEntry type="library" exported="" name="mapsforge-map-reader-0.5.1" level="project" />
-    <orderEntry type="library" exported="" name="design-22.2.0" level="project" />
-    <orderEntry type="library" exported="" name="cardview-v7-22.2.0" level="project" />
+    <orderEntry type="library" exported="" name="design-22.2.1" level="project" />
+    <orderEntry type="library" exported="" name="cardview-v7-22.2.1" level="project" />
     <orderEntry type="module" module-name="sectionedRecyclerAdapter" exported="" />
     <orderEntry type="module" module-name="android-support-v4-preferencefragment" exported="" />
   </component>
