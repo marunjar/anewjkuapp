@@ -277,6 +277,13 @@ public class KusssHandler {
 
             conn.disconnect();
         } catch (Exception e) {
+            mCalendarBuilder.toString()
+            try {
+                String data = mCalendarBuilder.calendar.toString();
+            } catch (Exception e2) {
+
+            }
+
             Log.e(TAG, "getLVAIcal", e);
             Analytics.sendException(c, e, true);
             iCal = null;
