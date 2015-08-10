@@ -1,2 +1,2 @@
-include ':android-support-v4-preferencefragment', ':kussslibrary', ':sectionedRecyclerAdapter'
+include ':android-support-v4-preferencefragment', ':sectionedRecyclerAdapter'
 include ':aNewJKUApp'
