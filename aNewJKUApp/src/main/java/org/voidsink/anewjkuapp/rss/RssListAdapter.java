@@ -90,7 +90,7 @@ public class RssListAdapter extends RecyclerArrayAdapter<FeedEntry, RssListAdapt
             @Override
             public void onClick(View v) {
                 if (mItemClickListener != null) {
-                    mItemClickListener.onItemClick(v, vh.getItemViewType(), vh.getPosition());
+                    mItemClickListener.onItemClick(v, vh.getItemViewType(), vh.getAdapterPosition());
                 }
             }
         });

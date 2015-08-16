@@ -88,7 +88,7 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
             mText = (TextView) itemView.findViewById(R.id.list_header_text);
         }
     }
-
+    
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
     }
@@ -102,7 +102,7 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
             @Override
             public void onClick(View v) {
                 if (mItemClickListener != null) {
-                    mItemClickListener.onItemClick(v, vh.getItemViewType(), vh.getPosition());
+                    mItemClickListener.onItemClick(v, vh.getItemViewType(), vh.getAdapterPosition());
                 }
             }
         });

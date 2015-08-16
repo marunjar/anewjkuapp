@@ -126,9 +126,11 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
 
             @Override
             public void onItemClick(View view, int viewType, int position) {
-                CalendarListItem item = mAdapter.getItem(position);
-                if (item != null) {
-                    ((CalendarListEvent) item).showOnMap(getContext());
+                if (position != RecyclerView.NO_POSITION) {
+                    CalendarListItem item = mAdapter.getItem(position);
+                    if (item != null) {
+                        ((CalendarListEvent) item).showOnMap(getContext());
+                    }
                 }
             }
         });
