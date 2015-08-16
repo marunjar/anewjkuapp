@@ -1,11 +1,10 @@
-/**
- * ****************************************************************************
- * ____.____  __.____ ___     _____
- * |    |    |/ _|    |   \   /  _  \ ______ ______
- * |    |      < |    |   /  /  /_\  \\____ \\____ \
+/*
+ *      ____.____  __.____ ___     _____
+ *     |    |    |/ _|    |   \   /  _  \ ______ ______
+ *     |    |      < |    |   /  /  /_\  \\____ \\____ \
  * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
  * \________|____|__ \______/   \____|__  /   __/|   __/
- * \/                  \/|__|   |__|
+ *                  \/                  \/|__|   |__|
  *
  * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
  *
@@ -21,14 +20,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- * ****************************************************************************
+ *
  */
 
 package org.voidsink.anewjkuapp.rss;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -40,9 +38,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
@@ -58,7 +53,6 @@ public class RssFeedFragment extends BaseFragment {
 
     private URL mUrl = null;
     private RssListAdapter mAdapter;
-    private DisplayImageOptions mOptions;
 
     @Override
     public void setArguments(Bundle args) {
@@ -72,28 +66,6 @@ public class RssFeedFragment extends BaseFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        DisplayImageOptions.Builder builder = new DisplayImageOptions.Builder()
-                .cacheInMemory(true)
-                .displayer(new SimpleBitmapDisplayer());
-
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder.showImageOnLoading(getResources().getDrawable(R.mipmap.ic_launcher, getContext().getTheme()))
-                    .showImageForEmptyUri(getResources().getDrawable(R.mipmap.ic_launcher, getContext().getTheme()))
-                    .showImageOnFail(getResources().getDrawable(R.mipmap.ic_launcher, getContext().getTheme()));
-        } else {
-            builder.showImageOnLoading(getResources().getDrawable(R.mipmap.ic_launcher))
-                    .showImageForEmptyUri(getResources().getDrawable(R.mipmap.ic_launcher))
-                    .showImageOnFail(getResources().getDrawable(R.mipmap.ic_launcher));
-
-        }
-
-        mOptions = builder.build();
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
@@ -101,7 +73,7 @@ public class RssFeedFragment extends BaseFragment {
 
         mRecyclerView.setHasFixedSize(true); // performance
 
-        mAdapter = new RssListAdapter(getContext(), null, mOptions);
+        mAdapter = new RssListAdapter(getContext(), null);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
 
@@ -140,16 +112,6 @@ public class RssFeedFragment extends BaseFragment {
     private class LoadFeedTask extends AsyncTask<Void, Void, Void> {
 
         private List<FeedEntry> mFeed = null;
-        private ProgressDialog mProgressDialog;
-
-        @Override
-        protected void onPreExecute() {
-            mProgressDialog = ProgressDialog.show(getContext(),
-                    getContext().getString(R.string.progress_title),
-                    getContext().getString(R.string.progress_load_feed), true);
-
-            super.onPreExecute();
-        }
 
         @Override
         protected Void doInBackground(Void... voids) {
@@ -165,11 +127,9 @@ public class RssFeedFragment extends BaseFragment {
             if (mFeed != null) {
                 mAdapter.addAll(mFeed);
             } else {
-                Toast.makeText(getContext(), "TODO: Error loading feed.", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "TODO: Error loading feed.", Toast.LENGTH_SHORT).show();
             }
             mAdapter.notifyDataSetChanged();
-
-            mProgressDialog.dismiss();
 
             super.onPostExecute(aVoid);
         }

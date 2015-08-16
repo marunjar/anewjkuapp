@@ -36,8 +36,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.bumptech.glide.Glide;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.RssFeedEntryActivity;
@@ -52,7 +51,6 @@ public class RssListAdapter extends RecyclerArrayAdapter<FeedEntry, RssListAdapt
     private static final String TAG = RssListAdapter.class.getSimpleName();
     private static final String EMPTY_IMAGE_URL = "http://oeh.jku.at/sites/default/files/styles/generic_thumbnail_medium/public/default_images/defaultimage-article_0.png";
 
-    private final DisplayImageOptions mOptions;
     private final Context mContext;
     private OnItemClickListener mItemClickListener;
 
@@ -64,10 +62,9 @@ public class RssListAdapter extends RecyclerArrayAdapter<FeedEntry, RssListAdapt
         this.mItemClickListener = mItemClickListener;
     }
 
-    public RssListAdapter(Context context, List<FeedEntry> dataset, DisplayImageOptions options) {
+    public RssListAdapter(Context context, List<FeedEntry> dataset) {
         super();
 
-        this.mOptions = options;
         this.mContext = context;
 
         SetOnItemClickListener(new OnItemClickListener() {
@@ -106,17 +103,21 @@ public class RssListAdapter extends RecyclerArrayAdapter<FeedEntry, RssListAdapt
         holder.mTitle.setText(item.getTitle());
         holder.mDescription.setText(item.getShortDescription());
 
-        ImageLoader imageLoader = ImageLoader.getInstance();
-
         Uri mImage = item.getImage();
         try {
             //ignore some icons of share buttons and linked documents
             if (mImage != null &&
                     !mImage.getPath().contains("contrib/service_links/images/") &&
                     !mImage.getPath().contains("file/icons/")) {
-                imageLoader.displayImage(mImage.toString(), holder.mImage, mOptions);
+                Glide.with(holder.mImage.getContext())
+                        .load(mImage)
+                        .fitCenter()
+                        .into(holder.mImage);
             } else {
-                imageLoader.displayImage(EMPTY_IMAGE_URL, holder.mImage, mOptions);
+                Glide.with(holder.mImage.getContext())
+                        .load(EMPTY_IMAGE_URL)
+                        .fitCenter()
+                        .into(holder.mImage);
             }
         } catch (Exception e) {
             Log.e(TAG, "displayImage failed", e);
