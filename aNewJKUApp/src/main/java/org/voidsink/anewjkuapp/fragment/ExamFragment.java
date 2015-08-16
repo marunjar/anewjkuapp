@@ -140,6 +140,8 @@ public class ExamFragment extends BaseFragment implements ContentObserverListene
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        showProgressIndeterminate();
+
         return new CursorLoader(getContext(), KusssContentContract.Exam.CONTENT_URI,
                 ImportExamTask.EXAM_PROJECTION, null, null,
                 KusssContentContract.Exam.COL_DTSTART + " ASC");
@@ -168,12 +170,16 @@ public class ExamFragment extends BaseFragment implements ContentObserverListene
             }
         }
         mAdapter.notifyDataSetChanged();
+
+        finishProgress();
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.clear();
         mAdapter.notifyDataSetChanged();
+
+        finishProgress();
     }
 
     @Override

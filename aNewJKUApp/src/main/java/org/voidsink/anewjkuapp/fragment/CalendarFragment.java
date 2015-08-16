@@ -230,6 +230,8 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        showProgressIndeterminate();
+
         Account mAccount = AppUtils.getAccount(getContext());
 
         String calIDLva = CalendarUtils.getCalIDByName(getContext(),
@@ -307,12 +309,16 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
         }
 
         mAdapter.notifyDataSetChanged();
+
+        finishProgress();
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.clear();
         mAdapter.notifyDataSetChanged();
+
+        finishProgress();
     }
 
     @Override

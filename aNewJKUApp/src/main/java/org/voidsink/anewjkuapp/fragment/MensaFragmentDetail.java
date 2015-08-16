@@ -86,6 +86,8 @@ public abstract class MensaFragmentDetail extends BaseFragment implements Loader
 
     @Override
     public Loader<ArrayList<MensaItem>> onCreateLoader(int i, Bundle bundle) {
+        showProgressIndeterminate();
+
         return new MenuDetailLoader(getContext(), createLoader());
     }
 
@@ -96,12 +98,16 @@ public abstract class MensaFragmentDetail extends BaseFragment implements Loader
             mAdapter.addAll(mensaItems);
         }
         mAdapter.notifyDataSetChanged();
+
+        finishProgress();
     }
 
     @Override
     public void onLoaderReset(Loader<ArrayList<MensaItem>> loader) {
         mAdapter.clear();
         mAdapter.notifyDataSetChanged();
+
+        finishProgress();
     }
 
     private static class MenuDetailLoader extends BaseAsyncTaskLoader<ArrayList<MensaItem>> {

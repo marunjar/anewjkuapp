@@ -117,6 +117,8 @@ public class RssFeedFragment extends BaseFragment implements LoaderManager.Loade
 
     @Override
     public Loader<List<FeedEntry>> onCreateLoader(int id, Bundle args) {
+        showProgressIndeterminate();
+
         return new FeedLoader(getContext(), mUrl);
     }
 
@@ -127,11 +129,15 @@ public class RssFeedFragment extends BaseFragment implements LoaderManager.Loade
             mAdapter.addAll(data);
         }
         mAdapter.notifyDataSetChanged();
+
+        finishProgress();
     }
 
     @Override
     public void onLoaderReset(Loader<List<FeedEntry>> loader) {
         mAdapter.clear();
         mAdapter.notifyDataSetChanged();
+
+        finishProgress();
     }
 }

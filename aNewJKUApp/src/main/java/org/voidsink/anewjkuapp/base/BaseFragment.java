@@ -34,6 +34,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
@@ -45,6 +46,7 @@ public class BaseFragment extends Fragment implements StackedFragment {
     private Intent mPendingIntent = null;
     private CharSequence mTitle = null;
     private int mId = 0;
+    private ProgressBar mProgress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,35 @@ public class BaseFragment extends Fragment implements StackedFragment {
         if (savedInstanceState != null) {
             mId = savedInstanceState.getInt(Consts.ARG_FRAGMENT_ID, mId);
             mTitle = savedInstanceState.getCharSequence(Consts.ARG_FRAGMENT_TITLE);
+        }
+
+        mProgress = (ProgressBar) view.findViewById(R.id.load_progress_bar);
+        if (mProgress != null){
+            mProgress.setMax(100);
+            finishProgress();
+        }
+    }
+
+    protected void showProgress(int progress) {
+        if (mProgress != null) {
+            mProgress.setIndeterminate(false);
+            mProgress.setProgress(progress);
+            mProgress.setVisibility(View.VISIBLE);
+        }
+    }
+
+    protected void showProgressIndeterminate() {
+        if (mProgress != null) {
+            mProgress.setIndeterminate(true);
+            mProgress.setVisibility(View.VISIBLE);
+        }
+    }
+
+    protected void finishProgress() {
+        if (mProgress != null) {
+            mProgress.setVisibility(View.INVISIBLE);
+            mProgress.setIndeterminate(false);
+            mProgress.setProgress(0);
         }
     }
 

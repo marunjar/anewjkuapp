@@ -150,11 +150,15 @@ public class StatFragmentDetail extends TermFragment implements
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id) {
             case Consts.LOADER_ID_COURSES: {
+                showProgressIndeterminate();
+
                 return new CursorLoader(getContext(), KusssContentContract.Course.CONTENT_URI,
                         ImportCourseTask.COURSE_PROJECTION, null, null,
                         KusssContentContract.Course.COL_TERM + " DESC");
             }
             case Consts.LOADER_ID_ASSESSMENTS: {
+                showProgressIndeterminate();
+
                 return new CursorLoader(getContext(), KusssContentContract.Assessment.CONTENT_URI,
                         ImportAssessmentTask.ASSESSMENT_PROJECTION, null, null,
                         KusssContentContract.Assessment.TABLE_NAME + "."
@@ -182,6 +186,8 @@ public class StatFragmentDetail extends TermFragment implements
         }
         // fill adapter
         setData(mAdapter, mCourseCursor, mAssessmentCursor);
+
+        finishProgress();
     }
 
     @Override
@@ -197,6 +203,8 @@ public class StatFragmentDetail extends TermFragment implements
             }
         }
         setData(mAdapter, mCourseCursor, mAssessmentCursor);
+
+        finishProgress();
     }
 
     private void setData(StatCardAdapter adapter, Cursor courseCursor, Cursor assessmentCursor) {
