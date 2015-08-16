@@ -59,20 +59,21 @@ public class FeedPullParser implements FeedParser {
 
     @Override
     public List<FeedEntry> parse(URL url) {
-        List<FeedEntry> entries;
         try {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestProperty("Cache-Control", "public, max-age=" + 7200);
-            connection.setConnectTimeout(3000);
-            connection.setReadTimeout(3000);
+            try {
+                connection.setRequestProperty("Cache-Control", "public, max-age=" + 7200);
+                connection.setConnectTimeout(3000);
+                connection.setReadTimeout(3000);
 
-            entries = parse(new BufferedInputStream(connection.getInputStream()));
-            connection.disconnect();
+                return parse(new BufferedInputStream(connection.getInputStream()));
+            } finally {
+                connection.disconnect();
+            }
         } catch (IOException e) {
             Log.e(getClass().getSimpleName(), "parse failed", e);
-            entries = null;
+            return null;
         }
-        return entries;
     }
 
     @Override

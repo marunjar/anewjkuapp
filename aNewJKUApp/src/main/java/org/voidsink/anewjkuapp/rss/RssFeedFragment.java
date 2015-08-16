@@ -25,10 +25,10 @@
 
 package org.voidsink.anewjkuapp.rss;
 
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -37,19 +37,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.rss.lib.FeedEntry;
-import org.voidsink.anewjkuapp.rss.lib.FeedPullParser;
+import org.voidsink.anewjkuapp.rss.lib.FeedLoader;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-public class RssFeedFragment extends BaseFragment {
+public class RssFeedFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<List<FeedEntry>> {
 
     private URL mUrl = null;
     private RssListAdapter mAdapter;
@@ -81,6 +80,13 @@ public class RssFeedFragment extends BaseFragment {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        getLoaderManager().initLoader(0, null, this);
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -88,7 +94,7 @@ public class RssFeedFragment extends BaseFragment {
     }
 
     private void updateData() {
-        new LoadFeedTask().execute();
+        getLoaderManager().restartLoader(0, null, this);
     }
 
     @Override
@@ -109,29 +115,23 @@ public class RssFeedFragment extends BaseFragment {
         }
     }
 
-    private class LoadFeedTask extends AsyncTask<Void, Void, Void> {
+    @Override
+    public Loader<List<FeedEntry>> onCreateLoader(int id, Bundle args) {
+        return new FeedLoader(getContext(), mUrl);
+    }
 
-        private List<FeedEntry> mFeed = null;
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            mFeed = new FeedPullParser().parse(mUrl);
-
-            return null;
+    @Override
+    public void onLoadFinished(Loader<List<FeedEntry>> loader, List<FeedEntry> data) {
+        mAdapter.clear();
+        if (data != null) {
+            mAdapter.addAll(data);
         }
+        mAdapter.notifyDataSetChanged();
+    }
 
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            mAdapter.clear();
-
-            if (mFeed != null) {
-                mAdapter.addAll(mFeed);
-            } else {
-//                Toast.makeText(getContext(), "TODO: Error loading feed.", Toast.LENGTH_SHORT).show();
-            }
-            mAdapter.notifyDataSetChanged();
-
-            super.onPostExecute(aVoid);
-        }
+    @Override
+    public void onLoaderReset(Loader<List<FeedEntry>> loader) {
+        mAdapter.clear();
+        mAdapter.notifyDataSetChanged();
     }
 }
