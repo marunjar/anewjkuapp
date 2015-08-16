@@ -41,6 +41,7 @@ import org.voidsink.anewjkuapp.MensaItem;
 import org.voidsink.anewjkuapp.MensaMenuAdapter;
 import org.voidsink.anewjkuapp.MensaMenuItem;
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.base.BaseAsyncTaskLoader;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.mensa.ChoiceMenuLoader;
 import org.voidsink.anewjkuapp.mensa.ClassicMenuLoader;
@@ -104,6 +105,21 @@ public class MensaDayFragment extends BaseFragment {
 
         mMensen.set(index, mensa);
     }
+
+    private class MenuDayLoader extends BaseAsyncTaskLoader<ArrayList<MensaItem>> {
+        private final Date mDay;
+
+        public MenuDayLoader(Context c, Date day) {
+            super(c);
+            this.mDay = day;
+        }
+
+        @Override
+        public ArrayList<MensaItem> loadInBackground() {
+            return null;
+        }
+    }
+
 
     private class MenuLoadTask extends AsyncTask<String, Void, Void> {
         private Context mContext;
