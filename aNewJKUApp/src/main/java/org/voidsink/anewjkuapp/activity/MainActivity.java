@@ -24,6 +24,7 @@
 
 package org.voidsink.anewjkuapp.activity;
 
+import android.Manifest;
 import android.accounts.Account;
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -32,6 +33,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -134,6 +136,9 @@ public class MainActivity extends ThemedActivity {
             getWindow().setStatusBarColor(getResources().getColor(android.R.color.transparent));
         }
 
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR}, 0);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCOUNT_MANAGER, Manifest.permission.GET_ACCOUNTS}, 0);
+
         // do things if new version was installed
         AppUtils.doOnNewVersion(this);
 
@@ -178,6 +183,13 @@ public class MainActivity extends ThemedActivity {
                 cl.getLogDialog().show();
             }
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+
     }
 
     private Fragment attachFragmentById(int id, boolean saveLastFragment) {

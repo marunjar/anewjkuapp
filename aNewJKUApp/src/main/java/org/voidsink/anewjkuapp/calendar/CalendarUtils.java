@@ -25,13 +25,16 @@
 
 package org.voidsink.anewjkuapp.calendar;
 
+import android.Manifest;
 import android.accounts.Account;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -187,6 +190,11 @@ public final class CalendarUtils {
 
         // nothing to do if there's no account
         if (context == null || account == null) {
+            return ids;
+        }
+
+        // nothing to do if there's no permission
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_DENIED) {
             return ids;
         }
 
