@@ -8,7 +8,7 @@
             android:title="@string/pref_app_use_light_theme_title" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_cat_app_map">
-        <org.voidsink.anewjkuapp.base.MapFilePreference
+        <ListPreference
             android:key="pref_key_map_file"
             android:summary=""
             android:title="@string/pref_app_map_file_title" />

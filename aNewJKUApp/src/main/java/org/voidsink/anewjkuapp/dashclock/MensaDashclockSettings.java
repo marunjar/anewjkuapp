@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,12 +20,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.dashclock;
 
 import android.os.Bundle;
-import android.support.v4.preference.PreferenceFragment;
+import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.Log;
 
 import org.voidsink.anewjkuapp.R;
@@ -55,12 +56,17 @@ public class MensaDashclockSettings extends ThemedActivity {
         Analytics.sendScreen(this, Consts.SCREEN_SETTINGS_DASHCLOCK);
     }
 
-    public static class MensaDashclockSettingsFragment extends PreferenceFragment {
+    public static class MensaDashclockSettingsFragment extends PreferenceFragmentCompat {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 
             addPreferencesFromResource(R.xml.preference_dashclock_extension_mensa);
+        }
+
+        @Override
+        public void onCreatePreferences(Bundle bundle, String s) {
+
         }
     }
 }

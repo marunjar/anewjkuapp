@@ -33,8 +33,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.preference.PreferenceFragment;
 import android.support.v7.app.ActionBar;
+import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.Log;
 
 import org.voidsink.anewjkuapp.PreferenceWrapper;
@@ -79,7 +79,7 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
                 String clazzname = intent.getDataString();
                 if (clazzname != null) {
                     Class<?> clazz = getClassLoader().loadClass(clazzname);
-                    if (PreferenceFragment.class.isAssignableFrom(clazz)) {
+                    if (PreferenceFragmentCompat.class.isAssignableFrom(clazz)) {
                         fragment = (Fragment) clazz.newInstance();
                     }
                 }
@@ -148,16 +148,8 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
                 break;
             case PreferenceWrapper.PREF_TRACKING_ERRORS:
                 boolean trackingErrors = sharedPreferences.getBoolean(key, PreferenceWrapper.PREF_TRACKING_ERRORS_DEFAULT);
-                if (trackingErrors) {
-                    // track opting in
-                    Analytics.setEnabled(trackingErrors);
-                    Analytics.sendPreferenceChanged(key, Boolean.toString(trackingErrors));
-                } else {
-                    // track opting out
-                    Analytics.sendPreferenceChanged(key, Boolean.toString(trackingErrors));
-                    Analytics.setEnabled(trackingErrors);
-                }
-
+                Analytics.setEnabled(trackingErrors);
+                Analytics.sendPreferenceChanged(key, Boolean.toString(trackingErrors));
                 break;
             default:
                 break;

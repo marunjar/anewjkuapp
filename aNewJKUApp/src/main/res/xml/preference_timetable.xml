@@ -5,7 +5,7 @@
             android:defaultValue="true"
             android:key="pref_key_notify_calendar"
             android:summary="@string/pref_kusss_calendar_notify_summary"
-            android:title="@string/pref_kusss_notify_title" />
+            android:title="@string/pref_kusss_notify_title"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/calendar_title_lva">
@@ -13,21 +13,21 @@
             android:defaultValue="false"
             android:key="pref_key_extend_calendar_lva"
             android:summary="@string/pref_kusss_calendar_extend_summary"
-            android:title="@string/pref_kusss_calendar_extend_title" />
+            android:title="@string/pref_kusss_calendar_extend_title"/>
 
-        <org.voidsink.anewjkuapp.base.TwoLinesListPreference
+        <ListPreference
             android:dependency="pref_key_extend_calendar_lva"
             android:key="pref_key_extended_calendar_lva"
             android:summary="@string/pref_kusss_calendar_extended_summary"
-            android:title="@string/pref_kusss_calendar_extended_title" />
+            android:title="@string/pref_kusss_calendar_extended_title"/>
 
         <CheckBoxPreference
+            android:defaultValue="true"
             android:dependency="pref_key_extend_calendar_lva"
             android:disableDependentsState="true"
-            android:defaultValue="true"
             android:key="pref_key_sync_calendar_lva"
             android:summary="@string/pref_kusss_calendar_sync_summary"
-            android:title="@string/pref_kusss_calendar_sync_title" />
+            android:title="@string/pref_kusss_calendar_sync_title"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/calendar_title_exam">
@@ -35,21 +35,21 @@
             android:defaultValue="false"
             android:key="pref_key_extend_calendar_exam"
             android:summary="@string/pref_kusss_calendar_extend_summary"
-            android:title="@string/pref_kusss_calendar_extend_title" />
+            android:title="@string/pref_kusss_calendar_extend_title"/>
 
-        <org.voidsink.anewjkuapp.base.TwoLinesListPreference
+        <ListPreference
             android:dependency="pref_key_extend_calendar_exam"
             android:key="pref_key_extended_calendar_exam"
             android:summary="@string/pref_kusss_calendar_extended_summary"
-            android:title="@string/pref_kusss_calendar_extended_title" />
+            android:title="@string/pref_kusss_calendar_extended_title"/>
 
         <CheckBoxPreference
+            android:defaultValue="true"
             android:dependency="pref_key_extend_calendar_exam"
             android:disableDependentsState="true"
-            android:defaultValue="true"
             android:key="pref_key_sync_calendar_exam"
             android:summary="@string/pref_kusss_calendar_sync_summary"
-            android:title="@string/pref_kusss_calendar_sync_title" />
+            android:title="@string/pref_kusss_calendar_sync_title"/>
     </PreferenceCategory>
 
 </PreferenceScreen>
