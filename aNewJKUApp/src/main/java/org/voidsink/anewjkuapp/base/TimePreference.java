@@ -27,65 +27,32 @@ package org.voidsink.anewjkuapp.base;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.preference.DialogPreference;
-import android.support.annotation.NonNull;
+import android.support.v7.preference.DialogPreference;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.TimePicker;
 
-import java.util.Calendar;
+import org.voidsink.anewjkuapp.R;
+
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class TimePreference extends DialogPreference {
-    private Calendar calendar;
-    private TimePicker picker = null;
 
-    public TimePreference(Context ctxt) {
-        this(ctxt, null);
+    final private Date date = new Date();
+
+    public TimePreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public TimePreference(Context ctxt, AttributeSet attrs) {
-        this(ctxt, attrs, 0);
+    public TimePreference(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
     }
 
-    public TimePreference(Context ctxt, AttributeSet attrs, int defStyle) {
-        super(ctxt, attrs, defStyle);
-
-        setPositiveButtonText(android.R.string.ok);
-        setNegativeButtonText(android.R.string.cancel);
-        calendar = new GregorianCalendar();
+    public TimePreference(Context context, AttributeSet attrs) {
+        super(context, attrs);
     }
 
-    @Override
-    protected View onCreateDialogView() {
-        picker = new TimePicker(getContext());
-        picker.setIs24HourView(DateFormat.is24HourFormat(getContext()));
-        return (picker);
-    }
-
-    @Override
-    protected void onBindDialogView(@NonNull View v) {
-        super.onBindDialogView(v);
-        picker.setCurrentHour(calendar.get(Calendar.HOUR_OF_DAY));
-        picker.setCurrentMinute(calendar.get(Calendar.MINUTE));
-    }
-
-    @Override
-    protected void onDialogClosed(boolean positiveResult) {
-        super.onDialogClosed(positiveResult);
-
-        if (positiveResult) {
-            calendar.set(Calendar.HOUR_OF_DAY, picker.getCurrentHour());
-            calendar.set(Calendar.MINUTE, picker.getCurrentMinute());
-
-            setSummary(getSummary());
-            if (callChangeListener(calendar.getTimeInMillis())) {
-                persistLong(calendar.getTimeInMillis());
-                notifyChanged();
-            }
-        }
+    public TimePreference(Context context) {
+        super(context);
     }
 
     @Override
@@ -98,15 +65,15 @@ public class TimePreference extends DialogPreference {
 
         if (restorePersistedValue) {
             if (defaultValue == null) {
-                calendar.setTimeInMillis(getPersistedLong(System.currentTimeMillis()));
+                date.setTime(getPersistedLong(System.currentTimeMillis()));
             } else {
-                calendar.setTimeInMillis(Long.parseLong(getPersistedString((String) defaultValue)));
+                date.setTime(Long.parseLong(getPersistedString((String) defaultValue)));
             }
         } else {
             if (defaultValue == null) {
-                calendar.setTimeInMillis(System.currentTimeMillis());
+                date.setTime(System.currentTimeMillis());
             } else {
-                calendar.setTimeInMillis(Long.parseLong((String) defaultValue));
+                date.setTime(Long.parseLong((String) defaultValue));
             }
         }
         setSummary(getSummary());
@@ -114,9 +81,23 @@ public class TimePreference extends DialogPreference {
 
     @Override
     public CharSequence getSummary() {
-        if (calendar == null) {
+        if (date == null) {
             return null;
         }
-        return DateFormat.getTimeFormat(getContext()).format(new Date(calendar.getTimeInMillis()));
+        return DateFormat.getTimeFormat(getContext()).format(date);
+    }
+
+    public long getTime() {
+        return date.getTime();
+    }
+
+    public void setTime(long time) {
+        date.setTime(time);
+
+        setSummary(getSummary());
+        if (callChangeListener(time)) {
+            persistLong(time);
+            notifyChanged();
+        }
     }
 } 

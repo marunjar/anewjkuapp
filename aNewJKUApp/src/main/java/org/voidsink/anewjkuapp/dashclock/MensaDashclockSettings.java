@@ -26,11 +26,11 @@
 package org.voidsink.anewjkuapp.dashclock;
 
 import android.os.Bundle;
-import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.Log;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.base.BasePreferenceFragment;
 import org.voidsink.anewjkuapp.base.ThemedActivity;
 import org.voidsink.anewjkuapp.utils.Consts;
 
@@ -56,7 +56,7 @@ public class MensaDashclockSettings extends ThemedActivity {
         Analytics.sendScreen(this, Consts.SCREEN_SETTINGS_DASHCLOCK);
     }
 
-    public static class MensaDashclockSettingsFragment extends PreferenceFragmentCompat {
+    public static class MensaDashclockSettingsFragment extends BasePreferenceFragment {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);

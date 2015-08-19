@@ -43,6 +43,7 @@ import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.SettingsActivity;
 import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.base.BasePreferenceFragment;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
@@ -50,7 +51,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 
-public class SettingsFragment extends PreferenceFragmentCompat {
+public class SettingsFragment extends BasePreferenceFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

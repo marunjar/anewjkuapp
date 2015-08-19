@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme.Base.Light" parent="@style/Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme.Base" parent="@style/Theme.AppCompat.NoActionBar">
         <item name="android:windowContentOverlay">@null</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.Custom</item>
-        <item name="cardToolbarTheme">@style/cardToolbar.light</item>
-        <item name="cardBackgroundColor">@color/cardview_light_background</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+
+        <item name="cardToolbarTheme">@style/cardToolbar</item>
+        <item name="cardBackgroundColor">@color/cardview_dark_background</item>
+
+        <item name="android:dialogTheme">@style/DialogStyle</item>
+        <item name="android:alertDialogTheme">@style/DialogStyle.Alert</item>
 
         <item name="colorPrimary">@color/default_primary</item>
         <item name="colorPrimaryDark">@color/default_primaryDark</item>
         <item name="colorAccent">@color/default_accent</item>
     </style>
 
-    <style name="AppTheme.Base" parent="@style/Theme.AppCompat.NoActionBar">
+    <style name="AppTheme.Base.Light" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowContentOverlay">@null</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.Custom</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+        <item name="cardToolbarTheme">@style/cardToolbar.light</item>
+        <item name="cardBackgroundColor">@color/cardview_light_background</item>
 
-        <item name="cardToolbarTheme">@style/cardToolbar</item>
-        <item name="cardBackgroundColor">@color/cardview_dark_background</item>
+        <item name="android:dialogTheme">@style/DialogStyle.Light</item>
+        <item name="android:alertDialogTheme">@style/DialogStyle.Alert.Light</item>
 
         <item name="colorPrimary">@color/default_primary</item>
         <item name="colorPrimaryDark">@color/default_primaryDark</item>
@@ -28,14 +34,37 @@
 
     <style name="AppTheme.Light" parent="AppTheme.Base.Light"/>
 
-    <style name="Preference.Custom" parent="Preference">
-        <item name="layout">@layout/preference_custom</item>
+    <style name="DialogStyle.Base" parent="Theme.AppCompat.Dialog">
+        <item name="colorPrimary">@color/default_primary</item>
+        <item name="colorPrimaryDark">@color/default_primaryDark</item>
+        <item name="colorAccent">@color/default_accent</item>
     </style>
 
-    <style name="PreferenceThemeOverlay.Custom" parent="PreferenceThemeOverlay">
-        <item name="android:preferenceStyle">@style/Preference.Custom</item>
+    <style name="DialogStyle.Base.Light" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">@color/default_primary</item>
+        <item name="colorPrimaryDark">@color/default_primaryDark</item>
+        <item name="colorAccent">@color/default_accent</item>
     </style>
 
+    <style name="DialogStyle" parent="DialogStyle.Base"/>
+
+    <style name="DialogStyle.Light" parent="DialogStyle.Base.Light"/>
+
+    <style name="DialogStyle.Alert.Base" parent="Theme.AppCompat.Dialog">
+        <item name="colorPrimary">@color/default_primary</item>
+        <item name="colorPrimaryDark">@color/default_primaryDark</item>
+        <item name="colorAccent">@color/default_accent</item>
+    </style>
+
+    <style name="DialogStyle.Alert.Base.Light" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">@color/default_primary</item>
+        <item name="colorPrimaryDark">@color/default_primaryDark</item>
+        <item name="colorAccent">@color/default_accent</item>
+    </style>
+
+    <style name="DialogStyle.Alert" parent="DialogStyle.Alert.Base"/>
+
+    <style name="DialogStyle.Alert.Light" parent="DialogStyle.Alert.Base.Light"/>
 
     <dimen name="drawer_header_height">96dp</dimen>
 </resources>
