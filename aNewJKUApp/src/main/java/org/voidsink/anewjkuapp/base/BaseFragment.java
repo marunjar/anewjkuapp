@@ -29,12 +29,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
@@ -46,7 +46,7 @@ public class BaseFragment extends Fragment implements StackedFragment {
     private Intent mPendingIntent = null;
     private CharSequence mTitle = null;
     private int mId = 0;
-    private ProgressBar mProgress;
+    private ContentLoadingProgressBar mProgress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,33 +65,21 @@ public class BaseFragment extends Fragment implements StackedFragment {
             mTitle = savedInstanceState.getCharSequence(Consts.ARG_FRAGMENT_TITLE);
         }
 
-        mProgress = (ProgressBar) view.findViewById(R.id.load_progress_bar);
-        if (mProgress != null){
-            mProgress.setMax(100);
-            finishProgress();
-        }
-    }
-
-    protected void showProgress(int progress) {
+        mProgress = (ContentLoadingProgressBar) view.findViewById(R.id.load_progress_bar);
         if (mProgress != null) {
-            mProgress.setIndeterminate(false);
-            mProgress.setProgress(progress);
-            mProgress.setVisibility(View.VISIBLE);
+            finishProgress();
         }
     }
 
     protected void showProgressIndeterminate() {
         if (mProgress != null) {
-            mProgress.setIndeterminate(true);
-            mProgress.setVisibility(View.VISIBLE);
+            mProgress.show();
         }
     }
 
     protected void finishProgress() {
         if (mProgress != null) {
-            mProgress.setVisibility(View.INVISIBLE);
-            mProgress.setIndeterminate(false);
-            mProgress.setProgress(0);
+            mProgress.hide();
         }
     }
 
