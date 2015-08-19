@@ -3,10 +3,12 @@
 
     <style name="AppTheme" parent="AppTheme.Base">
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
     </style>
 
     <style name="AppTheme.Light" parent="AppTheme.Base.Light">
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
 </resources>
