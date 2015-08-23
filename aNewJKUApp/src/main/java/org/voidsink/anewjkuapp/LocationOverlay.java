@@ -32,8 +32,8 @@ import android.view.MenuItem;
 
 import org.mapsforge.core.graphics.Bitmap;
 import org.mapsforge.core.graphics.Paint;
-import org.mapsforge.map.android.layer.MyLocationOverlay;
 import org.mapsforge.map.model.MapViewPosition;
+import org.voidsink.anewjkuapp.base.MyLocationOverlay;
 
 public class LocationOverlay extends MyLocationOverlay {
 
