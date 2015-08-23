@@ -265,8 +265,8 @@ public class AppUtils {
         try {
             PreferenceManager.setDefaultValues(context, R.xml.preference_app,
                     true);
-            PreferenceManager.setDefaultValues(context,
-                    R.xml.preference_dashclock_extension_mensa, true);
+//            PreferenceManager.setDefaultValues(context,
+//                    R.xml.preference_dashclock_extension_mensa, true);
             PreferenceManager.setDefaultValues(context, R.xml.preference_kusss,
                     true);
         } catch (Exception e) {
