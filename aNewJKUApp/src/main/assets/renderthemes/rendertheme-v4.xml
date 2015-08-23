@@ -1495,11 +1495,11 @@
 
 	<!-- building captions -->
 	<rule cat="buildings" e="any" k="*" v="*">
-		<rule e="any" k="building" v="*" zoom-min="18">
-			<caption k="name" font-style="bold" font-size="12" fill="#666666" stroke="#FFFFFF" stroke-width="2.0"/>
+		<rule e="any" k="building" v="*" zoom-min="17">
+			<caption k="name" font-style="bold" font-size="11" fill="#666666" stroke="#FFFFFF" stroke-width="2.0"/>
 		</rule>
-		<rule e="any" k="addr:housenumber" v="*" zoom-min="19">
-			<caption k="addr:housenumber" font-style="bold" font-size="10" fill="#666666" stroke="#FFFFFF" stroke-width="2.0"/>
+		<rule e="any" k="addr:housenumber" v="*" zoom-min="18">
+			<caption k="addr:housenumber" font-style="bold" font-size="9" fill="#666666" stroke="#FFFFFF" stroke-width="2.0"/>
 		</rule>
 	</rule>
 
