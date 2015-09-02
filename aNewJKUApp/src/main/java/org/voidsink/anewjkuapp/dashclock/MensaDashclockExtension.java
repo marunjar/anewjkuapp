@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,13 +20,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.dashclock;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.android.apps.dashclock.api.DashClockExtension;
@@ -40,9 +41,6 @@ import org.voidsink.anewjkuapp.mensa.IDay;
 import org.voidsink.anewjkuapp.mensa.IMensa;
 import org.voidsink.anewjkuapp.mensa.IMenu;
 import org.voidsink.anewjkuapp.mensa.KHGMenuLoader;
-import org.voidsink.anewjkuapp.mensa.Mensa;
-import org.voidsink.anewjkuapp.mensa.MensaDay;
-import org.voidsink.anewjkuapp.mensa.MensaMenu;
 import org.voidsink.anewjkuapp.mensa.RaabMenuLoader;
 
 import java.util.ArrayList;

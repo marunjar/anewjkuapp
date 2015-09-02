@@ -25,8 +25,7 @@
 package org.voidsink.anewjkuapp.fragment;
 
 import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceManager;
 
 import org.voidsink.anewjkuapp.MensaDayTabItem;
 import org.voidsink.anewjkuapp.PreferenceWrapper;

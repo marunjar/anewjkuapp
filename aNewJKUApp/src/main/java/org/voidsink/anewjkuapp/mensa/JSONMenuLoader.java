@@ -28,7 +28,7 @@ package org.voidsink.anewjkuapp.mensa;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceManager;
 import android.text.format.DateUtils;
 
 import org.json.JSONArray;

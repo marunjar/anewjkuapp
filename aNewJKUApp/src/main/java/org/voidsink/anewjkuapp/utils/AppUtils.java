@@ -40,7 +40,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
 import com.github.mikephil.charting.data.Entry;
@@ -265,8 +265,8 @@ public class AppUtils {
         try {
             PreferenceManager.setDefaultValues(context, R.xml.preference_app,
                     true);
-//            PreferenceManager.setDefaultValues(context,
-//                    R.xml.preference_dashclock_extension_mensa, true);
+            PreferenceManager.setDefaultValues(context,
+                    R.xml.preference_dashclock_extension_mensa, true);
             PreferenceManager.setDefaultValues(context, R.xml.preference_kusss,
                     true);
         } catch (Exception e) {

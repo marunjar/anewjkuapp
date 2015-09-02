@@ -25,14 +25,29 @@
 
 package org.voidsink.anewjkuapp.base;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceDialogFragmentCompat;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.text.format.DateFormat;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.TimePicker;
+
+import org.voidsink.anewjkuapp.R;
 
 import java.util.Calendar;
 
@@ -49,11 +64,110 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
 
                 return;
             }
+            if (preference instanceof TwoLinesListPreference) {
+                TwoLinesListPreferenceDialogFragment f = TwoLinesListPreferenceDialogFragment.newInstance(preference.getKey());
+
+                f.setTargetFragment(this, 0);
+                f.show(this.getFragmentManager(), "android.support.v7.preference.PreferenceFragment.DIALOG");
+
+                return;
+            }
         }
 
         super.onDisplayPreferenceDialog(preference);
     }
 
+
+    public static class TwoLinesListPreferenceDialogFragment extends PreferenceDialogFragmentCompat {
+        private int mClickedDialogEntryIndex;
+
+        public TwoLinesListPreferenceDialogFragment() {
+        }
+
+        public static TwoLinesListPreferenceDialogFragment newInstance(String key) {
+            TwoLinesListPreferenceDialogFragment fragment = new TwoLinesListPreferenceDialogFragment();
+            Bundle b = new Bundle(1);
+            b.putString("key", key);
+            fragment.setArguments(b);
+            return fragment;
+        }
+
+        private TwoLinesListPreference getListPreference() {
+            return (TwoLinesListPreference) this.getPreference();
+        }
+
+        protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {
+            super.onPrepareDialogBuilder(builder);
+            ListPreference preference = this.getListPreference();
+            if (preference.getEntries() != null && preference.getEntryValues() != null) {
+                // adapter
+                String[] mEntriesString = (String[]) getListPreference().getEntries();
+
+                ListAdapter adapter = new ArrayAdapter<String>(
+                        getContext(), R.layout.custom_simple_list_item_2_single_choice, mEntriesString) {
+
+                    ViewHolder holder;
+
+                    class ViewHolder {
+                        TextView title;
+                        TextView subTitle;
+                        public RadioButton radio;
+                    }
+
+                    @SuppressLint("InflateParams")
+                    public View getView(int position, View convertView, ViewGroup parent) {
+                        final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                        if (convertView == null) {
+                            convertView = inflater.inflate(R.layout.custom_simple_list_item_2_single_choice, null);
+
+                            holder = new ViewHolder();
+                            holder.title = (TextView) convertView.findViewById(android.R.id.text1);
+                            holder.subTitle = (TextView) convertView.findViewById(android.R.id.text2);
+                            holder.radio = (RadioButton) convertView.findViewById(R.id.radio);
+
+                            convertView.setTag(holder);
+                        } else {
+                            // view already defined, retrieve view holder
+                            holder = (ViewHolder) convertView.getTag();
+                        }
+
+                        holder.title.setText(getListPreference().getEntries()[position]);
+                        holder.subTitle.setText(getListPreference().getEntriesSubtitles()[position]);
+                        if (holder.radio != null) {
+                            holder.radio.setChecked(position == mClickedDialogEntryIndex);
+                        }
+
+                        return convertView;
+                    }
+                };
+
+
+                this.mClickedDialogEntryIndex = preference.findIndexOfValue(preference.getValue());
+                builder.setSingleChoiceItems(adapter, this.mClickedDialogEntryIndex, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        TwoLinesListPreferenceDialogFragment.this.mClickedDialogEntryIndex = which;
+                        TwoLinesListPreferenceDialogFragment.this.onClick(dialog, -1);
+                        dialog.dismiss();
+                    }
+                });
+                builder.setPositiveButton((CharSequence) null, (DialogInterface.OnClickListener) null);
+            } else {
+                throw new IllegalStateException("ListPreference requires an entries array and an entryValues array.");
+            }
+        }
+
+        public void onDialogClosed(boolean positiveResult) {
+            ListPreference preference = this.getListPreference();
+            if (positiveResult && this.mClickedDialogEntryIndex >= 0 && preference.getEntryValues() != null) {
+                String value = preference.getEntryValues()[this.mClickedDialogEntryIndex].toString();
+                if (preference.callChangeListener(value)) {
+                    preference.setValue(value);
+                }
+            }
+
+        }
+    }
 
     public static class TimePickerDialogFragment extends PreferenceDialogFragmentCompat
             implements TimePickerDialog.OnTimeSetListener {
@@ -67,9 +181,17 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
             // Use the current time as the default values for the picker
             final Calendar c = Calendar.getInstance();
             c.setTimeInMillis(mTime);
+
+
             // Create a new instance of TimePickerDialog and return it
-            return new TimePickerDialog(getActivity(), this, c.get(Calendar.HOUR_OF_DAY),
+            return new TimePickerDialog(getContext(), resolveDialogTheme(getContext()), this, c.get(Calendar.HOUR_OF_DAY),
                     c.get(Calendar.MINUTE), DateFormat.is24HourFormat(getActivity()));
+        }
+
+        private int resolveDialogTheme(Context context) {
+            TypedValue outValue = new TypedValue();
+            context.getTheme().resolveAttribute(android.support.v7.appcompat.R.attr.alertDialogTheme, outValue, true);
+            return outValue.resourceId;
         }
 
         @Override

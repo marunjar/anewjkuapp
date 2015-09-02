@@ -8,8 +8,8 @@
         <item name="cardToolbarTheme">@style/cardToolbar</item>
         <item name="cardBackgroundColor">@color/cardview_dark_background</item>
 
-        <item name="android:dialogTheme">@style/DialogStyle</item>
-        <item name="android:alertDialogTheme">@style/DialogStyle.Alert</item>
+        <item name="dialogTheme">@style/DialogStyle</item>
+        <item name="alertDialogTheme">@style/DialogStyle.Alert</item>
 
         <item name="colorPrimary">@color/default_primary</item>
         <item name="colorPrimaryDark">@color/default_primaryDark</item>
@@ -22,8 +22,8 @@
         <item name="cardToolbarTheme">@style/cardToolbar.light</item>
         <item name="cardBackgroundColor">@color/cardview_light_background</item>
 
-        <item name="android:dialogTheme">@style/DialogStyle.Light</item>
-        <item name="android:alertDialogTheme">@style/DialogStyle.Alert.Light</item>
+        <item name="dialogTheme">@style/DialogStyle.Light</item>
+        <item name="alertDialogTheme">@style/DialogStyle.Alert.Light</item>
 
         <item name="colorPrimary">@color/default_primary</item>
         <item name="colorPrimaryDark">@color/default_primaryDark</item>

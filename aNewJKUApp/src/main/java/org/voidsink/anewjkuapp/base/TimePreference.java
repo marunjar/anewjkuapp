@@ -37,11 +37,8 @@ import java.util.Date;
 
 public class TimePreference extends DialogPreference {
 
-    final private Date date = new Date();
-
-    public TimePreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
+    private long mTime = 0;
+    private final long DEFAULT_VALUE = 0;
 
     public TimePreference(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -65,15 +62,15 @@ public class TimePreference extends DialogPreference {
 
         if (restorePersistedValue) {
             if (defaultValue == null) {
-                date.setTime(getPersistedLong(System.currentTimeMillis()));
+                mTime = getPersistedLong(System.currentTimeMillis());
             } else {
-                date.setTime(Long.parseLong(getPersistedString((String) defaultValue)));
+                mTime = getPersistedLong(Long.parseLong(getPersistedString((String) defaultValue)));
             }
         } else {
             if (defaultValue == null) {
-                date.setTime(System.currentTimeMillis());
+                mTime = System.currentTimeMillis();
             } else {
-                date.setTime(Long.parseLong((String) defaultValue));
+                mTime = Long.parseLong((String) defaultValue);
             }
         }
         setSummary(getSummary());
@@ -81,18 +78,15 @@ public class TimePreference extends DialogPreference {
 
     @Override
     public CharSequence getSummary() {
-        if (date == null) {
-            return null;
-        }
-        return DateFormat.getTimeFormat(getContext()).format(date);
+        return DateFormat.getTimeFormat(getContext()).format(new Date(mTime));
     }
 
     public long getTime() {
-        return date.getTime();
+        return mTime;
     }
 
     public void setTime(long time) {
-        date.setTime(time);
+        mTime = time;
 
         setSummary(getSummary());
         if (callChangeListener(time)) {
