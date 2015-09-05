@@ -3,7 +3,7 @@
 
     <style name="AppTheme.Base" parent="@style/Theme.AppCompat.NoActionBar">
         <item name="android:windowContentOverlay">@null</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+        <item name="preferenceTheme">@style/PreferenceTheme</item>
 
         <item name="cardToolbarTheme">@style/cardToolbar</item>
         <item name="cardBackgroundColor">@color/cardview_dark_background</item>
@@ -18,7 +18,7 @@
 
     <style name="AppTheme.Base.Light" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowContentOverlay">@null</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+        <item name="preferenceTheme">@style/PreferenceTheme</item>
         <item name="cardToolbarTheme">@style/cardToolbar.light</item>
         <item name="cardBackgroundColor">@color/cardview_light_background</item>
 
@@ -60,6 +60,9 @@
         <item name="colorPrimary">@color/default_primary</item>
         <item name="colorPrimaryDark">@color/default_primaryDark</item>
         <item name="colorAccent">@color/default_accent</item>
+    </style>
+
+    <style name="PreferenceTheme" parent="PreferenceThemeOverlay.v14.Material">
     </style>
 
     <style name="DialogStyle.Alert" parent="DialogStyle.Alert.Base"/>

@@ -5,6 +5,7 @@
     <color name="default_primaryDark">#0F4D9D</color>
     <color name="default_accent">#EE8C2B</color>
     <color name="default_accentTransparent">#55EE8C2B</color>
+    <color name="preference_fallback_accent_color">@color/default_accent</color>
 
     <!--colors for sowi style-->
     <color name="sowi_primary">#adc258</color>
@@ -29,7 +30,6 @@
     <color name="med_primaryDark">#ffcb9f00</color>
     <color name="med_accent">#ee3b33</color>
     <color name="med_accentTransparent">#55ee3b33</color>
-
 
 
     <color name="color_chip_grade_back_default">#0F4D9D</color>
