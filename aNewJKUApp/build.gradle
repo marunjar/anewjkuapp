@@ -13,12 +13,12 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
 
-        proguardFile 'proguard-rules.txt'
-        proguardFile 'proguard-rules-glide.txt'
-        proguardFile 'proguard-rules-google-play-services.txt'
-        proguardFile 'proguard-rules-ical4j.txt'
-        proguardFile 'proguard-rules-keep-names.txt'
-        proguardFile getDefaultProguardFile('proguard-android.txt')
+        proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                'proguard-rules.txt',
+                'proguard-rules-glide.txt',
+                'proguard-rules-google-play-services.txt',
+                'proguard-rules-ical4j.txt',
+                'proguard-rules-keep-names.txt'
 
         buildConfigField "boolean", "FOSS_ONLY", "false"
 
@@ -91,14 +91,14 @@ dependencies {
     compile 'com.github.alamkanak:android-week-view:1.2.3'
 
     compile 'de.cketti.library.changelog:ckchangelog:1.2.2'
-    compile('com.mikepenz:aboutlibraries:5.2.1@aar') {
+    compile('com.mikepenz:aboutlibraries:5.2.3@aar') {
         transitive = true
     }
 
     compile project(':sectionedRecyclerAdapter')
     //compile project(':kussslibrary')
 
-    compile 'com.github.PhilJay:MPAndroidChart:v2.1.3'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.1.4'
 }
 
 def appendVersionNameVersionCode(variant, defaultConfig) {

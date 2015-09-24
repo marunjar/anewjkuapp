@@ -49,11 +49,12 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.renderer.PieChartRenderer;
-import com.github.mikephil.charting.utils.PercentFormatter;
-import com.github.mikephil.charting.utils.ValueFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.kusss.Assessment;
@@ -172,7 +173,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
                 limitLine.setTextSize(11);
                 limitLine.enableDashedLine(20, 10, 0);
                 limitLine.setLineWidth(2);
-                limitLine.setLabelPosition(LimitLine.LimitLabelPosition.POS_RIGHT);
+                limitLine.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
                 yAxis.addLimitLine(limitLine);
             }
 
@@ -588,8 +589,8 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
     private class ECTSFormatter implements ValueFormatter {
 
         @Override
-        public String getFormattedValue(float v) {
-            return String.format("%.2f ECTS", v);
+        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+            return String.format("%.2f ECTS", value);
         }
     }
 }
