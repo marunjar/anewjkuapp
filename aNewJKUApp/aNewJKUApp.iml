@@ -135,8 +135,8 @@
     <orderEntry type="library" exported="" name="appcompat-v7-23.0.1" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-23.0.1" level="project" />
     <orderEntry type="library" exported="" name="commons-codec-1.8" level="project" />
-    <orderEntry type="library" exported="" name="dashclock-api-2.0.0" level="project" />
     <orderEntry type="library" exported="" name="androidsvg-1.2.2-beta-1" level="project" />
+    <orderEntry type="library" exported="" name="dashclock-api-2.0.0" level="project" />
     <orderEntry type="library" exported="" name="commons-lang-2.6" level="project" />
     <orderEntry type="library" exported="" name="gridlayout-v7-23.0.1" level="project" />
     <orderEntry type="library" exported="" name="android-week-view-1.2.3" level="project" />
