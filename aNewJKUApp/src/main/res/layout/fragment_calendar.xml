@@ -30,7 +30,6 @@
             style="@style/Text.Button"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="@drawable/selectable_background_apptheme"
             android:text="@string/listview_footer_button"
             android:textColor="?android:attr/textColorSecondary" />
     </LinearLayout>

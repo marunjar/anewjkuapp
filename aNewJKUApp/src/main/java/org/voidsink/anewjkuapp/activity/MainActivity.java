@@ -168,8 +168,6 @@ public class MainActivity extends ThemedActivity {
         mUserLearnedDrawer = PreferenceWrapper.getUserLearnedDrawer(this);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
-                GravityCompat.START);
 
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         if (mNavigationView != null) {

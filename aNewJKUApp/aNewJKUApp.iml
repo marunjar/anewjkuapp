@@ -120,12 +120,12 @@
     <orderEntry type="jdk" jdkName="Android API 23 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="ckchangelog-1.2.2" level="project" />
-    <orderEntry type="library" exported="" name="mapsforge-map-android-0.5.2" level="project" />
     <orderEntry type="library" exported="" name="androidsvg-1.2.2-beta-1" level="project" />
+    <orderEntry type="library" exported="" name="mapsforge-map-android-0.5.2" level="project" />
     <orderEntry type="library" exported="" name="aboutlibraries-5.2.3" level="project" />
     <orderEntry type="library" exported="" name="mapsforge-map-reader-0.5.2" level="project" />
-    <orderEntry type="library" exported="" name="commons-lang-2.6" level="project" />
     <orderEntry type="library" exported="" name="kxml2-2.3.0" level="project" />
+    <orderEntry type="library" exported="" name="commons-lang-2.6" level="project" />
     <orderEntry type="library" exported="" name="support-v4-23.0.1" level="project" />
     <orderEntry type="library" exported="" name="design-23.0.1" level="project" />
     <orderEntry type="library" exported="" name="calligraphy-2.1.0" level="project" />

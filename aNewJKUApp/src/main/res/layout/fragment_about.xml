@@ -55,7 +55,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/selectable_background_apptheme"
         android:padding="10dp"
         android:text="@string/about_libraries_title"/>
 
@@ -65,7 +64,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/about_libraries"
-        android:background="@drawable/selectable_background_apptheme"
         android:padding="10dp"
         android:text="@string/action_changelog"/>
 
