@@ -108,17 +108,6 @@ public class BaseFragment extends Fragment implements StackedFragment {
         outState.putCharSequence(Consts.ARG_FRAGMENT_TITLE, mTitle);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public void onDestroyOptionsMenu() {
-        // Log.i(getClass().getSimpleName(), "onDestroyOptionsMenu");
-        super.onDestroyOptionsMenu();
-    }
-
     public final void handleIntent(Intent intent) {
         if (getContext() == null) {
             this.mPendingIntent = intent;

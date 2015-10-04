@@ -35,7 +35,7 @@ import java.util.Collection;
 
 public abstract class RecyclerArrayAdapter<T, VH extends RecyclerView.ViewHolder>
         extends RecyclerView.Adapter<VH> {
-    private ArrayList<T> items = new ArrayList<>();
+    private final ArrayList<T> items = new ArrayList<>();
 
     public RecyclerArrayAdapter() {
         super();

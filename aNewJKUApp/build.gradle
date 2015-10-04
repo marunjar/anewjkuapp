@@ -18,6 +18,7 @@ android {
                 'proguard-rules-glide.txt',
                 'proguard-rules-google-play-services.txt',
                 'proguard-rules-ical4j.txt',
+                'proguard-rules-aboutlibraries.pro',
                 'proguard-rules-keep-names.txt'
 
         buildConfigField "boolean", "FOSS_ONLY", "false"
@@ -91,7 +92,7 @@ dependencies {
     compile 'com.github.alamkanak:android-week-view:1.2.3'
 
     compile 'de.cketti.library.changelog:ckchangelog:1.2.2'
-    compile('com.mikepenz:aboutlibraries:5.2.3@aar') {
+    compile('com.mikepenz:aboutlibraries:5.2.4@aar') {
         transitive = true
     }
 

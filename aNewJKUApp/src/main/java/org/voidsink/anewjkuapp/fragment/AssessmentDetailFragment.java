@@ -112,11 +112,6 @@ public class AssessmentDetailFragment extends TermFragment implements
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
     public void onContentChanged(boolean selfChange) {
         getLoaderManager().restartLoader(0, null, this);
     }

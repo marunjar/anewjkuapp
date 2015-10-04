@@ -69,7 +69,7 @@ public class SectionedRecyclerViewSimpleAdapter extends SectionedRecyclerViewBas
     }
 
     public static class SectionViewHolder extends RecyclerView.ViewHolder {
-        public TextView title;
+        public final TextView title;
 
         public SectionViewHolder(View view, int mTextResourceid) {
             super(view);

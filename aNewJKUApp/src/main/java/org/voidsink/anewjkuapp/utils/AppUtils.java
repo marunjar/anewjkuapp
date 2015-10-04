@@ -43,8 +43,6 @@ import android.os.Bundle;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
-import com.github.mikephil.charting.data.Entry;
-
 import org.apache.commons.lang.time.DateUtils;
 import org.voidsink.anewjkuapp.ImportPoiTask;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
@@ -214,11 +212,7 @@ public class AppUtils {
 
     private static boolean createCalendars(Context context) {
         Account account = AppUtils.getAccount(context);
-        if (account == null) {
-            return true;
-        }
-
-        return CalendarUtils.createCalendarsIfNecessary(context, account);
+        return (account == null || CalendarUtils.createCalendarsIfNecessary(context, account));
     }
 
     private static boolean removeCalendars(Context context) {
@@ -549,15 +543,6 @@ public class AppUtils {
                 | IOException e) {
             Log.e(TAG, "getAccountAuthToken", e);
             return null;
-        }
-    }
-
-    public static void addSerieToPieChart(List<Entry> values, List<String> captions, List<Integer> colors, String category,
-                                          double value, double ects, int color) {
-        if (value > 0) {
-            values.add(new EctsEntry((float) value, (float) ects, values.size()));
-            captions.add(category);
-            colors.add(color);
         }
     }
 

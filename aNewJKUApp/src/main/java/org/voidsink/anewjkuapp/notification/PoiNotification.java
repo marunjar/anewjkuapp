@@ -41,10 +41,10 @@ import edu.emory.mathcs.backport.java.util.Collections;
 
 public class PoiNotification {
 
-    private Context mContext;
+    private final Context mContext;
 
-    private List<String> mInserts;
-    private List<String> mUpdates;
+    private final List<String> mInserts;
+    private final List<String> mUpdates;
 
     public PoiNotification(Context mContext) {
         this.mContext = mContext;

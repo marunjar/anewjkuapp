@@ -54,8 +54,8 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 
     // Global variables
     // Define a variable to contain a content resolver instance
-    private Context mContext;
-    private CalendarBuilder mCalendarBuilder;
+    private final Context mContext;
+    private final CalendarBuilder mCalendarBuilder;
     private ExecutorService mExecutorService = null;
 
     /**

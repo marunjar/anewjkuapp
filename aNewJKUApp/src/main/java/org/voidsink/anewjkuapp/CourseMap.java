@@ -54,7 +54,7 @@ public class CourseMap {
         }
     };
 
-    private Map<String, Course> map;
+    private final Map<String, Course> map;
 
     public CourseMap(Context context) {
         this.map = new HashMap<>();

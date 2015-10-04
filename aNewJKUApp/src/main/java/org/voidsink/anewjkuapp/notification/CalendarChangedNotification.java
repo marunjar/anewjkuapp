@@ -42,12 +42,12 @@ import edu.emory.mathcs.backport.java.util.Collections;
 
 public class CalendarChangedNotification {
 
-    private Context mContext;
+    private final Context mContext;
 
-    private String mName;
-    private List<String> mInserts;
-    private List<String> mUpdates;
-    private List<String> mDeletes;
+    private final String mName;
+    private final List<String> mInserts;
+    private final List<String> mUpdates;
+    private final List<String> mDeletes;
 
     public CalendarChangedNotification(Context mContext, String name) {
         this.mName = name;

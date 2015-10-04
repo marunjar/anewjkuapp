@@ -65,10 +65,10 @@ public class ImportExamTask implements Callable<Void> {
     private final long mSyncFromNow;
 
     private ContentProviderClient mProvider;
-    private Account mAccount;
+    private final Account mAccount;
     private SyncResult mSyncResult;
-    private Context mContext;
-    private ContentResolver mResolver;
+    private final Context mContext;
+    private final ContentResolver mResolver;
 
     private boolean mShowProgress;
     private SyncNotification mUpdateNotification;

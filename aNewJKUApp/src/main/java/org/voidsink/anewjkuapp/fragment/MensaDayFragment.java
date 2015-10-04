@@ -123,8 +123,8 @@ public class MensaDayFragment extends BaseFragment {
 
     private class MenuLoadTask extends AsyncTask<String, Void, Void> {
         private Context mContext;
-        private MenuLoader mLoader;
-        private int mIndex;
+        private final MenuLoader mLoader;
+        private final int mIndex;
         private IMensa mMensa;
 
         public MenuLoadTask(MenuLoader loader, int index) {

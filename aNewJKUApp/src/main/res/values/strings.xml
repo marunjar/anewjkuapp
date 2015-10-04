@@ -24,6 +24,7 @@
     <string name="action_changelog">Change Log</string>
     <string name="action_settings_summary">Einstellungen von KUSSS, Benachrichtigungen, ...</string>
     <string name="action_snap_to_location">Karte zur aktuellen GPS-Position bewegen</string>
+    <string name="action_tap_to_login">zum Einloggen tippen</string>
 
     <string name="grade_1">Sehr gut</string>
     <string name="grade_2">Gut</string>

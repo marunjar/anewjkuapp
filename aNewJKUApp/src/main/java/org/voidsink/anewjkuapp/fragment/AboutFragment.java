@@ -28,6 +28,7 @@ package org.voidsink.anewjkuapp.fragment;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,8 +101,8 @@ public class AboutFragment extends BaseFragment {
     private Colors getActivityColor(Context context) {
 
         TypedArray themeArray = context.getTheme().obtainStyledAttributes(new int[]{R.attr.colorPrimary, R.attr.colorPrimaryDark});
-        int colorPrimary = themeArray.getColor(0, context.getResources().getColor(R.color.default_primary));
-        int colorPrimaryDark = themeArray.getColor(1, context.getResources().getColor(R.color.default_primaryDark));
+        int colorPrimary = themeArray.getColor(0, ContextCompat.getColor(context, R.color.default_primary));
+        int colorPrimaryDark = themeArray.getColor(1, ContextCompat.getColor(context, R.color.default_primaryDark));
         themeArray.recycle();
 
         return new Colors(colorPrimary, colorPrimaryDark);

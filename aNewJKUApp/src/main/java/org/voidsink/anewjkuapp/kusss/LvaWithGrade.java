@@ -26,8 +26,8 @@ package org.voidsink.anewjkuapp.kusss;
 
 public class LvaWithGrade {
 
-    private Course course;
-    private Assessment grade;
+    private final Course course;
+    private final Assessment grade;
 
     public LvaWithGrade(Course course, Assessment grade) {
         this.course = course;

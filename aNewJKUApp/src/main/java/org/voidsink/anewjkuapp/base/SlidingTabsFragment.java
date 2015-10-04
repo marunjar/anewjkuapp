@@ -57,7 +57,7 @@ public abstract class SlidingTabsFragment extends BaseFragment {
     /**
      * List of {@link SlidingTabItem} which represent this sample's tabs.
      */
-    private List<SlidingTabItem> mTabs = new ArrayList<>();
+    private final List<SlidingTabItem> mTabs = new ArrayList<>();
 
     private TabLayout mTabLayout;
 

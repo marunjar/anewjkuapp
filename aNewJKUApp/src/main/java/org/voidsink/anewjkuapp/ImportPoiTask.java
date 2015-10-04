@@ -62,10 +62,10 @@ public class ImportPoiTask implements Callable<Void> {
 
     private static final String TAG = ImportPoiTask.class.getSimpleName();
 
-    private ContentProviderClient mProvider;
-    private Context mContext;
-    private File mFile;
-    private boolean mIsDefault;
+    private final ContentProviderClient mProvider;
+    private final Context mContext;
+    private final File mFile;
+    private final boolean mIsDefault;
 
     public static final String[] POI_PROJECTION = new String[]{
             PoiContentContract.Poi.COL_ROWID,

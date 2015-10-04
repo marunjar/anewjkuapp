@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp.rss.lib;
 
@@ -105,7 +105,7 @@ public class FeedEntryImpl implements FeedEntry {
 
             shortDescr = shortDescr.trim();
 
-            Pattern p = Pattern.compile("(\\D\\.|\\?|\\!)(\\s{1,})");
+            Pattern p = Pattern.compile("(\\D\\.|\\?|\\!)(\\s+)");
             Matcher m = p.matcher(shortDescr);
 
             if (m.find()) {

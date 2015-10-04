@@ -43,15 +43,14 @@ public abstract class SectionedRecyclerViewBaseAdapter extends RecyclerView.Adap
 
     private static final int SECTION_TYPE = 0;
     private boolean mValid = true;
-    protected RecyclerView.Adapter mBaseAdapter;
-    private SparseArray<Section> mSections = new SparseArray<>();
-    private RecyclerView mRecyclerView;
+    protected final RecyclerView.Adapter mBaseAdapter;
+    private final SparseArray<Section> mSections = new SparseArray<>();
 
     public SectionedRecyclerViewBaseAdapter(RecyclerView recyclerView,
                                             RecyclerView.Adapter baseAdapter) {
 
         mBaseAdapter = baseAdapter;
-        mRecyclerView = recyclerView;
+        RecyclerView mRecyclerView = recyclerView;
 
         mBaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override

@@ -56,14 +56,13 @@ public abstract class MensaFragmentDetail extends BaseFragment implements Loader
 
     public static final String TAG = MensaFragmentDetail.class.getSimpleName();
     private MensaMenuAdapter mAdapter;
-    private RecyclerView mRecyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         mAdapter = new MensaMenuAdapter(getContext(), true);
         mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter(mRecyclerView, mAdapter));

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -6,8 +6,6 @@
  * \________|____|__ \______/   \____|__  /   __/|   __/
  *                  \/                  \/|__|   |__|
  *
- * Copyright 2010, 2011, 2012, 2013 mapsforge.org
- * Copyright 2013-2014 Ludwig M Brinckmann
  * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp.fragment;
 
@@ -37,6 +35,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -231,7 +230,7 @@ public class MapFragment extends BaseFragment implements
             setNewGoal(new LatLong(lat, lon), name);
         }
         c.close();
-        
+
         if (mSearchView != null) {
             mSearchView.setQuery("", false);
         }
@@ -257,8 +256,7 @@ public class MapFragment extends BaseFragment implements
             if (!name.isEmpty()) {
                 // generate Bubble image
                 TextView bubbleView = new TextView(this.getContext());
-                MapUtils.setBackground(bubbleView,
-                        getResources().getDrawable(R.drawable.balloon_overlay));
+                MapUtils.setBackground(bubbleView, ContextCompat.getDrawable(getContext(), R.drawable.balloon_overlay));
                 bubbleView.setGravity(Gravity.CENTER);
                 bubbleView.setMaxEms(20);
                 bubbleView.setTextSize(15);
@@ -273,7 +271,7 @@ public class MapFragment extends BaseFragment implements
                 this.goalLocationOverlay.setHorizontalOffset(0);
                 this.goalLocationOverlay.setVerticalOffset(-bubble.getHeight() / 2);
             } else {
-                Drawable d = getResources().getDrawable(R.drawable.ic_marker_goal_position);
+                Drawable d = ContextCompat.getDrawable(getContext(), R.drawable.ic_marker_goal_position);
                 Bitmap b = AndroidGraphicFactory.convertToBitmap(d);
 
                 // set new goal
@@ -414,7 +412,7 @@ public class MapFragment extends BaseFragment implements
         layers.add(this.goalLocationOverlay);
 
         // overlay with a marker to show the actual position
-        Drawable drawable = getContext().getResources().getDrawable(R.drawable.ic_marker_own_position);
+        Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_marker_own_position);
         Bitmap bitmap = AndroidGraphicFactory.convertToBitmap(drawable);
 
         this.mMyLocationOverlay = new LocationOverlay(getContext(), this.mapViewPosition, bitmap);

@@ -38,7 +38,7 @@ import java.util.Locale;
 public class MensaDay implements IDay {
 
     private Date date;
-    private List<IMenu> menus;
+    private final List<IMenu> menus;
     private boolean isModified = false;
     private Mensa mensa;
 

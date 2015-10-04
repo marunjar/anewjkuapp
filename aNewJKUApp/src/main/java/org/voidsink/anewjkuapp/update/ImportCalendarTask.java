@@ -82,12 +82,12 @@ public class ImportCalendarTask implements Callable<Void> {
             .compile("Lva-LeiterIn:\\s+");
     private static final String EXTENDED_PROPERTY_NAME_KUSSS_ID = "kusssId";
 
-    private ContentProviderClient mProvider;
-    private Account mAccount;
-    private SyncResult mSyncResult;
-    private Context mContext;
-    private String mCalendarName;
-    private ContentResolver mResolver;
+    private final ContentProviderClient mProvider;
+    private final Account mAccount;
+    private final SyncResult mSyncResult;
+    private final Context mContext;
+    private final String mCalendarName;
+    private final ContentResolver mResolver;
 
     private final long mSyncFromNow;
 

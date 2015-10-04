@@ -135,7 +135,7 @@ public class MainActivity extends ThemedActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             // set Statusbar color to transparent if a drawer exists
             // in this case status bar is colored by DrawerLayout.setStatusBarBackgroundColor(). which is default primaryDark
-            getWindow().setStatusBarColor(getResources().getColor(android.R.color.transparent));
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
         }
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED ||
@@ -196,8 +196,6 @@ public class MainActivity extends ThemedActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-
     }
 
     private Fragment attachFragmentById(int id, boolean saveLastFragment) {
@@ -262,7 +260,7 @@ public class MainActivity extends ThemedActivity {
                 if (mDrawerUser != null) {
                     Account account = AppUtils.getAccount(MainActivity.this);
                     if (account == null) {
-                        mDrawerUser.setText("Click to login");
+                        mDrawerUser.setText(R.string.action_tap_to_login);
                         mDrawerUser.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {

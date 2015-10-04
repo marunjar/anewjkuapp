@@ -161,7 +161,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public static boolean toBool(int integer) {
-        return (integer == 1) ? true : false;
+        return (integer == 1);
     }
 
     public static int toInt(boolean bool) {

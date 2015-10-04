@@ -33,9 +33,9 @@ import android.support.v4.app.NotificationCompat;
 import org.voidsink.anewjkuapp.R;
 
 public class SyncNotification {
-    private Context mContext;
+    private final Context mContext;
     private NotificationCompat.Builder mBuilder;
-    private int id;
+    private final int id;
 
     public SyncNotification(Context mContext, int id) {
         this.mContext = mContext;

@@ -30,9 +30,9 @@ import org.voidsink.anewjkuapp.mensa.IMenu;
 
 public class MensaInfoItem implements MensaItem {
     protected final IDay mDay;
-    protected String title;
-    protected String descr;
-    protected IMensa mMensa;
+    protected final String title;
+    protected final String descr;
+    protected final IMensa mMensa;
 
     public MensaInfoItem(IMensa mensa, IDay day, String title, String descr) {
         this.mDay = day;

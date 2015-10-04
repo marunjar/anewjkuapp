@@ -28,7 +28,6 @@ package org.voidsink.anewjkuapp.workaround;
 import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 
 /**

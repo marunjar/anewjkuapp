@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp.rss.lib;
 
@@ -37,7 +37,6 @@ import java.io.StringReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;

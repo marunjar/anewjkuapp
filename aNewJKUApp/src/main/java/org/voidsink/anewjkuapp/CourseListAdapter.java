@@ -126,7 +126,7 @@ public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, Course
     }
 
     protected static class LvaHeaderHolder extends RecyclerView.ViewHolder {
-        public TextView mText;
+        public final TextView mText;
 
         public LvaHeaderHolder(View itemView) {
             super(itemView);

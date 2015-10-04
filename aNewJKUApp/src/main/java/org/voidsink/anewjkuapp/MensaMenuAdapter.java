@@ -47,7 +47,7 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
 
     private static final DateFormat df = SimpleDateFormat.getDateInstance();
 
-    protected boolean mUseDateHeader;
+    private final boolean mUseDateHeader;
 
     public MensaMenuAdapter(Context context, boolean useDateHeader) {
         super();
@@ -164,11 +164,11 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
 
     public static class MenuViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView mName;
-        public TextView mSoup;
-        public TextView mMeal;
-        public TextView mPrice;
-        public TextView mOehBonus;
+        public final TextView mName;
+        public final TextView mSoup;
+        public final TextView mMeal;
+        public final TextView mPrice;
+        public final TextView mOehBonus;
 
         public MenuViewHolder(View itemView) {
             super(itemView);
@@ -182,8 +182,8 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
     }
 
     public static class MensaInfoHolder extends RecyclerView.ViewHolder {
-        public TextView mTitle;
-        public TextView mDescr;
+        public final TextView mTitle;
+        public final TextView mDescr;
 
         public MensaInfoHolder(View itemView) {
             super(itemView);
@@ -194,7 +194,7 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
 
 
     public class MenuHeaderHolder extends RecyclerView.ViewHolder {
-        public TextView mText;
+        public final TextView mText;
 
         public MenuHeaderHolder(View itemView) {
             super(itemView);

@@ -26,9 +26,9 @@
 package org.voidsink.sectionedrecycleradapter;
 
 public class Section {
-    int firstPosition;
+    final int firstPosition;
     int sectionedPosition;
-    CharSequence title;
+    final CharSequence title;
 
     public Section(int firstPosition, CharSequence title) {
         this.firstPosition = firstPosition;

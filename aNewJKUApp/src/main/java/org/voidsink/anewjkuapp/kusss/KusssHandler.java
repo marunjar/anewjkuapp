@@ -95,7 +95,7 @@ public class KusssHandler {
     private static final int TIMEOUT_SEARCH_EXAM_BY_LVA = 10 * 1000; //10s
 
     private static KusssHandler handler = null;
-    private CookieManager mCookies;
+    private final CookieManager mCookies;
 
     private KusssHandler() {
         this.mCookies = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
@@ -494,8 +494,7 @@ public class KusssHandler {
         return exams;
     }
 
-    public List<Exam> getNewExamsByCourseId(Context c, List<Course> courses, List<Term> terms)
-            throws IOException {
+    public List<Exam> getNewExamsByCourseId(Context c, List<Course> courses, List<Term> terms) {
 
         List<Exam> exams = new ArrayList<>();
         try {

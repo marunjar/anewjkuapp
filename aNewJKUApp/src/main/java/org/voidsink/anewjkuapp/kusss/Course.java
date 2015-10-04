@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp.kusss;
 
@@ -37,7 +37,7 @@ public class Course {
     private static final Pattern courseIdPattern = Pattern
             .compile(KusssHandler.PATTERN_LVA_NR_WITH_DOT);
 
-    private Term term;
+    private final Term term;
     private String courseId;
     private String title;
     private int cid;

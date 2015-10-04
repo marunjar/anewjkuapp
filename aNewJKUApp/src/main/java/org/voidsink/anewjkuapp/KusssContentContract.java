@@ -35,7 +35,7 @@ public class KusssContentContract {
     public static final String CONTENT_TYPE_DIR = "vnd.android.cursor.dir";
     public static final String CONTENT_TYPE_ITEM = "vnd.android.cursor.item";
 
-    public static Uri CONTENT_URI = Uri.parse(String.format("content://%1$s",
+    public static final Uri CONTENT_URI = Uri.parse(String.format("content://%1$s",
             AUTHORITY));
 
     public static class Course {

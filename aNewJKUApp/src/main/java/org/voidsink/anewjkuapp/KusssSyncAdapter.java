@@ -54,8 +54,8 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
 
     // Global variables
     // Define a variable to contain a content resolver instance
-    ContentResolver mContentResolver;
-    private Context mContext;
+    private final ContentResolver mContentResolver;
+    private final Context mContext;
     private ExecutorService mExecutorService = null;
 
     /**

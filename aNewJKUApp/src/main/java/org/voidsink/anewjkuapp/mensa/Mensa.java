@@ -33,8 +33,8 @@ import java.util.List;
 public class Mensa implements IMensa {
 
     private final String key;
-    private String name;
-    private List<IDay> days;
+    private final String name;
+    private final List<IDay> days;
 
     public Mensa(String key, String name) {
         this.key = key;

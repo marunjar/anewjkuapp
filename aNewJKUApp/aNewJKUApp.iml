@@ -99,7 +99,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/preference-v14/23.0.1/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/preference-v7/23.0.1/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.github.alamkanak/android-week-view/1.2.3/jars" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.mikepenz/aboutlibraries/5.2.3/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.mikepenz/aboutlibraries/5.2.4/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/de.cketti.library.changelog/ckchangelog/1.2.2/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/uk.co.chrisjenx/calligraphy/2.1.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
@@ -122,10 +122,10 @@
     <orderEntry type="library" exported="" name="ckchangelog-1.2.2" level="project" />
     <orderEntry type="library" exported="" name="androidsvg-1.2.2-beta-1" level="project" />
     <orderEntry type="library" exported="" name="mapsforge-map-android-0.5.2" level="project" />
-    <orderEntry type="library" exported="" name="aboutlibraries-5.2.3" level="project" />
     <orderEntry type="library" exported="" name="mapsforge-map-reader-0.5.2" level="project" />
-    <orderEntry type="library" exported="" name="kxml2-2.3.0" level="project" />
     <orderEntry type="library" exported="" name="commons-lang-2.6" level="project" />
+    <orderEntry type="library" exported="" name="kxml2-2.3.0" level="project" />
+    <orderEntry type="library" exported="" name="aboutlibraries-5.2.4" level="project" />
     <orderEntry type="library" exported="" name="support-v4-23.0.1" level="project" />
     <orderEntry type="library" exported="" name="design-23.0.1" level="project" />
     <orderEntry type="library" exported="" name="calligraphy-2.1.0" level="project" />

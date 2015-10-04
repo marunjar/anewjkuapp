@@ -28,6 +28,7 @@ package org.voidsink.anewjkuapp;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff.Mode;
+import android.support.v4.content.ContextCompat;
 import android.view.MenuItem;
 
 import org.mapsforge.core.graphics.Bitmap;
@@ -75,7 +76,7 @@ public class LocationOverlay extends MyLocationOverlay {
 
                 // get accent color from theme
                 TypedArray themeArray = mContext.getTheme().obtainStyledAttributes(new int[]{R.attr.colorAccent});
-                int mColorAccent = themeArray.getColor(0, mContext.getResources().getColor(R.color.default_accent));
+                int mColorAccent = themeArray.getColor(0, ContextCompat.getColor(mContext, R.color.default_accent));
                 themeArray.recycle();
 
                 this.snapToLocationItem.getIcon()

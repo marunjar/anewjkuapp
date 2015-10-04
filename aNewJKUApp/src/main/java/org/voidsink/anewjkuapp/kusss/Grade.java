@@ -42,7 +42,7 @@ public enum Grade {
 
     private final boolean isPositive;
     private final boolean isNumber;
-    private int value;
+    private final int value;
 
     Grade(int value, boolean isPositive, boolean isNumber) {
         this.value = value;
