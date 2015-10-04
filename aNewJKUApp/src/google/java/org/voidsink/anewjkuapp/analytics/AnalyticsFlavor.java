@@ -157,7 +157,7 @@ public class AnalyticsFlavor implements IAnalytics {
                 }
 
                 if (!TextUtils.isEmpty(additionalData)) {
-                    eb.setCustomDimension(GA_DIM_ADDITIONAL_DATA, additionalData);
+                    eb.setCustomDimension(GA_DIM_ADDITIONAL_DATA, additionalData.substring(0, Math.min(additionalData.length(), 2048)));
                 }
                 eb.setCustomDimension(GA_DIM_EXCEPTION_MESSAGE, e.getMessage());
 
