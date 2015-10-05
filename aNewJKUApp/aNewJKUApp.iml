@@ -132,10 +132,10 @@
     <orderEntry type="library" exported="" name="android-week-view-1.2.3" level="project" />
     <orderEntry type="library" exported="" name="mapsforge-map-0.5.2" level="project" />
     <orderEntry type="library" exported="" name="commons-codec-1.8" level="project" />
-    <orderEntry type="library" exported="" name="backport-util-concurrent-3.1" level="project" />
     <orderEntry type="library" exported="" name="glide-3.6.1" level="project" />
-    <orderEntry type="library" exported="" name="ical4j-1.0.6" level="project" />
+    <orderEntry type="library" exported="" name="backport-util-concurrent-3.1" level="project" />
     <orderEntry type="library" exported="" name="mapsforge-core-0.5.2" level="project" />
+    <orderEntry type="library" exported="" name="ical4j-1.0.6" level="project" />
     <orderEntry type="library" exported="" name="preference-v7-23.0.1" level="project" />
     <orderEntry type="library" exported="" name="MPAndroidChart-v2.1.4" level="project" />
     <orderEntry type="library" exported="" name="dashclock-api-2.0.0" level="project" />
