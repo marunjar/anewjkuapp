@@ -11,4 +11,9 @@
         <item name="android:popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
+    <style name="AppTheme.Launch" parent="AppTheme.Base.Launch">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    </style>
+
 </resources>

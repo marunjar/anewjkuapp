@@ -30,9 +30,15 @@
         <item name="colorAccent">@color/default_accent</item>
     </style>
 
+    <style name="AppTheme.Base.Launch" parent="AppTheme.Base.Light">
+      <item name="android:windowBackground">@drawable/launch_screen</item>
+    </style>
+
     <style name="AppTheme" parent="AppTheme.Base"/>
 
     <style name="AppTheme.Light" parent="AppTheme.Base.Light"/>
+
+    <style name="AppTheme.Launch" parent="AppTheme.Base.Launch"/>
 
     <style name="DialogStyle.Base" parent="Theme.AppCompat.Dialog">
         <item name="colorPrimary">@color/default_primary</item>
