@@ -44,7 +44,7 @@ public class AnalyticsFlavor implements IAnalytics {
     @Override
     public void sendException(Context c, Exception e, boolean fatal, String additionalData) {
         if (e != null) {
-            Log.d(TAG, String.format("%s (%s)", e.getMessage(), additionalData.substring(0, Math.min(additionalData.length(), 2048))));
+            Log.d(TAG, String.format("%s (%s)", e.getMessage(), additionalData.substring(0, Math.min(additionalData.length(), 4096))));
         }
     }
 
