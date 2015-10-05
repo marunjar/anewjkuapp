@@ -4,6 +4,12 @@
 		    - fixed
 		    * changed
 		    + added -->
+    <release version="0.42" versioncode="140042">
+        <change>- App: viele Korrekturen und Optimierungen</change>
+        <change>* App: Design angepasst</change>
+        <change>* Karte: neue Daten von OpenStreetMap</change>
+        <change>+ Einstellungen: nur LVAs mit Noten anzeigen</change>
+    </release>
     <release version="0.41" versioncode="140041">
         <change>* App: Schriftarten und Farben angepasst</change>
     </release>
