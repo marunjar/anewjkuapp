@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,17 +20,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.calendar;
 
+import android.Manifest;
 import android.accounts.Account;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -48,7 +52,7 @@ import java.util.Map;
 
 public final class CalendarUtils {
 
-    public static final int COLOR_DEFAULT_EXAM = Consts.COLOR_DEFAULT_EXAM;
+    private static final int COLOR_DEFAULT_EXAM = Consts.COLOR_DEFAULT_EXAM;
     public static final int COLOR_DEFAULT_LVA = Consts.COLOR_DEFAULT_LVA;
     public static final String ARG_CALENDAR_EXAM = "ARG_EXAM_CALENDAR";
     public static final String ARG_CALENDAR_COURSE = "ARG_LVA_CALENDAR";
@@ -61,18 +65,18 @@ public final class CalendarUtils {
             CalendarContractWrapper.Calendars.ACCOUNT_TYPE(),
             CalendarContractWrapper.Calendars.CALENDAR_ACCESS_LEVEL()};
     public static final int COLUMN_CAL_ID = 0;
-    public static final int COLUMN_CAL_NAME = 1;
-    public static final int COLUMN_CAL_DISPLAY_NAME = 2;
+    private static final int COLUMN_CAL_NAME = 1;
+    private static final int COLUMN_CAL_DISPLAY_NAME = 2;
     public static final int COLUMN_CAL_ACCOUNT_NAME = 3;
     public static final int COLUMN_CAL_ACCOUNT_TYPE = 4;
-    public static final int COLUMN_CAL_ACCESS_LEVEL = 5;
+    private static final int COLUMN_CAL_ACCESS_LEVEL = 5;
     private static final String TAG = CalendarUtils.class.getSimpleName();
 
     private CalendarUtils() {
     }
 
-    public static Uri createCalendar(Context context, Account account,
-                                     String name, int color) {
+    private static Uri createCalendar(Context context, Account account,
+                                      String name, int color) {
         try {
             String accountName = account.name;
             String accountType = account.type;
@@ -182,10 +186,15 @@ public final class CalendarUtils {
     private static Map<String, String> getCalIDs(Context context,
                                                  Account account) {
         // get map with calendar ids and names for specific account
-        Map<String, String> ids = new HashMap<String, String>();
+        HashMap<String, String> ids = new HashMap<>();
 
         // nothing to do if there's no account
         if (context == null || account == null) {
+            return ids;
+        }
+
+        // nothing to do if there's no permission
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_DENIED) {
             return ids;
         }
 

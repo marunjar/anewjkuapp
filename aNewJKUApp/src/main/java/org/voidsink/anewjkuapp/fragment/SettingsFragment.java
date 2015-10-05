@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,19 +20,22 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.fragment;
 
+import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceManager;
-import android.preference.PreferenceScreen;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
-import android.support.v4.preference.PreferenceFragment;
+import android.support.v7.preference.CheckBoxPreference;
+import android.support.v7.preference.ListPreference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceScreen;
 import android.text.TextUtils;
 
 import org.voidsink.anewjkuapp.BuildConfig;
@@ -40,17 +43,27 @@ import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.SettingsActivity;
 import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.base.BasePreferenceFragment;
 import org.voidsink.anewjkuapp.base.TwoLinesListPreference;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
-public class SettingsFragment extends PreferenceFragment {
+import java.io.File;
+import java.io.FileFilter;
+import java.util.ArrayList;
+
+public class SettingsFragment extends BasePreferenceFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.preferences);
+    }
+
+    @Override
+    public void onCreatePreferences(Bundle bundle, String s) {
+
     }
 
     @Override
@@ -61,13 +74,13 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
     @Override
-    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
+    public boolean onPreferenceTreeClick(Preference preference) {
         if (preference instanceof PreferenceScreen) {
             if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
                 if (preference.getFragment() != null) {
                     try {
                         Class<?> clazz = getActivity().getClassLoader().loadClass(preference.getFragment());
-                        if (PreferenceFragment.class.isAssignableFrom(clazz)) {
+                        if (PreferenceFragmentCompat.class.isAssignableFrom(clazz)) {
                             Fragment pf = (Fragment) clazz.newInstance();
                             getActivity().getSupportFragmentManager()
                                     .beginTransaction()
@@ -76,16 +89,16 @@ public class SettingsFragment extends PreferenceFragment {
                                     .commit();
                             return true;
                         }
-                    } catch (ClassNotFoundException | java.lang.InstantiationException | IllegalAccessException e) {
-                        e.printStackTrace();
+                    } catch (Exception e) {
+                        Analytics.sendException(getActivity(), e, false);
                     }
                 }
             }
         }
-        return super.onPreferenceTreeClick(preferenceScreen, preference);
+        return super.onPreferenceTreeClick(preference);
     }
 
-    public static class KusssSettingsFragment extends PreferenceFragment {
+    public static class KusssSettingsFragment extends BasePreferenceFragment {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -100,6 +113,11 @@ public class SettingsFragment extends PreferenceFragment {
         }
 
         @Override
+        public void onCreatePreferences(Bundle bundle, String s) {
+
+        }
+
+        @Override
         public void onStart() {
             super.onStart();
 
@@ -107,7 +125,7 @@ public class SettingsFragment extends PreferenceFragment {
         }
     }
 
-    public static class AppSettingsFragment extends PreferenceFragment {
+    public static class AppSettingsFragment extends BasePreferenceFragment {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -127,6 +145,67 @@ public class SettingsFragment extends PreferenceFragment {
                 trackingErrors.setEnabled(false);
                 trackingErrors.setChecked(false);
             }
+
+            ListPreference mapFiles = (ListPreference) findPreference(PreferenceWrapper.PREF_MAP_FILE);
+            if (mapFiles != null) {
+                ArrayList<String> entries = new ArrayList<>();
+                ArrayList<String> entryValues = new ArrayList<>();
+
+                CollectMapFiles(entries, entryValues);
+
+                mapFiles.setEntries(entries.toArray(new CharSequence[entries.size()]));
+                mapFiles.setEntryValues(entryValues.toArray(new CharSequence[entryValues.size()]));
+
+                int index = Math
+                        .max(mapFiles.findIndexOfValue(getPreferenceManager().getSharedPreferences().getString(
+                                mapFiles.getKey(), "")), 0);
+                mapFiles.setValueIndex(index);
+
+            }
+
+        }
+
+        private void CollectMapFiles(ArrayList<String> entries, ArrayList<String> entryValues) {
+            entries.add("no .map file");
+            entryValues.add("");
+
+            ProgressDialog progressDialog = ProgressDialog.show(getContext(),
+                    getContext().getString(R.string.progress_title), getContext()
+                            .getString(R.string.progress_load_map_files), true);
+
+            File root = new File(Environment.getExternalStorageDirectory()
+                    .getAbsolutePath());
+            IterateDir(root, entries, entryValues);
+
+            progressDialog.dismiss();
+        }
+
+        private void IterateDir(File f, ArrayList<String> entries,
+                                ArrayList<String> entryValues) {
+
+            File[] files = f.listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File pathname) {
+                    return pathname.isDirectory()
+                            || (pathname.isFile() && pathname.toString().endsWith(
+                            ".map"));
+                }
+            });
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isDirectory()) {
+                        IterateDir(file, entries, entryValues);
+                    } else {
+                        entries.add(file.getPath());
+                        entryValues.add(file.getPath());
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onCreatePreferences(Bundle bundle, String s) {
+
         }
 
         @Override
@@ -137,7 +216,7 @@ public class SettingsFragment extends PreferenceFragment {
         }
     }
 
-    public static class TimetableSettingsFragment extends PreferenceFragment {
+    public static class TimetableSettingsFragment extends BasePreferenceFragment {
 
         private CalendarUtils.CalendarList calendars;
 
@@ -187,6 +266,11 @@ public class SettingsFragment extends PreferenceFragment {
             }
         }
 
+        @Override
+        public void onCreatePreferences(Bundle bundle, String s) {
+
+        }
+
         private void updateTextPrefSummary(ListPreference preference, String value, int defaultSummaryResId) {
             if (preference != null) {
                 if (TextUtils.isEmpty(value)) {
@@ -203,9 +287,9 @@ public class SettingsFragment extends PreferenceFragment {
         }
 
         private void setEntries(CalendarUtils.CalendarList calendars, TwoLinesListPreference preference) {
-            preference.setEntries(calendars.getDisplayNames().toArray(new String[0]));
+            preference.setEntries(calendars.getDisplayNames().toArray(new String[calendars.getDisplayNames().size()]));
             preference.setEntryValues(calendars.getIdsAsStrings());
-            preference.setEntriesSubtitles(calendars.getAccountNames().toArray(new String[0]));
+            preference.setEntriesSubtitles(calendars.getAccountNames().toArray(new String[calendars.getAccountNames().size()]));
         }
 
         @Override

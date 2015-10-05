@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,21 +20,25 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp.activity;
 
+import android.Manifest;
 import android.accounts.Account;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -52,6 +56,7 @@ import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.base.BaseFragment;
+import org.voidsink.anewjkuapp.base.StackedFragment;
 import org.voidsink.anewjkuapp.base.ThemedActivity;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.fragment.AssessmentFragment;
@@ -111,11 +116,38 @@ public class MainActivity extends ThemedActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
+        if (mNavigationView != null) {
+            Fragment f = getSupportFragmentManager().findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
+            if (f instanceof StackedFragment) {
+                int id = ((StackedFragment) f).getId(this);
+                if (id > 0) {
+                    outState.putInt(ARG_SHOW_FRAGMENT_ID, id);
+                }
+            }
+        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // set Statusbar color to transparent if a drawer exists
+            // in this case status bar is colored by DrawerLayout.setStatusBarBackgroundColor(). which is default primaryDark
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR}, 0);
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.GET_ACCOUNTS}, 1);
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCOUNT_MANAGER) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCOUNT_MANAGER}, 2);
+        }
 
         // do things if new version was installed
         AppUtils.doOnNewVersion(this);
@@ -136,8 +168,6 @@ public class MainActivity extends ThemedActivity {
         mUserLearnedDrawer = PreferenceWrapper.getUserLearnedDrawer(this);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
-                GravityCompat.START);
 
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         if (mNavigationView != null) {
@@ -161,6 +191,11 @@ public class MainActivity extends ThemedActivity {
                 cl.getLogDialog().show();
             }
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private Fragment attachFragmentById(int id, boolean saveLastFragment) {
@@ -188,10 +223,24 @@ public class MainActivity extends ThemedActivity {
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        attachFragment(menuItem, true);
+                        checkNavItem(menuItem);
+
+                        switch (menuItem.getItemId()) {
+                            case R.id.nav_settings: {
+                                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                                break;
+                            }
+                            case R.id.nav_about: {
+                                startActivity(new Intent(MainActivity.this, AboutActivity.class));
+                                break;
+                            }
+                            default:
+                                attachFragment(menuItem, true);
+                                break;
+                        }
 
                         mDrawerLayout.closeDrawers();
-                        return true;
+                        return menuItem.isCheckable();
                     }
                 });
 
@@ -211,7 +260,7 @@ public class MainActivity extends ThemedActivity {
                 if (mDrawerUser != null) {
                     Account account = AppUtils.getAccount(MainActivity.this);
                     if (account == null) {
-                        mDrawerUser.setText("Click to login");
+                        mDrawerUser.setText(R.string.action_tap_to_login);
                         mDrawerUser.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -324,15 +373,21 @@ public class MainActivity extends ThemedActivity {
 
         if (startFragment != null) {
             try {
-                menuItem.setChecked(true);
+                final Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
+
+                if (oldFragment != null) {
+                    if (oldFragment.getClass().getCanonicalName().equals(startFragment.getCanonicalName())) {
+                        return oldFragment;
+                    }
+                }
 
                 Fragment f = startFragment.newInstance();
 
                 Bundle b = new Bundle();
                 b.putCharSequence(Consts.ARG_FRAGMENT_TITLE, menuItem.getTitle());
+                b.putInt(Consts.ARG_FRAGMENT_ID, menuItem.getItemId());
                 f.setArguments(b);
 
-                final Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
                 final boolean addToBackstack = (oldFragment != null) && (!oldFragment.getClass().equals(f.getClass()));
 
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -368,6 +423,44 @@ public class MainActivity extends ThemedActivity {
 
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
+
+        if (mNavigationView != null) {
+            Fragment f = getSupportFragmentManager().findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
+            if (f instanceof StackedFragment) {
+                int id = ((StackedFragment) f).getId(this);
+                if (id > 0) {
+                    MenuItem menuItem = mNavigationView.getMenu().findItem(id);
+                    checkNavItem(menuItem);
+                }
+            }
+        }
+    }
+
+    private void uncheckMenuItems(Menu menu) {
+        if (menu != null) {
+            for (int i = 0; i < menu.size(); i++) {
+                MenuItem item = menu.getItem(i);
+
+                if (item.isCheckable()) {
+                    item.setChecked(false);
+                }
+
+                if (item.hasSubMenu()) {
+                    uncheckMenuItems(item.getSubMenu());
+                }
+            }
+        }
+    }
+
+    private void checkNavItem(MenuItem menuItem) {
+        if (menuItem != null) {
+            if (menuItem.isCheckable() && !menuItem.isChecked()) {
+                // iterate over all items and uncheck them, groups doesn't work with submenus for grouping entries in NavigationView
+                uncheckMenuItems(mNavigationView.getMenu());
+
+                menuItem.setChecked(true);
+            }
+        }
     }
 
     @Override
@@ -385,12 +478,6 @@ public class MainActivity extends ThemedActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
-            case R.id.action_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
-                return true;
-            case R.id.action_about:
-                startActivity(new Intent(this, AboutActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

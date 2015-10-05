@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -6,7 +6,6 @@
  * \________|____|__ \______/   \____|__  /   __/|   __/
  *                  \/                  \/|__|   |__|
  *
- * Copyright (c) 2009 The Android Open Source Project
  * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,14 +20,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.workaround;
 
 import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 
 /**
@@ -56,7 +55,7 @@ public class AccountAuthenticatorActivity extends AppCompatActivity {
      *
      * @param result this is returned as the result of the AbstractAccountAuthenticator request
      */
-    public final void setAccountAuthenticatorResult(Bundle result) {
+    protected final void setAccountAuthenticatorResult(Bundle result) {
         mResultBundle = result;
     }
 

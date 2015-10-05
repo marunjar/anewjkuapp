@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp;
 
@@ -31,15 +31,15 @@ import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 
 public class PoiContentContract {
 
-    public static final String AUTHORITY = "org.voidsink.anewjkuapp.provider.poi";
+    public static final String AUTHORITY = BuildConfig.CONFIG_POI_PROVIDER;
 
     public static final String CONTENT_TYPE_DIR = "vnd.android.cursor.dir";
     public static final String CONTENT_TYPE_ITEM = "vnd.android.cursor.item";
 
-    public static Uri CONTENT_URI = Uri.parse(String.format("content://%1$s",
+    public static final Uri CONTENT_URI = Uri.parse(String.format("content://%1$s",
             AUTHORITY));
 
-    public static final String getFTS() {
+    public static String getFTS() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             return "fts4";
         } else {

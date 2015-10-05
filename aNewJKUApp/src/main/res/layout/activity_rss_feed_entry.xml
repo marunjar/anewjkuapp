@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <include layout="@layout/main_toolbar" />
+    <include layout="@layout/main_toolbar"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,14 +19,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_vertical|left" />
+            android:gravity="center_vertical|left"/>
 
         <TextView
             android:id="@+id/rss_feed_author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_vertical|right" />
+            android:gravity="center_vertical|right"/>
 
     </LinearLayout>
 
@@ -33,6 +35,6 @@
         android:id="@+id/rss_feed_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="4dp"></WebView>
+        android:paddingBottom="4dp"/>
 
 </LinearLayout>

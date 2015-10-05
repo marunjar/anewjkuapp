@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.mensa;
 
@@ -32,11 +33,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-public class MensaDay {
+public class MensaDay implements IDay {
 
     private Date date;
-    private List<MensaMenu> menus;
+    private final List<IMenu> menus;
     private boolean isModified = false;
     private Mensa mensa;
 
@@ -47,7 +49,7 @@ public class MensaDay {
 
     public MensaDay(JSONObject jsonDay) {
         try {
-            final SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+            final SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd", Locale.GERMAN);
             this.date = df.parse(jsonDay.getString("date"));
         } catch (ParseException | JSONException e) {
             this.date = null;
@@ -57,10 +59,9 @@ public class MensaDay {
 
     public void addMenu(MensaMenu menu) {
         this.menus.add(menu);
-        menu.setDay(this);
     }
 
-    public List<MensaMenu> getMenus() {
+    public List<IMenu> getMenus() {
         return this.menus;
     }
 

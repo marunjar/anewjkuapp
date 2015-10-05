@@ -1,4 +1,4 @@
-#  proguard-rules.txt
+#  proguard-rules-keep-names.txt
 #
 
 ###############

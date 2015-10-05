@@ -35,8 +35,8 @@ import android.util.Log;
 public class BaseContentObserver extends ContentObserver {
 
     private static final String TAG = BaseContentObserver.class.getSimpleName();
-    private UriMatcher uriMatcher;
-    private ContentObserverListener listener;
+    private final UriMatcher uriMatcher;
+    private final ContentObserverListener listener;
 
     public BaseContentObserver(Handler handler, UriMatcher uriMatcher,
                                ContentObserverListener listener) {

@@ -1,4 +1,4 @@
-#  proguard-rules.txt
+#  proguard-rules-ical4j.txt
 #
 
 ###############

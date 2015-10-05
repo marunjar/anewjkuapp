@@ -40,4 +40,9 @@ public class ChoiceMenuLoader extends JSONMenuLoader {
     protected String getCacheKey() {
         return "Choice";
     }
+
+    @Override
+    protected String getMensaKey() {
+        return Mensen.MENSA_CHOICE;
+    }
 }

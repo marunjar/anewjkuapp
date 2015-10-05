@@ -30,14 +30,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Mensa {
+public class Mensa implements IMensa {
 
-    private String name;
-    private List<MensaDay> days;
+    private final String key;
+    private final String name;
+    private final List<IDay> days;
 
-    public Mensa(String name) {
+    public Mensa(String key, String name) {
+        this.key = key;
         this.name = name;
-        this.days = new ArrayList<MensaDay>();
+        this.days = new ArrayList<>();
     }
 
     public void addDay(MensaDay menuDay) {
@@ -51,16 +53,21 @@ public class Mensa {
         return this.days.size() == 0;
     }
 
-    public List<MensaDay> getDays() {
+    public List<IDay> getDays() {
         return this.days;
+    }
+
+    @Override
+    public String getKey() {
+        return this.key;
     }
 
     public String getName() {
         return this.name;
     }
 
-    public MensaDay getDay(Date now) {
-        for (MensaDay mensaDay : this.days) {
+    public IDay getDay(Date now) {
+        for (IDay mensaDay : this.days) {
             if (!mensaDay.isEmpty()
                     && DateUtils.isSameDay(now, mensaDay.getDate())) {
                 return mensaDay;

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.base;
 
@@ -29,8 +30,10 @@ import android.content.Context;
 public interface StackedFragment {
 
     //Return true if fragment needs to show back arrow on ActionBar
-    public boolean getDisplayHomeAsUpEnabled();
+    boolean getDisplayHomeAsUpEnabled();
     //Return title to be shown on ActionBar when fragment added
-    public CharSequence getTitle(Context context);
+    CharSequence getTitle(Context context);
+    //Return menu id to be selected in drawer when fragment added
+    int getId(Context context);
 
 }

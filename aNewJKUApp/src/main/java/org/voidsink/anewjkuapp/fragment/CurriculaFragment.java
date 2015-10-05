@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,16 +20,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.fragment;
 
+import android.accounts.Account;
 import android.content.Context;
 import android.content.Intent;
 import android.content.UriMatcher;
-import android.os.AsyncTask;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,9 +44,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
-
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
@@ -50,22 +52,28 @@ import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.kusss.Curriculum;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
+import org.voidsink.anewjkuapp.update.ImportCurriculaTask;
 import org.voidsink.anewjkuapp.update.UpdateService;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
+import org.voidsink.sectionedrecycleradapter.SectionedAdapter;
+import org.voidsink.sectionedrecycleradapter.SectionedRecyclerViewAdapter;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CurriculaFragment extends BaseFragment implements
-        ContentObserverListener {
+        ContentObserverListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
     private CurriculaAdapter mAdapter;
     private BaseContentObserver mObserver;
+    private RecyclerView mRecyclerView;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onStart() {
+        super.onStart();
 
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(KusssContentContract.AUTHORITY,
@@ -78,31 +86,32 @@ public class CurriculaFragment extends BaseFragment implements
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onStop() {
+        super.onStop();
 
         getActivity().getContentResolver().unregisterContentObserver(
                 mObserver);
+        mObserver = null;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
-        final RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        mAdapter = new CurriculaAdapter(getContext());
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mAdapter));
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
         return view;
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        loadData();
+        mAdapter = new CurriculaAdapter(getContext());
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter(mRecyclerView, mAdapter));
+
+        getLoaderManager().initLoader(0, null, this);
     }
 
     @Override
@@ -127,43 +136,40 @@ public class CurriculaFragment extends BaseFragment implements
         }
     }
 
-    private void loadData() {
-
-        new AsyncTask<Void, Void, Void>() {
-
-            public List<Curriculum> mCurricula;
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                mCurricula = KusssContentProvider.getCurricula(getContext());
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-
-                mAdapter.clear();
-                mAdapter.addAll(mCurricula);
-                mAdapter.notifyDataSetChanged();
-
-                super.onPostExecute(aVoid);
-            }
-        }.execute();
-
+    @Override
+    public void onContentChanged(boolean selfChange) {
+        getLoaderManager().restartLoader(0, null, this);
     }
 
     @Override
-    public void onContentChanged(boolean selfChange) {
-        loadData();
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(getContext(), KusssContentContract.Curricula.CONTENT_URI,
+                ImportCurriculaTask.CURRICULA_PROJECTION, null, null,
+                KusssContentContract.Curricula.COL_DT_START + " DESC");
     }
 
-    private static class CurriculaAdapter extends RecyclerArrayAdapter<Curriculum, CurriculumViewHolder> implements StickyRecyclerHeadersAdapter<CurriculumHeaderHolder> {
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mAdapter.clear();
+
+        List<Curriculum> mCurriculum = new ArrayList<>();
+        if (data != null) {
+            Account mAccount = AppUtils.getAccount(getContext());
+            if (mAccount != null) {
+                mCurriculum = KusssContentProvider.getCurriculaFromCursor(getContext(), data);
+            }
+        }
+        mAdapter.addAll(mCurriculum);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mAdapter.clear();
+        mAdapter.notifyDataSetChanged();
+    }
+
+    private static class CurriculaAdapter extends RecyclerArrayAdapter<Curriculum, CurriculumViewHolder> implements SectionedAdapter<CurriculumHeaderHolder> {
 
         private final Context mContext;
 
@@ -218,13 +224,13 @@ public class CurriculaFragment extends BaseFragment implements
     }
 
     public static class CurriculumViewHolder extends RecyclerView.ViewHolder {
-        public TextView isStandard;
-        public TextView cid;
-        public TextView title;
-        public TextView steopDone;
-        public TextView activeStatus;
-        public TextView dtStart;
-        public TextView dtEnd;
+        public final TextView isStandard;
+        public final TextView cid;
+        public final TextView title;
+        public final TextView steopDone;
+        public final TextView activeStatus;
+        public final TextView dtStart;
+        public final TextView dtEnd;
 
         public CurriculumViewHolder(View itemView) {
             super(itemView);

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp.analytics;
 
@@ -44,7 +44,7 @@ public class AnalyticsFlavor implements IAnalytics {
     @Override
     public void sendException(Context c, Exception e, boolean fatal, String additionalData) {
         if (e != null) {
-            Log.d(TAG, String.format("%s (%s)", e.getMessage(), additionalData));
+            Log.d(TAG, String.format("%s (%s)", e.getMessage(), additionalData.substring(0, Math.min(additionalData.length(), 4096))));
         }
     }
 

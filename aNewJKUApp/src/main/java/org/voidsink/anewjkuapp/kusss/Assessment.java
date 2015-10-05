@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.kusss;
 
@@ -34,6 +35,7 @@ import org.voidsink.anewjkuapp.analytics.Analytics;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -75,7 +77,7 @@ public class Assessment {
     public Assessment(Context c, AssessmentType type, Element row) {
         this(type, null, "", null, null, 0, "", "", 0, 0);
 
-        final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 
         final Elements columns = row.getElementsByTag("td");
         if (columns.size() >= 7) {

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,14 +20,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.mensa;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceManager;
 import android.text.format.DateUtils;
 
 import org.json.JSONArray;
@@ -53,6 +54,8 @@ public abstract class JSONMenuLoader implements MenuLoader {
     private static final String PREF_DATE_PREFIX = "MENSA_DATE_";
 
     protected abstract String getCacheKey();
+
+    protected abstract String getMensaKey();
 
     private String getData(Context context) {
         String result = null;
@@ -114,7 +117,7 @@ public abstract class JSONMenuLoader implements MenuLoader {
         }
     }
 
-    public Mensa getMensa(Context context) {
+    public IMensa getMensa(Context context) {
         Mensa mensa = null;
         try {
             String data = getData(context);
@@ -123,7 +126,7 @@ public abstract class JSONMenuLoader implements MenuLoader {
                 if (jsonData.getString("success").equals("true")) {
                     JSONObject jsonMensa = jsonData.getJSONObject("result");
 
-                    mensa = new Mensa(getLocation(context, Integer.parseInt(jsonMensa
+                    mensa = new Mensa(getMensaKey(), getLocation(context, Integer.parseInt(jsonMensa
                             .getString("location"))));
                     JSONArray jsonDays = jsonMensa.getJSONArray("offers");
                     for (int i = 0; i < jsonDays.length(); i++) {
@@ -172,10 +175,8 @@ public abstract class JSONMenuLoader implements MenuLoader {
         }
     }
 
-    public static final Pattern pricePattern = Pattern.compile("(€? ?)\\d[\\,\\.]\\d{2}( ?€?)");
-
     //push every followup-element one position later
-    protected void insert(JSONArray a, Object o, int index) throws JSONException {
+    private void insert(JSONArray a, Object o, int index) throws JSONException {
         if (index >= a.length() || index < 0) { //just for some cornercases
             a.put(o);
         } else {
@@ -186,28 +187,28 @@ public abstract class JSONMenuLoader implements MenuLoader {
         }
     }
 
-    protected void normalize(Context c, JSONArray jsonDays) throws JSONException {
+    private void normalize(Context c, JSONArray jsonDays) {
+        final Pattern pricePattern = Pattern.compile("(€? ?)\\d[\\,\\.]\\d{2}( ?€?)");
+
         int i = 0;
         while (i < jsonDays.length()) {
             try {
                 JSONObject jsonDay = jsonDays.getJSONObject(i);
                 String meal = jsonDay.getString("meal").trim();
-                if (meal != null) {
-                    Matcher priceMatcher = pricePattern.matcher(meal);
+                Matcher priceMatcher = pricePattern.matcher(meal);
 
-                    if (priceMatcher.find()) {
-                        // get rest of meal and insert for processing as next
-                        String nextMeal = meal.substring(priceMatcher.end()).trim();
-                        if (Pattern.compile("\\w+").matcher(nextMeal).find()) {
-                            JSONObject clone = new JSONObject(jsonDay.toString());
-                            clone.put("meal", nextMeal);
-                            insert(jsonDays, clone, i + 1);
-                        }
-
-                        // insert meal
-                        jsonDay.put("meal", meal.substring(0, priceMatcher.start()).trim());
-                        jsonDay.put("price", normalizePrice(meal.substring(priceMatcher.start(), priceMatcher.end())));
+                if (priceMatcher.find()) {
+                    // get rest of meal and insert for processing as next
+                    String nextMeal = meal.substring(priceMatcher.end()).trim();
+                    if (Pattern.compile("\\w+").matcher(nextMeal).find()) {
+                        JSONObject clone = new JSONObject(jsonDay.toString());
+                        clone.put("meal", nextMeal);
+                        insert(jsonDays, clone, i + 1);
                     }
+
+                    // insert meal
+                    jsonDay.put("meal", meal.substring(0, priceMatcher.start()).trim());
+                    jsonDay.put("price", normalizePrice(meal.substring(priceMatcher.start(), priceMatcher.end())));
                 }
             } catch (JSONException e) {
                 Analytics.sendException(c, e, false);

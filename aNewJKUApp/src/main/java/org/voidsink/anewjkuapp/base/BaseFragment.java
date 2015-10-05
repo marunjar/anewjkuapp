@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.base;
 
@@ -28,10 +29,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
@@ -42,6 +45,8 @@ public class BaseFragment extends Fragment implements StackedFragment {
     private static final String TAG = BaseFragment.class.getSimpleName();
     private Intent mPendingIntent = null;
     private CharSequence mTitle = null;
+    private int mId = 0;
+    private ContentLoadingProgressBar mProgress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,8 +56,31 @@ public class BaseFragment extends Fragment implements StackedFragment {
         setHasOptionsMenu(true);
     }
 
-    protected Context getContext() {
-        return this.getActivity();
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mId = savedInstanceState.getInt(Consts.ARG_FRAGMENT_ID, mId);
+            mTitle = savedInstanceState.getCharSequence(Consts.ARG_FRAGMENT_TITLE);
+        }
+
+        mProgress = (ContentLoadingProgressBar) view.findViewById(R.id.load_progress_bar);
+        if (mProgress != null) {
+            finishProgress();
+        }
+    }
+
+    protected void showProgressIndeterminate() {
+        if (mProgress != null) {
+            mProgress.show();
+        }
+    }
+
+    protected void finishProgress() {
+        if (mProgress != null) {
+            mProgress.hide();
+        }
     }
 
     @Override
@@ -75,18 +103,9 @@ public class BaseFragment extends Fragment implements StackedFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        // Log.i(getClass().getSimpleName(), "onSaveInstanceState");
-    }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public void onDestroyOptionsMenu() {
-        // Log.i(getClass().getSimpleName(), "onDestroyOptionsMenu");
-        super.onDestroyOptionsMenu();
+        outState.putInt(Consts.ARG_FRAGMENT_ID, mId);
+        outState.putCharSequence(Consts.ARG_FRAGMENT_TITLE, mTitle);
     }
 
     public final void handleIntent(Intent intent) {
@@ -98,15 +117,20 @@ public class BaseFragment extends Fragment implements StackedFragment {
         }
     }
 
-    public void handlePendingIntent(Intent intent) {
+    protected void handlePendingIntent(Intent intent) {
     }
 
     @Override
     public void setArguments(Bundle args) {
         super.setArguments(args);
 
-        if (args != null && args.containsKey(Consts.ARG_FRAGMENT_TITLE)) {
-            mTitle = args.getCharSequence(Consts.ARG_FRAGMENT_TITLE);
+        if (args != null) {
+            if (args.containsKey(Consts.ARG_FRAGMENT_TITLE)) {
+                mTitle = args.getCharSequence(Consts.ARG_FRAGMENT_TITLE);
+            }
+            if (args.containsKey(Consts.ARG_FRAGMENT_ID)) {
+                mId = args.getInt(Consts.ARG_FRAGMENT_ID);
+            }
         }
     }
 
@@ -144,5 +168,10 @@ public class BaseFragment extends Fragment implements StackedFragment {
     @Override
     public CharSequence getTitle(Context context) {
         return mTitle;
+    }
+
+    @Override
+    public int getId(Context context) {
+        return mId;
     }
 }

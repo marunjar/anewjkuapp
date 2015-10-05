@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,19 +20,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff.Mode;
+import android.support.v4.content.ContextCompat;
 import android.view.MenuItem;
 
 import org.mapsforge.core.graphics.Bitmap;
 import org.mapsforge.core.graphics.Paint;
-import org.mapsforge.map.android.layer.MyLocationOverlay;
 import org.mapsforge.map.model.MapViewPosition;
+import org.voidsink.anewjkuapp.base.MyLocationOverlay;
 
 public class LocationOverlay extends MyLocationOverlay {
 
@@ -73,8 +75,8 @@ public class LocationOverlay extends MyLocationOverlay {
             if (isSnapToLocationEnabled()) {
 
                 // get accent color from theme
-                TypedArray themeArray = mContext.getTheme().obtainStyledAttributes(new int[]{android.R.attr.colorAccent});
-                int mColorAccent = themeArray.getColor(0, mContext.getResources().getColor(R.color.default_accent));
+                TypedArray themeArray = mContext.getTheme().obtainStyledAttributes(new int[]{R.attr.colorAccent});
+                int mColorAccent = themeArray.getColor(0, ContextCompat.getColor(mContext, R.color.default_accent));
                 themeArray.recycle();
 
                 this.snapToLocationItem.getIcon()

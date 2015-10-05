@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.activity;
 
@@ -30,10 +31,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.preference.PreferenceFragment;
 import android.support.v7.app.ActionBar;
+import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
 import org.voidsink.anewjkuapp.PreferenceWrapper;
@@ -78,11 +79,11 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
                 String clazzname = intent.getDataString();
                 if (clazzname != null) {
                     Class<?> clazz = getClassLoader().loadClass(clazzname);
-                    if (PreferenceFragment.class.isAssignableFrom(clazz)) {
+                    if (PreferenceFragmentCompat.class.isAssignableFrom(clazz)) {
                         fragment = (Fragment) clazz.newInstance();
                     }
                 }
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             if (fragment != null) {
@@ -147,16 +148,8 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
                 break;
             case PreferenceWrapper.PREF_TRACKING_ERRORS:
                 boolean trackingErrors = sharedPreferences.getBoolean(key, PreferenceWrapper.PREF_TRACKING_ERRORS_DEFAULT);
-                if (trackingErrors) {
-                    // track opting in
-                    Analytics.setEnabled(trackingErrors);
-                    Analytics.sendPreferenceChanged(key, Boolean.toString(trackingErrors));
-                } else {
-                    // track opting out
-                    Analytics.sendPreferenceChanged(key, Boolean.toString(trackingErrors));
-                    Analytics.setEnabled(trackingErrors);
-                }
-
+                Analytics.setEnabled(trackingErrors);
+                Analytics.sendPreferenceChanged(key, Boolean.toString(trackingErrors));
                 break;
             default:
                 break;

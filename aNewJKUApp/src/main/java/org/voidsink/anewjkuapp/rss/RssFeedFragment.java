@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,14 +20,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.rss;
 
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -36,26 +37,21 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.rss.lib.FeedEntry;
-import org.voidsink.anewjkuapp.rss.lib.FeedPullParser;
+import org.voidsink.anewjkuapp.rss.lib.FeedLoader;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-public class RssFeedFragment extends BaseFragment {
+public class RssFeedFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<List<FeedEntry>> {
 
     private URL mUrl = null;
     private RssListAdapter mAdapter;
-    private DisplayImageOptions mOptions;
 
     @Override
     public void setArguments(Bundle args) {
@@ -69,19 +65,6 @@ public class RssFeedFragment extends BaseFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        mOptions = new DisplayImageOptions.Builder()
-                .cacheInMemory(true)
-                .displayer(new SimpleBitmapDisplayer())
-                .showImageOnLoading(getResources().getDrawable(R.mipmap.ic_launcher))
-                .showImageForEmptyUri(getResources().getDrawable(R.mipmap.ic_launcher))
-                .showImageOnFail(getResources().getDrawable(R.mipmap.ic_launcher))
-                .build();
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
@@ -89,11 +72,18 @@ public class RssFeedFragment extends BaseFragment {
 
         mRecyclerView.setHasFixedSize(true); // performance
 
-        mAdapter = new RssListAdapter(getContext(), null, mOptions);
+        mAdapter = new RssListAdapter(getContext(), null);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
 
         return v;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        getLoaderManager().initLoader(0, null, this);
     }
 
     @Override
@@ -104,7 +94,7 @@ public class RssFeedFragment extends BaseFragment {
     }
 
     private void updateData() {
-        new LoadFeedTask().execute();
+        getLoaderManager().restartLoader(0, null, this);
     }
 
     @Override
@@ -125,41 +115,29 @@ public class RssFeedFragment extends BaseFragment {
         }
     }
 
-    private class LoadFeedTask extends AsyncTask<Void, Void, Void> {
+    @Override
+    public Loader<List<FeedEntry>> onCreateLoader(int id, Bundle args) {
+        showProgressIndeterminate();
 
-        private List<FeedEntry> mFeed = null;
-        private ProgressDialog mProgressDialog;
+        return new FeedLoader(getContext(), mUrl);
+    }
 
-        @Override
-        protected void onPreExecute() {
-            mProgressDialog = ProgressDialog.show(getContext(),
-                    getContext().getString(R.string.progress_title),
-                    getContext().getString(R.string.progress_load_feed), true);
-
-            super.onPreExecute();
+    @Override
+    public void onLoadFinished(Loader<List<FeedEntry>> loader, List<FeedEntry> data) {
+        mAdapter.clear();
+        if (data != null) {
+            mAdapter.addAll(data);
         }
+        mAdapter.notifyDataSetChanged();
 
-        @Override
-        protected Void doInBackground(Void... voids) {
-            mFeed = new FeedPullParser().parse(mUrl);
+        finishProgress();
+    }
 
-            return null;
-        }
+    @Override
+    public void onLoaderReset(Loader<List<FeedEntry>> loader) {
+        mAdapter.clear();
+        mAdapter.notifyDataSetChanged();
 
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            mAdapter.clear();
-
-            if (mFeed != null) {
-                mAdapter.addAll(mFeed);
-            } else {
-                Toast.makeText(getContext(), "TODO: Error loading feed.", Toast.LENGTH_SHORT).show();
-            }
-            mAdapter.notifyDataSetChanged();
-
-            mProgressDialog.dismiss();
-
-            super.onPostExecute(aVoid);
-        }
+        finishProgress();
     }
 }

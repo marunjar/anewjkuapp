@@ -1,14 +1,15 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout
     android:id="@+id/item_detail"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MapFragment" >
+    tools:context=".MapFragment">
 
     <org.mapsforge.map.android.view.MapView
         android:id="@+id/mapView"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent"/>
 
     <TextView
         android:id="@+id/attribution"
@@ -18,10 +19,11 @@
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="1dip"
         android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
         android:singleLine="true"
-        android:text="copyright_osm"
         android:textColor="#000"
         android:textSize="4pt"
-        android:visibility="visible" />
+        android:visibility="visible"
+        tools:text="copyright_osm"/>
 
 </RelativeLayout>

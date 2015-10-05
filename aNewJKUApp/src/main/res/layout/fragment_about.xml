@@ -1,4 +1,5 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -26,14 +27,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:text="@string/app_name" />
+                android:text="@string/app_name"/>
 
             <TextView
                 style="@style/Text.Body1"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:text="@string/about_app_summary" />
+                android:text="@string/about_app_summary"/>
         </LinearLayout>
     </ScrollView>
 
@@ -49,24 +50,13 @@
     -->
 
     <Button
-        android:id="@+id/about_credits"
-        style="@style/Text.Button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/selectable_background_apptheme"
-        android:padding="10dp"
-        android:text="@string/about_credits_title" />
-
-    <Button
         android:id="@+id/about_libraries"
         style="@style/Text.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/about_credits"
-        android:background="@drawable/selectable_background_apptheme"
+        android:layout_alignParentBottom="true"
         android:padding="10dp"
-        android:text="@string/about_libraries_title" />
+        android:text="@string/about_libraries_title"/>
 
     <Button
         android:id="@+id/about_changelog"
@@ -74,8 +64,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/about_libraries"
-        android:background="@drawable/selectable_background_apptheme"
         android:padding="10dp"
-        android:text="@string/action_changelog" />
+        android:text="@string/action_changelog"/>
 
 </RelativeLayout>

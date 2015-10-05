@@ -2,17 +2,13 @@
 <resources>
 
     <style name="AppTheme" parent="AppTheme.Base">
-        <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
     </style>
 
     <style name="AppTheme.Light" parent="AppTheme.Base.Light">
-        <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
-    <dimen name="main_toolbar_padding">24dp</dimen>
-    <dimen name="drawer_header_height">96dp</dimen>
 </resources>

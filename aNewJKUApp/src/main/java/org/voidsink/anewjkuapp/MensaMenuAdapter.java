@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp;
 
@@ -31,28 +32,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
-
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
-import org.voidsink.anewjkuapp.mensa.Mensa;
-import org.voidsink.anewjkuapp.mensa.MensaDay;
-import org.voidsink.anewjkuapp.mensa.MensaMenu;
+import org.voidsink.anewjkuapp.mensa.IDay;
+import org.voidsink.anewjkuapp.mensa.IMensa;
+import org.voidsink.anewjkuapp.mensa.IMenu;
 import org.voidsink.anewjkuapp.utils.UIUtils;
+import org.voidsink.sectionedrecycleradapter.SectionedAdapter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerView.ViewHolder> implements StickyRecyclerHeadersAdapter<MensaMenuAdapter.MenuHeaderHolder> {
+public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerView.ViewHolder> implements SectionedAdapter<MensaMenuAdapter.MenuHeaderHolder> {
 
     private static final DateFormat df = SimpleDateFormat.getDateInstance();
 
-    private final Context mContext;
-    protected boolean mUseDateHeader;
+    private final boolean mUseDateHeader;
 
     public MensaMenuAdapter(Context context, boolean useDateHeader) {
         super();
-        this.mContext = context;
         this.mUseDateHeader = useDateHeader;
     }
 
@@ -83,20 +81,20 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
             }
             case MensaItem.TYPE_MENU: {
                 MenuViewHolder mensaMenuItemHolder = (MenuViewHolder) holder;
-                MensaMenu mensaMenuItem = (MensaMenu) getItem(position);
+                IMenu menu = getItem(position).getMenu();
 
-                UIUtils.setTextAndVisibility(mensaMenuItemHolder.mName, mensaMenuItem.getName());
-                UIUtils.setTextAndVisibility(mensaMenuItemHolder.mSoup, mensaMenuItem.getSoup());
+                UIUtils.setTextAndVisibility(mensaMenuItemHolder.mName, menu.getName());
+                UIUtils.setTextAndVisibility(mensaMenuItemHolder.mSoup, menu.getSoup());
 
-                mensaMenuItemHolder.mMeal.setText(mensaMenuItem.getMeal());
-                if (mensaMenuItem.getPrice() > 0) {
+                mensaMenuItemHolder.mMeal.setText(menu.getMeal());
+                if (menu.getPrice() > 0) {
                     mensaMenuItemHolder.mPrice.setText(String.format("%.2f €",
-                            mensaMenuItem.getPrice()));
+                            menu.getPrice()));
                     mensaMenuItemHolder.mPrice.setVisibility(View.VISIBLE);
 
-                    if (mensaMenuItem.getOehBonus() > 0) {
+                    if (menu.getOehBonus() > 0) {
                         mensaMenuItemHolder.mOehBonus.setText(String.format(
-                                "inkl %.2f € ÖH Bonus", mensaMenuItem.getOehBonus()));
+                                "inkl %.2f € ÖH Bonus", menu.getOehBonus()));
                         mensaMenuItemHolder.mOehBonus.setVisibility(View.VISIBLE);
                     } else {
                         mensaMenuItemHolder.mOehBonus.setVisibility(View.GONE);
@@ -120,7 +118,7 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
         MensaItem item = getItem(position);
         if (item != null) {
             if (mUseDateHeader) {
-                final MensaDay day = item.getDay();
+                final IDay day = item.getDay();
                 if (day != null) {
                     Calendar cal = Calendar.getInstance(); // locale-specific
                     cal.setTimeInMillis(day.getDate().getTime());
@@ -131,7 +129,7 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
                     return cal.getTimeInMillis();
                 }
             } else {
-                final Mensa mensa = item.getMensa();
+                final IMensa mensa = item.getMensa();
                 if (mensa != null) {
                     return (long) mensa.getName().hashCode() + (long) Integer.MAX_VALUE; // header id has to be > 0???
                 }
@@ -151,12 +149,12 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
         MensaItem item = getItem(position);
         if (item != null) {
             if (mUseDateHeader) {
-                final MensaDay day = item.getDay();
+                final IDay day = item.getDay();
                 if (day != null) {
                     menuHeaderHolder.mText.setText(df.format(day.getDate()));
                 }
             } else {
-                Mensa mensa = item.getMensa();
+                IMensa mensa = item.getMensa();
                 if (mensa != null) {
                     menuHeaderHolder.mText.setText(mensa.getName());
                 }
@@ -166,11 +164,11 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
 
     public static class MenuViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView mName;
-        public TextView mSoup;
-        public TextView mMeal;
-        public TextView mPrice;
-        public TextView mOehBonus;
+        public final TextView mName;
+        public final TextView mSoup;
+        public final TextView mMeal;
+        public final TextView mPrice;
+        public final TextView mOehBonus;
 
         public MenuViewHolder(View itemView) {
             super(itemView);
@@ -184,8 +182,8 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
     }
 
     public static class MensaInfoHolder extends RecyclerView.ViewHolder {
-        public TextView mTitle;
-        public TextView mDescr;
+        public final TextView mTitle;
+        public final TextView mDescr;
 
         public MensaInfoHolder(View itemView) {
             super(itemView);
@@ -196,7 +194,7 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
 
 
     public class MenuHeaderHolder extends RecyclerView.ViewHolder {
-        public TextView mText;
+        public final TextView mText;
 
         public MenuHeaderHolder(View itemView) {
             super(itemView);

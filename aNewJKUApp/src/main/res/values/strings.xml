@@ -17,16 +17,14 @@
     <string name="title_oeh_rights">Rechte</string>
     <string name="title_oeh_news">News</string>
     <string name="title_oeh_linz" translatable="false">ÖH Linz</string>
+    <string name="title_settings">Einstellungen</string>
+    <string name="title_about">About</string>
 
-    <string name="navigation_drawer_open">Navigation anzeigen</string>
-    <string name="navigation_drawer_close">Navigation ausblenden</string>
-
-    <string name="action_about">About</string>
-    <string name="action_settings">Einstellungen</string>
     <string name="action_refresh">Aktualisieren</string>
     <string name="action_changelog">Change Log</string>
     <string name="action_settings_summary">Einstellungen von KUSSS, Benachrichtigungen, ...</string>
     <string name="action_snap_to_location">Karte zur aktuellen GPS-Position bewegen</string>
+    <string name="action_tap_to_login">zum Einloggen tippen</string>
 
     <string name="grade_1">Sehr gut</string>
     <string name="grade_2">Gut</string>
@@ -124,11 +122,9 @@
     <string name="pref_cat_tracking">Tracking</string>
     <string name="pref_tracking_errors_title">Fehler</string>
     <string name="pref_tracking_errors_summary">Fehler automatisch an Entwickler senden damit schneller darauf reagiert werden kann.</string>
-
-    <string name="group_user">User</string>
-    <string name="group_oeh">ÖH</string>
-    <string name="group_kusss">KUSSS</string>
-    <string name="group_other">Sonstiges</string>
+    <string name="pref_cat_app_courses">LVAs</string>
+    <string name="pref_courses_show_with_assessment_only_title">nur LVAs mit Noten anzeigen</string>
+    <string name="pref_courses_show_with_assessment_only_summary">Für vergangene Semester werden nur LVAs angezeigt die bereits benotet wurden.</string>
 
     <string name="settings_kusss_title">KUSSS</string>
     <string name="settings_kusss_summary">Einstellungen für KUSSS</string>
@@ -139,7 +135,6 @@
 
     <string name="about_app_summary">Das ist eine neue JKU, KUSSS, ÖH, ... App für Studenten der JKU Linz.\n\nDie App ist noch in Entwicklung und die am meisten benötigten Funktionen sind bereits implementiert.\n\nWenn Sie Fragen, Probleme oder Wünsche haben, schreiben Sie eine E-Mail an die Entwickler!\nBesitzer eines GitHub-Accounts können auch einfach hier posten: https://github.com/marunjar/anewjkuapp/issues </string>
     <string name="about_libraries_title">verwendete Bibliotheken</string>
-    <string name="about_credits_title">Credits</string>
 
     <string name="oeh_info_main_title" translatable="false">Deine ÖH</string>
     <string name="oeh_info_main_summary" translatable="false">Die Österreichische Hochschülerinnen- und Hochschülerschaft ist die gesetzliche Vertretung aller Studierenden. Sie gliedert sich bundesweit in die ÖH-Bundesvertretung (<a href="http://www.oeh.ac.at/">http://www.oeh.ac.at/</a>), in die Universitätsvertretungen an den einzelnen Universitäten, wie beispielsweise die HochschülerInnenschaft an der Johannes Kepler Universität Linz (<a href="http://oeh.jku.at/">http://oeh.jku.at</a>).(</string>
@@ -245,10 +240,11 @@
     <string name="kusss_service_title">KUSSS Service</string>
     <string name="kusss_provider_name">KUSSS</string>
     <string name="poi_provider_name">POIs</string>
-    <string name="listview_footer_button">Mehr anzeigen</string>
+    <string name="listview_footer_button">Antippen für Termine nach dem %s</string>
     <string name="all_terms">alle Semester</string>
     <string name="about_force_logout">Ausloggen</string>
     <string name="menu_exam_register">in KUSSS anzeigen</string>
     <string name="action_show_rss_entry_in_browser">in Browser anzeigen</string>
     <string name="title_curricula">Studienrichtungen</string>
+    <string name="content_descr_rss_feed_item_image">Das erste Bild das in dem News-Eintrag vorkommt.</string>
 </resources>

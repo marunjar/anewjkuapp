@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.kusss;
 
@@ -65,7 +66,7 @@ public class Exam {
     private boolean isRegistered = false;
 
     public Exam(Context c, Element row, boolean isNewExam) {
-        final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 
         Elements columns = row.getElementsByTag("td");
         if (isNewExam) {

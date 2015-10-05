@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.notification;
 
@@ -40,17 +41,16 @@ import java.util.List;
 import edu.emory.mathcs.backport.java.util.Collections;
 
 public class AssessmentChangedNotification {
-    private static int NOTIFICATION_GRADES_CHANGED = R.string.notification_grades_changed;
 
-    private Context mContext;
+    private final Context mContext;
 
-    private List<String> mInserts;
-    private List<String> mUpdates;
+    private final List<String> mInserts;
+    private final List<String> mUpdates;
 
     public AssessmentChangedNotification(Context mContext) {
         this.mContext = mContext;
-        this.mInserts = new ArrayList<String>();
-        this.mUpdates = new ArrayList<String>();
+        this.mInserts = new ArrayList<>();
+        this.mUpdates = new ArrayList<>();
     }
 
     public void addInsert(String text) {
@@ -64,6 +64,8 @@ public class AssessmentChangedNotification {
     public void show() {
         if (PreferenceWrapper.getNotifyGrade(mContext)
                 && (mInserts.size() > 0 || mUpdates.size() > 0)) {
+            int NOTIFICATION_GRADES_CHANGED = R.string.notification_grades_changed;
+
             PendingIntent pendingIntent = PendingIntent
                     .getActivity(mContext, NOTIFICATION_GRADES_CHANGED, new Intent(mContext,
                             MainActivity.class).putExtra(MainActivity.ARG_SHOW_FRAGMENT_ID, R.id.nav_grades)

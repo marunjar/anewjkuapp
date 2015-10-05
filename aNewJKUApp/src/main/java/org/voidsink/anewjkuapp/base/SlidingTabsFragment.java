@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp.base;
 
@@ -35,6 +35,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +57,9 @@ public abstract class SlidingTabsFragment extends BaseFragment {
     /**
      * List of {@link SlidingTabItem} which represent this sample's tabs.
      */
-    private List<SlidingTabItem> mTabs = new ArrayList<SlidingTabItem>();
+    private final List<SlidingTabItem> mTabs = new ArrayList<>();
+
+    private TabLayout mTabLayout;
 
     protected abstract void fillTabs(List<SlidingTabItem> mTabs);
 
@@ -67,13 +70,8 @@ public abstract class SlidingTabsFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mTabs.clear();
-        fillTabs(mTabs);
-
         return LayoutInflater.from(getContext()).inflate(R.layout.fragment_sliding_tabs, container, false);
     }
-
-    // BEGIN_INCLUDE (fragment_onviewcreated)
 
     /**
      * This is called after the {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)} has finished.
@@ -87,19 +85,25 @@ public abstract class SlidingTabsFragment extends BaseFragment {
      */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        // BEGIN_INCLUDE (setup_viewpager)
-        // Get the ViewPager and set it's PagerAdapter so that it can display items
-        mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
-        mViewPager.setAdapter(new SlidingFragmentPagerAdapter(getChildFragmentManager()));
-        // END_INCLUDE (setup_viewpager)
+        super.onViewCreated(view, savedInstanceState);
 
-        // BEGIN_INCLUDE (setup_slidingtablayout)
-        // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
-        // it's PagerAdapter set.
-        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
-        tabLayout.setupWithViewPager(mViewPager);
-        // END_INCLUDE (tab_colorizer)
-        // END_INCLUDE (setup_slidingtablayout)
+        mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
+        mTabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        createTabs(savedInstanceState);
+    }
+
+    protected void createTabs(Bundle savedInstanceState) {
+        mTabs.clear();
+        fillTabs(mTabs);
+
+        mViewPager.setAdapter(new SlidingFragmentPagerAdapter(getChildFragmentManager()));
+        mTabLayout.setupWithViewPager(mViewPager);
     }
 
     public void notifyDataSetChanged() {
@@ -137,9 +141,8 @@ public abstract class SlidingTabsFragment extends BaseFragment {
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            Object o = super.instantiateItem(container, position);
+            return super.instantiateItem(container, position);
 //            Log.i(LOG_TAG, "instantiateItem() [position: " + position + "]");
-            return o;
         }
 
         @Override
@@ -158,8 +161,6 @@ public abstract class SlidingTabsFragment extends BaseFragment {
             return mTabs.size();
         }
 
-        // BEGIN_INCLUDE (pageradapter_getpagetitle)
-
         /**
          * Return the title of the item at {@code position}. This is important as what this method
          * returns is what is displayed in the {@link TabLayout}.
@@ -170,9 +171,18 @@ public abstract class SlidingTabsFragment extends BaseFragment {
         public CharSequence getPageTitle(int position) {
             return mTabs.get(position).getTitle();
         }
-        // END_INCLUDE (pageradapter_getpagetitle)
-
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
 
+        if (mViewPager != null) {
+            int pos = mViewPager.getCurrentItem();
+            if (pos >= 0) {
+                outState.putCharSequence(Consts.ARG_TAB_FRAGMENT_TITLE, mViewPager.getAdapter().getPageTitle(pos));
+                outState.putInt(Consts.ARG_TAB_FRAGMENT_POS, pos);
+            }
+        }
+    }
 }

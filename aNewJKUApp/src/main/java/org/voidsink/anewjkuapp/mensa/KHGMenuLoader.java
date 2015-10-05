@@ -36,5 +36,10 @@ public class KHGMenuLoader extends JSONMenuLoader {
         return "KHG";
     }
 
+    @Override
+    protected String getMensaKey() {
+        return Mensen.MENSA_KHG;
+    }
+
 
 }

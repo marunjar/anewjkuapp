@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp.utils;
 
@@ -33,15 +33,15 @@ import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
-
-import com.github.mikephil.charting.data.Entry;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.voidsink.anewjkuapp.ImportPoiTask;
@@ -78,6 +78,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 
@@ -207,11 +212,7 @@ public class AppUtils {
 
     private static boolean createCalendars(Context context) {
         Account account = AppUtils.getAccount(context);
-        if (account == null) {
-            return true;
-        }
-
-        return CalendarUtils.createCalendarsIfNecessary(context, account);
+        return (account == null || CalendarUtils.createCalendarsIfNecessary(context, account));
     }
 
     private static boolean removeCalendars(Context context) {
@@ -234,14 +235,7 @@ public class AppUtils {
 
     private static boolean importCurricula(Context context) {
         Account account = getAccount(context);
-        if (account != null) {
-            try {
-                new ImportCurriculaTask(account, context).execute();
-            } catch (Exception e) {
-                Analytics.sendException(context, e, false);
-            }
-        }
-        return true;
+        return account == null || executeEm(context, new Callable<?>[]{new ImportCurriculaTask(account, context)}, false);
     }
 
     private static boolean removeAccount(Context context) {
@@ -321,16 +315,12 @@ public class AppUtils {
             mapFileWriter.close();
 
             // import file
-            new ImportPoiTask(context, new File(context.getFilesDir(),
-                    DEFAULT_POI_FILE_NAME), true).execute();
-        } catch (FileNotFoundException e) {
-            Log.e(TAG, "importDefaultPois", e);
-            return false;
+            return executeEm(context, new Callable<?>[]{new ImportPoiTask(context, new File(context.getFilesDir(),
+                    DEFAULT_POI_FILE_NAME), true)}, false);
         } catch (IOException e) {
-            Log.e(TAG, "importDefaultPois", e);
+            Analytics.sendException(context, e, false);
             return false;
         }
-        return true;
     }
 
     public static double getECTS(LvaState state, List<LvaWithGrade> lvas) {
@@ -347,7 +337,7 @@ public class AppUtils {
         Collections.sort(courses, CourseComparator);
     }
 
-    public static void sortLVAsWithGrade(List<LvaWithGrade> mCourses) {
+    private static void sortLVAsWithGrade(List<LvaWithGrade> mCourses) {
         Collections.sort(mCourses, LvaWithGradeComparator);
 
     }
@@ -356,7 +346,7 @@ public class AppUtils {
         Collections.sort(assessments, AssessmentComparator);
     }
 
-    public static void removeDuplicates(List<LvaWithGrade> mCourses) {
+    private static void removeDuplicates(List<LvaWithGrade> mCourses) {
         // remove done duplicates
         int i = 0;
         while (i < mCourses.size()) {
@@ -556,15 +546,6 @@ public class AppUtils {
         }
     }
 
-    public static void addSerieToPieChart(List<Entry> values, List<String> captions, List<Integer> colors, String category,
-                                          double value, double ects, int color) {
-        if (value > 0) {
-            values.add(new EctsEntry((float) value, (float) ects, values.size()));
-            captions.add(category);
-            colors.add(color);
-        }
-    }
-
     public static double getGradePercent(List<Assessment> assessments, Grade grade, boolean ectsWeighting) {
         if (assessments == null || assessments.size() == 0) return 0;
 
@@ -601,7 +582,7 @@ public class AppUtils {
     }
 
 
-    public static List<LvaWithGrade> getLvasWithGrades(List<Term> terms, List<Course> courses, List<Assessment> assessments) {
+    public static List<LvaWithGrade> getLvasWithGrades(List<Term> terms, List<Course> courses, List<Assessment> assessments, boolean withAssessmentOnly, Term forLastTerm) {
         List<LvaWithGrade> result = new ArrayList<>();
 
         Map<String, Term> termMap = null;
@@ -615,7 +596,9 @@ public class AppUtils {
         for (Course course : courses) {
             if (termMap == null || termMap.containsKey(course.getTerm().toString())) {
                 Assessment assessment = findAssessment(assessments, course);
-                result.add(new LvaWithGrade(course, assessment));
+                if (!withAssessmentOnly || assessment != null || (forLastTerm != null && forLastTerm.equals(course.getTerm()))) {
+                    result.add(new LvaWithGrade(course, assessment));
+                }
             }
         }
 
@@ -821,4 +804,55 @@ public class AppUtils {
         }
         return "";
     }
+
+    public static void showEventInCalendar(Context context, long eventId, long dtStart) {
+        if (eventId > 0) {
+            Uri uri = ContentUris.withAppendedId(CalendarContractWrapper.Events.CONTENT_URI(), eventId);
+            Intent intent = new Intent(Intent.ACTION_VIEW)
+                    .setData(uri);
+            context.startActivity(intent);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            Uri.Builder builder = CalendarContractWrapper.CONTENT_URI().buildUpon();
+            builder.appendPath("time");
+            ContentUris.appendId(builder, dtStart);
+            Intent intent = new Intent(Intent.ACTION_VIEW)
+                    .setData(builder.build());
+            context.startActivity(intent);
+        }
+    }
+
+    public static boolean executeEm(Context context, Callable<?>[] callables, boolean wait) {
+        boolean result = true;
+
+        ExecutorService es = Executors.newSingleThreadExecutor();
+        try {
+            result = executeEm(es, context, callables, wait);
+        } finally {
+            es.shutdown();
+        }
+        return result;
+    }
+
+    public static boolean executeEm(ExecutorService es, Context context, Callable<?>[] callables, boolean wait) {
+        boolean result = true;
+
+        List<Future<?>> futures = new ArrayList<>();
+
+        for (Callable c : callables) {
+            futures.add(es.submit(c));
+        }
+
+        if (wait) {
+            for (Future f : futures) {
+                try {
+                    f.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    Analytics.sendException(context, e, false);
+                    result = false;
+                }
+            }
+        }
+        return result;
+    }
+
 }

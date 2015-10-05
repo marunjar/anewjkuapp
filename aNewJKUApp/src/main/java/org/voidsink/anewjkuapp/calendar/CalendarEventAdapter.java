@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.calendar;
 
@@ -33,17 +34,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
-
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.utils.UIUtils;
+import org.voidsink.sectionedrecycleradapter.SectionedAdapter;
 
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent, CalendarEventAdapter.EventItemHolder> implements StickyRecyclerHeadersAdapter<CalendarEventAdapter.DateHeaderHolder> {
+public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent, CalendarEventAdapter.EventItemHolder> implements SectionedAdapter<CalendarEventAdapter.DateHeaderHolder> {
 
     private final Context mContext;
     private OnItemClickListener mItemClickListener;
@@ -55,7 +55,7 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
     }
 
     public interface OnItemClickListener {
-        public void onItemClick(View view, int viewType, int position);
+        void onItemClick(View view, int viewType, int position);
     }
 
     protected static class EventItemHolder extends RecyclerView.ViewHolder {
@@ -88,7 +88,7 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
             mText = (TextView) itemView.findViewById(R.id.list_header_text);
         }
     }
-
+    
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
     }
@@ -102,7 +102,7 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
             @Override
             public void onClick(View v) {
                 if (mItemClickListener != null) {
-                    mItemClickListener.onItemClick(v, vh.getItemViewType(), vh.getPosition());
+                    mItemClickListener.onItemClick(v, vh.getItemViewType(), vh.getAdapterPosition());
                 }
             }
         });

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,19 +20,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -48,11 +49,12 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.renderer.PieChartRenderer;
-import com.github.mikephil.charting.utils.Highlight;
-import com.github.mikephil.charting.utils.PercentFormatter;
-import com.github.mikephil.charting.utils.ValueFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.kusss.Assessment;
@@ -171,7 +173,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
                 limitLine.setTextSize(11);
                 limitLine.enableDashedLine(20, 10, 0);
                 limitLine.setLineWidth(2);
-                limitLine.setLabelPosition(LimitLine.LimitLabelPosition.POS_RIGHT);
+                limitLine.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
                 yAxis.addLimitLine(limitLine);
             }
 
@@ -192,9 +194,9 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             ArrayList<Integer> colors = new ArrayList<>();
 
             // add series to pie chart
-            AppUtils.addSerieToPieChart(yVals, captions, colors, mContext.getString(LvaState.DONE.getStringResIDExt()),
+            addSerieToPieChart(yVals, captions, colors, mContext.getString(LvaState.DONE.getStringResIDExt()),
                     mDoneEcts, mDoneEcts, Grade.G1.getColor());
-            AppUtils.addSerieToPieChart(yVals, captions, colors, mContext.getString(LvaState.OPEN.getStringResIDExt()),
+            addSerieToPieChart(yVals, captions, colors, mContext.getString(LvaState.OPEN.getStringResIDExt()),
                     mOpenEcts, mOpenEcts, Grade.G3.getColor());
 
             PieDataSet dataSet = new PieDataSet(yVals, "");
@@ -217,9 +219,18 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
     private void addSerieToBarChart(List<BarEntry> values, List<String> captions, List<Integer> colors, String category,
                                     double value, int color) {
         if (value > 0) {
-            values.add(new BarEntry((float) value, values.size()));
-            captions.add(category);
             colors.add(color);
+            captions.add(category);
+            values.add(new BarEntry((float) value, values.size()));
+        }
+    }
+
+    private static void addSerieToPieChart(List<Entry> values, List<String> captions, List<Integer> colors, String category,
+                                           double value, double ects, int color) {
+        if (value > 0) {
+            colors.add(color);
+            captions.add(category);
+            values.add(new EctsEntry((float) value, (float) ects, values.size()));
         }
     }
 
@@ -362,28 +373,28 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             ArrayList<Integer> colors = new ArrayList<>();
 
             // add series to pie chart
-            AppUtils.addSerieToPieChart(yVals, captions, colors,
+            addSerieToPieChart(yVals, captions, colors,
                     mContext.getString(Grade.G1.getStringResID()),
                     AppUtils.getGradePercent(card.getAssessments(), Grade.G1, card.isWeighted()),
                     AppUtils.getGradeEcts(card.getAssessments(), Grade.G1),
                     Grade.G1.getColor());
-            AppUtils.addSerieToPieChart(yVals, captions, colors,
+            addSerieToPieChart(yVals, captions, colors,
                     mContext.getString(Grade.G2.getStringResID()),
                     AppUtils.getGradePercent(card.getAssessments(), Grade.G2, card.isWeighted()),
                     AppUtils.getGradeEcts(card.getAssessments(), Grade.G2),
                     Grade.G2.getColor());
-            AppUtils.addSerieToPieChart(yVals, captions, colors,
+            addSerieToPieChart(yVals, captions, colors,
                     mContext.getString(Grade.G3.getStringResID()),
                     AppUtils.getGradePercent(card.getAssessments(), Grade.G3, card.isWeighted()),
                     AppUtils.getGradeEcts(card.getAssessments(), Grade.G3),
                     Grade.G3.getColor());
-            AppUtils.addSerieToPieChart(yVals, captions, colors,
+            addSerieToPieChart(yVals, captions, colors,
                     mContext.getString(Grade.G4.getStringResID()),
                     AppUtils.getGradePercent(card.getAssessments(), Grade.G4, card.isWeighted()),
                     AppUtils.getGradeEcts(card.getAssessments(), Grade.G4),
                     Grade.G4.getColor());
             if (!card.isPositiveOnly()) {
-                AppUtils.addSerieToPieChart(yVals, captions, colors,
+                addSerieToPieChart(yVals, captions, colors,
                         mContext.getString(Grade.G5.getStringResID()),
                         AppUtils.getGradePercent(card.getAssessments(), Grade.G5, card.isWeighted()),
                         AppUtils.getGradeEcts(card.getAssessments(), Grade.G5),
@@ -566,18 +577,18 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
 
     public class StatViewHolder extends RecyclerView.ViewHolder {
 
-        public Toolbar mToolbar;
-        public TextView mTitle;
-        public GridLayout mItems;
-        public BarChart mBarChart;
-        public PieChart mPieChart;
+        public final Toolbar mToolbar;
+        public final TextView mTitle;
+        public final LinearLayout mItems;
+        public final BarChart mBarChart;
+        public final PieChart mPieChart;
 
         public StatViewHolder(View itemView) {
             super(itemView);
 
             mToolbar = (Toolbar) itemView.findViewById(R.id.stat_card_toolbar);
             mTitle = (TextView) itemView.findViewById(R.id.stat_card_title);
-            mItems = (GridLayout) itemView.findViewById(R.id.stat_card_items);
+            mItems = (LinearLayout) itemView.findViewById(R.id.stat_card_items);
             mBarChart = (BarChart) itemView.findViewById(R.id.stat_card_diagram_bar);
             mPieChart = (PieChart) itemView.findViewById(R.id.stat_card_diagram_pie);
 
@@ -587,8 +598,8 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
     private class ECTSFormatter implements ValueFormatter {
 
         @Override
-        public String getFormattedValue(float v) {
-            return String.format("%.2f ECTS", v);
+        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+            return String.format("%.2f ECTS", value);
         }
     }
 }

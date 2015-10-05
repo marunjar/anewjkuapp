@@ -9,4 +9,10 @@
         android:title="@string/action_refresh"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/action_toggle_visible_lvas"
+        android:checkable="true"
+        android:title="@string/pref_courses_show_with_assessment_only_title"
+        app:showAsAction="never" />
+
 </menu>

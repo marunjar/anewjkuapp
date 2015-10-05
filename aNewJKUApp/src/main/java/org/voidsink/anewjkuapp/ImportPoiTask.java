@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp;
 
@@ -34,7 +35,6 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import org.voidsink.anewjkuapp.analytics.Analytics;
-import org.voidsink.anewjkuapp.base.BaseAsyncTask;
 import org.voidsink.anewjkuapp.notification.PoiNotification;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
 import org.w3c.dom.Document;
@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -57,14 +58,14 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-public class ImportPoiTask extends BaseAsyncTask<Void, Void, Void> {
+public class ImportPoiTask implements Callable<Void> {
 
     private static final String TAG = ImportPoiTask.class.getSimpleName();
 
-    private ContentProviderClient mProvider;
-    private Context mContext;
-    private File mFile;
-    private boolean mIsDefault;
+    private final ContentProviderClient mProvider;
+    private final Context mContext;
+    private final File mFile;
+    private final boolean mIsDefault;
 
     public static final String[] POI_PROJECTION = new String[]{
             PoiContentContract.Poi.COL_ROWID,
@@ -90,12 +91,11 @@ public class ImportPoiTask extends BaseAsyncTask<Void, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(Void... params) {
-
+    public Void call() throws Exception {
         Log.d(TAG, "start importing POIs");
         PoiNotification mNotification = new PoiNotification(mContext);
         try {
-            Map<String, Poi> poiMap = new HashMap<String, Poi>();
+            Map<String, Poi> poiMap = new HashMap<>();
 
             try {
                 DocumentBuilderFactory factory = DocumentBuilderFactory
@@ -118,8 +118,7 @@ public class ImportPoiTask extends BaseAsyncTask<Void, Void, Void> {
 
                     NodeList names = wpt.getElementsByTagName("name");
                     if (names.getLength() == 1) {
-                        String name = ((Element) names.item(0))
-                                .getTextContent();
+                        String name = names.item(0).getTextContent();
 
                         Poi poi = new Poi(name, lat, lon);
                         if (!poiMap.containsKey(poi.getName())) {
@@ -141,7 +140,7 @@ public class ImportPoiTask extends BaseAsyncTask<Void, Void, Void> {
             if (!poiMap.isEmpty()) {
                 Log.i(TAG, String.format("got %s pois", poiMap.size()));
 
-                ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
+                ArrayList<ContentProviderOperation> batch = new ArrayList<>();
 
                 Uri poiUri = PoiContentContract.Poi.CONTENT_URI;
                 Cursor c = mProvider.query(poiUri, POI_PROJECTION, null, null,

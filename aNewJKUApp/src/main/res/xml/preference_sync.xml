@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <PreferenceCategory android:title="@string/action_settings" />
+    <PreferenceCategory android:title="@string/title_settings" />
 
     <!-- NOTE: Don't wrap PreferenceScreen with PreferenceCategory! Everything will crash!! Supid Android =D -->
 
     <PreferenceScreen
         android:key="account_settings"
         android:summary="@string/action_settings_summary"
-        android:title="@string/action_settings" >
+        android:title="@string/title_settings" >
         <intent android:action="org.voidsink.anewjkuapp.prefs.MAIN" />
     </PreferenceScreen>
 

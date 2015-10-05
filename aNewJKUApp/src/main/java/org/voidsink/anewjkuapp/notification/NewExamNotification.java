@@ -40,12 +40,11 @@ import java.util.List;
 import edu.emory.mathcs.backport.java.util.Collections;
 
 public class NewExamNotification {
-    private static int NOTIFICATION_NEW_EXAM = R.string.notification_new_exams;
 
-    private Context mContext;
+    private final Context mContext;
 
-    private List<String> mInserts;
-    private List<String> mUpdates;
+    private final List<String> mInserts;
+    private final List<String> mUpdates;
 
     public NewExamNotification(Context mContext) {
         this.mContext = mContext;
@@ -64,6 +63,8 @@ public class NewExamNotification {
     public void show() {
         if (PreferenceWrapper.getNotifyExam(mContext)
                 && (mInserts.size() > 0 || mUpdates.size() > 0)) {
+            int NOTIFICATION_NEW_EXAM = R.string.notification_new_exams;
+
             PendingIntent pendingIntent = PendingIntent
                     .getActivity(mContext, NOTIFICATION_NEW_EXAM, new Intent(mContext,
                             MainActivity.class).putExtra(MainActivity.ARG_SHOW_FRAGMENT_ID, R.id.nav_exams)

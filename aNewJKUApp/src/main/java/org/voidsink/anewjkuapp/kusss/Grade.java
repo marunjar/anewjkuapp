@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,11 +20,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.kusss;
 
-import android.annotation.SuppressLint;
 import android.graphics.Color;
 
 import org.voidsink.anewjkuapp.R;
@@ -42,35 +42,35 @@ public enum Grade {
 
     private final boolean isPositive;
     private final boolean isNumber;
-    private int value;
+    private final int value;
 
-    private Grade(int value, boolean isPositive, boolean isNumber) {
+    Grade(int value, boolean isPositive, boolean isNumber) {
         this.value = value;
         this.isPositive = isPositive;
         this.isNumber = isNumber;
     }
 
-    @SuppressLint("DefaultLocale")
     public static Grade parseGrade(String text) {
         text = text.trim().toLowerCase();
-        if (text.equals("sehr gut")) {
-            return G1;
-        } else if (text.equals("gut")) {
-            return G2;
-        } else if (text.equals("befriedigend")) {
-            return G3;
-        } else if (text.equals("genügend")) {
-            return G4;
-        } else if (text.equals("nicht genügend")) {
-            return G5;
-        } else if (text.equals("mit erfolg teilgenommen")) {
-            return GET;
-        } else if (text.equals("bestanden")) {
-            return GB;
-        } else if (text.equals("mit auszeichnung bestanden")) {
-            return GAB;
-        } else {
-            return null;
+        switch (text) {
+            case "sehr gut":
+                return G1;
+            case "gut":
+                return G2;
+            case "befriedigend":
+                return G3;
+            case "genügend":
+                return G4;
+            case "nicht genügend":
+                return G5;
+            case "mit erfolg teilgenommen":
+                return GET;
+            case "bestanden":
+                return GB;
+            case "mit auszeichnung bestanden":
+                return GAB;
+            default:
+                return null;
         }
     }
 

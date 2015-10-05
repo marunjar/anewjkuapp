@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.kusss;
 
@@ -29,6 +30,7 @@ import android.text.format.DateUtils;
 import android.util.Log;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 
 import org.jsoup.Connection;
@@ -39,7 +41,11 @@ import org.jsoup.select.Elements;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -56,6 +62,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class KusssHandler {
@@ -92,20 +99,20 @@ public class KusssHandler {
     private static final int TIMEOUT_LOGIN = 15 * 1000; // 15s
     private static final int TIMEOUT_SEARCH_EXAM_BY_LVA = 10 * 1000; //10s
 
+    private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
+
     private static KusssHandler handler = null;
-    private CookieManager mCookies;
+    private final CookieManager mCookies;
 
     private KusssHandler() {
         this.mCookies = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
         CookieHandler.setDefault(mCookies);
     }
 
-    private static Object mutex = new Object();
-
     public static synchronized KusssHandler getInstance() {
         if (handler == null) {
-            synchronized (mutex) {
-                if (handler==null) handler= new KusssHandler();
+            synchronized (KusssHandler.class) {
+                if (handler == null) handler = new KusssHandler();
             }
         }
         return handler;
@@ -252,15 +259,25 @@ public class KusssHandler {
 
     public synchronized boolean isAvailable(Context c, String sessionId,
                                             String user, String password) {
-        if (!isLoggedIn(c, sessionId)) {
-            return login(c, user, password) != null;
+        return isLoggedIn(c, sessionId) || login(c, user, password) != null;
+    }
+
+    public static long copyStream(final InputStream input, final OutputStream output) throws IOException {
+
+        final byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+        long count = 0;
+        int n = 0;
+        while (-1 != (n = input.read(buffer))) {
+            output.write(buffer, 0, n);
+            count += n;
         }
-        return true;
+        return count;
     }
 
     public Calendar getLVAIcal(Context c, CalendarBuilder mCalendarBuilder) {
 
-        Calendar iCal = null;
+        Calendar iCal;
+        ByteArrayOutputStream data = new ByteArrayOutputStream();
 
         try {
 
@@ -274,11 +291,15 @@ public class KusssHandler {
             writeParams(conn, new String[]{"selectAll"},
                     new String[]{"ical.category.mycourses"});
 
-            BufferedInputStream in = new BufferedInputStream(conn.getInputStream());
-
-            iCal = mCalendarBuilder.build(in);
-
+            long length = copyStream(conn.getInputStream(), data);
             conn.disconnect();
+
+            iCal = mCalendarBuilder.build(new ByteArrayInputStream(data.toByteArray()));
+
+        } catch (ParserException e) {
+            Log.e(TAG, "getLVAIcal", e);
+            Analytics.sendException(c, e, true, data.toString());
+            iCal = null;
         } catch (Exception e) {
             Log.e(TAG, "getLVAIcal", e);
             Analytics.sendException(c, e, true);
@@ -288,8 +309,28 @@ public class KusssHandler {
         return iCal;
     }
 
+    private class BufferedInputStreamWithLog extends BufferedInputStream {
+        private StringBuilder mStringBuilder = new StringBuilder();
+
+        public BufferedInputStreamWithLog(InputStream in) {
+            super(in);
+        }
+
+        public BufferedInputStreamWithLog(InputStream in, int size) {
+            super(in, size);
+        }
+
+        public String data() {
+            String mData = mStringBuilder.toString();
+
+            return mData;
+
+        }
+    }
+
     public Calendar getExamIcal(Context c, CalendarBuilder mCalendarBuilder) {
-        Calendar iCal = null;
+        Calendar iCal;
+        ByteArrayOutputStream data = new ByteArrayOutputStream();
 
         try {
             URL url = new URL(URL_GET_ICAL);
@@ -302,11 +343,14 @@ public class KusssHandler {
             writeParams(conn, new String[]{"selectAll"},
                     new String[]{"ical.category.examregs"});
 
-            BufferedInputStream in = new BufferedInputStream(conn.getInputStream());
-
-            iCal = mCalendarBuilder.build(in);
-
+            long length = copyStream(conn.getInputStream(), data);
             conn.disconnect();
+
+            iCal = mCalendarBuilder.build(new ByteArrayInputStream(data.toByteArray()));
+        } catch (ParserException e) {
+            Log.e(TAG, "getExamIcal", e);
+            Analytics.sendException(c, e, true, data.toString());
+            iCal = null;
         } catch (Exception e) {
             Log.e(TAG, "getExamIcal", e);
             Analytics.sendException(c, e, true);
@@ -339,7 +383,7 @@ public class KusssHandler {
     }
 
     public boolean selectTerm(Context c, Term term) throws IOException {
-        Document doc = Jsoup.connect(URL_SELECT_TERM)
+        Jsoup.connect(URL_SELECT_TERM)
                 .cookies(getCookieMap())
                 .data("term", term.toString())
                 .data("previousQueryString", "")
@@ -357,7 +401,7 @@ public class KusssHandler {
             return null;
         }
 
-        List<Course> courses = new ArrayList<>();
+        ArrayList<Course> courses = new ArrayList<>();
         try {
             Log.d(TAG, "getCourses");
 
@@ -386,7 +430,7 @@ public class KusssHandler {
                     throw new IOException(String.format("cannot select term: %s", term));
                 }
             }
-            if (courses != null && courses.size() == 0) {
+            if (courses.size() == 0) {
                 // break if no lvas found, a student without courses is a quite impossible case
                 return null;
             }
@@ -497,8 +541,7 @@ public class KusssHandler {
         return exams;
     }
 
-    public List<Exam> getNewExamsByCourseId(Context c, List<Course> courses, List<Term> terms)
-            throws IOException {
+    public List<Exam> getNewExamsByCourseId(Context c, List<Course> courses, List<Term> terms) {
 
         List<Exam> exams = new ArrayList<>();
         try {
@@ -563,7 +606,7 @@ public class KusssHandler {
     private List<Exam> getNewExamsByCourseId(Context c, String courseId) {
         List<Exam> exams = new ArrayList<>();
         try {
-            final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+            final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 
             Log.d(TAG, "getNewExamsByCourseId: " + courseId);
             Document doc = Jsoup

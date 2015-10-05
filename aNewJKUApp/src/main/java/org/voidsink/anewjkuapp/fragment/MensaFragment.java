@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,26 +20,44 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp.fragment;
 
-import android.graphics.Color;
+import android.content.SharedPreferences;
+import android.support.v7.preference.PreferenceManager;
 
 import org.voidsink.anewjkuapp.MensaDayTabItem;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.SlidingTabItem;
 import org.voidsink.anewjkuapp.base.SlidingTabsFragment;
-import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-public class MensaFragment extends SlidingTabsFragment {
+public class MensaFragment extends SlidingTabsFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        PreferenceManager.getDefaultSharedPreferences(getContext())
+                .registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        PreferenceManager.getDefaultSharedPreferences(getContext())
+                .unregisterOnSharedPreferenceChangeListener(this);
+    }
 
     @Override
     protected void fillTabs(List<SlidingTabItem> mTabs) {
@@ -74,11 +92,18 @@ public class MensaFragment extends SlidingTabsFragment {
         } else if (cal.get(Calendar.DATE) - now.get(Calendar.DATE) == 1) {
             return getResources().getString(R.string.mensa_menu_tomorrow);
         }
-        return new SimpleDateFormat("EEEE").format(cal.getTime());
+        return new SimpleDateFormat("EEEE", Locale.getDefault()).format(cal.getTime());
     }
 
     @Override
     protected String getScreenName() {
         return Consts.SCREEN_MENSA;
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(PreferenceWrapper.PREF_MENSA_GROUP_MENU_BY_DAY)) {
+            createTabs(null);
+        }
     }
 }

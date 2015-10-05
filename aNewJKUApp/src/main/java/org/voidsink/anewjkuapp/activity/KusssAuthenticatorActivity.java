@@ -152,7 +152,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
         }
     }
 
-    public void submit() {
+    private void submit() {
 
         mSubmit.setEnabled(false);
         mShowPassword.setChecked(false);

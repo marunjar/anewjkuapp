@@ -1,55 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.voidsink.anewjkuapp">
+<manifest
+    package="org.voidsink.anewjkuapp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
         android:normalScreens="true"
-        android:smallScreens="true" />
+        android:smallScreens="true"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
-    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
-    <uses-permission android:name="android.permission.READ_SYNC_STATS" />
-    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_CALENDAR" />
-    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.READ_SYNC_STATS"/>
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.READ_CALENDAR"/>
+    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:name="Globals"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme.Light">
+        android:supportsRtl="false"
+        android:theme="@style/AppTheme.Light"
+        tools:replace="android:allowBackup">
 
         <activity
-            android:name=".activity.MainActivity"
+            android:name="org.voidsink.anewjkuapp.activity.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
+                android:resource="@xml/searchable"/>
         </activity>
         <activity
-            android:name=".activity.SettingsActivity"
+            android:name="org.voidsink.anewjkuapp.activity.SettingsActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".activity.MainActivity"
             android:permission="android.permission.MANAGE_ACCOUNTS"
@@ -58,35 +62,35 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.voidsink.anewjkuapp.activity.MainActivity" />
+                android:value="org.voidsink.anewjkuapp.activity.MainActivity"/>
 
             <!-- Call from preference screen -->
             <intent-filter>
-                <action android:name="org.voidsink.anewjkuapp.prefs.MAIN" />
+                <action android:name="org.voidsink.anewjkuapp.prefs.MAIN"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.AboutActivity"
+            android:name="org.voidsink.anewjkuapp.activity.AboutActivity"
             android:parentActivityName=".activity.MainActivity"
             android:screenOrientation="portrait">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.voidsink.anewjkuapp.activity.MainActivity" />
+                android:value="org.voidsink.anewjkuapp.activity.MainActivity"/>
         </activity>
         <activity
-            android:name=".activity.RssFeedEntryActivity"
+            android:name="org.voidsink.anewjkuapp.activity.RssFeedEntryActivity"
             android:parentActivityName=".activity.MainActivity"
             android:screenOrientation="portrait">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.voidsink.anewjkuapp.activity.MainActivity" />
+                android:value="org.voidsink.anewjkuapp.activity.MainActivity"/>
         </activity>
         <activity
-            android:name=".activity.KusssAuthenticatorActivity"
+            android:name="org.voidsink.anewjkuapp.activity.KusssAuthenticatorActivity"
             android:parentActivityName=".activity.MainActivity"
             android:permission="android.permission.MANAGE_ACCOUNTS"
             android:screenOrientation="portrait">
@@ -94,99 +98,99 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.voidsink.anewjkuapp.activity.MainActivity" />
+                android:value="org.voidsink.anewjkuapp.activity.MainActivity"/>
 
             <!-- Call from preference screen -->
             <intent-filter>
-                <action android:name="org.voidsink.anewjkuapp.prefs.LOGIN" />
+                <action android:name="org.voidsink.anewjkuapp.prefs.LOGIN"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
-            android:name=".dashclock.MensaDashclockSettings"
+            android:name="org.voidsink.anewjkuapp.dashclock.MensaDashclockSettings"
             android:exported="true"
-            android:label="@string/extension_mensa_title" />
+            android:label="@string/extension_mensa_title"/>
 
         <service
-            android:name=".update.UpdateService"
-            android:exported="false" />
+            android:name="org.voidsink.anewjkuapp.update.UpdateService"
+            android:exported="false"/>
         <service
-            android:name=".service.SyncAlarmService"
-            android:exported="false" />
+            android:name="org.voidsink.anewjkuapp.service.SyncAlarmService"
+            android:exported="false"/>
         <service
-            android:name=".service.KusssAuthenticatorService"
+            android:name="org.voidsink.anewjkuapp.service.KusssAuthenticatorService"
             android:permission="android.permission.AUTHENTICATE_ACCOUNTS">
             <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator" />
+                <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/authenticator" />
+                android:resource="@xml/authenticator"/>
         </service>
         <service
-            android:name=".service.KusssCalendarSyncService"
+            android:name="org.voidsink.anewjkuapp.service.KusssCalendarSyncService"
             android:exported="false"
             android:process=":sync">
             <intent-filter>
-                <action android:name="android.content.SyncAdapter" />
+                <action android:name="android.content.SyncAdapter"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.content.SyncAdapter"
-                android:resource="@xml/syncadapter_calendar" />
+                android:resource="@xml/syncadapter_calendar"/>
         </service>
         <service
-            android:name=".service.KusssSyncService"
+            android:name="org.voidsink.anewjkuapp.service.KusssSyncService"
             android:exported="false"
             android:process=":sync">
             <intent-filter>
-                <action android:name="android.content.SyncAdapter" />
+                <action android:name="android.content.SyncAdapter"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.content.SyncAdapter"
-                android:resource="@xml/syncadapter_kusss" />
+                android:resource="@xml/syncadapter_kusss"/>
         </service>
         <service
-            android:name=".dashclock.MensaDashclockExtension"
+            android:name="org.voidsink.anewjkuapp.dashclock.MensaDashclockExtension"
             android:icon="@drawable/ic_food"
             android:label="@string/extension_mensa_title"
             android:permission="com.google.android.apps.dashclock.permission.READ_EXTENSION_DATA">
             <intent-filter>
-                <action android:name="com.google.android.apps.dashclock.Extension" />
+                <action android:name="com.google.android.apps.dashclock.Extension"/>
             </intent-filter>
 
             <meta-data
                 android:name="protocolVersion"
-                android:value="1" />
+                android:value="1"/>
             <meta-data
                 android:name="worldReadable"
-                android:value="true" />
+                android:value="true"/>
             <meta-data
                 android:name="description"
-                android:value="@string/extension_mensa_description" />
+                android:value="@string/extension_mensa_description"/>
             <!-- A settings activity is optional -->
             <meta-data
                 android:name="settingsActivity"
-                android:value=".dashclock.MensaDashclockSettings" />
+                android:value="org.voidsink.anewjkuapp.dashclock.MensaDashclockSettings"/>
         </service>
 
         <provider
             android:name="org.voidsink.anewjkuapp.provider.KusssContentProvider"
-            android:authorities="org.voidsink.anewjkuapp.provider"
+            android:authorities="@string/config_kusss_provider"
             android:exported="false"
             android:label="@string/kusss_provider_name"
-            android:syncable="true" />
+            android:syncable="true"/>
         <provider
             android:name="org.voidsink.anewjkuapp.provider.PoiContentProvider"
-            android:authorities="org.voidsink.anewjkuapp.provider.poi"
-            android:exported="false" />
+            android:authorities="@string/config_poi_provider"
+            android:exported="false"/>
 
-        <receiver android:name=".utils.BootReceiver">
+        <receiver android:name="org.voidsink.anewjkuapp.utils.BootReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
     </application>

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.provider;
 
@@ -111,11 +112,8 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
             + KusssContentContract.Curricula.COL_DT_START + " integer not null, "
             + KusssContentContract.Curricula.COL_DT_END + " integer" + ")";
 
-    private Context mContext = null;
-
     public KusssDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        this.mContext = context;
     }
 
     @Override
@@ -142,9 +140,11 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS "
                     + KusssContentContract.Course.TABLE_NAME);
         }
+        /*
         if (oldVersion < 10) {
             // try to import curricula
         }
+        */
         if (oldVersion < 11) {
             db.execSQL("DROP TABLE IF EXISTS "
                     + KusssContentContract.Exam.TABLE_NAME);
@@ -161,7 +161,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public static boolean toBool(int integer) {
-        return (integer == 1) ? true : false;
+        return (integer == 1);
     }
 
     public static int toInt(boolean bool) {

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.provider;
 
@@ -33,6 +34,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.voidsink.anewjkuapp.PoiContentContract;
@@ -75,17 +77,16 @@ public class PoiContentProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        String whereIdClause = "";
-        int rowsDeleted = -1;
+        int rowsDeleted;
         switch (sUriMatcher.match(uri)) {
             case CODE_POI:
                 rowsDeleted = db.delete(PoiContentContract.Poi.TABLE_NAME,
                         selection, selectionArgs);
                 break;
             case CODE_POI_ID:
-                whereIdClause = PoiContentContract.Poi.COL_ROWID + "="
+                String whereIdClause = PoiContentContract.Poi.COL_ROWID + "="
                         + uri.getLastPathSegment();
                 if (!TextUtils.isEmpty(selection))
                     whereIdClause += " AND " + selection;
@@ -102,7 +103,7 @@ public class PoiContentProvider extends ContentProvider {
     }
 
     @Override
-    public String getType(Uri uri) {
+    public String getType(@NonNull Uri uri) {
         switch (sUriMatcher.match(uri)) {
             case CODE_POI:
                 return PoiContentContract.CONTENT_TYPE_DIR + "/"
@@ -119,7 +120,7 @@ public class PoiContentProvider extends ContentProvider {
     }
 
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
+    public Uri insert(@NonNull Uri uri, ContentValues values) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         switch (sUriMatcher.match(uri)) {
             case CODE_POI: {
@@ -144,7 +145,7 @@ public class PoiContentProvider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection,
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
 
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
@@ -197,10 +198,8 @@ public class PoiContentProvider extends ContentProvider {
                             PoiContentContract.Poi.COL_ROWID + " AS "
                                     + SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID};
                 }
-                Cursor c = builder.query(db, projection, selection, selectionArgs,
+                return builder.query(db, projection, selection, selectionArgs,
                         null, null, sortOrder, limit);
-
-                return c;
             default:
                 throw new IllegalArgumentException("URI " + uri
                         + " is not supported.");
@@ -208,10 +207,9 @@ public class PoiContentProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection,
+    public int update(@NonNull Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        String whereIdClause = "";
 
         switch (sUriMatcher.match(uri)) {
             case CODE_POI: {
@@ -219,7 +217,7 @@ public class PoiContentProvider extends ContentProvider {
                         selection, selectionArgs);
             }
             case CODE_POI_ID: {
-                whereIdClause = PoiContentContract.Poi.COL_ROWID + "="
+                String whereIdClause = PoiContentContract.Poi.COL_ROWID + "="
                         + uri.getLastPathSegment();
                 if (!TextUtils.isEmpty(selection))
                     whereIdClause += " AND " + selection;

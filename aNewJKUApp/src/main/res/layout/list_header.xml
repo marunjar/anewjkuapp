@@ -8,7 +8,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:background="?android:attr/colorBackground"
-    android:padding="@dimen/list_card_padding_bottom"
+    android:padding="@dimen/card_content_padding"
     android:textColor="?android:attr/textColorSecondary"
     android:textSize="@dimen/text_size_subtitle"
     tools:text="this is the header text" />

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.kusss;
 
@@ -57,26 +58,28 @@ public enum AssessmentType {
     @SuppressLint("DefaultLocale")
     public static AssessmentType parseGradeType(String text) {
         text = text.trim().toLowerCase();
-        if (text.equals("vorläufige lehrveranstaltungsbeurteilungen")
-                || text.equals("interim course assessments")) {
-            return INTERIM_COURSE_ASSESSMENT;
-        } else if (text.equals("lehrveranstaltungsbeurteilungen")
-                || text.equals("course assessments")) {
-            return FINAL_COURSE_ASSESSMENT;
-        } else if (text.equals("sonstige beurteilungen")
-                || text.equals("recognized course certificates (ilas)")) {
-            return RECOGNIZED_COURSE_CERTIFICATE;
-        } else if (text.equals("anerkannte beurteilungen")
-                || text.equals("recognized assessments")) {
-            return RECOGNIZED_ASSESSMENT;
-        } else if (text.equals("prüfungen")
-                || text.equals("exams")) {
-            return RECOGNIZED_EXAM;
-        } else if (text.equals("anerkannte prüfungen")
-                || text.equals("recognized exams")) {
-            return RECOGNIZED_EXAM;
-        } else {
-            return null;
+
+        switch (text) {
+            case "vorläufige lehrveranstaltungsbeurteilungen":
+            case "interim course assessments":
+                return INTERIM_COURSE_ASSESSMENT;
+            case "lehrveranstaltungsbeurteilungen":
+            case "course assessments":
+                return FINAL_COURSE_ASSESSMENT;
+            case "sonstige beurteilungen":
+            case "recognized course certificates (ilas)":
+                return RECOGNIZED_COURSE_CERTIFICATE;
+            case "anerkannte beurteilungen":
+            case "recognized assessments":
+                return RECOGNIZED_ASSESSMENT;
+            case "prüfungen":
+            case "exams":
+                return RECOGNIZED_EXAM;
+            case "anerkannte prüfungen":
+            case "recognized exams":
+                return RECOGNIZED_EXAM;
+            default:
+                return null;
         }
     }
 

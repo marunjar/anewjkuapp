@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/card"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+<android.support.v7.widget.CardView style="@style/card"
+                                    xmlns:android="http://schemas.android.com/apk/res/android"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,140 +20,147 @@
                 style="@style/Text.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/separator_top_bottom_margin"
                 android:layout_marginRight="@dimen/separator_top_bottom_margin"
-                android:text="@string/studies_title" />
+                android:text="@string/studies_title"/>
 
             <TextView
                 android:id="@+id/curriculum_title"
                 style="@style/Text.Body2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/card_content_padding"
-            android:paddingRight="@dimen/card_content_padding">
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      android:paddingLeft="@dimen/card_content_padding"
+                      android:paddingRight="@dimen/card_content_padding">
 
             <TextView
                 style="@style/Text.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/separator_top_bottom_margin"
                 android:layout_marginRight="@dimen/separator_top_bottom_margin"
-                android:text="@string/studies_skz" />
+                android:text="@string/studies_skz"/>
 
             <TextView
                 android:id="@+id/curriculum_id"
                 style="@style/Text.Body2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/card_content_padding"
-            android:paddingRight="@dimen/card_content_padding">
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      android:paddingLeft="@dimen/card_content_padding"
+                      android:paddingRight="@dimen/card_content_padding">
 
             <TextView
                 style="@style/Text.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/separator_top_bottom_margin"
                 android:layout_marginRight="@dimen/separator_top_bottom_margin"
-                android:text="@string/studies_dt_start" />
+                android:text="@string/studies_dt_start"/>
 
             <TextView
                 android:id="@+id/curriculum_dt_start"
                 style="@style/Text.Body2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/card_content_padding"
-            android:paddingRight="@dimen/card_content_padding">
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      android:paddingLeft="@dimen/card_content_padding"
+                      android:paddingRight="@dimen/card_content_padding">
 
             <TextView
                 style="@style/Text.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/separator_top_bottom_margin"
                 android:layout_marginRight="@dimen/separator_top_bottom_margin"
-                android:text="@string/studies_dt_end" />
+                android:text="@string/studies_dt_end"/>
 
             <TextView
                 android:id="@+id/curriculum_dt_end"
                 style="@style/Text.Body2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/card_content_padding"
-            android:paddingRight="@dimen/card_content_padding">
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      android:paddingLeft="@dimen/card_content_padding"
+                      android:paddingRight="@dimen/card_content_padding">
 
             <TextView
                 style="@style/Text.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/separator_top_bottom_margin"
                 android:layout_marginRight="@dimen/separator_top_bottom_margin"
-                android:text="@string/studies_steop_done" />
+                android:text="@string/studies_steop_done"/>
 
             <TextView
                 android:id="@+id/curriculum_steop_done"
                 style="@style/Text.Body2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/card_content_padding"
-            android:paddingRight="@dimen/card_content_padding">
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      android:paddingLeft="@dimen/card_content_padding"
+                      android:paddingRight="@dimen/card_content_padding">
 
             <TextView
                 style="@style/Text.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/separator_top_bottom_margin"
                 android:layout_marginRight="@dimen/separator_top_bottom_margin"
-                android:text="@string/studies_active_status" />
+                android:text="@string/studies_active_status"/>
 
             <TextView
                 android:id="@+id/curriculum_active_status"
                 style="@style/Text.Body2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/card_content_padding"
-            android:paddingRight="@dimen/card_content_padding">
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      android:paddingLeft="@dimen/card_content_padding"
+                      android:paddingRight="@dimen/card_content_padding">
 
             <TextView
                 style="@style/Text.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/separator_top_bottom_margin"
                 android:layout_marginRight="@dimen/separator_top_bottom_margin"
-                android:text="@string/studies_is_standard" />
+                android:text="@string/studies_is_standard"/>
 
             <TextView
                 android:id="@+id/curriculum_is_standard"
                 style="@style/Text.Body2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

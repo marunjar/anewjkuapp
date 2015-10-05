@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp;
 
@@ -53,7 +54,7 @@ public class CourseMap {
         }
     };
 
-    private Map<String, Course> map;
+    private final Map<String, Course> map;
 
     public CourseMap(Context context) {
         this.map = new HashMap<>();
@@ -102,8 +103,8 @@ public class CourseMap {
         return courses.get(0);
     }
 
-    public List<Course> getCourses() {
-        return new ArrayList<Course>(this.map.values());
+    public ArrayList<Course> getCourses() {
+        return new ArrayList<>(this.map.values());
     }
 
 }

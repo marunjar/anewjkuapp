@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp;
 
@@ -33,6 +34,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -49,7 +51,7 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
     // public static final String AUTHORITY_CALENDAR =
     // "org.voidsink.anewjkuapp.calendar.provider";
     // An account type, in the form of a domain name
-    public static final String ACCOUNT_TYPE = "org.voidsink.anewjkuapp.account";
+    public static final String ACCOUNT_TYPE = BuildConfig.CONFIG_KUSSS_ACCOUNT_TYPE;
 
     public static final String AUTHTOKEN_TYPE_READ_ONLY = "Read only";
     public static final String AUTHTOKEN_TYPE_READ_ONLY_LABEL = "Read only access to a KUSSS account";
@@ -201,7 +203,7 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
     }
 
     @Override
-    public Bundle getAccountRemovalAllowed(
+    public @NonNull Bundle getAccountRemovalAllowed(
             AccountAuthenticatorResponse response, Account account)
             throws NetworkErrorException {
         final Bundle result = super.getAccountRemovalAllowed(response, account);

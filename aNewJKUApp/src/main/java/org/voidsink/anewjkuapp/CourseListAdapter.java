@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp;
 
@@ -31,14 +31,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
-
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.UIUtils;
+import org.voidsink.sectionedrecycleradapter.SectionedAdapter;
 
-public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, CourseListAdapter.LvaViewHolder> implements StickyRecyclerHeadersAdapter<CourseListAdapter.LvaHeaderHolder> {
+public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, CourseListAdapter.LvaViewHolder> implements SectionedAdapter<CourseListAdapter.LvaHeaderHolder> {
 
     private final Context mContext;
 
@@ -67,6 +67,7 @@ public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, Course
             holder.mCid.setVisibility(View.GONE);
         }
         holder.mCode.setText(lva.getCourse().getCode());
+        UIUtils.setTextAndVisibility(holder.mTerm, AppUtils.termToString(lva.getCourse().getTerm()));
 
         Assessment grade = lva.getGrade();
         holder.mChipBack.setBackgroundColor(UIUtils.getChipGradeColor(grade));
@@ -106,6 +107,7 @@ public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, Course
         private final View mChipBack;
         private final TextView mChipEcts;
         private final TextView mChipGrade;
+        private final TextView mTerm;
 
         public LvaViewHolder(View itemView) {
             super(itemView);
@@ -115,6 +117,7 @@ public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, Course
             mCid = (TextView) itemView.findViewById(R.id.lva_list2_item_cid);
             mCode = (TextView) itemView.findViewById(R.id.lva_list2_item_code);
             mTeacher = (TextView) itemView.findViewById(R.id.lva_list2_item_teacher);
+            mTerm = (TextView) itemView.findViewById(R.id.lva_list2_item_term);
 
             mChipBack = itemView.findViewById(R.id.grade_chip);
             mChipEcts = (TextView) itemView.findViewById(R.id.grade_chip_info);
@@ -123,7 +126,7 @@ public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, Course
     }
 
     protected static class LvaHeaderHolder extends RecyclerView.ViewHolder {
-        public TextView mText;
+        public final TextView mText;
 
         public LvaHeaderHolder(View itemView) {
             super(itemView);

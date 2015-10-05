@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp.mensa;
 
@@ -36,5 +36,8 @@ public class ClassicMenuLoader extends JSONMenuLoader {
         return "Classic";
     }
 
-
+    @Override
+    protected String getMensaKey() {
+        return Mensen.MENSA_CLASSIC;
+    }
 }

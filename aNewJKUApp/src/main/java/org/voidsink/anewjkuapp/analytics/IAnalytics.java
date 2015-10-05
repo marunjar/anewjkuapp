@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.analytics;
 
@@ -29,15 +30,15 @@ import android.content.Context;
 
 public interface IAnalytics {
 
-    public void init(Application app);
+    void init(Application app);
 
-    public void sendException(Context c, Exception e, boolean fatal, String additionalData);
+    void sendException(Context c, Exception e, boolean fatal, String additionalData);
 
-    public void sendScreen(Context c, String screenName);
+    void sendScreen(Context c, String screenName);
 
-    public void sendButtonEvent(String label);
+    void sendButtonEvent(String label);
 
-    public void sendPreferenceChanged(String key, String value);
+    void sendPreferenceChanged(String key, String value);
 
-    public void setEnabled(boolean enabled);
+    void setEnabled(boolean enabled);
 }

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp;
 
@@ -36,7 +36,6 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
 
-import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.notification.KusssNotificationBuilder;
 import org.voidsink.anewjkuapp.update.ImportAssessmentTask;
@@ -45,15 +44,19 @@ import org.voidsink.anewjkuapp.update.ImportCurriculaTask;
 import org.voidsink.anewjkuapp.update.ImportExamTask;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
 
     private static final String TAG = KusssSyncAdapter.class.getSimpleName();
 
     // Global variables
     // Define a variable to contain a content resolver instance
-    ContentResolver mContentResolver;
-    private boolean mSyncCancled;
-    private Context mContext;
+    private final ContentResolver mContentResolver;
+    private final Context mContext;
+    private ExecutorService mExecutorService = null;
 
     /**
      * Set up the sync adapter
@@ -64,7 +67,6 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
          * If your app uses a content resolver, get an instance of it from the
 		 * incoming Context
 		 */
-        this.mSyncCancled = false;
         this.mContext = context;
         this.mContentResolver = context.getContentResolver();
     }
@@ -77,11 +79,10 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
     public KusssSyncAdapter(Context context, boolean autoInitialize,
                             boolean allowParallelSyncs) {
         super(context, autoInitialize, allowParallelSyncs);
-		/*
-		 * If your app uses a content resolver, get an instance of it from the
+        /*
+         * If your app uses a content resolver, get an instance of it from the
 		 * incoming Context
 		 */
-        this.mSyncCancled = false;
         this.mContext = context;
         this.mContentResolver = context.getContentResolver();
     }
@@ -109,90 +110,32 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
             return;
         }
 
-        // TODO Download data here
-        try {
-            Looper.prepare();
+        this.mExecutorService = Executors.newSingleThreadExecutor();
 
-            Log.d(TAG, "importing curricula");
+        Looper.prepare();
 
-            ImportCurriculaTask curriculaTask = new ImportCurriculaTask(account, extras,
-                    authority, provider, syncResult, mContext);
-            curriculaTask.execute();
-            while (!curriculaTask.isDone() && !mSyncCancled) {
-                try {
-                    Thread.sleep(500);
-                } catch (Exception e) {
-                    Analytics.sendException(mContext, e, false);
-                }
-                if (mSyncCancled) {
-                    curriculaTask.cancel(true);
-                }
-            }
+        AppUtils.executeEm(mExecutorService, mContext,
+                new Callable[]{
+                        new ImportCurriculaTask(account, extras,
+                                authority, provider, syncResult, mContext),
+                        new ImportCourseTask(account, extras,
+                                authority, provider, syncResult, mContext),
+                        new ImportAssessmentTask(account, extras,
+                                authority, provider, syncResult, mContext),
+                        new ImportExamTask(account, extras,
+                                authority, provider, syncResult, mContext)},
+                true);
 
-            Log.d(TAG, "importing courses");
+        KusssHandler.getInstance().logout(mContext);
 
-            ImportCourseTask courseTask = new ImportCourseTask(account, extras,
-                    authority, provider, syncResult, mContext);
-            courseTask.execute();
-            while (!courseTask.isDone() && !mSyncCancled) {
-                try {
-                    Thread.sleep(500);
-                } catch (Exception e) {
-                    Analytics.sendException(mContext, e, false);
-                }
-                if (mSyncCancled) {
-                    courseTask.cancel(true);
-                }
-            }
-
-            Log.d(TAG, "importing Grades");
-
-            ImportAssessmentTask gradeTask = new ImportAssessmentTask(account, extras,
-                    authority, provider, syncResult, mContext);
-
-            gradeTask.execute();
-            while (!gradeTask.isDone() && !mSyncCancled) {
-                try {
-                    Thread.sleep(500);
-                } catch (Exception e) {
-                    Analytics.sendException(mContext, e, false);
-                }
-                if (mSyncCancled) {
-                    gradeTask.cancel(true);
-                }
-            }
-
-            Log.d(TAG, "importing Exams");
-
-            ImportExamTask examTask = new ImportExamTask(account, extras,
-                    authority, provider, syncResult, mContext);
-
-            examTask.execute();
-            while (!examTask.isDone() && !mSyncCancled) {
-                try {
-                    Thread.sleep(500);
-                } catch (Exception e) {
-                    Analytics.sendException(mContext, e, false);
-                }
-                if (mSyncCancled) {
-                    examTask.cancel(true);
-                }
-            }
-
-            Log.d(TAG, "importing finished");
-        } catch (Exception e) {
-            Analytics.sendException(mContext, e, true);
-            KusssNotificationBuilder.showErrorNotification(mContext,
-                    R.string.notification_error, e);
-        } finally {
-            KusssHandler.getInstance().logout(mContext);
-        }
+        this.mExecutorService.shutdown();
     }
 
     @Override
     public void onSyncCanceled() {
-        Log.d(TAG, "Canceled Sync");
-        mSyncCancled = true;
+        if (this.mExecutorService != null) {
+            this.mExecutorService.shutdownNow();
+        }
     }
 
 }

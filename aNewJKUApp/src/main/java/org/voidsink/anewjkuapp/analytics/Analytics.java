@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.analytics;
 
@@ -28,12 +29,11 @@ import android.app.Application;
 import android.content.Context;
 
 public class Analytics {
-    private static Object mutex = new Object();
     private static IAnalytics sAnalytics;
 
     private static synchronized IAnalytics getAnalytics() {
         if (sAnalytics == null) {
-            synchronized (mutex) {
+            synchronized (Analytics.class) {
                 if (sAnalytics == null) sAnalytics = new AnalyticsFlavor();
             }
         }

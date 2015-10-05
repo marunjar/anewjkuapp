@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,22 +20,23 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp;
 
-import org.voidsink.anewjkuapp.mensa.Mensa;
-import org.voidsink.anewjkuapp.mensa.MensaDay;
+import org.voidsink.anewjkuapp.mensa.IDay;
+import org.voidsink.anewjkuapp.mensa.IMensa;
+import org.voidsink.anewjkuapp.mensa.IMenu;
 
 public interface MensaItem {
 
-    public static final int TYPE_MENU = 0;
-    public static final int TYPE_INFO = 1;
+    int TYPE_MENU = 0;
+    int TYPE_INFO = 1;
 
-    public int getType();
+    int getType();
 
-    public MensaDay getDay();
-
-    public Mensa getMensa();
+    IMensa getMensa();
+    IDay getDay();
+    IMenu getMenu();
 
 }

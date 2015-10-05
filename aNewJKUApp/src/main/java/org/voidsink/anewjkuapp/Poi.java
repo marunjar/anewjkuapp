@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp;
 
@@ -73,7 +74,7 @@ public class Poi {
     public void parse(Element wpt) {
         NodeList descriptions = wpt.getElementsByTagName("desc");
         if (descriptions.getLength() == 1) {
-            Document doc = Jsoup.parse(((Element) descriptions.item(0)).getTextContent());
+            Document doc = Jsoup.parse(descriptions.item(0).getTextContent());
             mDescr = doc.text();
         }
     }
@@ -95,8 +96,6 @@ public class Poi {
             // no way back
             newIsDefault = oldIsDefault;
         }
-        ContentValues cv = getContentValues(newIsDefault);
-
-        return cv;
+        return getContentValues(newIsDefault);
     }
 }

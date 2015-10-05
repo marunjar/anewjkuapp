@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.notification;
 
@@ -40,21 +41,20 @@ import java.util.List;
 import edu.emory.mathcs.backport.java.util.Collections;
 
 public class CalendarChangedNotification {
-    private static int NOTIFICATION_CALENDAR_CHANGED = R.string.notification_events_changed;
 
-    private Context mContext;
+    private final Context mContext;
 
-    private String mName;
-    private List<String> mInserts;
-    private List<String> mUpdates;
-    private List<String> mDeletes;
+    private final String mName;
+    private final List<String> mInserts;
+    private final List<String> mUpdates;
+    private final List<String> mDeletes;
 
     public CalendarChangedNotification(Context mContext, String name) {
         this.mName = name;
         this.mContext = mContext;
-        this.mInserts = new ArrayList<String>();
-        this.mUpdates = new ArrayList<String>();
-        this.mDeletes = new ArrayList<String>();
+        this.mInserts = new ArrayList<>();
+        this.mUpdates = new ArrayList<>();
+        this.mDeletes = new ArrayList<>();
     }
 
     public void addInsert(String text) {
@@ -73,6 +73,8 @@ public class CalendarChangedNotification {
         if (PreferenceWrapper.getNotifyCalendar(mContext)
                 && (mInserts.size() > 0 || mUpdates.size() > 0 || mDeletes
                 .size() > 0)) {
+            int NOTIFICATION_CALENDAR_CHANGED = R.string.notification_events_changed;
+
             PendingIntent pendingIntent = PendingIntent.getActivity(
                     mContext,
                     NOTIFICATION_CALENDAR_CHANGED,

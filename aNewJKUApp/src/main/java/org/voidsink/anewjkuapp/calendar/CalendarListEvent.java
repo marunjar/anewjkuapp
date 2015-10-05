@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,16 +20,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp.calendar;
 
 import android.app.SearchManager;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
 import android.text.TextUtils;
 
 import org.voidsink.anewjkuapp.R;
@@ -42,13 +39,13 @@ import java.util.Date;
 public class CalendarListEvent implements CalendarListItem {
 
     private final long mEventId;
-    private int mColor;
-    private String mTitle;
-    private String mDescr;
-    private String mTime;
-    private String mLocation;
-    private long mDtStart;
-    private long mDtEnd;
+    private final int mColor;
+    private final String mTitle;
+    private final String mDescr;
+    private final String mTime;
+    private final String mLocation;
+    private final long mDtStart;
+    private final long mDtEnd;
 
     public CalendarListEvent(long eventId, int color, String title, String descr,
                              String location, long dtStart, long dtEnd) {
@@ -124,18 +121,6 @@ public class CalendarListEvent implements CalendarListItem {
     }
 
     public void showInCalendar(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            Uri.Builder builder = CalendarContractWrapper.CONTENT_URI().buildUpon();
-            builder.appendPath("time");
-            ContentUris.appendId(builder, getDtStart());
-            Intent intent = new Intent(Intent.ACTION_VIEW)
-                    .setData(builder.build());
-            context.startActivity(intent);
-        } else {
-            Uri uri = ContentUris.withAppendedId(CalendarContractWrapper.Events.CONTENT_URI(), getEventId());
-            Intent intent = new Intent(Intent.ACTION_VIEW)
-                    .setData(uri);
-            context.startActivity(intent);
-        }
+        AppUtils.showEventInCalendar(context, getEventId(), getDtStart());
     }
 }

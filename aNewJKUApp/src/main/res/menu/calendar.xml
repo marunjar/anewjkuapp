@@ -1,11 +1,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="org.voidsink.anewjkuapp.fragment.CalendarFragment">
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="org.voidsink.anewjkuapp.fragment.CalendarFragment">
+
+    <item
+        android:id="@+id/action_cal_goto_today"
+        android:icon="@drawable/ic_calendar_blank_white_24dp"
+        android:title="@string/mensa_menu_today"
+        app:showAsAction="ifRoom"
+        />
 
     <item
         android:id="@+id/action_refresh_calendar"
         android:icon="@drawable/ic_refresh_white_24dp"
         android:title="@string/action_refresh"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"/>
+
 </menu>

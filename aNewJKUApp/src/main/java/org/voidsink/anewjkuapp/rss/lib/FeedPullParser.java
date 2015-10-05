@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.rss.lib;
 
@@ -58,20 +59,21 @@ public class FeedPullParser implements FeedParser {
 
     @Override
     public List<FeedEntry> parse(URL url) {
-        List<FeedEntry> entries = null;
         try {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestProperty("Cache-Control", "public, max-age=" + 7200);
-            connection.setConnectTimeout((int) 3000);
-            connection.setReadTimeout((int) 3000);
+            try {
+                connection.setRequestProperty("Cache-Control", "public, max-age=" + 7200);
+                connection.setConnectTimeout(3000);
+                connection.setReadTimeout(3000);
 
-            entries = parse(new BufferedInputStream(connection.getInputStream()));
-            connection.disconnect();
+                return parse(new BufferedInputStream(connection.getInputStream()));
+            } finally {
+                connection.disconnect();
+            }
         } catch (IOException e) {
             Log.e(getClass().getSimpleName(), "parse failed", e);
-            entries = null;
+            return null;
         }
-        return entries;
     }
 
     @Override
@@ -81,7 +83,7 @@ public class FeedPullParser implements FeedParser {
 
     @Override
     public synchronized List<FeedEntry> parse(InputStream is) {
-        List<FeedEntry> entries = null;
+        List<FeedEntry> entries;
 
         final Stack<PullParserElement> mParseItems = new Stack<>();
         PullParserHandler handler = new RssHandler();

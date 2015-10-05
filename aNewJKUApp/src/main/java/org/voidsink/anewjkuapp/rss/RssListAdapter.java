@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.rss;
 
@@ -35,8 +36,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.bumptech.glide.Glide;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.RssFeedEntryActivity;
@@ -51,22 +51,20 @@ public class RssListAdapter extends RecyclerArrayAdapter<FeedEntry, RssListAdapt
     private static final String TAG = RssListAdapter.class.getSimpleName();
     private static final String EMPTY_IMAGE_URL = "http://oeh.jku.at/sites/default/files/styles/generic_thumbnail_medium/public/default_images/defaultimage-article_0.png";
 
-    private final DisplayImageOptions mOptions;
     private final Context mContext;
     private OnItemClickListener mItemClickListener;
 
     public interface OnItemClickListener {
-        public void onItemClick(View view, int viewType, int position);
+        void onItemClick(View view, int viewType, int position);
     }
 
     public void SetOnItemClickListener(final OnItemClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
     }
 
-    public RssListAdapter(Context context, List<FeedEntry> dataset, DisplayImageOptions options) {
+    public RssListAdapter(Context context, List<FeedEntry> dataset) {
         super();
 
-        this.mOptions = options;
         this.mContext = context;
 
         SetOnItemClickListener(new OnItemClickListener() {
@@ -89,7 +87,7 @@ public class RssListAdapter extends RecyclerArrayAdapter<FeedEntry, RssListAdapt
             @Override
             public void onClick(View v) {
                 if (mItemClickListener != null) {
-                    mItemClickListener.onItemClick(v, vh.getItemViewType(), vh.getPosition());
+                    mItemClickListener.onItemClick(v, vh.getItemViewType(), vh.getAdapterPosition());
                 }
             }
         });
@@ -105,17 +103,21 @@ public class RssListAdapter extends RecyclerArrayAdapter<FeedEntry, RssListAdapt
         holder.mTitle.setText(item.getTitle());
         holder.mDescription.setText(item.getShortDescription());
 
-        ImageLoader imageLoader = ImageLoader.getInstance();
-
         Uri mImage = item.getImage();
         try {
             //ignore some icons of share buttons and linked documents
             if (mImage != null &&
                     !mImage.getPath().contains("contrib/service_links/images/") &&
                     !mImage.getPath().contains("file/icons/")) {
-                imageLoader.displayImage(mImage.toString(), holder.mImage, mOptions);
+                Glide.with(holder.mImage.getContext())
+                        .load(mImage)
+                        .fitCenter()
+                        .into(holder.mImage);
             } else {
-                imageLoader.displayImage(EMPTY_IMAGE_URL, holder.mImage, mOptions);
+                Glide.with(holder.mImage.getContext())
+                        .load(EMPTY_IMAGE_URL)
+                        .fitCenter()
+                        .into(holder.mImage);
             }
         } catch (Exception e) {
             Log.e(TAG, "displayImage failed", e);

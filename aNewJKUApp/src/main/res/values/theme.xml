@@ -1,42 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme.Base.Light" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <item name="android:dropDownListViewStyle">@style/DropDownListView.Apptheme</item>
+    <style name="AppTheme.Base" parent="@style/Theme.AppCompat.NoActionBar">
         <item name="android:windowContentOverlay">@null</item>
-        <item name="actionBarItemBackground">@drawable/selectable_background_apptheme</item>
-        <item name="actionBarTabStyle">@style/ActionBarTabStyle.Apptheme</item>
-        <item name="actionDropDownStyle">@style/DropDownNav.Apptheme</item>
-        <item name="actionBarStyle">@style/ActionBar.Solid.Apptheme</item>
-        <item name="actionModeBackground">@drawable/cab_background_top_apptheme</item>
-        <item name="actionModeSplitBackground">@drawable/cab_background_bottom_apptheme</item>
-        <item name="actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Apptheme</item>
-        <item name="actionOverflowButtonStyle">@style/AppTheme.ActionButton.Overflow</item>
-        <item name="homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
+        <item name="preferenceTheme">@style/PreferenceTheme</item>
 
-        <item name="cardToolbarTheme">@style/cardToolbar.light</item>
-        <item name="cardBackgroundColor">@color/cardview_light_background</item>
+        <item name="cardToolbarTheme">@style/cardToolbar</item>
+        <item name="cardBackgroundColor">@color/cardview_dark_background</item>
+
+        <item name="dialogTheme">@style/DialogStyle</item>
+        <item name="alertDialogTheme">@style/DialogStyle.Alert</item>
 
         <item name="colorPrimary">@color/default_primary</item>
         <item name="colorPrimaryDark">@color/default_primaryDark</item>
         <item name="colorAccent">@color/default_accent</item>
     </style>
 
-    <style name="AppTheme.Base" parent="@style/Theme.AppCompat.NoActionBar">
-        <item name="android:dropDownListViewStyle">@style/DropDownListView.Apptheme</item>
+    <style name="AppTheme.Base.Light" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowContentOverlay">@null</item>
-        <item name="actionBarItemBackground">@drawable/selectable_background_apptheme</item>
-        <item name="actionBarTabStyle">@style/ActionBarTabStyle.Apptheme</item>
-        <item name="actionDropDownStyle">@style/DropDownNav.Apptheme</item>
-        <item name="actionBarStyle">@style/ActionBar.Solid.Apptheme</item>
-        <item name="actionModeBackground">@drawable/cab_background_top_apptheme</item>
-        <item name="actionModeSplitBackground">@drawable/cab_background_bottom_apptheme</item>
-        <item name="actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Apptheme</item>
-        <item name="actionOverflowButtonStyle">@style/AppTheme.ActionButton.Overflow</item>
-        <item name="homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
+        <item name="preferenceTheme">@style/PreferenceTheme</item>
+        <item name="cardToolbarTheme">@style/cardToolbar.light</item>
+        <item name="cardBackgroundColor">@color/cardview_light_background</item>
 
-        <item name="cardToolbarTheme">@style/cardToolbar</item>
-        <item name="cardBackgroundColor">@color/cardview_dark_background</item>
+        <item name="dialogTheme">@style/DialogStyle.Light</item>
+        <item name="alertDialogTheme">@style/DialogStyle.Alert.Light</item>
 
         <item name="colorPrimary">@color/default_primary</item>
         <item name="colorPrimaryDark">@color/default_primaryDark</item>
@@ -44,69 +31,44 @@
     </style>
 
     <style name="AppTheme" parent="AppTheme.Base"/>
+
     <style name="AppTheme.Light" parent="AppTheme.Base.Light"/>
 
-    <style name="AppTheme.ActionBar.TitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textStyle">bold</item>
+    <style name="DialogStyle.Base" parent="Theme.AppCompat.Dialog">
+        <item name="colorPrimary">@color/default_primary</item>
+        <item name="colorPrimaryDark">@color/default_primaryDark</item>
+        <item name="colorAccent">@color/default_accent</item>
     </style>
 
-    <style name="AppTheme.ActionButton.Overflow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
-        <item name="android:src">@drawable/ic_action_overflow_round</item>
+    <style name="DialogStyle.Base.Light" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">@color/default_primary</item>
+        <item name="colorPrimaryDark">@color/default_primaryDark</item>
+        <item name="colorAccent">@color/default_accent</item>
     </style>
 
-    <style name="ActionBar.Solid.Apptheme" parent="@style/Widget.AppCompat.ActionBar.Solid">
-        <item name="android:background">?attr/colorPrimary</item>
-        <item name="backgroundStacked">?attr/colorPrimary</item>
-        <item name="backgroundSplit">?attr/colorPrimary</item>
-        <item name="android:progressBarStyle">@style/ProgressBar.Apptheme</item>
-        <item name="titleTextStyle">@style/AppTheme.ActionBar.TitleTextStyle</item>
-        <item name="android:icon">@android:color/transparent</item>
-        <item name="elevation">0dp</item>
-        <!-- Support library compatibility -->
-        <item name="background">?attr/colorPrimary</item>
+    <style name="DialogStyle" parent="DialogStyle.Base"/>
+
+    <style name="DialogStyle.Light" parent="DialogStyle.Base.Light"/>
+
+    <style name="DialogStyle.Alert.Base" parent="Theme.AppCompat.Dialog">
+        <item name="colorPrimary">@color/default_primary</item>
+        <item name="colorPrimaryDark">@color/default_primaryDark</item>
+        <item name="colorAccent">@color/default_accent</item>
     </style>
 
-    <style name="ActionBar.Transparent.Apptheme" parent="@style/Widget.AppCompat.ActionBar">
-        <item name="android:background">@drawable/ab_transparent_apptheme</item>
-        <item name="android:progressBarStyle">@style/ProgressBar.Apptheme</item>
-        <item name="titleTextStyle">@style/AppTheme.ActionBar.TitleTextStyle</item>
-        <!-- Support library compatibility -->
-        <item name="background">@drawable/ab_transparent_apptheme</item>
+    <style name="DialogStyle.Alert.Base.Light" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">@color/default_primary</item>
+        <item name="colorPrimaryDark">@color/default_primaryDark</item>
+        <item name="colorAccent">@color/default_accent</item>
     </style>
 
-    <style name="DropDownListView.Apptheme" parent="@style/Widget.AppCompat.ListView.DropDown">
-        <item name="android:listSelector">@drawable/selectable_background_apptheme</item>
+    <style name="PreferenceTheme" parent="PreferenceThemeOverlay.v14.Material">
+        <item name="android:activatedBackgroundIndicator">?android:attr/selectableItemBackground</item>
     </style>
 
-    <style name="ActionBarTabStyle.Apptheme" parent="@style/Widget.AppCompat.ActionBar.TabView">
-        <item name="android:background">@drawable/tab_indicator_ab_apptheme</item>
-    </style>
+    <style name="DialogStyle.Alert" parent="DialogStyle.Alert.Base"/>
 
-    <style name="DropDownNav.Apptheme" parent="@style/Widget.AppCompat.Spinner.DropDown.ActionBar">
-        <item name="android:background">@drawable/spinner_background_ab_apptheme</item>
-        <item name="android:popupBackground">@drawable/menu_dropdown_panel_apptheme</item>
-        <item name="android:dropDownSelector">@drawable/selectable_background_apptheme</item>
-    </style>
+    <style name="DialogStyle.Alert.Light" parent="DialogStyle.Alert.Base.Light"/>
 
-    <style name="ProgressBar.Apptheme" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
-        <item name="android:progressDrawable">@drawable/progress_horizontal_apptheme</item>
-    </style>
-
-    <style name="ActionButton.CloseMode.Apptheme" parent="@style/Widget.AppCompat.ActionButton.CloseMode">
-        <item name="android:background">@drawable/btn_cab_done_apptheme</item>
-    </style>
-
-    <!-- this style is only referenced in a Light.DarkActionBar based theme -->
-    <style name="Theme.Apptheme.Widget" parent="@style/Theme.AppCompat">
-        <item name="android:dropDownListViewStyle">@style/DropDownListView.Apptheme</item>
-    </style>
-
-    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
-        <item name="spinBars">true</item>
-        <item name="color">@android:color/white</item>
-    </style>
-
-    <dimen name="main_toolbar_padding">0dp</dimen>
-    <dimen name="drawer_header_height">72dp</dimen>
+    <dimen name="drawer_header_height">96dp</dimen>
 </resources>

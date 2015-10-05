@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,7 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp.provider;
 
@@ -34,6 +34,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.voidsink.anewjkuapp.KusssContentContract;
@@ -44,7 +45,6 @@ import org.voidsink.anewjkuapp.kusss.Curriculum;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.update.ImportAssessmentTask;
-import org.voidsink.anewjkuapp.update.ImportCourseTask;
 import org.voidsink.anewjkuapp.update.ImportCurriculaTask;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
@@ -55,6 +55,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class KusssContentProvider extends ContentProvider {
 
@@ -100,10 +103,10 @@ public class KusssContentProvider extends ContentProvider {
     private KusssDatabaseHelper mDbHelper;
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        String whereIdClause = "";
-        int rowsDeleted = -1;
+        String whereIdClause;
+        int rowsDeleted;
         switch (sUriMatcher.match(uri)) {
             case CODE_COURSE:
                 rowsDeleted = db.delete(KusssContentContract.Course.TABLE_NAME,
@@ -167,7 +170,7 @@ public class KusssContentProvider extends ContentProvider {
     }
 
     @Override
-    public String getType(Uri uri) {
+    public String getType(@NonNull Uri uri) {
         switch (sUriMatcher.match(uri)) {
             case CODE_COURSE:
                 return KusssContentContract.CONTENT_TYPE_DIR + "/"
@@ -199,7 +202,7 @@ public class KusssContentProvider extends ContentProvider {
     }
 
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
+    public Uri insert(@NonNull Uri uri, ContentValues values) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         switch (sUriMatcher.match(uri)) {
             case CODE_COURSE: {
@@ -247,7 +250,7 @@ public class KusssContentProvider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection,
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
 
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
@@ -302,10 +305,9 @@ public class KusssContentProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection,
+    public int update(@NonNull Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        String whereIdClause = "";
 
         switch (sUriMatcher.match(uri)) {
             case CODE_COURSE: {
@@ -325,7 +327,7 @@ public class KusssContentProvider extends ContentProvider {
                         values, selection, selectionArgs);
             }
             case CODE_COURSE_ID: {
-                whereIdClause = KusssContentContract.Course.COL_ID + "="
+                String whereIdClause = KusssContentContract.Course.COL_ID + "="
                         + uri.getLastPathSegment();
                 if (!TextUtils.isEmpty(selection))
                     whereIdClause += " AND " + selection;
@@ -333,7 +335,7 @@ public class KusssContentProvider extends ContentProvider {
                         whereIdClause, selectionArgs);
             }
             case CODE_EXAM_ID: {
-                whereIdClause = KusssContentContract.Exam.COL_ID + "="
+                String whereIdClause = KusssContentContract.Exam.COL_ID + "="
                         + uri.getLastPathSegment();
                 if (!TextUtils.isEmpty(selection))
                     whereIdClause += " AND " + selection;
@@ -341,7 +343,7 @@ public class KusssContentProvider extends ContentProvider {
                         whereIdClause, selectionArgs);
             }
             case CODE_GRADE_ID: {
-                whereIdClause = KusssContentContract.Assessment.COL_ID + "="
+                String whereIdClause = KusssContentContract.Assessment.COL_ID + "="
                         + uri.getLastPathSegment();
                 if (!TextUtils.isEmpty(selection))
                     whereIdClause += " AND " + selection;
@@ -349,7 +351,7 @@ public class KusssContentProvider extends ContentProvider {
                         values, whereIdClause, selectionArgs);
             }
             case CODE_CURRICULA_ID: {
-                whereIdClause = KusssContentContract.Curricula.COL_ID + "="
+                String whereIdClause = KusssContentContract.Curricula.COL_ID + "="
                         + uri.getLastPathSegment();
                 if (!TextUtils.isEmpty(selection))
                     whereIdClause += " AND " + selection;
@@ -362,7 +364,25 @@ public class KusssContentProvider extends ContentProvider {
         }
     }
 
-    public static List<Assessment> getAssessments(Context context) {
+    public static List<Assessment> getAssessmentsFromCursor(Context context, Cursor data) {
+        List<Assessment> mAssessments = new ArrayList<>();
+
+        if (data != null) {
+            data.moveToFirst();
+            data.moveToPrevious();
+            try {
+                while (data.moveToNext()) {
+                    mAssessments.add(KusssHelper.createAssessment(data));
+                }
+            } catch (ParseException e) {
+                Analytics.sendException(context, e, false);
+                mAssessments.clear();
+            }
+        }
+        return mAssessments;
+    }
+
+    private static List<Assessment> getAssessments(Context context) {
         List<Assessment> mAssessments = new ArrayList<>();
 
         Account mAccount = AppUtils.getAccount(context);
@@ -378,46 +398,45 @@ public class KusssContentProvider extends ContentProvider {
                             + " DESC");
 
             if (c != null) {
-                try {
-                    while (c.moveToNext()) {
-                        mAssessments.add(KusssHelper.createAssessment(c));
-                    }
-                } catch (ParseException e) {
-                    Analytics.sendException(context, e, false);
-                    mAssessments.clear();
-                }
+                mAssessments = getAssessmentsFromCursor(context, c);
                 c.close();
             }
-            c = null;
         }
         return mAssessments;
     }
 
-    public static List<Course> getCourses(Context context) {
-        List<Course> mCourses = new ArrayList<>();
-        Account mAccount = AppUtils.getAccount(context);
-        if (mAccount != null) {
-            ContentResolver cr = context.getContentResolver();
-            Cursor c = cr.query(KusssContentContract.Course.CONTENT_URI,
-                    ImportCourseTask.COURSE_PROJECTION, null, null,
-                    KusssContentContract.Course.COL_TERM + " DESC");
+    public static List<Course> getCoursesFromCursor(Context context, Cursor c) {
+        List<Course> courses = new ArrayList<>();
 
-            if (c != null) {
-                try {
-                    while (c.moveToNext()) {
-                        mCourses.add(KusssHelper.createCourse(c));
-                    }
-                } catch (ParseException e) {
-                    Analytics.sendException(context, e, false);
-                    mCourses.clear();
+        if (c != null) {
+            c.moveToFirst();
+            c.moveToPrevious();
+            try {
+                while (c.moveToNext()) {
+                    courses.add(KusssHelper.createCourse(c));
                 }
-                c.close();
+            } catch (ParseException e) {
+                Analytics.sendException(context, e, false);
+                courses.clear();
             }
         }
-        return mCourses;
+        return courses;
     }
 
-    public static List<Curriculum> getCurricula(Context context) {
+    public static List<Curriculum> getCurriculaFromCursor(Context context, Cursor c) {
+        List<Curriculum> mCurriculum = new ArrayList<>();
+        if (c != null) {
+            c.moveToFirst();
+            c.moveToPrevious();
+            while (c.moveToNext()) {
+                mCurriculum.add(KusssHelper.createCurricula(c));
+            }
+            AppUtils.sortCurricula(mCurriculum);
+        }
+        return mCurriculum;
+    }
+
+    private static List<Curriculum> getCurricula(Context context) {
         List<Curriculum> mCurriculum = new ArrayList<>();
         Account mAccount = AppUtils.getAccount(context);
         if (mAccount != null) {
@@ -427,13 +446,10 @@ public class KusssContentProvider extends ContentProvider {
                     KusssContentContract.Curricula.COL_DT_START + " DESC");
 
             if (c != null) {
-                while (c.moveToNext()) {
-                    mCurriculum.add(KusssHelper.createCurricula(c));
-                }
+                mCurriculum = getCurriculaFromCursor(context, c);
                 c.close();
             }
         }
-        AppUtils.sortCurricula(mCurriculum);
 
         return mCurriculum;
     }
@@ -449,7 +465,15 @@ public class KusssContentProvider extends ContentProvider {
         }
 
         if (mCurriculum.size() == 0) {
-            new ImportCurriculaTask(AppUtils.getAccount(context), context).execute();
+
+            ExecutorService es = Executors.newFixedThreadPool(1);
+            try {
+                es.submit(new ImportCurriculaTask(AppUtils.getAccount(context), context)).get();
+            } catch (InterruptedException | ExecutionException e) {
+                Analytics.sendException(context, e, true);
+            } finally {
+                es.shutdown();
+            }
 
             try {
                 List<Assessment> assessments = getAssessments(context);
@@ -527,9 +551,11 @@ public class KusssContentProvider extends ContentProvider {
             }
         }
 
+        /*
         if (terms.size() == 0) {
             // get Terms from Data, may take a little bit longer
         }
+        */
 
         Collections.sort(terms, TermComparator);
 
@@ -546,6 +572,14 @@ public class KusssContentProvider extends ContentProvider {
         return Collections.unmodifiableList(objects);
     }
 
+    public static Term getLastTerm(Context c) {
+        List<Term> terms = getTerms(c);
+        if (terms.size() == 0) {
+            return null;
+        }
+        return terms.get(0);
+    }
+
     private static boolean dateInRange(Date date, List<Curriculum> curricula) {
         for (Curriculum curriculum : curricula) {
             if (curriculum.dateInRange(date)) {
@@ -554,5 +588,4 @@ public class KusssContentProvider extends ContentProvider {
         }
         return false;
     }
-
 }

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
     style="@style/card"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -16,7 +18,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/separator_top_bottom_margin"
-            android:minLines="2" />
+            android:gravity="center_vertical"
+            android:minLines="2"
+            tools:text="Title"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -30,7 +34,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_toLeftOf="@+id/grade_chip"
                 android:layout_toStartOf="@id/grade_chip"
-                android:textStyle="bold" />
+                tools:text="Grade"/>
 
             <TextView
                 android:id="@+id/grade_list_grade_date"
@@ -40,7 +44,8 @@
                 android:layout_below="@id/grade_list_grade_grade"
                 android:layout_toLeftOf="@id/grade_chip"
                 android:layout_toStartOf="@id/grade_chip"
-                android:gravity="center_vertical" />
+                android:gravity="center_vertical"
+                tools:text="03-14-2015"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -57,7 +62,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/separator_top_bottom_margin"
-                    android:gravity="center_vertical" />
+                    android:gravity="center_vertical"
+                    tools:text="2013S"/>
 
                 <TextView
                     android:id="@+id/grade_list_grade_courseId"
@@ -65,7 +71,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/separator_top_bottom_margin"
-                    android:gravity="center_vertical" />
+                    android:gravity="center_vertical"
+                    tools:text="133.337"/>
 
                 <TextView
                     android:id="@+id/grade_list_grade_cid"
@@ -73,7 +80,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/separator_top_bottom_margin"
-                    android:gravity="center_vertical" />
+                    android:gravity="center_vertical"
+                    tools:text="[521]"/>
             </LinearLayout>
 
             <include
@@ -83,7 +91,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true" />
+                android:layout_alignParentTop="true"/>
         </RelativeLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>
