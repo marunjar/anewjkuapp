@@ -1,37 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <org.voidsink.anewjkuapp.view.ExtendedRecyclerView
         android:id="@+id/calendar_card_events"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/calendar_card_footer"
+        android:layout_above="@+id/calendar_card_load"
         android:layout_alignParentTop="true"
-        android:scrollbarStyle="outsideOverlay" />
+        android:scrollbarStyle="outsideOverlay"/>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/calendar_card_footer"
+    <Button
+        android:id="@+id/calendar_card_load"
+        style="@style/Text.Button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@color/divider" />
-
-        <Button
-            android:id="@+id/calendar_card_load"
-            style="@style/Text.Button"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="@string/listview_footer_button"
-            android:textColor="?android:attr/textColorSecondary" />
-    </LinearLayout>
+        android:text="@string/listview_footer_button"
+        android:textColor="?android:attr/textColorSecondary"/>
 
 </RelativeLayout>
