@@ -40,7 +40,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -309,25 +308,6 @@ public class KusssHandler {
         return iCal;
     }
 
-    private class BufferedInputStreamWithLog extends BufferedInputStream {
-        private StringBuilder mStringBuilder = new StringBuilder();
-
-        public BufferedInputStreamWithLog(InputStream in) {
-            super(in);
-        }
-
-        public BufferedInputStreamWithLog(InputStream in, int size) {
-            super(in, size);
-        }
-
-        public String data() {
-            String mData = mStringBuilder.toString();
-
-            return mData;
-
-        }
-    }
-
     public Calendar getExamIcal(Context c, CalendarBuilder mCalendarBuilder) {
         Calendar iCal;
         ByteArrayOutputStream data = new ByteArrayOutputStream();
@@ -345,6 +325,11 @@ public class KusssHandler {
 
             long length = copyStream(conn.getInputStream(), data);
             conn.disconnect();
+
+            /*
+            AssetManager am = c.getAssets();
+            long length = copyStream(am.open("ical1.ics", AssetManager.ACCESS_STREAMING), data);
+            */
 
             iCal = mCalendarBuilder.build(new ByteArrayInputStream(data.toByteArray()));
         } catch (ParserException e) {

@@ -38,6 +38,13 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.data.CalendarParserFactory;
+import net.fortuna.ical4j.extensions.groupwise.ShowAs;
+import net.fortuna.ical4j.model.ParameterFactoryRegistry;
+import net.fortuna.ical4j.model.PropertyFactoryRegistry;
+import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
+
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
@@ -166,6 +173,17 @@ public final class CalendarUtils {
             }
         }
         return true;
+    }
+
+    public static CalendarBuilder newCalendarBuilder() {
+        PropertyFactoryRegistry propertyFactoryRegistry = new PropertyFactoryRegistry();
+        propertyFactoryRegistry.register(ShowAs.PROPERTY_NAME, ShowAs.FACTORY);
+
+        return new CalendarBuilder(
+                CalendarParserFactory.getInstance().createParser(),
+                propertyFactoryRegistry,
+                new ParameterFactoryRegistry(),
+                TimeZoneRegistryFactory.getInstance().createRegistry());
     }
 
     public static boolean createCalendarsIfNecessary(Context context,
