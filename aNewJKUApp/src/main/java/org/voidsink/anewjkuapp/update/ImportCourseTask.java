@@ -117,6 +117,10 @@ public class ImportCourseTask implements Callable<Void> {
 
     @Override
     public Void call() throws Exception {
+        if (mProvider == null) {
+            return null;
+        }
+
         if (mShowProgress) {
             mUpdateNotification = new SyncNotification(mContext,
                     R.string.notification_sync_lva);

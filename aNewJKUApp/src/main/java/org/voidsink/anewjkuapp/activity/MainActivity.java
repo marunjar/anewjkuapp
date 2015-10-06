@@ -30,6 +30,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -49,6 +50,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
@@ -59,6 +61,7 @@ import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.base.StackedFragment;
 import org.voidsink.anewjkuapp.base.ThemedActivity;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
+import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.fragment.AssessmentFragment;
 import org.voidsink.anewjkuapp.fragment.CalendarFragment;
 import org.voidsink.anewjkuapp.fragment.CurriculaFragment;
@@ -83,6 +86,10 @@ public class MainActivity extends ThemedActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    private static final int MY_PERMISSION_READ_CALENDAR = 0;
+    private static final int MY_PERMISSION_WRITE_CALENDAR = 1;
+    private static final int MY_PERMISSION_ACCOUNTS = 2;
+
     /**
      * Fragment managing the behaviors, interactions and presentation of the
      * navigation drawer.
@@ -93,15 +100,17 @@ public class MainActivity extends ThemedActivity {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public static void StartCreateAccount(Context context) {
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            context.startActivity(new Intent(Settings.ACTION_ADD_ACCOUNT)
-                    .putExtra(Settings.EXTRA_ACCOUNT_TYPES,
-                            new String[]{KusssAuthenticator.ACCOUNT_TYPE}));
-        } else {
-            context.startActivity(new Intent(Settings.ACTION_ADD_ACCOUNT)
-                    .putExtra(
-                            Settings.EXTRA_AUTHORITIES,
-                            new String[]{CalendarContractWrapper.AUTHORITY()}));
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.GET_ACCOUNTS) == PackageManager.PERMISSION_GRANTED) {
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                context.startActivity(new Intent(Settings.ACTION_ADD_ACCOUNT)
+                        .putExtra(Settings.EXTRA_ACCOUNT_TYPES,
+                                new String[]{KusssAuthenticator.ACCOUNT_TYPE}));
+            } else {
+                context.startActivity(new Intent(Settings.ACTION_ADD_ACCOUNT)
+                        .putExtra(
+                                Settings.EXTRA_AUTHORITIES,
+                                new String[]{CalendarContractWrapper.AUTHORITY()}));
+            }
         }
     }
 
@@ -138,15 +147,26 @@ public class MainActivity extends ThemedActivity {
             getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
         }
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR}, 0);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CALENDAR)) {
+                Toast.makeText(this, "Im Stundenplan werden keine Termine angezeigt da die nötige Berechtigung fehlt.", Toast.LENGTH_LONG).show();
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR}, MY_PERMISSION_READ_CALENDAR);
+            }
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_CALENDAR)) {
+                Toast.makeText(this, "Es können keine Termine in den Kalender für den Stundenplan importiert werden da die nötige Berechtigung fehlt.", Toast.LENGTH_LONG).show();
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_CALENDAR}, MY_PERMISSION_WRITE_CALENDAR);
+            }
         }
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.GET_ACCOUNTS}, 1);
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCOUNT_MANAGER) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCOUNT_MANAGER}, 2);
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.GET_ACCOUNTS)) {
+                Toast.makeText(this, "Es können keine keine Infomationen zu Accounts/Kontakten ausgelesen werden da die nötige Berechtigung fehlt.", Toast.LENGTH_LONG).show();
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.GET_ACCOUNTS}, MY_PERMISSION_ACCOUNTS);
+            }
         }
 
         // do things if new version was installed
@@ -183,19 +203,45 @@ public class MainActivity extends ThemedActivity {
         }
         handleIntent(f, intent);
 
+        ChangeLog cl = new ChangeLog(this);
+        if (cl.isFirstRun()) {
+            cl.getLogDialog().show();
+        }
+
         if (AppUtils.getAccount(this) == null) {
             StartCreateAccount(this);
-        } else {
-            ChangeLog cl = new ChangeLog(this);
-            if (cl.isFirstRun()) {
-                cl.getLogDialog().show();
-            }
         }
+
+        Log.d(TAG, "onCreate finished");
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case MY_PERMISSION_READ_CALENDAR:
+            case MY_PERMISSION_WRITE_CALENDAR:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Account account = AppUtils.getAccount(this);
+                    CalendarUtils.createCalendarsIfNecessary(this, account);
+                    Log.d(TAG, String.format("Permission granted: %d", requestCode));
+                } else {
+                    Log.d(TAG, String.format("Permission denied: %d", requestCode));
+                }
+                return;
+            case MY_PERMISSION_ACCOUNTS: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (AppUtils.getAccount(this) == null) {
+                        StartCreateAccount(this);
+                    }
+                    Log.d(TAG, String.format("Permission granted: %d", requestCode));
+                } else {
+                    Log.d(TAG, String.format("Permission denied: %d", requestCode));
+                }
+                return;
+            }
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
     private Fragment attachFragmentById(int id, boolean saveLastFragment) {
@@ -258,23 +304,37 @@ public class MainActivity extends ThemedActivity {
                 TextView mDrawerUser = (TextView) mNavigationView.findViewById(R.id.drawer_user);
 
                 if (mDrawerUser != null) {
-                    Account account = AppUtils.getAccount(MainActivity.this);
-                    if (account == null) {
-                        mDrawerUser.setText(R.string.action_tap_to_login);
+                    if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
+                        mDrawerUser.setText(R.string.missing_app_permission);
                         mDrawerUser.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                MainActivity.StartCreateAccount(MainActivity.this);
+                                try {
+                                    MainActivity.this.startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).addCategory(Intent.CATEGORY_DEFAULT).setData(Uri.parse("package:org.voidsink.anewjkuapp")));
+                                } catch (Exception e) {
+
+                                }
                             }
                         });
                     } else {
-                        mDrawerUser.setText(account.name);
-                        mDrawerUser.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                MainActivity.StartMyCurricula(MainActivity.this);
-                            }
-                        });
+                        Account account = AppUtils.getAccount(MainActivity.this);
+                        if (account == null) {
+                            mDrawerUser.setText(R.string.action_tap_to_login);
+                            mDrawerUser.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    MainActivity.StartCreateAccount(MainActivity.this);
+                                }
+                            });
+                        } else {
+                            mDrawerUser.setText(account.name);
+                            mDrawerUser.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    MainActivity.StartMyCurricula(MainActivity.this);
+                                }
+                            });
+                        }
                     }
                 }
 

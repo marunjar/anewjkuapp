@@ -24,6 +24,7 @@
 
 package org.voidsink.anewjkuapp.update;
 
+import android.Manifest;
 import android.accounts.Account;
 import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
@@ -32,11 +33,13 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SyncResult;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -83,7 +86,7 @@ public class ImportCalendarTask implements Callable<Void> {
             .compile("Lva-LeiterIn:\\s+");
     private static final String EXTENDED_PROPERTY_NAME_KUSSS_ID = "kusssId";
 
-    private final ContentProviderClient mProvider;
+    private ContentProviderClient mProvider;
     private final Account mAccount;
     private final SyncResult mSyncResult;
     private final Context mContext;
@@ -129,10 +132,14 @@ public class ImportCalendarTask implements Callable<Void> {
 
     public ImportCalendarTask(Account account, Context context,
                               String getTypeID, CalendarBuilder calendarBuilder) {
-        this(account, null, null, context.getContentResolver()
-                        .acquireContentProviderClient(
-                                CalendarContractWrapper.Events.CONTENT_URI()),
+        this(account, null, null, null,
                 new SyncResult(), context, getTypeID, calendarBuilder);
+
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+            this.mProvider = context.getContentResolver()
+                    .acquireContentProviderClient(
+                            CalendarContractWrapper.Events.CONTENT_URI());
+        }
         this.mShowProgress = true;
     }
 
@@ -177,6 +184,18 @@ public class ImportCalendarTask implements Callable<Void> {
 
     @Override
     public Void call() throws Exception {
+        if (mProvider == null) {
+            return null;
+        }
+
+        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            return null;
+        }
+
+        if (!CalendarUtils.getSyncCalendar(mContext, this.mCalendarName)) {
+            return null;
+        }
+
         if (mShowProgress) {
             mUpdateNotification = new SyncNotification(mContext,
                     R.string.notification_sync_calendar);
@@ -188,9 +207,6 @@ public class ImportCalendarTask implements Callable<Void> {
         CalendarChangedNotification mNotification = new CalendarChangedNotification(mContext,
                 CalendarUtils.getCalendarName(mContext, this.mCalendarName));
 
-        if (!CalendarUtils.getSyncCalendar(mContext, this.mCalendarName)) {
-            return null;
-        }
 
         try {
             Log.d(TAG, "setup connection");

@@ -212,7 +212,7 @@ public final class CalendarUtils {
         }
 
         // nothing to do if there's no permission
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_DENIED) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             return ids;
         }
 
@@ -236,7 +236,13 @@ public final class CalendarUtils {
 
     public static String getCalIDByName(Context context, Account account,
                                         String name, boolean usePreferences) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            Log.w(TAG, String.format("no id for '%s' found, no permission", name));
+            return null;
+        }
+
         String id = null;
+
         // get id from preferences
         if (usePreferences) {
             switch (name) {
@@ -264,6 +270,8 @@ public final class CalendarUtils {
 
         if (id == null) {
             Log.w(TAG, String.format("no id for '%s' found", name));
+        } else {
+            Log.d(TAG, String.format("id for '%s' found: %s", name, id));
         }
         return id;
     }

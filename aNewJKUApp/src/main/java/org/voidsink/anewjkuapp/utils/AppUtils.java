@@ -24,6 +24,7 @@
 
 package org.voidsink.anewjkuapp.utils;
 
+import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerFuture;
@@ -36,10 +37,12 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
@@ -496,6 +499,12 @@ public class AppUtils {
         if (context == null) {
             return null;
         }
+
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
+            Log.w(TAG, "getAccount failed, no permission");
+            return null;
+        }
+
         // get first account
         Account[] accounts = AccountManager.get(context).getAccountsByType(
                 KusssAuthenticator.ACCOUNT_TYPE);
