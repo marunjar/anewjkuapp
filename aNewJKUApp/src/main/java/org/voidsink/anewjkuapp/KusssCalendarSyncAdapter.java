@@ -68,7 +68,7 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 		 * incoming Context
 		 */
         this.mContext = context;
-        this.mCalendarBuilder = new CalendarBuilder(); // must create in main
+        this.mCalendarBuilder = CalendarUtils.newCalendarBuilder(); // must create in main
     }
 
     /**
@@ -84,7 +84,7 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 		 * incoming Context
 		 */
         this.mContext = context;
-        this.mCalendarBuilder = new CalendarBuilder(); // must create in main
+        this.mCalendarBuilder = CalendarUtils.newCalendarBuilder(); // must create in main
     }
 
     @Override

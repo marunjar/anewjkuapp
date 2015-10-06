@@ -59,13 +59,13 @@ public class UpdateService extends IntentService {
                 if (intent.getBooleanExtra(Consts.ARG_UPDATE_CAL, false) ||
                         intent.getBooleanExtra(Consts.ARG_UPDATE_CAL_COURSES, false)) {
                     Analytics.eventReloadEventsCourse(this);
-                    callables.add(new ImportCalendarTask(account, this, CalendarUtils.ARG_CALENDAR_COURSE, new CalendarBuilder()));
+                    callables.add(new ImportCalendarTask(account, this, CalendarUtils.ARG_CALENDAR_COURSE, CalendarUtils.newCalendarBuilder()));
                 }
                 if (intent.getBooleanExtra(Consts.ARG_UPDATE_CAL, false) ||
                         intent.getBooleanExtra(Consts.ARG_UPDATE_CAL_EXAM, false)) {
                     Analytics.eventReloadEventsExam(this);
                     callables.add(new ImportCalendarTask(account, this,
-                            CalendarUtils.ARG_CALENDAR_EXAM, new CalendarBuilder()));
+                            CalendarUtils.ARG_CALENDAR_EXAM, CalendarUtils.newCalendarBuilder()));
                 }
                 if (intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false) ||
                         intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS_CURRICULA, false)) {

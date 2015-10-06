@@ -41,6 +41,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.extensions.groupwise.ShowAs;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
@@ -520,8 +521,17 @@ public class ImportCalendarTask implements Callable<Void> {
                                             TimeZone.getDefault().getID());
 
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                                if (mCalendarName
-                                        .equals(CalendarUtils.ARG_CALENDAR_EXAM)) {
+                                boolean busy = false;
+
+                                Property p = v.getProperty(ShowAs.PROPERTY_NAME);
+                                if (p != null) {
+                                    busy = p.getValue().equals(ShowAs.BUSY.getValue());
+                                }
+                                if (!busy) {
+                                    busy = mCalendarName.equals(CalendarUtils.ARG_CALENDAR_EXAM);
+                                }
+
+                                if (busy) {
                                     builder.withValue(
                                             CalendarContractWrapper.Events
                                                     .AVAILABILITY(),

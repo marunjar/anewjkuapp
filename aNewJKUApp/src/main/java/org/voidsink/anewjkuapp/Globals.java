@@ -26,6 +26,8 @@ package org.voidsink.anewjkuapp;
 
 import android.app.Application;
 
+import net.fortuna.ical4j.util.CompatibilityHints;
+
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
@@ -46,6 +48,9 @@ public class Globals extends Application {
         Analytics.init(this);
 
         AppUtils.updateSyncAlarm(this, false);
+
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
+//        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
     }
 
 }

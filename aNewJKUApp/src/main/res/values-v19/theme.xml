@@ -9,4 +9,8 @@
         <!--<item name="android:windowTranslucentStatus">true</item>-->
     </style>
 
+    <style name="AppTheme.Launch" parent="AppTheme.Base.Launch">
+        <!--<item name="android:windowTranslucentStatus">true</item>-->
+    </style>
+
 </resources>
