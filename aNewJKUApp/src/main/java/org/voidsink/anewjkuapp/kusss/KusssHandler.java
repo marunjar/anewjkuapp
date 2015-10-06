@@ -249,11 +249,8 @@ public class KusssHandler {
 
     private boolean isLoggedIn(Context c, Document doc) {
         Elements logoutAction = doc.select(SELECT_LOGOUT);
-        if (logoutAction.size() > 0) {
-            return true;
-        }
 
-        return false;
+        return (logoutAction.size() > 0);
     }
 
     public synchronized boolean isAvailable(Context c, String sessionId,
@@ -290,11 +287,10 @@ public class KusssHandler {
             writeParams(conn, new String[]{"selectAll"},
                     new String[]{"ical.category.mycourses"});
 
-            long length = copyStream(conn.getInputStream(), data);
+            copyStream(conn.getInputStream(), data);
             conn.disconnect();
 
-            iCal = mCalendarBuilder.build(new ByteArrayInputStream(data.toByteArray()));
-
+            iCal = mCalendarBuilder.build(new ByteArrayInputStream(getModifiedData(data)));
         } catch (ParserException e) {
             Log.e(TAG, "getLVAIcal", e);
             Analytics.sendException(c, e, true, data.toString());
@@ -306,6 +302,11 @@ public class KusssHandler {
         }
 
         return iCal;
+    }
+
+    private byte[] getModifiedData(ByteArrayOutputStream data) {
+        // replace crlf with \n, kusss ics uses lf only as content line separator
+        return data.toString().replace("\r\n", "\\n").getBytes();
     }
 
     public Calendar getExamIcal(Context c, CalendarBuilder mCalendarBuilder) {
@@ -323,7 +324,7 @@ public class KusssHandler {
             writeParams(conn, new String[]{"selectAll"},
                     new String[]{"ical.category.examregs"});
 
-            long length = copyStream(conn.getInputStream(), data);
+            copyStream(conn.getInputStream(), data);
             conn.disconnect();
 
             /*
@@ -331,7 +332,7 @@ public class KusssHandler {
             long length = copyStream(am.open("ical1.ics", AssetManager.ACCESS_STREAMING), data);
             */
 
-            iCal = mCalendarBuilder.build(new ByteArrayInputStream(data.toByteArray()));
+            iCal = mCalendarBuilder.build(new ByteArrayInputStream(getModifiedData(data)));
         } catch (ParserException e) {
             Log.e(TAG, "getExamIcal", e);
             Analytics.sendException(c, e, true, data.toString());
