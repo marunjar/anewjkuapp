@@ -114,7 +114,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             TextView type = (TextView) view.findViewById(R.id.stat_card_lva_list_entry_type);
             TextView ects = (TextView) view.findViewById(R.id.stat_card_lva_list_entry_ects);
 
-            type.setText(mContext.getString(item.getType().getStringResIDExt()));
+            type.setText(mContext.getString(item.getType().getStringResID()));
             ects.setText(String.format("%.2f ECTS", item.getEcts()));
 
             holder.mItems.addView(view);
@@ -153,9 +153,9 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             ArrayList<Integer> colors = new ArrayList<>();
 
             // add series to bar chart
-            addSerieToBarChart(yVals, captions, colors, mContext.getString(LvaState.DONE.getStringResIDExt()),
+            addSerieToBarChart(yVals, captions, colors, mContext.getString(LvaState.DONE.getStringResID()),
                     mDoneEcts, Grade.G1.getColor());
-            addSerieToBarChart(yVals, captions, colors, mContext.getString(LvaState.OPEN.getStringResIDExt()),
+            addSerieToBarChart(yVals, captions, colors, mContext.getString(LvaState.OPEN.getStringResID()),
                     mOpenEcts, Grade.G3.getColor());
 
             BarDataSet dataSet = new BarDataSet(yVals, "");
@@ -194,9 +194,9 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             ArrayList<Integer> colors = new ArrayList<>();
 
             // add series to pie chart
-            addSerieToPieChart(yVals, captions, colors, mContext.getString(LvaState.DONE.getStringResIDExt()),
+            addSerieToPieChart(yVals, captions, colors, mContext.getString(LvaState.DONE.getStringResID()),
                     mDoneEcts, mDoneEcts, Grade.G1.getColor());
-            addSerieToPieChart(yVals, captions, colors, mContext.getString(LvaState.OPEN.getStringResIDExt()),
+            addSerieToPieChart(yVals, captions, colors, mContext.getString(LvaState.OPEN.getStringResID()),
                     mOpenEcts, mOpenEcts, Grade.G3.getColor());
 
             PieDataSet dataSet = new PieDataSet(yVals, "");
