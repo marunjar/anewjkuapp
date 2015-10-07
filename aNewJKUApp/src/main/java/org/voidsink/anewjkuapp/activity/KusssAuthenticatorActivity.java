@@ -1,10 +1,10 @@
 /*******************************************************************************
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
+ * ____.____  __.____ ___     _____
+ * |    |    |/ _|    |   \   /  _  \ ______ ______
+ * |    |      < |    |   /  /  /_\  \\____ \\____ \
  * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
  * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
+ * \/                  \/|__|   |__|
  *
  * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
  *
@@ -24,15 +24,19 @@
 
 package org.voidsink.anewjkuapp.activity;
 
+import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.method.PasswordTransformationMethod;
@@ -126,7 +130,15 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
         mSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                submit();
+                if (ContextCompat.checkSelfPermission(KusssAuthenticatorActivity.this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
+                    new AlertDialog.Builder(KusssAuthenticatorActivity.this)
+                            .setMessage(R.string.alert_permission_get_accounts)
+                            .setPositiveButton(R.string.button_ok, null)
+                            .setCancelable(false)
+                            .show();
+                } else {
+                    submit();
+                }
             }
         });
 

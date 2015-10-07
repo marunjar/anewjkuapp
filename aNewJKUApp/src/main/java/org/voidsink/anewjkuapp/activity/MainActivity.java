@@ -28,6 +28,7 @@ import android.Manifest;
 import android.accounts.Account;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -43,6 +44,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -50,7 +52,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
@@ -144,26 +145,61 @@ public class MainActivity extends ThemedActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             // set Statusbar color to transparent if a drawer exists
             // in this case status bar is colored by DrawerLayout.setStatusBarBackgroundColor(). which is default primaryDark
-            getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.fullTransparent));
         }
+
+        setContentView(R.layout.activity_main);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CALENDAR)) {
-                Toast.makeText(this, "Im Stundenplan werden keine Termine angezeigt da die nötige Berechtigung fehlt.", Toast.LENGTH_LONG).show();
+                new AlertDialog.Builder(this)
+                        .setMessage(getString(R.string.alert_permission_read_calendar))
+                        .setPositiveButton(R.string.button_ok, null)
+                        .setCancelable(false)
+                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialogInterface) {
+                                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+                                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_CALENDAR}, MY_PERMISSION_READ_CALENDAR);
+                                }
+                            }
+                        }).show();
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR}, MY_PERMISSION_READ_CALENDAR);
             }
         }
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_CALENDAR)) {
-                Toast.makeText(this, "Es können keine Termine in den Kalender für den Stundenplan importiert werden da die nötige Berechtigung fehlt.", Toast.LENGTH_LONG).show();
+                new AlertDialog.Builder(this)
+                        .setMessage(getString(R.string.alert_permission_write_calendar))
+                        .setPositiveButton(R.string.button_ok, null)
+                        .setCancelable(false)
+                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialogInterface) {
+                                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+                                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_CALENDAR}, MY_PERMISSION_WRITE_CALENDAR);
+                                }
+                            }
+                        }).show();
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_CALENDAR}, MY_PERMISSION_WRITE_CALENDAR);
             }
         }
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.GET_ACCOUNTS)) {
-                Toast.makeText(this, "Es können keine keine Infomationen zu Accounts/Kontakten ausgelesen werden da die nötige Berechtigung fehlt.", Toast.LENGTH_LONG).show();
+                new AlertDialog.Builder(this)
+                        .setMessage(getString(R.string.alert_permission_get_accounts))
+                        .setPositiveButton(R.string.button_ok, null)
+                        .setCancelable(false)
+                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialogInterface) {
+                                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
+                                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.GET_ACCOUNTS}, MY_PERMISSION_ACCOUNTS);
+                                }
+                            }
+                        }).show();
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.GET_ACCOUNTS}, MY_PERMISSION_ACCOUNTS);
             }
@@ -181,8 +217,6 @@ public class MainActivity extends ThemedActivity {
                 initActionBar();
             }
         });
-
-        setContentView(R.layout.activity_main);
 
         // set up drawer
         mUserLearnedDrawer = PreferenceWrapper.getUserLearnedDrawer(this);
@@ -310,7 +344,10 @@ public class MainActivity extends ThemedActivity {
                             @Override
                             public void onClick(View v) {
                                 try {
-                                    MainActivity.this.startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).addCategory(Intent.CATEGORY_DEFAULT).setData(Uri.parse("package:org.voidsink.anewjkuapp")));
+                                    MainActivity.this.startActivity(
+                                            new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                                                    .addCategory(Intent.CATEGORY_DEFAULT)
+                                                    .setData(Uri.parse("package:org.voidsink.anewjkuapp")));
                                 } catch (Exception e) {
 
                                 }
