@@ -40,6 +40,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -84,6 +85,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -882,4 +884,24 @@ public class AppUtils {
         return result;
     }
 
+    public static int getRandomColor() {
+        Random rand = new Random(System.currentTimeMillis());
+
+        float hue;
+        do {
+            hue = rand.nextFloat() * 360;
+        } while ((Math.abs(mLastHue - hue) < 45) ||
+                (hue > 280 && hue < 320));
+
+        mLastHue = hue;
+
+        float[] hsv = new float[3];
+        hsv[0] = hue;
+        hsv[1] = 0.95f;
+        hsv[2] = 0.8f;
+
+        return Color.HSVToColor(hsv);
+    }
+
+    private static float mLastHue = new Random(System.currentTimeMillis()).nextFloat() * 360;
 }

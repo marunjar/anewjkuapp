@@ -29,6 +29,7 @@ import android.graphics.Color;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 
 public enum Grade {
     G1(1, true, true), G2(2, true, true), G3(3, true, true), G4(4, true, true), G5(5, false, true),
@@ -124,7 +125,7 @@ public enum Grade {
             case GAB:
                 return COLOR_1;
             default:
-                return CalendarUtils.COLOR_DEFAULT_LVA;
+                return AppUtils.getRandomColor();
         }
     }
 

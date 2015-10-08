@@ -50,7 +50,6 @@ import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
-import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,8 +58,6 @@ import java.util.Map;
 
 public final class CalendarUtils {
 
-    private static final int COLOR_DEFAULT_EXAM = Consts.COLOR_DEFAULT_EXAM;
-    public static final int COLOR_DEFAULT_LVA = Consts.COLOR_DEFAULT_LVA;
     public static final String ARG_CALENDAR_EXAM = "ARG_EXAM_CALENDAR";
     public static final String ARG_CALENDAR_COURSE = "ARG_LVA_CALENDAR";
     // Constants representing column positions from PROJECTION.
@@ -188,13 +185,16 @@ public final class CalendarUtils {
 
     public static boolean createCalendarsIfNecessary(Context context,
                                                      Account account) {
+
         boolean calendarCreated = true;
+
         if (!createCalendarIfNecessary(context, account, ARG_CALENDAR_EXAM,
-                COLOR_DEFAULT_EXAM)) {
+                AppUtils.getRandomColor())) {
             calendarCreated = false;
         }
+
         if (!createCalendarIfNecessary(context, account, ARG_CALENDAR_COURSE,
-                COLOR_DEFAULT_LVA)) {
+                AppUtils.getRandomColor())) {
             calendarCreated = false;
         }
 

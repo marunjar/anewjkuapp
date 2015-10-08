@@ -28,9 +28,6 @@ import android.graphics.Color;
 
 public class Consts {
 
-    public static final int COLOR_DEFAULT_EXAM = Color.rgb(240, 149, 0);
-    public static final int COLOR_DEFAULT_LVA = Color.rgb(43, 127, 194);
-
     public static final String ARG_RECREATE_SYNC_ALARM = "RECREATE_SYNC_ALARM";
     public static final String ARG_UPDATE_CAL = "UPDATE_CAL";
     public static final String ARG_UPDATE_CAL_COURSES = "UPDATE_CAL_LVA";

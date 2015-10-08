@@ -3,6 +3,7 @@
 
 ###############
 # TODO: some stuff that must be checked
+-dontobfuscate
 -dontwarn org.xmlpull.v1.**
 -dontwarn com.caverock.androidsvg.**
 
