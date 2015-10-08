@@ -9,6 +9,4 @@
 
 # Add any project specific keep options here:
 
--keep public class com.alamkanak.weekview.** {
-  public protected *;
-}
+-keep class com.alamkanak.weekview.** { *; }

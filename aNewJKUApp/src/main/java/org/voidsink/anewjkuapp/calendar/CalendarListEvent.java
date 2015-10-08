@@ -106,18 +106,7 @@ public class CalendarListEvent implements CalendarListItem {
     }
 
     public void showOnMap(Context context) {
-        Intent intent = new Intent(context, MainActivity.class)
-                .putExtra(MainActivity.ARG_SHOW_FRAGMENT_ID, R.id.nav_map)
-                .putExtra(MainActivity.ARG_SAVE_LAST_FRAGMENT, false)
-                .setAction(Intent.ACTION_SEARCH)
-                .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        if (!TextUtils.isEmpty(getLocation())) {
-            intent.putExtra(SearchManager.QUERY, getLocation());
-            intent.putExtra(MainActivity.ARG_EXACT_LOCATION, true);
-        } else {
-            intent.putExtra(SearchManager.QUERY, "Uniteich");
-        }
-        context.startActivity(intent);
+        AppUtils.showEventLocation(context, getLocation());
     }
 
     public void showInCalendar(Context context) {

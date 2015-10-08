@@ -33,6 +33,7 @@ import android.accounts.OperationCanceledException;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
@@ -44,6 +45,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.apache.commons.lang.time.DateUtils;
@@ -52,6 +54,7 @@ import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
@@ -828,6 +831,21 @@ public class AppUtils {
                     .setData(builder.build());
             context.startActivity(intent);
         }
+    }
+
+    public static void showEventLocation(Context context, String location) {
+        Intent intent = new Intent(context, MainActivity.class)
+                .putExtra(MainActivity.ARG_SHOW_FRAGMENT_ID, R.id.nav_map)
+                .putExtra(MainActivity.ARG_SAVE_LAST_FRAGMENT, false)
+                .setAction(Intent.ACTION_SEARCH)
+                .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        if (!TextUtils.isEmpty(location)) {
+            intent.putExtra(SearchManager.QUERY, location);
+            intent.putExtra(MainActivity.ARG_EXACT_LOCATION, true);
+        } else {
+            intent.putExtra(SearchManager.QUERY, "Uniteich");
+        }
+        context.startActivity(intent);
     }
 
     public static boolean executeEm(Context context, Callable<?>[] callables, boolean wait) {
