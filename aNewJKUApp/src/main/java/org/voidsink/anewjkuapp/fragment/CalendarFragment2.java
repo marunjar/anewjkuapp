@@ -32,6 +32,9 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -44,9 +47,10 @@ import android.view.ViewGroup;
 import com.alamkanak.weekview.DateTimeInterpreter;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
+import com.alamkanak.weekview.WeekViewLoader;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
@@ -60,14 +64,18 @@ import org.voidsink.anewjkuapp.utils.Consts;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
-public class CalendarFragment2 extends BaseFragment implements ContentObserverListener, WeekView.MonthChangeListener,
-        WeekView.EventClickListener, DateTimeInterpreter {
+public class CalendarFragment2 extends BaseFragment implements ContentObserverListener, WeekView.ScrolledListener,
+        WeekView.EventClickListener, DateTimeInterpreter, WeekView.EventLongPressListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = CalendarFragment2.class.getSimpleName();
+    private static final String ARG_CAL_LOAD_NOW = "CLN";
+    private static final String ARG_CAL_LOAD_THEN = "CLT";
     private BaseContentObserver mDataObserver;
     private WeekView mWeekView;
+    private MyWeekViewLoader mWeekViewLoader = new MyWeekViewLoader();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,20 +83,20 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         View view = inflater.inflate(R.layout.fragment_calendar_2, container,
                 false);
 
+
         mWeekView = (WeekView) view.findViewById(R.id.weekView);
 
-        // Show a toast message about the touched event.
         mWeekView.setOnEventClickListener(this);
-        // The week view has infinite scrolling horizontally. We have to provide the events of a
-        // month every time the month changes on the week view.
-        mWeekView.setMonthChangeListener(this);
+        mWeekView.setEventLongPressListener(this);
         // Set long press listener for events.
         //mWeekView.setEventLongPressListener(this);
         // Set formatter for Date/Time
         mWeekView.setDateTimeInterpreter(this);
 
-        // goto now
-        goToDate(System.currentTimeMillis());
+        mWeekViewLoader.setDaysInPeriod(mWeekView.getNumberOfVisibleDays() * 2);
+        mWeekView.setWeekViewLoader(mWeekViewLoader);
+
+        mWeekView.setScrolledListener(this);
 
         return view;
     }
@@ -148,100 +156,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
 
     @Override
     public void onEventClick(WeekViewEvent weekViewEvent, RectF rectF) {
-        AppUtils.showEventInCalendar(getContext(), weekViewEvent.getId(), weekViewEvent.getStartTime().getTimeInMillis());
-    }
-
-    @Override
-    public List<WeekViewEvent> onMonthChange(int newYear, int newMonth) {
-        List<WeekViewEvent> events = new ArrayList<>();
-
-        Account mAccount = AppUtils.getAccount(getContext());
-        if (mAccount == null) {
-            return events;
-        }
-
-        final String calIDLva = CalendarUtils.getCalIDByName(getContext(),
-                mAccount, CalendarUtils.ARG_CALENDAR_COURSE, true);
-        final String calIDExam = CalendarUtils.getCalIDByName(getContext(),
-                mAccount, CalendarUtils.ARG_CALENDAR_EXAM, true);
-
-        if (calIDLva == null || calIDExam == null) {
-            Log.w(TAG, "no events loaded, calendars not found");
-            return events;
-        }
-
-        // fetch calendar colors
-        final SparseArray<Integer> mColors = new SparseArray<>();
-        final ContentResolver cr = getContext().getContentResolver();
-
-        Cursor c = cr.query(CalendarContractWrapper.Calendars.CONTENT_URI(),
-                new String[]{
-                        CalendarContractWrapper.Calendars._ID(),
-                        CalendarContractWrapper.Calendars.CALENDAR_COLOR()},
-                null, null, null);
-        if (c != null) {
-            while (c.moveToNext()) {
-                mColors.put(c.getInt(0), c.getInt(1));
-            }
-            c.close();
-        }
-
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(0);
-        cal.set(Calendar.YEAR, newYear);
-        cal.set(Calendar.MONTH, newMonth - 1); // month index starts at 0 for jan
-        cal.set(Calendar.DAY_OF_MONTH, 1);
-
-        long now = cal.getTimeInMillis();
-
-        cal.add(Calendar.MONTH, 1);
-        cal.add(Calendar.MILLISECOND, -1);
-
-        long then = cal.getTimeInMillis();
-
-        c = cr.query(
-                CalendarContractWrapper.Events.CONTENT_URI(),
-                ImportCalendarTask.EVENT_PROJECTION,
-                "("
-                        + CalendarContractWrapper.Events
-                        .CALENDAR_ID()
-                        + " = ? or "
-                        + CalendarContractWrapper.Events
-                        .CALENDAR_ID() + " = ? ) and "
-                        + CalendarContractWrapper.Events.DTEND()
-                        + " >= ? and "
-                        + CalendarContractWrapper.Events.DTSTART()
-                        + " <= ? and "
-                        + CalendarContractWrapper.Events.DELETED()
-                        + " != 1",
-                new String[]{calIDExam, calIDLva,
-                        Long.toString(now), Long.toString(then)},
-                CalendarContractWrapper.Events.DTSTART() + " ASC");
-
-        if (c == null) {
-            return events;
-        }
-
-        try {
-            while (c.moveToNext()) {
-                Calendar startTime = Calendar.getInstance();
-                startTime.setTimeInMillis(c.getLong(ImportCalendarTask.COLUMN_EVENT_DTSTART));
-                Calendar endTime = Calendar.getInstance();
-                endTime.setTimeInMillis(c.getLong(ImportCalendarTask.COLUMN_EVENT_DTEND));
-
-                WeekViewEvent event = new WeekViewEvent(c.getLong(ImportCalendarTask.COLUMN_EVENT_ID), c.getString(ImportCalendarTask.COLUMN_EVENT_TITLE), startTime, endTime);
-
-                event.setColor(mColors.get(c.getInt(ImportCalendarTask.COLUMN_EVENT_CAL_ID)));
-
-                events.add(event);
-            }
-            c.close();
-        } catch (Exception e) {
-            Analytics.sendException(getContext(), e, false);
-            events.clear();
-        }
-
-        return events;
+        AppUtils.showEventLocation(getContext(), weekViewEvent.getLocation());
     }
 
     @Override
@@ -262,7 +177,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
 
     @Override
     public void onContentChanged(boolean selfChange) {
-        mWeekView.notifyDatasetChanged();
+        loadData(mWeekView.getFirstVisibleDay());
     }
 
     @Override
@@ -285,6 +200,8 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
                 day.set(Calendar.MINUTE, iMinute);
 
                 outState.putLong(Consts.ARG_CALENDAR_NOW, day.getTimeInMillis());
+
+                Log.d(TAG, String.format("saveDateTime: %d", day.getTimeInMillis()));
             }
         }
     }
@@ -293,17 +210,244 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        long date = System.currentTimeMillis();
         if (savedInstanceState != null && savedInstanceState.containsKey(Consts.ARG_CALENDAR_NOW)) {
-            goToDate(savedInstanceState.getLong(Consts.ARG_CALENDAR_NOW));
+            date = savedInstanceState.getLong(Consts.ARG_CALENDAR_NOW);
+        }
+        goToDate(date);
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(date);
+
+        loadData(cal);
+
+    }
+
+    private void loadData(Calendar date) {
+        if (mWeekViewLoader != null && date != null) {
+            int periodIndex = (int) mWeekViewLoader.toWeekViewPeriodIndex(date);
+
+            mWeekViewLoader.loadPeriod(periodIndex - 1, true);
+            mWeekViewLoader.loadPeriod(periodIndex, true);
+            mWeekViewLoader.loadPeriod(periodIndex + 1, true);
         }
     }
 
     private void goToDate(long time) {
+        Log.d(TAG, String.format("goToDate: %d", time));
+
         Calendar day = Calendar.getInstance();
         day.setTimeInMillis(time);
         double hour = day.get(Calendar.HOUR_OF_DAY) + (day.get(Calendar.MINUTE) / 60);
 
         mWeekView.goToDate(day);
         mWeekView.goToHour(hour);
+    }
+
+    @Override
+    public void onEventLongPress(WeekViewEvent event, RectF eventRect) {
+        AppUtils.showEventInCalendar(getContext(), event.getId(), event.getStartTime().getTimeInMillis());
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        Account mAccount = AppUtils.getAccount(getContext());
+
+        String calIDLva = CalendarUtils.getCalIDByName(getContext(),
+                mAccount, CalendarUtils.ARG_CALENDAR_COURSE, true);
+        String calIDExam = CalendarUtils.getCalIDByName(getContext(),
+                mAccount, CalendarUtils.ARG_CALENDAR_EXAM, true);
+
+        if (calIDLva == null || calIDExam == null) {
+            Log.w(TAG, "no events loaded, calendars not found");
+            return null;
+        }
+
+        return new CursorLoader(getContext(), CalendarContractWrapper.Events.CONTENT_URI(),
+                ImportCalendarTask.EVENT_PROJECTION,
+                "("
+                        + CalendarContractWrapper.Events
+                        .CALENDAR_ID()
+                        + " = ? or "
+                        + CalendarContractWrapper.Events
+                        .CALENDAR_ID() + " = ? ) and "
+                        + CalendarContractWrapper.Events.DTEND()
+                        + " >= ? and "
+                        + CalendarContractWrapper.Events.DTSTART()
+                        + " <= ? and "
+                        + CalendarContractWrapper.Events.DELETED()
+                        + " != 1",
+                new String[]{calIDExam, calIDLva,
+                        Long.toString(args.getLong(ARG_CAL_LOAD_NOW)), Long.toString(args.getLong(ARG_CAL_LOAD_THEN))},
+                CalendarContractWrapper.Events.DTSTART() + " ASC");
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        ArrayList<WeekViewEvent> events = mWeekViewLoader.getEvents(loader.getId());
+        events.clear();
+
+        Account mAccount = AppUtils.getAccount(getContext());
+        if (mAccount != null) {
+            // fetch calendar colors
+            final SparseArray<Integer> mColors = new SparseArray<>();
+            ContentResolver cr = getContext().getContentResolver();
+            Cursor cursor = cr
+                    .query(CalendarContractWrapper.Calendars.CONTENT_URI(),
+                            new String[]{
+                                    CalendarContractWrapper.Calendars._ID(),
+                                    CalendarContractWrapper.Calendars
+                                            .CALENDAR_COLOR()}, null, null,
+                            null);
+            if (cursor != null) {
+                while (cursor.moveToNext()) {
+                    mColors.put(cursor.getInt(0), cursor.getInt(1));
+                }
+                cursor.close();
+            }
+
+
+            if (data != null) {
+                data.moveToFirst();
+                data.moveToPrevious();
+                while (data.moveToNext()) {
+
+                    Calendar startTime = Calendar.getInstance();
+                    startTime.setTimeInMillis(data.getLong(ImportCalendarTask.COLUMN_EVENT_DTSTART));
+                    Calendar endTime = Calendar.getInstance();
+                    endTime.setTimeInMillis(data.getLong(ImportCalendarTask.COLUMN_EVENT_DTEND));
+
+                    WeekViewEvent event = new WeekViewEvent(data.getLong(ImportCalendarTask.COLUMN_EVENT_ID),
+                            data.getString(ImportCalendarTask.COLUMN_EVENT_TITLE),
+                            data.getString(ImportCalendarTask.COLUMN_EVENT_LOCATION),
+                            startTime,
+                            endTime);
+
+                    event.setColor(mColors.get(data.getInt(ImportCalendarTask.COLUMN_EVENT_CAL_ID)));
+
+                    events.add(event);
+                }
+            }
+        }
+
+        mWeekView.notifyDatasetChanged();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mWeekViewLoader.removeEvents(loader.getId());
+    }
+
+    @Override
+    public void onFirstVisibleDayChanged(Calendar newFirstVisibleDay, Calendar oldFirstVisibleDay) {
+        if (mWeekViewLoader != null) {
+            int periodIndex = (int) mWeekViewLoader.toWeekViewPeriodIndex(newFirstVisibleDay);
+
+            mWeekViewLoader.loadPeriod(periodIndex - 1, false);
+            mWeekViewLoader.loadPeriod(periodIndex, false);
+            mWeekViewLoader.loadPeriod(periodIndex + 1, false);
+        }
+    }
+
+
+    private class MyWeekViewLoader implements WeekViewLoader {
+
+        private int mDaysInPeriod = 7;
+        private HashMap<Integer, ArrayList<WeekViewEvent>> mEvents;
+        private final ArrayList<Integer> mLastLoadedPeriods;
+
+        public MyWeekViewLoader() {
+            mLastLoadedPeriods = new ArrayList<>();
+            mEvents = new HashMap<>();
+        }
+
+        public void setDaysInPeriod(int daysInPeriod) {
+            mDaysInPeriod = daysInPeriod;
+        }
+
+        public ArrayList<WeekViewEvent> getEvents(int periodIndex) {
+            if (!mEvents.containsKey(periodIndex)) {
+                mEvents.put(periodIndex, new ArrayList<WeekViewEvent>());
+            }
+            return mEvents.get(periodIndex);
+        }
+
+        public void removeEvents(int periodIndex) {
+            mEvents.remove(periodIndex);
+        }
+
+        @Override
+        public double toWeekViewPeriodIndex(Calendar instance) {
+
+            Calendar now = Calendar.getInstance();
+            now.set(Calendar.HOUR_OF_DAY, 0);
+            now.set(Calendar.MINUTE, 0);
+            now.set(Calendar.SECOND, 0);
+            now.set(Calendar.MILLISECOND, 0);
+
+            long days = (instance.getTimeInMillis() - now.getTimeInMillis()) / DateUtils.MILLIS_PER_DAY;
+
+            int halfDaysInPeriod = mDaysInPeriod / 2;
+            int periodIndex = 0;
+            if (days > halfDaysInPeriod) {
+                periodIndex = 1 + (int) (days - halfDaysInPeriod - 1) / mDaysInPeriod;
+            } else if (days < -halfDaysInPeriod) {
+                periodIndex = -1 + (int) (days + halfDaysInPeriod + 1) / mDaysInPeriod;
+            }
+
+            //Log.d(TAG, String.format("%s toWeekViewPeriodIndex %d (%d days)", SimpleDateFormat.getDateTimeInstance().format(instance.getTime()), periodIndex, days));
+
+            return periodIndex;
+        }
+
+        @Override
+        public List<WeekViewEvent> onLoad(int periodIndex) {
+            return getEvents(periodIndex);
+        }
+
+        public void loadPeriod(int periodIndex, boolean forceIt) {
+
+            int index = mLastLoadedPeriods.indexOf(periodIndex);
+
+            if (index < 0 || forceIt) {
+                int halfDaysInPeriod = mDaysInPeriod / 2;
+
+                Calendar now = Calendar.getInstance();
+                now.add(Calendar.DATE, periodIndex * mDaysInPeriod - halfDaysInPeriod);
+                now.set(Calendar.HOUR_OF_DAY, 0);
+                now.set(Calendar.MINUTE, 0);
+                now.set(Calendar.SECOND, 0);
+                now.set(Calendar.MILLISECOND, 0);
+
+                Calendar then = Calendar.getInstance();
+                then.add(Calendar.DATE, periodIndex * mDaysInPeriod + halfDaysInPeriod);
+                now.set(Calendar.HOUR_OF_DAY, 23);
+                now.set(Calendar.MINUTE, 59);
+                now.set(Calendar.SECOND, 59);
+                now.set(Calendar.MILLISECOND, 999);
+
+                Bundle args = new Bundle();
+                args.putLong(ARG_CAL_LOAD_NOW, now.getTimeInMillis());
+                args.putLong(ARG_CAL_LOAD_THEN, then.getTimeInMillis());
+
+                Log.d(TAG, String.format("loadPeriod %d(%d)", periodIndex, index));
+                if (index >= 0) {
+                    mLastLoadedPeriods.remove(index);
+                    getLoaderManager().restartLoader(periodIndex, args, CalendarFragment2.this);
+                } else {
+                    getLoaderManager().initLoader(periodIndex, args, CalendarFragment2.this);
+                }
+                mLastLoadedPeriods.add(0, periodIndex);
+
+                while (mLastLoadedPeriods.size() > 3) {
+                    int removed = mLastLoadedPeriods.remove(mLastLoadedPeriods.size() - 1);
+
+                    Log.d(TAG, String.format("period removed %d", removed));
+
+                    getLoaderManager().destroyLoader(removed);
+                }
+            }
+        }
     }
 }

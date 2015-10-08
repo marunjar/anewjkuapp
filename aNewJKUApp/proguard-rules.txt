@@ -3,9 +3,9 @@
 
 ###############
 # TODO: some stuff that must be checked
+-dontobfuscate
 -dontwarn org.xmlpull.v1.**
 -dontwarn com.caverock.androidsvg.**
-
 
 ###############
 -keepclasseswithmembernames class * {
@@ -48,6 +48,8 @@ public <init>(android.content.Context, android.util.AttributeSet, int);
 -keepclassmembers class * extends android.content.Context {
 public void *(android.view.View);
 }
+
+-keep class com.alamkanak.weekview.** { *; }
 
 # preferences
 -keep class android.support.v7.preference.** { *; }

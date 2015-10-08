@@ -50,7 +50,6 @@ import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
-import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,8 +58,6 @@ import java.util.Map;
 
 public final class CalendarUtils {
 
-    private static final int COLOR_DEFAULT_EXAM = Consts.COLOR_DEFAULT_EXAM;
-    public static final int COLOR_DEFAULT_LVA = Consts.COLOR_DEFAULT_LVA;
     public static final String ARG_CALENDAR_EXAM = "ARG_EXAM_CALENDAR";
     public static final String ARG_CALENDAR_COURSE = "ARG_LVA_CALENDAR";
     // Constants representing column positions from PROJECTION.
@@ -188,13 +185,16 @@ public final class CalendarUtils {
 
     public static boolean createCalendarsIfNecessary(Context context,
                                                      Account account) {
+
         boolean calendarCreated = true;
+
         if (!createCalendarIfNecessary(context, account, ARG_CALENDAR_EXAM,
-                COLOR_DEFAULT_EXAM)) {
+                AppUtils.getRandomColor())) {
             calendarCreated = false;
         }
+
         if (!createCalendarIfNecessary(context, account, ARG_CALENDAR_COURSE,
-                COLOR_DEFAULT_LVA)) {
+                AppUtils.getRandomColor())) {
             calendarCreated = false;
         }
 
@@ -212,7 +212,7 @@ public final class CalendarUtils {
         }
 
         // nothing to do if there's no permission
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_DENIED) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             return ids;
         }
 
@@ -236,7 +236,13 @@ public final class CalendarUtils {
 
     public static String getCalIDByName(Context context, Account account,
                                         String name, boolean usePreferences) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            Log.w(TAG, String.format("no id for '%s' found, no permission", name));
+            return null;
+        }
+
         String id = null;
+
         // get id from preferences
         if (usePreferences) {
             switch (name) {
@@ -264,6 +270,8 @@ public final class CalendarUtils {
 
         if (id == null) {
             Log.w(TAG, String.format("no id for '%s' found", name));
+        } else {
+            Log.d(TAG, String.format("id for '%s' found: %s", name, id));
         }
         return id;
     }

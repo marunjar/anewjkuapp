@@ -287,12 +287,16 @@ public class KusssHandler {
             writeParams(conn, new String[]{"selectAll"},
                     new String[]{"ical.category.mycourses"});
 
-            copyStream(conn.getInputStream(), data);
+            long length = copyStream(conn.getInputStream(), data);
             conn.disconnect();
 
-            iCal = mCalendarBuilder.build(new ByteArrayInputStream(getModifiedData(data)));
+            if (length > 0) {
+                iCal = mCalendarBuilder.build(new ByteArrayInputStream(getModifiedData(data)));
+            } else {
+                iCal = new Calendar();
+            }
         } catch (ParserException e) {
-            Log.e(TAG, "getLVAIcal", e);
+            Log.e(TAG, "getLVAIcal: " + data.toString(), e);
             Analytics.sendException(c, e, true, data.toString());
             iCal = null;
         } catch (Exception e) {
@@ -324,7 +328,7 @@ public class KusssHandler {
             writeParams(conn, new String[]{"selectAll"},
                     new String[]{"ical.category.examregs"});
 
-            copyStream(conn.getInputStream(), data);
+            long length = copyStream(conn.getInputStream(), data);
             conn.disconnect();
 
             /*
@@ -332,9 +336,13 @@ public class KusssHandler {
             long length = copyStream(am.open("ical1.ics", AssetManager.ACCESS_STREAMING), data);
             */
 
-            iCal = mCalendarBuilder.build(new ByteArrayInputStream(getModifiedData(data)));
+            if (length > 0) {
+                iCal = mCalendarBuilder.build(new ByteArrayInputStream(getModifiedData(data)));
+            } else {
+                iCal = new Calendar();
+            }
         } catch (ParserException e) {
-            Log.e(TAG, "getExamIcal", e);
+            Log.e(TAG, "getExamIcal: " + data.toString(), e);
             Analytics.sendException(c, e, true, data.toString());
             iCal = null;
         } catch (Exception e) {

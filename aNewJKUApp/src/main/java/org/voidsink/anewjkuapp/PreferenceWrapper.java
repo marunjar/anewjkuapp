@@ -51,6 +51,9 @@ public final class PreferenceWrapper {
     public static final String PREF_NOTIFY_CALENDAR_KEY = "pref_key_notify_calendar";
     public static final boolean PREF_NOTIFY_CALENDAR_DEFAULT = true;
 
+    public static final String PREF_USE_CALENDAR_VIEW_KEY = "pref_key_use_calendar_view";
+    public static final boolean PREF_USE_CALENDAR_VIEW_DEFAULT = false;
+
     public static final String PREF_NOTIFY_EXAM_KEY = "pref_key_notify_exam";
     public static final boolean PREF_NOTIFY_EXAM_DEFAULT = true;
 
@@ -157,6 +160,18 @@ public final class PreferenceWrapper {
         } catch (Exception e) {
             Log.e(TAG, "Failure", e);
             return PREF_NOTIFY_CALENDAR_DEFAULT;
+        }
+    }
+
+    public static boolean getUseCalendarView(Context mContext) {
+        SharedPreferences sp = PreferenceManager
+                .getDefaultSharedPreferences(mContext);
+        try {
+            return sp.getBoolean(PREF_USE_CALENDAR_VIEW_KEY,
+                    PREF_USE_CALENDAR_VIEW_DEFAULT);
+        } catch (Exception e) {
+            Log.e(TAG, "Failure", e);
+            return PREF_USE_CALENDAR_VIEW_DEFAULT;
         }
     }
 

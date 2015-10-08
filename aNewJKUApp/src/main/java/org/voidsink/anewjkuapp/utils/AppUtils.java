@@ -24,6 +24,7 @@
 
 package org.voidsink.anewjkuapp.utils;
 
+import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerFuture;
@@ -32,15 +33,20 @@ import android.accounts.OperationCanceledException;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.apache.commons.lang.time.DateUtils;
@@ -49,6 +55,7 @@ import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
@@ -78,6 +85,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -496,6 +504,12 @@ public class AppUtils {
         if (context == null) {
             return null;
         }
+
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
+            Log.w(TAG, "getAccount failed, no permission");
+            return null;
+        }
+
         // get first account
         Account[] accounts = AccountManager.get(context).getAccountsByType(
                 KusssAuthenticator.ACCOUNT_TYPE);
@@ -821,6 +835,21 @@ public class AppUtils {
         }
     }
 
+    public static void showEventLocation(Context context, String location) {
+        Intent intent = new Intent(context, MainActivity.class)
+                .putExtra(MainActivity.ARG_SHOW_FRAGMENT_ID, R.id.nav_map)
+                .putExtra(MainActivity.ARG_SAVE_LAST_FRAGMENT, false)
+                .setAction(Intent.ACTION_SEARCH)
+                .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        if (!TextUtils.isEmpty(location)) {
+            intent.putExtra(SearchManager.QUERY, location);
+            intent.putExtra(MainActivity.ARG_EXACT_LOCATION, true);
+        } else {
+            intent.putExtra(SearchManager.QUERY, "Uniteich");
+        }
+        context.startActivity(intent);
+    }
+
     public static boolean executeEm(Context context, Callable<?>[] callables, boolean wait) {
         boolean result = true;
 
@@ -855,4 +884,24 @@ public class AppUtils {
         return result;
     }
 
+    public static int getRandomColor() {
+        Random rand = new Random(System.currentTimeMillis());
+
+        float hue;
+        do {
+            hue = rand.nextFloat() * 360;
+        } while ((Math.abs(mLastHue - hue) < 45) ||
+                (hue > 280 && hue < 320));
+
+        mLastHue = hue;
+
+        float[] hsv = new float[3];
+        hsv[0] = hue;
+        hsv[1] = 0.95f;
+        hsv[2] = 0.8f;
+
+        return Color.HSVToColor(hsv);
+    }
+
+    private static float mLastHue = new Random(System.currentTimeMillis()).nextFloat() * 360;
 }

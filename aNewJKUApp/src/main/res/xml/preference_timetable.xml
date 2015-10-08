@@ -6,6 +6,11 @@
             android:key="pref_key_notify_calendar"
             android:summary="@string/pref_kusss_calendar_notify_summary"
             android:title="@string/pref_kusss_notify_title"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_key_use_calendar_view"
+            android:summary="@string/pref_kusss_use_calendar_view_summary"
+            android:title="@string/pref_kusss_use_calendar_view_title"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/calendar_title_lva">

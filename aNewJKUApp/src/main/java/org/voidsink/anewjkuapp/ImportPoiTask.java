@@ -62,7 +62,6 @@ public class ImportPoiTask implements Callable<Void> {
 
     private static final String TAG = ImportPoiTask.class.getSimpleName();
 
-    private final ContentProviderClient mProvider;
     private final Context mContext;
     private final File mFile;
     private final boolean mIsDefault;
@@ -83,8 +82,6 @@ public class ImportPoiTask implements Callable<Void> {
     public static final int COLUMN_POI_IS_DEFAULT = 5;
 
     public ImportPoiTask(Context context, File file, boolean isDefault) {
-        this.mProvider = context.getContentResolver()
-                .acquireContentProviderClient(PoiContentContract.CONTENT_URI);
         this.mContext = context;
         this.mFile = file;
         this.mIsDefault = isDefault;
@@ -92,6 +89,13 @@ public class ImportPoiTask implements Callable<Void> {
 
     @Override
     public Void call() throws Exception {
+        ContentProviderClient mProvider = mContext.getContentResolver()
+                .acquireContentProviderClient(PoiContentContract.CONTENT_URI);
+
+        if (mProvider == null) {
+            return null;
+        }
+
         Log.d(TAG, "start importing POIs");
         PoiNotification mNotification = new PoiNotification(mContext);
         try {
@@ -247,6 +251,8 @@ public class ImportPoiTask implements Callable<Void> {
         } finally {
             mNotification.show();
         }
+
+        mProvider.release();
 
         return null;
     }

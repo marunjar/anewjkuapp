@@ -91,6 +91,8 @@
     <string name="pref_kusss_sync_interval_title">Synchronisationsintervall</string>
     <string name="pref_kusss_notify_title">Benachrichtigen</string>
     <string name="pref_cat_kusss_calendar">Stundenplan</string>
+    <string name="pref_kusss_use_calendar_view_summary">Termine in einer Kalenderansicht anzeigen</string>
+    <string name="pref_kusss_use_calendar_view_title">Kalenderansicht</string>
     <string name="pref_kusss_calendar_sync_summary">Termine vom aktuellen Semester aus KUSSS synchronisieren</string>
     <string name="pref_kusss_calendar_sync_title">Synchronisieren</string>
     <string name="pref_kusss_calendar_notify_summary">Benachrichtigen wenn sich Termine geändert haben</string>
@@ -235,6 +237,10 @@
     <string name="studies_dt_start">Beginn</string>
     <string name="studies_dt_end">Ende</string>
 
+    <string name="alert_permission_read_calendar">Im Stundenplan werden keine Termine im Stundenplan angezeigt da die nötige Berechtigung dazu fehlt.</string>
+    <string name="alert_permission_write_calendar">Es können keine Termine in den Stundenplan importiert werden da die nötige Berechtigung dazu fehlt.</string>
+    <string name="alert_permission_get_accounts">Es können keine Accounts gelesen und angelegt werden da die nötige Berectigungen für Kontakte fehlt.</string>
+
     <string name="default_chip_color" translatable="false">#ff2b7fc2</string>
     <string name="drawer_menu_item_icon">Icon</string>
     <string name="kusss_service_title">KUSSS Service</string>
@@ -247,4 +253,6 @@
     <string name="action_show_rss_entry_in_browser">in Browser anzeigen</string>
     <string name="title_curricula">Studienrichtungen</string>
     <string name="content_descr_rss_feed_item_image">Das erste Bild das in dem News-Eintrag vorkommt.</string>
+    <string name="missing_app_permission">Berechtigungen fehlen</string>
+    <string name="button_ok">Ok</string>
 </resources>

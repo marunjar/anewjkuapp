@@ -195,4 +195,11 @@
     <string name="pref_courses_show_with_assessment_only_title">Only courses with assessments</string>
     <string name="content_descr_rss_feed_item_image">The first image of the news entry</string>
     <string name="action_tap_to_login">Tap to login</string>
+    <string name="missing_app_permission">Missing App permissions</string>
+    <string name="alert_permission_get_accounts">Missing contacts permission for creating and reading accounts.</string>
+    <string name="alert_permission_read_calendar">Missing read calendar permission for showing events in timetable.</string>
+    <string name="alert_permission_write_calendar">Missing write calendar permission for importing events from KUSSS.</string>
+    <string name="button_ok">Ok</string>
+    <string name="pref_kusss_use_calendar_view_title">Calendar view</string>
+    <string name="pref_kusss_use_calendar_view_summary">Show all events in a calendar view</string>
 </resources>

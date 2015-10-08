@@ -14,6 +14,9 @@
         <item name="colorPrimary">@color/default_primary</item>
         <item name="colorPrimaryDark">@color/default_primaryDark</item>
         <item name="colorAccent">@color/default_accent</item>
+
+        <item name="pastBackgroundColor">@color/pastBackgroundColor_dark</item>
+        <item name="nowLineColor">@color/nowLineColor_dark</item>
     </style>
 
     <style name="AppTheme.Base.Light" parent="@style/Theme.AppCompat.Light.NoActionBar">
@@ -28,6 +31,9 @@
         <item name="colorPrimary">@color/default_primary</item>
         <item name="colorPrimaryDark">@color/default_primaryDark</item>
         <item name="colorAccent">@color/default_accent</item>
+
+        <item name="pastBackgroundColor">@color/pastBackgroundColor_light</item>
+        <item name="nowLineColor">@color/nowLineColor_light</item>
     </style>
 
     <style name="AppTheme.Base.Launch" parent="AppTheme.Base.Light">
