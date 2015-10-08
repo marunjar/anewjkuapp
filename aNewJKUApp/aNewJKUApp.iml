@@ -129,9 +129,9 @@
     <orderEntry type="library" exported="" name="mapsforge-map-reader-0.5.2" level="project" />
     <orderEntry type="library" exported="" name="ical4j-1.0.6" level="project" />
     <orderEntry type="library" exported="" name="preference-v7-23.0.1" level="project" />
+    <orderEntry type="library" exported="" name="MPAndroidChart-v2.1.4" level="project" />
     <orderEntry type="library" exported="" name="commons-lang-2.6" level="project" />
     <orderEntry type="library" exported="" name="kxml2-2.3.0" level="project" />
-    <orderEntry type="library" exported="" name="MPAndroidChart-v2.1.4" level="project" />
     <orderEntry type="library" exported="" name="aboutlibraries-5.2.4" level="project" />
     <orderEntry type="library" exported="" name="dashclock-api-2.0.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-23.0.1" level="project" />

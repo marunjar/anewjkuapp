@@ -4,8 +4,13 @@
 		    - fixed
 		    * changed
 		    + added -->
+    <release version="0.42.2" versioncode="140044">
+        <change>- Stundenplan: mehr Fehler bei mehrzeiligen Terminbeschreibungen behoben</change>
+        <change>- App: Fehler mit Berechtigungen für Android 6 behoben</change>
+        <change>+ Einstellungen: Kalenderansicht für Stundenplan kann aktiviert werden</change>
+    </release>
     <release version="0.42.1" versioncode="140043">
-        <change>- Stundenplan: Fehler mit mehrzeiligen Terminbeschreibungen behoben</change>
+        <change>- Stundenplan: Fehler bei mehrzeiligen Terminbeschreibungen behoben</change>
     </release>
     <release version="0.42" versioncode="140042">
         <change>- App: viele Korrekturen und Optimierungen</change>
