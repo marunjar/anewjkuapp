@@ -200,4 +200,6 @@
     <string name="alert_permission_read_calendar">Missing read calendar permission for showing events in timetable.</string>
     <string name="alert_permission_write_calendar">Missing write calendar permission for importing events from KUSSS.</string>
     <string name="button_ok">Ok</string>
+    <string name="pref_kusss_use_calendar_view_title">Calendar view</string>
+    <string name="pref_kusss_use_calendar_view_summary">Show all events in a calendar view</string>
 </resources>

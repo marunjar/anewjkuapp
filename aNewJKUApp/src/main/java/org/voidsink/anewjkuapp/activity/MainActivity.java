@@ -65,6 +65,7 @@ import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.fragment.AssessmentFragment;
 import org.voidsink.anewjkuapp.fragment.CalendarFragment;
+import org.voidsink.anewjkuapp.fragment.CalendarFragment2;
 import org.voidsink.anewjkuapp.fragment.CurriculaFragment;
 import org.voidsink.anewjkuapp.fragment.ExamFragment;
 import org.voidsink.anewjkuapp.fragment.LvaFragment;
@@ -432,7 +433,11 @@ public class MainActivity extends ThemedActivity {
 
         switch (menuItem.getItemId()) {
             case R.id.nav_cal:
-                startFragment = CalendarFragment.class;
+                if (PreferenceWrapper.getUseCalendarView(this)) {
+                    startFragment = CalendarFragment2.class;
+                } else {
+                    startFragment = CalendarFragment.class;
+                }
                 break;
             case R.id.nav_exams:
                 startFragment = ExamFragment.class;
