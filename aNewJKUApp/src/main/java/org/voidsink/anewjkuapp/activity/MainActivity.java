@@ -55,6 +55,8 @@ import android.widget.TextView;
 
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
+import org.voidsink.anewjkuapp.KusssContentContract;
+import org.voidsink.anewjkuapp.PoiContentContract;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
@@ -142,6 +144,11 @@ public class MainActivity extends ThemedActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.d(this.getClass().getCanonicalName(), KusssContentContract.AUTHORITY);
+        Log.d(this.getClass().getCanonicalName(), this.getResources().getString(R.string.config_kusss_provider));
+        Log.d(this.getClass().getCanonicalName(), PoiContentContract.AUTHORITY);
+        Log.d(this.getClass().getCanonicalName(), this.getResources().getString(R.string.config_poi_provider));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             // set Statusbar color to transparent if a drawer exists

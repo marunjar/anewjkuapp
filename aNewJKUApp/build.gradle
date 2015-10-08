@@ -1,8 +1,6 @@
 apply plugin: 'com.android.application'
 android {
     signingConfigs {
-        config {
-        }
     }
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
@@ -22,8 +20,6 @@ android {
                 'proguard-rules-keep-names.txt'
 
         buildConfigField "boolean", "FOSS_ONLY", "false"
-
-        initProvider(defaultConfig, "")
     }
 
     productFlavors {
@@ -39,16 +35,15 @@ android {
             minifyEnabled true
             shrinkResources true
             debuggable false
-
             applicationVariants.all { variant ->
                 appendVersionNameVersionCode(variant, defaultConfig)
             }
+            initProvider(defaultConfig, "")
         }
         debug {
             minifyEnabled true
             shrinkResources true
             debuggable true
-
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
             initProvider(defaultConfig, ".debug")
@@ -79,28 +74,22 @@ dependencies {
     compile 'com.android.support:design:23.0.1'
     googleCompile 'com.google.android.gms:play-services-analytics:8.1.0'
     compile 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
-
     compile 'org.mapsforge:mapsforge-core:0.5.2'
     compile 'org.mapsforge:mapsforge-map:0.5.2'
     compile 'org.mapsforge:mapsforge-map-android:0.5.2'
-
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'org.mnode.ical4j:ical4j:1.0.6'
     compile 'org.mnode.ical4j:ical4j-extensions:0.9.2'
-
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
     compile 'com.github.bumptech.glide:glide:3.6.1'
     //compile 'com.github.alamkanak:android-week-view:1.2.3'
-
     compile 'de.cketti.library.changelog:ckchangelog:1.2.2'
     compile('com.mikepenz:aboutlibraries:5.2.4@aar') {
         transitive = true
     }
-
     compile project(':sectionedRecyclerAdapter')
     compile project(':android-week-view')
     //compile project(':kussslibrary')
-
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.4'
 }
 
