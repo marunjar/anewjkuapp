@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Region;
 import android.graphics.Typeface;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.ViewCompat;
@@ -126,6 +127,7 @@ public class WeekView extends View {
     private double mScrollToHour = -1;
     private ScaleGestureDetector mScaleDetector;
     private boolean mIsZooming;
+    private int mEventCornerRadius = 0;
 
     // Listeners.
     private EventClickListener mEventClickListener;
@@ -288,6 +290,7 @@ public class WeekView extends View {
             mOverlappingEventGap = a.getDimensionPixelSize(R.styleable.WeekView_overlappingEventGap, mOverlappingEventGap);
             mEventMarginVertical = a.getDimensionPixelSize(R.styleable.WeekView_eventMarginVertical, mEventMarginVertical);
             mXScrollingSpeed = a.getFloat(R.styleable.WeekView_xScrollingSpeed, mXScrollingSpeed);
+            mEventCornerRadius = a.getDimensionPixelSize(R.styleable.WeekView_eventCornerRadius, mEventCornerRadius);
         } finally {
             a.recycle();
         }
@@ -418,22 +421,22 @@ public class WeekView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        // Hide everything in the first cell (top left corner).
+        canvas.drawRect(0, 0, mTimeTextWidth + mHeaderColumnPadding * 2, mHeaderTextHeight + mHeaderRowPadding * 2, mHeaderBackgroundPaint);
+
         // Draw the header row.
         drawHeaderRowAndEvents(canvas);
 
         // Draw the time column and all the axes/separators.
         drawTimeColumnAndAxes(canvas);
-
-        // Hide everything in the first cell (top left corner).
-        canvas.drawRect(0, 0, mTimeTextWidth + mHeaderColumnPadding * 2, mHeaderTextHeight + mHeaderRowPadding * 2, mHeaderBackgroundPaint);
-
-        // Hide anything that is in the bottom margin of the header row.
-        canvas.drawRect(mHeaderColumnWidth, mHeaderTextHeight + mHeaderRowPadding * 2, getWidth(), mHeaderRowPadding * 2 + mHeaderTextHeight + mHeaderMarginBottom + mTimeTextHeight/2 - mHourSeparatorHeight / 2, mHeaderColumnBackgroundPaint);
     }
 
     private void drawTimeColumnAndAxes(Canvas canvas) {
         // Draw the background color for the header column.
         canvas.drawRect(0, mHeaderTextHeight + mHeaderRowPadding * 2, mHeaderColumnWidth, getHeight(), mHeaderColumnBackgroundPaint);
+
+        // only paint in left column
+        canvas.clipRect(0, mHeaderTextHeight + mHeaderRowPadding * 2, mHeaderColumnWidth, getHeight(), Region.Op.REPLACE);
 
         for (int i = 0; i < 24; i++) {
             float top = mHeaderTextHeight + mHeaderRowPadding * 2 + mCurrentOrigin.y + mHourHeight * i + mHeaderMarginBottom;
@@ -527,6 +530,9 @@ public class WeekView extends View {
             }
         }
 
+        // clip rect to events
+        canvas.clipRect(mHeaderColumnWidth, mHeaderTextHeight + mHeaderRowPadding * 2, getWidth(), getHeight(), Region.Op.REPLACE);
+
         // Iterate through each day.
         Calendar oldFirstVisibleDay = mFirstVisibleDay;
         mFirstVisibleDay = (Calendar) today.clone();
@@ -609,6 +615,10 @@ public class WeekView extends View {
             startPixel += mWidthPerDay + mColumnGap;
         }
 
+
+        // clip to header row
+        canvas.clipRect(mHeaderColumnWidth, 0, getWidth(), mHeaderTextHeight + mHeaderRowPadding * 2, Region.Op.REPLACE);
+
         // Draw the header background.
         canvas.drawRect(0, 0, getWidth(), mHeaderTextHeight + mHeaderRowPadding * 2, mHeaderBackgroundPaint);
 
@@ -675,9 +685,6 @@ public class WeekView extends View {
 
                     // Calculate top.
                     float top = mHourHeight * 24 * mEventRects.get(i).top / 1440 + mCurrentOrigin.y + mHeaderTextHeight + mHeaderRowPadding * 2 + mHeaderMarginBottom + mTimeTextHeight/2 + mEventMarginVertical;
-                    float originalTop = top;
-                    if (top < mHeaderTextHeight + mHeaderRowPadding * 2 + mHeaderMarginBottom + mTimeTextHeight/2)
-                        top = mHeaderTextHeight + mHeaderRowPadding * 2 + mHeaderMarginBottom + mTimeTextHeight/2;
 
                     // Calculate bottom.
                     float bottom = mEventRects.get(i).bottom;
@@ -687,11 +694,9 @@ public class WeekView extends View {
                     float left = startFromPixel + mEventRects.get(i).left * mWidthPerDay;
                     if (left < startFromPixel)
                         left += mOverlappingEventGap;
-                    float originalLeft = left;
                     float right = left + mEventRects.get(i).width * mWidthPerDay;
                     if (right < startFromPixel + mWidthPerDay)
                         right -= mOverlappingEventGap;
-                    if (left < mHeaderColumnWidth) left = mHeaderColumnWidth;
 
                     // Draw the event and the event name on top of it.
                     RectF eventRectF = new RectF(left, top, right, bottom);
@@ -704,10 +709,9 @@ public class WeekView extends View {
                             ) {
                         mEventRects.get(i).rectF = eventRectF;
                         mEventBackgroundPaint.setColor(mEventRects.get(i).event.getColor() == 0 ? mDefaultEventColor : mEventRects.get(i).event.getColor());
-                        canvas.drawRect(mEventRects.get(i).rectF, mEventBackgroundPaint);
-                        drawEventTitle(mEventRects.get(i).event, mEventRects.get(i).rectF, canvas, originalTop, originalLeft);
-                    }
-                    else
+                        canvas.drawRoundRect(mEventRects.get(i).rectF, mEventCornerRadius, mEventCornerRadius, mEventBackgroundPaint);
+                        drawEventTitle(mEventRects.get(i).event, mEventRects.get(i).rectF, canvas, top, left);
+                    } else
                         mEventRects.get(i).rectF = null;
                 }
             }
@@ -727,12 +731,14 @@ public class WeekView extends View {
         if (rect.right - rect.left - mEventPadding * 2 < 0) return;
 
         SpannableStringBuilder bob = new SpannableStringBuilder();
-        if (event.getName() != null) {
+        if (!TextUtils.isEmpty(event.getName())) {
             bob.append(event.getName());
-            bob.setSpan(new StyleSpan(android.graphics.Typeface.BOLD),0,bob.length(),0);
-            bob.append(' ');
+            bob.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, bob.length(), 0);
         }
-        if (event.getLocation() != null) {
+        if (!TextUtils.isEmpty(event.getLocation())) {
+            if (bob.length() > 0) {
+                bob.append('\n');
+            }
             bob.append(event.getLocation());
         }
 
@@ -892,12 +898,16 @@ public class WeekView extends View {
             Calendar endTime = (Calendar) event.getStartTime().clone();
             endTime.set(Calendar.HOUR_OF_DAY, 23);
             endTime.set(Calendar.MINUTE, 59);
+            endTime.set(Calendar.SECOND, 59);
+            endTime.set(Calendar.MILLISECOND, 999);
             Calendar startTime = (Calendar) event.getEndTime().clone();
             startTime.set(Calendar.HOUR_OF_DAY, 0);
             startTime.set(Calendar.MINUTE, 0);
-            WeekViewEvent event1 = new WeekViewEvent(event.getId(), event.getName(), event.getStartTime(), endTime);
+            startTime.set(Calendar.SECOND, 0);
+            startTime.set(Calendar.MILLISECOND, 0);
+            WeekViewEvent event1 = new WeekViewEvent(event.getId(), event.getName(), event.getLocation(), event.getStartTime(), endTime);
             event1.setColor(event.getColor());
-            WeekViewEvent event2 = new WeekViewEvent(event.getId(), event.getName(), startTime, event.getEndTime());
+            WeekViewEvent event2 = new WeekViewEvent(event.getId(), event.getName(), event.getLocation(), startTime, event.getEndTime());
             event2.setColor(event.getColor());
             mEventRects.add(new EventRect(event1, event, null));
             mEventRects.add(new EventRect(event2, event, null));
@@ -1399,6 +1409,19 @@ public class WeekView extends View {
     public void setOverlappingEventGap(int overlappingEventGap) {
         this.mOverlappingEventGap = overlappingEventGap;
         invalidate();
+    }
+
+    public int getEventCornerRadius() {
+        return mEventCornerRadius;
+    }
+
+    /**
+     * Set corner radius for event rect.
+     *
+     * @param eventCornerRadius the radius in px.
+     */
+    public void setEventCornerRadius(int eventCornerRadius) {
+        mEventCornerRadius = eventCornerRadius;
     }
 
     public int getEventMarginVertical() {

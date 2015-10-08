@@ -24,13 +24,8 @@
 
 package org.voidsink.anewjkuapp.calendar;
 
-import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
-import android.text.TextUtils;
 
-import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import java.util.Date;

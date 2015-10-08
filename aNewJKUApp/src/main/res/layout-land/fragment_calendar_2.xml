@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     app:columnGap="8dp"
     app:dayBackgroundColor="@color/fullTransparent"
+    app:eventCornerRadius="4dp"
     app:eventTextColor="@android:color/white"
     app:firstDayOfWeek="monday"
     app:futureBackgroundColor="@color/fullTransparent"

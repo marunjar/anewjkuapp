@@ -93,6 +93,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         // Set formatter for Date/Time
         mWeekView.setDateTimeInterpreter(this);
 
+        mWeekViewLoader.setDaysInPeriod(mWeekView.getNumberOfVisibleDays() * 2);
         mWeekView.setWeekViewLoader(mWeekViewLoader);
 
         mWeekView.setScrolledListener(this);
@@ -352,12 +353,17 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
 
     private class MyWeekViewLoader implements WeekViewLoader {
 
+        private int mDaysInPeriod = 7;
         private HashMap<Integer, ArrayList<WeekViewEvent>> mEvents;
         private final ArrayList<Integer> mLastLoadedPeriods;
 
         public MyWeekViewLoader() {
             mLastLoadedPeriods = new ArrayList<>();
             mEvents = new HashMap<>();
+        }
+
+        public void setDaysInPeriod(int daysInPeriod) {
+            mDaysInPeriod = daysInPeriod;
         }
 
         public ArrayList<WeekViewEvent> getEvents(int periodIndex) {
@@ -382,12 +388,15 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
 
             long days = (instance.getTimeInMillis() - now.getTimeInMillis()) / DateUtils.MILLIS_PER_DAY;
 
+            int halfDaysInPeriod = mDaysInPeriod / 2;
             int periodIndex = 0;
-            if (days > 3) {
-                periodIndex = 1 + (int) (days - 4) / 7;
-            } else if (days < -3) {
-                periodIndex = -1 + (int) (days + 4) / 7;
+            if (days > halfDaysInPeriod) {
+                periodIndex = 1 + (int) (days - halfDaysInPeriod - 1) / mDaysInPeriod;
+            } else if (days < -halfDaysInPeriod) {
+                periodIndex = -1 + (int) (days + halfDaysInPeriod + 1) / mDaysInPeriod;
             }
+
+            //Log.d(TAG, String.format("%s toWeekViewPeriodIndex %d (%d days)", SimpleDateFormat.getDateTimeInstance().format(instance.getTime()), periodIndex, days));
 
             return periodIndex;
         }
@@ -402,15 +411,17 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
             int index = mLastLoadedPeriods.indexOf(periodIndex);
 
             if (index < 0 || forceIt) {
+                int halfDaysInPeriod = mDaysInPeriod / 2;
+
                 Calendar now = Calendar.getInstance();
-                now.add(Calendar.DATE, periodIndex * 7 - 3);
+                now.add(Calendar.DATE, periodIndex * mDaysInPeriod - halfDaysInPeriod);
                 now.set(Calendar.HOUR_OF_DAY, 0);
                 now.set(Calendar.MINUTE, 0);
                 now.set(Calendar.SECOND, 0);
                 now.set(Calendar.MILLISECOND, 0);
 
                 Calendar then = Calendar.getInstance();
-                then.add(Calendar.DATE, periodIndex * 7 + 3);
+                then.add(Calendar.DATE, periodIndex * mDaysInPeriod + halfDaysInPeriod);
                 now.set(Calendar.HOUR_OF_DAY, 23);
                 now.set(Calendar.MINUTE, 59);
                 now.set(Calendar.SECOND, 59);
