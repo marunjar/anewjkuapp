@@ -30,11 +30,13 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.graphics.ColorUtils;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -302,7 +304,25 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
                             null);
             if (cursor != null) {
                 while (cursor.moveToNext()) {
-                    mColors.put(cursor.getInt(0), cursor.getInt(1));
+                    int color = cursor.getInt(1);
+
+                    double lastContrast = ColorUtils.calculateContrast(color, mWeekView.getEventTextColor());
+                    Log.d(TAG, String.format("color=%d %d %d, contrast=%f", Color.red(color), Color.green(color), Color.blue(color), lastContrast));
+
+                    while (lastContrast < 1.6) {
+                        float[] hsv = new float[3];
+
+                        Color.colorToHSV(color, hsv);
+                        hsv[2] = Math.max(0f, hsv[2] - 0.033f); // darken
+                        color = Color.HSVToColor(hsv);
+
+                        lastContrast = ColorUtils.calculateContrast(color, mWeekView.getEventTextColor());
+                        Log.d(TAG, String.format("new color=%d %d %d, contrast=%f", Color.red(color), Color.green(color), Color.blue(color), lastContrast));
+
+                        if (hsv[2] == 0) break;
+                    }
+
+                    mColors.put(cursor.getInt(0), color);
                 }
                 cursor.close();
             }
