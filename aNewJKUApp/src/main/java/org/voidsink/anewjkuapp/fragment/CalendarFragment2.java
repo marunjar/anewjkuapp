@@ -67,7 +67,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-public class CalendarFragment2 extends BaseFragment implements ContentObserverListener, WeekView.ScrolledListener,
+public class CalendarFragment2 extends BaseFragment implements ContentObserverListener, WeekView.ScrollListener,
         WeekView.EventClickListener, DateTimeInterpreter, WeekView.EventLongPressListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = CalendarFragment2.class.getSimpleName();
@@ -93,10 +93,10 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         // Set formatter for Date/Time
         mWeekView.setDateTimeInterpreter(this);
 
-        mWeekViewLoader.setDaysInPeriod(mWeekView.getNumberOfVisibleDays() * 2);
+        mWeekViewLoader.setDaysInPeriod(mWeekView.getNumberOfVisibleDays() * 3);
         mWeekView.setWeekViewLoader(mWeekViewLoader);
 
-        mWeekView.setScrolledListener(this);
+        mWeekView.setScrollListener(this);
 
         return view;
     }
