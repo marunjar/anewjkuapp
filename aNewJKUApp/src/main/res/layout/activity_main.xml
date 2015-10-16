@@ -14,24 +14,33 @@
          space available using match_parent in both dimensions.
     -->
 
-    <!-- Your normal content view -->
-    <LinearLayout
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- We use a Toolbar so that our drawer can be displayed
-                     in front of the action bar -->
-        <include layout="@layout/main_toolbar"/>
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <!-- The rest of your content view -->
+            <!-- We use a Toolbar so that our drawer can be displayed
+                         in front of the action bar -->
+            <include
+                layout="@layout/main_toolbar"
+                app:layout_scrollFlags="scroll|enterAlways"/>
+
+        </android.support.design.widget.AppBarLayout>
 
         <FrameLayout
             android:id="@+id/container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-    </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
+
     <!--
          android:layout_gravity="start" tells DrawerLayout to treat
          this as a sliding drawer on the left side for left-to-right

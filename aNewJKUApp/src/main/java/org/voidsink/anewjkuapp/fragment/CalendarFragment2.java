@@ -307,7 +307,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
                     int color = cursor.getInt(1);
 
                     double lastContrast = ColorUtils.calculateContrast(color, mWeekView.getEventTextColor());
-                    Log.d(TAG, String.format("color=%d %d %d, contrast=%f", Color.red(color), Color.green(color), Color.blue(color), lastContrast));
+                    //Log.d(TAG, String.format("color=%d %d %d, contrast=%f", Color.red(color), Color.green(color), Color.blue(color), lastContrast));
 
                     while (lastContrast < 1.6) {
                         float[] hsv = new float[3];
@@ -317,7 +317,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
                         color = Color.HSVToColor(hsv);
 
                         lastContrast = ColorUtils.calculateContrast(color, mWeekView.getEventTextColor());
-                        Log.d(TAG, String.format("new color=%d %d %d, contrast=%f", Color.red(color), Color.green(color), Color.blue(color), lastContrast));
+                        //Log.d(TAG, String.format("new color=%d %d %d, contrast=%f", Color.red(color), Color.green(color), Color.blue(color), lastContrast));
 
                         if (hsv[2] == 0) break;
                     }
