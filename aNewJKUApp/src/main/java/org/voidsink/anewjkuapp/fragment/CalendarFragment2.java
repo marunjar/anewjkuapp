@@ -95,7 +95,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         // Set formatter for Date/Time
         mWeekView.setDateTimeInterpreter(this);
 
-        mWeekViewLoader.setDaysInPeriod(mWeekView.getNumberOfVisibleDays() * 3);
+        mWeekViewLoader.setDaysInPeriod(mWeekView.getNumberOfVisibleDays() * 4);
         mWeekView.setWeekViewLoader(mWeekViewLoader);
 
         mWeekView.setScrollListener(this);
@@ -426,48 +426,55 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
             return getEvents(periodIndex);
         }
 
-        public void loadPeriod(int periodIndex, boolean forceIt) {
+        public void loadPeriod(final int periodIndex, final boolean forceIt) {
 
-            int index = mLastLoadedPeriods.indexOf(periodIndex);
+            new Runnable() {
+                @Override
+                public void run() {
+                    android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
 
-            if (index < 0 || forceIt) {
-                int halfDaysInPeriod = mDaysInPeriod / 2;
+                    int index = mLastLoadedPeriods.indexOf(periodIndex);
+                    if (index < 0 || forceIt) {
+                        mLastLoadedPeriods.add(0, periodIndex);
 
-                Calendar now = Calendar.getInstance();
-                now.add(Calendar.DATE, periodIndex * mDaysInPeriod - halfDaysInPeriod);
-                now.set(Calendar.HOUR_OF_DAY, 0);
-                now.set(Calendar.MINUTE, 0);
-                now.set(Calendar.SECOND, 0);
-                now.set(Calendar.MILLISECOND, 0);
+                        int halfDaysInPeriod = mDaysInPeriod / 2;
 
-                Calendar then = Calendar.getInstance();
-                then.add(Calendar.DATE, periodIndex * mDaysInPeriod + halfDaysInPeriod);
-                now.set(Calendar.HOUR_OF_DAY, 23);
-                now.set(Calendar.MINUTE, 59);
-                now.set(Calendar.SECOND, 59);
-                now.set(Calendar.MILLISECOND, 999);
+                        Calendar now = Calendar.getInstance();
+                        now.add(Calendar.DATE, periodIndex * mDaysInPeriod - halfDaysInPeriod);
+                        now.set(Calendar.HOUR_OF_DAY, 0);
+                        now.set(Calendar.MINUTE, 0);
+                        now.set(Calendar.SECOND, 0);
+                        now.set(Calendar.MILLISECOND, 0);
 
-                Bundle args = new Bundle();
-                args.putLong(ARG_CAL_LOAD_NOW, now.getTimeInMillis());
-                args.putLong(ARG_CAL_LOAD_THEN, then.getTimeInMillis());
+                        Calendar then = Calendar.getInstance();
+                        then.add(Calendar.DATE, periodIndex * mDaysInPeriod + halfDaysInPeriod);
+                        now.set(Calendar.HOUR_OF_DAY, 23);
+                        now.set(Calendar.MINUTE, 59);
+                        now.set(Calendar.SECOND, 59);
+                        now.set(Calendar.MILLISECOND, 999);
 
-                Log.d(TAG, String.format("loadPeriod %d(%d)", periodIndex, index));
-                if (index >= 0) {
-                    mLastLoadedPeriods.remove(index);
-                    getLoaderManager().restartLoader(periodIndex, args, CalendarFragment2.this);
-                } else {
-                    getLoaderManager().initLoader(periodIndex, args, CalendarFragment2.this);
+                        Bundle args = new Bundle();
+                        args.putLong(ARG_CAL_LOAD_NOW, now.getTimeInMillis());
+                        args.putLong(ARG_CAL_LOAD_THEN, then.getTimeInMillis());
+
+                        Log.d(TAG, String.format("loadPeriod %d(%d)", periodIndex, index));
+                        if (index >= 0) {
+                            mLastLoadedPeriods.remove(index);
+                            getLoaderManager().restartLoader(periodIndex, args, CalendarFragment2.this);
+                        } else {
+                            getLoaderManager().initLoader(periodIndex, args, CalendarFragment2.this);
+                        }
+
+                        while (mLastLoadedPeriods.size() > 3) {
+                            int removed = mLastLoadedPeriods.remove(mLastLoadedPeriods.size() - 1);
+
+                            Log.d(TAG, String.format("period removed %d", removed));
+
+                            getLoaderManager().destroyLoader(removed);
+                        }
+                    }
                 }
-                mLastLoadedPeriods.add(0, periodIndex);
-
-                while (mLastLoadedPeriods.size() > 3) {
-                    int removed = mLastLoadedPeriods.remove(mLastLoadedPeriods.size() - 1);
-
-                    Log.d(TAG, String.format("period removed %d", removed));
-
-                    getLoaderManager().destroyLoader(removed);
-                }
-            }
+            }.run();
         }
     }
 }
