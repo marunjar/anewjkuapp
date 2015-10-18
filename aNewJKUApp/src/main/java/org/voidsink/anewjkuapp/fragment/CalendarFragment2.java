@@ -68,6 +68,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 public class CalendarFragment2 extends BaseFragment implements ContentObserverListener, WeekView.ScrollListener,
         WeekView.EventClickListener, DateTimeInterpreter, WeekView.EventLongPressListener, LoaderManager.LoaderCallbacks<Cursor> {
@@ -274,7 +275,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
                         + " = ? or "
                         + CalendarContractWrapper.Events
                         .CALENDAR_ID() + " = ? ) and "
-                        + CalendarContractWrapper.Events.DTEND()
+                        + CalendarContractWrapper.Events.DTSTART()
                         + " >= ? and "
                         + CalendarContractWrapper.Events.DTSTART()
                         + " <= ? and "
@@ -333,9 +334,18 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
                 data.moveToPrevious();
                 while (data.moveToNext()) {
 
+                    boolean allDay = data.getInt(ImportCalendarTask.COLUMN_EVENT_ALL_DAY) == 1;
+
                     Calendar startTime = Calendar.getInstance();
+                    if (allDay){
+                        startTime.setTimeZone(TimeZone.getTimeZone("GMT+0"));
+                    }
                     startTime.setTimeInMillis(data.getLong(ImportCalendarTask.COLUMN_EVENT_DTSTART));
+
                     Calendar endTime = Calendar.getInstance();
+                    if (allDay){
+                        endTime.setTimeZone(TimeZone.getTimeZone("GMT+0"));
+                    }
                     endTime.setTimeInMillis(data.getLong(ImportCalendarTask.COLUMN_EVENT_DTEND));
 
                     WeekViewEvent event = new WeekViewEvent(data.getLong(ImportCalendarTask.COLUMN_EVENT_ID),
@@ -447,17 +457,17 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
                         now.set(Calendar.MILLISECOND, 0);
 
                         Calendar then = Calendar.getInstance();
-                        then.add(Calendar.DATE, periodIndex * mDaysInPeriod + halfDaysInPeriod);
-                        now.set(Calendar.HOUR_OF_DAY, 23);
-                        now.set(Calendar.MINUTE, 59);
-                        now.set(Calendar.SECOND, 59);
-                        now.set(Calendar.MILLISECOND, 999);
+                        then.add(Calendar.DATE, periodIndex * mDaysInPeriod + halfDaysInPeriod - 1);
+                        then.set(Calendar.HOUR_OF_DAY, 23);
+                        then.set(Calendar.MINUTE, 59);
+                        then.set(Calendar.SECOND, 59);
+                        then.set(Calendar.MILLISECOND, 999);
 
                         Bundle args = new Bundle();
                         args.putLong(ARG_CAL_LOAD_NOW, now.getTimeInMillis());
                         args.putLong(ARG_CAL_LOAD_THEN, then.getTimeInMillis());
 
-                        Log.d(TAG, String.format("loadPeriod %d(%d)", periodIndex, index));
+                        //Log.d(TAG, String.format("loadPeriod %d(%d) %s - %s", periodIndex, index, SimpleDateFormat.getDateTimeInstance().format(now.getTime()), SimpleDateFormat.getDateTimeInstance().format(then.getTime())));
                         if (index >= 0) {
                             mLastLoadedPeriods.remove(index);
                             getLoaderManager().restartLoader(periodIndex, args, CalendarFragment2.this);
@@ -468,7 +478,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
                         while (mLastLoadedPeriods.size() > 3) {
                             int removed = mLastLoadedPeriods.remove(mLastLoadedPeriods.size() - 1);
 
-                            Log.d(TAG, String.format("period removed %d", removed));
+                            //Log.d(TAG, String.format("period removed %d", removed));
 
                             getLoaderManager().destroyLoader(removed);
                         }

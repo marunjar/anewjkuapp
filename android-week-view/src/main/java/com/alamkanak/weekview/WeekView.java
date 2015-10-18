@@ -20,7 +20,6 @@ import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.style.StyleSpan;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.HapticFeedbackConstants;
@@ -869,25 +868,26 @@ public class WeekView extends View {
         }
 
         // Prepare to calculate positions of each events.
-        ArrayList<EventRect> tempEvents = new ArrayList<EventRect>(mEventRects);
-        mEventRects = new ArrayList<EventRect>();
-        Calendar dayCounter = (Calendar) day.clone();
-        dayCounter.add(Calendar.MONTH, -1);
-        dayCounter.set(Calendar.DAY_OF_MONTH, 1);
-        Calendar maxDay = (Calendar) day.clone();
-        maxDay.add(Calendar.MONTH, 1);
-        maxDay.set(Calendar.DAY_OF_MONTH, maxDay.getActualMaximum(Calendar.DAY_OF_MONTH));
+        List<EventRect> tempEvents = mEventRects;
+        mEventRects = new ArrayList<>();
 
-        // Iterate through each day to calculate the position of the events.
-        while (dayCounter.getTimeInMillis() <= maxDay.getTimeInMillis()) {
-            ArrayList<EventRect> eventRects = new ArrayList<EventRect>();
-            for (EventRect eventRect : tempEvents) {
-                if (isSameDay(eventRect.event.getStartTime(), dayCounter))
-                    eventRects.add(eventRect);
+        while (tempEvents.size() > 0) {
+            ArrayList<EventRect> eventRects = new ArrayList<>(tempEvents.size());
+
+            EventRect reference = tempEvents.remove(0);
+            eventRects.add(reference);
+
+            int i = 0;
+            while (i < tempEvents.size()) {
+                EventRect event = tempEvents.get(i);
+                if (isSameDay(reference.event.getStartTime(), event.event.getStartTime())) {
+                    tempEvents.remove(i);
+                    eventRects.add(event);
+                } else {
+                    i++;
+                }
             }
-
             computePositionOfEvents(eventRects);
-            dayCounter.add(Calendar.DATE, 1);
         }
     }
 
@@ -897,18 +897,29 @@ public class WeekView extends View {
      */
     private void cacheEvent(WeekViewEvent event) {
         if (!isSameDay(event.getStartTime(), event.getEndTime())) {
-            Calendar endTime = (Calendar) event.getStartTime().clone();
-            endTime.set(Calendar.HOUR_OF_DAY, 23);
-            endTime.set(Calendar.MINUTE, 59);
-            Calendar startTime = (Calendar) event.getEndTime().clone();
-            startTime.set(Calendar.HOUR_OF_DAY, 0);
-            startTime.set(Calendar.MINUTE, 0);
-            WeekViewEvent event1 = new WeekViewEvent(event.getId(), event.getName(), event.getLocation(), event.getStartTime(), endTime);
+            WeekViewEvent event1 = new WeekViewEvent(event.getId(), event.getName(), event.getLocation(), event.getStartTime(), event.getEndTime());
             event1.setColor(event.getColor());
-            WeekViewEvent event2 = new WeekViewEvent(event.getId(), event.getName(), event.getLocation(), startTime, event.getEndTime());
-            event2.setColor(event.getColor());
+
+            do {
+                Calendar endTime = (Calendar) event1.getStartTime().clone();
+                endTime.set(Calendar.HOUR_OF_DAY, 23);
+                endTime.set(Calendar.MINUTE, 59);
+                endTime.set(Calendar.SECOND, 59);
+
+                Calendar nextstartTime = (Calendar) event1.getStartTime().clone();
+                nextstartTime.set(Calendar.HOUR_OF_DAY, 0);
+                nextstartTime.set(Calendar.MINUTE, 0);
+                nextstartTime.set(Calendar.SECOND, 0);
+                nextstartTime.add(Calendar.DAY_OF_YEAR, 1);
+
+                WeekViewEvent event2 = new WeekViewEvent(event1.getId(), event1.getName(), event1.getLocation(), event1.getStartTime(), endTime);
+                event2.setColor(event1.getColor());
+                mEventRects.add(new EventRect(event2, event, null));
+
+                event1.setStartTime(nextstartTime);
+            } while (!isSameDay(event1.getStartTime(), event1.getEndTime()));
+
             mEventRects.add(new EventRect(event1, event, null));
-            mEventRects.add(new EventRect(event2, event, null));
         }
         else
             mEventRects.add(new EventRect(event, event, null));
@@ -1520,7 +1531,7 @@ public class WeekView extends View {
 
             ViewCompat.postInvalidateOnAnimation(this);
 
-            //fireFirstVisibleDayChanged();
+            fireFirstVisibleDayChanged();
         }
     }
 
