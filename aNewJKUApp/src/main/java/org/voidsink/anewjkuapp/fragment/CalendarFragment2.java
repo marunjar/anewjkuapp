@@ -30,11 +30,13 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.graphics.ColorUtils;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -66,8 +68,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
-public class CalendarFragment2 extends BaseFragment implements ContentObserverListener, WeekView.ScrolledListener,
+public class CalendarFragment2 extends BaseFragment implements ContentObserverListener, WeekView.ScrollListener,
         WeekView.EventClickListener, DateTimeInterpreter, WeekView.EventLongPressListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = CalendarFragment2.class.getSimpleName();
@@ -93,10 +96,10 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         // Set formatter for Date/Time
         mWeekView.setDateTimeInterpreter(this);
 
-        mWeekViewLoader.setDaysInPeriod(mWeekView.getNumberOfVisibleDays() * 2);
+        mWeekViewLoader.setDaysInPeriod(mWeekView.getNumberOfVisibleDays() * 4);
         mWeekView.setWeekViewLoader(mWeekViewLoader);
 
-        mWeekView.setScrolledListener(this);
+        mWeekView.setScrollListener(this);
 
         return view;
     }
@@ -151,7 +154,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
 
     @Override
     protected String getScreenName() {
-        return Consts.SCREEN_CALENDAR;
+        return Consts.SCREEN_CALENDAR_2;
     }
 
     @Override
@@ -272,7 +275,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
                         + " = ? or "
                         + CalendarContractWrapper.Events
                         .CALENDAR_ID() + " = ? ) and "
-                        + CalendarContractWrapper.Events.DTEND()
+                        + CalendarContractWrapper.Events.DTSTART()
                         + " >= ? and "
                         + CalendarContractWrapper.Events.DTSTART()
                         + " <= ? and "
@@ -302,7 +305,25 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
                             null);
             if (cursor != null) {
                 while (cursor.moveToNext()) {
-                    mColors.put(cursor.getInt(0), cursor.getInt(1));
+                    int color = cursor.getInt(1);
+
+                    double lastContrast = ColorUtils.calculateContrast(color, mWeekView.getEventTextColor());
+                    //Log.d(TAG, String.format("color=%d %d %d, contrast=%f", Color.red(color), Color.green(color), Color.blue(color), lastContrast));
+
+                    while (lastContrast < 1.6) {
+                        float[] hsv = new float[3];
+
+                        Color.colorToHSV(color, hsv);
+                        hsv[2] = Math.max(0f, hsv[2] - 0.033f); // darken
+                        color = Color.HSVToColor(hsv);
+
+                        lastContrast = ColorUtils.calculateContrast(color, mWeekView.getEventTextColor());
+                        //Log.d(TAG, String.format("new color=%d %d %d, contrast=%f", Color.red(color), Color.green(color), Color.blue(color), lastContrast));
+
+                        if (hsv[2] == 0) break;
+                    }
+
+                    mColors.put(cursor.getInt(0), color);
                 }
                 cursor.close();
             }
@@ -313,9 +334,18 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
                 data.moveToPrevious();
                 while (data.moveToNext()) {
 
+                    boolean allDay = data.getInt(ImportCalendarTask.COLUMN_EVENT_ALL_DAY) == 1;
+
                     Calendar startTime = Calendar.getInstance();
+                    if (allDay){
+                        startTime.setTimeZone(TimeZone.getTimeZone("GMT+0"));
+                    }
                     startTime.setTimeInMillis(data.getLong(ImportCalendarTask.COLUMN_EVENT_DTSTART));
+
                     Calendar endTime = Calendar.getInstance();
+                    if (allDay){
+                        endTime.setTimeZone(TimeZone.getTimeZone("GMT+0"));
+                    }
                     endTime.setTimeInMillis(data.getLong(ImportCalendarTask.COLUMN_EVENT_DTEND));
 
                     WeekViewEvent event = new WeekViewEvent(data.getLong(ImportCalendarTask.COLUMN_EVENT_ID),
@@ -406,48 +436,55 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
             return getEvents(periodIndex);
         }
 
-        public void loadPeriod(int periodIndex, boolean forceIt) {
+        public void loadPeriod(final int periodIndex, final boolean forceIt) {
 
-            int index = mLastLoadedPeriods.indexOf(periodIndex);
+            new Runnable() {
+                @Override
+                public void run() {
+                    android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
 
-            if (index < 0 || forceIt) {
-                int halfDaysInPeriod = mDaysInPeriod / 2;
+                    int index = mLastLoadedPeriods.indexOf(periodIndex);
+                    if (index < 0 || forceIt) {
+                        mLastLoadedPeriods.add(0, periodIndex);
 
-                Calendar now = Calendar.getInstance();
-                now.add(Calendar.DATE, periodIndex * mDaysInPeriod - halfDaysInPeriod);
-                now.set(Calendar.HOUR_OF_DAY, 0);
-                now.set(Calendar.MINUTE, 0);
-                now.set(Calendar.SECOND, 0);
-                now.set(Calendar.MILLISECOND, 0);
+                        int halfDaysInPeriod = mDaysInPeriod / 2;
 
-                Calendar then = Calendar.getInstance();
-                then.add(Calendar.DATE, periodIndex * mDaysInPeriod + halfDaysInPeriod);
-                now.set(Calendar.HOUR_OF_DAY, 23);
-                now.set(Calendar.MINUTE, 59);
-                now.set(Calendar.SECOND, 59);
-                now.set(Calendar.MILLISECOND, 999);
+                        Calendar now = Calendar.getInstance();
+                        now.add(Calendar.DATE, periodIndex * mDaysInPeriod - halfDaysInPeriod);
+                        now.set(Calendar.HOUR_OF_DAY, 0);
+                        now.set(Calendar.MINUTE, 0);
+                        now.set(Calendar.SECOND, 0);
+                        now.set(Calendar.MILLISECOND, 0);
 
-                Bundle args = new Bundle();
-                args.putLong(ARG_CAL_LOAD_NOW, now.getTimeInMillis());
-                args.putLong(ARG_CAL_LOAD_THEN, then.getTimeInMillis());
+                        Calendar then = Calendar.getInstance();
+                        then.add(Calendar.DATE, periodIndex * mDaysInPeriod + halfDaysInPeriod - 1);
+                        then.set(Calendar.HOUR_OF_DAY, 23);
+                        then.set(Calendar.MINUTE, 59);
+                        then.set(Calendar.SECOND, 59);
+                        then.set(Calendar.MILLISECOND, 999);
 
-                Log.d(TAG, String.format("loadPeriod %d(%d)", periodIndex, index));
-                if (index >= 0) {
-                    mLastLoadedPeriods.remove(index);
-                    getLoaderManager().restartLoader(periodIndex, args, CalendarFragment2.this);
-                } else {
-                    getLoaderManager().initLoader(periodIndex, args, CalendarFragment2.this);
+                        Bundle args = new Bundle();
+                        args.putLong(ARG_CAL_LOAD_NOW, now.getTimeInMillis());
+                        args.putLong(ARG_CAL_LOAD_THEN, then.getTimeInMillis());
+
+                        //Log.d(TAG, String.format("loadPeriod %d(%d) %s - %s", periodIndex, index, SimpleDateFormat.getDateTimeInstance().format(now.getTime()), SimpleDateFormat.getDateTimeInstance().format(then.getTime())));
+                        if (index >= 0) {
+                            mLastLoadedPeriods.remove(index);
+                            getLoaderManager().restartLoader(periodIndex, args, CalendarFragment2.this);
+                        } else {
+                            getLoaderManager().initLoader(periodIndex, args, CalendarFragment2.this);
+                        }
+
+                        while (mLastLoadedPeriods.size() > 3) {
+                            int removed = mLastLoadedPeriods.remove(mLastLoadedPeriods.size() - 1);
+
+                            //Log.d(TAG, String.format("period removed %d", removed));
+
+                            getLoaderManager().destroyLoader(removed);
+                        }
+                    }
                 }
-                mLastLoadedPeriods.add(0, periodIndex);
-
-                while (mLastLoadedPeriods.size() > 3) {
-                    int removed = mLastLoadedPeriods.remove(mLastLoadedPeriods.size() - 1);
-
-                    Log.d(TAG, String.format("period removed %d", removed));
-
-                    getLoaderManager().destroyLoader(removed);
-                }
-            }
+            }.run();
         }
     }
 }

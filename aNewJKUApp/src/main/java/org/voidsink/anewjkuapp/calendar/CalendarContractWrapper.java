@@ -414,5 +414,13 @@ public final class CalendarContractWrapper {
                 return SYNC_LOCAL_ID();
             }
         }
+
+        public static String ALL_DAY() {
+            if (useSDK()) {
+                return CalendarContract.Events.ALL_DAY;
+            } else {
+                return "allDay";
+            }
+        }
     }
 }

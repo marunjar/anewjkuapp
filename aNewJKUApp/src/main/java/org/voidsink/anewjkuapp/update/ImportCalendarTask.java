@@ -109,7 +109,8 @@ public class ImportCalendarTask implements Callable<Void> {
             CalendarContractWrapper.Events.DIRTY(),
             CalendarContractWrapper.Events.DELETED(),
             CalendarContractWrapper.Events.CALENDAR_ID(),
-            CalendarContractWrapper.Events._SYNC_ID()};
+            CalendarContractWrapper.Events._SYNC_ID(),
+            CalendarContractWrapper.Events.ALL_DAY()};
 
     public static final String[] EXTENDED_PROPERTIES_PROJECTION = new String[]{
             CalendarContract.ExtendedProperties.EVENT_ID,
@@ -129,6 +130,7 @@ public class ImportCalendarTask implements Callable<Void> {
     public static final int COLUMN_EVENT_DELETED = 8;
     public static final int COLUMN_EVENT_CAL_ID = 9;
     public static final int COLUMN_EVENT_KUSSS_ID_LEGACY = 10;
+    public static final int COLUMN_EVENT_ALL_DAY = 11;
 
     public ImportCalendarTask(Account account, Context context,
                               String getTypeID, CalendarBuilder calendarBuilder) {

@@ -18,6 +18,7 @@
     app:headerRowPadding="12dp"
     app:hourHeight="60dp"
     app:hourSeparatorColor="@color/divider"
+    app:minHourHeight="30dp"
     app:noOfVisibleDays="3"
     app:nowLineColor="?attr/nowLineColor"
     app:nowLineThickness="2dp"
