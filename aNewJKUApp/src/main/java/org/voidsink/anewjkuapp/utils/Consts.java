@@ -70,6 +70,7 @@ public class Consts {
     //strings for logging of screens
 
     public static final String SCREEN_CALENDAR = "/calendar";
+    public static final String SCREEN_CALENDAR_2 = "/calendar2";
     public static final String SCREEN_EXAMS = "/exams";
     public static final String SCREEN_ASSESSMENTS = "/assessments";
     public static final String SCREEN_COURSES = "/courses";

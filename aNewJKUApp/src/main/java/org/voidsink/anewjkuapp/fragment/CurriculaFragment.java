@@ -253,4 +253,9 @@ public class CurriculaFragment extends BaseFragment implements
             mText = (TextView) itemView.findViewById(R.id.list_header_text);
         }
     }
+
+    @Override
+    protected String getScreenName() {
+        return Consts.SCREEN_CURRICULA;
+    }
 }

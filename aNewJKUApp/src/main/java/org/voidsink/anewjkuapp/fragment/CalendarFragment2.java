@@ -154,7 +154,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
 
     @Override
     protected String getScreenName() {
-        return Consts.SCREEN_CALENDAR;
+        return Consts.SCREEN_CALENDAR_2;
     }
 
     @Override
