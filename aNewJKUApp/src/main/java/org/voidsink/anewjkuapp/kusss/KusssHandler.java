@@ -283,11 +283,18 @@ public class KusssHandler {
             conn.setRequestProperty("Cookie", getCookieString());
             conn.setConnectTimeout(5000);
             conn.setReadTimeout(15000);
+            conn.setRequestMethod("POST");
 
             writeParams(conn, new String[]{"selectAll"},
                     new String[]{"ical.category.mycourses"});
 
+            Log.d(TAG, String.format("getLVAIcal: RequestMethod: %s", conn.getContentType()));
+            if (!conn.getContentType().contains("text/calendar")) {
+                throw new IOException(String.format("wrong content type: %s", conn.getContentType()));
+            }
+
             long length = copyStream(conn.getInputStream(), data);
+
             conn.disconnect();
 
             if (length > 0) {
@@ -324,11 +331,18 @@ public class KusssHandler {
             conn.setRequestProperty("Cookie", getCookieString());
             conn.setConnectTimeout(5000);
             conn.setReadTimeout(15000);
+            conn.setRequestMethod("POST");
 
             writeParams(conn, new String[]{"selectAll"},
                     new String[]{"ical.category.examregs"});
 
+            Log.d(TAG, String.format("getExamIcal: RequestMethod: %s", conn.getContentType()));
+            if (!conn.getContentType().contains("text/calendar")) {
+                throw new IOException(String.format("wrong content type: %s", conn.getContentType()));
+            }
+
             long length = copyStream(conn.getInputStream(), data);
+
             conn.disconnect();
 
             /*
