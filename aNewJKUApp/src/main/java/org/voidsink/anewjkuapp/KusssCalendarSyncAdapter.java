@@ -108,25 +108,25 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
             return;
         }
 
-        mExecutorService = Executors.newSingleThreadExecutor();
-
         Looper.prepare();
 
-        AppUtils.executeEm(mExecutorService, mContext,
-                new Callable[]{
-                        new ImportCalendarTask(account, extras,
-                                authority, provider, syncResult, getContext(),
-                                CalendarUtils.ARG_CALENDAR_EXAM, mCalendarBuilder),
-                        new ImportCalendarTask(account, extras, authority, provider,
-                                syncResult, getContext(),
-                                CalendarUtils.ARG_CALENDAR_COURSE, mCalendarBuilder)
-                },
-                true
-        );
-
-        KusssHandler.getInstance().logout(mContext);
-
-        mExecutorService.shutdown();
+        mExecutorService = Executors.newSingleThreadExecutor();
+        try {
+            AppUtils.executeEm(mExecutorService, mContext,
+                    new Callable[]{
+                            new ImportCalendarTask(account, extras,
+                                    authority, provider, syncResult, getContext(),
+                                    CalendarUtils.ARG_CALENDAR_EXAM, mCalendarBuilder),
+                            new ImportCalendarTask(account, extras, authority, provider,
+                                    syncResult, getContext(),
+                                    CalendarUtils.ARG_CALENDAR_COURSE, mCalendarBuilder)
+                    },
+                    true
+            );
+        } finally {
+            mExecutorService.shutdown();
+            KusssHandler.getInstance().logout(mContext);
+        }
     }
 
     @Override
