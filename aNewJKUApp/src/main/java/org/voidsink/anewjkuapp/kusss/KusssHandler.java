@@ -290,17 +290,18 @@ public class KusssHandler {
 
             Log.d(TAG, String.format("getLVAIcal: RequestMethod: %s", conn.getContentType()));
             if (!conn.getContentType().contains("text/calendar")) {
-                throw new IOException(String.format("wrong content type: %s", conn.getContentType()));
-            }
-
-            long length = copyStream(conn.getInputStream(), data);
-
-            conn.disconnect();
-
-            if (length > 0) {
-                iCal = mCalendarBuilder.build(new ByteArrayInputStream(getModifiedData(data)));
+                conn.disconnect();
+                return null;
             } else {
-                iCal = new Calendar();
+                long length = copyStream(conn.getInputStream(), data);
+
+                conn.disconnect();
+
+                if (length > 0) {
+                    iCal = mCalendarBuilder.build(new ByteArrayInputStream(getModifiedData(data)));
+                } else {
+                    iCal = new Calendar();
+                }
             }
         } catch (ParserException e) {
             Log.e(TAG, "getLVAIcal: " + data.toString(), e);
@@ -338,22 +339,23 @@ public class KusssHandler {
 
             Log.d(TAG, String.format("getExamIcal: RequestMethod: %s", conn.getContentType()));
             if (!conn.getContentType().contains("text/calendar")) {
-                throw new IOException(String.format("wrong content type: %s", conn.getContentType()));
-            }
-
-            long length = copyStream(conn.getInputStream(), data);
-
-            conn.disconnect();
-
-            /*
-            AssetManager am = c.getAssets();
-            long length = copyStream(am.open("ical1.ics", AssetManager.ACCESS_STREAMING), data);
-            */
-
-            if (length > 0) {
-                iCal = mCalendarBuilder.build(new ByteArrayInputStream(getModifiedData(data)));
+                conn.disconnect();
+                return null;
             } else {
-                iCal = new Calendar();
+                long length = copyStream(conn.getInputStream(), data);
+
+                conn.disconnect();
+
+                /*
+                AssetManager am = c.getAssets();
+                long length = copyStream(am.open("ical1.ics", AssetManager.ACCESS_STREAMING), data);
+                */
+
+                if (length > 0) {
+                    iCal = mCalendarBuilder.build(new ByteArrayInputStream(getModifiedData(data)));
+                } else {
+                    iCal = new Calendar();
+                }
             }
         } catch (ParserException e) {
             Log.e(TAG, "getExamIcal: " + data.toString(), e);
