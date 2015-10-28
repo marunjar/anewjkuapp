@@ -466,7 +466,7 @@ public class KusssContentProvider extends ContentProvider {
 
         if (mCurriculum.size() == 0) {
 
-            ExecutorService es = Executors.newFixedThreadPool(1);
+            ExecutorService es = Executors.newSingleThreadExecutor();
             try {
                 es.submit(new ImportCurriculaTask(AppUtils.getAccount(context), context)).get();
             } catch (InterruptedException | ExecutionException e) {

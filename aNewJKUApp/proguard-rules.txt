@@ -55,3 +55,6 @@ public void *(android.view.View);
 -keep class android.support.v7.preference.** { *; }
 -keep interface android.support.v7.preference.** { *; }
 -keep public class * extends android.support.v7.preference.Preference { *; }
+
+#fixes NavigationDrawer for com.android.support:design:23.1.0
+-keep class android.support.v7.widget.LinearLayoutManager { *; }

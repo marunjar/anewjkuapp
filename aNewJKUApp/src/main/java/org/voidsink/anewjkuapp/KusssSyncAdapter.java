@@ -110,25 +110,26 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
             return;
         }
 
-        this.mExecutorService = Executors.newSingleThreadExecutor();
-
         Looper.prepare();
 
-        AppUtils.executeEm(mExecutorService, mContext,
-                new Callable[]{
-                        new ImportCurriculaTask(account, extras,
-                                authority, provider, syncResult, mContext),
-                        new ImportCourseTask(account, extras,
-                                authority, provider, syncResult, mContext),
-                        new ImportAssessmentTask(account, extras,
-                                authority, provider, syncResult, mContext),
-                        new ImportExamTask(account, extras,
-                                authority, provider, syncResult, mContext)},
-                true);
+        this.mExecutorService = Executors.newSingleThreadExecutor();
+        try {
+            AppUtils.executeEm(mExecutorService, mContext,
+                    new Callable[]{
+                            new ImportCurriculaTask(account, extras,
+                                    authority, provider, syncResult, mContext),
+                            new ImportCourseTask(account, extras,
+                                    authority, provider, syncResult, mContext),
+                            new ImportAssessmentTask(account, extras,
+                                    authority, provider, syncResult, mContext),
+                            new ImportExamTask(account, extras,
+                                    authority, provider, syncResult, mContext)},
+                    true);
 
-        KusssHandler.getInstance().logout(mContext);
-
-        this.mExecutorService.shutdown();
+        } finally {
+            this.mExecutorService.shutdown();
+            KusssHandler.getInstance().logout(mContext);
+        }
     }
 
     @Override

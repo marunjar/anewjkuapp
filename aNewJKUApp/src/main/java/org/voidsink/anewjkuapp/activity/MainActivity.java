@@ -562,7 +562,7 @@ public class MainActivity extends ThemedActivity {
     }
 
     private void checkNavItem(MenuItem menuItem) {
-        if (mNavigationView != null) {
+        /*if (mNavigationView != null) {
             if (menuItem != null) {
                 if (menuItem.isCheckable() && !menuItem.isChecked()) {
                     // iterate over all items and uncheck them, groups doesn't work with submenus for grouping entries in NavigationView
@@ -571,7 +571,7 @@ public class MainActivity extends ThemedActivity {
                     menuItem.setChecked(true);
                 }
             }
-        }
+        }*/
     }
 
     @Override
