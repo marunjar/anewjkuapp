@@ -72,7 +72,7 @@ dependencies {
     compile 'com.android.support:preference-v7:23.1.0'
     compile 'com.android.support:preference-v14:23.1.0'
     compile 'com.android.support:design:23.1.0'
-    googleCompile 'com.google.android.gms:play-services-analytics:8.1.0'
+    googleCompile 'com.google.android.gms:play-services-analytics:8.3.0'
     compile 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
     compile 'org.mapsforge:mapsforge-core:0.5.2'
     compile 'org.mapsforge:mapsforge-map:0.5.2'
@@ -84,13 +84,13 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.6.1'
     //compile 'com.github.alamkanak:android-week-view:1.2.3'
     compile 'de.cketti.library.changelog:ckchangelog:1.2.2'
-    compile('com.mikepenz:aboutlibraries:5.2.5@aar') {
+    compile('com.mikepenz:aboutlibraries:5.3.2@aar') {
         transitive = true
     }
     compile project(':sectionedRecyclerAdapter')
     compile project(':android-week-view')
     //compile project(':kussslibrary')
-    compile 'com.github.PhilJay:MPAndroidChart:v2.1.5'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
 }
 
 def appendVersionNameVersionCode(variant, defaultConfig) {

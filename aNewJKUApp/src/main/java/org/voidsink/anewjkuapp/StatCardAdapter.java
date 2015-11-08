@@ -434,7 +434,8 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         initBaseChart(barChart);
 
         barChart.setPinchZoom(false);
-        barChart.setHighlightEnabled(false);
+        barChart.setHighlightPerTapEnabled(false);
+        barChart.setHighlightPerDragEnabled(false);
         barChart.setDrawBarShadow(false);
         barChart.setDrawValueAboveBar(false);
 
