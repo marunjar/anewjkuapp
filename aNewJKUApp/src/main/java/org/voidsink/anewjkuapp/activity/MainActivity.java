@@ -343,7 +343,7 @@ public class MainActivity extends ThemedActivity {
                     PreferenceWrapper.setPrefUserLearnedDrawer(MainActivity.this, true);
                 }
 
-                TextView mDrawerUser = (TextView) mNavigationView.findViewById(R.id.drawer_user);
+                TextView mDrawerUser = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.drawer_user);
 
                 if (mDrawerUser != null) {
                     if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
