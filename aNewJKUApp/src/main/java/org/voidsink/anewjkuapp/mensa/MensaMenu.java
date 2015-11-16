@@ -57,6 +57,19 @@ public class MensaMenu implements IMenu {
         }
     }
 
+    public MensaMenu(String name, String soup, String meal, double price) {
+        this(name, soup, meal, price, price, 0);
+    }
+
+    public MensaMenu(String name, String soup, String meal, double price, double priceBig, double oehBonus) {
+        this.name = name;
+        this.soup = soup;
+        this.meal = meal;
+        this.price = price;
+        this.priceBig = priceBig;
+        this.oehBonus = oehBonus;
+    }
+
     @Override
     public String getName() {
         return this.name;
