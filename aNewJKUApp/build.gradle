@@ -3,7 +3,7 @@ android {
     signingConfigs {
     }
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.2"
     defaultConfig {
         applicationId "org.voidsink.anewjkuapp"
         versionCode 140046
@@ -78,13 +78,13 @@ dependencies {
     compile 'org.mapsforge:mapsforge-map:0.5.2'
     compile 'org.mapsforge:mapsforge-map-android:0.5.2'
     compile 'org.jsoup:jsoup:1.8.3'
-    compile 'org.mnode.ical4j:ical4j:1.0.6'
+    compile 'org.mnode.ical4j:ical4j:1.0.7'
     compile 'org.mnode.ical4j:ical4j-extensions:0.9.2'
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
     compile 'com.github.bumptech.glide:glide:3.6.1'
     //compile 'com.github.alamkanak:android-week-view:1.2.3'
     compile 'de.cketti.library.changelog:ckchangelog:1.2.2'
-    compile('com.mikepenz:aboutlibraries:5.3.2@aar') {
+    compile('com.mikepenz:aboutlibraries:5.3.3@aar') {
         transitive = true
     }
     compile project(':sectionedRecyclerAdapter')
