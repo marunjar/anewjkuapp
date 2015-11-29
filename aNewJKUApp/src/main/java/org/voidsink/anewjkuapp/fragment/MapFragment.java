@@ -67,7 +67,7 @@ import org.mapsforge.map.layer.labels.LabelLayer;
 import org.mapsforge.map.layer.overlay.Marker;
 import org.mapsforge.map.layer.renderer.TileRendererLayer;
 import org.mapsforge.map.model.MapViewPosition;
-import org.mapsforge.map.reader.MapDataStore;
+import org.mapsforge.map.datastore.MapDataStore;
 import org.mapsforge.map.reader.MapFile;
 import org.mapsforge.map.rendertheme.InternalRenderTheme;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
@@ -166,13 +166,15 @@ public class MapFragment extends BaseFragment implements
                 .appendPath(query).build();
         Cursor c = cr.query(searchUri, ImportPoiTask.POI_PROJECTION, null,
                 null, null);
-        while (c.moveToNext()) {
-            Poi p = new Poi(c);
-            if (!isExactLocation || p.getName().equalsIgnoreCase(query)) {
-                pois.add(p);
+        if (c != null) {
+            while (c.moveToNext()) {
+                Poi p = new Poi(c);
+                if (!isExactLocation || p.getName().equalsIgnoreCase(query)) {
+                    pois.add(p);
+                }
             }
+            c.close();
         }
-        c.close();
 
         if (pois.size() == 0) {
             Toast.makeText(getContext(), String.format(getContext().getString(R.string.map_place_not_found), query), Toast.LENGTH_LONG)
@@ -222,14 +224,16 @@ public class MapFragment extends BaseFragment implements
 
         Cursor c = cr
                 .query(uri, ImportPoiTask.POI_PROJECTION, null, null, null);
-        if (c.moveToNext()) {
-            String name = c.getString(ImportPoiTask.COLUMN_POI_NAME);
-            double lon = c.getDouble(ImportPoiTask.COLUMN_POI_LON);
-            double lat = c.getDouble(ImportPoiTask.COLUMN_POI_LAT);
+        if (c != null) {
+            if (c.moveToNext()) {
+                String name = c.getString(ImportPoiTask.COLUMN_POI_NAME);
+                double lon = c.getDouble(ImportPoiTask.COLUMN_POI_LON);
+                double lat = c.getDouble(ImportPoiTask.COLUMN_POI_LAT);
 
-            setNewGoal(new LatLong(lat, lon), name);
+                setNewGoal(new LatLong(lat, lon), name);
+            }
+            c.close();
         }
-        c.close();
 
         if (mSearchView != null) {
             mSearchView.setQuery("", false);
