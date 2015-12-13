@@ -408,7 +408,19 @@ public class WeekView extends View {
 
             @Override
             public boolean onScale(ScaleGestureDetector detector) {
-                mNewHourHeight = Math.round(mHourHeight * detector.getScaleFactor());
+                final float scale = detector.getScaleFactor();
+
+                mNewHourHeight = Math.round(mHourHeight * scale);
+
+                // Grab focus
+                final float centerY = detector.getFocusY();
+                // Calculating difference
+                float diffY = centerY - mCurrentOrigin.y;
+                // Scaling difference
+                diffY = diffY * scale - diffY;
+                // Updating week view origin
+                mCurrentOrigin.y -= diffY;
+
                 invalidate();
                 return true;
             }
@@ -508,7 +520,6 @@ public class WeekView extends View {
             else if (mNewHourHeight > mMaxHourHeight)
                 mNewHourHeight = mMaxHourHeight;
 
-            mCurrentOrigin.y = (mCurrentOrigin.y/mHourHeight)*mNewHourHeight;
             mHourHeight = mNewHourHeight;
             mNewHourHeight = -1;
         }

@@ -32,8 +32,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="false"
-        android:theme="@style/AppTheme.Launch"
-        tools:replace="android:allowBackup">
+        android:theme="@style/AppTheme.Launch">
 
         <activity
             android:name="org.voidsink.anewjkuapp.activity.MainActivity"
