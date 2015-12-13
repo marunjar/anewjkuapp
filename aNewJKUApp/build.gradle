@@ -1,3 +1,7 @@
+repositories {
+    maven { url "https://jitpack.io" }
+}
+
 apply plugin: 'com.android.application'
 android {
     signingConfigs {

@@ -24,7 +24,8 @@
     app:nowLineThickness="2dp"
     app:overlappingEventGap="1dp"
     app:pastBackgroundColor="?attr/pastBackgroundColor"
+    app:showDistinctPastFutureColor="true"
+    app:showNowLine="true"
     app:textSize="12sp"
     app:todayBackgroundColor="@color/divider"
-    app:todayHeaderTextColor="?android:attr/textColorPrimary"
-    app:useNewColoringStyle="true"/>
+    app:todayHeaderTextColor="?android:attr/textColorPrimary"/>
