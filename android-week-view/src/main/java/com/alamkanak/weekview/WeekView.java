@@ -14,6 +14,7 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.text.Layout;
 import android.text.SpannableStringBuilder;
 import android.text.StaticLayout;
@@ -29,6 +30,7 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.SoundEffectConstants;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.OverScroller;
 
 import java.text.SimpleDateFormat;
@@ -44,6 +46,10 @@ import java.util.Locale;
  * Website: http://alamkanak.github.io/
  */
 public class WeekView extends View {
+
+    private enum Direction {
+        NONE, LEFT, RIGHT, VERTICAL
+    }
 
     @Deprecated
     public static final int LENGTH_SHORT = 1;
@@ -74,9 +80,9 @@ public class WeekView extends View {
     private Paint mEventBackgroundPaint;
     private float mHeaderColumnWidth;
     private List<EventRect> mEventRects;
-    private List<WeekViewEvent> mPreviousPeriodEvents;
-    private List<WeekViewEvent> mCurrentPeriodEvents;
-    private List<WeekViewEvent> mNextPeriodEvents;
+    private List<? extends WeekViewEvent> mPreviousPeriodEvents;
+    private List<? extends WeekViewEvent> mCurrentPeriodEvents;
+    private List<? extends WeekViewEvent> mNextPeriodEvents;
     private TextPaint mEventTextPaint;
     private Paint mHeaderColumnBackgroundPaint;
     private int mFetchedPeriod = -1; // the middle period the calendar has fetched.
@@ -87,7 +93,8 @@ public class WeekView extends View {
     private Calendar mFirstVisibleDay;
     private Calendar mLastVisibleDay;
     private int mDefaultEventColor;
-
+    private int mMinimumFlingVelocity = 0;
+    private int mScaledTouchSlop = 0;
     // Attributes and their default values.
     private int mHourHeight = 50;
     private int mNewHourHeight = -1;
@@ -153,20 +160,40 @@ public class WeekView extends View {
             if (mIsZooming)
                 return true;
 
-            // Calculate the direction to scroll.
-            if (mCurrentScrollDirection == Direction.NONE) {
-                // allow scrolling only in one direction
-                if (Math.abs(distanceX) > Math.abs(distanceY)){
-                    mCurrentScrollDirection = Direction.HORIZONTAL;
+            switch (mCurrentScrollDirection) {
+                case NONE: {
+                    // allow scrolling only in one direction
+                    if (Math.abs(distanceX) > Math.abs(distanceY)) {
+                        if (distanceX > 0) {
+                            mCurrentScrollDirection = Direction.LEFT;
+                        } else {
+                            mCurrentScrollDirection = Direction.RIGHT;
+                        }
+                    } else {
+                        mCurrentScrollDirection = Direction.VERTICAL;
+                    }
+                    break;
                 }
-                else {
-                    mCurrentScrollDirection = Direction.VERTICAL;
+                case LEFT: {
+                    // change direction if there was enough change
+                    if (Math.abs(distanceX) > Math.abs(distanceY) && (distanceX < -mScaledTouchSlop)) {
+                        mCurrentScrollDirection = Direction.RIGHT;
+                    }
+                    break;
+                }
+                case RIGHT: {
+                    // change direction if there was enough change
+                    if (Math.abs(distanceX) > Math.abs(distanceY) && (distanceX > mScaledTouchSlop)) {
+                        mCurrentScrollDirection = Direction.LEFT;
+                    }
+                    break;
                 }
             }
 
             // Calculate the new origin after scroll.
             switch (mCurrentScrollDirection) {
-                case HORIZONTAL:
+                case LEFT:
+                case RIGHT:
                     mCurrentOrigin.x -= distanceX * mXScrollingSpeed;
                     ViewCompat.postInvalidateOnAnimation(WeekView.this);
                     break;
@@ -180,14 +207,20 @@ public class WeekView extends View {
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            if (mIsZooming)
+                return true;
+
             mScroller.forceFinished(true);
 
             mCurrentFlingDirection = mCurrentScrollDirection;
-            if (mCurrentFlingDirection == Direction.HORIZONTAL){
-                mScroller.fling((int) mCurrentOrigin.x, (int) mCurrentOrigin.y, (int) (velocityX * mXScrollingSpeed), 0, Integer.MIN_VALUE, Integer.MAX_VALUE, (int) -(mHourHeight * 24 + mHeaderTextHeight + mHeaderRowPadding * 2 + mHeaderMarginBottom + mTimeTextHeight/2 - getHeight()), 0);
-            }
-            else if (mCurrentFlingDirection == Direction.VERTICAL){
-                mScroller.fling((int) mCurrentOrigin.x, (int) mCurrentOrigin.y, 0, (int) velocityY, Integer.MIN_VALUE, Integer.MAX_VALUE, (int) -(mHourHeight * 24 + mHeaderTextHeight + mHeaderRowPadding * 2 + mHeaderMarginBottom + mTimeTextHeight/2 - getHeight()), 0);
+            switch (mCurrentFlingDirection) {
+                case LEFT:
+                case RIGHT:
+                    mScroller.fling((int) mCurrentOrigin.x, (int) mCurrentOrigin.y, (int) (velocityX * mXScrollingSpeed), 0, Integer.MIN_VALUE, Integer.MAX_VALUE, (int) -(mHourHeight * 24 + mHeaderTextHeight + mHeaderRowPadding * 2 + mHeaderMarginBottom + mTimeTextHeight / 2 - getHeight()), 0);
+                    break;
+                case VERTICAL:
+                    mScroller.fling((int) mCurrentOrigin.x, (int) mCurrentOrigin.y, 0, (int) velocityY, Integer.MIN_VALUE, Integer.MAX_VALUE, (int) -(mHourHeight * 24 + mHeaderTextHeight + mHeaderRowPadding * 2 + mHeaderMarginBottom + mTimeTextHeight/2 - getHeight()), 0);
+                    break;
             }
 
             ViewCompat.postInvalidateOnAnimation(WeekView.this);
@@ -248,10 +281,6 @@ public class WeekView extends View {
             }
         }
     };
-
-    private enum Direction {
-        NONE, HORIZONTAL, VERTICAL
-    }
 
     public WeekView(Context context) {
         this(context, null);
@@ -316,7 +345,10 @@ public class WeekView extends View {
     private void init() {
         // Scrolling initialization.
         mGestureDetector = new GestureDetectorCompat(mContext, mGestureListener);
-        mScroller = new OverScroller(mContext);
+        mScroller = new OverScroller(mContext, new FastOutLinearInInterpolator());
+
+        mMinimumFlingVelocity = ViewConfiguration.get(mContext).getScaledMinimumFlingVelocity();
+        mScaledTouchSlop = ViewConfiguration.get(mContext).getScaledTouchSlop();
 
         // Measure settings for time column.
         mTimeTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -466,7 +498,7 @@ public class WeekView extends View {
         // Draw the background color for the header column.
         canvas.drawRect(0, mHeaderTextHeight + mHeaderRowPadding * 2, mHeaderColumnWidth, getHeight(), mHeaderColumnBackgroundPaint);
 
-        // only paint in left column
+        // Clip to paint in left column only
         canvas.clipRect(0, mHeaderTextHeight + mHeaderRowPadding * 2, mHeaderColumnWidth, getHeight(), Region.Op.REPLACE);
 
         for (int i = 0; i < 24; i++) {
@@ -557,8 +589,8 @@ public class WeekView extends View {
             }
         }
 
-        // clip rect to events
-        canvas.clipRect(mHeaderColumnWidth, mHeaderTextHeight + mHeaderRowPadding * 2, getWidth(), getHeight(), Region.Op.REPLACE);
+        // Clip to paint events only
+        canvas.clipRect(mHeaderColumnWidth, mHeaderTextHeight + mHeaderRowPadding * 2 + mHeaderMarginBottom + mTimeTextHeight/2, getWidth(), getHeight(), Region.Op.REPLACE);
 
         // Iterate through each day.
         for (int dayNumber = leftDaysWithGaps + 1;
@@ -640,7 +672,7 @@ public class WeekView extends View {
         }
 
 
-        // clip to header row
+        // Clip to paint header row only
         canvas.clipRect(mHeaderColumnWidth, 0, getWidth(), mHeaderTextHeight + mHeaderRowPadding * 2, Region.Op.REPLACE);
 
         // Draw the header background.
@@ -730,15 +762,14 @@ public class WeekView extends View {
                         right -= mOverlappingEventGap;
 
                     // Draw the event and the event name on top of it.
-                    RectF eventRectF = new RectF(left, top, right, bottom);
                     if (bottom > mHeaderTextHeight + mHeaderRowPadding * 2 + mHeaderMarginBottom + mTimeTextHeight/2 && left < right &&
-                            eventRectF.right > mHeaderColumnWidth &&
-                            eventRectF.left < getWidth() &&
-                            eventRectF.bottom > mHeaderTextHeight + mHeaderRowPadding * 2 + mTimeTextHeight / 2 + mHeaderMarginBottom &&
-                            eventRectF.top < getHeight() &&
+                            right > mHeaderColumnWidth &&
+                            left < getWidth() &&
+                            bottom > mHeaderTextHeight + mHeaderRowPadding * 2 + mTimeTextHeight / 2 + mHeaderMarginBottom &&
+                            top < getHeight() &&
                             left < right
                             ) {
-                        mEventRects.get(i).rectF = eventRectF;
+                        mEventRects.get(i).rectF = new RectF(left, top, right, bottom);
                         mEventBackgroundPaint.setColor(mEventRects.get(i).event.getColor() == 0 ? mDefaultEventColor : mEventRects.get(i).event.getColor());
                         canvas.drawRoundRect(mEventRects.get(i).rectF, mEventCornerRadius, mEventCornerRadius, mEventBackgroundPaint);
                         drawEventTitle(mEventRects.get(i).event, mEventRects.get(i).rectF, canvas, top, left);
@@ -875,9 +906,9 @@ public class WeekView extends View {
         if (mWeekViewLoader != null){
             int periodToFetch = (int) mWeekViewLoader.toWeekViewPeriodIndex(day);
             if (!isInEditMode() && (mFetchedPeriod < 0 || mFetchedPeriod != periodToFetch || mRefreshEvents)) {
-                List<WeekViewEvent> previousPeriodEvents = null;
-                List<WeekViewEvent> currentPeriodEvents = null;
-                List<WeekViewEvent> nextPeriodEvents = null;
+                List<? extends WeekViewEvent> previousPeriodEvents = null;
+                List<? extends WeekViewEvent> currentPeriodEvents = null;
+                List<? extends WeekViewEvent> nextPeriodEvents = null;
 
                 if (mPreviousPeriodEvents != null && mCurrentPeriodEvents != null && mNextPeriodEvents != null){
                     if (periodToFetch == mFetchedPeriod-1){
@@ -947,30 +978,42 @@ public class WeekView extends View {
      * @param event The event to cache.
      */
     private void cacheEvent(WeekViewEvent event) {
+        if(event.getStartTime().compareTo(event.getEndTime()) >= 0)
+            return;
         if (!isSameDay(event.getStartTime(), event.getEndTime())) {
-            WeekViewEvent event1 = new WeekViewEvent(event.getId(), event.getName(), event.getLocation(), event.getStartTime(), event.getEndTime());
+            // Add first day.
+            Calendar endTime = (Calendar) event.getStartTime().clone();
+            endTime.set(Calendar.HOUR_OF_DAY, 23);
+            endTime.set(Calendar.MINUTE, 59);
+            WeekViewEvent event1 = new WeekViewEvent(event.getId(), event.getName(), event.getLocation(), event.getStartTime(), endTime);
             event1.setColor(event.getColor());
-
-            do {
-                Calendar endTime = (Calendar) event1.getStartTime().clone();
-                endTime.set(Calendar.HOUR_OF_DAY, 23);
-                endTime.set(Calendar.MINUTE, 59);
-                endTime.set(Calendar.SECOND, 59);
-
-                Calendar nextstartTime = (Calendar) event1.getStartTime().clone();
-                nextstartTime.set(Calendar.HOUR_OF_DAY, 0);
-                nextstartTime.set(Calendar.MINUTE, 0);
-                nextstartTime.set(Calendar.SECOND, 0);
-                nextstartTime.add(Calendar.DAY_OF_YEAR, 1);
-
-                WeekViewEvent event2 = new WeekViewEvent(event1.getId(), event1.getName(), event1.getLocation(), event1.getStartTime(), endTime);
-                event2.setColor(event1.getColor());
-                mEventRects.add(new EventRect(event2, event, null));
-
-                event1.setStartTime(nextstartTime);
-            } while (!isSameDay(event1.getStartTime(), event1.getEndTime()));
-
             mEventRects.add(new EventRect(event1, event, null));
+
+            // Add other days.
+            Calendar otherDay = (Calendar) event.getStartTime().clone();
+            otherDay.add(Calendar.DATE, 1);
+            while (!isSameDay(otherDay, event.getEndTime())) {
+                Calendar overDay = (Calendar) otherDay.clone();
+                overDay.set(Calendar.HOUR_OF_DAY, 0);
+                overDay.set(Calendar.MINUTE, 0);
+                Calendar endOfOverDay = (Calendar) overDay.clone();
+                endOfOverDay.set(Calendar.HOUR_OF_DAY, 23);
+                endOfOverDay.set(Calendar.MINUTE, 59);
+                WeekViewEvent eventMore = new WeekViewEvent(event.getId(), event.getName(), overDay, endOfOverDay);
+                eventMore.setColor(event.getColor());
+                mEventRects.add(new EventRect(eventMore, event, null));
+
+                // Add next day.
+                otherDay.add(Calendar.DATE, 1);
+            }
+
+            // Add last day.
+            Calendar startTime = (Calendar) event.getEndTime().clone();
+            startTime.set(Calendar.HOUR_OF_DAY, 0);
+            startTime.set(Calendar.MINUTE, 0);
+            WeekViewEvent event2 = new WeekViewEvent(event.getId(), event.getName(), event.getLocation(), startTime, event.getEndTime());
+            event2.setColor(event.getColor());
+            mEventRects.add(new EventRect(event2, event, null));
         }
         else {
             mEventRects.add(new EventRect(event, event, null));
@@ -981,7 +1024,7 @@ public class WeekView extends View {
      * Sort and cache events.
      * @param events The events to be sorted and cached.
      */
-    private void sortAndCacheEvents(List<WeekViewEvent> events) {
+    private void sortAndCacheEvents(List<? extends WeekViewEvent> events) {
         sortEvents(events);
         for (WeekViewEvent event : events) {
             cacheEvent(event);
@@ -992,7 +1035,7 @@ public class WeekView extends View {
      * Sorts the events in ascending order.
      * @param events The events to be sorted.
      */
-    private void sortEvents(List<WeekViewEvent> events) {
+    private void sortEvents(List<? extends WeekViewEvent> events) {
         Collections.sort(events, new Comparator<WeekViewEvent>() {
             @Override
             public int compare(WeekViewEvent event1, WeekViewEvent event2) {
@@ -1656,7 +1699,7 @@ public class WeekView extends View {
 
         // Check after call of mGestureDetector, so mCurrentFlingDirection and mCurrentScrollDirection are set.
         if (event.getAction() == MotionEvent.ACTION_UP && !mIsZooming && mCurrentFlingDirection == Direction.NONE) {
-            if (mCurrentScrollDirection == Direction.HORIZONTAL) {
+            if (mCurrentScrollDirection == Direction.RIGHT || mCurrentScrollDirection == Direction.LEFT) {
                 goToNearestOrigin();
             }
             mCurrentScrollDirection = Direction.NONE;
@@ -1666,7 +1709,21 @@ public class WeekView extends View {
     }
 
     private void goToNearestOrigin(){
-        float leftDays = Math.round(mCurrentOrigin.x / (mWidthPerDay + mColumnGap));
+        double leftDays = mCurrentOrigin.x / (mWidthPerDay + mColumnGap);
+
+        if (mCurrentFlingDirection != Direction.NONE) {
+            // snap to nearest day
+            leftDays = Math.round(leftDays);
+        } else if (mCurrentScrollDirection == Direction.LEFT) {
+            // snap to last day
+            leftDays = Math.floor(leftDays);
+        } else if (mCurrentScrollDirection == Direction.RIGHT) {
+            // snap to next day
+            leftDays = Math.ceil(leftDays);
+        } else {
+            // snap to nearest day
+            leftDays = Math.round(leftDays);
+        }
 
         int nearestOrigin = (int) (mCurrentOrigin.x - leftDays * (mWidthPerDay + mColumnGap));
 
@@ -1674,7 +1731,7 @@ public class WeekView extends View {
             // Stop current animation.
             mScroller.forceFinished(true);
             // Snap to date.
-            mScroller.startScroll((int) mCurrentOrigin.x, (int) mCurrentOrigin.y, -nearestOrigin, 0, 50);
+            mScroller.startScroll((int) mCurrentOrigin.x, (int) mCurrentOrigin.y, -nearestOrigin, 0, (int) (Math.abs(nearestOrigin) / mWidthPerDay * 500));
             ViewCompat.postInvalidateOnAnimation(WeekView.this);
         }
         // Reset scrolling and fling direction.
@@ -1693,12 +1750,27 @@ public class WeekView extends View {
             }
             fireFirstVisibleDayChanged();
         } else {
-            if (mScroller.computeScrollOffset()) {
+            if (mCurrentFlingDirection != Direction.NONE && forceFinishScroll()) {
+                goToNearestOrigin();
+            } else if (mScroller.computeScrollOffset()) {
                 mCurrentOrigin.y = mScroller.getCurrY();
                 mCurrentOrigin.x = mScroller.getCurrX();
                 ViewCompat.postInvalidateOnAnimation(this);
                 fireFirstVisibleDayChanged();
             }
+        }
+    }
+
+    /**
+     * check if scrolling should be stopped
+     * @return true if scrolling should be stopped before reaching the end of animation
+     */
+    private boolean forceFinishScroll() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            // current velocity only available since api 14
+            return mScroller.getCurrVelocity() <= mMinimumFlingVelocity;
+        } else {
+            return false;
         }
     }
 
