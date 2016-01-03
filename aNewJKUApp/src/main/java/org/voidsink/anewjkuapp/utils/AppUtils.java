@@ -645,10 +645,10 @@ public class AppUtils {
                 }
             }
             if (finalAssessment != null) {
-                Log.d(TAG, String.format("found by courseId/title: %s/%s", course.getCourseId(), course.getTitle()));
+                Log.d(TAG, String.format("found by code/title: %s/%s -> %s", course.getCode(), course.getTitle(), course.getCourseId()));
             }
         } else {
-            Log.d(TAG, String.format("found by courseId/code: %s/%s", course.getCourseId(), course.getCode()));
+            Log.d(TAG, String.format("found by code/courseId: %s/%s -> %s", course.getCode(), course.getCourseId(), course.getTitle()));
         }
 
         return finalAssessment;
