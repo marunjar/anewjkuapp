@@ -136,6 +136,8 @@ public class WeekView extends View {
     private boolean mShowDistinctWeekendColor = false;
     private boolean mShowNowLine = false;
     private boolean mShowDistinctPastFutureColor = false;
+    private boolean mHorizontalFlingEnabled = true;
+    private boolean mVerticalFlingEnabled = true;
 
     // Listeners.
     private EventClickListener mEventClickListener;
@@ -162,7 +164,7 @@ public class WeekView extends View {
 
             switch (mCurrentScrollDirection) {
                 case NONE: {
-                    // allow scrolling only in one direction
+                    // Allow scrolling only in one direction.
                     if (Math.abs(distanceX) > Math.abs(distanceY)) {
                         if (distanceX > 0) {
                             mCurrentScrollDirection = Direction.LEFT;
@@ -175,14 +177,14 @@ public class WeekView extends View {
                     break;
                 }
                 case LEFT: {
-                    // change direction if there was enough change
+                    // Change direction if there was enough change.
                     if (Math.abs(distanceX) > Math.abs(distanceY) && (distanceX < -mScaledTouchSlop)) {
                         mCurrentScrollDirection = Direction.RIGHT;
                     }
                     break;
                 }
                 case RIGHT: {
-                    // change direction if there was enough change
+                    // Change direction if there was enough change.
                     if (Math.abs(distanceX) > Math.abs(distanceY) && (distanceX > mScaledTouchSlop)) {
                         mCurrentScrollDirection = Direction.LEFT;
                     }
@@ -209,6 +211,12 @@ public class WeekView extends View {
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             if (mIsZooming)
                 return true;
+
+            if ((mCurrentFlingDirection == Direction.LEFT && !mHorizontalFlingEnabled) ||
+                    (mCurrentFlingDirection == Direction.RIGHT && !mHorizontalFlingEnabled) ||
+                    (mCurrentFlingDirection == Direction.VERTICAL && !mVerticalFlingEnabled)) {
+                return true;
+            }
 
             mScroller.forceFinished(true);
 
@@ -324,17 +332,20 @@ public class WeekView extends View {
             mTodayHeaderTextColor = a.getColor(R.styleable.WeekView_todayHeaderTextColor, mTodayHeaderTextColor);
             mEventTextSize = a.getDimensionPixelSize(R.styleable.WeekView_eventTextSize, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, mEventTextSize, context.getResources().getDisplayMetrics()));
             mEventTextColor = a.getColor(R.styleable.WeekView_eventTextColor, mEventTextColor);
-            mEventPadding = a.getDimensionPixelSize(R.styleable.WeekView_hourSeparatorHeight, mEventPadding);
+            mEventPadding = a.getDimensionPixelSize(R.styleable.WeekView_eventPadding, mEventPadding);
             mHeaderColumnBackgroundColor = a.getColor(R.styleable.WeekView_headerColumnBackground, mHeaderColumnBackgroundColor);
             mDayNameLength = a.getInteger(R.styleable.WeekView_dayNameLength, mDayNameLength);
             mOverlappingEventGap = a.getDimensionPixelSize(R.styleable.WeekView_overlappingEventGap, mOverlappingEventGap);
             mEventMarginVertical = a.getDimensionPixelSize(R.styleable.WeekView_eventMarginVertical, mEventMarginVertical);
             mXScrollingSpeed = a.getFloat(R.styleable.WeekView_xScrollingSpeed, mXScrollingSpeed);
             mEventCornerRadius = a.getDimensionPixelSize(R.styleable.WeekView_eventCornerRadius, mEventCornerRadius);
+
             mShowDistinctPastFutureColor = a.getBoolean(R.styleable.WeekView_showDistinctPastFutureColor, mShowDistinctPastFutureColor);
             mShowDistinctWeekendColor = a.getBoolean(R.styleable.WeekView_showDistinctWeekendColor, mShowDistinctWeekendColor);
             mShowNowLine = a.getBoolean(R.styleable.WeekView_showNowLine, mShowNowLine);
 
+            mHorizontalFlingEnabled = a.getBoolean(R.styleable.WeekView_horizontalFlingEnabled, mHorizontalFlingEnabled);
+            mVerticalFlingEnabled = a.getBoolean(R.styleable.WeekView_verticalFlingEnabled, mVerticalFlingEnabled);
         } finally {
             a.recycle();
         }
@@ -498,7 +509,7 @@ public class WeekView extends View {
         // Draw the background color for the header column.
         canvas.drawRect(0, mHeaderTextHeight + mHeaderRowPadding * 2, mHeaderColumnWidth, getHeight(), mHeaderColumnBackgroundPaint);
 
-        // Clip to paint in left column only
+        // Clip to paint in left column only.
         canvas.clipRect(0, mHeaderTextHeight + mHeaderRowPadding * 2, mHeaderColumnWidth, getHeight(), Region.Op.REPLACE);
 
         for (int i = 0; i < 24; i++) {
@@ -589,7 +600,7 @@ public class WeekView extends View {
             }
         }
 
-        // Clip to paint events only
+        // Clip to paint events only.
         canvas.clipRect(mHeaderColumnWidth, mHeaderTextHeight + mHeaderRowPadding * 2 + mHeaderMarginBottom + mTimeTextHeight/2, getWidth(), getHeight(), Region.Op.REPLACE);
 
         // Iterate through each day.
@@ -672,7 +683,7 @@ public class WeekView extends View {
         }
 
 
-        // Clip to paint header row only
+        // Clip to paint header row only.
         canvas.clipRect(mHeaderColumnWidth, 0, getWidth(), mHeaderTextHeight + mHeaderRowPadding * 2, Region.Op.REPLACE);
 
         // Draw the header background.
@@ -762,12 +773,11 @@ public class WeekView extends View {
                         right -= mOverlappingEventGap;
 
                     // Draw the event and the event name on top of it.
-                    if (bottom > mHeaderTextHeight + mHeaderRowPadding * 2 + mHeaderMarginBottom + mTimeTextHeight/2 && left < right &&
-                            right > mHeaderColumnWidth &&
+                    if (left < right &&
                             left < getWidth() &&
-                            bottom > mHeaderTextHeight + mHeaderRowPadding * 2 + mTimeTextHeight / 2 + mHeaderMarginBottom &&
                             top < getHeight() &&
-                            left < right
+                            right > mHeaderColumnWidth &&
+                            bottom > mHeaderTextHeight + mHeaderRowPadding * 2 + mTimeTextHeight / 2 + mHeaderMarginBottom
                             ) {
                         mEventRects.get(i).rectF = new RectF(left, top, right, bottom);
                         mEventBackgroundPaint.setColor(mEventRects.get(i).event.getColor() == 0 ? mDefaultEventColor : mEventRects.get(i).event.getColor());
@@ -1379,6 +1389,8 @@ public class WeekView extends View {
 
     public void setHeaderColumnTextColor(int headerColumnTextColor) {
         mHeaderColumnTextColor = headerColumnTextColor;
+        mHeaderTextPaint.setColor(mHeaderColumnTextColor);
+        mTimeTextPaint.setColor(mHeaderColumnTextColor);
         invalidate();
     }
 
@@ -1397,6 +1409,7 @@ public class WeekView extends View {
 
     public void setHeaderRowBackgroundColor(int headerRowBackgroundColor) {
         mHeaderRowBackgroundColor = headerRowBackgroundColor;
+        mHeaderBackgroundPaint.setColor(mHeaderRowBackgroundColor);
         invalidate();
     }
 
@@ -1406,6 +1419,7 @@ public class WeekView extends View {
 
     public void setDayBackgroundColor(int dayBackgroundColor) {
         mDayBackgroundColor = dayBackgroundColor;
+        mDayBackgroundPaint.setColor(mDayBackgroundColor);
         invalidate();
     }
 
@@ -1415,6 +1429,7 @@ public class WeekView extends View {
 
     public void setHourSeparatorColor(int hourSeparatorColor) {
         mHourSeparatorColor = hourSeparatorColor;
+        mHourSeparatorPaint.setColor(mHourSeparatorColor);
         invalidate();
     }
 
@@ -1424,6 +1439,7 @@ public class WeekView extends View {
 
     public void setTodayBackgroundColor(int todayBackgroundColor) {
         mTodayBackgroundColor = todayBackgroundColor;
+        mTodayBackgroundPaint.setColor(mTodayBackgroundColor);
         invalidate();
     }
 
@@ -1433,6 +1449,7 @@ public class WeekView extends View {
 
     public void setHourSeparatorHeight(int hourSeparatorHeight) {
         mHourSeparatorHeight = hourSeparatorHeight;
+        mHourSeparatorPaint.setStrokeWidth(mHourSeparatorHeight);
         invalidate();
     }
 
@@ -1442,6 +1459,7 @@ public class WeekView extends View {
 
     public void setTodayHeaderTextColor(int todayHeaderTextColor) {
         mTodayHeaderTextColor = todayHeaderTextColor;
+        mTodayHeaderTextPaint.setColor(mTodayHeaderTextColor);
         invalidate();
     }
 
@@ -1461,6 +1479,7 @@ public class WeekView extends View {
 
     public void setEventTextColor(int eventTextColor) {
         mEventTextColor = eventTextColor;
+        mEventTextPaint.setColor(mEventTextColor);
         invalidate();
     }
 
@@ -1479,6 +1498,7 @@ public class WeekView extends View {
 
     public void setHeaderColumnBackgroundColor(int headerColumnBackgroundColor) {
         mHeaderColumnBackgroundColor = headerColumnBackgroundColor;
+        mHeaderColumnBackgroundPaint.setColor(mHeaderColumnBackgroundColor);
         invalidate();
     }
 
@@ -1686,6 +1706,22 @@ public class WeekView extends View {
         invalidate();
     }
 
+    public boolean isHorizontalFlingEnabled() {
+        return mHorizontalFlingEnabled;
+    }
+
+    public void setHorizontalFlingEnabled(boolean enabled) {
+        mHorizontalFlingEnabled = enabled;
+    }
+
+    public boolean isVerticalFlingEnabled() {
+        return mVerticalFlingEnabled;
+    }
+
+    public void setVerticalFlingEnabled(boolean enabled) {
+        mVerticalFlingEnabled = enabled;
+    }
+
     /////////////////////////////////////////////////////////////////
     //
     //      Functions related to scrolling.
@@ -1762,8 +1798,8 @@ public class WeekView extends View {
     }
 
     /**
-     * check if scrolling should be stopped
-     * @return true if scrolling should be stopped before reaching the end of animation
+     * Check if scrolling should be stopped.
+     * @return true if scrolling should be stopped before reaching the end of animation.
      */
     private boolean forceFinishScroll() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
