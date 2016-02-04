@@ -513,7 +513,7 @@ public class WeekView extends View {
         boolean containsAllDayEvent = false;
         if (mEventRects != null && mEventRects.size() > 0) {
             for (int dayNumber = 0;
-                 dayNumber < mNumberOfVisibleDays;
+                 dayNumber <= mNumberOfVisibleDays;
                  dayNumber++) {
                 Calendar day = (Calendar) getFirstVisibleDay().clone();
                 day.add(Calendar.DATE, dayNumber);
