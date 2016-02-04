@@ -615,6 +615,10 @@ public class WeekView extends View {
             mScrollListener.onFirstVisibleDayChanged(mFirstVisibleDay, oldFirstVisibleDay);
         }
 
+        // Set last visible day
+        mLastVisibleDay = (Calendar) mFirstVisibleDay.clone();
+        mLastVisibleDay.add(Calendar.DATE, mNumberOfVisibleDays - 1);
+
         // Get more events if necessary. We want to store the events 3 months beforehand. Get
         // events only when it is the first iteration of the loop.
         if (mEventRects == null || mRefreshEvents ||
@@ -662,11 +666,9 @@ public class WeekView extends View {
              dayNumber <= leftDaysWithGaps + mNumberOfVisibleDays + 1;
              dayNumber++) {
 
-            // Check if the day is today.
+            // Calc date and check if it is today.
             day = (Calendar) today.clone();
-            mLastVisibleDay = (Calendar) day.clone();
             day.add(Calendar.DATE, dayNumber - 1);
-            mLastVisibleDay.add(Calendar.DATE, dayNumber - 2);
             boolean sameDay = isSameDay(day, today);
 
             // Draw background color for each day.
