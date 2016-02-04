@@ -74,7 +74,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class CalendarFragment2 extends BaseFragment implements ContentObserverListener, WeekView.ScrollListener,
+public class CalendarFragment2 extends BaseFragment implements ContentObserverListener,
         WeekView.EventClickListener, WeekView.EventLongPressListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = CalendarFragment2.class.getSimpleName();
@@ -103,7 +103,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         mWeekViewLoader.setDaysInPeriod(mWeekView.getNumberOfVisibleDays() * 4);
         mWeekView.setWeekViewLoader(mWeekViewLoader);
 
-        mWeekView.setScrollListener(this);
+        mWeekView.setScrollListener(mWeekViewLoader);
 
         return view;
     }
@@ -361,23 +361,12 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         mWeekViewLoader.removeEvents(loader.getId());
     }
 
-    @Override
-    public void onFirstVisibleDayChanged(Calendar newFirstVisibleDay, Calendar oldFirstVisibleDay) {
-        if (mWeekViewLoader != null) {
-            int periodIndex = (int) mWeekViewLoader.toWeekViewPeriodIndex(newFirstVisibleDay);
-
-            mWeekViewLoader.loadPeriod(periodIndex - 1, false);
-            mWeekViewLoader.loadPeriod(periodIndex, false);
-            mWeekViewLoader.loadPeriod(periodIndex + 1, false);
-        }
-    }
-
-
-    private class MyWeekViewLoader implements WeekViewLoader {
+    private class MyWeekViewLoader implements WeekViewLoader, WeekView.ScrollListener {
 
         private int mDaysInPeriod = 7;
         private HashMap<Integer, ArrayList<WeekViewEvent>> mEvents;
         private final ArrayList<Integer> mLastLoadedPeriods;
+        private int mLastPeriodIndex = 0;
 
         public MyWeekViewLoader() {
             mLastLoadedPeriods = new ArrayList<>();
@@ -477,6 +466,19 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
                     }
                 }
             }.run();
+        }
+
+        @Override
+        public void onFirstVisibleDayChanged(Calendar newFirstVisibleDay, Calendar oldFirstVisibleDay) {
+            int periodIndex = (int) toWeekViewPeriodIndex(newFirstVisibleDay);
+
+            if (oldFirstVisibleDay == null || mLastPeriodIndex != periodIndex) {
+                mLastPeriodIndex = periodIndex;
+
+                loadPeriod(periodIndex - 1, false);
+                loadPeriod(periodIndex, false);
+                loadPeriod(periodIndex + 1, false);
+            }
         }
     }
 

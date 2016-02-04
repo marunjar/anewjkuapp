@@ -509,7 +509,7 @@ public class WeekView extends View {
     }
 
     private void calculateHeaderHeight(){
-        //Make sure the header is the right size (depends on AllDay events)
+        // Make sure the header is the right size (depends on AllDay events)
         boolean containsAllDayEvent = false;
         if (mEventRects != null && mEventRects.size() > 0) {
             for (int dayNumber = 0;
@@ -529,12 +529,14 @@ public class WeekView extends View {
                 }
             }
         }
+        float mOldHeaderHeight = mHeaderHeight;
         if(containsAllDayEvent) {
             mHeaderHeight = mHeaderTextHeight + (mAllDayEventHeight + mHeaderMarginBottom);
         }
         else{
             mHeaderHeight = mHeaderTextHeight;
         }
+        mCurrentOrigin.y -= mHeaderHeight - mOldHeaderHeight;
     }
 
     private void drawTimeColumnAndAxes(Canvas canvas) {
@@ -560,8 +562,6 @@ public class WeekView extends View {
         mHeaderColumnWidth = mTimeTextWidth + mHeaderColumnPadding *2;
         mWidthPerDay = getWidth() - mHeaderColumnWidth - mColumnGap * (mNumberOfVisibleDays - 1);
         mWidthPerDay = mWidthPerDay/mNumberOfVisibleDays;
-
-        calculateHeaderHeight(); //Make sure the header is the right size (depends on AllDay events)
 
         Calendar today = today();
 
@@ -601,6 +601,32 @@ public class WeekView extends View {
             mNewHourHeight = -1;
         }
 
+        // Consider scroll offset.
+        int leftDaysWithGaps = (int) -(Math.ceil(mCurrentOrigin.x / (mWidthPerDay + mColumnGap)));
+        float startFromPixel = mCurrentOrigin.x + (mWidthPerDay + mColumnGap) * leftDaysWithGaps +
+                mHeaderColumnWidth;
+        float startPixel = startFromPixel;
+
+        // Set first visible day
+        Calendar oldFirstVisibleDay = mFirstVisibleDay;
+        mFirstVisibleDay = (Calendar) today.clone();
+        mFirstVisibleDay.add(Calendar.DATE, leftDaysWithGaps);
+        if(!mFirstVisibleDay.equals(oldFirstVisibleDay) && mScrollListener != null){
+            mScrollListener.onFirstVisibleDayChanged(mFirstVisibleDay, oldFirstVisibleDay);
+        }
+
+        // Get more events if necessary. We want to store the events 3 months beforehand. Get
+        // events only when it is the first iteration of the loop.
+        if (mEventRects == null || mRefreshEvents ||
+                (mFetchedPeriod != (int) mWeekViewLoader.toWeekViewPeriodIndex(mFirstVisibleDay) &&
+                        Math.abs(mFetchedPeriod - mWeekViewLoader.toWeekViewPeriodIndex(mFirstVisibleDay)) > 0.5)) {
+            getMoreEvents(mFirstVisibleDay);
+            mRefreshEvents = false;
+        }
+
+        // Make sure the header is the right size (depends on AllDay events)
+        calculateHeaderHeight();
+
         // If the new mCurrentOrigin.y is invalid, make it valid.
         if (mCurrentOrigin.y < getHeight() - mHourHeight * 24 - mHeaderHeight - mHeaderRowPadding * 2 - mHeaderMarginBottom - mTimeTextHeight/2)
             mCurrentOrigin.y = getHeight() - mHourHeight * 24 - mHeaderHeight - mHeaderRowPadding * 2 - mHeaderMarginBottom - mTimeTextHeight/2;
@@ -610,12 +636,6 @@ public class WeekView extends View {
         if (mCurrentOrigin.y > 0) {
             mCurrentOrigin.y = 0;
         }
-
-        // Consider scroll offset.
-        int leftDaysWithGaps = (int) -(Math.ceil(mCurrentOrigin.x / (mWidthPerDay + mColumnGap)));
-        float startFromPixel = mCurrentOrigin.x + (mWidthPerDay + mColumnGap) * leftDaysWithGaps +
-                mHeaderColumnWidth;
-        float startPixel = startFromPixel;
 
         // Prepare to iterate for each day.
         Calendar day = (Calendar) today.clone();
@@ -635,7 +655,7 @@ public class WeekView extends View {
         }
 
         // Clip to paint events only.
-        canvas.clipRect(mHeaderColumnWidth, mHeaderHeight + mHeaderRowPadding * 2 + mHeaderMarginBottom + mTimeTextHeight/2, getWidth(), getHeight(), Region.Op.REPLACE);
+        canvas.clipRect(mHeaderColumnWidth, mHeaderHeight + mHeaderRowPadding * 2 + mHeaderMarginBottom + mTimeTextHeight / 2, getWidth(), getHeight(), Region.Op.REPLACE);
 
         // Iterate through each day.
         for (int dayNumber = leftDaysWithGaps + 1;
@@ -648,15 +668,6 @@ public class WeekView extends View {
             day.add(Calendar.DATE, dayNumber - 1);
             mLastVisibleDay.add(Calendar.DATE, dayNumber - 2);
             boolean sameDay = isSameDay(day, today);
-
-            // Get more events if necessary. We want to store the events 3 months beforehand. Get
-            // events only when it is the first iteration of the loop.
-            if (mEventRects == null || mRefreshEvents ||
-                    (dayNumber == leftDaysWithGaps + 1 && mFetchedPeriod != (int) mWeekViewLoader.toWeekViewPeriodIndex(day) &&
-                            Math.abs(mFetchedPeriod - mWeekViewLoader.toWeekViewPeriodIndex(day)) > 0.5)) {
-                getMoreEvents(day);
-                mRefreshEvents = false;
-            }
 
             // Draw background color for each day.
             float start =  (startPixel < mHeaderColumnWidth ? mHeaderColumnWidth : startPixel);
@@ -740,16 +751,6 @@ public class WeekView extends View {
             startPixel += mWidthPerDay + mColumnGap;
         }
 
-    }
-
-    private void fireFirstVisibleDayChanged() {
-        Calendar oldFirstVisibleDay = mFirstVisibleDay;
-        mFirstVisibleDay = today();
-        mFirstVisibleDay.add(Calendar.DATE, -(Math.round(mCurrentOrigin.x / (mWidthPerDay + mColumnGap))));
-        if (!mFirstVisibleDay.equals(oldFirstVisibleDay) && mScrollListener != null) {
-            mScrollListener.onFirstVisibleDayChanged(mFirstVisibleDay, oldFirstVisibleDay);
-            mScrollListener.onFirstVisibleDayChanged(mFirstVisibleDay, oldFirstVisibleDay);
-        }
     }
 
     /**
@@ -1028,7 +1029,6 @@ public class WeekView extends View {
                 sortAndCacheEvents(previousPeriodEvents);
                 sortAndCacheEvents(currentPeriodEvents);
                 sortAndCacheEvents(nextPeriodEvents);
-                //calculateHeaderHeight();
 
                 mPreviousPeriodEvents = previousPeriodEvents;
                 mCurrentPeriodEvents = currentPeriodEvents;
@@ -1157,7 +1157,7 @@ public class WeekView extends View {
             outerLoop:
             for (List<EventRect> collisionGroup : collisionGroups) {
                 for (EventRect groupEvent : collisionGroup) {
-                    if (isEventsCollide(groupEvent.event, eventRect.event)) {
+                    if (isEventsCollide(groupEvent.event, eventRect.event) && groupEvent.event.isAllDay() == eventRect.event.isAllDay()) {
                         collisionGroup.add(eventRect);
                         isPlaced = true;
                         break outerLoop;
@@ -1244,8 +1244,6 @@ public class WeekView extends View {
      * @return true if the events overlap.
      */
     private boolean isEventsCollide(WeekViewEvent event1, WeekViewEvent event2) {
-        if (event1.isAllDay() != event2.isAllDay()) return false;
-
         long start1 = event1.getStartTime().getTimeInMillis();
         long end1 = event1.getEndTime().getTimeInMillis();
         long start2 = event2.getStartTime().getTimeInMillis();
@@ -1920,15 +1918,27 @@ public class WeekView extends View {
                 // Snap to day after fling is finished.
                 goToNearestOrigin();
             }
-            fireFirstVisibleDayChanged();
         } else {
             if (mCurrentFlingDirection != Direction.NONE && forceFinishScroll()) {
                 goToNearestOrigin();
             } else if (mScroller.computeScrollOffset()) {
-                mCurrentOrigin.y = mScroller.getCurrY();
-                mCurrentOrigin.x = mScroller.getCurrX();
+                switch (mCurrentScrollDirection) {
+                    case LEFT:
+                    case RIGHT:
+                        // Allow moving into scroll direction only
+                        mCurrentOrigin.x = mScroller.getCurrX();
+                        break;
+                    case VERTICAL:
+                        // Allow moving into scroll direction only
+                        mCurrentOrigin.y = mScroller.getCurrY();
+                        break;
+                    default:
+                        // Allow moving into all directions for finishing animation and goToNearestOrigin()
+                        mCurrentOrigin.x = mScroller.getCurrX();
+                        mCurrentOrigin.y = mScroller.getCurrY();
+                        break;
+                }
                 ViewCompat.postInvalidateOnAnimation(this);
-                fireFirstVisibleDayChanged();
             }
         }
     }
