@@ -332,16 +332,16 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             }
 
             if (rangeTopMax > 0) {
-                // add some free space
+                // add min 5% free space
                 rangeTopMax = (Math.ceil(rangeTopMax / 10) * 10) + 5;
             } else {
-                // default 25%
+                // default 20% + 5% free space
                 rangeTopMax = 25;
             }
 
-            // max 100%
-            if (rangeTopMax > 100) {
-                rangeTopMax = 100;
+            // max 100% + 5% free space
+            if (rangeTopMax > 105) {
+                rangeTopMax = 105;
             }
 
             YAxis yAxis = holder.mBarChart.getAxisLeft();
