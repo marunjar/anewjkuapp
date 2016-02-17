@@ -11,6 +11,7 @@
     app:eventCornerRadius="4dp"
     app:eventTextColor="@android:color/white"
     app:firstDayOfWeek="monday"
+    app:fixedFocusPointEnabled="false"
     app:futureBackgroundColor="@color/fullTransparent"
     app:headerColumnBackground="@color/fullTransparent"
     app:headerColumnPadding="8dp"
