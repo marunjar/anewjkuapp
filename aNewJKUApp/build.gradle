@@ -94,7 +94,7 @@ dependencies {
     compile project(':sectionedRecyclerAdapter')
     compile project(':android-week-view')
     //compile project(':kussslibrary')
-    compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.2.2'
 }
 
 def appendVersionNameVersionCode(variant, defaultConfig) {
