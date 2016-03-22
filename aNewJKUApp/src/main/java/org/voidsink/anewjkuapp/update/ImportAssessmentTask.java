@@ -152,8 +152,14 @@ public class ImportAssessmentTask implements Callable<Void> {
                     mSyncResult.stats.numParseExceptions++;
                 } else {
                     Map<String, Assessment> assessmentMap = new HashMap<>();
+                    ArrayList<Assessment> possibleDuplicates = new ArrayList<>();
+
                     for (Assessment assessment : assessments) {
-                        assessmentMap.put(KusssHelper.getAssessmentKey(assessment.getCode(), assessment.getCourseId(), assessment.getDate().getTime()), assessment);
+                        if (assessment.getAssessmentType().isDuplicatesPossible()) {
+                            possibleDuplicates.add(assessment);
+                        } else {
+                            assessmentMap.put(KusssHelper.getAssessmentKey(assessment.getCode(), assessment.getCourseId(), assessment.getDate().getTime()), assessment);
+                        }
                     }
 
                     Log.d(TAG, String.format("got %s assessments", assessments.size()));
@@ -188,37 +194,61 @@ public class ImportAssessmentTask implements Callable<Void> {
                                     .getInt(COLUMN_ASSESSMENT_GRADE));
                             assessmentCourseId = c.getString(COLUMN_ASSESSMENT_COURSEID);
 
-                            Assessment assessment = assessmentMap.remove(KusssHelper.getAssessmentKey(assessmentCode, assessmentCourseId, assessmentDate.getTime()));
-                            if (assessment != null) {
-                                // Check to see if the entry needs to be updated
-                                Uri existingUri = examUri.buildUpon()
+                            if (assessmentType.isDuplicatesPossible()) {
+                                // delete
+                                Log.d(TAG,
+                                        "delete: "
+                                                + KusssHelper.getAssessmentKey(assessmentCode, assessmentCourseId, assessmentDate.getTime()));
+                                // duplicate possible. remove existing
+                                Uri deleteUri = examUri
+                                        .buildUpon()
                                         .appendPath(Integer.toString(_Id))
                                         .build();
-                                Log.d(TAG, "Scheduling update: " + existingUri);
-
-                                if (!assessmentType.equals(assessment.getAssessmentType())
-                                        || !assessmentGrade.equals(assessment.getGrade())) {
-                                    mAssessmentChangeNotification
-                                            .addUpdate(String.format("%s: %s",
-                                                    assessment.getTitle(),
-                                                    mContext.getString(assessment
-                                                            .getGrade()
-                                                            .getStringResID())));
-                                }
+                                Log.d(TAG, "Scheduling delete: "
+                                        + deleteUri);
 
                                 batch.add(ContentProviderOperation
-                                        .newUpdate(
+                                        .newDelete(
                                                 KusssContentContract
                                                         .asEventSyncAdapter(
-                                                                existingUri,
+                                                                deleteUri,
                                                                 mAccount.name,
                                                                 mAccount.type))
-                                        .withValue(
-                                                KusssContentContract.Assessment.COL_ID,
-                                                Integer.toString(_Id))
-                                        .withValues(KusssHelper.getAssessmentContentValues(assessment))
                                         .build());
-                                mSyncResult.stats.numUpdates++;
+                                mSyncResult.stats.numDeletes++;
+                            } else {
+                                Assessment assessment = assessmentMap.remove(KusssHelper.getAssessmentKey(assessmentCode, assessmentCourseId, assessmentDate.getTime()));
+                                if (assessment != null) {
+                                    // Check to see if the entry needs to be updated
+                                    Uri existingUri = examUri.buildUpon()
+                                            .appendPath(Integer.toString(_Id))
+                                            .build();
+                                    Log.d(TAG, "Scheduling update: " + existingUri);
+
+                                    if (!assessmentType.equals(assessment.getAssessmentType())
+                                            || !assessmentGrade.equals(assessment.getGrade())) {
+                                        mAssessmentChangeNotification
+                                                .addUpdate(String.format("%s: %s",
+                                                        assessment.getTitle(),
+                                                        mContext.getString(assessment
+                                                                .getGrade()
+                                                                .getStringResID())));
+                                    }
+
+                                    batch.add(ContentProviderOperation
+                                            .newUpdate(
+                                                    KusssContentContract
+                                                            .asEventSyncAdapter(
+                                                                    existingUri,
+                                                                    mAccount.name,
+                                                                    mAccount.type))
+                                            .withValue(
+                                                    KusssContentContract.Assessment.COL_ID,
+                                                    Integer.toString(_Id))
+                                            .withValues(KusssHelper.getAssessmentContentValues(assessment))
+                                            .build());
+                                    mSyncResult.stats.numUpdates++;
+                                }
                             }
                         }
                         c.close();
@@ -243,6 +273,22 @@ public class ImportAssessmentTask implements Callable<Void> {
 
                             mSyncResult.stats.numInserts++;
                         }
+                        for (Assessment assessment : possibleDuplicates) {
+                            batch.add(ContentProviderOperation
+                                    .newInsert(
+                                            KusssContentContract
+                                                    .asEventSyncAdapter(
+                                                            examUri,
+                                                            mAccount.name,
+                                                            mAccount.type))
+                                    .withValues(KusssHelper.getAssessmentContentValues(assessment))
+                                    .build());
+                            Log.d(TAG, "Scheduling insert: " + assessment.getTerm()
+                                    + " " + assessment.getCourseId());
+
+                            mSyncResult.stats.numInserts++;
+                        }
+
 
                         if (batch.size() > 0) {
                             updateNotify(mContext.getString(R.string.notification_sync_assessment_saving));

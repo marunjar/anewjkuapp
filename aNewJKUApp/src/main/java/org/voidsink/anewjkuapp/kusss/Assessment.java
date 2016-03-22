@@ -123,6 +123,10 @@ public class Assessment {
                 Analytics.sendException(c, e, false, columns.get(0).text());
             }
 
+            if (term == null && date != null) {
+                term = Term.fromDate(date);
+            }
+
             setGrade(Grade.parseGrade(columns.get(2).text())); // grade
 
             try {

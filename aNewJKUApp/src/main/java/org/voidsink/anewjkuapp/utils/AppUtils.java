@@ -655,22 +655,24 @@ public class AppUtils {
     }
 
     private static void addIfRecent(List<Assessment> assessments, Assessment assessment) {
-        int i = 0;
-        while (i < assessments.size()) {
-            Assessment g = assessments.get(i);
-            // check only assessments for same lva and term
-            if (g.getCode().equals(assessment.getCode())
-                    && g.getCourseId().equals(assessment.getCourseId())) {
-                // keep only recent (best and newest) assessment
-                if (g.getDate().before(assessment.getDate())) {
-                    // remove last assessment
-                    assessments.remove(i);
+        if (!assessment.getAssessmentType().isDuplicatesPossible()) {
+            int i = 0;
+            while (i < assessments.size()) {
+                Assessment g = assessments.get(i);
+                // check only assessments for same lva and term
+                if (g.getCode().equals(assessment.getCode())
+                        && g.getCourseId().equals(assessment.getCourseId())) {
+                    // keep only recent (best and newest) assessment
+                    if (g.getDate().before(assessment.getDate())) {
+                        // remove last assessment
+                        assessments.remove(i);
+                    } else {
+                        // break without adding
+                        return;
+                    }
                 } else {
-                    // break without adding
-                    return;
+                    i++;
                 }
-            } else {
-                i++;
             }
         }
         // finally add assessment
