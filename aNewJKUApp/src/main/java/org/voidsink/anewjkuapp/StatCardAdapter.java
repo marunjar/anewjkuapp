@@ -467,7 +467,8 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         pieChart.setUsePercentValues(true);
         pieChart.setHoleRadius(45);
         pieChart.setTransparentCircleRadius(50);
-        pieChart.setHoleColorTransparent(true);
+        pieChart.setHoleColor(Color.TRANSPARENT);
+        pieChart.setDrawSlicesUnderHole(false);
         pieChart.setRotationEnabled(false);
         pieChart.setRotationAngle(180);
 

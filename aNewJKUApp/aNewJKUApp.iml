@@ -134,19 +134,19 @@
     <orderEntry type="library" exported="" name="appcompat-v7-23.2.1" level="project" />
     <orderEntry type="library" exported="" name="cardview-v7-23.2.1" level="project" />
     <orderEntry type="library" exported="" name="glide-3.7.0" level="project" />
+    <orderEntry type="library" exported="" name="MPAndroidChart-v2.2.3" level="project" />
     <orderEntry type="library" exported="" name="calligraphy-2.1.0" level="project" />
     <orderEntry type="library" exported="" name="preference-v7-23.2.1" level="project" />
     <orderEntry type="library" exported="" name="commons-codec-1.8" level="project" />
     <orderEntry type="library" exported="" name="backport-util-concurrent-3.1" level="project" />
-    <orderEntry type="library" exported="" name="MPAndroidChart-v2.2.2" level="project" />
     <orderEntry type="library" exported="" name="mapsforge-map-android-0.6.0" level="project" />
     <orderEntry type="library" exported="" name="ical4j-1.0.7" level="project" />
     <orderEntry type="library" exported="" name="mapsforge-map-0.6.0" level="project" />
     <orderEntry type="library" exported="" name="fastadapter-1.2.9" level="project" />
     <orderEntry type="library" exported="" name="dashclock-api-2.0.0" level="project" />
     <orderEntry type="library" exported="" name="aboutlibraries-5.6.2" level="project" />
-    <orderEntry type="library" exported="" name="jsoup-1.8.3" level="project" />
     <orderEntry type="library" exported="" name="mapsforge-map-reader-0.6.0" level="project" />
+    <orderEntry type="library" exported="" name="jsoup-1.8.3" level="project" />
     <orderEntry type="library" exported="" name="iconics-core-2.5.10" level="project" />
     <orderEntry type="library" exported="" name="mapsforge-core-0.6.0" level="project" />
     <orderEntry type="module" module-name="android-week-view" exported="" />
