@@ -35,6 +35,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -258,7 +259,7 @@ public class MainActivity extends ThemedActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSION_READ_CALENDAR:
             case MY_PERMISSION_WRITE_CALENDAR:
@@ -357,7 +358,7 @@ public class MainActivity extends ThemedActivity {
                                                     .addCategory(Intent.CATEGORY_DEFAULT)
                                                     .setData(Uri.parse("package:org.voidsink.anewjkuapp")));
                                 } catch (Exception e) {
-
+                                    Analytics.sendException(MainActivity.this, e, false);
                                 }
                             }
                         });
@@ -639,8 +640,7 @@ public class MainActivity extends ThemedActivity {
                     false);
             TextView textView = (TextView) rootView
                     .findViewById(R.id.section_label);
-            textView.setText(Integer.toString(getArguments().getInt(
-                    ARG_SECTION_NUMBER)));
+            textView.setText(String.format("%d", getArguments().getInt(ARG_SECTION_NUMBER)));
             return rootView;
         }
     }

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -20,9 +20,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ */
 
 package org.voidsink.anewjkuapp.utils;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.github.mikephil.charting.data.Entry;
 
@@ -39,7 +42,30 @@ public class EctsEntry extends Entry {
         this.mEcts = ects;
     }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeFloat(this.mEcts);
+    }
+
+    protected EctsEntry(Parcel in) {
+        super(in);
+        this.mEcts = in.readFloat();
+    }
+
     public float getEcts() {
         return mEcts;
     }
+
+    public static final Parcelable.Creator<EctsEntry> CREATOR = new Parcelable.Creator<EctsEntry>() {
+        public EctsEntry createFromParcel(Parcel source) {
+            return new EctsEntry(source);
+        }
+
+        public EctsEntry[] newArray(int size) {
+            return new EctsEntry[size];
+        }
+    };
+
+
 }

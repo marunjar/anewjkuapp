@@ -31,8 +31,6 @@ import android.support.v7.preference.DialogPreference;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
 
-import org.voidsink.anewjkuapp.R;
-
 import java.util.Date;
 
 public class TimePreference extends DialogPreference {

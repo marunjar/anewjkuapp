@@ -141,9 +141,6 @@ public class ImportExamTask implements Callable<Void> {
         }
         NewExamNotification mNewExamNotification = new NewExamNotification(mContext);
 
-
-        final DateFormat df = DateFormat.getDateInstance();
-
         try {
             Log.d(TAG, "setup connection");
 

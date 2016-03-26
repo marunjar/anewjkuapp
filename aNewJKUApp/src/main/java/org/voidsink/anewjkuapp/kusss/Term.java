@@ -99,7 +99,7 @@ public class Term implements Comparable<Term> {
     }
 
     @Override
-    public int compareTo(Term o) {
+    public int compareTo(@NonNull Term o) {
         if (o == null) {
             return -1;
         }

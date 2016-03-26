@@ -249,7 +249,7 @@ public class AppUtils {
     private static boolean removeAccount(Context context) {
         Account account = getAccount(context);
         if (account != null) {
-            AccountManager.get(context).removeAccount(account, null, null);
+            AccountManager.get(context).removeAccount(account, null, null, null);
             Log.d(TAG, "account removed");
         }
         return true;
@@ -547,9 +547,11 @@ public class AppUtils {
                     null, null);
         } else {
             response = am.getAuthToken(account,
-                    KusssAuthenticator.AUTHTOKEN_TYPE_READ_ONLY, true, null,
+                    KusssAuthenticator.AUTHTOKEN_TYPE_READ_ONLY, null, true, null,
                     null);
         }
+
+        if (response == null) return null;
 
         try {
             return response.getResult().getString(AccountManager.KEY_AUTHTOKEN);

@@ -24,8 +24,6 @@
 
 package org.voidsink.anewjkuapp.utils;
 
-import android.graphics.Color;
-
 public class Consts {
 
     public static final String ARG_RECREATE_SYNC_ALARM = "RECREATE_SYNC_ALARM";

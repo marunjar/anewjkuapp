@@ -246,10 +246,10 @@ public class MapFragment extends BaseFragment implements
         this.mMyLocationOverlay.enableMyLocation(false);
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//    }
 
     private void setNewGoal(LatLong goalPosition, String name) {
         if (goalPosition != null &&
