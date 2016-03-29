@@ -7,8 +7,6 @@
 -dontwarn org.xmlpull.v1.**
 -dontwarn com.caverock.androidsvg.**
 
--dontwarn io.realm.**
-
 ###############
 -keepclasseswithmembernames class * {
 public <init>(android.content.Context);

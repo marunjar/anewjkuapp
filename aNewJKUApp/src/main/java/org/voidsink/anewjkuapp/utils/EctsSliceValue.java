@@ -24,48 +24,33 @@
 
 package org.voidsink.anewjkuapp.utils;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import org.voidsink.anewjkuapp.kusss.Grade;
 
-import com.github.mikephil.charting.data.Entry;
+import lecho.lib.hellocharts.model.SliceValue;
 
-public class EctsEntry extends Entry {
+public class EctsSliceValue extends SliceValue {
 
     private final float mEcts;
+    private final Grade mGrade;
 
-    public EctsEntry(float val, int xIndex) {
-        this(val, val, xIndex);
+    public EctsSliceValue(float val, int color) {
+        this(val, val, Grade.G3, color);
     }
 
-    public EctsEntry(float val, float ects, int xIndex) {
-        super(val, xIndex);
+    public EctsSliceValue(float val, float ects, Grade grade, int color) {
+        super(val, color);
+        if (grade != null) {
+            this.setColor(grade.getColor());
+        }
         this.mEcts = ects;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
-        dest.writeFloat(this.mEcts);
-    }
-
-    protected EctsEntry(Parcel in) {
-        super(in);
-        this.mEcts = in.readFloat();
+        this.mGrade = grade;
     }
 
     public float getEcts() {
         return mEcts;
     }
 
-    public static final Parcelable.Creator<EctsEntry> CREATOR = new Parcelable.Creator<EctsEntry>() {
-        public EctsEntry createFromParcel(Parcel source) {
-            return new EctsEntry(source);
-        }
-
-        public EctsEntry[] newArray(int size) {
-            return new EctsEntry[size];
-        }
-    };
-
-
+    public Grade getGrade() {
+        return mGrade;
+    }
 }

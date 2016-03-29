@@ -30,31 +30,12 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.Chart;
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.LimitLine;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.renderer.PieChartRenderer;
-import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.kusss.Assessment;
@@ -63,26 +44,44 @@ import org.voidsink.anewjkuapp.kusss.Grade;
 import org.voidsink.anewjkuapp.kusss.LvaState;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.utils.AppUtils;
-import org.voidsink.anewjkuapp.utils.EctsEntry;
+import org.voidsink.anewjkuapp.utils.EctsSliceValue;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import lecho.lib.hellocharts.listener.PieChartOnValueSelectListener;
+import lecho.lib.hellocharts.model.AbstractChartData;
+import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.AxisValue;
+import lecho.lib.hellocharts.model.Column;
+import lecho.lib.hellocharts.model.ColumnChartData;
+import lecho.lib.hellocharts.model.ComboLineColumnChartData;
+import lecho.lib.hellocharts.model.PieChartData;
+import lecho.lib.hellocharts.model.SliceValue;
+import lecho.lib.hellocharts.model.SubcolumnValue;
+import lecho.lib.hellocharts.view.AbstractChartView;
+import lecho.lib.hellocharts.view.ComboLineColumnChartView;
+import lecho.lib.hellocharts.view.PieChartView;
+
 public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdapter.StatViewHolder> {
 
-    private static final int ANIMATION_DURATION = 1250;
+    private static final int ADDITIONAL_SPACE = 10;
 
     private final int mTextColorPrimary;
+    private final int mTextSizePrimary;
     private final int mTextColorSecondary;
+    private final int mTextSizeSecondary;
     private final Context mContext;
 
     public StatCardAdapter(Context context) {
         super();
         this.mContext = context;
 
-        TypedArray themeArray = context.getTheme().obtainStyledAttributes(new int[]{android.R.attr.textColorPrimary, android.R.attr.textColorSecondary});
+        TypedArray themeArray = context.getTheme().obtainStyledAttributes(new int[]{android.R.attr.textColorPrimary, android.R.attr.textColorSecondary, android.R.attr.textSize});
         this.mTextColorPrimary = themeArray.getColor(0, Color.BLACK);
         this.mTextColorSecondary = themeArray.getColor(1, Color.DKGRAY);
+        this.mTextSizePrimary = (int) themeArray.getDimension(2, 12);
+        this.mTextSizeSecondary = this.mTextSizePrimary;
         themeArray.recycle();
     }
 
@@ -128,109 +127,97 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         double minEcts = (card.getTerms() != null) ? card.getTerms().size() * 30 : 0;
 
         if (holder.mBarChart.getVisibility() == View.VISIBLE) {
-            // clear chart
-            holder.mBarChart.clear();
+            ComboLineColumnChartData dataSet = new ComboLineColumnChartData();
+            initBarChartDataSet(dataSet);
 
-            // calculate range
-            double rangeTopMax = ((card.getTerms() != null) ? card.getTerms().size() : 1) * 30;
-            if ((mDoneEcts + mOpenEcts) > (rangeTopMax - 5)) {
-                if ((mDoneEcts + mOpenEcts) > rangeTopMax) {
-                    rangeTopMax = (Math.ceil((mDoneEcts + mOpenEcts) / 10) * 10) + 5;
-                } else {
-                    rangeTopMax = rangeTopMax + 5;
-                }
-            }
-            if (rangeTopMax <= minEcts) {
-                rangeTopMax = minEcts + 5;
-            }
-
-            YAxis yAxis = holder.mBarChart.getAxisLeft();
-            yAxis.setAxisMinValue(0);
-            yAxis.setAxisMaxValue((float) rangeTopMax);
-
-            ArrayList<BarEntry> yVals = new ArrayList<>();
-            ArrayList<String> captions = new ArrayList<>();
-            ArrayList<Integer> colors = new ArrayList<>();
+            ArrayList<Column> yVals = new ArrayList<>();
+            ArrayList<AxisValue> axisValues = new ArrayList<>();
 
             // add series to bar chart
-            addSerieToBarChart(yVals, captions, colors, mContext.getString(LvaState.DONE.getStringResID()),
-                    mDoneEcts, Grade.G1.getColor());
-            addSerieToBarChart(yVals, captions, colors, mContext.getString(LvaState.OPEN.getStringResID()),
-                    mOpenEcts, Grade.G3.getColor());
+            addSerieToBarChart(yVals, axisValues, mContext.getString(LvaState.DONE.getStringResID()),
+                    mDoneEcts * 100 / (mOpenEcts + mDoneEcts), mDoneEcts, Grade.G1.getColor());
+            addSerieToBarChart(yVals, axisValues, mContext.getString(LvaState.OPEN.getStringResID()),
+                    mOpenEcts * 100 / (mOpenEcts + mDoneEcts), mOpenEcts, Grade.G3.getColor());
 
-            BarDataSet dataSet = new BarDataSet(yVals, "");
+            Axis xAxis = new Axis(axisValues);
+            xAxis.setTextColor(mTextColorPrimary);
+            xAxis.setLineColor(mTextColorSecondary);
+            Axis yAxis = Axis.generateAxisFromRange(0, 110, 10).setHasLines(true).setName("%");
+            yAxis.setTextColor(mTextColorPrimary);
+            yAxis.setLineColor(mTextColorSecondary);
 
-            dataSet.setColors(colors);
-            dataSet.setValueTextColor(mTextColorPrimary);
-            dataSet.setValueFormatter(new ECTSFormatter());
+            dataSet.setAxisXBottom(xAxis);
+            dataSet.setAxisYLeft(yAxis);
 
-            BarData barData = new BarData(captions, dataSet);
+            dataSet.setColumnChartData(new ColumnChartData(yVals));
 
-            if (minEcts > 0) {
-                LimitLine limitLine = new LimitLine((float) minEcts, String.format("%.2f ECTS", minEcts));
-                limitLine.setLineColor(Color.RED);
-                limitLine.setTextColor(Color.RED);
-                limitLine.setTextSize(11);
-                limitLine.enableDashedLine(20, 10, 0);
-                limitLine.setLineWidth(2);
-                limitLine.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                yAxis.addLimitLine(limitLine);
-            }
-
-            holder.mBarChart.setData(barData);
-            // undo all highlights
-            holder.mBarChart.highlightValues(null);
-            holder.mBarChart.getLegend().setTextColor(mTextColorPrimary);
-            holder.mBarChart.getLegend().setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
-            holder.mBarChart.getLegend().setEnabled(false);
-            holder.mBarChart.animateY(ANIMATION_DURATION);
+            holder.mBarChart.setComboLineColumnChartData(dataSet);
         }
         if (holder.mPieChart.getVisibility() == View.VISIBLE) {
-            // clear chart
-            holder.mPieChart.clear();
-
-            ArrayList<Entry> yVals = new ArrayList<>();
+            ArrayList<SliceValue> slices = new ArrayList<>();
             ArrayList<String> captions = new ArrayList<>();
             ArrayList<Integer> colors = new ArrayList<>();
 
             // add series to pie chart
-            addSerieToPieChart(yVals, captions, colors, mContext.getString(LvaState.DONE.getStringResID()),
-                    mDoneEcts, mDoneEcts, Grade.G1.getColor());
-            addSerieToPieChart(yVals, captions, colors, mContext.getString(LvaState.OPEN.getStringResID()),
-                    mOpenEcts, mOpenEcts, Grade.G3.getColor());
+            addSerieToPieChart(slices, captions, colors, mContext.getString(LvaState.DONE.getStringResID()),
+                    mDoneEcts * 100 / (mOpenEcts + mDoneEcts), mDoneEcts, null, Grade.G1.getColor());
+            addSerieToPieChart(slices, captions, colors, mContext.getString(LvaState.OPEN.getStringResID()),
+                    mOpenEcts * 100 / (mOpenEcts + mDoneEcts), mOpenEcts, null, Grade.G3.getColor());
 
-            PieDataSet dataSet = new PieDataSet(yVals, "");
+            PieChartData dataSet = new PieChartData();
+            initPieChartDataSet(dataSet);
+            dataSet.setValues(slices);
 
-            dataSet.setColors(colors);
-            dataSet.setValueTextColor(mTextColorPrimary);
-            dataSet.setValueFormatter(new PercentFormatter());
-
-            PieData pieData = new PieData(captions, dataSet);
-
-            holder.mPieChart.setData(pieData);
-            // undo all highlights
-            holder.mPieChart.highlightValues(null);
-            holder.mPieChart.getLegend().setTextColor(mTextColorPrimary);
-            holder.mPieChart.getLegend().setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
-            holder.mPieChart.animateXY(ANIMATION_DURATION, ANIMATION_DURATION);
+            holder.mPieChart.setPieChartData(dataSet);
         }
     }
 
-    private void addSerieToBarChart(List<BarEntry> values, List<String> captions, List<Integer> colors, String category,
-                                    double value, int color) {
-        if (value > 0) {
-            colors.add(color);
-            captions.add(category);
-            values.add(new BarEntry((float) value, values.size()));
+    private void initBarChartDataSet(ComboLineColumnChartData dataSet) {
+        initBaseChartDataSet(dataSet);
+    }
+
+    private void initPieChartDataSet(PieChartData dataSet) {
+        initBaseChartDataSet(dataSet);
+
+        dataSet.setCenterText1Color(mTextColorPrimary);
+        dataSet.setCenterText1FontSize(mTextSizePrimary);
+        dataSet.setCenterText2Color(mTextColorSecondary);
+        dataSet.setCenterText2FontSize(mTextSizeSecondary);
+        dataSet.setHasCenterCircle(true);
+        dataSet.setHasLabels(true);
+        dataSet.setHasLabelsOnlyForSelected(false);
+    }
+
+    private void initBaseChartDataSet(AbstractChartData dataSet) {
+    }
+
+    private void addSerieToBarChart(List<Column> values, List<AxisValue> axisValues, String category,
+                                    double percent, double ects, int color) {
+
+        if (percent > 0) {
+            axisValues.add(new AxisValue(axisValues.size()).setLabel(category));
+
+            ArrayList<SubcolumnValue> subColumns = new ArrayList<>();
+            SubcolumnValue subColumn = new SubcolumnValue((float) percent, color);
+            subColumn.setLabel(String.format("%.2f ECTS", ects));
+            subColumns.add(subColumn);
+            Column column = new Column(subColumns);
+            column.setHasLabels(false);
+            column.setHasLabelsOnlyForSelected(true);
+            values.add(column);
         }
     }
 
-    private static void addSerieToPieChart(List<Entry> values, List<String> captions, List<Integer> colors, String category,
-                                           double value, double ects, int color) {
-        if (value > 0) {
+    private static void addSerieToPieChart(List<SliceValue> slices, List<String> captions, List<Integer> colors, String category,
+                                           double percent, double ects, Grade grade, int color) {
+        if (percent > 0) {
             colors.add(color);
+
             captions.add(category);
-            values.add(new EctsEntry((float) value, (float) ects, values.size()));
+
+            SliceValue slice = new EctsSliceValue((float)percent, (float)ects, grade, color);
+            slice.setLabel(String.format("%.2f %%", percent));
+            slices.add(slice);
         }
     }
 
@@ -306,115 +293,80 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
 
     private void updateGradePlot(StatViewHolder holder, StatCard card) {
         if (holder.mBarChart.getVisibility() == View.VISIBLE) {
-            // clear chart
-            holder.mBarChart.clear();
-
-            ArrayList<BarEntry> yVals = new ArrayList<>();
-            ArrayList<String> captions = new ArrayList<>();
-            ArrayList<Integer> colors = new ArrayList<>();
+            ArrayList<Column> yVals = new ArrayList<>();
+            ArrayList<AxisValue> axisValues = new ArrayList<>();
 
             // add series to bar chart
-            addSerieToBarChart(yVals, captions, colors, mContext.getString(Grade.G1.getStringResID()), AppUtils.getGradePercent(card.getAssessments(), Grade.G1, card.isWeighted()), Grade.G1.getColor());
-            addSerieToBarChart(yVals, captions, colors, mContext.getString(Grade.G2.getStringResID()), AppUtils.getGradePercent(card.getAssessments(), Grade.G2, card.isWeighted()), Grade.G2.getColor());
-            addSerieToBarChart(yVals, captions, colors, mContext.getString(Grade.G3.getStringResID()), AppUtils.getGradePercent(card.getAssessments(), Grade.G3, card.isWeighted()), Grade.G3.getColor());
-            addSerieToBarChart(yVals, captions, colors, mContext.getString(Grade.G4.getStringResID()), AppUtils.getGradePercent(card.getAssessments(), Grade.G4, card.isWeighted()), Grade.G4.getColor());
+            addSerieToBarChart(yVals, axisValues, mContext.getString(Grade.G1.getStringResID()), AppUtils.getGradePercent(card.getAssessments(), Grade.G1, card.isWeighted()), AppUtils.getGradeEcts(card.getAssessments(), Grade.G1), Grade.G1.getColor());
+            addSerieToBarChart(yVals, axisValues, mContext.getString(Grade.G2.getStringResID()), AppUtils.getGradePercent(card.getAssessments(), Grade.G2, card.isWeighted()), AppUtils.getGradeEcts(card.getAssessments(), Grade.G2), Grade.G2.getColor());
+            addSerieToBarChart(yVals, axisValues, mContext.getString(Grade.G3.getStringResID()), AppUtils.getGradePercent(card.getAssessments(), Grade.G3, card.isWeighted()), AppUtils.getGradeEcts(card.getAssessments(), Grade.G3), Grade.G3.getColor());
+            addSerieToBarChart(yVals, axisValues, mContext.getString(Grade.G4.getStringResID()), AppUtils.getGradePercent(card.getAssessments(), Grade.G4, card.isWeighted()), AppUtils.getGradeEcts(card.getAssessments(), Grade.G4), Grade.G4.getColor());
             if (!card.isPositiveOnly()) {
-                addSerieToBarChart(yVals, captions, colors, mContext.getString(Grade.G5.getStringResID()), AppUtils.getGradePercent(card.getAssessments(), Grade.G5, card.isWeighted()), Grade.G5.getColor());
+                addSerieToBarChart(yVals, axisValues, mContext.getString(Grade.G5.getStringResID()), AppUtils.getGradePercent(card.getAssessments(), Grade.G5, card.isWeighted()), AppUtils.getGradeEcts(card.getAssessments(), Grade.G5), Grade.G5.getColor());
             }
 
-            // calculate range
-            double rangeTopMax = 0;
-            // find max %
-            for (Entry n : yVals) {
-                if (n != null) {
-                    rangeTopMax = Math.max(rangeTopMax, n.getVal());
-                }
-            }
 
-            if (rangeTopMax > 0) {
-                // add min 5% free space
-                rangeTopMax = (Math.ceil(rangeTopMax / 10) * 10) + 5;
-            } else {
-                // default 20% + 5% free space
-                rangeTopMax = 25;
-            }
+            ComboLineColumnChartData dataSet = new ComboLineColumnChartData();
+            initBarChartDataSet(dataSet);
 
-            // max 100% + 5% free space
-            if (rangeTopMax > 105) {
-                rangeTopMax = 105;
-            }
+            Axis xAxis = new Axis(axisValues);
+            xAxis.setTextColor(mTextColorPrimary);
+            xAxis.setLineColor(mTextColorSecondary);
+            Axis yAxis = Axis.generateAxisFromRange(0, 110, 10).setHasLines(true).setName("%");
+            yAxis.setTextColor(mTextColorPrimary);
+            yAxis.setLineColor(mTextColorSecondary);
 
-            YAxis yAxis = holder.mBarChart.getAxisLeft();
-            yAxis.setAxisMinValue(0);
-            yAxis.setAxisMaxValue((float) rangeTopMax);
+            dataSet.setAxisXBottom(xAxis);
+            dataSet.setAxisYLeft(yAxis);
 
-            BarDataSet dataSet = new BarDataSet(yVals, "");
+            dataSet.setColumnChartData(new ColumnChartData(yVals));
 
-            dataSet.setColors(colors);
-            dataSet.setValueTextColor(mTextColorPrimary);
-            dataSet.setValueFormatter(new PercentFormatter());
-
-            BarData barData = new BarData(captions, dataSet);
-
-            holder.mBarChart.setData(barData);
-            // undo all highlights
-            holder.mBarChart.highlightValues(null);
-            holder.mBarChart.getLegend().setTextColor(mTextColorPrimary);
-            holder.mBarChart.getLegend().setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
-            holder.mBarChart.getLegend().setEnabled(false);
-            holder.mBarChart.animateY(ANIMATION_DURATION);
+            holder.mBarChart.setComboLineColumnChartData(dataSet);
         }
         if (holder.mPieChart.getVisibility() == View.VISIBLE) {
-            // clear chart
-            holder.mPieChart.clear();
-
-            ArrayList<Entry> yVals = new ArrayList<>();
+            ArrayList<SliceValue> slices = new ArrayList<>();
             ArrayList<String> captions = new ArrayList<>();
             ArrayList<Integer> colors = new ArrayList<>();
 
             // add series to pie chart
-            addSerieToPieChart(yVals, captions, colors,
+            addSerieToPieChart(slices, captions, colors,
                     mContext.getString(Grade.G1.getStringResID()),
                     AppUtils.getGradePercent(card.getAssessments(), Grade.G1, card.isWeighted()),
                     AppUtils.getGradeEcts(card.getAssessments(), Grade.G1),
+                    Grade.G1,
                     Grade.G1.getColor());
-            addSerieToPieChart(yVals, captions, colors,
+            addSerieToPieChart(slices, captions, colors,
                     mContext.getString(Grade.G2.getStringResID()),
                     AppUtils.getGradePercent(card.getAssessments(), Grade.G2, card.isWeighted()),
                     AppUtils.getGradeEcts(card.getAssessments(), Grade.G2),
+                    Grade.G2,
                     Grade.G2.getColor());
-            addSerieToPieChart(yVals, captions, colors,
+            addSerieToPieChart(slices, captions, colors,
                     mContext.getString(Grade.G3.getStringResID()),
                     AppUtils.getGradePercent(card.getAssessments(), Grade.G3, card.isWeighted()),
                     AppUtils.getGradeEcts(card.getAssessments(), Grade.G3),
+                    Grade.G3,
                     Grade.G3.getColor());
-            addSerieToPieChart(yVals, captions, colors,
+            addSerieToPieChart(slices, captions, colors,
                     mContext.getString(Grade.G4.getStringResID()),
                     AppUtils.getGradePercent(card.getAssessments(), Grade.G4, card.isWeighted()),
                     AppUtils.getGradeEcts(card.getAssessments(), Grade.G4),
+                    Grade.G4,
                     Grade.G4.getColor());
             if (!card.isPositiveOnly()) {
-                addSerieToPieChart(yVals, captions, colors,
+                addSerieToPieChart(slices, captions, colors,
                         mContext.getString(Grade.G5.getStringResID()),
                         AppUtils.getGradePercent(card.getAssessments(), Grade.G5, card.isWeighted()),
                         AppUtils.getGradeEcts(card.getAssessments(), Grade.G5),
+                        Grade.G5,
                         Grade.G5.getColor());
             }
 
-            PieDataSet dataSet = new PieDataSet(yVals, "");
+            PieChartData dataSet = new PieChartData();
+            initPieChartDataSet(dataSet);
+            dataSet.setValues(slices);
 
-            dataSet.setColors(colors);
-            dataSet.setValueTextColor(mTextColorPrimary);
-            dataSet.setValueFormatter(new PercentFormatter());
-
-            PieData pieData = new PieData(captions, dataSet);
-
-            holder.mPieChart.setData(pieData);
-            // undo all highlights
-            holder.mPieChart.highlightValues(null);
-            holder.mPieChart.getLegend().setTextColor(mTextColorPrimary);
-            holder.mPieChart.getLegend().setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
-            holder.mPieChart.animateXY(ANIMATION_DURATION, ANIMATION_DURATION);
+            holder.mPieChart.setPieChartData(dataSet);
         }
     }
 
@@ -430,75 +382,43 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         }
     }
 
-    private void initBarChart(BarChart barChart) {
+    private void initBarChart(ComboLineColumnChartView barChart) {
         initBaseChart(barChart);
 
-        barChart.setPinchZoom(false);
-        barChart.setHighlightPerTapEnabled(false);
-        barChart.setHighlightPerDragEnabled(false);
-        barChart.setDrawBarShadow(false);
-        barChart.setDrawValueAboveBar(false);
-
-        XAxis xl = barChart.getXAxis();
-        xl.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xl.setTextColor(mTextColorPrimary);
-
-        barChart.getAxisRight().setEnabled(false);
-
-        YAxis yAxis = barChart.getAxisLeft();
-        yAxis.setTextColor(mTextColorPrimary);
-        yAxis.setGridColor(mTextColorSecondary);
-        yAxis.setDrawGridLines(true);
-
-        XAxis xAxis = barChart.getXAxis();
-        xAxis.setTextColor(mTextColorPrimary);
-        xAxis.setGridColor(mTextColorSecondary);
-        xAxis.setDrawGridLines(true);
-
-        barChart.setDrawGridBackground(false);
-// barChart.setDrawBorder(true);
-// barChart.setBorderColor(mTextColorSecondary);
+        barChart.getCurrentViewport()
     }
 
-    private void initPieChart(final PieChart pieChart) {
+    private void initPieChart(final PieChartView pieChart) {
         initBaseChart(pieChart);
 
-        pieChart.setDrawSliceText(false);
-        pieChart.setUsePercentValues(true);
-        pieChart.setHoleRadius(45);
-        pieChart.setTransparentCircleRadius(50);
-        pieChart.setHoleColor(Color.TRANSPARENT);
-        pieChart.setDrawSlicesUnderHole(false);
-        pieChart.setRotationEnabled(false);
-        pieChart.setRotationAngle(180);
+        pieChart.setChartRotationEnabled(false);
+        pieChart.setChartRotation(180, false);
 
-        pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-            @Override
-            public void onValueSelected(Entry entry, int i, Highlight h) {
-                if (entry instanceof EctsEntry) {
-                    float ects = ((EctsEntry) entry).getEcts();
-                    if (ects > 0) {
-                        pieChart.setDrawCenterText(true);
-                        pieChart.setCenterText(String.format("%.2f\nECTS", ects));
+        pieChart.setOnValueTouchListener(new PieChartOnValueSelectListener() {
+                @Override
+                public void onValueSelected(int arcIndex, SliceValue value) {
+                    SliceValue slice = pieChart.getPieChartData().getValues().get(arcIndex);
+                    if (slice instanceof EctsSliceValue) {
+                        pieChart.getPieChartData().setCenterText1(String.format("%.2f ECTS", ((EctsSliceValue) slice).getEcts()));
+                        Grade grade = ((EctsSliceValue) slice).getGrade();
+                        if (grade != null) {
+                            pieChart.getPieChartData().setCenterText2(mContext.getString(grade.getStringResID()));
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onNothingSelected() {
-                pieChart.setDrawCenterText(false);
-            }
-        });
-
-        if (pieChart.getRenderer() != null) {
-            ((PieChartRenderer) pieChart.getRenderer()).getPaintCenterText().setColor(mTextColorPrimary);
-        }
+                @Override
+                public void onValueDeselected() {
+                    pieChart.getPieChartData().setCenterText1(null);
+                    pieChart.getPieChartData().setCenterText2(null);
+                }
+            });
     }
 
-    private void initBaseChart(Chart chart) {
-        chart.setDescription("");
-        chart.setNoDataText("");
-        chart.setNoDataTextDescription("");
+    private void initBaseChart(AbstractChartView chart) {
+        chart.setScrollEnabled(false);
+        chart.setZoomEnabled(false);
+        chart.setValueSelectionEnabled(true);
     }
 
     @Override
@@ -582,8 +502,8 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         public final Toolbar mToolbar;
         public final TextView mTitle;
         public final LinearLayout mItems;
-        public final BarChart mBarChart;
-        public final PieChart mPieChart;
+        public final ComboLineColumnChartView mBarChart;
+        public final PieChartView mPieChart;
 
         public StatViewHolder(View itemView) {
             super(itemView);
@@ -591,17 +511,8 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             mToolbar = (Toolbar) itemView.findViewById(R.id.stat_card_toolbar);
             mTitle = (TextView) itemView.findViewById(R.id.stat_card_title);
             mItems = (LinearLayout) itemView.findViewById(R.id.stat_card_items);
-            mBarChart = (BarChart) itemView.findViewById(R.id.stat_card_diagram_bar);
-            mPieChart = (PieChart) itemView.findViewById(R.id.stat_card_diagram_pie);
-
-        }
-    }
-
-    private class ECTSFormatter implements ValueFormatter {
-
-        @Override
-        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-            return String.format("%.2f ECTS", value);
+            mBarChart = (ComboLineColumnChartView) itemView.findViewById(R.id.stat_card_diagram_bar);
+            mPieChart = (PieChartView) itemView.findViewById(R.id.stat_card_diagram_pie);
         }
     }
 }

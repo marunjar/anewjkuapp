@@ -1,7 +1,3 @@
-repositories {
-    maven { url "https://jitpack.io" }
-}
-
 apply plugin: 'com.android.application'
 android {
     signingConfigs {
@@ -95,6 +91,7 @@ dependencies {
     compile 'org.mnode.ical4j:ical4j-extensions:0.9.2'
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
     //compile 'com.github.alamkanak:android-week-view:1.2.3'
     compile 'de.cketti.library.changelog:ckchangelog:1.2.2'
     compile('com.mikepenz:aboutlibraries:5.6.2@aar') {
@@ -103,7 +100,6 @@ dependencies {
     compile project(':sectionedRecyclerAdapter')
     compile project(':android-week-view')
     //compile project(':kussslibrary')
-    compile 'com.github.PhilJay:MPAndroidChart:v2.2.3'
 }
 
 def appendVersionNameVersionCode(variant, defaultConfig) {
