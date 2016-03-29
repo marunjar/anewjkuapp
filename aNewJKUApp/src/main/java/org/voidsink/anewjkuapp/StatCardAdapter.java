@@ -384,8 +384,6 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
 
     private void initBarChart(ComboLineColumnChartView barChart) {
         initBaseChart(barChart);
-
-        barChart.getCurrentViewport()
     }
 
     private void initPieChart(final PieChartView pieChart) {
