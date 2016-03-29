@@ -201,5 +201,4 @@
     <string name="button_ok">OK</string>
     <string name="pref_kusss_use_calendar_view_title">Calendar view</string>
     <string name="pref_kusss_use_calendar_view_summary">Show all events in a calendar view</string>
-    <string name="extension_mensa_description">Show today\'s menu for selected cafeteria</string>
 </resources>
