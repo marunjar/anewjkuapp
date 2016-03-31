@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -6,7 +6,7 @@
  * \________|____|__ \______/   \____|__  /   __/|   __/
  *                  \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ * Copyright (c) 2014-2016 Paul "Marunjar" Pretsch
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.notification;
 
@@ -85,6 +86,7 @@ public class NewExamNotification {
                                     mContext.getString(R.string.notification_new_exams),
                                     (mInserts.size() + mUpdates.size())))
                     .setContentIntent(pendingIntent)
+                    .setCategory(NotificationCompat.CATEGORY_EMAIL)
                     .setAutoCancel(true)
                     .setNumber(
                             mInserts.size() + mUpdates.size());

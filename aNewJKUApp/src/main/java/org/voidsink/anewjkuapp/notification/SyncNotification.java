@@ -6,7 +6,7 @@
  * \________|____|__ \______/   \____|__  /   __/|   __/
  *                  \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ * Copyright (c) 2014-2016 Paul "Marunjar" Pretsch
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
 
 package org.voidsink.anewjkuapp.notification;
@@ -28,9 +29,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.activity.MainActivity;
 
 public class SyncNotification {
     private final Context mContext;
@@ -44,28 +47,31 @@ public class SyncNotification {
     }
 
     public void show(String mTitle) {
+        ((NotificationManager) mContext
+                .getSystemService(Context.NOTIFICATION_SERVICE)).cancel(id);
+
         this.mBuilder = new NotificationCompat.Builder(this.mContext)
                 .setSmallIcon(R.drawable.ic_stat_notify_kusss)
                 .setOngoing(true)
+                .setCategory(NotificationCompat.CATEGORY_SERVICE)
                 .setAutoCancel(true)
-//				.setLargeIcon(
-//						BitmapFactory.decodeResource(
-//								this.mContext.getResources(),
-//								R.drawable.ic_refresh_white_24dp))
+//                .setLargeIcon(
+//                        BitmapFactory.decodeResource(
+//                                this.mContext.getResources(),
+//                                R.drawable.ic_refresh_white_24dp))
                 .setContentTitle(mTitle)
-                .setProgress(0, 0, true);
+                .setVisibility(NotificationCompat.VISIBILITY_SECRET)
+                .setProgress(0, 100, true)
+                .setGroup("Sync Group");
 
         // contenIntent required for all Versions before ICS
         PendingIntent pendingIntent = PendingIntent.getActivity(this.mContext,
-                0, new Intent(), 0);
+                0, new Intent(mContext, MainActivity.class), 0);
         this.mBuilder.setContentIntent(pendingIntent);
 
         ((NotificationManager) mContext
-                .getSystemService(Context.NOTIFICATION_SERVICE)).cancel(id);
-        ((NotificationManager) mContext
                 .getSystemService(Context.NOTIFICATION_SERVICE)).notify(id,
                 mBuilder.build());
-
     }
 
     public void update(String mText) {

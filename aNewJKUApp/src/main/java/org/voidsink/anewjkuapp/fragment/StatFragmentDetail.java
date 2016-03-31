@@ -25,6 +25,7 @@
 package org.voidsink.anewjkuapp.fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -61,7 +63,7 @@ import org.voidsink.anewjkuapp.utils.Consts;
 import java.util.List;
 
 public class StatFragmentDetail extends TermFragment implements
-        ContentObserverListener, LoaderManager.LoaderCallbacks<Cursor> {
+        ContentObserverListener, LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private BaseContentObserver mDataObserver;
     private StatCardAdapter mAdapter;
@@ -106,6 +108,10 @@ public class StatFragmentDetail extends TermFragment implements
                 getActivity().startService(mUpdateService);
 
                 return true;
+            case R.id.action_toggle_grades:
+                item.setChecked(item.isCheckable() && !item.isChecked());
+                PreferenceWrapper.setPrefPositiveGradesOnly(getContext(), item.isChecked());
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -135,11 +141,17 @@ public class StatFragmentDetail extends TermFragment implements
         getActivity().getContentResolver().registerContentObserver(
                 KusssContentContract.Assessment.CONTENT_CHANGED_URI, false,
                 mDataObserver);
+
+        PreferenceManager.getDefaultSharedPreferences(getContext())
+                .registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
+
+        PreferenceManager.getDefaultSharedPreferences(getContext())
+                .unregisterOnSharedPreferenceChangeListener(this);
 
         getActivity().getContentResolver().unregisterContentObserver(
                 mDataObserver);
@@ -226,5 +238,12 @@ public class StatFragmentDetail extends TermFragment implements
         }
 
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(PreferenceWrapper.PREF_POSITIVE_GRADES_ONLY)) {
+            onContentChanged(false);
+        }
     }
 }

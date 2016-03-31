@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  *      ____.____  __.____ ___     _____
  *     |    |    |/ _|    |   \   /  _  \ ______ ______
  *     |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -6,7 +6,7 @@
  * \________|____|__ \______/   \____|__  /   __/|   __/
  *                  \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ * Copyright (c) 2014-2016 Paul "Marunjar" Pretsch
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *
+ */
 
 package org.voidsink.anewjkuapp.notification;
 
@@ -31,6 +32,7 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.activity.MainActivity;
 
 public class KusssNotificationBuilder {
 
@@ -40,12 +42,14 @@ public class KusssNotificationBuilder {
                                              int stringResID, Exception e) {
         // contenIntent required for all Versions before ICS
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
-                new Intent(), 0);
+                new Intent(mContext, MainActivity.class), 0);
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-                mContext).setSmallIcon(R.drawable.ic_stat_notify_kusss)
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext)
+                .setSmallIcon(R.drawable.ic_stat_notify_kusss)
                 .setContentTitle(mContext.getText(stringResID))
-                .setContentIntent(pendingIntent).setAutoCancel(true);
+                .setContentIntent(pendingIntent)
+                .setCategory(NotificationCompat.CATEGORY_ERROR)
+                .setAutoCancel(true);
 
         if (e != null) {
             mBuilder.setContentText(e.getLocalizedMessage());
@@ -56,7 +60,5 @@ public class KusssNotificationBuilder {
         ((NotificationManager) mContext
                 .getSystemService(Context.NOTIFICATION_SERVICE)).notify(
                 NOTIFICATION_ERROR, mBuilder.build());
-
     }
-
 }
