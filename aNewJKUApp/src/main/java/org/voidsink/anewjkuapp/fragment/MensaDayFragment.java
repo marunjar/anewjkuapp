@@ -59,7 +59,7 @@ import java.util.List;
 
 public class MensaDayFragment extends BaseFragment {
 
-    public static final String TAG = MensaDayFragment.class.getSimpleName();
+    private static final String TAG = MensaDayFragment.class.getSimpleName();
     private static final List<IMensa> mMensen = new ArrayList<>();
     private Date mDate;
     private MensaMenuAdapter mAdapter;

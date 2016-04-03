@@ -246,7 +246,7 @@ public class CurriculaFragment extends BaseFragment implements
     }
 
     public static class CurriculumHeaderHolder extends RecyclerView.ViewHolder {
-        public TextView mText;
+        public final TextView mText;
 
         public CurriculumHeaderHolder(View itemView) {
             super(itemView);

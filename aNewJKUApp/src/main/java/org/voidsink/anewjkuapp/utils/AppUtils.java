@@ -249,10 +249,18 @@ public class AppUtils {
     private static boolean removeAccount(Context context) {
         Account account = getAccount(context);
         if (account != null) {
-            AccountManager.get(context).removeAccount(account, null, null, null);
-            Log.d(TAG, "account removed");
+            removeAccout(AccountManager.get(context), account);
         }
         return true;
+    }
+
+    public static void removeAccout(AccountManager accountManager, Account account) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            accountManager.removeAccount(account, null, null, null);
+        } else {
+            accountManager.removeAccount(account, null, null);
+        }
+        Log.d(TAG, "account removed");
     }
 
     private static boolean shouldRemoveOldAccount(int lastVersion,

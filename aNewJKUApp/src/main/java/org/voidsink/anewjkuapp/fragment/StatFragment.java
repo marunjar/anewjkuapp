@@ -32,7 +32,7 @@ import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.utils.Consts;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class StatFragment extends SlidingTabsFragment {
@@ -44,7 +44,7 @@ public class StatFragment extends SlidingTabsFragment {
         mTabs.add(new TermTabItem(getString(R.string.all_terms), null, StatFragmentDetail.class));
 
         for (Term term : mTerms) {
-            mTabs.add(new TermTabItem(term.toString(), Arrays.asList(term), StatFragmentDetail.class));
+            mTabs.add(new TermTabItem(term.toString(), Collections.singletonList(term), StatFragmentDetail.class));
         }
     }
 

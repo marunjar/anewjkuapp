@@ -63,6 +63,8 @@ public class SectionedRecyclerViewAdapter extends SectionedRecyclerViewBaseAdapt
 
     @Override
     protected void onBindHeaderViewHolder(Section section, RecyclerView.ViewHolder sectionViewHolder, int position) {
-        ((SectionedAdapter) mBaseAdapter).onBindHeaderViewHolder(sectionViewHolder, section.firstPosition);
+        if (mBaseAdapter instanceof SectionedAdapter) {
+            ((SectionedAdapter) mBaseAdapter).onBindHeaderViewHolder(sectionViewHolder, section.firstPosition);
+        }
     }
 }

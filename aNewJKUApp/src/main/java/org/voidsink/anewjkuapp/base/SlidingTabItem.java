@@ -31,7 +31,7 @@ import android.support.v4.app.Fragment;
 public class SlidingTabItem {
     private final CharSequence mTitle;
 
-    protected final Class<? extends Fragment> mFragment;
+    private final Class<? extends Fragment> mFragment;
 
     public SlidingTabItem(CharSequence title, Class<? extends Fragment> fragment) {
         mTitle = title;

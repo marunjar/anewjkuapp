@@ -29,10 +29,10 @@ import org.voidsink.anewjkuapp.mensa.IMensa;
 import org.voidsink.anewjkuapp.mensa.IMenu;
 
 public class MensaInfoItem implements MensaItem {
-    protected final IDay mDay;
-    protected final String title;
-    protected final String descr;
-    protected final IMensa mMensa;
+    private final IDay mDay;
+    private final String title;
+    private final String descr;
+    private final IMensa mMensa;
 
     public MensaInfoItem(IMensa mensa, IDay day, String title, String descr) {
         this.mDay = day;

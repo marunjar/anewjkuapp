@@ -44,7 +44,7 @@ import java.io.File;
 import java.util.List;
 
 public final class PreferenceWrapper {
-    public static final String TAG = PreferenceWrapper.class.getSimpleName();
+    private static final String TAG = PreferenceWrapper.class.getSimpleName();
 
     public static final String PREF_SYNC_INTERVAL_KEY = "pref_key_sync_interval";
     public static final int PREF_SYNC_INTERVAL_DEFAULT = 85;

@@ -85,17 +85,7 @@ public class BaseFragment extends Fragment implements StackedFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.i(TAG, "onOptionsItemSelected");
 
-        switch (item.getItemId()) {
-            case R.id.action_refresh_calendar:
-                return onRefreshSelected(item);
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    protected boolean onRefreshSelected(MenuItem item) {
-        Log.d(TAG, "onRefreshSelected");
-        return false;
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

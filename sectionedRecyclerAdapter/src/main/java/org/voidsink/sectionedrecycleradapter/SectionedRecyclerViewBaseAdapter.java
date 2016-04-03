@@ -50,7 +50,6 @@ public abstract class SectionedRecyclerViewBaseAdapter extends RecyclerView.Adap
                                             RecyclerView.Adapter baseAdapter) {
 
         mBaseAdapter = baseAdapter;
-        RecyclerView mRecyclerView = recyclerView;
 
         mBaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -82,8 +81,8 @@ public abstract class SectionedRecyclerViewBaseAdapter extends RecyclerView.Adap
             }
         });
 
-        if (mRecyclerView.getLayoutManager() instanceof GridLayoutManager) {
-            final GridLayoutManager layoutManager = (GridLayoutManager) mRecyclerView.getLayoutManager();
+        if (recyclerView.getLayoutManager() instanceof GridLayoutManager) {
+            final GridLayoutManager layoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
             layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {

@@ -121,8 +121,10 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
         if (!mIsNewAccount) {
             if (accountName != null) {
                 final TextView tvAccountName = (TextView) findViewById(R.id.accountName);
-                tvAccountName.setText(accountName);
-                tvAccountName.setEnabled(false);
+                if (tvAccountName != null) {
+                    tvAccountName.setText(accountName);
+                    tvAccountName.setEnabled(false);
+                }
             }
         }
 
@@ -148,10 +150,12 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 final TextView userPass = ((TextView) findViewById(R.id.accountPassword));
-                if (b) {
-                    userPass.setTransformationMethod(null);
-                } else {
-                    userPass.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                if (userPass != null) {
+                    if (b) {
+                        userPass.setTransformationMethod(null);
+                    } else {
+                        userPass.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    }
                 }
             }
         });
@@ -257,7 +261,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
                 account = oldAccount;
                 addNewAccount = false;
             } else {
-                mAccountManager.removeAccount(oldAccount, null, null); // todo: set param2, set param3
+                AppUtils.removeAccout(mAccountManager, oldAccount);
                 account = new Account(accountName, accountType);
                 addNewAccount = true;
             }

@@ -471,7 +471,7 @@ public class MapFragment extends BaseFragment implements
         return tileRendererLayer;
     }
 
-    protected MapViewPosition initializePosition(MapViewPosition mvp) {
+    private MapViewPosition initializePosition(MapViewPosition mvp) {
         LatLong center = mvp.getCenter();
 
         if (center.equals(new LatLong(0, 0))) {
@@ -482,7 +482,7 @@ public class MapFragment extends BaseFragment implements
         return mvp;
     }
 
-    protected MapPosition getInitialPosition() {
+    private MapPosition getInitialPosition() {
         File mapFile = getMapFile();
         MapDataStore mapDataStore = new MapFile(mapFile);
 
@@ -518,7 +518,7 @@ public class MapFragment extends BaseFragment implements
         AndroidResourceBitmap.clearResourceBitmaps();
     }
 
-    protected File getMapFile() {
+    private File getMapFile() {
         File mapFile = PreferenceWrapper.getMapFile(getContext());
         if (mapFile == null || !mapFile.exists() || !mapFile.canRead()) {
             mapFile = new File(getActivity().getFilesDir(), MAP_FILE_NAME);

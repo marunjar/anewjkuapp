@@ -30,7 +30,6 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -124,7 +123,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         List<LvaWithGrade> mLvas = card.getLvasWithGrades();
         double mOpenEcts = AppUtils.getECTS(LvaState.OPEN, mLvas);
         double mDoneEcts = AppUtils.getECTS(LvaState.DONE, mLvas);
-        double minEcts = (card.getTerms() != null) ? card.getTerms().size() * 30 : 0;
+        //double minEcts = (card.getTerms() != null) ? card.getTerms().size() * 30 : 0;
 
         if (holder.mBarChart.getVisibility() == View.VISIBLE) {
             ComboLineColumnChartData dataSet = new ComboLineColumnChartData();
@@ -215,7 +214,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
 
             captions.add(category);
 
-            SliceValue slice = new EctsSliceValue((float)percent, (float)ects, grade, color);
+            SliceValue slice = new EctsSliceValue((float) percent, (float) ects, grade, color);
             slice.setLabel(String.format("%.2f %%", percent));
             slices.add(slice);
         }
@@ -393,24 +392,24 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         pieChart.setChartRotation(180, false);
 
         pieChart.setOnValueTouchListener(new PieChartOnValueSelectListener() {
-                @Override
-                public void onValueSelected(int arcIndex, SliceValue value) {
-                    SliceValue slice = pieChart.getPieChartData().getValues().get(arcIndex);
-                    if (slice instanceof EctsSliceValue) {
-                        pieChart.getPieChartData().setCenterText1(String.format("%.2f ECTS", ((EctsSliceValue) slice).getEcts()));
-                        Grade grade = ((EctsSliceValue) slice).getGrade();
-                        if (grade != null) {
-                            pieChart.getPieChartData().setCenterText2(mContext.getString(grade.getStringResID()));
-                        }
+            @Override
+            public void onValueSelected(int arcIndex, SliceValue value) {
+                SliceValue slice = pieChart.getPieChartData().getValues().get(arcIndex);
+                if (slice instanceof EctsSliceValue) {
+                    pieChart.getPieChartData().setCenterText1(String.format("%.2f ECTS", ((EctsSliceValue) slice).getEcts()));
+                    Grade grade = ((EctsSliceValue) slice).getGrade();
+                    if (grade != null) {
+                        pieChart.getPieChartData().setCenterText2(mContext.getString(grade.getStringResID()));
                     }
                 }
+            }
 
-                @Override
-                public void onValueDeselected() {
-                    pieChart.getPieChartData().setCenterText1(null);
-                    pieChart.getPieChartData().setCenterText2(null);
-                }
-            });
+            @Override
+            public void onValueDeselected() {
+                pieChart.getPieChartData().setCenterText1(null);
+                pieChart.getPieChartData().setCenterText2(null);
+            }
+        });
     }
 
     private void initBaseChart(AbstractChartView chart) {

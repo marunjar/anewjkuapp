@@ -65,9 +65,9 @@ public abstract class RecyclerArrayAdapter<T, VH extends RecyclerView.ViewHolder
         }
     }
 
-    public void addAll(T... items) {
-        addAll(Arrays.asList(items));
-    }
+//    public final void addAll(T... items) {
+//        addAll(Arrays.asList(items));
+//    }
 
     public void clear() {
         items.clear();

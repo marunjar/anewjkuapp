@@ -82,7 +82,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
     private static final String ARG_CAL_LOAD_THEN = "CLT";
     private BaseContentObserver mDataObserver;
     private WeekView mWeekView;
-    private MyWeekViewLoader mWeekViewLoader = new MyWeekViewLoader();
+    private final MyWeekViewLoader mWeekViewLoader = new MyWeekViewLoader();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -364,7 +364,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
     private class MyWeekViewLoader implements WeekViewLoader, WeekView.ScrollListener {
 
         private int mDaysInPeriod = 7;
-        private HashMap<Integer, ArrayList<WeekViewEvent>> mEvents;
+        private final HashMap<Integer, ArrayList<WeekViewEvent>> mEvents;
         private final ArrayList<Integer> mLastLoadedPeriods;
         private int mLastPeriodIndex = 0;
 
