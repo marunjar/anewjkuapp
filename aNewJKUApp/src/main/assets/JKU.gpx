@@ -37,9 +37,9 @@
 	<sym>z-favorites</sym>
 </wpt>
 <wpt lat="48.338029" lon="14.319930">
-	<time>2014-05-08T04:55:07Z</time>
+	<time>2016-04-25T08:37:07Z</time>
 	<name><![CDATA[HS 4]]></name>
-	<desc><![CDATA[HT 179F, 1. OG , Aufgang F]]></desc>
+	<desc><![CDATA[OÖNachrichten Hörsaal, HT 179F, 1. OG , Aufgang F]]></desc>
 	<sym>z-favorites</sym>
 </wpt>
 <wpt lat="48.338087" lon="14.319152">
@@ -60,14 +60,14 @@
 	<sym>z-favorites</sym>
 </wpt>
 <wpt lat="48.337408" lon="14.317177">
-	<time>2014-05-08T08:38:40Z</time>
+	<time>2016-04-25T08:37:40Z</time>
 	<name><![CDATA[HS 9]]></name>
-	<desc><![CDATA[Borealis Hörsaal, HG 001, EG]]></desc>
+	<desc><![CDATA[HG 001, EG]]></desc>
 </wpt>
 <wpt lat="48.337408" lon="14.317177">
-	<time>2014-05-08T08:38:40Z</time>
+	<time>2016-04-25T08:37:40Z</time>
 	<name><![CDATA[HS 10]]></name>
-	<desc><![CDATA[Fabasoft Hörsaal, HG 101, 1. OG]]></desc>
+	<desc><![CDATA[HG 101, 1. OG]]></desc>
 </wpt>
 <wpt lat="48.337043" lon="14.319597">
 	<time>2014-05-07T13:14:30Z</time>
@@ -91,9 +91,9 @@
 	<sym>z-favorites</sym>
 </wpt>
 <wpt lat="48.335208" lon="14.324013">
-	<time>2014-05-12T08:03:34Z</time>
+	<time>2016-04-25T08:37:00Z</time>
 	<name><![CDATA[S3 063]]></name>
-	<desc><![CDATA[PC-Pool, EG]]></desc>
+	<desc><![CDATA[ruxit Seminarraum, S3 055,EG]]></desc>
 </wpt>
 <wpt lat="48.335020" lon="14.323806">
 	<time>2014-05-12T08:04:57Z</time>
@@ -206,9 +206,9 @@
 	<desc><![CDATA[T 008, EG]]></desc>
 </wpt>
 <wpt lat="48.336362" lon="14.318116">
-	<time>2014-05-15T12:16:49Z</time>
+	<time>2016-04-25T08:40:46Z</time>
 	<name><![CDATA[HS 15]]></name>
-	<desc><![CDATA[Siemens VAI Hörsaal, MZ 001A, EG]]></desc>
+	<desc><![CDATA[Primetals Technologies Hörsaal, MZ 001A, EG]]></desc>
 	<sym>z-favorites</sym>
 </wpt>
 <wpt lat="48.336424" lon="14.317768">
@@ -217,9 +217,9 @@
 	<desc><![CDATA[voestalpine Saal, MZ 009A, EG]]></desc>
 </wpt>
 <wpt lat="48.336674" lon="14.317754">
-	<time>2014-05-15T12:19:13Z</time>
+	<time>2016-04-25T08:40:13Z</time>
 	<name><![CDATA[HS 17]]></name>
-	<desc><![CDATA[Hypo-OÖ Saal, MZ 001B, EG]]></desc>
+	<desc><![CDATA[MZ 001B, EG]]></desc>
 </wpt>
 <wpt lat="48.337106" lon="14.317852">
 	<time>2014-05-15T12:39:32Z</time>
