@@ -631,4 +631,24 @@
 	<desc><![CDATA[1. OG]]></desc>
 	<sym>z-favorites</sym>
 </wpt>
+<wpt lat="48.335597" lon="14.3171515">
+	<time>2016-05-03T16:56:00Z</time>
+	<name><![CDATA[KHG I]]></name>
+	<desc><![CDATA[Seminarraum, Repräsentationsraum, 1. UG]]></desc>
+</wpt>
+<wpt lat="48.335597" lon="14.3171515">
+	<time>2016-05-03T16:57:00Z</time>
+	<name><![CDATA[KHG II]]></name>
+	<desc><![CDATA[Seminarraum, Katholische Hochschulgemeinde, EG]]></desc>
+</wpt>
+<wpt lat="48.33707" lon="14.32443">
+	<time>2016-05-03T16:59:00Z</time>
+	<name><![CDATA[KEP 1]]></name>
+	<desc><![CDATA[KH 004, Seminarraum, Keplerheim, EG]]></desc>
+</wpt>
+<wpt lat="48.33707" lon="14.32443">
+	<time>2016-05-06T20:21:00Z</time>
+	<name><![CDATA[KEP 3]]></name>
+	<desc><![CDATA[KH 008, Seminarraum, Keplerheim, 1. UG]]></desc>
+</wpt>
 </gpx>
