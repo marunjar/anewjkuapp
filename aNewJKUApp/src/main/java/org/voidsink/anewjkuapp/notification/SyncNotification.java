@@ -50,7 +50,7 @@ public class SyncNotification {
                 .getSystemService(Context.NOTIFICATION_SERVICE)).cancel(id);
 
         this.mBuilder = new NotificationCompat.Builder(this.mContext)
-                .setSmallIcon(R.drawable.ic_stat_notify_kusss)
+                .setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp)
                 .setOngoing(true)
                 .setCategory(NotificationCompat.CATEGORY_SERVICE)
                 .setAutoCancel(true)

@@ -154,7 +154,7 @@
         </service>
         <service
             android:name="org.voidsink.anewjkuapp.dashclock.MensaDashclockExtension"
-            android:icon="@drawable/ic_food"
+            android:icon="@drawable/ic_food_24dp"
             android:label="@string/extension_mensa_title"
             android:permission="com.google.android.apps.dashclock.permission.READ_EXTENSION_DATA">
             <intent-filter>

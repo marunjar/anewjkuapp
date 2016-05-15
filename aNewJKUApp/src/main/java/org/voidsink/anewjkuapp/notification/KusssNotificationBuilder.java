@@ -45,7 +45,7 @@ public class KusssNotificationBuilder {
                 new Intent(mContext, MainActivity.class), 0);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext)
-                .setSmallIcon(R.drawable.ic_stat_notify_kusss)
+                .setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp)
                 .setContentTitle(mContext.getText(stringResID))
                 .setContentIntent(pendingIntent)
                 .setCategory(NotificationCompat.CATEGORY_ERROR)
