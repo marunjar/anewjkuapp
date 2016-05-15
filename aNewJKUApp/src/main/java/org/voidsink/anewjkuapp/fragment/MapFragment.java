@@ -380,6 +380,10 @@ public class MapFragment extends BaseFragment implements
         this.mapView.setBuiltInZoomControls(true);
         this.mapView.getMapZoomControls().setZoomLevelMin(MIN_ZOOM_LEVEL);
         this.mapView.getMapZoomControls().setZoomLevelMax(MAX_ZOOM_LEVEL);
+        this.mapView.getMapZoomControls().setZoomInResource(R.drawable.zoom_control_in);
+        this.mapView.getMapZoomControls().setZoomOutResource(R.drawable.zoom_control_out);
+        this.mapView.getMapZoomControls().setMarginHorizontal(getContext().getResources().getDimensionPixelSize(R.dimen.map_zoom_control_margin_horizontal));
+        this.mapView.getMapZoomControls().setMarginVertical(getContext().getResources().getDimensionPixelSize(R.dimen.map_zoom_control_margin_vertical));
 
         this.tileCache = AndroidUtil.createTileCache(getContext(),
                 "mapFragment",
