@@ -26,10 +26,10 @@ package org.voidsink.anewjkuapp.calendar;
 
 public interface CalendarListItem {
 
-    public static final int TYPE_SECTION = 0;
-    public static final int TYPE_EVENT = 1;
+    int TYPE_SECTION = 0;
+    int TYPE_EVENT = 1;
 
-    public boolean isEvent();
+    boolean isEvent();
 
-    public int getType();
+    int getType();
 }

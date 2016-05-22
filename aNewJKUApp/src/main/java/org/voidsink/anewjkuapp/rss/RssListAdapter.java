@@ -51,7 +51,6 @@ public class RssListAdapter extends RecyclerArrayAdapter<FeedEntry, RssListAdapt
     private static final String TAG = RssListAdapter.class.getSimpleName();
     private static final String EMPTY_IMAGE_URL = "http://oeh.jku.at/sites/default/files/styles/generic_thumbnail_medium/public/default_images/defaultimage-article_0.png";
 
-    private final Context mContext;
     private OnItemClickListener mItemClickListener;
 
     public interface OnItemClickListener {
@@ -63,9 +62,7 @@ public class RssListAdapter extends RecyclerArrayAdapter<FeedEntry, RssListAdapt
     }
 
     public RssListAdapter(Context context, List<FeedEntry> dataset) {
-        super();
-
-        this.mContext = context;
+        super(context);
 
         SetOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -144,11 +141,11 @@ public class RssListAdapter extends RecyclerArrayAdapter<FeedEntry, RssListAdapt
 
     private void startFeedDetailView(FeedEntry entry) {
         if (entry != null) {
-            Intent i = new Intent(mContext, RssFeedEntryActivity.class);
+            Intent i = new Intent(getContext(), RssFeedEntryActivity.class);
 
             i.putExtra(Consts.ARG_FEED_ENTRY, entry);
 
-            mContext.startActivity(i);
+            getContext().startActivity(i);
         }
     }
 }

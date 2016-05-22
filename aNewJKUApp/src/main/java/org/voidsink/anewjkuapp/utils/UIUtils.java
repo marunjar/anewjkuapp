@@ -81,10 +81,10 @@ public class UIUtils {
         }
     }
 
-    public static String getChipGradeText(Assessment assessment) {
+    public static String getChipGradeText(Context context, Assessment assessment) {
         if (assessment != null) {
             if (assessment.getGrade().isNumber()) {
-                return String.format("%d", assessment.getGrade().getValue());
+                return AppUtils.format(context, "%d", assessment.getGrade().getValue());
             }
             if (assessment.getGrade().isPositive()) {
                 return "\u2713";
@@ -102,7 +102,7 @@ public class UIUtils {
         return Color.GRAY;
     }
 
-    public static String getChipGradeEcts(double ects) {
-        return String.format("%.2f ECTS", ects);
+    public static String getChipGradeEcts(Context context, double ects) {
+        return AppUtils.format(context, "%.2f ECTS", ects);
     }
 }

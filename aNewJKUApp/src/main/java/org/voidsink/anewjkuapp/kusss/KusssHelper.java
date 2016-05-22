@@ -42,6 +42,7 @@ import org.voidsink.anewjkuapp.utils.AppUtils;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Locale;
 
 public class KusssHelper {
 
@@ -86,7 +87,7 @@ public class KusssHelper {
     }
 
     public static String getExamKey(String courseId, String term, long date) {
-        return String.format("%s-%s-%d", courseId, term, date);
+        return String.format(Locale.GERMAN, "%s-%s-%d", courseId, term, date);
     }
 
 
@@ -154,7 +155,7 @@ public class KusssHelper {
     }
 
     public static String getAssessmentKey(String classCode, String courseId, long date) {
-        return String.format("%s-%s-%d", classCode, courseId, date);
+        return String.format(Locale.GERMAN, "%s-%s-%d", classCode, courseId, date);
     }
 
     public static Assessment createAssessment(Cursor c) throws ParseException {

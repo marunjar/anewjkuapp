@@ -84,6 +84,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.Callable;
@@ -916,4 +917,15 @@ public class AppUtils {
     }
 
     private static float mLastHue = new Random(System.currentTimeMillis()).nextFloat() * 360;
+
+    public static String format(Context c, String format, Object... args) {
+        Locale locale = null;
+        try {
+            locale = c.getResources().getConfiguration().locale;
+        } catch (Exception e) {
+            locale = Locale.getDefault();
+        }
+
+        return String.format(locale, format, args);
+    }
 }

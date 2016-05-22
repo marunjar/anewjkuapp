@@ -40,11 +40,8 @@ import org.voidsink.sectionedrecycleradapter.SectionedAdapter;
 
 public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, CourseListAdapter.LvaViewHolder> implements SectionedAdapter<CourseListAdapter.LvaHeaderHolder> {
 
-    private final Context mContext;
-
     public CourseListAdapter(Context context) {
-        super();
-        this.mContext = context;
+        super(context);
     }
 
     @Override
@@ -61,7 +58,7 @@ public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, Course
         UIUtils.setTextAndVisibility(holder.mTeacher, lva.getCourse().getTeacher());
         holder.mCourseId.setText(lva.getCourse().getCourseId());
         if (lva.getCourse().getCid() > 0) {
-            holder.mCid.setText(String.format("[%d]", lva.getCourse().getCid()));
+            holder.mCid.setText(AppUtils.format(getContext(), "[%d]", lva.getCourse().getCid()));
             holder.mCid.setVisibility(View.VISIBLE);
         } else {
             holder.mCid.setVisibility(View.GONE);
@@ -71,8 +68,8 @@ public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, Course
 
         Assessment grade = lva.getGrade();
         holder.mChipBack.setBackgroundColor(UIUtils.getChipGradeColor(grade));
-        holder.mChipGrade.setText(UIUtils.getChipGradeText(grade));
-        holder.mChipEcts.setText(UIUtils.getChipGradeEcts(lva.getCourse().getEcts()));
+        holder.mChipGrade.setText(UIUtils.getChipGradeText(getContext(), grade));
+        holder.mChipEcts.setText(UIUtils.getChipGradeEcts(getContext(), lva.getCourse().getEcts()));
     }
 
     @Override
@@ -94,7 +91,7 @@ public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, Course
     public void onBindHeaderViewHolder(LvaHeaderHolder lvaHeaderHolder, int position) {
         LvaWithGrade lva = getItem(position);
         if (lva != null) {
-            lvaHeaderHolder.mText.setText(mContext.getString(lva.getState().getStringResID()));
+            lvaHeaderHolder.mText.setText(getContext().getString(lva.getState().getStringResID()));
         }
     }
 

@@ -30,6 +30,7 @@ import android.text.TextUtils;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -130,7 +131,7 @@ public class Term implements Comparable<Term> {
     }
 
     public String toString() {
-        return String.format("%d%s", year, type.toString());
+        return String.format(Locale.GERMAN, "%d%s", year, type.toString());
     }
 
     public boolean isLoaded() {

@@ -45,13 +45,10 @@ import java.util.Date;
 
 public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent, CalendarEventAdapter.EventItemHolder> implements SectionedAdapter<CalendarEventAdapter.DateHeaderHolder> {
 
-    private final Context mContext;
     private OnItemClickListener mItemClickListener;
 
     public CalendarEventAdapter(Context context) {
-        super();
-
-        mContext = context;
+        super(context);
     }
 
     public interface OnItemClickListener {
@@ -120,11 +117,11 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
                 public boolean onMenuItemClick(MenuItem menuItem) {
                     switch (menuItem.getItemId()) {
                         case R.id.show_in_calendar: {
-                            eventItem.showInCalendar(mContext);
+                            eventItem.showInCalendar(getContext());
                             return true;
                         }
                         case R.id.show_on_map: {
-                            eventItem.showOnMap(mContext);
+                            eventItem.showOnMap(getContext());
                             return true;
                         }
                     }

@@ -70,11 +70,9 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
     private final int mTextSizePrimary;
     private final int mTextColorSecondary;
     private final int mTextSizeSecondary;
-    private final Context mContext;
 
     public StatCardAdapter(Context context) {
-        super();
-        this.mContext = context;
+        super(context);
 
         TypedArray themeArray = context.getTheme().obtainStyledAttributes(new int[]{android.R.attr.textColorPrimary, android.R.attr.textColorSecondary, android.R.attr.textSize});
         this.mTextColorPrimary = themeArray.getColor(0, Color.BLACK);
@@ -106,14 +104,14 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         holder.mItems.removeAllViews();
 
         for (LvaStatItem item : lvaStats) {
-            final LayoutInflater mInflater = LayoutInflater.from(mContext);
+            final LayoutInflater mInflater = LayoutInflater.from(getContext());
             View view = mInflater.inflate(R.layout.stat_card_lva_list_entry, null, false);
 
             TextView type = (TextView) view.findViewById(R.id.stat_card_lva_list_entry_type);
             TextView ects = (TextView) view.findViewById(R.id.stat_card_lva_list_entry_ects);
 
-            type.setText(mContext.getString(item.getType().getStringResID()));
-            ects.setText(String.format("%.2f ECTS", item.getEcts()));
+            type.setText(getContext().getString(item.getType().getStringResID()));
+            ects.setText(AppUtils.format(getContext(), "%.2f ECTS", item.getEcts()));
 
             holder.mItems.addView(view);
         }
@@ -133,9 +131,9 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             ArrayList<AxisValue> axisValues = new ArrayList<>();
 
             // add series to bar chart
-            addSerieToBarChart(yVals, axisValues, mContext.getString(LvaState.DONE.getStringResID()),
+            addSerieToBarChart(yVals, axisValues, getContext().getString(LvaState.DONE.getStringResID()),
                     mDoneEcts * 100 / (mOpenEcts + mDoneEcts), mDoneEcts, Grade.G1.getColor());
-            addSerieToBarChart(yVals, axisValues, mContext.getString(LvaState.OPEN.getStringResID()),
+            addSerieToBarChart(yVals, axisValues, getContext().getString(LvaState.OPEN.getStringResID()),
                     mOpenEcts * 100 / (mOpenEcts + mDoneEcts), mOpenEcts, Grade.G3.getColor());
 
             Axis xAxis = new Axis(axisValues);
@@ -158,9 +156,9 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             ArrayList<Integer> colors = new ArrayList<>();
 
             // add series to pie chart
-            addSerieToPieChart(slices, captions, colors, mContext.getString(LvaState.DONE.getStringResID()),
+            addSerieToPieChart(getContext(), slices, captions, colors, getContext().getString(LvaState.DONE.getStringResID()),
                     mDoneEcts * 100 / (mOpenEcts + mDoneEcts), mDoneEcts, null, Grade.G1.getColor());
-            addSerieToPieChart(slices, captions, colors, mContext.getString(LvaState.OPEN.getStringResID()),
+            addSerieToPieChart(getContext(), slices, captions, colors, getContext().getString(LvaState.OPEN.getStringResID()),
                     mOpenEcts * 100 / (mOpenEcts + mDoneEcts), mOpenEcts, null, Grade.G3.getColor());
 
             PieChartData dataSet = new PieChartData();
@@ -198,7 +196,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
 
             ArrayList<SubcolumnValue> subColumns = new ArrayList<>();
             SubcolumnValue subColumn = new SubcolumnValue((float) percent, color);
-            subColumn.setLabel(String.format("%.2f ECTS", ects));
+            subColumn.setLabel(AppUtils.format(getContext(), "%.2f ECTS", ects));
             subColumns.add(subColumn);
             Column column = new Column(subColumns);
             column.setHasLabels(false);
@@ -207,7 +205,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         }
     }
 
-    private static void addSerieToPieChart(List<SliceValue> slices, List<String> captions, List<Integer> colors, String category,
+    private static void addSerieToPieChart(Context context, List<SliceValue> slices, List<String> captions, List<Integer> colors, String category,
                                            double percent, double ects, Grade grade, int color) {
         if (percent > 0) {
             colors.add(color);
@@ -215,13 +213,13 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             captions.add(category);
 
             SliceValue slice = new EctsSliceValue((float) percent, (float) ects, grade, color);
-            slice.setLabel(String.format("%.2f %%", percent));
+            slice.setLabel(AppUtils.format(context, "%.2f %%", percent));
             slices.add(slice);
         }
     }
 
     private void initLvaPlot(final StatViewHolder holder) {
-        if (PreferenceWrapper.getUseLvaBarChart(mContext)) {
+        if (PreferenceWrapper.getUseLvaBarChart(getContext())) {
             holder.mBarChart.setVisibility(View.VISIBLE);
             initBarChart(holder.mBarChart);
             holder.mPieChart.setVisibility(View.GONE);
@@ -277,14 +275,14 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         holder.mItems.removeAllViews();
 
         for (GradeStatItem item : gradeStats) {
-            final LayoutInflater mInflater = LayoutInflater.from(mContext);
+            final LayoutInflater mInflater = LayoutInflater.from(getContext());
 
             View view = mInflater.inflate(R.layout.stat_card_grade_list_entry, null, false);
             TextView type = (TextView) view.findViewById(R.id.stat_card_grade_list_entry_type);
             TextView avgGrade = (TextView) view.findViewById(R.id.stat_card_grade_list_entry_grade);
 
-            type.setText(mContext.getString(item.getType().getStringResID()));
-            avgGrade.setText(String.format("ø %.2f", item.getAvgGrade()));
+            type.setText(getContext().getString(item.getType().getStringResID()));
+            avgGrade.setText(AppUtils.format(getContext(), "ø %.2f", item.getAvgGrade()));
 
             holder.mItems.addView(view);
         }
@@ -296,12 +294,12 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             ArrayList<AxisValue> axisValues = new ArrayList<>();
 
             // add series to bar chart
-            addSerieToBarChart(yVals, axisValues, mContext.getString(Grade.G1.getStringResID()), AppUtils.getGradePercent(card.getAssessments(), Grade.G1, card.isWeighted()), AppUtils.getGradeEcts(card.getAssessments(), Grade.G1), Grade.G1.getColor());
-            addSerieToBarChart(yVals, axisValues, mContext.getString(Grade.G2.getStringResID()), AppUtils.getGradePercent(card.getAssessments(), Grade.G2, card.isWeighted()), AppUtils.getGradeEcts(card.getAssessments(), Grade.G2), Grade.G2.getColor());
-            addSerieToBarChart(yVals, axisValues, mContext.getString(Grade.G3.getStringResID()), AppUtils.getGradePercent(card.getAssessments(), Grade.G3, card.isWeighted()), AppUtils.getGradeEcts(card.getAssessments(), Grade.G3), Grade.G3.getColor());
-            addSerieToBarChart(yVals, axisValues, mContext.getString(Grade.G4.getStringResID()), AppUtils.getGradePercent(card.getAssessments(), Grade.G4, card.isWeighted()), AppUtils.getGradeEcts(card.getAssessments(), Grade.G4), Grade.G4.getColor());
+            addSerieToBarChart(yVals, axisValues, getContext().getString(Grade.G1.getStringResID()), AppUtils.getGradePercent(card.getAssessments(), Grade.G1, card.isWeighted()), AppUtils.getGradeEcts(card.getAssessments(), Grade.G1), Grade.G1.getColor());
+            addSerieToBarChart(yVals, axisValues, getContext().getString(Grade.G2.getStringResID()), AppUtils.getGradePercent(card.getAssessments(), Grade.G2, card.isWeighted()), AppUtils.getGradeEcts(card.getAssessments(), Grade.G2), Grade.G2.getColor());
+            addSerieToBarChart(yVals, axisValues, getContext().getString(Grade.G3.getStringResID()), AppUtils.getGradePercent(card.getAssessments(), Grade.G3, card.isWeighted()), AppUtils.getGradeEcts(card.getAssessments(), Grade.G3), Grade.G3.getColor());
+            addSerieToBarChart(yVals, axisValues, getContext().getString(Grade.G4.getStringResID()), AppUtils.getGradePercent(card.getAssessments(), Grade.G4, card.isWeighted()), AppUtils.getGradeEcts(card.getAssessments(), Grade.G4), Grade.G4.getColor());
             if (!card.isPositiveOnly()) {
-                addSerieToBarChart(yVals, axisValues, mContext.getString(Grade.G5.getStringResID()), AppUtils.getGradePercent(card.getAssessments(), Grade.G5, card.isWeighted()), AppUtils.getGradeEcts(card.getAssessments(), Grade.G5), Grade.G5.getColor());
+                addSerieToBarChart(yVals, axisValues, getContext().getString(Grade.G5.getStringResID()), AppUtils.getGradePercent(card.getAssessments(), Grade.G5, card.isWeighted()), AppUtils.getGradeEcts(card.getAssessments(), Grade.G5), Grade.G5.getColor());
             }
 
 
@@ -328,33 +326,33 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             ArrayList<Integer> colors = new ArrayList<>();
 
             // add series to pie chart
-            addSerieToPieChart(slices, captions, colors,
-                    mContext.getString(Grade.G1.getStringResID()),
+            addSerieToPieChart(getContext(), slices, captions, colors,
+                    getContext().getString(Grade.G1.getStringResID()),
                     AppUtils.getGradePercent(card.getAssessments(), Grade.G1, card.isWeighted()),
                     AppUtils.getGradeEcts(card.getAssessments(), Grade.G1),
                     Grade.G1,
                     Grade.G1.getColor());
-            addSerieToPieChart(slices, captions, colors,
-                    mContext.getString(Grade.G2.getStringResID()),
+            addSerieToPieChart(getContext(), slices, captions, colors,
+                    getContext().getString(Grade.G2.getStringResID()),
                     AppUtils.getGradePercent(card.getAssessments(), Grade.G2, card.isWeighted()),
                     AppUtils.getGradeEcts(card.getAssessments(), Grade.G2),
                     Grade.G2,
                     Grade.G2.getColor());
-            addSerieToPieChart(slices, captions, colors,
-                    mContext.getString(Grade.G3.getStringResID()),
+            addSerieToPieChart(getContext(), slices, captions, colors,
+                    getContext().getString(Grade.G3.getStringResID()),
                     AppUtils.getGradePercent(card.getAssessments(), Grade.G3, card.isWeighted()),
                     AppUtils.getGradeEcts(card.getAssessments(), Grade.G3),
                     Grade.G3,
                     Grade.G3.getColor());
-            addSerieToPieChart(slices, captions, colors,
-                    mContext.getString(Grade.G4.getStringResID()),
+            addSerieToPieChart(getContext(), slices, captions, colors,
+                    getContext().getString(Grade.G4.getStringResID()),
                     AppUtils.getGradePercent(card.getAssessments(), Grade.G4, card.isWeighted()),
                     AppUtils.getGradeEcts(card.getAssessments(), Grade.G4),
                     Grade.G4,
                     Grade.G4.getColor());
             if (!card.isPositiveOnly()) {
-                addSerieToPieChart(slices, captions, colors,
-                        mContext.getString(Grade.G5.getStringResID()),
+                addSerieToPieChart(getContext(), slices, captions, colors,
+                        getContext().getString(Grade.G5.getStringResID()),
                         AppUtils.getGradePercent(card.getAssessments(), Grade.G5, card.isWeighted()),
                         AppUtils.getGradeEcts(card.getAssessments(), Grade.G5),
                         Grade.G5,
@@ -370,7 +368,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
     }
 
     private void initGradePlot(final StatViewHolder holder) {
-        if (PreferenceWrapper.getUseLvaBarChart(mContext)) {
+        if (PreferenceWrapper.getUseLvaBarChart(getContext())) {
             holder.mBarChart.setVisibility(View.VISIBLE);
             initBarChart(holder.mBarChart);
             holder.mPieChart.setVisibility(View.GONE);
@@ -396,10 +394,10 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             public void onValueSelected(int arcIndex, SliceValue value) {
                 SliceValue slice = pieChart.getPieChartData().getValues().get(arcIndex);
                 if (slice instanceof EctsSliceValue) {
-                    pieChart.getPieChartData().setCenterText1(String.format("%.2f ECTS", ((EctsSliceValue) slice).getEcts()));
+                    pieChart.getPieChartData().setCenterText1(AppUtils.format(getContext(), "%.2f ECTS", ((EctsSliceValue) slice).getEcts()));
                     Grade grade = ((EctsSliceValue) slice).getGrade();
                     if (grade != null) {
-                        pieChart.getPieChartData().setCenterText2(mContext.getString(grade.getStringResID()));
+                        pieChart.getPieChartData().setCenterText2(getContext().getString(grade.getStringResID()));
                     }
                 }
             }
@@ -430,9 +428,9 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         switch (getItemViewType(position)) {
             case StatCard.TYPE_GRADE: {
                 if (item.isWeighted()) {
-                    holder.mTitle.setText(mContext.getString(R.string.stat_title_grade_weighted));
+                    holder.mTitle.setText(getContext().getString(R.string.stat_title_grade_weighted));
                 } else {
-                    holder.mTitle.setText(mContext.getString(R.string.stat_title_grade));
+                    holder.mTitle.setText(getContext().getString(R.string.stat_title_grade));
                 }
 
                 initGradeListItems(holder, item);
@@ -442,7 +440,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
                 break;
             }
             case StatCard.TYPE_LVA: {
-                holder.mTitle.setText(mContext.getString(R.string.stat_title_lva));
+                holder.mTitle.setText(getContext().getString(R.string.stat_title_lva));
 
                 initLvaListItems(holder, item);
                 initLvaPlot(holder);

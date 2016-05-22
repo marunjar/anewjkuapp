@@ -55,6 +55,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -532,10 +533,10 @@ public class KusssContentProvider extends ContentProvider {
 
             while (startSS.before(then) || startWS.before(then)) {
                 if (startSS.before(then) && dateInRange(startSS, mCurriculum)) {
-                    terms.add(String.format("%dS", year));
+                    terms.add(String.format(Locale.GERMAN, "%dS", year));
                 }
                 if (startWS.before(then) && dateInRange(startWS, mCurriculum)) {
-                    terms.add(String.format("%dW", year));
+                    terms.add(String.format(Locale.GERMAN, "%dW", year));
                 }
 
                 // inc year
