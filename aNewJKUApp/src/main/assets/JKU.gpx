@@ -651,4 +651,9 @@
 	<name><![CDATA[KEP 3]]></name>
 	<desc><![CDATA[KH 008, Seminarraum, Keplerheim, 1. UG]]></desc>
 </wpt>
+<wpt lat="48.337023" lon="14.320397">
+	<time>2016-05-22T19:42:00Z</time>
+	<name><![CDATA[TeichWerk]]></name>
+	<desc><![CDATA[es schwimmt]]></desc>
+</wpt>
 </gpx>
