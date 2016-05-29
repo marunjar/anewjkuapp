@@ -25,21 +25,27 @@
 
 package org.voidsink.anewjkuapp.base;
 
+import android.content.Context;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
 
 public abstract class RecyclerArrayAdapter<T, VH extends RecyclerView.ViewHolder>
         extends RecyclerView.Adapter<VH> {
     private final ArrayList<T> items = new ArrayList<>();
+    private final Context mContext;
 
-    public RecyclerArrayAdapter() {
+    public RecyclerArrayAdapter(Context context) {
         super();
+        this.mContext = context;
         setHasStableIds(true);
+    }
+
+    protected Context getContext() {
+        return mContext;
     }
 
     public void add(T object) {
@@ -65,9 +71,9 @@ public abstract class RecyclerArrayAdapter<T, VH extends RecyclerView.ViewHolder
         }
     }
 
-    public void addAll(T... items) {
-        addAll(Arrays.asList(items));
-    }
+//    public final void addAll(T... items) {
+//        addAll(Arrays.asList(items));
+//    }
 
     public void clear() {
         items.clear();

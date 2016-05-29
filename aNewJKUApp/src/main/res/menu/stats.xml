@@ -9,4 +9,10 @@
         android:title="@string/action_refresh"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/action_toggle_grades"
+        android:checkable="true"
+        android:title="@string/pref_stats_positive_grades_only_title"
+        app:showAsAction="never" />
+
 </menu>

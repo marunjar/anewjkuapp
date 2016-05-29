@@ -27,11 +27,13 @@ package org.voidsink.anewjkuapp.fragment;
 
 import android.accounts.Account;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.RectF;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -63,22 +65,24 @@ import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
-public class CalendarFragment2 extends BaseFragment implements ContentObserverListener, WeekView.ScrollListener,
-        WeekView.EventClickListener, DateTimeInterpreter, WeekView.EventLongPressListener, LoaderManager.LoaderCallbacks<Cursor> {
+public class CalendarFragment2 extends BaseFragment implements ContentObserverListener,
+        WeekView.EventClickListener, WeekView.EventLongPressListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = CalendarFragment2.class.getSimpleName();
     private static final String ARG_CAL_LOAD_NOW = "CLN";
     private static final String ARG_CAL_LOAD_THEN = "CLT";
     private BaseContentObserver mDataObserver;
     private WeekView mWeekView;
-    private MyWeekViewLoader mWeekViewLoader = new MyWeekViewLoader();
+    private final MyWeekViewLoader mWeekViewLoader = new MyWeekViewLoader();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,12 +98,12 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         // Set long press listener for events.
         //mWeekView.setEventLongPressListener(this);
         // Set formatter for Date/Time
-        mWeekView.setDateTimeInterpreter(this);
+        mWeekView.setDateTimeInterpreter(new CalendarDateTimeInterpreter(getContext()));
 
         mWeekViewLoader.setDaysInPeriod(mWeekView.getNumberOfVisibleDays() * 4);
         mWeekView.setWeekViewLoader(mWeekViewLoader);
 
-        mWeekView.setScrollListener(this);
+        mWeekView.setScrollListener(mWeekViewLoader);
 
         return view;
     }
@@ -160,22 +164,6 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
     @Override
     public void onEventClick(WeekViewEvent weekViewEvent, RectF rectF) {
         AppUtils.showEventLocation(getContext(), weekViewEvent.getLocation());
-    }
-
-    @Override
-    public String interpretDate(Calendar calendar) {
-        return SimpleDateFormat.getDateInstance().format(calendar.getTime());
-    }
-
-    @Override
-    public String interpretTime(int hour) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-
-        return SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(calendar.getTime());
     }
 
     @Override
@@ -337,22 +325,26 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
                     boolean allDay = data.getInt(ImportCalendarTask.COLUMN_EVENT_ALL_DAY) == 1;
 
                     Calendar startTime = Calendar.getInstance();
-                    if (allDay){
+                    if (allDay) {
                         startTime.setTimeZone(TimeZone.getTimeZone("GMT+0"));
                     }
                     startTime.setTimeInMillis(data.getLong(ImportCalendarTask.COLUMN_EVENT_DTSTART));
 
                     Calendar endTime = Calendar.getInstance();
-                    if (allDay){
+                    if (allDay) {
                         endTime.setTimeZone(TimeZone.getTimeZone("GMT+0"));
                     }
                     endTime.setTimeInMillis(data.getLong(ImportCalendarTask.COLUMN_EVENT_DTEND));
+                    if (allDay && endTime.getTimeInMillis() % DateUtils.MILLIS_PER_DAY == 0) {
+                        endTime.add(Calendar.MILLISECOND, -1);
+                    }
 
                     WeekViewEvent event = new WeekViewEvent(data.getLong(ImportCalendarTask.COLUMN_EVENT_ID),
                             data.getString(ImportCalendarTask.COLUMN_EVENT_TITLE),
                             data.getString(ImportCalendarTask.COLUMN_EVENT_LOCATION),
                             startTime,
-                            endTime);
+                            endTime,
+                            allDay);
 
                     event.setColor(mColors.get(data.getInt(ImportCalendarTask.COLUMN_EVENT_CAL_ID)));
 
@@ -369,23 +361,12 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         mWeekViewLoader.removeEvents(loader.getId());
     }
 
-    @Override
-    public void onFirstVisibleDayChanged(Calendar newFirstVisibleDay, Calendar oldFirstVisibleDay) {
-        if (mWeekViewLoader != null) {
-            int periodIndex = (int) mWeekViewLoader.toWeekViewPeriodIndex(newFirstVisibleDay);
-
-            mWeekViewLoader.loadPeriod(periodIndex - 1, false);
-            mWeekViewLoader.loadPeriod(periodIndex, false);
-            mWeekViewLoader.loadPeriod(periodIndex + 1, false);
-        }
-    }
-
-
-    private class MyWeekViewLoader implements WeekViewLoader {
+    private class MyWeekViewLoader implements WeekViewLoader, WeekView.ScrollListener {
 
         private int mDaysInPeriod = 7;
-        private HashMap<Integer, ArrayList<WeekViewEvent>> mEvents;
+        private final HashMap<Integer, ArrayList<WeekViewEvent>> mEvents;
         private final ArrayList<Integer> mLastLoadedPeriods;
+        private int mLastPeriodIndex = 0;
 
         public MyWeekViewLoader() {
             mLastLoadedPeriods = new ArrayList<>();
@@ -485,6 +466,51 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
                     }
                 }
             }.run();
+        }
+
+        @Override
+        public void onFirstVisibleDayChanged(Calendar newFirstVisibleDay, Calendar oldFirstVisibleDay) {
+            int periodIndex = (int) toWeekViewPeriodIndex(newFirstVisibleDay);
+
+            if (oldFirstVisibleDay == null || mLastPeriodIndex != periodIndex) {
+                mLastPeriodIndex = periodIndex;
+
+                loadPeriod(periodIndex - 1, false);
+                loadPeriod(periodIndex, false);
+                loadPeriod(periodIndex + 1, false);
+            }
+        }
+    }
+
+    private class CalendarDateTimeInterpreter implements DateTimeInterpreter {
+
+        final DateFormat mDateFormat;
+        final DateFormat mTimeFormat;
+
+        public CalendarDateTimeInterpreter(Context context) {
+            Locale locale = context.getResources().getConfiguration().locale;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                mDateFormat = new SimpleDateFormat(android.text.format.DateFormat.getBestDateTimePattern(locale, "EEEMMdd"), locale);
+            } else {
+                mDateFormat = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT, locale);
+            }
+            mTimeFormat = android.text.format.DateFormat.getTimeFormat(context);
+        }
+
+        @Override
+        public String interpretDate(Calendar calendar) {
+            return mDateFormat.format(calendar.getTime());
+        }
+
+        @Override
+        public String interpretTime(int hour) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, hour);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+
+            return mTimeFormat.format(calendar.getTime());
         }
     }
 }

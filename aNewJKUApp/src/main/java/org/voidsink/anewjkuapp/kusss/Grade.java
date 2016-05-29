@@ -28,7 +28,6 @@ package org.voidsink.anewjkuapp.kusss;
 import android.graphics.Color;
 
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
 public enum Grade {

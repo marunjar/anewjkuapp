@@ -84,6 +84,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.Callable;
@@ -249,10 +250,18 @@ public class AppUtils {
     private static boolean removeAccount(Context context) {
         Account account = getAccount(context);
         if (account != null) {
-            AccountManager.get(context).removeAccount(account, null, null);
-            Log.d(TAG, "account removed");
+            removeAccout(AccountManager.get(context), account);
         }
         return true;
+    }
+
+    public static void removeAccout(AccountManager accountManager, Account account) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            accountManager.removeAccount(account, null, null, null);
+        } else {
+            accountManager.removeAccount(account, null, null);
+        }
+        Log.d(TAG, "account removed");
     }
 
     private static boolean shouldRemoveOldAccount(int lastVersion,
@@ -547,9 +556,11 @@ public class AppUtils {
                     null, null);
         } else {
             response = am.getAuthToken(account,
-                    KusssAuthenticator.AUTHTOKEN_TYPE_READ_ONLY, true, null,
+                    KusssAuthenticator.AUTHTOKEN_TYPE_READ_ONLY, null, true, null,
                     null);
         }
+
+        if (response == null) return null;
 
         try {
             return response.getResult().getString(AccountManager.KEY_AUTHTOKEN);
@@ -645,32 +656,34 @@ public class AppUtils {
                 }
             }
             if (finalAssessment != null) {
-                Log.d(TAG, String.format("found by courseId/title: %s/%s", course.getCourseId(), course.getTitle()));
+                Log.d(TAG, String.format("found by code/title: %s/%s -> %s", course.getCode(), course.getTitle(), course.getCourseId()));
             }
         } else {
-            Log.d(TAG, String.format("found by courseId/code: %s/%s", course.getCourseId(), course.getCode()));
+            Log.d(TAG, String.format("found by code/courseId: %s/%s -> %s", course.getCode(), course.getCourseId(), course.getTitle()));
         }
 
         return finalAssessment;
     }
 
     private static void addIfRecent(List<Assessment> assessments, Assessment assessment) {
-        int i = 0;
-        while (i < assessments.size()) {
-            Assessment g = assessments.get(i);
-            // check only assessments for same lva and term
-            if (g.getCode().equals(assessment.getCode())
-                    && g.getCourseId().equals(assessment.getCourseId())) {
-                // keep only recent (best and newest) assessment
-                if (g.getDate().before(assessment.getDate())) {
-                    // remove last assessment
-                    assessments.remove(i);
+        if (!assessment.getAssessmentType().isDuplicatesPossible()) {
+            int i = 0;
+            while (i < assessments.size()) {
+                Assessment g = assessments.get(i);
+                // check only assessments for same lva and term
+                if (g.getCode().equals(assessment.getCode())
+                        && g.getCourseId().equals(assessment.getCourseId())) {
+                    // keep only recent (best and newest) assessment
+                    if (g.getDate().before(assessment.getDate())) {
+                        // remove last assessment
+                        assessments.remove(i);
+                    } else {
+                        // break without adding
+                        return;
+                    }
                 } else {
-                    // break without adding
-                    return;
+                    i++;
                 }
-            } else {
-                i++;
             }
         }
         // finally add assessment
@@ -904,4 +917,15 @@ public class AppUtils {
     }
 
     private static float mLastHue = new Random(System.currentTimeMillis()).nextFloat() * 360;
+
+    public static String format(Context c, String format, Object... args) {
+        Locale locale = null;
+        try {
+            locale = c.getResources().getConfiguration().locale;
+        } catch (Exception e) {
+            locale = Locale.getDefault();
+        }
+
+        return String.format(locale, format, args);
+    }
 }

@@ -41,11 +41,8 @@ import java.text.DateFormat;
 
 public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, AssessmentListAdapter.GradeViewHolder> implements SectionedAdapter<AssessmentListAdapter.GradeHeaderHolder> {
 
-    private final Context mContext;
-
     public AssessmentListAdapter(Context context) {
-        super();
-        this.mContext = context;
+        super(context);
     }
 
     @Override
@@ -63,18 +60,18 @@ public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, Asse
         UIUtils.setTextAndVisibility(holder.mTerm, AppUtils.termToString(assessment.getTerm()));
 
         if (assessment.getCid() > 0) {
-            holder.mCid.setText(String.format("[%d]", assessment.getCid()));
+            holder.mCid.setText(AppUtils.format(getContext(), "[%d]", assessment.getCid()));
             holder.mCid.setVisibility(View.VISIBLE);
         } else {
             holder.mCid.setVisibility(View.GONE);
         }
 
         holder.mChipBack.setBackgroundColor(UIUtils.getChipGradeColor(assessment));
-        holder.mChipGrade.setText(UIUtils.getChipGradeText(assessment));
-        holder.mChipInfo.setText(UIUtils.getChipGradeEcts(assessment.getEcts()));
+        holder.mChipGrade.setText(UIUtils.getChipGradeText(getContext(), assessment));
+        holder.mChipInfo.setText(UIUtils.getChipGradeEcts(getContext(), assessment.getEcts()));
 
         holder.mDate.setText(DateFormat.getDateInstance().format(assessment.getDate()));
-        holder.mGrade.setText(mContext.getString(assessment.getGrade()
+        holder.mGrade.setText(getContext().getString(assessment.getGrade()
                 .getStringResID()));
     }
 
@@ -97,7 +94,7 @@ public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, Asse
     public void onBindHeaderViewHolder(GradeHeaderHolder gradeHeaderHolder, int position) {
         Assessment grade = getItem(position);
         if (grade != null) {
-            gradeHeaderHolder.mText.setText(mContext.getString(grade.getAssessmentType().getStringResID()));
+            gradeHeaderHolder.mText.setText(getContext().getString(grade.getAssessmentType().getStringResID()));
 
         }
     }

@@ -44,12 +44,8 @@ import java.util.Calendar;
 
 public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamListAdapter.ExamViewHolder> implements SectionedAdapter<ExamListAdapter.DateHeaderHolder> {
 
-    private final Context mContext;
-
     public ExamListAdapter(Context context) {
-        super();
-
-        this.mContext = context;
+        super(context);
     }
 
     @Override
@@ -69,7 +65,7 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
                 public boolean onMenuItemClick(MenuItem menuItem) {
                     switch (menuItem.getItemId()) {
                         case R.id.menu_exam_register: {
-                            KusssHelper.showExamInBrowser(mContext, exam.getCourseId());
+                            KusssHelper.showExamInBrowser(getContext(), exam.getCourseId());
                             return true;
                         }
                     }
@@ -84,7 +80,7 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
             UIUtils.setTextAndVisibility(holder.mTerm, AppUtils.termToString(exam.getTerm()));
 
             if (exam.getCid() > 0) {
-                holder.mCid.setText(String.format("[%d]", exam.getCid()));
+                holder.mCid.setText(AppUtils.format(getContext(),"[%d]", exam.getCid()));
                 holder.mCid.setVisibility(View.VISIBLE);
             } else {
                 holder.mCid.setVisibility(View.GONE);

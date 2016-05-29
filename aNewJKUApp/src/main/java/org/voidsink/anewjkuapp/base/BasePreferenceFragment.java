@@ -31,6 +31,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
@@ -151,7 +152,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
                         dialog.dismiss();
                     }
                 });
-                builder.setPositiveButton((CharSequence) null, (DialogInterface.OnClickListener) null);
+                builder.setPositiveButton(null, null);
             } else {
                 throw new IllegalStateException("ListPreference requires an entries array and an entryValues array.");
             }
@@ -174,6 +175,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
 
         private long mTime;
 
+        @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             mTime = getTimePreference().getTime();

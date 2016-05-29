@@ -400,12 +400,14 @@ public class ImportCalendarTask implements Callable<Void> {
                                     new String[]{eventId},
                                     null);
 
-                            while (c2.moveToNext()) {
-                                if (c2.getString(1).contains(EXTENDED_PROPERTY_NAME_KUSSS_ID)) {
-                                    eventKusssId = c2.getString(2);
+                            if (c2 != null) {
+                                while (c2.moveToNext()) {
+                                    if (c2.getString(1).contains(EXTENDED_PROPERTY_NAME_KUSSS_ID)) {
+                                        eventKusssId = c2.getString(2);
+                                    }
                                 }
+                                c2.close();
                             }
-                            c2.close();
                         } else {
                             eventKusssId = c.getString(COLUMN_EVENT_KUSSS_ID);
                         }
@@ -456,9 +458,7 @@ public class ImportCalendarTask implements Callable<Void> {
                                             .build());
                                     mSyncResult.stats.numUpdates++;
 
-                                    if (mNotification != null) {
-                                        mNotification.addUpdate(getEventString(match));
-                                    }
+                                    mNotification.addUpdate(getEventString(match));
                                 } else {
                                     mSyncResult.stats.numSkippedEntries++;
                                 }

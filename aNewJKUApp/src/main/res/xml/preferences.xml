@@ -11,7 +11,7 @@
             android:action="org.voidsink.anewjkuapp.prefs.LEGACY"
             android:data="org.voidsink.anewjkuapp.fragment.SettingsFragment$KusssSettingsFragment"
             android:targetClass="org.voidsink.anewjkuapp.activity.SettingsActivity"
-            android:targetPackage="org.voidsink.anewjkuapp"></intent>
+            android:targetPackage="org.voidsink.anewjkuapp"/>
 
     </PreferenceScreen>
 
@@ -26,7 +26,7 @@
             android:action="org.voidsink.anewjkuapp.prefs.LEGACY"
             android:data="org.voidsink.anewjkuapp.fragment.SettingsFragment$TimetableSettingsFragment"
             android:targetClass="org.voidsink.anewjkuapp.activity.SettingsActivity"
-            android:targetPackage="org.voidsink.anewjkuapp"></intent>
+            android:targetPackage="org.voidsink.anewjkuapp"/>
 
     </PreferenceScreen>
 
@@ -42,6 +42,6 @@
             android:action="org.voidsink.anewjkuapp.prefs.LEGACY"
             android:data="org.voidsink.anewjkuapp.fragment.SettingsFragment$AppSettingsFragment"
             android:targetClass="org.voidsink.anewjkuapp.activity.SettingsActivity"
-            android:targetPackage="org.voidsink.anewjkuapp"></intent>
+            android:targetPackage="org.voidsink.anewjkuapp"/>
     </PreferenceScreen>
 </PreferenceScreen>

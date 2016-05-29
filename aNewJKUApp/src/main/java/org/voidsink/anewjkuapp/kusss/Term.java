@@ -28,12 +28,40 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Term implements Comparable<Term> {
 
     private static final Pattern termPattern = Pattern.compile("\\d{4}[WwSs]");
+
+    public static Term fromDate(Date date) {
+        if (date == null) return null;
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        // set to start of summer semester 1.3.
+        cal.set(Calendar.MONTH, Calendar.MARCH);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+
+        if (date.before(cal.getTime())) {
+            return new Term(cal.get(Calendar.YEAR) - 1, TermType.WINTER);
+        }
+
+        // set to start of winter semester 1.10.
+        cal.set(Calendar.MONTH, Calendar.OCTOBER);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+
+        if (date.before(cal.getTime())) {
+            return new Term(cal.get(Calendar.YEAR), TermType.SUMMER);
+        }
+
+        return new Term(cal.get(Calendar.YEAR), TermType.WINTER);
+    }
 
     public enum TermType {
         SUMMER("S"), WINTER("W");
@@ -72,7 +100,7 @@ public class Term implements Comparable<Term> {
     }
 
     @Override
-    public int compareTo(Term o) {
+    public int compareTo(@NonNull Term o) {
         if (o == null) {
             return -1;
         }
@@ -103,7 +131,7 @@ public class Term implements Comparable<Term> {
     }
 
     public String toString() {
-        return String.format("%d%s", year, type.toString());
+        return String.format(Locale.GERMAN, "%d%s", year, type.toString());
     }
 
     public boolean isLoaded() {

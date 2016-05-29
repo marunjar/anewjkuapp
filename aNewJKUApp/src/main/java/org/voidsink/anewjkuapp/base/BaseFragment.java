@@ -31,8 +31,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -87,17 +85,7 @@ public class BaseFragment extends Fragment implements StackedFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.i(TAG, "onOptionsItemSelected");
 
-        switch (item.getItemId()) {
-            case R.id.action_refresh_calendar:
-                return onRefreshSelected(item);
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    protected boolean onRefreshSelected(MenuItem item) {
-        Log.d(TAG, "onRefreshSelected");
-        return false;
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

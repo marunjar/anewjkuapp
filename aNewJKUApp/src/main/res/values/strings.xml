@@ -22,7 +22,7 @@
 
     <string name="action_refresh">Aktualisieren</string>
     <string name="action_changelog">Change Log</string>
-    <string name="action_settings_summary">Einstellungen von KUSSS, Benachrichtigungen, ...</string>
+    <string name="action_settings_summary">Einstellungen von KUSSS, Benachrichtigungen, …</string>
     <string name="action_snap_to_location">Karte zur aktuellen GPS-Position bewegen</string>
     <string name="action_tap_to_login">zum Einloggen tippen</string>
 
@@ -107,7 +107,7 @@
     <string name="pref_kusss_exam_sync_summary">LVA-Prüfungen synchronisieren</string>
     <string name="pref_kusss_exam_notify_summary">Benachrichtigen wenn neue LVA-Prüfungen zu den eigenen LVAs verfügbar sind</string>
     <string name="pref_kusss_exam_get_from_lva_title">Prüfungen nach LVA-Nr laden</string>
-    <string name="pref_kusss_exam_get_from_lva_summary">findet Prüfungen zu LVAs auch aus früheren Semestern, ist dafür aber langsamer ...</string>
+    <string name="pref_kusss_exam_get_from_lva_summary">findet Prüfungen zu LVAs auch aus früheren Semestern, ist dafür aber langsamer …</string>
     <string name="pref_cat_app_main">App</string>
     <string name="pref_app_use_light_theme_title">helles Design verwenden</string>
     <string name="pref_app_use_light_theme_summary">Das Ändern dieser Einstellung startet die App beim Verlassen der Einstellungen neu</string>
@@ -135,7 +135,7 @@
     <string name="settings_timetable_title">Kalender</string>
     <string name="settings_timetable_summary">Einstellungen für verwendete Kalender und Stundenplan</string>
 
-    <string name="about_app_summary">Das ist eine neue JKU, KUSSS, ÖH, ... App für Studenten der JKU Linz.\n\nDie App ist noch in Entwicklung und die am meisten benötigten Funktionen sind bereits implementiert.\n\nWenn Sie Fragen, Probleme oder Wünsche haben, schreiben Sie eine E-Mail an die Entwickler!\nBesitzer eines GitHub-Accounts können auch einfach hier posten: https://github.com/marunjar/anewjkuapp/issues </string>
+    <string name="about_app_summary">Das ist eine neue JKU, KUSSS, ÖH, … App für Studenten der JKU Linz.\n\nDie App ist noch in Entwicklung und die am meisten benötigten Funktionen sind bereits implementiert.\n\nWenn Sie Fragen, Probleme oder Wünsche haben, schreiben Sie eine E-Mail an die Entwickler!\nBesitzer eines GitHub-Accounts können auch einfach hier posten: https://github.com/marunjar/anewjkuapp/issues </string>
     <string name="about_libraries_title">verwendete Bibliotheken</string>
 
     <string name="oeh_info_main_title" translatable="false">Deine ÖH</string>
@@ -150,7 +150,7 @@
     <string name="oeh_rights_2_summary" translatable="false">Wenn du unerlaubte Hilfsmittel benützt, wird deine Prüfung für ungültig erklärt und auf deine Antrittsmöglichkeiten angerechnet. Das bedeutet, dass du dadurch einen Antritt verspielen kannst.</string>
     <string name="oeh_rights_3_title" translatable="false">Wie lange darf ich in schriftliche Klausuren Einsicht nehmen?</string>
     <string name="oeh_rights_3_summary" translatable="false">Du hast das Recht innerhalb von sechs Monaten nach Ablegung einer Prüfung in deine Arbeit Einsicht zu nehmen. Weiters darfst du jede von dir abgelegte Prüfung inkl. Beurteilungsunterlagen und Prüfungsprotokolle kopieren (außer bei Multiple-Choice Klausuren).</string>
-    <string name="oeh_rights_4_title" translatable="false">Ist die Festlegung einer höheren Mindestpunktezahl als 50% bei Klausuren zulässig?</string>
+    <string name="oeh_rights_4_title" translatable="false" formatted="false">Ist die Festlegung einer höheren Mindestpunktezahl als 50% bei Klausuren zulässig?</string>
     <string name="oeh_rights_4_summary" translatable="false">Ja. Grundsätzlich obliegt es dem/der LVA-LeiterIn den Schwierigkeitsgrad und die Mindestanforderungen für eine positive Absolvierung festzulegen, sofern im Studienplan keine abweichenden Bestimmungen enthalten sind.</string>
     <string name="oeh_rights_5_title" translatable="false">Wie oft darf ich eine LVA wiederholen?</string>
     <string name="oeh_rights_5_summary" translatable="false">Bei allen Prüfungen hast du 4 Wiederholungen, d.h. insgesamt 5 Antritte. Prüfungstechnisch gibt es zwei unterschiedliche Kursformen. Einerseits solche mit "immanentem Prüfungscharakter", d.h. die Note setzt sich aus mehreren Leistungsprüfungen wie z.B. Hausübungen zusammen. Hier kannst du ab der dritten Wiederholung eine kommissionelle Prüfung verlangen; dein Antrag muss vom Vizerektor für Lehre genehmigt werden. Bei allen anderen LVAs und Fachprüfungen muss ab der dritten Wiederholung eine kommissionelle Prüfung abgehalten werden. Kommissionelle Prüfungen sind vom Modus her meist gleich, werden aber von mehreren ProfessorInnen beurteilt. Bei positiven Prüfungen ist eine Wiederholung innerhalb von 6 Monaten möglich, wenn du eine bessere Note haben willst.</string>
@@ -162,15 +162,15 @@
     <string name="map_search_poi_hint">Hörsaal hier eingeben</string>
     <string name="map_select_location">Hörsaal auswählen</string>
 
-    <string name="progress_title">Bitte warten...</string>
-    <string name="progress_load_menu">Menüs werden geladen...</string>
-    <string name="progress_load_exam">Prüfungen werden geladen...</string>
-    <string name="progress_load_grade">Noten werden geladen...</string>
-    <string name="progress_load_lva">LVAs werden geladen...</string>
-    <string name="progress_load_calendar">Termine werden geladen...</string>
-    <string name="progress_load_map_files">Karten werden geladen...</string>
-    <string name="progress_login">Anmelden...</string>
-    <string name="progress_load_feed">News werden geladen...</string>
+    <string name="progress_title">Bitte warten…</string>
+    <string name="progress_load_menu">Menüs werden geladen…</string>
+    <string name="progress_load_exam">Prüfungen werden geladen…</string>
+    <string name="progress_load_grade">Noten werden geladen…</string>
+    <string name="progress_load_lva">LVAs werden geladen…</string>
+    <string name="progress_load_calendar">Termine werden geladen…</string>
+    <string name="progress_load_map_files">Karten werden geladen…</string>
+    <string name="progress_login">Anmelden…</string>
+    <string name="progress_load_feed">News werden geladen…</string>
 
     <string name="mensa_menu_not_available">kein Speiseplan verfügbar</string>
     <string name="mensa_menu_today">Heute</string>
@@ -254,5 +254,5 @@
     <string name="title_curricula">Studienrichtungen</string>
     <string name="content_descr_rss_feed_item_image">Das erste Bild das in dem News-Eintrag vorkommt.</string>
     <string name="missing_app_permission">Berechtigungen fehlen</string>
-    <string name="button_ok">Ok</string>
+    <string name="button_ok">OK</string>
 </resources>

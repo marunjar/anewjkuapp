@@ -6,7 +6,7 @@
  * \________|____|__ \______/   \____|__  /   __/|   __/
  *                  \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ * Copyright (c) 2014-2016 Paul "Marunjar" Pretsch
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -71,7 +71,7 @@ public class PoiNotification {
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                     mContext)
-                    .setSmallIcon(R.drawable.ic_stat_notify_kusss)
+                    .setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp)
 //					.setLargeIcon(
 //							BitmapFactory.decodeResource(
 //									mContext.getResources(),
@@ -85,6 +85,7 @@ public class PoiNotification {
                                     (mInserts.size() + mUpdates.size())))
                     .setContentIntent(pendingIntent)
                     .setAutoCancel(true)
+                    .setCategory(NotificationCompat.CATEGORY_STATUS)
                     .setNumber(
                             mInserts.size() + mUpdates.size());
 

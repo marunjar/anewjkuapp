@@ -2,12 +2,12 @@
 <resources>
     <string name="mensa_menu_today">Today</string>
     <string name="mensa_menu_tomorrow">Tomorrow</string>
-    <string name="about_app_summary">This is a new JKU, KUSSS, ÖH, ... App for the students of JKU Linz.\n\nThe development is still in progress but the most needed functions are already implemented.\n\nIf you have any questions, problems or feature requests, write an email to the developer!\nIf you have an existing GitHub account you can also post here: https://github.com/marunjar/anewjkuapp/issues</string>
+    <string name="about_app_summary">This is a new JKU, KUSSS, ÖH, … App for the students of JKU Linz.\n\nThe development is still in progress but the most needed functions are already implemented.\n\nIf you have any questions, problems or feature requests, write an email to the developer!\nIf you have an existing GitHub account you can also post here: https://github.com/marunjar/anewjkuapp/issues</string>
     <string name="about_force_logout">Logout</string>
     <string name="about_libraries_title">Libraries</string>
     <string name="action_changelog">Change Log</string>
     <string name="action_refresh">Refresh</string>
-    <string name="action_settings_summary">Settings for KUSSS, notifications, ...</string>
+    <string name="action_settings_summary">Settings for KUSSS, notifications, …</string>
     <string name="action_snap_to_location">Snap to current gps location</string>
     <string name="all_terms">All terms</string>
     <string name="app_name">JKU App</string>
@@ -93,14 +93,14 @@
     <string name="pref_mensa_group_menu_by_day_title">Group per day</string>
     <string name="pref_stats_use_lva_bar_chart_summary">Use barchart for open and completed courses</string>
     <string name="pref_stats_use_lva_bar_chart_title">Diagrams</string>
-    <string name="progress_load_calendar">Loading dates...</string>
-    <string name="progress_load_exam">Loading exams...</string>
-    <string name="progress_load_grade">Loading grades...</string>
-    <string name="progress_load_lva">Loading courses...</string>
-    <string name="progress_load_map_files">Loading map...</string>
-    <string name="progress_load_menu">Loading menus...</string>
-    <string name="progress_login">Logging in...</string>
-    <string name="progress_title">Please wait...</string>
+    <string name="progress_load_calendar">Loading dates…</string>
+    <string name="progress_load_exam">Loading exams…</string>
+    <string name="progress_load_grade">Loading grades…</string>
+    <string name="progress_load_lva">Loading courses…</string>
+    <string name="progress_load_map_files">Loading map…</string>
+    <string name="progress_load_menu">Loading menus…</string>
+    <string name="progress_login">Logging in…</string>
+    <string name="progress_title">Please wait…</string>
     <string name="settings_app_summary">App settings</string>
     <string name="settings_app_title">App</string>
     <string name="settings_kusss_summary">KUSSS settings</string>
@@ -151,7 +151,7 @@
     <string name="notification_sync_lva_saving">Saving courses</string>
     <string name="notification_sync_lva_updating">Updating courses</string>
     <string name="action_show_rss_entry_in_browser">Show in browser</string>
-    <string name="progress_load_feed">Loading news...</string>
+    <string name="progress_load_feed">Loading news…</string>
     <string name="pref_stats_positive_grades_only_title">Improved grade point average</string>
     <string name="pref_stats_positive_grades_only_summary">Grade point average is calculated for positive grades only</string>
     <string name="notification_sync_curricula">Synchronizing curricula</string>
@@ -198,7 +198,7 @@
     <string name="alert_permission_get_accounts">Missing contacts permission for creating and reading accounts.</string>
     <string name="alert_permission_read_calendar">Missing read calendar permission for showing events in timetable.</string>
     <string name="alert_permission_write_calendar">Missing write calendar permission for importing events from KUSSS.</string>
-    <string name="button_ok">Ok</string>
+    <string name="button_ok">OK</string>
     <string name="pref_kusss_use_calendar_view_title">Calendar view</string>
     <string name="pref_kusss_use_calendar_view_summary">Show all events in a calendar view</string>
 </resources>

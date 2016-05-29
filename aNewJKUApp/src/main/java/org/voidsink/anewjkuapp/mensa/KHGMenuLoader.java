@@ -125,7 +125,9 @@ public class KHGMenuLoader implements MenuLoader {
                                     priceBig = nf.parse(columns.get(3).text()).doubleValue();
                                     oehBonus = priceBig - price;
                                 } catch (ParseException e) {
-
+                                    price = 0;
+                                    priceBig = 0;
+                                    oehBonus = 0;
                                 }
 
                                 day.addMenu(new MensaMenu(null, soup, meal, price, priceBig, oehBonus));
@@ -147,7 +149,9 @@ public class KHGMenuLoader implements MenuLoader {
                                         priceBig = nf.parse(columns.get(2).text()).doubleValue();
                                         oehBonus = priceBig - price;
                                     } catch (ParseException e) {
-
+                                        price = 0;
+                                        priceBig = 0;
+                                        oehBonus = 0;
                                     }
 
                                     day.addMenu(new MensaMenu(null, soup, meal, price, priceBig, oehBonus));

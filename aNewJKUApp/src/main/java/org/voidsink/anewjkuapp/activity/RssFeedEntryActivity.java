@@ -43,18 +43,15 @@ import java.text.SimpleDateFormat;
 
 public class RssFeedEntryActivity extends ThemedActivity {
 
-    private TextView mDate;
-    private WebView mContent;
-    private TextView mAuthor;
     private FeedEntry mFeedEntry;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_rss_feed_entry);
-        this.mDate = (TextView) findViewById(R.id.rss_feed_date);
-        this.mAuthor = (TextView) findViewById(R.id.rss_feed_author);
-        this.mContent = (WebView) findViewById(R.id.rss_feed_content);
+        TextView mDate = (TextView) findViewById(R.id.rss_feed_date);
+        TextView mAuthor = (TextView) findViewById(R.id.rss_feed_author);
+        WebView mContent = (WebView) findViewById(R.id.rss_feed_content);
 
         Intent i = getIntent();
         if (i != null && i.hasExtra(Consts.ARG_FEED_ENTRY)) {
@@ -62,15 +59,21 @@ public class RssFeedEntryActivity extends ThemedActivity {
         }
 
         if (this.mFeedEntry != null) {
-            if (this.mFeedEntry.getPubDate() != null) {
-                this.mDate.setText(SimpleDateFormat.getDateTimeInstance().format(this.mFeedEntry.getPubDate()));
-            } else {
-                this.mDate.setText("");
+            if (mDate != null) {
+                if (this.mFeedEntry.getPubDate() != null) {
+                    mDate.setText(SimpleDateFormat.getDateTimeInstance().format(this.mFeedEntry.getPubDate()));
+                } else {
+                    mDate.setText("");
+                }
             }
-            this.mAuthor.setText(this.mFeedEntry.getAuthor());
-            Document d = Jsoup.parse(this.mFeedEntry.getDescription());
-            d.outputSettings().charset("ASCII");
-            this.mContent.loadData(d.html(), "text/html", null);
+            if (mAuthor != null) {
+                mAuthor.setText(this.mFeedEntry.getAuthor());
+            }
+            if (mContent != null) {
+                Document d = Jsoup.parse(this.mFeedEntry.getDescription());
+                d.outputSettings().charset("ASCII");
+                mContent.loadData(d.html(), "text/html", null);
+            }
         }
     }
 

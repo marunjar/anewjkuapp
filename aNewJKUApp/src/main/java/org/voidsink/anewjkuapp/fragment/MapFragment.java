@@ -67,7 +67,7 @@ import org.mapsforge.map.layer.labels.LabelLayer;
 import org.mapsforge.map.layer.overlay.Marker;
 import org.mapsforge.map.layer.renderer.TileRendererLayer;
 import org.mapsforge.map.model.MapViewPosition;
-import org.mapsforge.map.reader.MapDataStore;
+import org.mapsforge.map.datastore.MapDataStore;
 import org.mapsforge.map.reader.MapFile;
 import org.mapsforge.map.rendertheme.InternalRenderTheme;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
@@ -166,13 +166,15 @@ public class MapFragment extends BaseFragment implements
                 .appendPath(query).build();
         Cursor c = cr.query(searchUri, ImportPoiTask.POI_PROJECTION, null,
                 null, null);
-        while (c.moveToNext()) {
-            Poi p = new Poi(c);
-            if (!isExactLocation || p.getName().equalsIgnoreCase(query)) {
-                pois.add(p);
+        if (c != null) {
+            while (c.moveToNext()) {
+                Poi p = new Poi(c);
+                if (!isExactLocation || p.getName().equalsIgnoreCase(query)) {
+                    pois.add(p);
+                }
             }
+            c.close();
         }
-        c.close();
 
         if (pois.size() == 0) {
             Toast.makeText(getContext(), String.format(getContext().getString(R.string.map_place_not_found), query), Toast.LENGTH_LONG)
@@ -222,14 +224,16 @@ public class MapFragment extends BaseFragment implements
 
         Cursor c = cr
                 .query(uri, ImportPoiTask.POI_PROJECTION, null, null, null);
-        if (c.moveToNext()) {
-            String name = c.getString(ImportPoiTask.COLUMN_POI_NAME);
-            double lon = c.getDouble(ImportPoiTask.COLUMN_POI_LON);
-            double lat = c.getDouble(ImportPoiTask.COLUMN_POI_LAT);
+        if (c != null) {
+            if (c.moveToNext()) {
+                String name = c.getString(ImportPoiTask.COLUMN_POI_NAME);
+                double lon = c.getDouble(ImportPoiTask.COLUMN_POI_LON);
+                double lat = c.getDouble(ImportPoiTask.COLUMN_POI_LAT);
 
-            setNewGoal(new LatLong(lat, lon), name);
+                setNewGoal(new LatLong(lat, lon), name);
+            }
+            c.close();
         }
-        c.close();
 
         if (mSearchView != null) {
             mSearchView.setQuery("", false);
@@ -242,10 +246,10 @@ public class MapFragment extends BaseFragment implements
         this.mMyLocationOverlay.enableMyLocation(false);
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//    }
 
     private void setNewGoal(LatLong goalPosition, String name) {
         if (goalPosition != null &&
@@ -376,6 +380,10 @@ public class MapFragment extends BaseFragment implements
         this.mapView.setBuiltInZoomControls(true);
         this.mapView.getMapZoomControls().setZoomLevelMin(MIN_ZOOM_LEVEL);
         this.mapView.getMapZoomControls().setZoomLevelMax(MAX_ZOOM_LEVEL);
+        this.mapView.getMapZoomControls().setZoomInResource(R.drawable.zoom_control_in);
+        this.mapView.getMapZoomControls().setZoomOutResource(R.drawable.zoom_control_out);
+        this.mapView.getMapZoomControls().setMarginHorizontal(getContext().getResources().getDimensionPixelSize(R.dimen.map_zoom_control_margin_horizontal));
+        this.mapView.getMapZoomControls().setMarginVertical(getContext().getResources().getDimensionPixelSize(R.dimen.map_zoom_control_margin_vertical));
 
         this.tileCache = AndroidUtil.createTileCache(getContext(),
                 "mapFragment",
@@ -467,7 +475,7 @@ public class MapFragment extends BaseFragment implements
         return tileRendererLayer;
     }
 
-    protected MapViewPosition initializePosition(MapViewPosition mvp) {
+    private MapViewPosition initializePosition(MapViewPosition mvp) {
         LatLong center = mvp.getCenter();
 
         if (center.equals(new LatLong(0, 0))) {
@@ -478,7 +486,7 @@ public class MapFragment extends BaseFragment implements
         return mvp;
     }
 
-    protected MapPosition getInitialPosition() {
+    private MapPosition getInitialPosition() {
         File mapFile = getMapFile();
         MapDataStore mapDataStore = new MapFile(mapFile);
 
@@ -514,7 +522,7 @@ public class MapFragment extends BaseFragment implements
         AndroidResourceBitmap.clearResourceBitmaps();
     }
 
-    protected File getMapFile() {
+    private File getMapFile() {
         File mapFile = PreferenceWrapper.getMapFile(getContext());
         if (mapFile == null || !mapFile.exists() || !mapFile.canRead()) {
             mapFile = new File(getActivity().getFilesDir(), MAP_FILE_NAME);

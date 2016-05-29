@@ -32,11 +32,11 @@
                 android:orientation="vertical"
                 tools:layout_height="20dp"/>
 
-            <com.github.mikephil.charting.charts.PieChart
+            <lecho.lib.hellocharts.view.PieChartView
                 android:id="@+id/stat_card_diagram_pie"
                 style="@style/plotStyle"/>
 
-            <com.github.mikephil.charting.charts.BarChart
+            <lecho.lib.hellocharts.view.ComboLineColumnChartView
                 android:id="@+id/stat_card_diagram_bar"
                 style="@style/plotStyle"/>
         </LinearLayout>

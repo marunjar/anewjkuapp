@@ -6,7 +6,7 @@
  * \________|____|__ \______/   \____|__  /   __/|   __/
  *                  \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ * Copyright (c) 2014-2016 Paul "Marunjar" Pretsch
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
 
 package org.voidsink.anewjkuapp;
@@ -43,7 +44,7 @@ import java.io.File;
 import java.util.List;
 
 public final class PreferenceWrapper {
-    public static final String TAG = PreferenceWrapper.class.getSimpleName();
+    private static final String TAG = PreferenceWrapper.class.getSimpleName();
 
     public static final String PREF_SYNC_INTERVAL_KEY = "pref_key_sync_interval";
     public static final int PREF_SYNC_INTERVAL_DEFAULT = 85;
@@ -325,7 +326,7 @@ public final class PreferenceWrapper {
         try {
             SharedPreferences sp = PreferenceManager
                     .getDefaultSharedPreferences(mContext);
-            sp.edit().putBoolean(PREF_POSITIVE_GRADES_ONLY, positiveOnly).commit();
+            sp.edit().putBoolean(PREF_POSITIVE_GRADES_ONLY, positiveOnly).apply();
         } catch (Exception e) {
             Analytics.sendException(mContext, e, false);
         }
@@ -481,7 +482,7 @@ public final class PreferenceWrapper {
         try {
             SharedPreferences sp = PreferenceManager
                     .getDefaultSharedPreferences(mContext);
-            sp.edit().putBoolean(PREF_COURSES_SHOW_WITH_ASSESSMENT_ONLY, value).commit();
+            sp.edit().putBoolean(PREF_COURSES_SHOW_WITH_ASSESSMENT_ONLY, value).apply();
         } catch (Exception e) {
             Analytics.sendException(mContext, e, false);
         }

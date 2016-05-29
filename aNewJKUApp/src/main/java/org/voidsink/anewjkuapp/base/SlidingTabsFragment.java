@@ -139,22 +139,22 @@ public abstract class SlidingTabsFragment extends BaseFragment {
             return mTabs.get(i).createFragment();
         }
 
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            return super.instantiateItem(container, position);
+//        @Override
+//        public Object instantiateItem(ViewGroup container, int position) {
+//            return super.instantiateItem(container, position);
 //            Log.i(LOG_TAG, "instantiateItem() [position: " + position + "]");
-        }
+//        }
 
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            super.destroyItem(container, position, object);
+//        @Override
+//        public void destroyItem(ViewGroup container, int position, Object object) {
+//            super.destroyItem(container, position, object);
 //            Log.i(LOG_TAG, "destroyItem() [position: " + position + "]");
-        }
+//        }
 
-        @Override
-        public int getItemPosition(Object object) {
-            return super.getItemPosition(object);
-        }
+//        @Override
+//        public int getItemPosition(Object object) {
+//            return super.getItemPosition(object);
+//        }
 
         @Override
         public int getCount() {

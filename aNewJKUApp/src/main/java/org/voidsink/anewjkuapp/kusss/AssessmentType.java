@@ -55,6 +55,13 @@ public enum AssessmentType {
         }
     }
 
+    public boolean isDuplicatesPossible() {
+        switch (this) {
+            case RECOGNIZED_ASSESSMENT: return true;
+            default: return false;
+        }
+    }
+
     @SuppressLint("DefaultLocale")
     public static AssessmentType parseGradeType(String text) {
         text = text.trim().toLowerCase();

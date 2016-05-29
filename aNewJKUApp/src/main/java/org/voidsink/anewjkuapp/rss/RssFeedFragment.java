@@ -58,7 +58,10 @@ public class RssFeedFragment extends BaseFragment implements LoaderManager.Loade
         super.setArguments(args);
 
         try {
-            mUrl = new URL(args.getString(Consts.ARG_FEED_URL));
+            final String url = args.getString(Consts.ARG_FEED_URL);
+            if (url != null) {
+                mUrl = new URL(url);
+            }
         } catch (MalformedURLException e) {
             mUrl = null;
         }

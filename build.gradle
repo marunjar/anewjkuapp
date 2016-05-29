@@ -2,7 +2,7 @@
 
 // Running 'gradle wrapper' will generate gradlew - Getting gradle wrapper working and using it will save you a lot of pain.
 /*task wrapper(type: Wrapper) {
-    gradleVersion = '2.8'
+    gradleVersion = '2.13'
 }
 */
 
@@ -11,14 +11,11 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.android.tools.build:gradle:2.1.0'
     }
 }
 allprojects {
     repositories {
         jcenter()
-
-        maven { url "https://jitpack.io" }
     }
-
 }

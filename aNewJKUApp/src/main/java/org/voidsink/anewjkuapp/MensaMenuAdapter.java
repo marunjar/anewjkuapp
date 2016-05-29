@@ -36,6 +36,7 @@ import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.mensa.IDay;
 import org.voidsink.anewjkuapp.mensa.IMensa;
 import org.voidsink.anewjkuapp.mensa.IMenu;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.UIUtils;
 import org.voidsink.sectionedrecycleradapter.SectionedAdapter;
 
@@ -50,7 +51,7 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
     private final boolean mUseDateHeader;
 
     public MensaMenuAdapter(Context context, boolean useDateHeader) {
-        super();
+        super(context);
         this.mUseDateHeader = useDateHeader;
     }
 
@@ -88,12 +89,12 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
 
                 mensaMenuItemHolder.mMeal.setText(menu.getMeal());
                 if (menu.getPrice() > 0) {
-                    mensaMenuItemHolder.mPrice.setText(String.format("%.2f €",
+                    mensaMenuItemHolder.mPrice.setText(AppUtils.format(getContext(), "%.2f €",
                             menu.getPrice()));
                     mensaMenuItemHolder.mPrice.setVisibility(View.VISIBLE);
 
                     if (menu.getOehBonus() > 0) {
-                        mensaMenuItemHolder.mOehBonus.setText(String.format(
+                        mensaMenuItemHolder.mOehBonus.setText(AppUtils.format(getContext(),
                                 "inkl %.2f € ÖH Bonus", menu.getOehBonus()));
                         mensaMenuItemHolder.mOehBonus.setVisibility(View.VISIBLE);
                     } else {

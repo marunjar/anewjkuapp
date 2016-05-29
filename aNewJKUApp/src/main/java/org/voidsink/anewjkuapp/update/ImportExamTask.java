@@ -51,7 +51,6 @@ import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -140,9 +139,6 @@ public class ImportExamTask implements Callable<Void> {
             mUpdateNotification.show(mContext.getString(R.string.notification_sync_exam_loading));
         }
         NewExamNotification mNewExamNotification = new NewExamNotification(mContext);
-
-
-        final DateFormat df = DateFormat.getDateInstance();
 
         try {
             Log.d(TAG, "setup connection");

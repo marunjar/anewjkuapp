@@ -37,7 +37,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 
 /**
  * A thread-safe {@link Layer} implementation to display the current location. NOTE: This code really does not reflect

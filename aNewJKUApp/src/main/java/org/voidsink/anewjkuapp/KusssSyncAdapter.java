@@ -104,8 +104,8 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
                 AppUtils.getAccountAuthToken(mContext, account),
                 AppUtils.getAccountName(mContext, account),
                 AppUtils.getAccountPassword(mContext, account))) {
-            KusssNotificationBuilder.showErrorNotification(mContext,
-                    R.string.notification_error_account_not_available, null);
+//            KusssNotificationBuilder.showErrorNotification(mContext,
+//                    R.string.notification_error_account_not_available, null);
             syncResult.stats.numAuthExceptions++;
             return;
         }

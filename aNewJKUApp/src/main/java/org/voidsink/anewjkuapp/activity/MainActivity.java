@@ -35,6 +35,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -99,11 +100,12 @@ public class MainActivity extends ThemedActivity {
      * navigation drawer.
      */
     private DrawerLayout mDrawerLayout;
+    private DrawerLayout.DrawerListener mDrawerListener;
     private NavigationView mNavigationView;
     private boolean mUserLearnedDrawer;
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-    public static void StartCreateAccount(Context context) {
+    private static void StartCreateAccount(Context context) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.GET_ACCOUNTS) == PackageManager.PERMISSION_GRANTED) {
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 context.startActivity(new Intent(Settings.ACTION_ADD_ACCOUNT)
@@ -118,7 +120,7 @@ public class MainActivity extends ThemedActivity {
         }
     }
 
-    public static void StartMyCurricula(Context context) {
+    private static void StartMyCurricula(Context context) {
         //
         Intent i = new Intent(context, MainActivity.class)
                 .putExtra(MainActivity.ARG_SHOW_FRAGMENT_ID, R.id.nav_curricula)
@@ -231,6 +233,57 @@ public class MainActivity extends ThemedActivity {
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
+        mDrawerListener = new DrawerLayout.SimpleDrawerListener() {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                if (!mUserLearnedDrawer) {
+                    PreferenceWrapper.setPrefUserLearnedDrawer(MainActivity.this, true);
+                }
+
+                TextView mDrawerUser = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.drawer_user);
+
+                if (mDrawerUser != null) {
+                    if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
+                        mDrawerUser.setText(R.string.missing_app_permission);
+                        mDrawerUser.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    MainActivity.this.startActivity(
+                                            new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                                                    .addCategory(Intent.CATEGORY_DEFAULT)
+                                                    .setData(Uri.parse("package:org.voidsink.anewjkuapp")));
+                                } catch (Exception e) {
+                                    Analytics.sendException(MainActivity.this, e, false);
+                                }
+                            }
+                        });
+                    } else {
+                        Account account = AppUtils.getAccount(MainActivity.this);
+                        if (account == null) {
+                            mDrawerUser.setText(R.string.action_tap_to_login);
+                            mDrawerUser.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    MainActivity.StartCreateAccount(MainActivity.this);
+                                }
+                            });
+                        } else {
+                            mDrawerUser.setText(account.name);
+                            mDrawerUser.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    MainActivity.StartMyCurricula(MainActivity.this);
+                                }
+                            });
+                        }
+                    }
+                }
+
+                super.onDrawerOpened(drawerView);
+            }
+        };
+
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         if (mNavigationView != null) {
             setupDrawerContent(mNavigationView);
@@ -258,7 +311,7 @@ public class MainActivity extends ThemedActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSION_READ_CALENDAR:
             case MY_PERMISSION_WRITE_CALENDAR:
@@ -304,7 +357,7 @@ public class MainActivity extends ThemedActivity {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_24dp);
         actionBar.setHomeButtonEnabled(true);
 
         navigationView.setNavigationItemSelectedListener(
@@ -335,57 +388,6 @@ public class MainActivity extends ThemedActivity {
         if (!mUserLearnedDrawer) {
             mDrawerLayout.openDrawer(navigationView);
         }
-
-        mDrawerLayout.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                if (!mUserLearnedDrawer) {
-                    PreferenceWrapper.setPrefUserLearnedDrawer(MainActivity.this, true);
-                }
-
-                TextView mDrawerUser = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.drawer_user);
-
-                if (mDrawerUser != null) {
-                    if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
-                        mDrawerUser.setText(R.string.missing_app_permission);
-                        mDrawerUser.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                try {
-                                    MainActivity.this.startActivity(
-                                            new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                                                    .addCategory(Intent.CATEGORY_DEFAULT)
-                                                    .setData(Uri.parse("package:org.voidsink.anewjkuapp")));
-                                } catch (Exception e) {
-
-                                }
-                            }
-                        });
-                    } else {
-                        Account account = AppUtils.getAccount(MainActivity.this);
-                        if (account == null) {
-                            mDrawerUser.setText(R.string.action_tap_to_login);
-                            mDrawerUser.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    MainActivity.StartCreateAccount(MainActivity.this);
-                                }
-                            });
-                        } else {
-                            mDrawerUser.setText(account.name);
-                            mDrawerUser.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    MainActivity.StartMyCurricula(MainActivity.this);
-                                }
-                            });
-                        }
-                    }
-                }
-
-                super.onDrawerOpened(drawerView);
-            }
-        });
     }
 
     private Fragment attachFragment(Intent intent, Bundle savedInstanceState,
@@ -605,43 +607,18 @@ public class MainActivity extends ThemedActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+        mDrawerLayout.addDrawerListener(mDrawerListener);
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
 
+        mDrawerLayout.removeDrawerListener(mDrawerListener);
+
         Analytics.clearScreen(this);
-    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container,
-                    false);
-            TextView textView = (TextView) rootView
-                    .findViewById(R.id.section_label);
-            textView.setText(Integer.toString(getArguments().getInt(
-                    ARG_SECTION_NUMBER)));
-            return rootView;
-        }
     }
 }

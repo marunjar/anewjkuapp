@@ -22,4 +22,9 @@
     <dimen name="text_size_body">12sp</dimen>
     <dimen name="text_size_button">14sp</dimen>
     <dimen name="grid_entry_width">280dp</dimen>
+
+    <!-- Map -->
+    <dimen name="map_zoom_control_margin_horizontal">8dp</dimen>
+    <dimen name="map_zoom_control_margin_vertical">0dp</dimen>
+
 </resources>

@@ -171,11 +171,8 @@ public class CurriculaFragment extends BaseFragment implements
 
     private static class CurriculaAdapter extends RecyclerArrayAdapter<Curriculum, CurriculumViewHolder> implements SectionedAdapter<CurriculumHeaderHolder> {
 
-        private final Context mContext;
-
         public CurriculaAdapter(Context context) {
-            super();
-            mContext = context;
+            super(context);
         }
 
         @Override
@@ -188,11 +185,11 @@ public class CurriculaFragment extends BaseFragment implements
         public void onBindViewHolder(CurriculumViewHolder holder, int position) {
             Curriculum item = getItem(position);
 
-            holder.isStandard.setText(item.isStandard() ? mContext.getString(R.string.curriculum_is_standard_yes) : mContext.getString(R.string.curriculum_is_standard_no));
+            holder.isStandard.setText(item.isStandard() ? getContext().getString(R.string.curriculum_is_standard_yes) : getContext().getString(R.string.curriculum_is_standard_no));
             holder.cid.setText(item.getCid());
             holder.title.setText(item.getTitle());
-            holder.steopDone.setText(item.isSteopDone() ? mContext.getString(R.string.curriculum_steop_done_yes) : mContext.getString(R.string.curriculum_steop_done_no));
-            holder.activeStatus.setText(item.isActive() ? mContext.getString(R.string.curriculum_active_status_yes) : mContext.getString(R.string.curriculum_active_status_no));
+            holder.steopDone.setText(item.isSteopDone() ? getContext().getString(R.string.curriculum_steop_done_yes) : getContext().getString(R.string.curriculum_steop_done_no));
+            holder.activeStatus.setText(item.isActive() ? getContext().getString(R.string.curriculum_active_status_yes) : getContext().getString(R.string.curriculum_active_status_no));
             if (item.getDtStart() != null) {
                 holder.dtStart.setText(dateFormat.format(item.getDtStart()));
             }
@@ -246,7 +243,7 @@ public class CurriculaFragment extends BaseFragment implements
     }
 
     public static class CurriculumHeaderHolder extends RecyclerView.ViewHolder {
-        public TextView mText;
+        public final TextView mText;
 
         public CurriculumHeaderHolder(View itemView) {
             super(itemView);
