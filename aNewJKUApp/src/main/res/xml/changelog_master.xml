@@ -4,6 +4,13 @@
 		    - fixed
 		    * changed
 		    + added -->
+    <release version="0.43" versioncode="140048">
+        <change>- Noten: laden von Noten aus Auslandssemester</change>
+        <change>+ Karte: fehlende Räume hinzugefügt</change>
+        <change>* Karte: neue Daten von OpenStreetMap</change>
+        <change>* App: Icons aktualisiert</change>
+        <change>* App: viele kleinere Korrekturen und Optimierungen</change>
+    </release>
     <release version="0.42.5" versioncode="140047">
         <change>- Mensa: Menü von KHG Mensa funktioniert wieder</change>
     </release>
