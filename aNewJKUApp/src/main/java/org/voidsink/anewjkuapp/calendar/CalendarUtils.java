@@ -81,7 +81,10 @@ public final class CalendarUtils {
 
     private static Uri createCalendar(Context context, Account account,
                                       String name, int color) {
-        try {
+        if (context == null || account == null) {
+          return null;
+        }
+        try {                        
             String accountName = account.name;
             String accountType = account.type;
 
@@ -124,9 +127,7 @@ public final class CalendarUtils {
                         CalendarContractWrapper.Attendees.TYPE_NONE());
             }
 
-            Uri newCalendar = context.getContentResolver().insert(target, values);
-
-            return newCalendar;
+            return context.getContentResolver().insert(target, values);
         } catch (Exception e) {
             Analytics.sendException(context, e, true, name);
             return null;
