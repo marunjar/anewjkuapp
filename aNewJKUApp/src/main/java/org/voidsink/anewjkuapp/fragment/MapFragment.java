@@ -465,7 +465,7 @@ public class MapFragment extends BaseFragment implements
 
     private XmlRenderTheme getRenderTheme() {
         try {
-            return new AssetsRenderTheme(getContext(), "", "renderthemes/rendertheme-v4.xml");
+            return new AssetsRenderTheme(getContext(), "", "renderthemes/rendertheme-v5.xml");
         } catch (Exception e) {
             Analytics.sendException(getContext(), e, false);
         }
