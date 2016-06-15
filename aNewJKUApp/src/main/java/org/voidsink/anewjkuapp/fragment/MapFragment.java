@@ -35,6 +35,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
@@ -100,9 +101,14 @@ public class MapFragment extends BaseFragment implements
     private static final byte MIN_ZOOM_LEVEL = 14; // full campus fits to screen at zoom level 15
     private static final byte DEFAULT_ZOOM_LEVEL = 17;
 
+    private static final String KEY_GOAL_LATITUDE = "GOAL_LATITUDE";
+    private static final String KEY_GOAL_LONGITUDE = "GOAL_LONGITUDE";
+    private static final String KEY_GOAL_NAME = "GOAL_NAME";
+
     // Map Layer
     private TileRendererLayer tileRendererLayer;
     private LabelLayer labelLayer;
+    private MyMarker goalLocation = null;
     private Marker goalLocationOverlay;
     private LocationOverlay mMyLocationOverlay;
 
@@ -128,6 +134,25 @@ public class MapFragment extends BaseFragment implements
     public void onPause() {
         mMyLocationOverlay.disableMyLocation();
         super.onPause();
+    }
+
+
+    class MyMarker {
+        private final LatLong mLatLon;
+        private final String mName;
+
+        public MyMarker(double lat, double lon, String name) {
+            this.mLatLon = new LatLong(lat, lon);
+            this.mName = name;
+        }
+
+        public LatLong getLatLon() {
+            return mLatLon;
+        }
+
+        public String getName() {
+            return mName;
+        }
     }
 
     @Override
@@ -230,7 +255,7 @@ public class MapFragment extends BaseFragment implements
                 double lon = c.getDouble(ImportPoiTask.COLUMN_POI_LON);
                 double lat = c.getDouble(ImportPoiTask.COLUMN_POI_LAT);
 
-                setNewGoal(new LatLong(lat, lon), name);
+                setNewGoal(new MyMarker(lat, lon, name));
             }
             c.close();
         }
@@ -251,79 +276,84 @@ public class MapFragment extends BaseFragment implements
 //        super.onCreate(savedInstanceState);
 //    }
 
-    private void setNewGoal(LatLong goalPosition, String name) {
-        if (goalPosition != null &&
-                mMyLocationOverlay != null &&
-                goalLocationOverlay != null) {
-            this.mMyLocationOverlay.setSnapToLocationEnabled(false);
+    private void setNewGoal(MyMarker marker) {
+        if (goalLocationOverlay != null) {
+            if (marker != null) {
+                this.goalLocation = marker;
+                if (!marker.getName().isEmpty()) {
+                    // generate Bubble image
+                    TextView bubbleView = new TextView(this.getContext());
+                    MapUtils.setBackground(bubbleView, ContextCompat.getDrawable(getContext(), R.drawable.balloon_overlay));
+                    bubbleView.setGravity(Gravity.CENTER);
+                    bubbleView.setMaxEms(20);
+                    bubbleView.setTextSize(15);
+                    bubbleView.setTextColor(Color.BLACK);
+                    bubbleView.setText(marker.getName());
+                    Bitmap bubble = MapUtils.viewToBitmap(getContext(), bubbleView);
+                    bubble.incrementRefCount();
 
-            if (!name.isEmpty()) {
-                // generate Bubble image
-                TextView bubbleView = new TextView(this.getContext());
-                MapUtils.setBackground(bubbleView, ContextCompat.getDrawable(getContext(), R.drawable.balloon_overlay));
-                bubbleView.setGravity(Gravity.CENTER);
-                bubbleView.setMaxEms(20);
-                bubbleView.setTextSize(15);
-                bubbleView.setTextColor(Color.BLACK);
-                bubbleView.setText(name);
-                Bitmap bubble = MapUtils.viewToBitmap(getContext(), bubbleView);
-                bubble.incrementRefCount();
+                    // set new goal
+                    this.goalLocationOverlay.setLatLong(marker.getLatLon());
+                    this.goalLocationOverlay.setBitmap(bubble);
+                    this.goalLocationOverlay.setHorizontalOffset(0);
+                    this.goalLocationOverlay.setVerticalOffset(-bubble.getHeight() / 2);
+                } else {
+                    Drawable d = ContextCompat.getDrawable(getContext(), R.drawable.ic_marker_goal_position);
+                    Bitmap b = AndroidGraphicFactory.convertToBitmap(d);
 
-                // set new goal
-                this.goalLocationOverlay.setLatLong(goalPosition);
-                this.goalLocationOverlay.setBitmap(bubble);
-                this.goalLocationOverlay.setHorizontalOffset(0);
-                this.goalLocationOverlay.setVerticalOffset(-bubble.getHeight() / 2);
-            } else {
-                Drawable d = ContextCompat.getDrawable(getContext(), R.drawable.ic_marker_goal_position);
-                Bitmap b = AndroidGraphicFactory.convertToBitmap(d);
-
-                // set new goal
-                this.goalLocationOverlay.setLatLong(goalPosition);
-                this.goalLocationOverlay.setBitmap(b);
-                this.goalLocationOverlay.setHorizontalOffset(0);
-                this.goalLocationOverlay.setVerticalOffset(0);
-            }
-
-            if (this.mMyLocationOverlay != null &&
-                    this.mMyLocationOverlay.getLastLocation() != null) {
-                LatLong mLocation = LocationOverlay
-                        .locationToLatLong(this.mMyLocationOverlay
-                                .getLastLocation());
-
-                // lat long difference for bounding box
-                double mDLat = Math.abs((mLocation.latitude - goalPosition.latitude));
-                double mDLong = Math.abs((mLocation.longitude - goalPosition.longitude));
-
-                // trunc distance
-                double distance = mLocation.distance(goalPosition);
-                if (distance > 0.0088) {
-                    mDLat = (mDLat * 0.0088 / distance);
-                    mDLong = (mDLong * 0.0088 / distance);
+                    // set new goal
+                    this.goalLocationOverlay.setLatLong(marker.getLatLon());
+                    this.goalLocationOverlay.setBitmap(b);
+                    this.goalLocationOverlay.setHorizontalOffset(0);
+                    this.goalLocationOverlay.setVerticalOffset(0);
                 }
 
-                // zoom to bounds
-                BoundingBox bb = new BoundingBox(
-                        Math.max(MercatorProjection.LATITUDE_MIN, goalPosition.latitude - mDLat),
-                        Math.max(-180, goalPosition.longitude - mDLong),
-                        Math.min(MercatorProjection.LATITUDE_MAX, goalPosition.latitude + mDLat),
-                        Math.min(180, goalPosition.longitude + mDLong));
-                Dimension dimension = this.mapView.getModel().mapViewDimension
-                        .getDimension();
-                // zoom to bounding box, center at goalPosition
-                this.mapView.getModel().mapViewPosition
-                        .setMapPosition(new MapPosition(goalPosition, LatLongUtils
-                                .zoomForBounds(dimension, bb, this.mapView
-                                        .getModel().displayModel.getTileSize())));
+                if (this.mMyLocationOverlay != null){
+                    this.mMyLocationOverlay.setSnapToLocationEnabled(false);
+
+                    if (this.mMyLocationOverlay.getLastLocation() != null) {
+
+                        LatLong mLocation = LocationOverlay
+                                .locationToLatLong(this.mMyLocationOverlay
+                                        .getLastLocation());
+
+                        // lat long difference for bounding box
+                        double mDLat = Math.abs((mLocation.latitude - marker.getLatLon().latitude));
+                        double mDLong = Math.abs((mLocation.longitude - marker.getLatLon().longitude));
+
+                        // trunc distance
+                        double distance = mLocation.distance(marker.getLatLon());
+                        if (distance > 0.0088) {
+                            mDLat = (mDLat * 0.0088 / distance);
+                            mDLong = (mDLong * 0.0088 / distance);
+                        }
+
+                        // zoom to bounds
+                        BoundingBox bb = new BoundingBox(
+                                Math.max(MercatorProjection.LATITUDE_MIN, marker.getLatLon().latitude - mDLat),
+                                Math.max(-180, marker.getLatLon().longitude - mDLong),
+                                Math.min(MercatorProjection.LATITUDE_MAX, marker.getLatLon().latitude + mDLat),
+                                Math.min(180, marker.getLatLon().longitude + mDLong));
+                        Dimension dimension = this.mapView.getModel().mapViewDimension
+                                .getDimension();
+                        // zoom to bounding box, center at goalPosition
+                        this.mapView.getModel().mapViewPosition
+                                .setMapPosition(new MapPosition(marker.getLatLon(), LatLongUtils
+                                        .zoomForBounds(dimension, bb, this.mapView
+                                                .getModel().displayModel.getTileSize())));
+                    } else {
+                        this.mapViewPosition.setCenter(marker.getLatLon());
+                    }
+                } else {
+                    this.mapViewPosition.setCenter(marker.getLatLon());
+                }
             } else {
-                this.mapViewPosition.setCenter(goalPosition);
+                this.goalLocationOverlay.setLatLong(null);
+                this.mMyLocationOverlay.setSnapToLocationEnabled(true);
             }
-        } else {
-            this.goalLocationOverlay.setLatLong(null);
-            this.mMyLocationOverlay.setSnapToLocationEnabled(true);
+            this.goalLocationOverlay.requestRedraw();
+            this.mMyLocationOverlay.requestRedraw();
         }
-        this.goalLocationOverlay.requestRedraw();
-        this.mMyLocationOverlay.requestRedraw();
     }
 
     @Override
@@ -391,14 +421,30 @@ public class MapFragment extends BaseFragment implements
                 1.0f,
                 this.mapView.getModel().frameBufferModel.getOverdrawFactor());
 
+        createLayers();
+
+        restoreMarker(savedInstanceState);
+
         return rootView;
     }
 
     @Override
-    public void onStart() {
-        // create layer before handling intents in super
-        createLayers();
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
+        restoreMarker(savedInstanceState);
+    }
+
+    private void restoreMarker(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(KEY_GOAL_LATITUDE) && savedInstanceState.containsKey(KEY_GOAL_LONGITUDE) && savedInstanceState.containsKey(KEY_GOAL_NAME)) {
+                setNewGoal(new MyMarker(savedInstanceState.getDouble(KEY_GOAL_LATITUDE), savedInstanceState.getDouble(KEY_GOAL_LONGITUDE), savedInstanceState.getString(KEY_GOAL_NAME)));
+            }
+        }
+    }
+
+    @Override
+    public void onStart() {
         super.onStart();
     }
 
@@ -439,10 +485,15 @@ public class MapFragment extends BaseFragment implements
     }
 
     @Override
+    public void onDestroyView() {
+        removeLayers();
+
+        super.onDestroyView();
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
-
-        removeLayers();
     }
 
     private void removeLayers() {
@@ -550,4 +601,17 @@ public class MapFragment extends BaseFragment implements
     protected String getScreenName() {
         return Consts.SCREEN_MAP;
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (goalLocation != null) {
+            outState.putDouble(KEY_GOAL_LATITUDE, goalLocation.getLatLon().latitude);
+            outState.putDouble(KEY_GOAL_LONGITUDE, goalLocation.getLatLon().longitude);
+            outState.putString(KEY_GOAL_NAME, goalLocation.getName());
+        }
+
+    }
+
 }
