@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rendertheme xmlns="http://mapsforge.org/renderTheme"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://mapsforge.org/renderTheme https://raw.githubusercontent.com/mapsforge/mapsforge/dev/resources/renderTheme-v4.xsd"
-    version="4" map-background="#F8F8F8" map-background-outside="#DDDDDD">
+    xsi:schemaLocation="http://mapsforge.org/renderTheme https://raw.githubusercontent.com/mapsforge/mapsforge/dev/resources/renderTheme-v5.xsd"
+    version="5" map-background="#F8F8F8" map-background-outside="#DDDDDD">
 
     <stylemenu id="r4menu" defaultvalue="standard" defaultlang="en">
 
@@ -180,16 +180,14 @@
         <area fill="#A5CBA5" />
         <rule e="any" k="*" v="*" zoom-min="13">
             <rule e="any" k="wood" v="coniferous">
-                <area src="assets:patterns/coniferous.svg" symbol-scaling="size" symbol-height="50"
-                    symbol-width="50" />
+                <area src="assets:patterns/coniferous.svg" symbol-height="50" symbol-width="50" />
             </rule>
             <rule e="any" k="wood" v="deciduous">
-                <area src="assets:patterns/deciduous.svg" symbol-scaling="size" symbol-height="50"
-                    symbol-width="50" />
+                <area src="assets:patterns/deciduous.svg" symbol-height="50" symbol-width="50" />
             </rule>
             <rule e="any" k="wood" v="~|*">
-                <area src="assets:patterns/coniferous_and_deciduous.svg" symbol-scaling="size"
-                    symbol-height="50" symbol-width="50" />
+                <area src="assets:patterns/coniferous_and_deciduous.svg" symbol-height="50"
+                    symbol-width="50" />
             </rule>
         </rule>
     </rule>
@@ -198,47 +196,41 @@
         <area fill="#BBE6FFDB" stroke="#C6E6B8" stroke-width="0.1" />
     </rule>
     <rule cat="areas" e="way" k="landuse" v="field|farm|farmland|orchard|vineyard" zoom-min="13">
-        <area src="assets:patterns/farmland.svg" symbol-scaling="size" symbol-height="70"
-            symbol-width="70" />
+        <area src="assets:patterns/farmland.svg" symbol-height="70" symbol-width="70" />
     </rule>
     <rule cat="nature" e="way" k="natural" v="marsh|wetland|mud" zoom-min="13">
         <area fill="#88D0D9BF" stroke="#D0D9BF" stroke-width="0.1" />
-        <area src="assets:patterns/swamp.svg" symbol-scaling="size" symbol-height="40"
-            symbol-width="40" />
+        <area src="assets:patterns/swamp.svg" symbol-height="40" symbol-width="40" />
     </rule>
     <rule cat="nature" e="way" k="natural" v="beach|sand" zoom-min="14">
         <area fill="#FAEBB9" />
     </rule>
     <rule cat="nature" e="way" k="natural" v="rock|stone|bare_rock|bedrock" zoom-min="14">
         <area fill="#BBF1F1F1" stroke="#F1F1F1" stroke-width="0.1" />
-        <area src="assets:patterns/hills.svg" symbol-scaling="size" symbol-height="40"
-            symbol-width="40" />
+        <area src="assets:patterns/hills.svg" symbol-height="40" symbol-width="40" />
     </rule>
     <rule cat="nature" e="way" k="natural" v="heath" zoom-min="14">
         <area fill="#BBEBF7E4" stroke="#EBF7E4" stroke-width="0.1" />
-        <area src="assets:patterns/grass.svg" symbol-scaling="percent" symbol-percent="30" />
+        <area src="assets:patterns/grass.svg" symbol-percent="30" />
     </rule>
     <rule cat="nature" e="way" k="natural" v="scrub" zoom-min="14">
         <area fill="#BBB7EBA4" stroke="#B7EBA4" stroke-width="0.1" />
-        <area src="assets:patterns/scrub1.svg" symbol-percent="50" symbol-scaling="percent" />
+        <area src="assets:patterns/scrub1.svg" symbol-percent="50" />
     </rule>
     <rule cat="nature" e="way" k="natural" v="fell" zoom-min="14">
         <area fill="#BBE9FCE6" stroke="#E9FCE6" stroke-width="0.1" />
-        <area src="assets:patterns/quarry.svg" symbol-scaling="size" symbol-height="90"
-            symbol-width="90" />
+        <area src="assets:patterns/quarry.svg" symbol-height="90" symbol-width="90" />
     </rule>
     <rule cat="nature" e="way" k="natural" v="scree" zoom-min="14">
         <area fill="#BBF5F5F5" stroke="#F5F5F5" stroke-width="0.1" />
-        <area src="assets:patterns/quarry.svg" symbol-scaling="size" symbol-height="90"
-            symbol-width="90" />
+        <area src="assets:patterns/quarry.svg" symbol-height="90" symbol-width="90" />
     </rule>
     <rule cat="nature" e="way" k="natural" v="glacier" zoom-min="12">
         <area fill="#BBE0FFFF" stroke="#E0FFFF" stroke-width="0.8" />
     </rule>
     <rule cat="areas" e="way" k="landuse" v="landfill|quarry" zoom-min="14">
         <area fill="#CCF2EFE4" stroke="#9EA199" stroke-width="0.2" />
-        <area src="assets:patterns/quarry.svg" symbol-scaling="size" symbol-height="90"
-            symbol-width="90" />
+        <area src="assets:patterns/quarry.svg" symbol-height="90" symbol-width="90" />
     </rule>
     <rule cat="areas" e="way" k="landuse|leisure" v="garden|village_green|common|grass"
         zoom-min="14">
@@ -356,7 +348,7 @@
         </rule>
         <rule e="way" k="waterway" v="stream|canal" zoom-min="15">
             <pathText k="name" display="always" priority="-100" font-style="bold" font-size="12"
-                fill="#6C96E6" stroke="#FFFFFF" stroke-width="2.0" />
+                fill="#6C96E6" stroke="#FFFFFF" stroke-width="2.0" repeat="false"/>
         </rule>
         <rule e="way" k="natural|landuse" v="water|reservoir|basin">
             <area fill="#B3DDFF" />
@@ -709,12 +701,12 @@
         <rule e="way" k="area" v="~|no|false">
             <!-- highway cores -->
             <rule e="way" k="highway" v="footway">
-                <line stroke="#888888" stroke-width="0.5" stroke-dasharray="12,1"
-                    stroke-linecap="butt" />
+                <line stroke="#888888" stroke-width="0.5" stroke-dasharray="12,5"
+                    stroke-linecap="butt" scale="none" />
             </rule>
             <rule e="way" k="highway" v="path">
-                <line stroke="#9C6800" stroke-width="0.5" stroke-dasharray="12,1"
-                    stroke-linecap="butt" />
+                <line stroke="#9C6800" stroke-width="0.5" stroke-dasharray="1,0.5"
+                    stroke-linecap="butt" scale="all" />
             </rule>
             <rule e="way" k="highway" v="steps">
                 <line stroke="#888888" stroke-width="0.5" stroke-linecap="butt" />
@@ -799,29 +791,29 @@
     <rule cat="roads" e="way" k="tunnel" v="~|no|false">
         <rule e="way" k="highway" v="footway|path|track|bridleway|steps|byway" zoom-min="14">
             <pathText k="name" display="always" priority="-8" font-style="bold" font-size="12"
-                fill="#606060" stroke="#FFFFFF" stroke-width="2" />
+                fill="#606060" stroke="#FFFFFF" stroke-width="2" repeat-start="0" repeat-gap="0"/>
         </rule>
         <rule e="way" k="highway"
             v="cycleway|service|construction|road|pedestrian|unclassified|residential|living_street|tertiary|tertiary_link"
             zoom-min="16">
             <pathText k="name" display="always" priority="-7" font-style="bold" font-size="10"
-                fill="#000000" stroke="#FFFFFF" stroke-width="2.0" />
+                fill="#000000" stroke="#FFFFFF" stroke-width="2.0" repeat="false"/>
         </rule>
         <rule e="way" k="highway"
             v="secondary_link|primary_link|trunk_link|motorway_link|secondary|primary"
             zoom-min="15">
             <pathText k="name" display="always" priority="-6" font-style="bold" font-size="12"
-                fill="#000000" stroke="#FFFFFF" stroke-width="2.0" />
+                fill="#000000" stroke="#FFFFFF" stroke-width="2.0" repeat-start="0" repeat-gap="0"/>
         </rule>
         <rule e="any" k="highway" v="trunk|primary|secondary|tertiary" zoom-min="12">
             <rule e="way" k="name" v="~">
                 <pathText k="ref" priority="-5" font-style="bold" font-size="14" stroke="#FFFFFF"
-                    fill="#606060" stroke-width="3.0" />
+                    fill="#606060" stroke-width="3.0" repeat-start="20" repeat-gap="100" />
             </rule>
         </rule>
         <rule e="any" k="highway" v="motorway" zoom-min="12">
             <pathText k="ref" priority="-4" font-style="bold" font-size="14" stroke="#FFFF00"
-                fill="#FF0000" stroke-width="3.0" />
+                fill="#FF0000" stroke-width="3.0" repeat-start="20" repeat-gap="70"/>
         </rule>
         <rule e="way" k="highway" v="*" zoom-min="15">
             <rule e="way" k="access" v="destination">
@@ -1116,8 +1108,7 @@
                 font-size="12" fill="#DA0092" stroke="#FFFFFF" stroke-width="2.0" />
         </rule>
         <rule e="any" k="amenity" v="pharmacy" zoom-min="13">
-            <symbol id="pharmacy" src="assets:symbols/health/pharmacy.svg" symbol-scaling="size"
-                symbol-height="15" />
+            <symbol id="pharmacy" src="assets:symbols/health/pharmacy.svg" symbol-height="15" />
             <caption priority="10" symbol-id="pharmacy" k="name" position="above" font-style="bold"
                 font-size="12" fill="#DA0092" stroke="#FFFFFF" stroke-width="2.0" />
         </rule>
@@ -1183,8 +1174,7 @@
             </rule>
         </rule>
         <rule e="any" k="tourism|building" v="hotel|guest_house|motel" zoom-min="13">
-            <symbol id="hotel" src="assets:symbols/accommodation/hotel.svg" symbol-scaling="size"
-                symbol-height="25" />
+            <symbol id="hotel" src="assets:symbols/accommodation/hotel.svg" symbol-height="25" />
             <rule e="any" k="*" v="*" zoom-min="18">
                 <caption symbol-id="hotel" k="name" display="never" font-style="bold" font-size="12"
                     fill="#0092DA" stroke="#FFFFFF" stroke-width="2" />
@@ -1261,10 +1251,10 @@
             <symbol src="assets:symbols/food/biergarten.svg" />
         </rule>
         <rule e="any" k="amenity" v="cafe" zoom-min="15">
-            <symbol src="assets:symbols/food/cafe.svg" symbol-scaling="size" symbol-height="25" />
+            <symbol src="assets:symbols/food/cafe.svg" symbol-height="25" />
         </rule>
         <rule e="any" k="amenity" v="pub|bar" zoom-min="15">
-            <symbol src="assets:symbols/food/bar.svg" symbol-scaling="size" symbol-width="25" />
+            <symbol src="assets:symbols/food/bar.svg" symbol-width="25" />
         </rule>
     </rule>
 
@@ -1420,12 +1410,10 @@
     <rule cat="parking" e="any" k="*" v="*">
         <rule e="any" k="amenity" v="parking" zoom-min="14">
             <rule e="any" k="access" v="private">
-                <symbol src="assets:symbols/transport/parking_private2.svg" symbol-scaling="percent"
-                    symbol-percent="80" />
+                <symbol src="assets:symbols/transport/parking_private2.svg" symbol-percent="80" />
             </rule>
             <rule e="any" k="*" v="*">
-                <symbol src="assets:symbols/transport/parking.svg" symbol-scaling="percent"
-                    symbol-percent="80" />
+                <symbol src="assets:symbols/transport/parking.svg" symbol-percent="80" />
             </rule>
         </rule>
         <rule e="node" k="highway" v="traffic_signals" zoom-min="17">
