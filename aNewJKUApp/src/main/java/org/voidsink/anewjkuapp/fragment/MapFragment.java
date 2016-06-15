@@ -58,17 +58,16 @@ import org.mapsforge.core.model.MapPosition;
 import org.mapsforge.core.util.LatLongUtils;
 import org.mapsforge.core.util.MercatorProjection;
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
-import org.mapsforge.map.android.graphics.AndroidResourceBitmap;
 import org.mapsforge.map.android.rendertheme.AssetsRenderTheme;
 import org.mapsforge.map.android.util.AndroidUtil;
 import org.mapsforge.map.android.view.MapView;
+import org.mapsforge.map.datastore.MapDataStore;
 import org.mapsforge.map.layer.Layers;
 import org.mapsforge.map.layer.cache.TileCache;
 import org.mapsforge.map.layer.labels.LabelLayer;
 import org.mapsforge.map.layer.overlay.Marker;
 import org.mapsforge.map.layer.renderer.TileRendererLayer;
 import org.mapsforge.map.model.MapViewPosition;
-import org.mapsforge.map.datastore.MapDataStore;
 import org.mapsforge.map.reader.MapFile;
 import org.mapsforge.map.rendertheme.InternalRenderTheme;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
@@ -106,8 +105,6 @@ public class MapFragment extends BaseFragment implements
     private static final String KEY_GOAL_NAME = "GOAL_NAME";
 
     // Map Layer
-    private TileRendererLayer tileRendererLayer;
-    private LabelLayer labelLayer;
     private MyMarker goalLocation = null;
     private Marker goalLocationOverlay;
     private LocationOverlay mMyLocationOverlay;
@@ -116,9 +113,6 @@ public class MapFragment extends BaseFragment implements
      * The dummy content this fragment is presenting.
      */
     private MapView mapView;
-    private TileCache tileCache;
-
-    private MapViewPosition mapViewPosition;
 
     private SearchView mSearchView;
 
@@ -271,11 +265,6 @@ public class MapFragment extends BaseFragment implements
         this.mMyLocationOverlay.enableMyLocation(false);
     }
 
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//    }
-
     private void setNewGoal(MyMarker marker) {
         if (goalLocationOverlay != null) {
             if (marker != null) {
@@ -308,7 +297,7 @@ public class MapFragment extends BaseFragment implements
                     this.goalLocationOverlay.setVerticalOffset(0);
                 }
 
-                if (this.mMyLocationOverlay != null){
+                if (this.mMyLocationOverlay != null) {
                     this.mMyLocationOverlay.setSnapToLocationEnabled(false);
 
                     if (this.mMyLocationOverlay.getLastLocation() != null) {
@@ -342,10 +331,10 @@ public class MapFragment extends BaseFragment implements
                                         .zoomForBounds(dimension, bb, this.mapView
                                                 .getModel().displayModel.getTileSize())));
                     } else {
-                        this.mapViewPosition.setCenter(marker.getLatLon());
+                        this.mapView.setCenter(marker.getLatLon());
                     }
                 } else {
-                    this.mapViewPosition.setCenter(marker.getLatLon());
+                    this.mapView.setCenter(marker.getLatLon());
                 }
             } else {
                 this.goalLocationOverlay.setLatLong(null);
@@ -408,18 +397,12 @@ public class MapFragment extends BaseFragment implements
         //this.mapView.getFpsCounter().setVisible(true);
         this.mapView.getMapScaleBar().setVisible(true);
         this.mapView.setBuiltInZoomControls(true);
-        this.mapView.getMapZoomControls().setZoomLevelMin(MIN_ZOOM_LEVEL);
-        this.mapView.getMapZoomControls().setZoomLevelMax(MAX_ZOOM_LEVEL);
+        this.mapView.setZoomLevelMin(MIN_ZOOM_LEVEL);
+        this.mapView.setZoomLevelMax(MAX_ZOOM_LEVEL);
         this.mapView.getMapZoomControls().setZoomInResource(R.drawable.zoom_control_in);
         this.mapView.getMapZoomControls().setZoomOutResource(R.drawable.zoom_control_out);
         this.mapView.getMapZoomControls().setMarginHorizontal(getContext().getResources().getDimensionPixelSize(R.dimen.map_zoom_control_margin_horizontal));
         this.mapView.getMapZoomControls().setMarginVertical(getContext().getResources().getDimensionPixelSize(R.dimen.map_zoom_control_margin_vertical));
-
-        this.tileCache = AndroidUtil.createTileCache(getContext(),
-                "mapFragment",
-                this.mapView.getModel().displayModel.getTileSize(),
-                1.0f,
-                this.mapView.getModel().frameBufferModel.getOverdrawFactor());
 
         createLayers();
 
@@ -449,17 +432,23 @@ public class MapFragment extends BaseFragment implements
     }
 
     private void createLayers() {
+        TileCache tileCache = AndroidUtil.createTileCache(getContext(),
+                "mapFragment",
+                this.mapView.getModel().displayModel.getTileSize(),
+                1.0f,
+                this.mapView.getModel().frameBufferModel.getOverdrawFactor());
+
         final Layers layers = this.mapView.getLayerManager().getLayers();
 
-        this.mapViewPosition = this.mapView.getModel().mapViewPosition;
-        initializePosition(this.mapViewPosition);
+        MapViewPosition mapViewPosition = this.mapView.getModel().mapViewPosition;
+        initializePosition(mapViewPosition);
 
-        tileRendererLayer = createTileRendererLayer(this.tileCache, mapViewPosition,
-                getMapFile(), getRenderTheme(), false);
+        TileRendererLayer tileRendererLayer = createTileRendererLayer(tileCache, mapViewPosition,
+                getMapFile(), getRenderTheme());
         layers.add(tileRendererLayer);
 
-        labelLayer = new LabelLayer(AndroidGraphicFactory.INSTANCE, tileRendererLayer.getLabelStore());
-        layers.add(labelLayer);
+        LabelLayer labelLayer = new LabelLayer(AndroidGraphicFactory.INSTANCE, tileRendererLayer.getLabelStore());
+        mapView.getLayerManager().getLayers().add(labelLayer);
 
         // overlay with a marker to show the goal position
         this.goalLocationOverlay = new Marker(null, null, 0, 0);
@@ -469,7 +458,7 @@ public class MapFragment extends BaseFragment implements
         Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_marker_own_position);
         Bitmap bitmap = AndroidGraphicFactory.convertToBitmap(drawable);
 
-        this.mMyLocationOverlay = new LocationOverlay(getContext(), this.mapViewPosition, bitmap);
+        this.mMyLocationOverlay = new LocationOverlay(getContext(), mapViewPosition, bitmap);
         this.mMyLocationOverlay.setSnapToLocationEnabled(false);
         layers.add(this.mMyLocationOverlay);
     }
@@ -497,30 +486,22 @@ public class MapFragment extends BaseFragment implements
     }
 
     private void removeLayers() {
-        this.mapView.getLayerManager().getLayers().remove(this.mMyLocationOverlay);
-        this.mMyLocationOverlay.onDestroy();
         this.mMyLocationOverlay = null;
-
-        this.mapView.getLayerManager().getLayers().remove(this.goalLocationOverlay);
-        this.goalLocationOverlay.onDestroy();
         this.goalLocationOverlay = null;
 
-        this.mapView.getLayerManager().getLayers().remove(this.labelLayer);
-        this.labelLayer.onDestroy();
-        this.labelLayer = null;
+        this.mapView.destroyAll();
+        this.mapView = null;
 
-        this.mapView.getLayerManager().getLayers().remove(this.tileRendererLayer);
-        this.tileRendererLayer.onDestroy();
-        this.tileRendererLayer = null;
+        AndroidGraphicFactory.clearResourceMemoryCache();
     }
 
     private TileRendererLayer createTileRendererLayer(TileCache tileCache,
                                                       MapViewPosition mapViewPosition, File mapFile,
-                                                      XmlRenderTheme renderTheme, boolean hasAlpha) {
+                                                      XmlRenderTheme renderTheme) {
         MapDataStore mapDataStore = new MapFile(mapFile);
 
         TileRendererLayer tileRendererLayer = AndroidUtil.createTileRendererLayer(tileCache,
-                mapViewPosition, mapDataStore, renderTheme, hasAlpha, false);
+                mapViewPosition, mapDataStore, renderTheme, false, false, true);
         tileRendererLayer.setTextScale(1.5f);
 
         return tileRendererLayer;
@@ -532,8 +513,6 @@ public class MapFragment extends BaseFragment implements
         if (center.equals(new LatLong(0, 0))) {
             mvp.setMapPosition(this.getInitialPosition());
         }
-        mvp.setZoomLevelMax(MAX_ZOOM_LEVEL);
-        mvp.setZoomLevelMin(MIN_ZOOM_LEVEL);
         return mvp;
     }
 
@@ -562,15 +541,6 @@ public class MapFragment extends BaseFragment implements
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (this.tileCache != null) {
-            this.tileCache.destroy();
-        }
-        if (this.mapView != null) {
-            this.mapView.getModel().mapViewPosition.destroy();
-            this.mapView.destroy();
-        }
-
-        AndroidResourceBitmap.clearResourceBitmaps();
     }
 
     private File getMapFile() {
