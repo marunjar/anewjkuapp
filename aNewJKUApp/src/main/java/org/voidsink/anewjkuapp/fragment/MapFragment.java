@@ -35,6 +35,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
@@ -57,17 +58,16 @@ import org.mapsforge.core.model.MapPosition;
 import org.mapsforge.core.util.LatLongUtils;
 import org.mapsforge.core.util.MercatorProjection;
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
-import org.mapsforge.map.android.graphics.AndroidResourceBitmap;
 import org.mapsforge.map.android.rendertheme.AssetsRenderTheme;
 import org.mapsforge.map.android.util.AndroidUtil;
 import org.mapsforge.map.android.view.MapView;
+import org.mapsforge.map.datastore.MapDataStore;
 import org.mapsforge.map.layer.Layers;
 import org.mapsforge.map.layer.cache.TileCache;
 import org.mapsforge.map.layer.labels.LabelLayer;
 import org.mapsforge.map.layer.overlay.Marker;
 import org.mapsforge.map.layer.renderer.TileRendererLayer;
 import org.mapsforge.map.model.MapViewPosition;
-import org.mapsforge.map.datastore.MapDataStore;
 import org.mapsforge.map.reader.MapFile;
 import org.mapsforge.map.rendertheme.InternalRenderTheme;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
@@ -100,9 +100,12 @@ public class MapFragment extends BaseFragment implements
     private static final byte MIN_ZOOM_LEVEL = 14; // full campus fits to screen at zoom level 15
     private static final byte DEFAULT_ZOOM_LEVEL = 17;
 
+    private static final String KEY_GOAL_LATITUDE = "GOAL_LATITUDE";
+    private static final String KEY_GOAL_LONGITUDE = "GOAL_LONGITUDE";
+    private static final String KEY_GOAL_NAME = "GOAL_NAME";
+
     // Map Layer
-    private TileRendererLayer tileRendererLayer;
-    private LabelLayer labelLayer;
+    private MyMarker goalLocation = null;
     private Marker goalLocationOverlay;
     private LocationOverlay mMyLocationOverlay;
 
@@ -110,9 +113,6 @@ public class MapFragment extends BaseFragment implements
      * The dummy content this fragment is presenting.
      */
     private MapView mapView;
-    private TileCache tileCache;
-
-    private MapViewPosition mapViewPosition;
 
     private SearchView mSearchView;
 
@@ -128,6 +128,25 @@ public class MapFragment extends BaseFragment implements
     public void onPause() {
         mMyLocationOverlay.disableMyLocation();
         super.onPause();
+    }
+
+
+    class MyMarker {
+        private final LatLong mLatLon;
+        private final String mName;
+
+        public MyMarker(double lat, double lon, String name) {
+            this.mLatLon = new LatLong(lat, lon);
+            this.mName = name;
+        }
+
+        public LatLong getLatLon() {
+            return mLatLon;
+        }
+
+        public String getName() {
+            return mName;
+        }
     }
 
     @Override
@@ -230,7 +249,7 @@ public class MapFragment extends BaseFragment implements
                 double lon = c.getDouble(ImportPoiTask.COLUMN_POI_LON);
                 double lat = c.getDouble(ImportPoiTask.COLUMN_POI_LAT);
 
-                setNewGoal(new LatLong(lat, lon), name);
+                setNewGoal(new MyMarker(lat, lon, name));
             }
             c.close();
         }
@@ -246,84 +265,84 @@ public class MapFragment extends BaseFragment implements
         this.mMyLocationOverlay.enableMyLocation(false);
     }
 
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//    }
+    private void setNewGoal(MyMarker marker) {
+        if (goalLocationOverlay != null) {
+            if (marker != null) {
+                this.goalLocation = marker;
+                if (!marker.getName().isEmpty()) {
+                    // generate Bubble image
+                    TextView bubbleView = new TextView(this.getContext());
+                    MapUtils.setBackground(bubbleView, ContextCompat.getDrawable(getContext(), R.drawable.balloon_overlay));
+                    bubbleView.setGravity(Gravity.CENTER);
+                    bubbleView.setMaxEms(20);
+                    bubbleView.setTextSize(15);
+                    bubbleView.setTextColor(Color.BLACK);
+                    bubbleView.setText(marker.getName());
+                    Bitmap bubble = MapUtils.viewToBitmap(getContext(), bubbleView);
+                    bubble.incrementRefCount();
 
-    private void setNewGoal(LatLong goalPosition, String name) {
-        if (goalPosition != null &&
-                mMyLocationOverlay != null &&
-                goalLocationOverlay != null) {
-            this.mMyLocationOverlay.setSnapToLocationEnabled(false);
+                    // set new goal
+                    this.goalLocationOverlay.setLatLong(marker.getLatLon());
+                    this.goalLocationOverlay.setBitmap(bubble);
+                    this.goalLocationOverlay.setHorizontalOffset(0);
+                    this.goalLocationOverlay.setVerticalOffset(-bubble.getHeight() / 2);
+                } else {
+                    Drawable d = ContextCompat.getDrawable(getContext(), R.drawable.ic_marker_goal_position);
+                    Bitmap b = AndroidGraphicFactory.convertToBitmap(d);
 
-            if (!name.isEmpty()) {
-                // generate Bubble image
-                TextView bubbleView = new TextView(this.getContext());
-                MapUtils.setBackground(bubbleView, ContextCompat.getDrawable(getContext(), R.drawable.balloon_overlay));
-                bubbleView.setGravity(Gravity.CENTER);
-                bubbleView.setMaxEms(20);
-                bubbleView.setTextSize(15);
-                bubbleView.setTextColor(Color.BLACK);
-                bubbleView.setText(name);
-                Bitmap bubble = MapUtils.viewToBitmap(getContext(), bubbleView);
-                bubble.incrementRefCount();
-
-                // set new goal
-                this.goalLocationOverlay.setLatLong(goalPosition);
-                this.goalLocationOverlay.setBitmap(bubble);
-                this.goalLocationOverlay.setHorizontalOffset(0);
-                this.goalLocationOverlay.setVerticalOffset(-bubble.getHeight() / 2);
-            } else {
-                Drawable d = ContextCompat.getDrawable(getContext(), R.drawable.ic_marker_goal_position);
-                Bitmap b = AndroidGraphicFactory.convertToBitmap(d);
-
-                // set new goal
-                this.goalLocationOverlay.setLatLong(goalPosition);
-                this.goalLocationOverlay.setBitmap(b);
-                this.goalLocationOverlay.setHorizontalOffset(0);
-                this.goalLocationOverlay.setVerticalOffset(0);
-            }
-
-            if (this.mMyLocationOverlay != null &&
-                    this.mMyLocationOverlay.getLastLocation() != null) {
-                LatLong mLocation = LocationOverlay
-                        .locationToLatLong(this.mMyLocationOverlay
-                                .getLastLocation());
-
-                // lat long difference for bounding box
-                double mDLat = Math.abs((mLocation.latitude - goalPosition.latitude));
-                double mDLong = Math.abs((mLocation.longitude - goalPosition.longitude));
-
-                // trunc distance
-                double distance = mLocation.distance(goalPosition);
-                if (distance > 0.0088) {
-                    mDLat = (mDLat * 0.0088 / distance);
-                    mDLong = (mDLong * 0.0088 / distance);
+                    // set new goal
+                    this.goalLocationOverlay.setLatLong(marker.getLatLon());
+                    this.goalLocationOverlay.setBitmap(b);
+                    this.goalLocationOverlay.setHorizontalOffset(0);
+                    this.goalLocationOverlay.setVerticalOffset(0);
                 }
 
-                // zoom to bounds
-                BoundingBox bb = new BoundingBox(
-                        Math.max(MercatorProjection.LATITUDE_MIN, goalPosition.latitude - mDLat),
-                        Math.max(-180, goalPosition.longitude - mDLong),
-                        Math.min(MercatorProjection.LATITUDE_MAX, goalPosition.latitude + mDLat),
-                        Math.min(180, goalPosition.longitude + mDLong));
-                Dimension dimension = this.mapView.getModel().mapViewDimension
-                        .getDimension();
-                // zoom to bounding box, center at goalPosition
-                this.mapView.getModel().mapViewPosition
-                        .setMapPosition(new MapPosition(goalPosition, LatLongUtils
-                                .zoomForBounds(dimension, bb, this.mapView
-                                        .getModel().displayModel.getTileSize())));
+                if (this.mMyLocationOverlay != null) {
+                    this.mMyLocationOverlay.setSnapToLocationEnabled(false);
+
+                    if (this.mMyLocationOverlay.getLastLocation() != null) {
+
+                        LatLong mLocation = LocationOverlay
+                                .locationToLatLong(this.mMyLocationOverlay
+                                        .getLastLocation());
+
+                        // lat long difference for bounding box
+                        double mDLat = Math.abs((mLocation.latitude - marker.getLatLon().latitude));
+                        double mDLong = Math.abs((mLocation.longitude - marker.getLatLon().longitude));
+
+                        // trunc distance
+                        double distance = mLocation.distance(marker.getLatLon());
+                        if (distance > 0.0088) {
+                            mDLat = (mDLat * 0.0088 / distance);
+                            mDLong = (mDLong * 0.0088 / distance);
+                        }
+
+                        // zoom to bounds
+                        BoundingBox bb = new BoundingBox(
+                                Math.max(MercatorProjection.LATITUDE_MIN, marker.getLatLon().latitude - mDLat),
+                                Math.max(-180, marker.getLatLon().longitude - mDLong),
+                                Math.min(MercatorProjection.LATITUDE_MAX, marker.getLatLon().latitude + mDLat),
+                                Math.min(180, marker.getLatLon().longitude + mDLong));
+                        Dimension dimension = this.mapView.getModel().mapViewDimension
+                                .getDimension();
+                        // zoom to bounding box, center at goalPosition
+                        this.mapView.getModel().mapViewPosition
+                                .setMapPosition(new MapPosition(marker.getLatLon(), LatLongUtils
+                                        .zoomForBounds(dimension, bb, this.mapView
+                                                .getModel().displayModel.getTileSize())));
+                    } else {
+                        this.mapView.setCenter(marker.getLatLon());
+                    }
+                } else {
+                    this.mapView.setCenter(marker.getLatLon());
+                }
             } else {
-                this.mapViewPosition.setCenter(goalPosition);
+                this.goalLocationOverlay.setLatLong(null);
+                this.mMyLocationOverlay.setSnapToLocationEnabled(true);
             }
-        } else {
-            this.goalLocationOverlay.setLatLong(null);
-            this.mMyLocationOverlay.setSnapToLocationEnabled(true);
+            this.goalLocationOverlay.requestRedraw();
+            this.mMyLocationOverlay.requestRedraw();
         }
-        this.goalLocationOverlay.requestRedraw();
-        this.mMyLocationOverlay.requestRedraw();
     }
 
     @Override
@@ -378,42 +397,58 @@ public class MapFragment extends BaseFragment implements
         //this.mapView.getFpsCounter().setVisible(true);
         this.mapView.getMapScaleBar().setVisible(true);
         this.mapView.setBuiltInZoomControls(true);
-        this.mapView.getMapZoomControls().setZoomLevelMin(MIN_ZOOM_LEVEL);
-        this.mapView.getMapZoomControls().setZoomLevelMax(MAX_ZOOM_LEVEL);
+        this.mapView.setZoomLevelMin(MIN_ZOOM_LEVEL);
+        this.mapView.setZoomLevelMax(MAX_ZOOM_LEVEL);
         this.mapView.getMapZoomControls().setZoomInResource(R.drawable.zoom_control_in);
         this.mapView.getMapZoomControls().setZoomOutResource(R.drawable.zoom_control_out);
         this.mapView.getMapZoomControls().setMarginHorizontal(getContext().getResources().getDimensionPixelSize(R.dimen.map_zoom_control_margin_horizontal));
         this.mapView.getMapZoomControls().setMarginVertical(getContext().getResources().getDimensionPixelSize(R.dimen.map_zoom_control_margin_vertical));
 
-        this.tileCache = AndroidUtil.createTileCache(getContext(),
-                "mapFragment",
-                this.mapView.getModel().displayModel.getTileSize(),
-                1.0f,
-                this.mapView.getModel().frameBufferModel.getOverdrawFactor());
+        createLayers();
+
+        restoreMarker(savedInstanceState);
 
         return rootView;
     }
 
     @Override
-    public void onStart() {
-        // create layer before handling intents in super
-        createLayers();
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
+        restoreMarker(savedInstanceState);
+    }
+
+    private void restoreMarker(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(KEY_GOAL_LATITUDE) && savedInstanceState.containsKey(KEY_GOAL_LONGITUDE) && savedInstanceState.containsKey(KEY_GOAL_NAME)) {
+                setNewGoal(new MyMarker(savedInstanceState.getDouble(KEY_GOAL_LATITUDE), savedInstanceState.getDouble(KEY_GOAL_LONGITUDE), savedInstanceState.getString(KEY_GOAL_NAME)));
+            }
+        }
+    }
+
+    @Override
+    public void onStart() {
         super.onStart();
     }
 
     private void createLayers() {
+        TileCache tileCache = AndroidUtil.createTileCache(getContext(),
+                "mapFragment",
+                this.mapView.getModel().displayModel.getTileSize(),
+                1.0f,
+                this.mapView.getModel().frameBufferModel.getOverdrawFactor());
+
         final Layers layers = this.mapView.getLayerManager().getLayers();
 
-        this.mapViewPosition = this.mapView.getModel().mapViewPosition;
-        initializePosition(this.mapViewPosition);
+        MapViewPosition mapViewPosition = this.mapView.getModel().mapViewPosition;
+        initializePosition(mapViewPosition);
 
-        tileRendererLayer = createTileRendererLayer(this.tileCache, mapViewPosition,
-                getMapFile(), getRenderTheme(), false);
+        TileRendererLayer tileRendererLayer = createTileRendererLayer(tileCache, mapViewPosition,
+                getMapFile(), getRenderTheme());
         layers.add(tileRendererLayer);
 
-        labelLayer = new LabelLayer(AndroidGraphicFactory.INSTANCE, tileRendererLayer.getLabelStore());
-        layers.add(labelLayer);
+        LabelLayer labelLayer = new LabelLayer(AndroidGraphicFactory.INSTANCE, tileRendererLayer.getLabelStore());
+        mapView.getLayerManager().getLayers().add(labelLayer);
 
         // overlay with a marker to show the goal position
         this.goalLocationOverlay = new Marker(null, null, 0, 0);
@@ -423,14 +458,14 @@ public class MapFragment extends BaseFragment implements
         Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_marker_own_position);
         Bitmap bitmap = AndroidGraphicFactory.convertToBitmap(drawable);
 
-        this.mMyLocationOverlay = new LocationOverlay(getContext(), this.mapViewPosition, bitmap);
+        this.mMyLocationOverlay = new LocationOverlay(getContext(), mapViewPosition, bitmap);
         this.mMyLocationOverlay.setSnapToLocationEnabled(false);
         layers.add(this.mMyLocationOverlay);
     }
 
     private XmlRenderTheme getRenderTheme() {
         try {
-            return new AssetsRenderTheme(getContext(), "", "renderthemes/rendertheme-v4.xml");
+            return new AssetsRenderTheme(getContext(), "", "renderthemes/rendertheme-v5.xml");
         } catch (Exception e) {
             Analytics.sendException(getContext(), e, false);
         }
@@ -439,37 +474,34 @@ public class MapFragment extends BaseFragment implements
     }
 
     @Override
+    public void onDestroyView() {
+        removeLayers();
+
+        super.onDestroyView();
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
-
-        removeLayers();
     }
 
     private void removeLayers() {
-        this.mapView.getLayerManager().getLayers().remove(this.mMyLocationOverlay);
-        this.mMyLocationOverlay.onDestroy();
         this.mMyLocationOverlay = null;
-
-        this.mapView.getLayerManager().getLayers().remove(this.goalLocationOverlay);
-        this.goalLocationOverlay.onDestroy();
         this.goalLocationOverlay = null;
 
-        this.mapView.getLayerManager().getLayers().remove(this.labelLayer);
-        this.labelLayer.onDestroy();
-        this.labelLayer = null;
+        this.mapView.destroyAll();
+        this.mapView = null;
 
-        this.mapView.getLayerManager().getLayers().remove(this.tileRendererLayer);
-        this.tileRendererLayer.onDestroy();
-        this.tileRendererLayer = null;
+        AndroidGraphicFactory.clearResourceMemoryCache();
     }
 
     private TileRendererLayer createTileRendererLayer(TileCache tileCache,
                                                       MapViewPosition mapViewPosition, File mapFile,
-                                                      XmlRenderTheme renderTheme, boolean hasAlpha) {
+                                                      XmlRenderTheme renderTheme) {
         MapDataStore mapDataStore = new MapFile(mapFile);
 
         TileRendererLayer tileRendererLayer = AndroidUtil.createTileRendererLayer(tileCache,
-                mapViewPosition, mapDataStore, renderTheme, hasAlpha, false);
+                mapViewPosition, mapDataStore, renderTheme, false, false, true);
         tileRendererLayer.setTextScale(1.5f);
 
         return tileRendererLayer;
@@ -481,8 +513,6 @@ public class MapFragment extends BaseFragment implements
         if (center.equals(new LatLong(0, 0))) {
             mvp.setMapPosition(this.getInitialPosition());
         }
-        mvp.setZoomLevelMax(MAX_ZOOM_LEVEL);
-        mvp.setZoomLevelMin(MIN_ZOOM_LEVEL);
         return mvp;
     }
 
@@ -511,15 +541,6 @@ public class MapFragment extends BaseFragment implements
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (this.tileCache != null) {
-            this.tileCache.destroy();
-        }
-        if (this.mapView != null) {
-            this.mapView.getModel().mapViewPosition.destroy();
-            this.mapView.destroy();
-        }
-
-        AndroidResourceBitmap.clearResourceBitmaps();
     }
 
     private File getMapFile() {
@@ -550,4 +571,17 @@ public class MapFragment extends BaseFragment implements
     protected String getScreenName() {
         return Consts.SCREEN_MAP;
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (goalLocation != null) {
+            outState.putDouble(KEY_GOAL_LATITUDE, goalLocation.getLatLon().latitude);
+            outState.putDouble(KEY_GOAL_LONGITUDE, goalLocation.getLatLon().longitude);
+            outState.putString(KEY_GOAL_NAME, goalLocation.getName());
+        }
+
+    }
+
 }

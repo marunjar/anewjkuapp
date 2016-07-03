@@ -29,6 +29,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
 import org.voidsink.anewjkuapp.R;
@@ -45,11 +46,16 @@ public class KusssNotificationBuilder {
                 new Intent(mContext, MainActivity.class), 0);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext)
-                .setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp)
                 .setContentTitle(mContext.getText(stringResID))
                 .setContentIntent(pendingIntent)
                 .setCategory(NotificationCompat.CATEGORY_ERROR)
                 .setAutoCancel(true);
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp);
+        } else {
+            mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_compat_24dp);
+        }
 
         if (e != null) {
             mBuilder.setContentText(e.getLocalizedMessage());

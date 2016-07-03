@@ -29,6 +29,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
 import org.voidsink.anewjkuapp.R;
@@ -50,18 +52,23 @@ public class SyncNotification {
                 .getSystemService(Context.NOTIFICATION_SERVICE)).cancel(id);
 
         this.mBuilder = new NotificationCompat.Builder(this.mContext)
-                .setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp)
                 .setOngoing(true)
                 .setCategory(NotificationCompat.CATEGORY_SERVICE)
                 .setAutoCancel(true)
-//                .setLargeIcon(
-//                        BitmapFactory.decodeResource(
-//                                this.mContext.getResources(),
-//                                R.drawable.ic_refresh_white_24dp))
                 .setContentTitle(mTitle)
                 .setVisibility(NotificationCompat.VISIBILITY_SECRET)
                 .setProgress(0, 100, true)
                 .setGroup("Sync Group");
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            this.mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp)
+                    .setLargeIcon(
+                            BitmapFactory.decodeResource(
+                                    this.mContext.getResources(),
+                                    R.drawable.ic_refresh_white_24dp));
+        } else {
+            this.mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_compat_24dp);
+        }
 
         // contenIntent required for all Versions before ICS
         PendingIntent pendingIntent = PendingIntent.getActivity(this.mContext,
