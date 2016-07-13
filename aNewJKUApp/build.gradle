@@ -82,7 +82,7 @@ dependencies {
     compile 'com.android.support:preference-v7:24.0.0'
     compile 'com.android.support:preference-v14:24.0.0'
     compile 'com.android.support:design:24.0.0'
-    googleCompile 'com.google.android.gms:play-services-analytics:9.2.0'
+    googleCompile 'com.google.android.gms:play-services-analytics:9.2.1'
     compile 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
     compile 'org.mapsforge:mapsforge-core:0.6.1'
     compile 'org.mapsforge:mapsforge-map:0.6.1'
@@ -95,7 +95,7 @@ dependencies {
     compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
     //compile 'com.github.alamkanak:android-week-view:1.2.3'
     compile 'de.cketti.library.changelog:ckchangelog:1.2.2'
-    compile('com.mikepenz:aboutlibraries:5.6.8@aar') {
+    compile('com.mikepenz:aboutlibraries:5.7.1@aar') {
         transitive = true
     }
     compile project(':sectionedRecyclerAdapter')
