@@ -337,25 +337,31 @@ public class KusssHandler {
             writeParams(conn, new String[]{"selectAll"},
                     new String[]{"ical.category.examregs"});
 
-            Log.d(TAG, String.format("getExamIcal: RequestMethod: %s", conn.getContentType()));
-            if (!conn.getContentType().contains("text/calendar")) {
+            final String contentType = conn.getContentType();
+
+            if (contentType == null) {
                 conn.disconnect();
                 return null;
-            } else {
-                long length = copyStream(conn.getInputStream(), data);
+            }
 
+            Log.d(TAG, String.format("getExamIcal: RequestMethod: %s", contentType));
+            if (!contentType.contains("text/calendar")) {
                 conn.disconnect();
+                return null;
+            }
+            final long length = copyStream(conn.getInputStream(), data);
 
-                /*
-                AssetManager am = c.getAssets();
-                long length = copyStream(am.open("ical1.ics", AssetManager.ACCESS_STREAMING), data);
-                */
+            conn.disconnect();
 
-                if (length > 0) {
-                    iCal = mCalendarBuilder.build(new ByteArrayInputStream(getModifiedData(data)));
-                } else {
-                    iCal = new Calendar();
-                }
+            /*
+            AssetManager am = c.getAssets();
+            long length = copyStream(am.open("ical1.ics", AssetManager.ACCESS_STREAMING), data);
+            */
+
+            if (length > 0) {
+                iCal = mCalendarBuilder.build(new ByteArrayInputStream(getModifiedData(data)));
+            } else {
+                iCal = new Calendar();
             }
         } catch (ParserException e) {
             Log.e(TAG, "getExamIcal: " + data.toString(), e);
