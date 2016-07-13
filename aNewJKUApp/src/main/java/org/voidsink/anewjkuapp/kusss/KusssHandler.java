@@ -288,20 +288,26 @@ public class KusssHandler {
             writeParams(conn, new String[]{"selectAll"},
                     new String[]{"ical.category.mycourses"});
 
-            Log.d(TAG, String.format("getLVAIcal: RequestMethod: %s", conn.getContentType()));
-            if (!conn.getContentType().contains("text/calendar")) {
+            final String contentType = conn.getContentType();
+
+            if (contentType == null) {
                 conn.disconnect();
                 return null;
-            } else {
-                long length = copyStream(conn.getInputStream(), data);
+            }
 
+            Log.d(TAG, String.format("getExamIcal: RequestMethod: %s", contentType));
+            if (!contentType.contains("text/calendar")) {
                 conn.disconnect();
+                return null;
+            }
+            final long length = copyStream(conn.getInputStream(), data);
 
-                if (length > 0) {
-                    iCal = mCalendarBuilder.build(new ByteArrayInputStream(getModifiedData(data)));
-                } else {
-                    iCal = new Calendar();
-                }
+            conn.disconnect();
+
+            if (length > 0) {
+                iCal = mCalendarBuilder.build(new ByteArrayInputStream(getModifiedData(data)));
+            } else {
+                iCal = new Calendar();
             }
         } catch (ParserException e) {
             Log.e(TAG, "getLVAIcal: " + data.toString(), e);
