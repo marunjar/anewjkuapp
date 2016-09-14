@@ -26,6 +26,8 @@
 package org.voidsink.anewjkuapp.kusss;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.text.format.DateUtils;
 import android.util.Log;
 
@@ -108,6 +110,20 @@ public class KusssHandler {
         CookieHandler.setDefault(mCookies);
     }
 
+    public static boolean isNetworkAvailable(Context context) {
+        try {
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
+                return true;
+            }
+            Log.i(TAG, "network not available");
+        } catch (Exception e) {
+            Log.w(TAG, "network not available", e);
+        }
+        return false;
+    }
+
     public static synchronized KusssHandler getInstance() {
         if (handler == null) {
             synchronized (KusssHandler.class) {
@@ -138,8 +154,12 @@ public class KusssHandler {
         if (user == null || password == null) {
             return null;
         }
+        if (!isNetworkAvailable(c)) {
+            return null;
+        }
 
         try {
+
             if ((user.length() > 0) && (user.charAt(0) != 'k')) {
                 user = "k" + user;
             }
@@ -213,6 +233,10 @@ public class KusssHandler {
     }
 
     public synchronized boolean logout(Context c) {
+        if (!isNetworkAvailable(c)) {
+            mCookies.getCookieStore().removeAll();
+            return true;
+        }
         try {
             Connection.Response r = Jsoup.connect(URL_LOGOUT).cookies(getCookieMap()).method(Connection.Method.GET).execute();
 
@@ -233,6 +257,9 @@ public class KusssHandler {
     }
 
     public synchronized boolean isLoggedIn(Context c, String sessionId) {
+        if (!isNetworkAvailable(c)) {
+            return false;
+        }
         try {
             Document doc = Jsoup.connect(URL_START_PAGE).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true).get();
 
@@ -255,7 +282,7 @@ public class KusssHandler {
 
     public synchronized boolean isAvailable(Context c, String sessionId,
                                             String user, String password) {
-        return isLoggedIn(c, sessionId) || login(c, user, password) != null;
+        return isNetworkAvailable(c) && (isLoggedIn(c, sessionId) || login(c, user, password) != null);
     }
 
     public static long copyStream(final InputStream input, final OutputStream output) throws IOException {
@@ -271,6 +298,9 @@ public class KusssHandler {
     }
 
     public Calendar getLVAIcal(Context c, CalendarBuilder mCalendarBuilder) {
+        if (!isNetworkAvailable(c)) {
+            return null;
+        }
 
         Calendar iCal;
         ByteArrayOutputStream data = new ByteArrayOutputStream();
@@ -328,6 +358,10 @@ public class KusssHandler {
     }
 
     public Calendar getExamIcal(Context c, CalendarBuilder mCalendarBuilder) {
+        if (!isNetworkAvailable(c)) {
+            return null;
+        }
+
         Calendar iCal;
         ByteArrayOutputStream data = new ByteArrayOutputStream();
 
@@ -383,6 +417,9 @@ public class KusssHandler {
     }
 
     public Map<String, String> getTerms(Context c) {
+        if (!isNetworkAvailable(c)) {
+            return null;
+        }
         Map<String, String> terms = new HashMap<>();
         try {
             Document doc = Jsoup.connect(URL_GET_TERMS).cookies(getCookieMap()).get();
@@ -405,6 +442,9 @@ public class KusssHandler {
     }
 
     public boolean selectTerm(Context c, Term term) throws IOException {
+        if (!isNetworkAvailable(c)) {
+            return false;
+        }
         Jsoup.connect(URL_SELECT_TERM)
                 .cookies(getCookieMap())
                 .data("term", term.toString())
@@ -420,6 +460,9 @@ public class KusssHandler {
 
     public List<Course> getLvas(Context c, List<Term> terms) {
         if (terms == null || terms.size() == 0) {
+            return null;
+        }
+        if (!isNetworkAvailable(c)) {
             return null;
         }
 
@@ -496,6 +539,9 @@ public class KusssHandler {
     }
 
     public List<Assessment> getAssessments(Context c) {
+        if (!isNetworkAvailable(c)) {
+            return null;
+        }
         List<Assessment> grades = new ArrayList<>();
         try {
             Document doc = Jsoup.connect(URL_MY_GRADES).cookies(getCookieMap()).data("months", "0")
@@ -528,6 +574,9 @@ public class KusssHandler {
     }
 
     public List<Exam> getNewExams(Context c) {
+        if (!isNetworkAvailable(c)) {
+            return null;
+        }
         List<Exam> exams = new ArrayList<>();
         try {
             Document doc = Jsoup.connect(URL_GET_NEW_EXAMS)
@@ -671,6 +720,10 @@ public class KusssHandler {
     }
 
     private void loadExams(Context c, List<Exam> exams) throws IOException {
+        if (!isNetworkAvailable(c)) {
+            return;
+        }
+
         Log.d(TAG, "loadExams");
 
         Document doc = Jsoup.connect(URL_GET_EXAMS).cookies(getCookieMap()).get();
@@ -695,6 +748,9 @@ public class KusssHandler {
     }
 
     public List<Curriculum> getCurricula(Context c) {
+        if (!isNetworkAvailable(c)) {
+            return null;
+        }
         try {
             List<Curriculum> mCurricula = new ArrayList<>();
 
