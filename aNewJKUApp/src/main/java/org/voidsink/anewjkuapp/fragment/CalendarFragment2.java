@@ -93,6 +93,14 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
 
         mWeekView = (WeekView) view.findViewById(R.id.weekView);
 
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -1);
+        mWeekView.setMinDate(cal);
+
+        cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, 2);
+        mWeekView.setMaxDate(cal);
+
         mWeekView.setOnEventClickListener(this);
         mWeekView.setEventLongPressListener(this);
         // Set long press listener for events.
@@ -482,7 +490,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         }
     }
 
-    private class CalendarDateTimeInterpreter implements DateTimeInterpreter {
+    private class CalendarDateTimeInterpreter extends DateTimeInterpreter {
 
         final DateFormat mDateFormat;
         final DateFormat mTimeFormat;
@@ -503,10 +511,10 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         }
 
         @Override
-        public String interpretTime(int hour) {
+        public String interpretTime(int hour, int minute) {
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.HOUR_OF_DAY, hour);
-            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.MINUTE, minute);
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
 

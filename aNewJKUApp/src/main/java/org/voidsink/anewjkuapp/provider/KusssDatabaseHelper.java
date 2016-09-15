@@ -40,6 +40,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "kusss.db";
     private static final int DATABASE_VERSION = 11;
+    private static KusssDatabaseHelper instance = null;
 
     // Database creation sql statement
     public static final String DB_CREATE_COURSE = "create table if not exists "
@@ -112,7 +113,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
             + KusssContentContract.Curricula.COL_DT_START + " integer not null, "
             + KusssContentContract.Curricula.COL_DT_END + " integer" + ")";
 
-    public KusssDatabaseHelper(Context context) {
+    private KusssDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -194,4 +195,14 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
             drop(context);
         }
     }
+
+    public static synchronized KusssDatabaseHelper getInstance(Context context) {
+        if (instance == null) {
+            synchronized (KusssDatabaseHelper.class) {
+                if (instance == null) instance = new KusssDatabaseHelper(context);
+            }
+        }
+        return instance;
+    }
+
 }

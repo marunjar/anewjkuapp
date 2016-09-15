@@ -101,11 +101,9 @@ public class KusssContentProvider extends ContentProvider {
                 KusssContentContract.Curricula.PATH + "/#", CODE_CURRICULA_ID);
     }
 
-    private KusssDatabaseHelper mDbHelper;
-
     @Override
     public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        SQLiteDatabase db = KusssDatabaseHelper.getInstance(getContext()).getWritableDatabase();
         String whereIdClause;
         int rowsDeleted;
         switch (sUriMatcher.match(uri)) {
@@ -204,7 +202,7 @@ public class KusssContentProvider extends ContentProvider {
 
     @Override
     public Uri insert(@NonNull Uri uri, ContentValues values) {
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        SQLiteDatabase db = KusssDatabaseHelper.getInstance(getContext()).getWritableDatabase();
         switch (sUriMatcher.match(uri)) {
             case CODE_COURSE: {
                 long id = db.insert(KusssContentContract.Course.TABLE_NAME, null,
@@ -246,7 +244,6 @@ public class KusssContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        mDbHelper = new KusssDatabaseHelper(getContext());
         return true;
     }
 
@@ -254,7 +251,7 @@ public class KusssContentProvider extends ContentProvider {
     public Cursor query(@NonNull Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
 
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        SQLiteDatabase db = KusssDatabaseHelper.getInstance(getContext()).getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 
 		/*
@@ -308,7 +305,7 @@ public class KusssContentProvider extends ContentProvider {
     @Override
     public int update(@NonNull Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        SQLiteDatabase db = KusssDatabaseHelper.getInstance(getContext()).getWritableDatabase();
 
         switch (sUriMatcher.match(uri)) {
             case CODE_COURSE: {

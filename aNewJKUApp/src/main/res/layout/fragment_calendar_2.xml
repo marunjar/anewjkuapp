@@ -11,7 +11,6 @@
     app:eventCornerRadius="4dp"
     app:eventTextColor="@android:color/white"
     app:firstDayOfWeek="monday"
-    app:fixedFocusPointEnabled="false"
     app:futureBackgroundColor="@color/fullTransparent"
     app:headerColumnBackground="@color/fullTransparent"
     app:headerColumnPadding="8dp"
@@ -30,4 +29,5 @@
     app:showNowLine="true"
     app:textSize="12sp"
     app:todayBackgroundColor="@color/divider"
-    app:todayHeaderTextColor="?android:attr/textColorPrimary"/>
+    app:todayHeaderTextColor="?android:attr/textColorPrimary"
+    app:zoomFocusPointEnabled="false"/>

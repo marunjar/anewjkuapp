@@ -1,8 +1,12 @@
 apply plugin: 'com.android.library'
 
+repositories {
+    mavenCentral()
+}
+
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.0"
+    buildToolsVersion "24.0.2"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -14,7 +18,13 @@ android {
         targetSdkVersion 24
     }
 }
-dependencies {
-    compile 'com.android.support:appcompat-v7:24.0.0'
+
+configurations {
+    javadocDeps
 }
-//apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
+dependencies {
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    javadocDeps 'com.android.support:appcompat-v7:24.2.1'
+}
+
+//apply from: 'gradle-mvn-push.gradle'

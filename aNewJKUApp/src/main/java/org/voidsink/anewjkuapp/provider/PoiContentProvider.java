@@ -62,8 +62,6 @@ public class PoiContentProvider extends ContentProvider {
                 SearchManager.SUGGEST_URI_PATH_QUERY + "/*", CODE_POI_SEARCH);
     }
 
-    private KusssDatabaseHelper mDbHelper;
-
     public static boolean matchFromExt(Uri uri) {
         switch (sUriMatcher.match(uri)) {
             case CODE_POI_ID:
@@ -78,7 +76,7 @@ public class PoiContentProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        SQLiteDatabase db = KusssDatabaseHelper.getInstance(getContext()).getWritableDatabase();
         int rowsDeleted;
         switch (sUriMatcher.match(uri)) {
             case CODE_POI:
@@ -121,7 +119,7 @@ public class PoiContentProvider extends ContentProvider {
 
     @Override
     public Uri insert(@NonNull Uri uri, ContentValues values) {
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        SQLiteDatabase db = KusssDatabaseHelper.getInstance(getContext()).getWritableDatabase();
         switch (sUriMatcher.match(uri)) {
             case CODE_POI: {
                 long id = db
@@ -139,8 +137,6 @@ public class PoiContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        mDbHelper = new KusssDatabaseHelper(getContext());
-
         return true;
     }
 
@@ -148,7 +144,7 @@ public class PoiContentProvider extends ContentProvider {
     public Cursor query(@NonNull Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
 
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        SQLiteDatabase db = KusssDatabaseHelper.getInstance(getContext()).getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 
 		/*
@@ -209,7 +205,7 @@ public class PoiContentProvider extends ContentProvider {
     @Override
     public int update(@NonNull Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        SQLiteDatabase db = KusssDatabaseHelper.getInstance(getContext()).getWritableDatabase();
 
         switch (sUriMatcher.match(uri)) {
             case CODE_POI: {
