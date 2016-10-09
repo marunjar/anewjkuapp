@@ -594,7 +594,7 @@ public class WeekView extends View {
 
     private float getYMinLimit() {
         return -(mHourHeight * 24
-                + mHeaderTextHeight
+                + mHeaderHeight
                 + mHeaderRowPadding *2
                 + mHeaderMarginBottom
                 + mTimeTextHeight/2
@@ -1084,8 +1084,8 @@ public class WeekView extends View {
             bob.append(event.getLocation());
         }
 
-        final int availableHeight = (int) (rect.bottom - originalTop - mEventPadding * 2);
-        final int availableWidth = (int) (rect.right - originalLeft - mEventPadding * 2);
+        int availableHeight = (int) (rect.bottom - originalTop - mEventPadding * 2);
+        int availableWidth = (int) (rect.right - originalLeft - mEventPadding * 2);
 
         // Get text dimensions.
         StaticLayout textLayout = new StaticLayout(bob, mEventTextPaint, availableWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);

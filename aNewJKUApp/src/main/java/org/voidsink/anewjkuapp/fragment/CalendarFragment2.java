@@ -490,12 +490,12 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         }
     }
 
-    private class CalendarDateTimeInterpreter extends DateTimeInterpreter {
+    private class CalendarDateTimeInterpreter implements DateTimeInterpreter {
 
         final DateFormat mDateFormat;
         final DateFormat mTimeFormat;
 
-        public CalendarDateTimeInterpreter(Context context) {
+        CalendarDateTimeInterpreter(Context context) {
             Locale locale = context.getResources().getConfiguration().locale;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 mDateFormat = new SimpleDateFormat(android.text.format.DateFormat.getBestDateTimePattern(locale, "EEEMMdd"), locale);
