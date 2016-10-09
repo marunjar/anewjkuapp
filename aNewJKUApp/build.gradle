@@ -4,7 +4,7 @@ android {
     }
 
     compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    buildToolsVersion "24.0.3"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -82,7 +82,7 @@ dependencies {
     compile 'com.android.support:preference-v7:24.2.1'
     compile 'com.android.support:preference-v14:24.2.1'
     compile 'com.android.support:design:24.2.1'
-    googleCompile 'com.google.android.gms:play-services-analytics:9.4.0'
+    googleCompile 'com.google.android.gms:play-services-analytics:9.6.1'
     compile 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
     compile 'org.mapsforge:mapsforge-core:0.6.1'
     compile 'org.mapsforge:mapsforge-map:0.6.1'
