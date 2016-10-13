@@ -257,6 +257,9 @@ public class KusssHandler {
     }
 
     public synchronized boolean isLoggedIn(Context c, String sessionId) {
+        if (sessionId == null) {
+            return false;
+        }
         if (!isNetworkAvailable(c)) {
             return false;
         }
