@@ -4,12 +4,13 @@
 		    - fixed
 		    * changed
 		    + added -->
-    <release version="0.43.2" versioncode="140050">
-        <change>* Karte: neue Daten von OpenStreetMap</change>
+    <release version="0.43.3" versioncode="140051">
+        <change>- Karte: bring App nicht mehr zum Absturz</change>
+        <change>- App: startet wieder auf Android Versionen kleiner 5.0</change>
         <change>- App: viele kleinere Korrekturen und Optimierungen</change>
     </release>
-    <release version="0.43.1" versioncode="140049">
-        <change>- App: startet wieder auf Android Versionen kleiner 5.0</change>
+    <release version="0.43.2" versioncode="140050">
+        <change>* Karte: neue Daten von OpenStreetMap</change>
     </release>
     <release version="0.43" versioncode="140048">
         <change>- Noten: laden von Noten aus Auslandssemester</change>
