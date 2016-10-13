@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    buildToolsVersion "24.0.3"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -11,6 +11,8 @@ android {
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 24
+
+        return void // fix lint warning "Not all execution paths return a value"
     }
 
     buildTypes {

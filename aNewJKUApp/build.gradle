@@ -4,7 +4,7 @@ android {
     }
 
     compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    buildToolsVersion "24.0.3"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -29,14 +29,8 @@ android {
                 'proguard-rules-keep-names.txt'
 
         buildConfigField "boolean", "FOSS_ONLY", "false"
-    }
 
-    productFlavors {
-        google {
-        }
-        fdroid {
-            buildConfigField "boolean", "FOSS_ONLY", "true"
-        }
+        return void // fix lint warning "Not all execution pathsreturn a value"
     }
 
     buildTypes {
@@ -48,6 +42,8 @@ android {
                 appendVersionNameVersionCode(variant, defaultConfig)
             }
             initProvider(defaultConfig, "")
+
+            return void // fix lint warning "Not all execution pathsreturn a value"
         }
         debug {
             minifyEnabled true
@@ -56,6 +52,18 @@ android {
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
             initProvider(defaultConfig, ".debug")
+
+            return void // fix lint warning "Not all execution pathsreturn a value"
+        }
+    }
+
+    productFlavors {
+        google {
+            return void // fix lint warning "Not all execution pathsreturn a value"
+        }
+        fdroid {
+            buildConfigField "boolean", "FOSS_ONLY", "true"
+            return void // fix lint warning "Not all execution pathsreturn a value"
         }
     }
 
@@ -70,6 +78,8 @@ android {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
         //exclude 'META-INF/ASL2.0'
+
+        return void // fix lint warning "Not all execution pathsreturn a value"
     }
 }
 
@@ -82,7 +92,7 @@ dependencies {
     compile 'com.android.support:preference-v7:24.2.1'
     compile 'com.android.support:preference-v14:24.2.1'
     compile 'com.android.support:design:24.2.1'
-    googleCompile 'com.google.android.gms:play-services-analytics:9.4.0'
+    googleCompile 'com.google.android.gms:play-services-analytics:9.6.1'
     compile 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
     compile 'org.mapsforge:mapsforge-core:0.6.1'
     compile 'org.mapsforge:mapsforge-map:0.6.1'

@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 
 import org.voidsink.anewjkuapp.R;
@@ -39,6 +40,10 @@ import org.voidsink.anewjkuapp.utils.UIUtils;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ThemedActivity extends AppCompatActivity {
+
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

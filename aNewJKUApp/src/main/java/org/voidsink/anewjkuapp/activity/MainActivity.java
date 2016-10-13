@@ -466,9 +466,9 @@ public class MainActivity extends ThemedActivity {
             case R.id.nav_map:
                 startFragment = MapFragment.class;
                 break;
-            case R.id.nav_oeh_news:
-                startFragment = OehNewsFragment.class;
-                break;
+//            case R.id.nav_oeh_news:
+//                startFragment = OehNewsFragment.class;
+//                break;
             case R.id.nav_oeh_info:
                 startFragment = OehInfoFragment.class;
                 break;
