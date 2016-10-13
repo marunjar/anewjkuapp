@@ -56,10 +56,12 @@
             <group
                 android:id="@+id/group_oeh"
                 android:checkableBehavior="none">
+                <!--
                 <item
                     android:id="@+id/nav_oeh_news"
                     android:icon="@drawable/ic_message_white_24dp"
                     android:title="@string/title_oeh_news" />
+                 -->
                 <item
                     android:id="@+id/nav_oeh_info"
                     android:icon="@drawable/ic_info_outline_white_24dp"
