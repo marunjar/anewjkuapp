@@ -16,7 +16,7 @@ android {
         versionCode 140051
         versionName "0.43.3"
         minSdkVersion 14
-        targetSdkVersion 24
+        targetSdkVersion 25
 
         vectorDrawables.useSupportLibrary = true // Android Plugin for Gradle 2.0.0
 
