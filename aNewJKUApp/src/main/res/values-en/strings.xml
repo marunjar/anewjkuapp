@@ -48,8 +48,8 @@
     <string name="notification_error">"JKU App" error</string>
     <string name="notification_error_account_is_null">Account not found</string>
     <string name="notification_error_account_not_available">Account not accessible</string>
-    <string name="notification_events_changed" formatted="false">%d events changed in "%s"</string>
-    <string name="notification_events_changed_title">Events changed in "%s"</string>
+    <string name="notification_events_changed" formatted="false">Changed %d events in "%s"</string>
+    <string name="notification_events_changed_title">Changed events in "%s"</string>
     <string name="notification_grades_changed">%d new grades available</string>
     <string name="notification_grades_changed_title">New grades available</string>
     <string name="notification_new_exams">Found %d new exams</string>
@@ -201,4 +201,7 @@
     <string name="button_ok">OK</string>
     <string name="pref_kusss_use_calendar_view_title">Calendar view</string>
     <string name="pref_kusss_use_calendar_view_summary">Show all events in a calendar view</string>
+    <string name="notification_more">+%d more</string>
+    <string name="notification_events_deleted" formatted="false">Removed %d events from "%s"</string>
+    <string name="notification_events_deleted_title">Removed events from "%s"</string>
 </resources>

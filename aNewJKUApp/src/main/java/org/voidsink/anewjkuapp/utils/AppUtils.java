@@ -822,7 +822,7 @@ public class AppUtils {
 
         DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
 
-        return String.format("%s: %s, %s", eventTitle, df.format(eventDTStart), AppUtils.getTimeString(new Date(eventDTStart), new Date(eventDTEnd)));
+        return String.format("%s: %s, %s", df.format(eventDTStart), AppUtils.getTimeString(new Date(eventDTStart), new Date(eventDTEnd)), eventTitle);
     }
 
     public static String termToString(Term term) {
