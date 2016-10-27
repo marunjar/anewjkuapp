@@ -116,8 +116,6 @@ public class CalendarChangedNotification {
 
             if (lines.size() > MAX_LINES) {
                 inBoxStyle.setSummaryText(mContext.getString(R.string.notification_more, lines.size() - MAX_LINES));
-            } else {
-                inBoxStyle.setSummaryText("");
             }
             // Moves the big view style object into the notification object.
             mBuilder.setStyle(inBoxStyle);
