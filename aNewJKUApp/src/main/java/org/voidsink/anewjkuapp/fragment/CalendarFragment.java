@@ -102,7 +102,7 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
     }
 
     private void setButtonLoadText() {
-        mLoadMoreButton.setText(String.format(getContext().getString(R.string.listview_footer_button), SimpleDateFormat.getDateInstance(SimpleDateFormat.MEDIUM).format(then)));
+        mLoadMoreButton.setText(getContext().getString(R.string.listview_footer_button, SimpleDateFormat.getDateInstance(SimpleDateFormat.MEDIUM).format(then)));
     }
 
     @Override

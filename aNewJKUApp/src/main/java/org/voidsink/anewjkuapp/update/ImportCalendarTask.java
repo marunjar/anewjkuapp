@@ -203,9 +203,7 @@ public class ImportCalendarTask implements Callable<Void> {
             mUpdateNotification = new SyncNotification(mContext,
                     R.string.notification_sync_calendar);
             mUpdateNotification.show(
-                    String.format(
-                            mContext.getString(R.string.notification_sync_calendar_loading),
-                            CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
+                    mContext.getString(R.string.notification_sync_calendar_loading, CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
         }
         CalendarChangedNotification mNotification = new CalendarChangedNotification(mContext,
                 CalendarUtils.getCalendarName(mContext, this.mCalendarName));
@@ -221,9 +219,7 @@ public class ImportCalendarTask implements Callable<Void> {
                     AppUtils.getAccountName(mContext, mAccount),
                     AppUtils.getAccountPassword(mContext, mAccount))) {
 
-                updateNotify(String.format(
-                        mContext.getString(R.string.notification_sync_calendar_loading),
-                        CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
+                updateNotify(mContext.getString(R.string.notification_sync_calendar_loading, CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
 
                 Log.d(TAG, "loading calendar");
 
@@ -256,9 +252,7 @@ public class ImportCalendarTask implements Callable<Void> {
 
                 Log.d(TAG, String.format("got %d events", events.size()));
 
-                updateNotify(String.format(
-                        mContext.getString(R.string.notification_sync_calendar_updating),
-                        CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
+                updateNotify(mContext.getString(R.string.notification_sync_calendar_updating, CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
 
                 ArrayList<ContentProviderOperation> batch = new ArrayList<>();
 
@@ -497,9 +491,7 @@ public class ImportCalendarTask implements Callable<Void> {
 
                     Log.d(TAG, String.format("Cursor closed, %d events left", eventsMap.size()));
 
-                    updateNotify(String.format(
-                            mContext.getString(R.string.notification_sync_calendar_adding),
-                            CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
+                    updateNotify(mContext.getString(R.string.notification_sync_calendar_adding, CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
 
                     // Add new items
                     for (VEvent v : eventsMap.values()) {
@@ -596,9 +588,7 @@ public class ImportCalendarTask implements Callable<Void> {
                     }
 
                     if (batch.size() > 0) {
-                        updateNotify(String.format(
-                                mContext.getString(R.string.notification_sync_calendar_saving),
-                                CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
+                        updateNotify(mContext.getString(R.string.notification_sync_calendar_saving, CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
 
                         Log.d(TAG, "Applying batch update");
                         mProvider.applyBatch(batch);

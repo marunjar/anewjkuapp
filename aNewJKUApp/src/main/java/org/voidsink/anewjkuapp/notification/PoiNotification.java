@@ -75,12 +75,8 @@ public class PoiNotification {
                     mContext)
                     .setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp)
                     .setContentIntent(pendingIntent)
-                    .setContentTitle(
-                            mContext.getText(R.string.notification_poi_changed_title))
-                    .setContentText(
-                            String.format(
-                                    mContext.getString(R.string.notification_poi_changed),
-                                    (mInserts.size() + mUpdates.size())))
+                    .setContentTitle(mContext.getText(R.string.notification_poi_changed_title))
+                    .setContentText(mContext.getString(R.string.notification_poi_changed, (mInserts.size() + mUpdates.size())))
                     .setContentIntent(pendingIntent)
                     .setAutoCancel(true)
                     .setCategory(NotificationCompat.CATEGORY_STATUS)
@@ -100,9 +96,7 @@ public class PoiNotification {
             // creates big view with all grades in inbox style
             NotificationCompat.InboxStyle inBoxStyle = new NotificationCompat.InboxStyle();
 
-            inBoxStyle.setBigContentTitle(String.format(
-                    mContext.getString(R.string.notification_poi_changed),
-                    (mInserts.size() + mUpdates.size())));
+            inBoxStyle.setBigContentTitle(mContext.getString(R.string.notification_poi_changed, (mInserts.size() + mUpdates.size())));
 
             Collections.sort(mInserts);
             for (String text : mInserts) {

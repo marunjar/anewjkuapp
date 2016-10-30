@@ -196,7 +196,7 @@ public class MapFragment extends BaseFragment implements
         }
 
         if (pois.size() == 0) {
-            Toast.makeText(getContext(), String.format(getContext().getString(R.string.map_place_not_found), query), Toast.LENGTH_LONG)
+            Toast.makeText(getContext(), getContext().getString(R.string.map_place_not_found, query), Toast.LENGTH_LONG)
                     .show();
         } else if (pois.size() == 1) {
             finishSearch(pois.get(0));
