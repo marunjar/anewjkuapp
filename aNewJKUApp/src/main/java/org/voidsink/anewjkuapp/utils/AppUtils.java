@@ -918,14 +918,17 @@ public class AppUtils {
 
     private static float mLastHue = new Random(System.currentTimeMillis()).nextFloat() * 360;
 
-    public static String format(Context c, String format, Object... args) {
+    public static Locale getLocale(Context context) {
         Locale locale = null;
         try {
-            locale = c.getResources().getConfiguration().locale;
+            locale = context.getResources().getConfiguration().locale;
         } catch (Exception e) {
             locale = Locale.getDefault();
         }
+        return locale;
+    }
 
-        return String.format(locale, format, args);
+    public static String format(Context c, String format, Object... args) {
+        return String.format(getLocale(c), format, args);
     }
 }

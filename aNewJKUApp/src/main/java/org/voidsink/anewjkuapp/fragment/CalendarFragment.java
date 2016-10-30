@@ -39,7 +39,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
-import android.util.SparseArray;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -270,7 +270,7 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
         Account mAccount = AppUtils.getAccount(getContext());
         if (mAccount != null) {
             // fetch calendar colors
-            final SparseArray<Integer> mColors = new SparseArray<>();
+            final SparseIntArray mColors = new SparseIntArray();
             ContentResolver cr = getContext().getContentResolver();
             Cursor cursor = cr
                     .query(CalendarContractWrapper.Calendars.CONTENT_URI(),

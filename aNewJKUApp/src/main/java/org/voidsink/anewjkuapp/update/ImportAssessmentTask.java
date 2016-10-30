@@ -32,6 +32,7 @@ import android.content.Context;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -60,6 +61,7 @@ public class ImportAssessmentTask implements Callable<Void> {
     private static final String TAG = ImportCourseTask.class.getSimpleName();
 
     private ContentProviderClient mProvider;
+    private boolean mReleaseProvider = false;
     private final Account mAccount;
     private SyncResult mSyncResult;
     private final Context mContext;
@@ -99,6 +101,7 @@ public class ImportAssessmentTask implements Callable<Void> {
         this.mProvider = context.getContentResolver()
                 .acquireContentProviderClient(
                         KusssContentContract.Exam.CONTENT_URI);
+        this.mReleaseProvider = true;
         this.mSyncResult = new SyncResult();
         this.mShowProgress = true;
     }
@@ -322,6 +325,14 @@ public class ImportAssessmentTask implements Callable<Void> {
             mUpdateNotification.cancel();
         }
         mAssessmentChangeNotification.show();
+
+        if (mReleaseProvider) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                mProvider.close();
+            } else {
+                mProvider.release();
+            }
+        }
 
         return null;
     }

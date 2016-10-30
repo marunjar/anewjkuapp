@@ -31,6 +31,7 @@ import android.content.Context;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.RemoteException;
 import android.util.Log;
 
@@ -252,7 +253,11 @@ public class ImportPoiTask implements Callable<Void> {
             mNotification.show();
         }
 
-        mProvider.release();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            mProvider.close();
+        } else {
+            mProvider.release();
+        }
 
         return null;
     }

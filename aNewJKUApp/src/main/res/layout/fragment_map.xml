@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MapFragment">
+    tools:context="org.voidsink.anewjkuapp.fragment.MapFragment">
 
     <org.mapsforge.map.android.view.MapView
         android:id="@+id/mapView"
@@ -17,10 +17,11 @@
         android:layout_height="10dip"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_marginBottom="1dip"
         android:layout_marginLeft="5dip"
         android:layout_marginRight="5dip"
-        android:singleLine="true"
+        android:maxLines="1"
         android:textColor="#000"
         android:textSize="4pt"
         android:visibility="visible"

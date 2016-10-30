@@ -204,4 +204,5 @@
     <string name="notification_more">+%d more</string>
     <string name="notification_events_deleted" formatted="false">Removed %d events from "%s"</string>
     <string name="notification_events_deleted_title">Removed events from "%s"</string>
+    <string name="extension_mensa_description">Show today\'s menu of selected cafeteria</string>
 </resources>

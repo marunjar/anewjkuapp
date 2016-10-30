@@ -87,6 +87,7 @@ public class ImportCalendarTask implements Callable<Void> {
     private static final String EXTENDED_PROPERTY_NAME_KUSSS_ID = "kusssId";
 
     private ContentProviderClient mProvider;
+    private boolean mReleaseProvider = false;
     private final Account mAccount;
     private final SyncResult mSyncResult;
     private final Context mContext;
@@ -142,6 +143,7 @@ public class ImportCalendarTask implements Callable<Void> {
                     .acquireContentProviderClient(
                             CalendarContractWrapper.Events.CONTENT_URI());
         }
+        this.mReleaseProvider = true;
         this.mShowProgress = true;
     }
 
@@ -620,6 +622,14 @@ public class ImportCalendarTask implements Callable<Void> {
             mUpdateNotification.cancel();
         }
         mNotification.show();
+
+        if (mReleaseProvider) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                mProvider.close();
+            } else {
+                mProvider.release();
+            }
+        }
 
         return null;
     }

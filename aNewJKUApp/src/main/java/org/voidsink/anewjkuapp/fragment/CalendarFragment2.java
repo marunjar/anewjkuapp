@@ -41,6 +41,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.graphics.ColorUtils;
 import android.util.Log;
 import android.util.SparseArray;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -69,7 +70,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -290,7 +290,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         Account mAccount = AppUtils.getAccount(getContext());
         if (mAccount != null) {
             // fetch calendar colors
-            final SparseArray<Integer> mColors = new SparseArray<>();
+            final SparseIntArray mColors = new SparseIntArray();
             ContentResolver cr = getContext().getContentResolver();
             Cursor cursor = cr
                     .query(CalendarContractWrapper.Calendars.CONTENT_URI(),
@@ -372,13 +372,13 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
     private class MyWeekViewLoader implements WeekViewLoader, WeekView.ScrollListener {
 
         private int mDaysInPeriod = 7;
-        private final HashMap<Integer, ArrayList<WeekViewEvent>> mEvents;
+        private final SparseArray<ArrayList<WeekViewEvent>> mEvents;
         private final ArrayList<Integer> mLastLoadedPeriods;
         private int mLastPeriodIndex = 0;
 
         public MyWeekViewLoader() {
             mLastLoadedPeriods = new ArrayList<>();
-            mEvents = new HashMap<>();
+            mEvents = new SparseArray<>();
         }
 
         public void setDaysInPeriod(int daysInPeriod) {
@@ -386,8 +386,10 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         }
 
         public ArrayList<WeekViewEvent> getEvents(int periodIndex) {
-            if (!mEvents.containsKey(periodIndex)) {
-                mEvents.put(periodIndex, new ArrayList<WeekViewEvent>());
+            ArrayList<WeekViewEvent> events = mEvents.get(periodIndex);
+            if (events == null) {
+                events = new ArrayList<>();
+                mEvents.put(periodIndex, events);
             }
             return mEvents.get(periodIndex);
         }
@@ -496,7 +498,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         final DateFormat mTimeFormat;
 
         CalendarDateTimeInterpreter(Context context) {
-            Locale locale = context.getResources().getConfiguration().locale;
+            Locale locale = AppUtils.getLocale(context);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 mDateFormat = new SimpleDateFormat(android.text.format.DateFormat.getBestDateTimePattern(locale, "EEEMMdd"), locale);
             } else {

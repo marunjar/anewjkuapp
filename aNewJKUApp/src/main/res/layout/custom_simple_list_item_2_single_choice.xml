@@ -36,7 +36,7 @@ limitations under the License.
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
             android:gravity="center_vertical|start"
-            android:singleLine="true"
+            android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="?android:attr/textColorAlertDialogListItem"/>
 
@@ -46,7 +46,7 @@ limitations under the License.
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
             android:gravity="center_vertical|start"
-            android:singleLine="true"
+            android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorAlertDialogListItem"/>
     </LinearLayout>
