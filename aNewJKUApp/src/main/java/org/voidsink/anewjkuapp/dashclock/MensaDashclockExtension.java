@@ -35,6 +35,7 @@ import com.google.android.apps.dashclock.api.ExtensionData;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
+import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.mensa.ChoiceMenuLoader;
 import org.voidsink.anewjkuapp.mensa.ClassicMenuLoader;
 import org.voidsink.anewjkuapp.mensa.IDay;
@@ -42,6 +43,7 @@ import org.voidsink.anewjkuapp.mensa.IMensa;
 import org.voidsink.anewjkuapp.mensa.IMenu;
 import org.voidsink.anewjkuapp.mensa.KHGMenuLoader;
 import org.voidsink.anewjkuapp.mensa.RaabMenuLoader;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -163,5 +165,6 @@ public class MensaDashclockExtension extends DashClockExtension {
             publishUpdate(new ExtensionData().visible(false));
         }
 
+        Analytics.sendScreen(getApplicationContext(), Consts.SCREEN_DASHCLOCK);
     }
 }
