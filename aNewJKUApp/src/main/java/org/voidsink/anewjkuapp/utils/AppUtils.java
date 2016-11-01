@@ -47,9 +47,9 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.util.Log;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.voidsink.anewjkuapp.ImportPoiTask;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.KusssContentContract;
@@ -761,7 +761,7 @@ public class AppUtils {
         PendingIntent alarmIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         if (!mIsMasterSyncEnabled || !mIsCalendarSyncEnabled || !mIsKusssSyncEnable) {
             if (reCreateAlarm) {
-                long interval = PreferenceWrapper.getSyncInterval(context) * DateUtils.MILLIS_PER_HOUR;
+                long interval = PreferenceWrapper.getSyncInterval(context) * DateUtils.HOUR_IN_MILLIS;
 
                 // synchronize in half an hour
                 am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + AlarmManager.INTERVAL_HALF_HOUR, interval, alarmIntent);
@@ -805,7 +805,7 @@ public class AppUtils {
     public static String getTimeString(Date dtStart, Date dtEnd) {
         DateFormat dfStart = DateFormat.getTimeInstance(DateFormat.SHORT);
         DateFormat dfEnd = DateFormat.getTimeInstance(DateFormat.SHORT);
-        if (!DateUtils.isSameDay(dtStart, dtEnd)) {
+        if (!CalendarUtils.isSameDay(dtStart, dtEnd)) {
             dfEnd = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
         }
 

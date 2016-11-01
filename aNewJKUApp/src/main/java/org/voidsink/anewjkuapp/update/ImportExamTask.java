@@ -34,14 +34,15 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.util.Log;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.voidsink.anewjkuapp.CourseMap;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.Exam;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
@@ -225,7 +226,7 @@ public class ImportExamTask implements Callable<Void> {
                                 Log.d(TAG, "Scheduling update: "
                                         + existingUri);
 
-                                if (!DateUtils.isSameDay(
+                                if (!CalendarUtils.isSameDay(
                                         new Date(examDtStart), exam.getDtStart())
                                         || !new Date(examDtEnd).equals(exam.getDtEnd())
                                         || !examLocation.equals(exam.getLocation())) {
@@ -245,7 +246,7 @@ public class ImportExamTask implements Callable<Void> {
                                         .withValues(KusssHelper.getExamContentValues(exam))
                                         .build());
                                 mSyncResult.stats.numUpdates++;
-                            } else if (examDtStart > mSyncFromNow - DateUtils.MILLIS_PER_DAY) {
+                            } else if (examDtStart > mSyncFromNow - DateUtils.DAY_IN_MILLIS) {
                                 // Entry doesn't exist. Remove only newer
                                 // events from the database.
                                 Uri deleteUri = examUri

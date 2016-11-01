@@ -39,6 +39,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.graphics.ColorUtils;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
@@ -54,7 +55,6 @@ import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 import com.alamkanak.weekview.WeekViewLoader;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.BaseFragment;
@@ -343,7 +343,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
                         endTime.setTimeZone(TimeZone.getTimeZone("GMT+0"));
                     }
                     endTime.setTimeInMillis(data.getLong(ImportCalendarTask.COLUMN_EVENT_DTEND));
-                    if (allDay && endTime.getTimeInMillis() % DateUtils.MILLIS_PER_DAY == 0) {
+                    if (allDay && endTime.getTimeInMillis() % DateUtils.DAY_IN_MILLIS == 0) {
                         endTime.add(Calendar.MILLISECOND, -1);
                     }
 
@@ -407,7 +407,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
             now.set(Calendar.SECOND, 0);
             now.set(Calendar.MILLISECOND, 0);
 
-            long days = (instance.getTimeInMillis() - now.getTimeInMillis()) / DateUtils.MILLIS_PER_DAY;
+            long days = (instance.getTimeInMillis() - now.getTimeInMillis()) / DateUtils.DAY_IN_MILLIS;
 
             int halfDaysInPeriod = mDaysInPeriod / 2;
             int periodIndex = 0;

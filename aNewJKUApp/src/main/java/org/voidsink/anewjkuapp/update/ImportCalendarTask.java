@@ -41,6 +41,7 @@ import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.util.Log;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
@@ -51,7 +52,6 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.component.VEvent;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
@@ -382,7 +382,7 @@ public class ImportCalendarTask implements Callable<Void> {
                     // calc date for notifiying only future changes
                     // max update interval is 1 week
                     long notifyFrom = new Date().getTime()
-                            - (DateUtils.MILLIS_PER_DAY * 7);
+                            - (DateUtils.DAY_IN_MILLIS * 7);
 
                     while (c.moveToNext()) {
                         mSyncResult.stats.numEntries++;
@@ -459,7 +459,7 @@ public class ImportCalendarTask implements Callable<Void> {
                                     mSyncResult.stats.numSkippedEntries++;
                                 }
                             } else {
-                                if (eventDTStart > (mSyncFromNow - DateUtils.MILLIS_PER_DAY)) {
+                                if (eventDTStart > (mSyncFromNow - DateUtils.DAY_IN_MILLIS)) {
                                     // Entry doesn't exist. Remove only newer events from the database.
                                     Uri deleteUri = calUri.buildUpon()
                                             .appendPath(eventId)
