@@ -37,12 +37,11 @@ import org.voidsink.anewjkuapp.update.ImportCourseTask;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 
 public class CourseMap {
 
