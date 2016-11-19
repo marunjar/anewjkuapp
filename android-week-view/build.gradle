@@ -25,8 +25,8 @@ configurations {
     javadocDeps
 }
 dependencies {
-    compile 'com.android.support:appcompat-v7:25.0.0'
-    javadocDeps 'com.android.support:appcompat-v7:25.0.0'
+    compile 'com.android.support:appcompat-v7:25.0.1'
+    javadocDeps 'com.android.support:appcompat-v7:25.0.1'
 }
 
 //apply from: 'gradle-mvn-push.gradle'
