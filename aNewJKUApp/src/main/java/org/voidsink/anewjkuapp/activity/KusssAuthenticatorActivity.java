@@ -74,7 +74,6 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
     private AccountManager mAccountManager;
     private String mAuthTokenType;
     private Button mSubmit;
-    private CheckBox mShowPassword;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -143,22 +142,6 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
                 }
             }
         });
-
-        mShowPassword = (CheckBox) findViewById(R.id.accountPasswordShow);
-        mShowPassword.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                final TextView userPass = ((TextView) findViewById(R.id.accountPassword));
-                if (userPass != null) {
-                    if (b) {
-                        userPass.setTransformationMethod(null);
-                    } else {
-                        userPass.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                    }
-                }
-            }
-        });
     }
 
     private void initActionBar() {
@@ -169,9 +152,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
     }
 
     private void submit() {
-
         mSubmit.setEnabled(false);
-        mShowPassword.setChecked(false);
 
         final String userName = ((TextView) findViewById(R.id.accountName))
                 .getText().toString();
