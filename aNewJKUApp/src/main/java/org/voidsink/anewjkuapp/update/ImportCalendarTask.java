@@ -26,6 +26,7 @@ package org.voidsink.anewjkuapp.update;
 
 import android.Manifest;
 import android.accounts.Account;
+import android.app.SearchManager;
 import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderOperation.Builder;
@@ -52,7 +53,10 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.component.VEvent;
 
+import org.voidsink.anewjkuapp.ImportPoiTask;
 import org.voidsink.anewjkuapp.KusssContentContract;
+import org.voidsink.anewjkuapp.Poi;
+import org.voidsink.anewjkuapp.PoiContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
@@ -63,6 +67,8 @@ import org.voidsink.anewjkuapp.notification.SyncNotification;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -85,6 +91,7 @@ public class ImportCalendarTask implements Callable<Void> {
     private static final Pattern lecturerPattern = Pattern
             .compile("Lva-LeiterIn:\\s+");
     private static final String EXTENDED_PROPERTY_NAME_KUSSS_ID = "kusssId";
+    private static final String EXTENDED_PROPERTY_LOCATION_EXTRA = "locationExtra";
 
     private ContentProviderClient mProvider;
     private boolean mReleaseProvider = false;
@@ -390,6 +397,7 @@ public class ImportCalendarTask implements Callable<Void> {
 
                         eventKusssId = null;
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+
                             // get kusssId from extended properties
                             Cursor c2 = mProvider.query(CalendarContract.ExtendedProperties.CONTENT_URI, EXTENDED_PROPERTIES_PROJECTION,
                                     CalendarContract.ExtendedProperties.EVENT_ID + " = ?",
@@ -398,6 +406,13 @@ public class ImportCalendarTask implements Callable<Void> {
 
                             if (c2 != null) {
                                 while (c2.moveToNext()) {
+
+//                                    String extra = "";
+//                                    for (int i = 0; i < c2.getColumnCount(); i++) {
+//                                        extra = extra + i + "=" + c2.getString(i) + ";";
+//                                    }
+//                                    Log.d(TAG, "Extended: " + extra);
+
                                     if (c2.getString(1).contains(EXTENDED_PROPERTY_NAME_KUSSS_ID)) {
                                         eventKusssId = c2.getString(2);
                                     }
@@ -582,6 +597,17 @@ public class ImportCalendarTask implements Callable<Void> {
                                         .withValueBackReference(CalendarContract.ExtendedProperties.EVENT_ID, eventIndex)
                                         .withValue(CalendarContract.ExtendedProperties.NAME, EXTENDED_PROPERTY_NAME_KUSSS_ID)
                                         .withValue(CalendarContract.ExtendedProperties.VALUE, v.getUid().getValue()).build());
+                                // add location extra for google maps
+                                batch.add(ContentProviderOperation
+                                        .newInsert(
+                                                KusssContentContract
+                                                        .asEventSyncAdapter(
+                                                                CalendarContract.ExtendedProperties.CONTENT_URI,
+                                                                mAccount.name,
+                                                                mAccount.type))
+                                        .withValueBackReference(CalendarContract.ExtendedProperties.EVENT_ID, eventIndex)
+                                        .withValue(CalendarContract.ExtendedProperties.NAME, EXTENDED_PROPERTY_LOCATION_EXTRA)
+                                        .withValue(CalendarContract.ExtendedProperties.VALUE, getLocationExtra(v)).build());
                             }
                             mSyncResult.stats.numInserts++;
                         } else {
@@ -632,5 +658,62 @@ public class ImportCalendarTask implements Callable<Void> {
         }
 
         return null;
+    }
+
+    private String getLocationExtra(VEvent event) {
+        try {
+            String name = event.getLocation().getValue().trim();
+
+            String formattedAddress = "Altenbergerstraße 69, 4040 Linz, Österreich";
+            double latitude = 48.33706;
+            double longitude = 14.31960;
+            String mapsClusterId = "CmRSAAAAEgnjqopJd0JVC22GrUK5G1fgukG3Q8gxwJ_4D-NdV1OZMP8oB3v_lA8GImeDVdqUR25xFAXHrRvR3QzA3U9i_OPDMh84Q0YFRX2IUXPhUTPfu1jp17f3APBlagpU-TNEEhAo0CzFCYccX9h60fY53upEGhROUkNAKVsKbGO2faMKyGvmc_26Ig";
+
+            if (name != null) {
+                if (name.startsWith("PE00")) {
+                    formattedAddress = "Petrinumstraße 12, 4040 Linz, Österreich";
+                    latitude = 48.319757;
+                    longitude = 14.275298;
+                    mapsClusterId = "CmRRAAAAVSgRGVv3PnjX7nWhyjLYOPA98MmrhhorKQHiTpKIALBSYkMMxTKTtvDr2KS3l6IKqhDqLicgeIwPl_uwmEN0aRokUojJa7Pryg-K7rLJ9ohiWXJow68suju9NfYzfJ3tEhDPlEQoguNvjwLjC8dXva7jGhTFyeDxDdfdZ8JY-dYjpPHqv_TXuQ";
+                }
+
+                ContentResolver cr = mContext.getContentResolver();
+                Uri searchUri = PoiContentContract.CONTENT_URI.buildUpon()
+                        .appendPath(SearchManager.SUGGEST_URI_PATH_QUERY)
+                        .appendPath(name).build();
+                Cursor c = cr.query(searchUri, ImportPoiTask.POI_PROJECTION, null,
+                        null, null);
+                Poi p = null;
+
+                if (c != null) {
+                    while (c.moveToNext()) {
+                        p = new Poi(c);
+
+                        if (p.getName().equalsIgnoreCase(name)) {
+                            break;
+                        }
+                        p = null;
+                    }
+                    c.close();
+                }
+
+                if (p != null) {
+                    latitude = p.getLat();
+                    longitude = p.getLon();
+                    name = p.getName();
+                }
+            } else {
+                name = "";
+            }
+
+            DecimalFormatSymbols dfs = DecimalFormatSymbols.getInstance();
+            dfs.setDecimalSeparator('.');
+            DecimalFormat df = new DecimalFormat("##0.0#############", dfs);
+
+            return String.format("{\"locations\":[{\"address\":{\"formattedAddress\":\"%s\"},\"geo\":{\"latitude\":%s,\"longitude\":%s},\"mapsClusterId\":\"%s\",\"name\":\"%s\",\"url\":\"http://maps.google.com/maps?q=loc:%s,%s+(%s)&z=19\n\"}]}", formattedAddress, df.format(latitude), df.format(longitude), mapsClusterId, name, df.format(latitude), df.format(longitude), name);
+        } catch (Exception e) {
+            Analytics.sendException(mContext, e, true);
+            return "";
+        }
     }
 }
