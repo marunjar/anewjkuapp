@@ -264,7 +264,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         }
 
         return new CursorLoader(getContext(), CalendarContractWrapper.Events.CONTENT_URI(),
-                ImportCalendarTask.EVENT_PROJECTION,
+                CalendarUtils.EVENT_PROJECTION,
                 "("
                         + CalendarContractWrapper.Events
                         .CALENDAR_ID()
@@ -330,31 +330,31 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
                 data.moveToPrevious();
                 while (data.moveToNext()) {
 
-                    boolean allDay = data.getInt(ImportCalendarTask.COLUMN_EVENT_ALL_DAY) == 1;
+                    boolean allDay = data.getInt(CalendarUtils.COLUMN_EVENT_ALL_DAY) == 1;
 
                     Calendar startTime = Calendar.getInstance();
                     if (allDay) {
                         startTime.setTimeZone(TimeZone.getTimeZone("GMT+0"));
                     }
-                    startTime.setTimeInMillis(data.getLong(ImportCalendarTask.COLUMN_EVENT_DTSTART));
+                    startTime.setTimeInMillis(data.getLong(CalendarUtils.COLUMN_EVENT_DTSTART));
 
                     Calendar endTime = Calendar.getInstance();
                     if (allDay) {
                         endTime.setTimeZone(TimeZone.getTimeZone("GMT+0"));
                     }
-                    endTime.setTimeInMillis(data.getLong(ImportCalendarTask.COLUMN_EVENT_DTEND));
+                    endTime.setTimeInMillis(data.getLong(CalendarUtils.COLUMN_EVENT_DTEND));
                     if (allDay && endTime.getTimeInMillis() % DateUtils.DAY_IN_MILLIS == 0) {
                         endTime.add(Calendar.MILLISECOND, -1);
                     }
 
-                    WeekViewEvent event = new WeekViewEvent(data.getLong(ImportCalendarTask.COLUMN_EVENT_ID),
-                            data.getString(ImportCalendarTask.COLUMN_EVENT_TITLE),
-                            data.getString(ImportCalendarTask.COLUMN_EVENT_LOCATION),
+                    WeekViewEvent event = new WeekViewEvent(data.getLong(CalendarUtils.COLUMN_EVENT_ID),
+                            data.getString(CalendarUtils.COLUMN_EVENT_TITLE),
+                            data.getString(CalendarUtils.COLUMN_EVENT_LOCATION),
                             startTime,
                             endTime,
                             allDay);
 
-                    event.setColor(mColors.get(data.getInt(ImportCalendarTask.COLUMN_EVENT_CAL_ID)));
+                    event.setColor(mColors.get(data.getInt(CalendarUtils.COLUMN_EVENT_CAL_ID)));
 
                     events.add(event);
                 }

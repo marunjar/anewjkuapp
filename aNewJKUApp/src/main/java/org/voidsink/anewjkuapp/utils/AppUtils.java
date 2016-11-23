@@ -204,6 +204,10 @@ public class AppUtils {
                     if (!createCalendars(context)) {
                         errorOccured = true;
                     }
+                } else if (shouldDeleteKusssEvents(mLastVersion, mCurrentVersion)) {
+                    if (!deleteKusssEvents(context)) {
+                        errorOccured = true;
+                    }
                 }
 
                 PreferenceWrapper.applySyncInterval(context);
@@ -223,6 +227,11 @@ public class AppUtils {
         return (account == null || CalendarUtils.createCalendarsIfNecessary(context, account));
     }
 
+    private static boolean deleteKusssEvents(Context context) {
+        Account account = AppUtils.getAccount(context);
+        return (account == null || CalendarUtils.deleteKusssEvents(context, account));
+    }
+
     private static boolean removeCalendars(Context context) {
         return CalendarUtils.removeCalendar(context, CalendarUtils.ARG_CALENDAR_EXAM) &&
                 CalendarUtils.removeCalendar(context, CalendarUtils.ARG_CALENDAR_COURSE);
@@ -232,6 +241,11 @@ public class AppUtils {
         // calendars changed with 140029
         // remove old calendars on startup to avoid strange behaviour
         return (lastVersion <= 140028 && currentVersion > 140028);
+    }
+
+    private static boolean shouldDeleteKusssEvents(int lastVersion, int currentVersion) {
+        // events changed with 140052
+        return (lastVersion <= 140051 && currentVersion > 140051);
     }
 
     private static boolean shouldImportCurricula(int lastVersion, int currentVersion) {
