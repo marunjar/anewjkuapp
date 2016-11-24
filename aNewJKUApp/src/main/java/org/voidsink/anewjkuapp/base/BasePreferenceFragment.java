@@ -115,8 +115,9 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
                         public RadioButton radio;
                     }
 
+                    @NonNull
                     @SuppressLint("InflateParams")
-                    public View getView(int position, View convertView, ViewGroup parent) {
+                    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
                         final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
                         if (convertView == null) {

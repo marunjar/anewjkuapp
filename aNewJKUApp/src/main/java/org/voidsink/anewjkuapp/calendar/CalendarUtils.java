@@ -27,15 +27,21 @@ package org.voidsink.anewjkuapp.calendar;
 
 import android.Manifest;
 import android.accounts.Account;
+import android.content.ContentProviderClient;
+import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.OperationApplicationException;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.os.RemoteException;
+import android.provider.CalendarContract;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.util.Log;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
@@ -52,6 +58,8 @@ import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +68,7 @@ public final class CalendarUtils {
 
     public static final String ARG_CALENDAR_EXAM = "ARG_EXAM_CALENDAR";
     public static final String ARG_CALENDAR_COURSE = "ARG_LVA_CALENDAR";
+
     // Constants representing column positions from PROJECTION.
     public static final String[] CALENDAR_PROJECTION = new String[]{
             CalendarContractWrapper.Calendars._ID(),
@@ -69,11 +78,46 @@ public final class CalendarUtils {
             CalendarContractWrapper.Calendars.ACCOUNT_TYPE(),
             CalendarContractWrapper.Calendars.CALENDAR_ACCESS_LEVEL()};
     public static final int COLUMN_CAL_ID = 0;
-    private static final int COLUMN_CAL_NAME = 1;
-    private static final int COLUMN_CAL_DISPLAY_NAME = 2;
+    public static final int COLUMN_CAL_NAME = 1;
+    public static final int COLUMN_CAL_DISPLAY_NAME = 2;
     public static final int COLUMN_CAL_ACCOUNT_NAME = 3;
     public static final int COLUMN_CAL_ACCOUNT_TYPE = 4;
-    private static final int COLUMN_CAL_ACCESS_LEVEL = 5;
+    public static final int COLUMN_CAL_ACCESS_LEVEL = 5;
+
+    public static final String[] EVENT_PROJECTION = new String[]{
+            CalendarContractWrapper.Events._ID(), //
+            CalendarContractWrapper.Events.EVENT_LOCATION(), // VEvent.getLocation()
+            CalendarContractWrapper.Events.TITLE(), // VEvent.getSummary()
+            CalendarContractWrapper.Events.DESCRIPTION(), // VEvent.getDescription()
+            CalendarContractWrapper.Events.DTSTART(), // VEvent.getStartDate()
+            CalendarContractWrapper.Events.DTEND(), // VEvent.getEndDate()
+            CalendarContractWrapper.Events.SYNC_ID_CUSTOM(), // VEvent.getUID()
+            CalendarContractWrapper.Events.DIRTY(),
+            CalendarContractWrapper.Events.DELETED(),
+            CalendarContractWrapper.Events.CALENDAR_ID(),
+            CalendarContractWrapper.Events._SYNC_ID(),
+            CalendarContractWrapper.Events.ALL_DAY()};
+    public static final int COLUMN_EVENT_ID = 0;
+    public static final int COLUMN_EVENT_LOCATION = 1;
+    public static final int COLUMN_EVENT_TITLE = 2;
+    public static final int COLUMN_EVENT_DESCRIPTION = 3;
+    public static final int COLUMN_EVENT_DTSTART = 4;
+    public static final int COLUMN_EVENT_DTEND = 5;
+    public static final int COLUMN_EVENT_KUSSS_ID = 6;
+    public static final int COLUMN_EVENT_DIRTY = 7;
+    public static final int COLUMN_EVENT_DELETED = 8;
+    public static final int COLUMN_EVENT_CAL_ID = 9;
+    public static final int COLUMN_EVENT_KUSSS_ID_LEGACY = 10;
+    public static final int COLUMN_EVENT_ALL_DAY = 11;
+
+    public static final String[] EXTENDED_PROPERTIES_PROJECTION = new String[]{
+            CalendarContract.ExtendedProperties.EVENT_ID,
+            CalendarContract.ExtendedProperties.NAME,
+            CalendarContract.ExtendedProperties.VALUE
+    };
+    public static final String EXTENDED_PROPERTY_NAME_KUSSS_ID = "kusssId";
+    public static final String EXTENDED_PROPERTY_LOCATION_EXTRA = "locationExtra";
+
     private static final String TAG = CalendarUtils.class.getSimpleName();
 
     private CalendarUtils() {
@@ -82,9 +126,9 @@ public final class CalendarUtils {
     private static Uri createCalendar(Context context, Account account,
                                       String name, int color) {
         if (context == null || account == null) {
-          return null;
+            return null;
         }
-        try {                        
+        try {
             String accountName = account.name;
             String accountType = account.type;
 
@@ -357,6 +401,118 @@ public final class CalendarUtils {
         }
     }
 
+    public static boolean deleteKusssEvents(Context context, Account account) {
+        boolean done = true;
+        if (!deleteKusssEvents(context, account, ARG_CALENDAR_COURSE)) {
+            done = false;
+        }
+        if (!deleteKusssEvents(context, account, ARG_CALENDAR_EXAM)) {
+            done = false;
+        }
+        return done;
+    }
+
+    private static boolean deleteKusssEvents(Context context, Account account, String name) {
+        String calId = getCalIDByName(context, account, name, false);
+        if (calId != null) {
+            ContentProviderClient provider = context.getContentResolver()
+                    .acquireContentProviderClient(
+                            CalendarContractWrapper.Events.CONTENT_URI());
+
+            if (provider == null) {
+                return false;
+            }
+
+            try {
+                Uri calUri = CalendarContractWrapper.Events
+                        .CONTENT_URI();
+
+                Cursor c = loadEvent(provider, calUri, calId);
+                if (c != null) {
+                    try {
+                        ArrayList<ContentProviderOperation> batch = new ArrayList<>();
+                        long deleteFrom = new Date().getTime() - DateUtils.DAY_IN_MILLIS;
+                        while (c.moveToNext()) {
+                            long eventDTStart = c.getLong(CalendarUtils.COLUMN_EVENT_DTSTART);
+                            if (eventDTStart > deleteFrom) {
+                                String eventId = c.getString(COLUMN_EVENT_ID);
+                                //                        Log.d(TAG, "---------");
+                                String eventKusssId = null;
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+
+                                    // get kusssId from extended properties
+                                    Cursor c2 = provider.query(CalendarContract.ExtendedProperties.CONTENT_URI, CalendarUtils.EXTENDED_PROPERTIES_PROJECTION,
+                                            CalendarContract.ExtendedProperties.EVENT_ID + " = ?",
+                                            new String[]{eventId},
+                                            null);
+
+                                    if (c2 != null) {
+                                        while (c2.moveToNext()) {
+                                            if (c2.getString(1).contains(EXTENDED_PROPERTY_NAME_KUSSS_ID)) {
+                                                eventKusssId = c2.getString(2);
+                                            }
+                                        }
+                                        c2.close();
+                                    }
+                                } else {
+                                    eventKusssId = c.getString(COLUMN_EVENT_KUSSS_ID);
+                                }
+                                if (TextUtils.isEmpty(eventKusssId)) {
+                                    eventKusssId = c.getString(COLUMN_EVENT_KUSSS_ID_LEGACY);
+                                }
+
+                                if (!TextUtils.isEmpty(eventKusssId)) {
+                                    Uri deleteUri = calUri.buildUpon()
+                                            .appendPath(eventId)
+                                            .build();
+                                    Log.d(TAG, "Scheduling delete: " + deleteUri);
+                                    batch.add(ContentProviderOperation
+                                            .newDelete(deleteUri)
+                                            .build());
+                                }
+                            }
+                        }
+                        if (batch.size() > 0) {
+                            Log.d(TAG, "Applying batch update");
+                            provider.applyBatch(batch);
+                            Log.d(TAG, "Notify resolver");
+                        } else {
+                            Log.w(TAG,
+                                    "No batch operations found! Do nothing");
+                        }
+                    } catch (RemoteException | OperationApplicationException e) {
+                        Analytics.sendException(context, e, true, name);
+                        return false;
+                    }
+                }
+            } finally {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    provider.close();
+                } else {
+                    provider.release();
+                }
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public static Cursor loadEvent(ContentProviderClient mProvider, Uri calUri, String calendarId) {
+        // The ID of the recurring event whose instances you are
+        // searching
+        // for in the Instances table
+        String selection = CalendarContractWrapper.Events
+                .CALENDAR_ID() + " = ?";
+        String[] selectionArgs = new String[]{calendarId};
+
+        try {
+            return mProvider.query(calUri, EVENT_PROJECTION,
+                    selection, selectionArgs, null);
+        } catch (RemoteException e) {
+            return null;
+        }
+    }
+
     public static class CalendarList {
         private final List<Integer> mIds;
         private final List<String> mNames;
@@ -401,5 +557,25 @@ public final class CalendarUtils {
                 ret[i] = mIds.get(i).toString();
             return ret;
         }
+    }
+
+    public static boolean isSameDay(Date date1, Date date2) {
+        if (date1 == null || date2 == null) {
+            throw new IllegalArgumentException("The date must not be null");
+        }
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(date1);
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(date2);
+        return isSameDay(cal1, cal2);
+    }
+
+    public static boolean isSameDay(Calendar cal1, Calendar cal2) {
+        if (cal1 == null || cal2 == null) {
+            throw new IllegalArgumentException("The date must not be null");
+        }
+        return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) &&
+                cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
     }
 }

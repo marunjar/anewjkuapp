@@ -38,12 +38,12 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 
 public class AssessmentChangedNotification {
 
+    private static final int MAX_LINES = 5;
     private final Context mContext;
 
     private final List<String> mInserts;
@@ -63,30 +63,25 @@ public class AssessmentChangedNotification {
         mUpdates.add(text);
     }
 
-    public void show() {
-        if (PreferenceWrapper.getNotifyGrade(mContext)
-                && (mInserts.size() > 0 || mUpdates.size() > 0)) {
-            int NOTIFICATION_GRADES_CHANGED = R.string.notification_grades_changed;
-
-            PendingIntent pendingIntent = PendingIntent
-                    .getActivity(mContext, NOTIFICATION_GRADES_CHANGED, new Intent(mContext,
-                            MainActivity.class).putExtra(MainActivity.ARG_SHOW_FRAGMENT_ID, R.id.nav_grades)
-                            .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
+    private void showInternal(List<String> lines, int notificationId, int resIdtitle, int resIdContent) {
+        if (PreferenceWrapper.getNotifyGrade(mContext) && (lines.size() > 0)) {
+            PendingIntent pendingIntent = PendingIntent.getActivity(
+                    mContext,
+                    notificationId,
+                    new Intent(mContext, MainActivity.class).putExtra(
+                            MainActivity.ARG_SHOW_FRAGMENT_ID,
+                            R.id.nav_grades).addFlags(
+                            Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                     mContext)
                     .setContentIntent(pendingIntent)
-                    .setContentTitle(
-                            mContext.getText(R.string.notification_grades_changed_title))
-                    .setContentText(
-                            String.format(
-                                    mContext.getString(R.string.notification_grades_changed),
-                                    (mInserts.size() + mUpdates.size())))
+                    .setContentTitle(mContext.getString(resIdtitle))
+                    .setContentText(mContext.getString(resIdContent, lines.size()))
                     .setContentIntent(pendingIntent)
                     .setCategory(NotificationCompat.CATEGORY_EMAIL)
                     .setAutoCancel(true)
-                    .setNumber(
-                            mInserts.size() + mUpdates.size());
+                    .setNumber(lines.size());
 
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp)
@@ -101,24 +96,32 @@ public class AssessmentChangedNotification {
             // creates big view with all grades in inbox style
             NotificationCompat.InboxStyle inBoxStyle = new NotificationCompat.InboxStyle();
 
-            inBoxStyle.setBigContentTitle(String.format(
-                    mContext.getString(R.string.notification_grades_changed),
-                    (mInserts.size() + mUpdates.size())));
+            inBoxStyle.setBigContentTitle(mContext.getString(resIdContent, lines.size()));
 
-            Collections.sort(mInserts);
-            for (String text : mInserts) {
-                inBoxStyle.addLine(text);
+            Collections.sort(lines);
+
+            for (int i = 0; i < MAX_LINES; i++) {
+                if (i < lines.size()) {
+                    inBoxStyle.addLine(lines.get(i));                }
             }
-            Collections.sort(mUpdates);
-            for (String text : mUpdates) {
-                inBoxStyle.addLine(text);
+
+            if (lines.size() > MAX_LINES) {
+                inBoxStyle.setSummaryText(mContext.getString(R.string.notification_more, lines.size() - MAX_LINES));
             }
             // Moves the big view style object into the notification object.
             mBuilder.setStyle(inBoxStyle);
 
             ((NotificationManager) mContext
                     .getSystemService(Context.NOTIFICATION_SERVICE)).notify(
-                    NOTIFICATION_GRADES_CHANGED, mBuilder.build());
+                    notificationId,
+                    mBuilder.build());
         }
+    }
+
+    public void show() {
+        List<String> changed = new ArrayList<>(mInserts.size() + mUpdates.size());
+        changed.addAll(mInserts);
+        changed.addAll(mUpdates);
+        showInternal(changed, R.string.notification_grades_changed, R.string.notification_grades_changed_title, R.string.notification_grades_changed);
     }
 }

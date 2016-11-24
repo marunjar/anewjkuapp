@@ -71,6 +71,14 @@ public class Poi {
         return this.mDescr;
     }
 
+    public double getLat() {
+        return mLat;
+    }
+
+    public double getLon() {
+        return mLon;
+    }
+
     public void parse(Element wpt) {
         NodeList descriptions = wpt.getElementsByTagName("desc");
         if (descriptions.getLength() == 1) {

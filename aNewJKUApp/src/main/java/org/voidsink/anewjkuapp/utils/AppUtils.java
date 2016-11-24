@@ -47,9 +47,9 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.util.Log;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.voidsink.anewjkuapp.ImportPoiTask;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.KusssContentContract;
@@ -80,6 +80,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -92,8 +93,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 
 public class AppUtils {
 
@@ -205,6 +204,10 @@ public class AppUtils {
                     if (!createCalendars(context)) {
                         errorOccured = true;
                     }
+                } else if (shouldDeleteKusssEvents(mLastVersion, mCurrentVersion)) {
+                    if (!deleteKusssEvents(context)) {
+                        errorOccured = true;
+                    }
                 }
 
                 PreferenceWrapper.applySyncInterval(context);
@@ -224,6 +227,11 @@ public class AppUtils {
         return (account == null || CalendarUtils.createCalendarsIfNecessary(context, account));
     }
 
+    private static boolean deleteKusssEvents(Context context) {
+        Account account = AppUtils.getAccount(context);
+        return (account == null || CalendarUtils.deleteKusssEvents(context, account));
+    }
+
     private static boolean removeCalendars(Context context) {
         return CalendarUtils.removeCalendar(context, CalendarUtils.ARG_CALENDAR_EXAM) &&
                 CalendarUtils.removeCalendar(context, CalendarUtils.ARG_CALENDAR_COURSE);
@@ -233,6 +241,11 @@ public class AppUtils {
         // calendars changed with 140029
         // remove old calendars on startup to avoid strange behaviour
         return (lastVersion <= 140028 && currentVersion > 140028);
+    }
+
+    private static boolean shouldDeleteKusssEvents(int lastVersion, int currentVersion) {
+        // events changed with 140052
+        return (lastVersion <= 140051 && currentVersion > 140051);
     }
 
     private static boolean shouldImportCurricula(int lastVersion, int currentVersion) {
@@ -761,7 +774,7 @@ public class AppUtils {
         PendingIntent alarmIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         if (!mIsMasterSyncEnabled || !mIsCalendarSyncEnabled || !mIsKusssSyncEnable) {
             if (reCreateAlarm) {
-                long interval = PreferenceWrapper.getSyncInterval(context) * DateUtils.MILLIS_PER_HOUR;
+                long interval = PreferenceWrapper.getSyncInterval(context) * DateUtils.HOUR_IN_MILLIS;
 
                 // synchronize in half an hour
                 am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + AlarmManager.INTERVAL_HALF_HOUR, interval, alarmIntent);
@@ -805,7 +818,7 @@ public class AppUtils {
     public static String getTimeString(Date dtStart, Date dtEnd) {
         DateFormat dfStart = DateFormat.getTimeInstance(DateFormat.SHORT);
         DateFormat dfEnd = DateFormat.getTimeInstance(DateFormat.SHORT);
-        if (!DateUtils.isSameDay(dtStart, dtEnd)) {
+        if (!CalendarUtils.isSameDay(dtStart, dtEnd)) {
             dfEnd = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
         }
 
@@ -822,7 +835,7 @@ public class AppUtils {
 
         DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
 
-        return String.format("%s: %s, %s", eventTitle, df.format(eventDTStart), AppUtils.getTimeString(new Date(eventDTStart), new Date(eventDTEnd)));
+        return String.format("%s: %s, %s", df.format(eventDTStart), AppUtils.getTimeString(new Date(eventDTStart), new Date(eventDTEnd)), eventTitle);
     }
 
     public static String termToString(Term term) {
@@ -918,14 +931,17 @@ public class AppUtils {
 
     private static float mLastHue = new Random(System.currentTimeMillis()).nextFloat() * 360;
 
-    public static String format(Context c, String format, Object... args) {
+    public static Locale getLocale(Context context) {
         Locale locale = null;
         try {
-            locale = c.getResources().getConfiguration().locale;
+            locale = context.getResources().getConfiguration().locale;
         } catch (Exception e) {
             locale = Locale.getDefault();
         }
+        return locale;
+    }
 
-        return String.format(locale, format, args);
+    public static String format(Context c, String format, Object... args) {
+        return String.format(getLocale(c), format, args);
     }
 }

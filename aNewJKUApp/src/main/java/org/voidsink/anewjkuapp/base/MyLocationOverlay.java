@@ -30,6 +30,7 @@ import org.mapsforge.map.layer.Layer;
 import org.mapsforge.map.layer.overlay.Circle;
 import org.mapsforge.map.layer.overlay.Marker;
 import org.mapsforge.map.model.MapViewPosition;
+import org.voidsink.anewjkuapp.analytics.Analytics;
 
 import android.content.Context;
 import android.location.Location;
@@ -47,6 +48,7 @@ import android.os.Bundle;
  */
 public class MyLocationOverlay extends Layer implements LocationListener {
 	private static final GraphicFactory GRAPHIC_FACTORY = AndroidGraphicFactory.INSTANCE;
+	private final Context mContext;
 	private float minDistance = 0.0f;
 	private long minTime = 0;
 
@@ -116,6 +118,7 @@ public class MyLocationOverlay extends Layer implements LocationListener {
 			Paint circleStroke) {
 		super();
 
+		this.mContext = context;
 		this.mapViewPosition = mapViewPosition;
 		this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 		this.marker = new Marker(null, bitmap, 0, 0);
@@ -128,7 +131,11 @@ public class MyLocationOverlay extends Layer implements LocationListener {
 	public synchronized void disableMyLocation() {
 		if (this.myLocationEnabled) {
 			this.myLocationEnabled = false;
-			this.locationManager.removeUpdates(this);
+			try {
+				this.locationManager.removeUpdates(this);
+			} catch (SecurityException e) {
+				Analytics.sendException(mContext, e, false);
+			}
 			// TODO trigger redraw?
 		}
 	}

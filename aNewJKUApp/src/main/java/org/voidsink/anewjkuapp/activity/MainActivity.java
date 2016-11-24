@@ -47,11 +47,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
@@ -75,7 +73,6 @@ import org.voidsink.anewjkuapp.fragment.LvaFragment;
 import org.voidsink.anewjkuapp.fragment.MapFragment;
 import org.voidsink.anewjkuapp.fragment.MensaFragment;
 import org.voidsink.anewjkuapp.fragment.OehInfoFragment;
-import org.voidsink.anewjkuapp.fragment.OehNewsFragment;
 import org.voidsink.anewjkuapp.fragment.OehRightsFragment;
 import org.voidsink.anewjkuapp.fragment.StatFragment;
 import org.voidsink.anewjkuapp.utils.AppUtils;
@@ -363,7 +360,7 @@ public class MainActivity extends ThemedActivity {
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                         checkNavItem(menuItem);
 
                         switch (menuItem.getItemId()) {

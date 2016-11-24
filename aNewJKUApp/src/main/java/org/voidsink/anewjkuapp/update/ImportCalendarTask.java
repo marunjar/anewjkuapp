@@ -26,6 +26,7 @@ package org.voidsink.anewjkuapp.update;
 
 import android.Manifest;
 import android.accounts.Account;
+import android.app.SearchManager;
 import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderOperation.Builder;
@@ -41,6 +42,7 @@ import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.util.Log;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
@@ -51,8 +53,10 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.component.VEvent;
 
-import org.apache.commons.lang.time.DateUtils;
+import org.voidsink.anewjkuapp.ImportPoiTask;
 import org.voidsink.anewjkuapp.KusssContentContract;
+import org.voidsink.anewjkuapp.Poi;
+import org.voidsink.anewjkuapp.PoiContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
@@ -63,6 +67,8 @@ import org.voidsink.anewjkuapp.notification.SyncNotification;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -84,9 +90,9 @@ public class ImportCalendarTask implements Callable<Void> {
             .compile(KusssHandler.PATTERN_LVA_NR_SLASH_TERM);
     private static final Pattern lecturerPattern = Pattern
             .compile("Lva-LeiterIn:\\s+");
-    private static final String EXTENDED_PROPERTY_NAME_KUSSS_ID = "kusssId";
 
     private ContentProviderClient mProvider;
+    private boolean mReleaseProvider = false;
     private final Account mAccount;
     private final SyncResult mSyncResult;
     private final Context mContext;
@@ -98,40 +104,6 @@ public class ImportCalendarTask implements Callable<Void> {
     private boolean mShowProgress;
     private SyncNotification mUpdateNotification;
 
-    public static final String[] EVENT_PROJECTION = new String[]{
-            CalendarContractWrapper.Events._ID(), //
-            CalendarContractWrapper.Events.EVENT_LOCATION(), // VEvent.getLocation()
-            CalendarContractWrapper.Events.TITLE(), // VEvent.getSummary()
-            CalendarContractWrapper.Events.DESCRIPTION(), // VEvent.getDescription()
-            CalendarContractWrapper.Events.DTSTART(), // VEvent.getStartDate()
-            CalendarContractWrapper.Events.DTEND(), // VEvent.getEndDate()
-            CalendarContractWrapper.Events.SYNC_ID_CUSTOM(), // VEvent.getUID()
-            CalendarContractWrapper.Events.DIRTY(),
-            CalendarContractWrapper.Events.DELETED(),
-            CalendarContractWrapper.Events.CALENDAR_ID(),
-            CalendarContractWrapper.Events._SYNC_ID(),
-            CalendarContractWrapper.Events.ALL_DAY()};
-
-    public static final String[] EXTENDED_PROPERTIES_PROJECTION = new String[]{
-            CalendarContract.ExtendedProperties.EVENT_ID,
-            CalendarContract.ExtendedProperties.NAME,
-            CalendarContract.ExtendedProperties.VALUE
-    };
-
-    // Constants representing column positions from PROJECTION.
-    public static final int COLUMN_EVENT_ID = 0;
-    public static final int COLUMN_EVENT_LOCATION = 1;
-    public static final int COLUMN_EVENT_TITLE = 2;
-    public static final int COLUMN_EVENT_DESCRIPTION = 3;
-    public static final int COLUMN_EVENT_DTSTART = 4;
-    public static final int COLUMN_EVENT_DTEND = 5;
-    public static final int COLUMN_EVENT_KUSSS_ID = 6;
-    public static final int COLUMN_EVENT_DIRTY = 7;
-    public static final int COLUMN_EVENT_DELETED = 8;
-    public static final int COLUMN_EVENT_CAL_ID = 9;
-    public static final int COLUMN_EVENT_KUSSS_ID_LEGACY = 10;
-    public static final int COLUMN_EVENT_ALL_DAY = 11;
-
     public ImportCalendarTask(Account account, Context context,
                               String getTypeID, CalendarBuilder calendarBuilder) {
         this(account, null, null, null,
@@ -142,6 +114,7 @@ public class ImportCalendarTask implements Callable<Void> {
                     .acquireContentProviderClient(
                             CalendarContractWrapper.Events.CONTENT_URI());
         }
+        this.mReleaseProvider = true;
         this.mShowProgress = true;
     }
 
@@ -203,9 +176,7 @@ public class ImportCalendarTask implements Callable<Void> {
             mUpdateNotification = new SyncNotification(mContext,
                     R.string.notification_sync_calendar);
             mUpdateNotification.show(
-                    String.format(
-                            mContext.getString(R.string.notification_sync_calendar_loading),
-                            CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
+                    mContext.getString(R.string.notification_sync_calendar_loading, CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
         }
         CalendarChangedNotification mNotification = new CalendarChangedNotification(mContext,
                 CalendarUtils.getCalendarName(mContext, this.mCalendarName));
@@ -221,9 +192,7 @@ public class ImportCalendarTask implements Callable<Void> {
                     AppUtils.getAccountName(mContext, mAccount),
                     AppUtils.getAccountPassword(mContext, mAccount))) {
 
-                updateNotify(String.format(
-                        mContext.getString(R.string.notification_sync_calendar_loading),
-                        CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
+                updateNotify(mContext.getString(R.string.notification_sync_calendar_loading, CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
 
                 Log.d(TAG, "loading calendar");
 
@@ -256,9 +225,7 @@ public class ImportCalendarTask implements Callable<Void> {
 
                 Log.d(TAG, String.format("got %d events", events.size()));
 
-                updateNotify(String.format(
-                        mContext.getString(R.string.notification_sync_calendar_updating),
-                        CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
+                updateNotify(mContext.getString(R.string.notification_sync_calendar_updating, CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
 
                 ArrayList<ContentProviderOperation> batch = new ArrayList<>();
 
@@ -357,15 +324,7 @@ public class ImportCalendarTask implements Callable<Void> {
                 Uri calUri = CalendarContractWrapper.Events
                         .CONTENT_URI();
 
-                // The ID of the recurring event whose instances you are
-                // searching
-                // for in the Instances table
-                String selection = CalendarContractWrapper.Events
-                        .CALENDAR_ID() + " = ?";
-                String[] selectionArgs = new String[]{calendarId};
-
-                Cursor c = mProvider.query(calUri, EVENT_PROJECTION,
-                        selection, selectionArgs, null);
+                Cursor c = CalendarUtils.loadEvent(mProvider, calUri, calendarId);
 
                 if (c == null) {
                     Log.w(TAG, "selection failed");
@@ -386,47 +345,58 @@ public class ImportCalendarTask implements Callable<Void> {
                     // calc date for notifiying only future changes
                     // max update interval is 1 week
                     long notifyFrom = new Date().getTime()
-                            - (DateUtils.MILLIS_PER_DAY * 7);
+                            - (DateUtils.DAY_IN_MILLIS * 7);
 
                     while (c.moveToNext()) {
                         mSyncResult.stats.numEntries++;
-                        eventId = c.getString(COLUMN_EVENT_ID);
+                        eventId = c.getString(CalendarUtils.COLUMN_EVENT_ID);
 
+
+//                        Log.d(TAG, "---------");
                         eventKusssId = null;
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+
                             // get kusssId from extended properties
-                            Cursor c2 = mProvider.query(CalendarContract.ExtendedProperties.CONTENT_URI, EXTENDED_PROPERTIES_PROJECTION,
+                            Cursor c2 = mProvider.query(CalendarContract.ExtendedProperties.CONTENT_URI, CalendarUtils.EXTENDED_PROPERTIES_PROJECTION,
                                     CalendarContract.ExtendedProperties.EVENT_ID + " = ?",
                                     new String[]{eventId},
                                     null);
 
                             if (c2 != null) {
                                 while (c2.moveToNext()) {
-                                    if (c2.getString(1).contains(EXTENDED_PROPERTY_NAME_KUSSS_ID)) {
+
+//                                    String extra = "";
+//                                    for (int i = 0; i < c2.getColumnCount(); i++) {
+//                                        extra = extra + i + "=" + c2.getString(i) + ";";
+//                                    }
+//                                    Log.d(TAG, "Extended: " + extra);
+
+                                    if (c2.getString(1).contains(CalendarUtils.EXTENDED_PROPERTY_NAME_KUSSS_ID)) {
                                         eventKusssId = c2.getString(2);
                                     }
                                 }
                                 c2.close();
                             }
                         } else {
-                            eventKusssId = c.getString(COLUMN_EVENT_KUSSS_ID);
+                            eventKusssId = c.getString(CalendarUtils.COLUMN_EVENT_KUSSS_ID);
                         }
                         if (TextUtils.isEmpty(eventKusssId)) {
-                            eventKusssId = c.getString(COLUMN_EVENT_KUSSS_ID_LEGACY);
+                            eventKusssId = c.getString(CalendarUtils.COLUMN_EVENT_KUSSS_ID_LEGACY);
                         }
 
-                        eventTitle = c.getString(COLUMN_EVENT_TITLE);
+                        eventTitle = c.getString(CalendarUtils.COLUMN_EVENT_TITLE);
+                        Log.d(TAG, "Title: " + eventTitle);
 
                         eventLocation = c
-                                .getString(COLUMN_EVENT_LOCATION);
+                                .getString(CalendarUtils.COLUMN_EVENT_LOCATION);
                         eventDescription = c
-                                .getString(COLUMN_EVENT_DESCRIPTION);
-                        eventDTStart = c.getLong(COLUMN_EVENT_DTSTART);
-                        eventDTEnd = c.getLong(COLUMN_EVENT_DTEND);
+                                .getString(CalendarUtils.COLUMN_EVENT_DESCRIPTION);
+                        eventDTStart = c.getLong(CalendarUtils.COLUMN_EVENT_DTSTART);
+                        eventDTEnd = c.getLong(CalendarUtils.COLUMN_EVENT_DTEND);
                         eventDirty = "1".equals(c
-                                .getString(COLUMN_EVENT_DIRTY));
+                                .getString(CalendarUtils.COLUMN_EVENT_DIRTY));
                         eventDeleted = "1".equals(c
-                                .getString(COLUMN_EVENT_DELETED));
+                                .getString(CalendarUtils.COLUMN_EVENT_DELETED));
 
                         if (eventKusssId != null && kusssIdPrefix != null && eventKusssId.startsWith(kusssIdPrefix)) {
                             VEvent match = eventsMap.get(eventKusssId);
@@ -463,7 +433,7 @@ public class ImportCalendarTask implements Callable<Void> {
                                     mSyncResult.stats.numSkippedEntries++;
                                 }
                             } else {
-                                if (eventDTStart > (mSyncFromNow - DateUtils.MILLIS_PER_DAY)) {
+                                if (eventDTStart > (mSyncFromNow - DateUtils.DAY_IN_MILLIS)) {
                                     // Entry doesn't exist. Remove only newer events from the database.
                                     Uri deleteUri = calUri.buildUpon()
                                             .appendPath(eventId)
@@ -497,9 +467,7 @@ public class ImportCalendarTask implements Callable<Void> {
 
                     Log.d(TAG, String.format("Cursor closed, %d events left", eventsMap.size()));
 
-                    updateNotify(String.format(
-                            mContext.getString(R.string.notification_sync_calendar_adding),
-                            CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
+                    updateNotify(mContext.getString(R.string.notification_sync_calendar_adding, CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
 
                     // Add new items
                     for (VEvent v : eventsMap.values()) {
@@ -586,8 +554,19 @@ public class ImportCalendarTask implements Callable<Void> {
                                                                 mAccount.name,
                                                                 mAccount.type))
                                         .withValueBackReference(CalendarContract.ExtendedProperties.EVENT_ID, eventIndex)
-                                        .withValue(CalendarContract.ExtendedProperties.NAME, EXTENDED_PROPERTY_NAME_KUSSS_ID)
+                                        .withValue(CalendarContract.ExtendedProperties.NAME, CalendarUtils.EXTENDED_PROPERTY_NAME_KUSSS_ID)
                                         .withValue(CalendarContract.ExtendedProperties.VALUE, v.getUid().getValue()).build());
+                                // add location extra for google maps
+                                batch.add(ContentProviderOperation
+                                        .newInsert(
+                                                KusssContentContract
+                                                        .asEventSyncAdapter(
+                                                                CalendarContract.ExtendedProperties.CONTENT_URI,
+                                                                mAccount.name,
+                                                                mAccount.type))
+                                        .withValueBackReference(CalendarContract.ExtendedProperties.EVENT_ID, eventIndex)
+                                        .withValue(CalendarContract.ExtendedProperties.NAME, CalendarUtils.EXTENDED_PROPERTY_LOCATION_EXTRA)
+                                        .withValue(CalendarContract.ExtendedProperties.VALUE, getLocationExtra(v)).build());
                             }
                             mSyncResult.stats.numInserts++;
                         } else {
@@ -596,9 +575,7 @@ public class ImportCalendarTask implements Callable<Void> {
                     }
 
                     if (batch.size() > 0) {
-                        updateNotify(String.format(
-                                mContext.getString(R.string.notification_sync_calendar_saving),
-                                CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
+                        updateNotify(mContext.getString(R.string.notification_sync_calendar_saving, CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
 
                         Log.d(TAG, "Applying batch update");
                         mProvider.applyBatch(batch);
@@ -631,6 +608,86 @@ public class ImportCalendarTask implements Callable<Void> {
         }
         mNotification.show();
 
+        if (mReleaseProvider) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                mProvider.close();
+            } else {
+                mProvider.release();
+            }
+        }
+
         return null;
+    }
+
+    private String getLocationExtra(VEvent event) {
+        try {
+            String name = event.getLocation().getValue().trim();
+
+            String formattedAddress = "Altenbergerstraße 69, 4040 Linz, Österreich";
+            double latitude = 48.33706;
+            double longitude = 14.31960;
+            String mapsClusterId = "CmRSAAAAEgnjqopJd0JVC22GrUK5G1fgukG3Q8gxwJ_4D-NdV1OZMP8oB3v_lA8GImeDVdqUR25xFAXHrRvR3QzA3U9i_OPDMh84Q0YFRX2IUXPhUTPfu1jp17f3APBlagpU-TNEEhAo0CzFCYccX9h60fY53upEGhROUkNAKVsKbGO2faMKyGvmc_26Ig";
+
+            if (name != null) {
+                if (name.toUpperCase().startsWith("PE 00")) {
+                    formattedAddress = "Petrinumstraße 12, 4040 Linz, Österreich";
+                    latitude = 48.319757;
+                    longitude = 14.275298;
+                    mapsClusterId = "CmRRAAAAVSgRGVv3PnjX7nWhyjLYOPA98MmrhhorKQHiTpKIALBSYkMMxTKTtvDr2KS3l6IKqhDqLicgeIwPl_uwmEN0aRokUojJa7Pryg-K7rLJ9ohiWXJow68suju9NfYzfJ3tEhDPlEQoguNvjwLjC8dXva7jGhTFyeDxDdfdZ8JY-dYjpPHqv_TXuQ";
+                } else if (name.toUpperCase().startsWith("KEP ")) {
+                    formattedAddress = "Altenbergerstraße 74, 4040 Linz, Österreich";
+                    latitude = 48.3374066;
+                    longitude = 14.324123;
+                    mapsClusterId = "CmRSAAAA2F4LeVYCcAwT4VAT6mP3xqyDEZ40xdCIlUJZjJI0HRDrZYUTsCTrAQu0uXwdgE_Q2Yx-8kYiTg2XfA2pDpU5BkKgHfDKYPfh8_Zv6AiMgf9nxoAth1aUHlbp3iGMugauEhCUsVrMJImZyNojXWN_Nm8tGhQFqVEHQz2b5RCXc7cHik17JV1DCA";
+                } else if (name.toUpperCase().startsWith("KHG ")) {
+                    formattedAddress = "Mengerstraße 23, 4040 Linz, Österreich";
+                    latitude = 48.33565830000001;
+                    longitude = 14.3171069;
+                    mapsClusterId = "CmRRAAAAzFi-w_zcsubNwMXG9-wpVfq6tFlTl2wxfR59QcybAQuF7k4kwNwTlFQWluOgyKKEtfi5-fP-zzJM_Jwv837jI-QTFQaDXfEpdaXKgHas9VNtHDjMbbTrh2YG5-8NZQz_EhAh0qirheebQ6QJROK39fNOGhQKPJEmyjv_S8iLlpIRtbskq_dThg";
+                } else if (name.toUpperCase().startsWith("ESH ")) {
+                    formattedAddress = "Julius-Raab-Straße 1-3, 4040 Linz, Österreich";
+                    latitude = 48.32893189999999;
+                    longitude = 14.3220179;
+                    mapsClusterId = "CmRRAAAAztw2Q-pFchJnT32wqealtHgsRyNlzebFxGqFb_PZIRsqujQKfTNKYn0zA6mdGYelwDtmm-SIKH5srpkIGrZkwhckuYQhFo3UkpLsnFYV73hScFdrSvMJLmGuKLwRHW1bEhBTuKPtU_mvcMQplpxK-h6PGhSnVtoLUH37vZBXvWna051K_nC5PA";
+                }
+
+                ContentResolver cr = mContext.getContentResolver();
+                Uri searchUri = PoiContentContract.CONTENT_URI.buildUpon()
+                        .appendPath(SearchManager.SUGGEST_URI_PATH_QUERY)
+                        .appendPath(name).build();
+                Cursor c = cr.query(searchUri, ImportPoiTask.POI_PROJECTION, null,
+                        null, null);
+                Poi p = null;
+
+                if (c != null) {
+                    while (c.moveToNext()) {
+                        p = new Poi(c);
+
+                        if (p.getName().equalsIgnoreCase(name)) {
+                            break;
+                        }
+                        p = null;
+                    }
+                    c.close();
+                }
+
+                if (p != null) {
+                    latitude = p.getLat();
+                    longitude = p.getLon();
+                    name = p.getName();
+                }
+            } else {
+                name = "";
+            }
+
+            DecimalFormatSymbols dfs = DecimalFormatSymbols.getInstance();
+            dfs.setDecimalSeparator('.');
+            DecimalFormat df = new DecimalFormat("##0.0#############", dfs);
+
+            return String.format("{\"locations\":[{\"address\":{\"formattedAddress\":\"%s\"},\"geo\":{\"latitude\":%s,\"longitude\":%s},\"mapsClusterId\":\"%s\",\"name\":\"%s\",\"url\":\"http://maps.google.com/maps?q=loc:%s,%s+(%s)&z=19\n\"}]}", formattedAddress, df.format(latitude), df.format(longitude), mapsClusterId, name, df.format(latitude), df.format(longitude), name);
+        } catch (Exception e) {
+            Analytics.sendException(mContext, e, true);
+            return "";
+        }
     }
 }

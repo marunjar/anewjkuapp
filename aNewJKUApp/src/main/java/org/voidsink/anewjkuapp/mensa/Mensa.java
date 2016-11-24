@@ -24,7 +24,7 @@
 
 package org.voidsink.anewjkuapp.mensa;
 
-import org.apache.commons.lang.time.DateUtils;
+import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,7 +69,7 @@ public class Mensa implements IMensa {
     public IDay getDay(Date now) {
         for (IDay mensaDay : this.days) {
             if (!mensaDay.isEmpty()
-                    && DateUtils.isSameDay(now, mensaDay.getDate())) {
+                    && CalendarUtils.isSameDay(now, mensaDay.getDate())) {
                 return mensaDay;
             }
         }

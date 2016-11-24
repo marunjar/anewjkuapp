@@ -221,6 +221,8 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
             for (Account account : accounts) {
                 AppUtils.triggerSync(context, account, true, true);
             }
+        } catch (SecurityException e) {
+            Analytics.sendException(context, e, true);
         } catch (Exception e) {
             Analytics.sendException(context, e, false);
         }

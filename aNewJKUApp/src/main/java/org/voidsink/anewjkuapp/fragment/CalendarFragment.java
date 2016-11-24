@@ -39,7 +39,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
-import android.util.SparseArray;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -102,7 +102,7 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
     }
 
     private void setButtonLoadText() {
-        mLoadMoreButton.setText(String.format(getContext().getString(R.string.listview_footer_button), SimpleDateFormat.getDateInstance(SimpleDateFormat.MEDIUM).format(then)));
+        mLoadMoreButton.setText(getContext().getString(R.string.listview_footer_button, SimpleDateFormat.getDateInstance(SimpleDateFormat.MEDIUM).format(then)));
     }
 
     @Override
@@ -245,7 +245,7 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
         }
 
         return new CursorLoader(getContext(), CalendarContractWrapper.Events.CONTENT_URI(),
-                ImportCalendarTask.EVENT_PROJECTION,
+                CalendarUtils.EVENT_PROJECTION,
                 "("
                         + CalendarContractWrapper.Events
                         .CALENDAR_ID()
@@ -270,7 +270,7 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
         Account mAccount = AppUtils.getAccount(getContext());
         if (mAccount != null) {
             // fetch calendar colors
-            final SparseArray<Integer> mColors = new SparseArray<>();
+            final SparseIntArray mColors = new SparseIntArray();
             ContentResolver cr = getContext().getContentResolver();
             Cursor cursor = cr
                     .query(CalendarContractWrapper.Calendars.CONTENT_URI(),
@@ -294,14 +294,14 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
                 data.moveToPrevious();
                 while (data.moveToNext()) {
                     mEvents.add(new CalendarListEvent(
-                            data.getLong(ImportCalendarTask.COLUMN_EVENT_ID),
+                            data.getLong(CalendarUtils.COLUMN_EVENT_ID),
                             mColors.get(data
-                                    .getInt(ImportCalendarTask.COLUMN_EVENT_CAL_ID)),
-                            data.getString(ImportCalendarTask.COLUMN_EVENT_TITLE),
-                            data.getString(ImportCalendarTask.COLUMN_EVENT_DESCRIPTION),
-                            data.getString(ImportCalendarTask.COLUMN_EVENT_LOCATION),
-                            data.getLong(ImportCalendarTask.COLUMN_EVENT_DTSTART),
-                            data.getLong(ImportCalendarTask.COLUMN_EVENT_DTEND)));
+                                    .getInt(CalendarUtils.COLUMN_EVENT_CAL_ID)),
+                            data.getString(CalendarUtils.COLUMN_EVENT_TITLE),
+                            data.getString(CalendarUtils.COLUMN_EVENT_DESCRIPTION),
+                            data.getString(CalendarUtils.COLUMN_EVENT_LOCATION),
+                            data.getLong(CalendarUtils.COLUMN_EVENT_DTSTART),
+                            data.getLong(CalendarUtils.COLUMN_EVENT_DTEND)));
                 }
             }
 

@@ -69,17 +69,20 @@
     <string name="notification_sync_curricula_loading">Studienrichtungen werden geladen</string>
     <string name="notification_sync_curricula_updating">Studienrichtungen werden aktualisiert</string>
     <string name="notification_sync_curricula_saving">Studienrichtungen werden gespeichert</string>
-    <string name="notification_events_changed_title" formatted="false">Termin(e) in "%s" geändert</string>
+    <string name="notification_events_changed_title">Termin(e) in "%s" geändert</string>
     <string name="notification_events_changed" formatted="false">%d Termin(e) in "%s" geändert</string>
+    <string name="notification_events_deleted_title">Termin(e) aus "%s" entfernt</string>
+    <string name="notification_events_deleted" formatted="false">%d Termin(e) aus "%s" entfernt</string>
     <string name="notification_new_exams_title">neue Prüfung(en) gefunden</string>
-    <string name="notification_new_exams" formatted="false">%d neue Prüfung(en) gefunden</string>
+    <string name="notification_new_exams">%d neue Prüfung(en) gefunden</string>
     <string name="notification_grades_changed_title">neue Note(n) verfügbar</string>
-    <string name="notification_grades_changed" formatted="false">%d neue Note(n) verfügbar</string>
+    <string name="notification_grades_changed">%d neue Note(n) verfügbar</string>
     <string name="notification_poi_changed_title">neue Orte verfügbar</string>
-    <string name="notification_poi_changed" formatted="false">%d neue Orte verfügbar</string>
+    <string name="notification_poi_changed">%d neue Orte verfügbar</string>
     <string name="notification_error">"JKU App" Fehler</string>
     <string name="notification_error_account_is_null">kein Account vorhanden</string>
     <string name="notification_error_account_not_available">Account konnte nicht validiert werden</string>
+    <string name="notification_more">+%d weitere</string>
 
     <string name="pref_cat_sync_settings">Einstellungen bearbeiten</string>
     <string name="pref_cat_update_password">Passwort aktualisieren</string>
@@ -150,14 +153,14 @@
     <string name="oeh_rights_2_summary" translatable="false">Wenn du unerlaubte Hilfsmittel benützt, wird deine Prüfung für ungültig erklärt und auf deine Antrittsmöglichkeiten angerechnet. Das bedeutet, dass du dadurch einen Antritt verspielen kannst.</string>
     <string name="oeh_rights_3_title" translatable="false">Wie lange darf ich in schriftliche Klausuren Einsicht nehmen?</string>
     <string name="oeh_rights_3_summary" translatable="false">Du hast das Recht innerhalb von sechs Monaten nach Ablegung einer Prüfung in deine Arbeit Einsicht zu nehmen. Weiters darfst du jede von dir abgelegte Prüfung inkl. Beurteilungsunterlagen und Prüfungsprotokolle kopieren (außer bei Multiple-Choice Klausuren).</string>
-    <string name="oeh_rights_4_title" translatable="false" formatted="false">Ist die Festlegung einer höheren Mindestpunktezahl als 50% bei Klausuren zulässig?</string>
+    <string name="oeh_rights_4_title" translatable="false">Ist die Festlegung einer höheren Mindestpunktezahl als 50% bei Klausuren zulässig?</string>
     <string name="oeh_rights_4_summary" translatable="false">Ja. Grundsätzlich obliegt es dem/der LVA-LeiterIn den Schwierigkeitsgrad und die Mindestanforderungen für eine positive Absolvierung festzulegen, sofern im Studienplan keine abweichenden Bestimmungen enthalten sind.</string>
     <string name="oeh_rights_5_title" translatable="false">Wie oft darf ich eine LVA wiederholen?</string>
     <string name="oeh_rights_5_summary" translatable="false">Bei allen Prüfungen hast du 4 Wiederholungen, d.h. insgesamt 5 Antritte. Prüfungstechnisch gibt es zwei unterschiedliche Kursformen. Einerseits solche mit "immanentem Prüfungscharakter", d.h. die Note setzt sich aus mehreren Leistungsprüfungen wie z.B. Hausübungen zusammen. Hier kannst du ab der dritten Wiederholung eine kommissionelle Prüfung verlangen; dein Antrag muss vom Vizerektor für Lehre genehmigt werden. Bei allen anderen LVAs und Fachprüfungen muss ab der dritten Wiederholung eine kommissionelle Prüfung abgehalten werden. Kommissionelle Prüfungen sind vom Modus her meist gleich, werden aber von mehreren ProfessorInnen beurteilt. Bei positiven Prüfungen ist eine Wiederholung innerhalb von 6 Monaten möglich, wenn du eine bessere Note haben willst.</string>
     <string name="oeh_rights_6_title" translatable="false">Links</string>
     <string name="oeh_rights_6_summary" translatable="false"><a href="http://www.jku.at/content/e262/e239/e3257">Detaillierte Informationen zum Studienrecht der JKU</a>\n\n<a href="http://www.ris.bka.gv.at/GeltendeFassung.wxe?Abfrage=Bundesnormen&amp;Gesetzesnummer=20002128">Das Universitätsgesetz</a></string>
 
-    <string name="map_place_not_found" formatted="false">\'%s\' nicht gefunden</string>
+    <string name="map_place_not_found">\'%s\' nicht gefunden</string>
     <string name="map_search_poi_title">Suche</string>
     <string name="map_search_poi_hint">Hörsaal hier eingeben</string>
     <string name="map_select_location">Hörsaal auswählen</string>

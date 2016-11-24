@@ -28,6 +28,7 @@ package org.voidsink.anewjkuapp.base;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.widget.ArrayAdapter;
 
 import java.util.Collection;
@@ -62,14 +63,12 @@ public class BaseArrayAdapter<T> extends ArrayAdapter<T> {
 
     @SuppressLint("NewApi")
     @Override
-    public void addAll(Collection<? extends T> collection) {
-        if (collection != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                super.addAll(collection);
-            } else {
-                for (T item : collection) {
-                    super.add(item);
-                }
+    public void addAll(@NonNull Collection<? extends T> collection) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            super.addAll(collection);
+        } else {
+            for (T item : collection) {
+                super.add(item);
             }
         }
     }

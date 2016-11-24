@@ -39,8 +39,10 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.graphics.ColorUtils;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.util.SparseArray;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -53,7 +55,6 @@ import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 import com.alamkanak.weekview.WeekViewLoader;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.BaseFragment;
@@ -69,7 +70,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -264,7 +264,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         }
 
         return new CursorLoader(getContext(), CalendarContractWrapper.Events.CONTENT_URI(),
-                ImportCalendarTask.EVENT_PROJECTION,
+                CalendarUtils.EVENT_PROJECTION,
                 "("
                         + CalendarContractWrapper.Events
                         .CALENDAR_ID()
@@ -290,7 +290,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         Account mAccount = AppUtils.getAccount(getContext());
         if (mAccount != null) {
             // fetch calendar colors
-            final SparseArray<Integer> mColors = new SparseArray<>();
+            final SparseIntArray mColors = new SparseIntArray();
             ContentResolver cr = getContext().getContentResolver();
             Cursor cursor = cr
                     .query(CalendarContractWrapper.Calendars.CONTENT_URI(),
@@ -330,31 +330,31 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
                 data.moveToPrevious();
                 while (data.moveToNext()) {
 
-                    boolean allDay = data.getInt(ImportCalendarTask.COLUMN_EVENT_ALL_DAY) == 1;
+                    boolean allDay = data.getInt(CalendarUtils.COLUMN_EVENT_ALL_DAY) == 1;
 
                     Calendar startTime = Calendar.getInstance();
                     if (allDay) {
                         startTime.setTimeZone(TimeZone.getTimeZone("GMT+0"));
                     }
-                    startTime.setTimeInMillis(data.getLong(ImportCalendarTask.COLUMN_EVENT_DTSTART));
+                    startTime.setTimeInMillis(data.getLong(CalendarUtils.COLUMN_EVENT_DTSTART));
 
                     Calendar endTime = Calendar.getInstance();
                     if (allDay) {
                         endTime.setTimeZone(TimeZone.getTimeZone("GMT+0"));
                     }
-                    endTime.setTimeInMillis(data.getLong(ImportCalendarTask.COLUMN_EVENT_DTEND));
-                    if (allDay && endTime.getTimeInMillis() % DateUtils.MILLIS_PER_DAY == 0) {
+                    endTime.setTimeInMillis(data.getLong(CalendarUtils.COLUMN_EVENT_DTEND));
+                    if (allDay && endTime.getTimeInMillis() % DateUtils.DAY_IN_MILLIS == 0) {
                         endTime.add(Calendar.MILLISECOND, -1);
                     }
 
-                    WeekViewEvent event = new WeekViewEvent(data.getLong(ImportCalendarTask.COLUMN_EVENT_ID),
-                            data.getString(ImportCalendarTask.COLUMN_EVENT_TITLE),
-                            data.getString(ImportCalendarTask.COLUMN_EVENT_LOCATION),
+                    WeekViewEvent event = new WeekViewEvent(data.getLong(CalendarUtils.COLUMN_EVENT_ID),
+                            data.getString(CalendarUtils.COLUMN_EVENT_TITLE),
+                            data.getString(CalendarUtils.COLUMN_EVENT_LOCATION),
                             startTime,
                             endTime,
                             allDay);
 
-                    event.setColor(mColors.get(data.getInt(ImportCalendarTask.COLUMN_EVENT_CAL_ID)));
+                    event.setColor(mColors.get(data.getInt(CalendarUtils.COLUMN_EVENT_CAL_ID)));
 
                     events.add(event);
                 }
@@ -372,13 +372,13 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
     private class MyWeekViewLoader implements WeekViewLoader, WeekView.ScrollListener {
 
         private int mDaysInPeriod = 7;
-        private final HashMap<Integer, ArrayList<WeekViewEvent>> mEvents;
+        private final SparseArray<ArrayList<WeekViewEvent>> mEvents;
         private final ArrayList<Integer> mLastLoadedPeriods;
         private int mLastPeriodIndex = 0;
 
         public MyWeekViewLoader() {
             mLastLoadedPeriods = new ArrayList<>();
-            mEvents = new HashMap<>();
+            mEvents = new SparseArray<>();
         }
 
         public void setDaysInPeriod(int daysInPeriod) {
@@ -386,8 +386,10 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         }
 
         public ArrayList<WeekViewEvent> getEvents(int periodIndex) {
-            if (!mEvents.containsKey(periodIndex)) {
-                mEvents.put(periodIndex, new ArrayList<WeekViewEvent>());
+            ArrayList<WeekViewEvent> events = mEvents.get(periodIndex);
+            if (events == null) {
+                events = new ArrayList<>();
+                mEvents.put(periodIndex, events);
             }
             return mEvents.get(periodIndex);
         }
@@ -405,7 +407,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
             now.set(Calendar.SECOND, 0);
             now.set(Calendar.MILLISECOND, 0);
 
-            long days = (instance.getTimeInMillis() - now.getTimeInMillis()) / DateUtils.MILLIS_PER_DAY;
+            long days = (instance.getTimeInMillis() - now.getTimeInMillis()) / DateUtils.DAY_IN_MILLIS;
 
             int halfDaysInPeriod = mDaysInPeriod / 2;
             int periodIndex = 0;
@@ -496,7 +498,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         final DateFormat mTimeFormat;
 
         CalendarDateTimeInterpreter(Context context) {
-            Locale locale = context.getResources().getConfiguration().locale;
+            Locale locale = AppUtils.getLocale(context);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 mDateFormat = new SimpleDateFormat(android.text.format.DateFormat.getBestDateTimePattern(locale, "EEEMMdd"), locale);
             } else {
