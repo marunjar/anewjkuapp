@@ -4,6 +4,11 @@
 		    - fixed
 		    * changed
 		    + added -->
+    <release version="0.44" versioncode="140052">
+        <change>- Stundenplan: genauer Standort für neue Termine wird gespeichert</change>
+        <change>- App: Korrekturen und Optimierungen</change>
+        <change>* Karte: neue Daten von OpenStreetMap</change>
+    </release>
     <release version="0.43.3" versioncode="140051">
         <change>- Karte: bring App nicht mehr zum Absturz</change>
         <change>- App: startet wieder auf Android Versionen kleiner 5.0</change>
