@@ -403,17 +403,22 @@ public final class CalendarUtils {
 
     public static boolean deleteKusssEvents(Context context, Account account) {
         boolean done = true;
-        if (!deleteKusssEvents(context, account, ARG_CALENDAR_COURSE)) {
+        if (!deleteKusssEvents(context, getCalIDByName(context, account, ARG_CALENDAR_COURSE, false))) {
             done = false;
         }
-        if (!deleteKusssEvents(context, account, ARG_CALENDAR_EXAM)) {
+        if (!deleteKusssEvents(context, PreferenceWrapper.getLvaCalendarId(context))) {
+            done = false;
+        }
+        if (!deleteKusssEvents(context, getCalIDByName(context, account, ARG_CALENDAR_EXAM, false))) {
+            done = false;
+        }
+        if (!deleteKusssEvents(context, PreferenceWrapper.getExamCalendarId(context))) {
             done = false;
         }
         return done;
     }
 
-    private static boolean deleteKusssEvents(Context context, Account account, String name) {
-        String calId = getCalIDByName(context, account, name, false);
+    private static boolean deleteKusssEvents(Context context, String calId) {
         if (calId != null) {
             ContentProviderClient provider = context.getContentResolver()
                     .acquireContentProviderClient(
@@ -481,7 +486,7 @@ public final class CalendarUtils {
                                     "No batch operations found! Do nothing");
                         }
                     } catch (RemoteException | OperationApplicationException e) {
-                        Analytics.sendException(context, e, true, name);
+                        Analytics.sendException(context, e, true);
                         return false;
                     }
                 }

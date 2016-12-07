@@ -244,8 +244,8 @@ public class AppUtils {
     }
 
     private static boolean shouldDeleteKusssEvents(int lastVersion, int currentVersion) {
-        // events changed with 140052
-        return (lastVersion <= 140051 && currentVersion > 140051);
+        // events changed with 140053
+        return (lastVersion <= 140052 && currentVersion > 140052);
     }
 
     private static boolean shouldImportCurricula(int lastVersion, int currentVersion) {
