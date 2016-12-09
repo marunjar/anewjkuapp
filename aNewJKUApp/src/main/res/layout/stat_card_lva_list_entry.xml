@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/separator_top_bottom_margin"
-    android:paddingTop="@dimen/separator_top_bottom_margin">
-
-    <TextView
-        android:id="@+id/stat_card_lva_list_entry_ects"
-        style="@style/Text.Body2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:gravity="center_vertical" />
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="wrap_content"
+                                             android:paddingBottom="@dimen/separator_top_bottom_margin"
+                                             android:paddingTop="@dimen/separator_top_bottom_margin"
+    >
 
     <TextView
         android:id="@+id/stat_card_lva_list_entry_type"
         style="@style/Text.Body2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@id/stat_card_lva_list_entry_ects"
-        android:gravity="center_vertical" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/stat_card_lva_list_entry_ects"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toRightOf="@id/stat_card_lva_list_entry_type"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+</android.support.constraint.ConstraintLayout>
