@@ -278,6 +278,10 @@ public class KusssHandler {
     }
 
     private boolean isLoggedIn(Context c, Document doc) {
+        if (!isNetworkAvailable(c)) {
+            return false;
+        }
+
         Elements logoutAction = doc.select(SELECT_LOGOUT);
 
         return (logoutAction.size() > 0);
@@ -333,6 +337,12 @@ public class KusssHandler {
                 conn.disconnect();
                 return null;
             }
+
+            if (!isNetworkAvailable(c)) {
+                conn.disconnect();
+                return null;
+            }
+
             final long length = copyStream(conn.getInputStream(), data);
 
             conn.disconnect();
@@ -392,6 +402,12 @@ public class KusssHandler {
                 conn.disconnect();
                 return null;
             }
+
+            if (!isNetworkAvailable(c)) {
+                conn.disconnect();
+                return null;
+            }
+
             final long length = copyStream(conn.getInputStream(), data);
 
             conn.disconnect();
@@ -616,6 +632,9 @@ public class KusssHandler {
     }
 
     public List<Exam> getNewExamsByCourseId(Context c, List<Course> courses, List<Term> terms) {
+        if (!isNetworkAvailable(c)) {
+            return null;
+        }
 
         List<Exam> exams = new ArrayList<>();
         try {
@@ -678,6 +697,10 @@ public class KusssHandler {
     }
 
     private List<Exam> getNewExamsByCourseId(Context c, String courseId) {
+        if (!isNetworkAvailable(c)) {
+            return null;
+        }
+
         List<Exam> exams = new ArrayList<>();
         try {
             final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
