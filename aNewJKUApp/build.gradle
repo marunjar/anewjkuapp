@@ -30,7 +30,15 @@ android {
 
         buildConfigField "boolean", "FOSS_ONLY", "false"
 
-        return void // fix lint warning "Not all execution pathsreturn a value"
+        buildConfigField "String", "CONFIG_KUSSS_PROVIDER", '"' + applicationId + applicationIdSuffix + '.provider"'
+        buildConfigField "String", "CONFIG_KUSSS_ACCOUNT_TYPE", '"' + applicationId + applicationIdSuffix + '.account"'
+        buildConfigField "String", "CONFIG_POI_PROVIDER", '"' + applicationId + applicationIdSuffix + '.provider.poi"'
+//        resValue "string", "config_kusss_provider", applicationId + applicationIdSuffix + '.provider'
+//        resValue "string", "config_kusss_account_type", applicationId + applicationIdSuffix + '.account'
+//        resValue "string", "config_poi_provider", applicationId + applicationIdSuffix + '.provider.poi'
+//        resValue "string", "config_poi_content_uri", "content://" + applicationId + applicationIdSuffix + ".provider.poi/poi"
+
+        return void // fix lint warning "Not all execution paths return a value"
     }
 
     buildTypes {
@@ -38,9 +46,8 @@ android {
             minifyEnabled true
             shrinkResources true
             debuggable false
-            initProvider(defaultConfig, "")
 
-            return void // fix lint warning "Not all execution pathsreturn a value"
+            return void // fix lint warning "Not all execution paths return a value"
         }
         debug {
             minifyEnabled true
@@ -48,19 +55,18 @@ android {
             debuggable true
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
-            initProvider(defaultConfig, ".debug")
 
-            return void // fix lint warning "Not all execution pathsreturn a value"
+            return void // fix lint warning "Not all execution paths return a value"
         }
     }
 
     productFlavors {
         google {
-            return void // fix lint warning "Not all execution pathsreturn a value"
+            return void // fix lint warning "Not all execution paths return a value"
         }
         fdroid {
             buildConfigField "boolean", "FOSS_ONLY", "true"
-            return void // fix lint warning "Not all execution pathsreturn a value"
+            return void // fix lint warning "Not all execution paths return a value"
         }
     }
 
@@ -113,15 +119,4 @@ dependencies {
     compile project(':sectionedRecyclerAdapter')
     compile project(':android-week-view')
     //compile project(':kussslibrary')
-}
-
-def initProvider(defaultConfig, suffix) {
-    defaultConfig.resValue "string", "config_kusss_provider", defaultConfig.applicationId + suffix + '.provider'
-    defaultConfig.resValue "string", "config_kusss_account_type", defaultConfig.applicationId + suffix + '.account'
-    defaultConfig.resValue "string", "config_poi_provider", defaultConfig.applicationId + suffix + '.provider.poi'
-    defaultConfig.resValue "string", "config_poi_content_uri", "content://" + defaultConfig.applicationId + suffix + ".provider.poi/poi"
-
-    defaultConfig.buildConfigField "String", "CONFIG_KUSSS_PROVIDER", '"' + defaultConfig.applicationId + suffix + '.provider"'
-    defaultConfig.buildConfigField "String", "CONFIG_KUSSS_ACCOUNT_TYPE", '"' + defaultConfig.applicationId + suffix + '.account"'
-    defaultConfig.buildConfigField "String", "CONFIG_POI_PROVIDER", '"' + defaultConfig.applicationId + suffix + '.provider.poi"'
 }
