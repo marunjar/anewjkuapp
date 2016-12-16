@@ -30,9 +30,6 @@ android {
 
         buildConfigField "boolean", "FOSS_ONLY", "false"
 
-        buildConfigField "String", "CONFIG_KUSSS_PROVIDER", '"' + applicationId + applicationIdSuffix + '.provider"'
-        buildConfigField "String", "CONFIG_KUSSS_ACCOUNT_TYPE", '"' + applicationId + applicationIdSuffix + '.account"'
-        buildConfigField "String", "CONFIG_POI_PROVIDER", '"' + applicationId + applicationIdSuffix + '.provider.poi"'
 //        resValue "string", "config_kusss_provider", applicationId + applicationIdSuffix + '.provider'
 //        resValue "string", "config_kusss_account_type", applicationId + applicationIdSuffix + '.account'
 //        resValue "string", "config_poi_provider", applicationId + applicationIdSuffix + '.provider.poi'
@@ -46,6 +43,9 @@ android {
             minifyEnabled true
             shrinkResources true
             debuggable false
+
+            applicationIdSuffix ""
+            versionNameSuffix ""
 
             return void // fix lint warning "Not all execution paths return a value"
         }

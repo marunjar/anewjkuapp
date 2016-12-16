@@ -111,6 +111,10 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
                     KusssAuthenticator.ARG_ACCOUNT_NAME);
             mIsNewAccount = mIntent.getBooleanExtra(
                     KusssAuthenticator.ARG_IS_ADDING_NEW_ACCOUNT, false);
+            if (!mIntent.hasExtra(KusssAuthenticator.ARG_ACCOUNT_TYPE)) {
+                mIntent.putExtra(KusssAuthenticator.ARG_ACCOUNT_TYPE,
+                        KusssAuthenticator.ACCOUNT_TYPE);
+            }
         }
 
         if (mAuthTokenType == null) {
