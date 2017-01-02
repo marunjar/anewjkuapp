@@ -25,6 +25,7 @@
 
 package org.voidsink.anewjkuapp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff.Mode;
@@ -41,16 +42,16 @@ public class LocationOverlay extends MyLocationOverlay {
     private final Context mContext;
     private MenuItem snapToLocationItem;
 
-    public LocationOverlay(Context context, MapViewPosition mapViewPosition,
+    public LocationOverlay(Activity activity, MapViewPosition mapViewPosition,
                            Bitmap bitmap) {
-        super(context, mapViewPosition, bitmap);
-        this.mContext = context;
+        super(activity, mapViewPosition, bitmap);
+        this.mContext = activity;
     }
 
-    public LocationOverlay(Context context, MapViewPosition mapViewPosition,
+    public LocationOverlay(Activity activity, MapViewPosition mapViewPosition,
                            Bitmap bitmap, Paint circleFill, Paint circleStroke) {
-        super(context, mapViewPosition, bitmap, circleFill, circleStroke);
-        this.mContext = context;
+        super(activity, mapViewPosition, bitmap, circleFill, circleStroke);
+        this.mContext = activity;
     }
 
     public void setSnapToLocationItem(MenuItem item) {
@@ -66,14 +67,15 @@ public class LocationOverlay extends MyLocationOverlay {
             boolean snapToLocationEnabled) {
         super.setSnapToLocationEnabled(snapToLocationEnabled);
 
-        onSnapToLocationChanged(snapToLocationEnabled);
+        onSnapToLocationChanged();
     }
 
-    private void onSnapToLocationChanged(boolean snapToLocationEnabled) {
+    private void onSnapToLocationChanged() {
         if (this.snapToLocationItem != null) {
-            this.snapToLocationItem.setChecked(isSnapToLocationEnabled());
-            if (isSnapToLocationEnabled()) {
+            final boolean snapToLocationEnabled = isSnapToLocationEnabled() && isMyLocationEnabled();
 
+            this.snapToLocationItem.setChecked(snapToLocationEnabled);
+            if (snapToLocationEnabled) {
                 // get accent color from theme
                 TypedArray themeArray = mContext.getTheme().obtainStyledAttributes(new int[]{R.attr.colorAccent});
                 int mColorAccent = themeArray.getColor(0, ContextCompat.getColor(mContext, R.color.default_accent));

@@ -35,6 +35,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -404,9 +405,6 @@ public class MapFragment extends BaseFragment implements
         this.mapView.getMapZoomControls().setMarginHorizontal(getContext().getResources().getDimensionPixelSize(R.dimen.map_zoom_control_margin_horizontal));
         this.mapView.getMapZoomControls().setMarginVertical(getContext().getResources().getDimensionPixelSize(R.dimen.map_zoom_control_margin_vertical));
 
-        createLayers();
-
-        restoreMarker(savedInstanceState);
 
         return rootView;
     }
@@ -414,6 +412,8 @@ public class MapFragment extends BaseFragment implements
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        createLayers();
 
         restoreMarker(savedInstanceState);
     }
@@ -458,7 +458,7 @@ public class MapFragment extends BaseFragment implements
         Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_marker_own_position);
         Bitmap bitmap = AndroidGraphicFactory.convertToBitmap(drawable);
 
-        this.mMyLocationOverlay = new LocationOverlay(getContext(), mapViewPosition, bitmap);
+        this.mMyLocationOverlay = new LocationOverlay(getActivity(), mapViewPosition, bitmap);
         this.mMyLocationOverlay.setSnapToLocationEnabled(false);
         layers.add(this.mMyLocationOverlay);
     }
@@ -584,4 +584,8 @@ public class MapFragment extends BaseFragment implements
 
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        mMyLocationOverlay.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 }
