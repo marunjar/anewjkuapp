@@ -50,7 +50,7 @@ import org.mapsforge.map.model.MapViewPosition;
  * (otherwise no DisplayModel is set).
  */
 public class MyLocationOverlay extends Layer implements LocationListener, ActivityCompat.OnRequestPermissionsResultCallback {
-    private final byte PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 10;
+    public static final byte PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 10;
     private static final GraphicFactory GRAPHIC_FACTORY = AndroidGraphicFactory.INSTANCE;
     private float minDistance = 0.0f;
     private long minTime = 0;

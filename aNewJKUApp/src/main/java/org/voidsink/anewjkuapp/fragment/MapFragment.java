@@ -24,12 +24,14 @@
 
 package org.voidsink.anewjkuapp.fragment;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -59,7 +61,7 @@ import org.mapsforge.core.model.MapPosition;
 import org.mapsforge.core.util.LatLongUtils;
 import org.mapsforge.core.util.MercatorProjection;
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
-import org.mapsforge.map.android.rendertheme.AssetsRenderTheme;
+import org.mapsforge.map.android.util.AndroidSupportUtil;
 import org.mapsforge.map.android.util.AndroidUtil;
 import org.mapsforge.map.android.view.MapView;
 import org.mapsforge.map.datastore.MapDataStore;
@@ -105,6 +107,8 @@ public class MapFragment extends BaseFragment implements
     private static final String KEY_GOAL_LONGITUDE = "GOAL_LONGITUDE";
     private static final String KEY_GOAL_NAME = "GOAL_NAME";
 
+    private static final byte PERMISSIONS_REQUEST_READ_STORAGE = 122;
+
     // Map Layer
     private MyMarker goalLocation = null;
     private Marker goalLocationOverlay;
@@ -136,12 +140,12 @@ public class MapFragment extends BaseFragment implements
         private final LatLong mLatLon;
         private final String mName;
 
-        public MyMarker(double lat, double lon, String name) {
+        MyMarker(double lat, double lon, String name) {
             this.mLatLon = new LatLong(lat, lon);
             this.mName = name;
         }
 
-        public LatLong getLatLon() {
+        LatLong getLatLon() {
             return mLatLon;
         }
 
@@ -432,35 +436,40 @@ public class MapFragment extends BaseFragment implements
     }
 
     private void createLayers() {
-        TileCache tileCache = AndroidUtil.createTileCache(getContext(),
-                "mapFragment",
-                this.mapView.getModel().displayModel.getTileSize(),
-                1.0f,
-                this.mapView.getModel().frameBufferModel.getOverdrawFactor());
+        if (AndroidSupportUtil.runtimePermissionRequiredForReadExternalStorage(this.getActivity(), getMapFileDirectory())) {
+            // note that this the Fragment method, not compat lib
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_READ_STORAGE);
+        } else {
+            TileCache tileCache = AndroidUtil.createTileCache(getContext(),
+                    "mapFragment",
+                    this.mapView.getModel().displayModel.getTileSize(),
+                    1.0f,
+                    this.mapView.getModel().frameBufferModel.getOverdrawFactor());
 
-        final Layers layers = this.mapView.getLayerManager().getLayers();
+            final Layers layers = this.mapView.getLayerManager().getLayers();
 
-        MapViewPosition mapViewPosition = this.mapView.getModel().mapViewPosition;
-        initializePosition(mapViewPosition);
+            MapViewPosition mapViewPosition = this.mapView.getModel().mapViewPosition;
+            initializePosition(mapViewPosition);
 
-        TileRendererLayer tileRendererLayer = createTileRendererLayer(tileCache, mapViewPosition,
-                getMapFile(), getRenderTheme());
-        layers.add(tileRendererLayer);
+            TileRendererLayer tileRendererLayer = createTileRendererLayer(tileCache, mapViewPosition,
+                    getMapFile(), getRenderTheme());
+            layers.add(tileRendererLayer);
 
-        LabelLayer labelLayer = new LabelLayer(AndroidGraphicFactory.INSTANCE, tileRendererLayer.getLabelStore());
-        mapView.getLayerManager().getLayers().add(labelLayer);
+            LabelLayer labelLayer = new LabelLayer(AndroidGraphicFactory.INSTANCE, tileRendererLayer.getLabelStore());
+            mapView.getLayerManager().getLayers().add(labelLayer);
 
-        // overlay with a marker to show the goal position
-        this.goalLocationOverlay = new Marker(null, null, 0, 0);
-        layers.add(this.goalLocationOverlay);
+            // overlay with a marker to show the goal position
+            this.goalLocationOverlay = new Marker(null, null, 0, 0);
+            layers.add(this.goalLocationOverlay);
 
-        // overlay with a marker to show the actual position
-        Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_marker_own_position);
-        Bitmap bitmap = AndroidGraphicFactory.convertToBitmap(drawable);
+            // overlay with a marker to show the actual position
+            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_marker_own_position);
+            Bitmap bitmap = AndroidGraphicFactory.convertToBitmap(drawable);
 
-        this.mMyLocationOverlay = new LocationOverlay(getActivity(), mapViewPosition, bitmap);
-        this.mMyLocationOverlay.setSnapToLocationEnabled(false);
-        layers.add(this.mMyLocationOverlay);
+            this.mMyLocationOverlay = new LocationOverlay(getActivity(), mapViewPosition, bitmap);
+            this.mMyLocationOverlay.setSnapToLocationEnabled(false);
+            layers.add(this.mMyLocationOverlay);
+        }
     }
 
     private XmlRenderTheme getRenderTheme() {
@@ -554,6 +563,15 @@ public class MapFragment extends BaseFragment implements
         return mapFile;
     }
 
+    private File getMapFileDirectory() {
+        File mapFile = PreferenceWrapper.getMapFile(getContext());
+        if (mapFile == null || !mapFile.exists() || !mapFile.canRead()) {
+            return getActivity().getFilesDir();
+        } else {
+            return mapFile.getParentFile();
+        }
+    }
+
     @Override
     public boolean onQueryTextChange(String newText) {
         // Log.i(TAG, newText);
@@ -586,6 +604,22 @@ public class MapFragment extends BaseFragment implements
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        mMyLocationOverlay.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_READ_STORAGE: {
+                if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    // permission is not granted, the app should do something meaningful here.
+                    return;
+                }
+                createLayers();
+                return;
+            }
+            case LocationOverlay.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+                mMyLocationOverlay.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                return;
+            }
+            default: {
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            }
+        }
     }
 }
