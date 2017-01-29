@@ -98,7 +98,7 @@ public class KusssHandler {
     private static final String SELECT_MY_STUDIES = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > form > table > tbody > tr[class]:has(td)";
 
     private static final int TIMEOUT_LOGIN = 15 * 1000; // 15s
-    private static final int TIMEOUT_SEARCH_EXAM_BY_LVA = 15 * 1000; //15s
+    private static final int TIMEOUT_SEARCH_EXAM_BY_LVA = 10 * 1000; //10s
 
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 

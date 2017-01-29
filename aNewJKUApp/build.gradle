@@ -106,7 +106,7 @@ dependencies {
     compile 'org.mapsforge:mapsforge-themes:0.7.0'
     compile 'org.mapsforge:mapsforge-map-android:0.7.0'
     compile 'org.mapsforge:mapsforge-map-android-extras:0.7.0'
-    compile 'org.jsoup:jsoup:1.10.2'
+    compile 'org.jsoup:jsoup:1.10.1'
     compile 'org.mnode.ical4j:ical4j:1.0.7'
 //    compile 'org.mnode.ical4j:ical4j-extensions:0.9.2'
 //    compile 'org.slf4j:slf4j-android:1.7.21'
