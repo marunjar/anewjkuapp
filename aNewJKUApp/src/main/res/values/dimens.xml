@@ -7,7 +7,6 @@
     <!--
          Per the design guidelines, navigation drawers should be between 240dp and 320dp:
          https://developer.android.com/design/patterns/navigation-drawer.html
-
     -->
 
     <!-- dimension for grade chip -->
@@ -27,4 +26,6 @@
     <dimen name="map_zoom_control_margin_horizontal">8dp</dimen>
     <dimen name="map_zoom_control_margin_vertical">0dp</dimen>
 
+    <!--Calendar-->
+    <dimen name="today_icon_text_size">10sp</dimen>
 </resources>
