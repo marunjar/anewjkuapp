@@ -306,6 +306,7 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
                 data.moveToPrevious();
                 while (data.moveToNext()) {
                     mEvents.add(new CalendarListEvent(
+                            getContext(),
                             data.getLong(CalendarUtils.COLUMN_EVENT_ID),
                             mColors.get(data
                                     .getInt(CalendarUtils.COLUMN_EVENT_CAL_ID)),
@@ -313,7 +314,8 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
                             data.getString(CalendarUtils.COLUMN_EVENT_DESCRIPTION),
                             data.getString(CalendarUtils.COLUMN_EVENT_LOCATION),
                             data.getLong(CalendarUtils.COLUMN_EVENT_DTSTART),
-                            data.getLong(CalendarUtils.COLUMN_EVENT_DTEND)));
+                            data.getLong(CalendarUtils.COLUMN_EVENT_DTEND),
+                            data.getInt(CalendarUtils.COLUMN_EVENT_ALL_DAY) == 1));
                 }
             }
 

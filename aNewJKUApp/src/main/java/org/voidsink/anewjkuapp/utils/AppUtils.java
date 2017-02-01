@@ -48,6 +48,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.text.format.Time;
 import android.util.Log;
 
 import org.voidsink.anewjkuapp.ImportPoiTask;
@@ -80,9 +81,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -815,19 +818,20 @@ public class AppUtils {
         }
     }
 
-    public static String getTimeString(Date dtStart, Date dtEnd) {
-        DateFormat dfStart = DateFormat.getTimeInstance(DateFormat.SHORT);
-        DateFormat dfEnd = DateFormat.getTimeInstance(DateFormat.SHORT);
-        if (!CalendarUtils.isSameDay(dtStart, dtEnd)) {
-            dfEnd = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+    public static String getTimeString(Context c, Date dtStart, Date dtEnd, boolean allDay) {
+        int flags = 0;
+        String tzString = Time.getCurrentTimezone();
+        if (allDay) {
+            tzString = Time.TIMEZONE_UTC;
+        } else {
+            flags = DateUtils.FORMAT_SHOW_TIME;
         }
 
-        return String.format("%s - %s", dfStart.format(dtStart),
-                dfEnd.format(dtEnd));
+        return DateUtils.formatDateRange(c, new Formatter(Locale.getDefault()), dtStart.getTime(), dtEnd.getTime(), flags, tzString).toString();
     }
 
-    public static String getEventString(long eventDTStart, long eventDTEnd,
-                                        String eventTitle) {
+    public static String getEventString(Context c, long eventDTStart, long eventDTEnd,
+                                        String eventTitle, boolean allDay) {
         int index = eventTitle.indexOf(", ");
         if (index > 1) {
             eventTitle = eventTitle.substring(0, index);
@@ -835,7 +839,7 @@ public class AppUtils {
 
         DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
 
-        return String.format("%s: %s, %s", df.format(eventDTStart), AppUtils.getTimeString(new Date(eventDTStart), new Date(eventDTEnd)), eventTitle);
+        return String.format("%s: %s, %s", df.format(eventDTStart), AppUtils.getTimeString(c, new Date(eventDTStart), new Date(eventDTEnd), allDay), eventTitle);
     }
 
     public static String termToString(Term term) {

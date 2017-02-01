@@ -344,13 +344,13 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
 
                     Calendar startTime = Calendar.getInstance();
                     if (allDay) {
-                        startTime.setTimeZone(TimeZone.getTimeZone("GMT+0"));
+                        startTime.setTimeZone(TimeZone.getTimeZone("UTC"));
                     }
                     startTime.setTimeInMillis(data.getLong(CalendarUtils.COLUMN_EVENT_DTSTART));
 
                     Calendar endTime = Calendar.getInstance();
                     if (allDay) {
-                        endTime.setTimeZone(TimeZone.getTimeZone("GMT+0"));
+                        endTime.setTimeZone(TimeZone.getTimeZone("UTC"));
                     }
                     endTime.setTimeInMillis(data.getLong(CalendarUtils.COLUMN_EVENT_DTEND));
                     if (allDay && endTime.getTimeInMillis() % DateUtils.DAY_IN_MILLIS == 0) {

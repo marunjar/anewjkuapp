@@ -151,10 +151,10 @@ public class ImportCalendarTask implements Callable<Void> {
         }
     }
 
-    private String getEventString(VEvent v) {
-        return AppUtils.getEventString(v.getStartDate().getDate().getTime(), v
+    private String getEventString(Context c, VEvent v) {
+        return AppUtils.getEventString(c, v.getStartDate().getDate().getTime(), v
                 .getEndDate().getDate().getTime(), v.getSummary().getValue()
-                .trim());
+                .trim(), false);
     }
 
     @Override
@@ -428,7 +428,7 @@ public class ImportCalendarTask implements Callable<Void> {
                                             .build());
                                     mSyncResult.stats.numUpdates++;
 
-                                    mNotification.addUpdate(getEventString(match));
+                                    mNotification.addUpdate(getEventString(mContext, match));
                                 } else {
                                     mSyncResult.stats.numSkippedEntries++;
                                 }
@@ -443,9 +443,10 @@ public class ImportCalendarTask implements Callable<Void> {
                                     if (eventDTStart > notifyFrom && !eventDeleted) {
                                         mNotification
                                                 .addDelete(AppUtils.getEventString(
+                                                        mContext,
                                                         eventDTStart,
                                                         eventDTEnd,
-                                                        eventTitle));
+                                                        eventTitle, false));
                                     }
 
                                     batch.add(ContentProviderOperation
@@ -475,7 +476,7 @@ public class ImportCalendarTask implements Callable<Void> {
                         if (v.getUid().getValue().startsWith(kusssIdPrefix)) {
                             // notify only future changes
                             if (v.getStartDate().getDate().getTime() > notifyFrom) {
-                                mNotification.addInsert(getEventString(v));
+                                mNotification.addInsert(getEventString(mContext, v));
                             }
 
                             Builder builder = null;
