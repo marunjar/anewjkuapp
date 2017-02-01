@@ -1091,10 +1091,9 @@ public class WeekView extends View {
 
         // Get text dimensions.
         StaticLayout textLayout = new StaticLayout(bob, mEventTextPaint, availableWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+        if(textLayout.getLineCount() > 0) {
+            int lineHeight = textLayout.getHeight() / textLayout.getLineCount();
 
-        final int lineCount = textLayout.getLineCount();
-        if (lineCount > 0) {
-            final int lineHeight = textLayout.getHeight() / lineCount;
             if (availableHeight >= lineHeight) {
                 // Calculate available number of line counts.
                 int availableLineCount = availableHeight / lineHeight;
