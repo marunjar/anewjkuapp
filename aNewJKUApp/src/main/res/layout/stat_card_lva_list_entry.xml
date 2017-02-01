@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/separator_top_bottom_margin"
@@ -12,16 +13,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintRight_toLeftOf="@+id/stat_card_lva_list_entry_ects"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Type" />
 
     <TextView
         android:id="@+id/stat_card_lva_list_entry_ects"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/separator_top_bottom_margin"
         android:layout_marginStart="@dimen/separator_top_bottom_margin"
+        android:gravity="end|right"
+        app:layout_constraintBaseline_toBaselineOf="@+id/stat_card_lva_list_entry_type"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toRightOf="@+id/stat_card_lva_list_entry_type"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:text="23" />
 </android.support.constraint.ConstraintLayout>
