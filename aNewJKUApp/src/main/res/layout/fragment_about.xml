@@ -10,7 +10,7 @@
     <Button
         android:id="@+id/about_libraries"
         style="@style/Text.Button"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:text="@string/about_libraries_title"
@@ -21,19 +21,19 @@
     <Button
         android:id="@+id/about_changelog"
         style="@style/Text.Button"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:text="@string/action_changelog"
-        app:layout_constraintBottom_toTopOf="@id/about_libraries"
+        app:layout_constraintBottom_toTopOf="@+id/about_libraries"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
 
     <ScrollView
         android:id="@+id/about_content_scroller"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toTopOf="@id/about_changelog"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/about_changelog"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">

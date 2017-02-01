@@ -29,7 +29,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/mensa_info_item_title"
+            app:layout_constraintTop_toBottomOf="@+id/mensa_info_item_title"
             tools:text="Description"/>
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>

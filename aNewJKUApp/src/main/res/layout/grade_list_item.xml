@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.widget.CardView
-    style="@style/card"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -19,7 +18,11 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:minLines="2"
-            tools:text="Title"/>
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Title" />
 
         <include
             android:id="@+id/grade_chip"
@@ -27,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/grade_list_grade_title"/>
+            app:layout_constraintTop_toBottomOf="@+id/grade_list_grade_title" />
 
         <TextView
             android:id="@+id/grade_list_grade_grade"
@@ -36,9 +39,9 @@
             android:layout_height="wrap_content"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/grade_chip"
-            app:layout_constraintTop_toBottomOf="@id/grade_list_grade_title"
-            tools:text="Grade"/>
+            app:layout_constraintRight_toLeftOf="@+id/grade_chip"
+            app:layout_constraintTop_toBottomOf="@+id/grade_list_grade_title"
+            tools:text="Grade" />
 
         <TextView
             android:id="@+id/grade_list_grade_date"
@@ -47,9 +50,9 @@
             android:layout_height="wrap_content"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/grade_chip"
-            app:layout_constraintTop_toBottomOf="@id/grade_list_grade_grade"
-            tools:text="03-14-2015"/>
+            app:layout_constraintRight_toLeftOf="@+id/grade_chip"
+            app:layout_constraintTop_toBottomOf="@+id/grade_list_grade_grade"
+            tools:text="03-14-2015" />
 
         <TextView
             android:id="@+id/grade_list_grade_term"
@@ -58,18 +61,20 @@
             android:layout_height="wrap_content"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/grade_list_grade_date"
-            tools:text="2013S"/>
+            app:layout_constraintTop_toBottomOf="@+id/grade_list_grade_date"
+            tools:text="2013S" />
 
         <TextView
             android:id="@+id/grade_list_grade_courseId"
             style="@style/Text.Body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/separator_top_bottom_margin"
+            android:layout_marginStart="@dimen/separator_top_bottom_margin"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toRightOf="@id/grade_list_grade_term"
-            app:layout_constraintTop_toBottomOf="@id/grade_list_grade_date"
-            tools:text="133.337"/>
+            app:layout_constraintLeft_toRightOf="@+id/grade_list_grade_term"
+            app:layout_constraintTop_toBottomOf="@+id/grade_list_grade_date"
+            tools:text="133.337" />
 
         <TextView
             android:id="@+id/grade_list_grade_cid"
@@ -77,12 +82,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/separator_top_bottom_margin"
+            android:layout_marginLeft="@dimen/separator_top_bottom_margin"
             android:layout_marginRight="@dimen/separator_top_bottom_margin"
+            android:layout_marginStart="@dimen/separator_top_bottom_margin"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toRightOf="@id/grade_list_grade_courseId"
-            app:layout_constraintRight_toLeftOf="@id/grade_chip"
-            app:layout_constraintTop_toBottomOf="@id/grade_list_grade_date"
-            tools:text="[521]"/>
+            app:layout_constraintLeft_toRightOf="@+id/grade_list_grade_courseId"
+            app:layout_constraintRight_toLeftOf="@+id/grade_chip"
+            app:layout_constraintTop_toBottomOf="@+id/grade_list_grade_date"
+            tools:text="[521]" />
 
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>

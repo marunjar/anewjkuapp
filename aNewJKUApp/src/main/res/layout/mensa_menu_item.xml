@@ -29,8 +29,8 @@
             android:padding="@dimen/separator_top_bottom_margin"
             android:textColor="?attr/colorAccent"
             android:textStyle="bold"
-            app:layout_constraintBaseline_toBaselineOf="@id/mensa_menu_item_name"
-            app:layout_constraintLeft_toRightOf="@id/mensa_menu_item_name"
+            app:layout_constraintBaseline_toBaselineOf="@+id/mensa_menu_item_name"
+            app:layout_constraintLeft_toRightOf="@+id/mensa_menu_item_name"
             tools:text="Price"/>
 
         <TextView
@@ -40,9 +40,9 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/separator_top_bottom_margin"
             android:textColor="?android:attr/textColorSecondary"
-            app:layout_constraintBaseline_toBaselineOf="@id/mensa_menu_item_price"
+            app:layout_constraintBaseline_toBaselineOf="@+id/mensa_menu_item_price"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toRightOf="@id/mensa_menu_item_price"
+            app:layout_constraintLeft_toRightOf="@+id/mensa_menu_item_price"
             app:layout_constraintRight_toRightOf="parent"
             tools:text="ÖH Bonus"/>
 
@@ -52,8 +52,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/separator_top_bottom_margin"
-            app:layout_constraintLeft_toLeftOf="@id/mensa_menu_item_name"
-            app:layout_constraintTop_toBottomOf="@id/mensa_menu_item_name"
+            app:layout_constraintLeft_toLeftOf="@+id/mensa_menu_item_name"
+            app:layout_constraintTop_toBottomOf="@+id/mensa_menu_item_name"
             tools:text="Soup"/>
 
         <TextView
@@ -63,8 +63,8 @@
             android:layout_height="wrap_content"
             android:minLines="2"
             android:padding="@dimen/separator_top_bottom_margin"
-            app:layout_constraintLeft_toLeftOf="@id/mensa_menu_item_soup"
-            app:layout_constraintTop_toBottomOf="@id/mensa_menu_item_soup"
+            app:layout_constraintLeft_toLeftOf="@+id/mensa_menu_item_soup"
+            app:layout_constraintTop_toBottomOf="@+id/mensa_menu_item_soup"
             tools:text="Meal"/>
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>

@@ -38,7 +38,7 @@ limitations under the License.
 
     <TextView
         android:id="@android:id/text1"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ellipsize="marquee"
         android:maxLines="1"
@@ -46,13 +46,13 @@ limitations under the License.
         android:textColor="?android:attr/textColorAlertDialogListItem"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/radio"
+        app:layout_constraintRight_toLeftOf="@+id/radio"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Text 1"/>
 
     <TextView
         android:id="@android:id/text2"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ellipsize="marquee"
         android:maxLines="1"
@@ -60,8 +60,8 @@ limitations under the License.
         android:textColor="?android:attr/textColorAlertDialogListItem"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/radio"
-        app:layout_constraintTop_toBottomOf="@android:id/text1"
-        tools:text="Text 2"/>
+        app:layout_constraintRight_toLeftOf="@+id/radio"
+        tools:text="Text 2"
+        tools:layout_editor_absoluteY="22dp" />
 
 </android.support.constraint.ConstraintLayout>
