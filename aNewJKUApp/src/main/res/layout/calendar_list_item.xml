@@ -34,7 +34,11 @@
                 style="@style/Text.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/separator_top_bottom_margin"
+                android:layout_marginRight="@dimen/separator_top_bottom_margin"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/calendar_list_item_location"
                 app:layout_constraintTop_toBottomOf="@+id/calendar_list_item_title"
                 tools:text="08:00 - 10:00" />
 
@@ -45,12 +49,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/separator_top_bottom_margin"
                 android:layout_marginStart="@dimen/separator_top_bottom_margin"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintBaseline_toBaselineOf="@+id/calendar_list_item_time"
                 app:layout_constraintLeft_toRightOf="@+id/calendar_list_item_time"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/calendar_list_item_title"
                 tools:text="HS 19" />
-
 
             <TextView
                 android:id="@+id/calendar_list_item_descr"
