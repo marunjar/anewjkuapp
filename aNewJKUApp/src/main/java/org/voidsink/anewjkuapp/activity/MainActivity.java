@@ -103,7 +103,7 @@ public class MainActivity extends ThemedActivity {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     private static void StartCreateAccount(Context context) {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.GET_ACCOUNTS) == PackageManager.PERMISSION_GRANTED) {
+        if ((android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) || (ContextCompat.checkSelfPermission(context, Manifest.permission.GET_ACCOUNTS) == PackageManager.PERMISSION_GRANTED)) {
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 context.startActivity(new Intent(Settings.ACTION_ADD_ACCOUNT)
                         .putExtra(Settings.EXTRA_ACCOUNT_TYPES,
@@ -240,7 +240,7 @@ public class MainActivity extends ThemedActivity {
                 TextView mDrawerUser = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.drawer_user);
 
                 if (mDrawerUser != null) {
-                    if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
+                    if ((android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M) && (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED)) {
                         mDrawerUser.setText(R.string.missing_app_permission);
                         mDrawerUser.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -321,7 +321,7 @@ public class MainActivity extends ThemedActivity {
                 }
                 return;
             case MY_PERMISSION_ACCOUNTS: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if ((android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) || (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     if (AppUtils.getAccount(this) == null) {
                         StartCreateAccount(this);
                     }

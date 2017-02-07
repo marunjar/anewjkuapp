@@ -81,7 +81,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -530,7 +529,7 @@ public class AppUtils {
             return null;
         }
 
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
+        if ((android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M) && (ContextCompat.checkSelfPermission(context, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED)) {
             Log.w(TAG, "getAccount failed, no permission");
             return null;
         }
