@@ -4,6 +4,11 @@
 		    - fixed
 		    * changed
 		    + added -->
+    <release version="0.45" versioncode="140054">
+        <change>- App: Korrekturen und Optimierungen</change>
+        <change>* App: unnötige Berechtigungen entfernt</change>
+        <change>* Karte: neue Daten von OpenStreetMap</change>
+    </release>
     <release version="0.44.1" versioncode="140053">
         <change>- Stundenplan: genauer Standort für neue Termine wird gespeichert</change>
         <change>- App: Korrekturen und Optimierungen</change>
