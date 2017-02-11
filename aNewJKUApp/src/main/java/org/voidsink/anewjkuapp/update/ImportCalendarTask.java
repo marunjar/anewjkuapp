@@ -46,7 +46,7 @@ import android.text.format.DateUtils;
 import android.util.Log;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.extensions.groupwise.ShowAs;
+//import net.fortuna.ical4j.extensions.groupwise.ShowAs;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
@@ -151,10 +151,10 @@ public class ImportCalendarTask implements Callable<Void> {
         }
     }
 
-    private String getEventString(VEvent v) {
-        return AppUtils.getEventString(v.getStartDate().getDate().getTime(), v
+    private String getEventString(Context c, VEvent v) {
+        return AppUtils.getEventString(c, v.getStartDate().getDate().getTime(), v
                 .getEndDate().getDate().getTime(), v.getSummary().getValue()
-                .trim());
+                .trim(), false);
     }
 
     @Override
@@ -428,7 +428,7 @@ public class ImportCalendarTask implements Callable<Void> {
                                             .build());
                                     mSyncResult.stats.numUpdates++;
 
-                                    mNotification.addUpdate(getEventString(match));
+                                    mNotification.addUpdate(getEventString(mContext, match));
                                 } else {
                                     mSyncResult.stats.numSkippedEntries++;
                                 }
@@ -443,9 +443,10 @@ public class ImportCalendarTask implements Callable<Void> {
                                     if (eventDTStart > notifyFrom && !eventDeleted) {
                                         mNotification
                                                 .addDelete(AppUtils.getEventString(
+                                                        mContext,
                                                         eventDTStart,
                                                         eventDTEnd,
-                                                        eventTitle));
+                                                        eventTitle, false));
                                     }
 
                                     batch.add(ContentProviderOperation
@@ -475,7 +476,7 @@ public class ImportCalendarTask implements Callable<Void> {
                         if (v.getUid().getValue().startsWith(kusssIdPrefix)) {
                             // notify only future changes
                             if (v.getStartDate().getDate().getTime() > notifyFrom) {
-                                mNotification.addInsert(getEventString(v));
+                                mNotification.addInsert(getEventString(mContext, v));
                             }
 
                             Builder builder = null;
@@ -510,13 +511,13 @@ public class ImportCalendarTask implements Callable<Void> {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
                                 boolean busy = false;
 
-                                Property p = v.getProperty(ShowAs.PROPERTY_NAME);
-                                if (p != null) {
-                                    busy = p.getValue().equals(ShowAs.BUSY.getValue());
-                                }
-                                if (!busy) {
+//                                Property p = v.getProperty(ShowAs.PROPERTY_NAME);
+//                                if (p != null) {
+//                                    busy = p.getValue().equals(ShowAs.BUSY.getValue());
+//                                }
+//                                if (!busy) {
                                     busy = mCalendarName.equals(CalendarUtils.ARG_CALENDAR_EXAM);
-                                }
+//                                }
 
                                 if (busy) {
                                     builder.withValue(

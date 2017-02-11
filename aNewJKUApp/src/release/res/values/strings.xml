@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="config_kusss_provider" translatable="false">org.voidsink.anewjkuapp.provider</string>
+    <string name="config_kusss_account_type" translatable="false">org.voidsink.anewjkuapp.account</string>
+    <string name="config_poi_provider" translatable="false">org.voidsink.anewjkuapp.provider.poi</string>
+    <string name="config_poi_content_uri" translatable="false">org.voidsink.anewjkuapp.provider.poi/poi</string>
+</resources>

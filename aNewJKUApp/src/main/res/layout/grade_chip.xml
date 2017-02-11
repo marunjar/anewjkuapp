@@ -1,36 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_margin="3dp"
-              android:background="@color/color_chip_grade_back_default"
-              android:gravity="center_vertical"
-              android:minHeight="60dp"
-              android:minWidth="60dp"
-              android:orientation="vertical"
-              android:padding="3dp">
-
-    <TextView
-        android:id="@+id/grade_chip_grade"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:textColor="@color/color_chip_grade_text"
-        android:textSize="@dimen/grade_chip_grade_size"
-        android:textStyle="bold"
-        tools:text="\?"/>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="3dp"
+    android:background="@color/color_chip_grade_back_default"
+    android:gravity="center_vertical"
+    android:minHeight="60dp"
+    android:minWidth="60dp"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/grade_chip_info"
         fontPath="fonts/Roboto-Light.ttf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_marginBottom="6dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:layout_marginStart="3dp"
         android:gravity="center"
         android:textColor="@color/color_chip_grade_text"
         android:textSize="@dimen/grade_chip_info_size"
-        tools:text="4,50 ECTS"/>
-</LinearLayout>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:text="4,50 ECTS" />
+
+    <TextView
+        android:id="@+id/grade_chip_grade"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/color_chip_grade_text"
+        android:textSize="@dimen/grade_chip_grade_size"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/grade_chip_info"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="\?" />
+
+</android.support.constraint.ConstraintLayout>

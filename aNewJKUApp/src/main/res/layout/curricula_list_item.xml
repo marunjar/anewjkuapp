@@ -1,166 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView style="@style/card"
-                                    xmlns:android="http://schemas.android.com/apk/res/android"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/curriculum_title_title"
+            style="@style/Text.Body1"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/card_content_padding"
-            android:paddingRight="@dimen/card_content_padding">
+            android:text="@string/studies_title"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                style="@style/Text.Body1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/separator_top_bottom_margin"
-                android:layout_marginRight="@dimen/separator_top_bottom_margin"
-                android:text="@string/studies_title"/>
+        <TextView
+            android:id="@+id/curriculum_title"
+            style="@style/Text.Body2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/separator_top_bottom_margin"
+            android:layout_marginStart="@dimen/separator_top_bottom_margin"
+            app:layout_constraintBaseline_toBaselineOf="@+id/curriculum_title_title"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@+id/curriculum_title_title"
+            app:layout_constraintRight_toRightOf="parent" />
 
-            <TextView
-                android:id="@+id/curriculum_title"
-                style="@style/Text.Body2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+        <TextView
+            android:id="@+id/curriculum_id_title"
+            style="@style/Text.Body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/studies_skz"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/curriculum_title_title" />
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:orientation="horizontal"
-                      android:paddingLeft="@dimen/card_content_padding"
-                      android:paddingRight="@dimen/card_content_padding">
+        <TextView
+            android:id="@+id/curriculum_id"
+            style="@style/Text.Body2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/separator_top_bottom_margin"
+            android:layout_marginStart="@dimen/separator_top_bottom_margin"
+            app:layout_constraintBaseline_toBaselineOf="@+id/curriculum_id_title"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@+id/curriculum_id_title"
+            app:layout_constraintRight_toRightOf="parent" />
 
-            <TextView
-                style="@style/Text.Body1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/separator_top_bottom_margin"
-                android:layout_marginRight="@dimen/separator_top_bottom_margin"
-                android:text="@string/studies_skz"/>
+        <TextView
+            android:id="@+id/curriculum_dt_start_title"
+            style="@style/Text.Body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/studies_dt_start"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/curriculum_id_title" />
 
-            <TextView
-                android:id="@+id/curriculum_id"
-                style="@style/Text.Body2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+        <TextView
+            android:id="@+id/curriculum_dt_start"
+            style="@style/Text.Body2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/separator_top_bottom_margin"
+            android:layout_marginStart="@dimen/separator_top_bottom_margin"
+            app:layout_constraintBaseline_toBaselineOf="@+id/curriculum_dt_start_title"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@+id/curriculum_dt_start_title"
+            app:layout_constraintRight_toRightOf="parent" />
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:orientation="horizontal"
-                      android:paddingLeft="@dimen/card_content_padding"
-                      android:paddingRight="@dimen/card_content_padding">
+        <TextView
+            android:id="@+id/curriculum_dt_end_title"
+            style="@style/Text.Body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/studies_dt_end"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/curriculum_dt_start_title" />
 
-            <TextView
-                style="@style/Text.Body1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/separator_top_bottom_margin"
-                android:layout_marginRight="@dimen/separator_top_bottom_margin"
-                android:text="@string/studies_dt_start"/>
+        <TextView
+            android:id="@+id/curriculum_dt_end"
+            style="@style/Text.Body2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/separator_top_bottom_margin"
+            android:layout_marginStart="@dimen/separator_top_bottom_margin"
+            app:layout_constraintBaseline_toBaselineOf="@+id/curriculum_dt_end_title"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@+id/curriculum_dt_end_title"
+            app:layout_constraintRight_toRightOf="parent" />
 
-            <TextView
-                android:id="@+id/curriculum_dt_start"
-                style="@style/Text.Body2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+        <TextView
+            android:id="@+id/curriculum_steop_done_title"
+            style="@style/Text.Body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/studies_steop_done"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/curriculum_dt_end_title" />
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:orientation="horizontal"
-                      android:paddingLeft="@dimen/card_content_padding"
-                      android:paddingRight="@dimen/card_content_padding">
+        <TextView
+            android:id="@+id/curriculum_steop_done"
+            style="@style/Text.Body2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/separator_top_bottom_margin"
+            android:layout_marginStart="@dimen/separator_top_bottom_margin"
+            app:layout_constraintBaseline_toBaselineOf="@+id/curriculum_steop_done_title"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@+id/curriculum_steop_done_title"
+            app:layout_constraintRight_toRightOf="parent" />
 
-            <TextView
-                style="@style/Text.Body1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/separator_top_bottom_margin"
-                android:layout_marginRight="@dimen/separator_top_bottom_margin"
-                android:text="@string/studies_dt_end"/>
+        <TextView
+            android:id="@+id/curriculum_active_status_title"
+            style="@style/Text.Body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/studies_active_status"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/curriculum_steop_done_title" />
 
-            <TextView
-                android:id="@+id/curriculum_dt_end"
-                style="@style/Text.Body2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+        <TextView
+            android:id="@+id/curriculum_active_status"
+            style="@style/Text.Body2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/separator_top_bottom_margin"
+            android:layout_marginStart="@dimen/separator_top_bottom_margin"
+            app:layout_constraintBaseline_toBaselineOf="@+id/curriculum_active_status_title"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@+id/curriculum_active_status_title"
+            app:layout_constraintRight_toRightOf="parent" />
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:orientation="horizontal"
-                      android:paddingLeft="@dimen/card_content_padding"
-                      android:paddingRight="@dimen/card_content_padding">
+        <TextView
+            android:id="@+id/curriculum_is_standard_title"
+            style="@style/Text.Body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/studies_is_standard"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/curriculum_active_status_title" />
 
-            <TextView
-                style="@style/Text.Body1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/separator_top_bottom_margin"
-                android:layout_marginRight="@dimen/separator_top_bottom_margin"
-                android:text="@string/studies_steop_done"/>
+        <TextView
+            android:id="@+id/curriculum_is_standard"
+            style="@style/Text.Body2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/separator_top_bottom_margin"
+            android:layout_marginStart="@dimen/separator_top_bottom_margin"
+            app:layout_constraintBaseline_toBaselineOf="@+id/curriculum_is_standard_title"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@+id/curriculum_is_standard_title"
+            app:layout_constraintRight_toRightOf="parent" />
 
-            <TextView
-                android:id="@+id/curriculum_steop_done"
-                style="@style/Text.Body2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:orientation="horizontal"
-                      android:paddingLeft="@dimen/card_content_padding"
-                      android:paddingRight="@dimen/card_content_padding">
-
-            <TextView
-                style="@style/Text.Body1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/separator_top_bottom_margin"
-                android:layout_marginRight="@dimen/separator_top_bottom_margin"
-                android:text="@string/studies_active_status"/>
-
-            <TextView
-                android:id="@+id/curriculum_active_status"
-                style="@style/Text.Body2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:orientation="horizontal"
-                      android:paddingLeft="@dimen/card_content_padding"
-                      android:paddingRight="@dimen/card_content_padding">
-
-            <TextView
-                style="@style/Text.Body1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/separator_top_bottom_margin"
-                android:layout_marginRight="@dimen/separator_top_bottom_margin"
-                android:text="@string/studies_is_standard"/>
-
-            <TextView
-                android:id="@+id/curriculum_is_standard"
-                style="@style/Text.Body2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>

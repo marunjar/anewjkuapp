@@ -33,6 +33,7 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.RectF;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -65,6 +66,7 @@ import org.voidsink.anewjkuapp.update.ImportCalendarTask;
 import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
+import org.voidsink.anewjkuapp.utils.UIUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -121,6 +123,14 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         super.onCreateOptionsMenu(menu, inflater);
 
         inflater.inflate(R.menu.calendar, menu);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            MenuItem menuItem = menu.findItem(R.id.action_cal_goto_today);
+            // replace the default top layer drawable of the today icon with a
+            // custom drawable that shows the day of the month of today
+            LayerDrawable icon = (LayerDrawable) menuItem.getIcon();
+            UIUtils.setTodayIcon(icon, getContext(), "");
+        }
     }
 
     @Override
@@ -334,13 +344,13 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
 
                     Calendar startTime = Calendar.getInstance();
                     if (allDay) {
-                        startTime.setTimeZone(TimeZone.getTimeZone("GMT+0"));
+                        startTime.setTimeZone(TimeZone.getTimeZone("UTC"));
                     }
                     startTime.setTimeInMillis(data.getLong(CalendarUtils.COLUMN_EVENT_DTSTART));
 
                     Calendar endTime = Calendar.getInstance();
                     if (allDay) {
-                        endTime.setTimeZone(TimeZone.getTimeZone("GMT+0"));
+                        endTime.setTimeZone(TimeZone.getTimeZone("UTC"));
                     }
                     endTime.setTimeInMillis(data.getLong(CalendarUtils.COLUMN_EVENT_DTEND));
                     if (allDay && endTime.getTimeInMillis() % DateUtils.DAY_IN_MILLIS == 0) {

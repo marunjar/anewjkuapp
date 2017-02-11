@@ -85,7 +85,7 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
             } else {
                 holder.mCid.setVisibility(View.GONE);
             }
-            holder.mTime.setText(AppUtils.getTimeString(exam.getDtStart(), exam.getDtEnd()));
+            holder.mTime.setText(AppUtils.getTimeString(getContext(), exam.getDtStart(), exam.getDtEnd(), false));
             holder.mLocation.setText(exam.getLocation());
         }
     }

@@ -1,25 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/separator_top_bottom_margin"
     android:paddingTop="@dimen/separator_top_bottom_margin">
 
     <TextView
-        android:id="@+id/stat_card_grade_list_entry_grade"
-        style="@style/Text.Body2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:gravity="center_vertical" />
-
-    <TextView
         android:id="@+id/stat_card_grade_list_entry_type"
         style="@style/Text.Body2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@id/stat_card_grade_list_entry_grade"
-        android:gravity="center_vertical" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/stat_card_grade_list_entry_grade"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Type" />
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/stat_card_grade_list_entry_grade"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/separator_top_bottom_margin"
+        android:layout_marginStart="@dimen/separator_top_bottom_margin"
+        android:gravity="end|right"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toRightOf="@+id/stat_card_grade_list_entry_type"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@id/stat_card_grade_list_entry_type"
+        tools:text="23" />
+</android.support.constraint.ConstraintLayout>

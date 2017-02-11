@@ -1,21 +1,41 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="top"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="org.voidsink.anewjkuapp.fragment.AboutFragment">
+
+    <Button
+        android:id="@+id/about_libraries"
+        style="@style/Text.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/about_libraries_title"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/about_changelog"
+        style="@style/Text.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/action_changelog"
+        app:layout_constraintBottom_toTopOf="@+id/about_libraries"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <ScrollView
         android:id="@+id/about_content_scroller"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/about_changelog"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,44 +47,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:text="@string/app_name"/>
+                android:text="@string/app_name" />
 
             <TextView
                 style="@style/Text.Body1"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:text="@string/about_app_summary"/>
+                android:text="@string/about_app_summary" />
         </LinearLayout>
     </ScrollView>
 
-    <!--
-    <Button
-        android:id="@id/force_logout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/about_credits"
-        android:layout_marginTop="10dp"
-        android:padding="10dp"
-        android:text="@string/about_force_logout" />
-    -->
-
-    <Button
-        android:id="@+id/about_libraries"
-        style="@style/Text.Button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:padding="10dp"
-        android:text="@string/about_libraries_title"/>
-
-    <Button
-        android:id="@+id/about_changelog"
-        style="@style/Text.Button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/about_libraries"
-        android:padding="10dp"
-        android:text="@string/action_changelog"/>
-
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

@@ -4,4 +4,8 @@
     <string name="extension_mensa_title">JKU Mensa Debug</string>
     <string name="calendar_title_exam">Prüfungen Debug</string>
     <string name="calendar_title_lva">LVAs Debug</string>
+    <string name="config_kusss_provider" translatable="false">org.voidsink.anewjkuapp.debug.provider</string>
+    <string name="config_kusss_account_type" translatable="false">org.voidsink.anewjkuapp.debug.account</string>
+    <string name="config_poi_provider" translatable="false">org.voidsink.anewjkuapp.debug.provider.poi</string>
+    <string name="config_poi_content_uri" translatable="false">org.voidsink.anewjkuapp.debug.provider.poi/poi</string>
 </resources>

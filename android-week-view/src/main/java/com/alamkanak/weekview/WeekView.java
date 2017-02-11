@@ -24,6 +24,7 @@ import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 import android.text.style.StyleSpan;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -41,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -351,7 +353,7 @@ public class WeekView extends View {
                             mNewEventRect = new EventRect(newEvent, newEvent, dayRectF);
                             tempEventRects.add(mNewEventRect);
                             invalidate();
-                            computePositionOfEvents(tempEventRects);
+                            computePositions(tempEventRects, 0);
                         }
                     }
                 }
@@ -1089,10 +1091,9 @@ public class WeekView extends View {
 
         // Get text dimensions.
         StaticLayout textLayout = new StaticLayout(bob, mEventTextPaint, availableWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+        if(textLayout.getLineCount() > 0) {
+            int lineHeight = textLayout.getHeight() / textLayout.getLineCount();
 
-        final int lineCount = textLayout.getLineCount();
-        if (lineCount > 0) {
-            final int lineHeight = textLayout.getHeight() / lineCount;
             if (availableHeight >= lineHeight) {
                 // Calculate available number of line counts.
                 int availableLineCount = availableHeight / lineHeight;
@@ -1156,6 +1157,8 @@ public class WeekView extends View {
         public float width;
         public float top;
         public float bottom;
+        private int column;
+        private int maxColumns;
 
         /**
          * Create a new instance of event rect. An EventRect is actually the rectangle that is drawn
@@ -1172,6 +1175,22 @@ public class WeekView extends View {
             this.event = event;
             this.rectF = rectF;
             this.originalEvent = originalEvent;
+        }
+
+        public void setColumn(int column) {
+            this.column = column;
+        }
+
+        public void setMaxColumns(int maxColumns) {
+            this.maxColumns = maxColumns;
+        }
+
+        public int getColumn() {
+            return column;
+        }
+
+        public int getMaxColumns() {
+            return maxColumns;
         }
     }
 
@@ -1231,9 +1250,11 @@ public class WeekView extends View {
 
                 // Clear events.
                 mEventRects.clear();
-                sortAndCacheEvents(previousPeriodEvents);
-                sortAndCacheEvents(currentPeriodEvents);
-                sortAndCacheEvents(nextPeriodEvents);
+                cacheEvents(previousPeriodEvents);
+                cacheEvents(currentPeriodEvents);
+                cacheEvents(nextPeriodEvents);
+                sortEventRects(mEventRects);
+
                 calculateHeaderHeight();
 
                 mPreviousPeriodEvents = previousPeriodEvents;
@@ -1243,31 +1264,120 @@ public class WeekView extends View {
             }
         }
 
-        // Prepare to calculate positions of each events.
-        List<EventRect> tempEvents = mEventRects;
-        mEventRects = new ArrayList<EventRect>();
+        computePositions(mEventRects, 0);
+    }
 
-        // Iterate through each day with events to calculate the position of the events.
-        while (tempEvents.size() > 0) {
-            ArrayList<EventRect> eventRects = new ArrayList<>(tempEvents.size());
+    private void computePositions(List<EventRect> eventRects, long minimumDurationMillis) {
+        doComputePositions(eventRects, minimumDurationMillis, false);
+        doComputePositions(eventRects, minimumDurationMillis, true);
 
-            // Get first event for a day.
-            EventRect eventRect1 = tempEvents.remove(0);
-            eventRects.add(eventRect1);
+        for (EventRect eventRect : eventRects) {
+            eventRect.width = 1f / eventRect.getMaxColumns();
+            eventRect.left = eventRect.getColumn() * eventRect.width;
 
-            int i = 0;
-            while (i < tempEvents.size()) {
-                // Collect all other events for same day.
-                EventRect eventRect2 = tempEvents.get(i);
-                if (isSameDay(eventRect1.event.getStartTime(), eventRect2.event.getStartTime())) {
-                    tempEvents.remove(i);
-                    eventRects.add(eventRect2);
-                } else {
-                    i++;
-                }
+            if (!eventRect.event.isAllDay()) {
+                final float minimumDurationMin = (float) Math.floor(minimumDurationMillis / (1000 * 60));
+
+                eventRect.top = eventRect.event.getStartTime().get(Calendar.HOUR_OF_DAY) * 60 + eventRect.event.getStartTime().get(Calendar.MINUTE);
+                eventRect.bottom = Math.max(eventRect.event.getEndTime().get(Calendar.HOUR_OF_DAY) * 60 + eventRect.event.getEndTime().get(Calendar.MINUTE), eventRect.top + minimumDurationMin);
+            } else {
+                eventRect.top = 0;
+                eventRect.bottom = mAllDayEventHeight;
             }
-            computePositionOfEvents(eventRects);
         }
+    }
+
+    private void doComputePositions(List<EventRect> eventRects, long minimumDurationMillis, boolean doAlldayEvents) {
+        final ArrayList<EventRect> activeList = new ArrayList<>();
+        final ArrayList<EventRect> groupList = new ArrayList<>();
+
+        if (minimumDurationMillis < 0) {
+            minimumDurationMillis = 0;
+        }
+
+        long colMask = 0;
+        int maxCols = 0;
+        for (EventRect eventRect : eventRects) {
+            // Process all-day events separately
+            if (eventRect.event.isAllDay() != doAlldayEvents)
+                continue;
+
+            if (!doAlldayEvents) {
+                colMask = removeNonAlldayActiveEvents(
+                        eventRect, activeList.iterator(), minimumDurationMillis, colMask);
+            } else {
+                colMask = removeAlldayActiveEvents(eventRect, activeList.iterator(), colMask);
+            }
+
+            // If the active list is empty, then reset the max columns, clear
+            // the column bit mask, and empty the groupList.
+            if (activeList.isEmpty()) {
+                for (EventRect activeEventRect : groupList) {
+                    activeEventRect.setMaxColumns(maxCols);
+                }
+                maxCols = 0;
+                colMask = 0;
+                groupList.clear();
+            }
+
+            // Find the first empty column.  Empty columns are represented by
+            // zero bits in the column mask "colMask".
+            int col = findFirstZeroBit(colMask);
+            if (col == 64)
+                col = 63;
+            colMask |= (1L << col);
+            eventRect.setColumn(col);
+            activeList.add(eventRect);
+            groupList.add(eventRect);
+            int len = activeList.size();
+            if (maxCols < len)
+                maxCols = len;
+        }
+        for (EventRect ev : groupList) {
+            ev.setMaxColumns(maxCols);
+        }
+    }
+
+    private int findFirstZeroBit(long colMask) {
+        for (int ii = 0; ii < 64; ++ii) {
+            if ((colMask & (1L << ii)) == 0)
+                return ii;
+        }
+        return 64;
+    }
+
+    private long removeAlldayActiveEvents(EventRect eventRect, Iterator<EventRect> iterator, long colMask) {
+        // Remove the inactive allday events. An event on the active list
+        // becomes inactive when the end day is less than the current event's
+        // start day.
+        while (iterator.hasNext()) {
+            final EventRect active = iterator.next();
+            final long activeEndDay = active.event.getEndTime().getTimeInMillis() / DateUtils.DAY_IN_MILLIS;
+            final long eventStartDay = eventRect.event.getStartTime().getTimeInMillis() / DateUtils.DAY_IN_MILLIS;
+            if (activeEndDay < eventStartDay) {
+                colMask &= ~(1L << active.getColumn());
+                iterator.remove();
+            }
+        }
+        return colMask;
+    }
+
+    private long removeNonAlldayActiveEvents(EventRect eventRect, Iterator<EventRect> iterator, long minimumDurationMillis, long colMask) {
+        long start = eventRect.event.getStartTime().getTimeInMillis();
+        // Remove the inactive events. An event on the active list
+        // becomes inactive when its end time is less than or equal to
+        // the current event's start time.
+        while (iterator.hasNext()) {
+            final EventRect active = iterator.next();
+
+            final long duration = Math.max(
+                    active.event.getEndTime().getTimeInMillis() - active.event.getStartTime().getTimeInMillis(), minimumDurationMillis);
+            if ((active.event.getStartTime().getTimeInMillis() + duration) <= start) {
+                colMask &= ~(1L << active.getColumn());
+                iterator.remove();
+            }
+        }
+        return colMask;
     }
 
     /**
@@ -1284,11 +1394,10 @@ public class WeekView extends View {
     }
 
     /**
-     * Sort and cache events.
-     * @param events The events to be sorted and cached.
+     * cache events
+     * @param events The events to be cached.
      */
-    private void sortAndCacheEvents(List<? extends WeekViewEvent> events) {
-        sortEvents(events);
+    private void cacheEvents(List<? extends WeekViewEvent> events) {
         for (WeekViewEvent event : events) {
             cacheEvent(event);
         }
@@ -1296,142 +1405,23 @@ public class WeekView extends View {
 
     /**
      * Sorts the events in ascending order.
-     * @param events The events to be sorted.
+     * @param eventRects The events to be sorted.
      */
-    private void sortEvents(List<? extends WeekViewEvent> events) {
-        Collections.sort(events, new Comparator<WeekViewEvent>() {
+    private void sortEventRects(List<EventRect> eventRects) {
+        Collections.sort(eventRects, new Comparator<EventRect>() {
             @Override
-            public int compare(WeekViewEvent event1, WeekViewEvent event2) {
-                long start1 = event1.getStartTime().getTimeInMillis();
-                long start2 = event2.getStartTime().getTimeInMillis();
+            public int compare(EventRect left, EventRect right) {
+                long start1 = left.event.getStartTime().getTimeInMillis();
+                long start2 = right.event.getStartTime().getTimeInMillis();
                 int comparator = start1 > start2 ? 1 : (start1 < start2 ? -1 : 0);
                 if (comparator == 0) {
-                    long end1 = event1.getEndTime().getTimeInMillis();
-                    long end2 = event2.getEndTime().getTimeInMillis();
+                    long end1 = left.event.getEndTime().getTimeInMillis();
+                    long end2 = right.event.getEndTime().getTimeInMillis();
                     comparator = end1 > end2 ? 1 : (end1 < end2 ? -1 : 0);
                 }
                 return comparator;
             }
         });
-    }
-
-    /**
-     * Calculates the left and right positions of each events. This comes handy specially if events
-     * are overlapping.
-     * @param eventRects The events along with their wrapper class.
-     */
-    private void computePositionOfEvents(List<EventRect> eventRects) {
-        // Make "collision groups" for all events that collide with others.
-        List<List<EventRect>> collisionGroups = new ArrayList<List<EventRect>>();
-        for (EventRect eventRect : eventRects) {
-            boolean isPlaced = false;
-
-            outerLoop:
-            for (List<EventRect> collisionGroup : collisionGroups) {
-                for (EventRect groupEvent : collisionGroup) {
-                    if (isEventsCollide(groupEvent.event, eventRect.event) && groupEvent.event.isAllDay() == eventRect.event.isAllDay()) {
-                        collisionGroup.add(eventRect);
-                        isPlaced = true;
-                        break outerLoop;
-                    }
-                }
-            }
-
-            if (!isPlaced) {
-                List<EventRect> newGroup = new ArrayList<EventRect>();
-                newGroup.add(eventRect);
-                collisionGroups.add(newGroup);
-            }
-        }
-
-        for (List<EventRect> collisionGroup : collisionGroups) {
-            expandEventsToMaxWidth(collisionGroup);
-        }
-    }
-
-    /**
-     * Expands all the events to maximum possible width. The events will try to occupy maximum
-     * space available horizontally.
-     * @param collisionGroup The group of events which overlap with each other.
-     */
-    private void expandEventsToMaxWidth(List<EventRect> collisionGroup) {
-        // Expand the events to maximum possible width.
-        List<List<EventRect>> columns = new ArrayList<List<EventRect>>();
-        columns.add(new ArrayList<EventRect>());
-        for (EventRect eventRect : collisionGroup) {
-            boolean isPlaced = false;
-            for (List<EventRect> column : columns) {
-                if (column.size() == 0) {
-                    column.add(eventRect);
-                    isPlaced = true;
-                }
-                else if (!isEventsCollide(eventRect.event, column.get(column.size()-1).event)) {
-                    column.add(eventRect);
-                    isPlaced = true;
-                    break;
-                }
-            }
-            if (!isPlaced) {
-                List<EventRect> newColumn = new ArrayList<EventRect>();
-                newColumn.add(eventRect);
-                columns.add(newColumn);
-            }
-        }
-
-
-        // Calculate left and right position for all the events.
-        // Get the maxRowCount by looking in all columns.
-        int maxRowCount = 0;
-        for (List<EventRect> column : columns){
-            maxRowCount = Math.max(maxRowCount, column.size());
-        }
-        for (int i = 0; i < maxRowCount; i++) {
-            // Set the left and right values of the event.
-            float j = 0;
-            for (List<EventRect> column : columns) {
-                if (column.size() >= i+1) {
-                    EventRect eventRect = column.get(i);
-                    eventRect.width = 1f / columns.size();
-                    eventRect.left = j / columns.size();
-                    if(!eventRect.event.isAllDay()) {
-                        eventRect.top = eventRect.event.getStartTime().get(Calendar.HOUR_OF_DAY) * 60 + eventRect.event.getStartTime().get(Calendar.MINUTE);
-                        eventRect.bottom = eventRect.event.getEndTime().get(Calendar.HOUR_OF_DAY) * 60 + eventRect.event.getEndTime().get(Calendar.MINUTE);
-                    }
-                    else{
-                        eventRect.top = 0;
-                        eventRect.bottom = mAllDayEventHeight;
-                    }
-                    mEventRects.add(eventRect);
-                }
-                j++;
-            }
-        }
-    }
-
-
-    /**
-     * Checks if two events overlap.
-     * @param event1 The first event.
-     * @param event2 The second event.
-     * @return true if the events overlap.
-     */
-    private boolean isEventsCollide(WeekViewEvent event1, WeekViewEvent event2) {
-        long start1 = event1.getStartTime().getTimeInMillis();
-        long end1 = event1.getEndTime().getTimeInMillis();
-        long start2 = event2.getStartTime().getTimeInMillis();
-        long end2 = event2.getEndTime().getTimeInMillis();
-        return !((start1 >= end2) || (end1 <= start2));
-    }
-
-
-    /**
-     * Checks if time1 occurs after (or at the same time) time2.
-     * @param time1 The time to check.
-     * @param time2 The time to check against.
-     * @return true if time1 and time2 are equal or if time1 is after time2. Otherwise false.
-     */
-    private boolean isTimeAfterOrEquals(Calendar time1, Calendar time2) {
-        return !(time1 == null || time2 == null) && time1.getTimeInMillis() >= time2.getTimeInMillis();
     }
 
     @Override

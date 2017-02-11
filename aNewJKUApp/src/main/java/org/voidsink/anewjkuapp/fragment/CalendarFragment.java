@@ -30,6 +30,8 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.graphics.drawable.LayerDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -62,6 +64,7 @@ import org.voidsink.anewjkuapp.update.ImportCalendarTask;
 import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
+import org.voidsink.anewjkuapp.utils.UIUtils;
 import org.voidsink.sectionedrecycleradapter.SectionedRecyclerViewAdapter;
 
 import java.text.SimpleDateFormat;
@@ -159,10 +162,19 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.calendar, menu);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            MenuItem menuItem = menu.findItem(R.id.action_cal_goto_today);
+            // replace the default top layer drawable of the today icon with a
+            // custom drawable that shows the day of the month of today
+            LayerDrawable icon = (LayerDrawable) menuItem.getIcon();
+            UIUtils.setTodayIcon(icon, getContext(), "");
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         switch (item.getItemId()) {
             case R.id.action_refresh_calendar:
                 Intent mUpdateService = new Intent(getActivity(), UpdateService.class);
@@ -294,6 +306,7 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
                 data.moveToPrevious();
                 while (data.moveToNext()) {
                     mEvents.add(new CalendarListEvent(
+                            getContext(),
                             data.getLong(CalendarUtils.COLUMN_EVENT_ID),
                             mColors.get(data
                                     .getInt(CalendarUtils.COLUMN_EVENT_CAL_ID)),
@@ -301,7 +314,8 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
                             data.getString(CalendarUtils.COLUMN_EVENT_DESCRIPTION),
                             data.getString(CalendarUtils.COLUMN_EVENT_LOCATION),
                             data.getLong(CalendarUtils.COLUMN_EVENT_DTSTART),
-                            data.getLong(CalendarUtils.COLUMN_EVENT_DTEND)));
+                            data.getLong(CalendarUtils.COLUMN_EVENT_DTEND),
+                            data.getInt(CalendarUtils.COLUMN_EVENT_ALL_DAY) == 1));
                 }
             }
 

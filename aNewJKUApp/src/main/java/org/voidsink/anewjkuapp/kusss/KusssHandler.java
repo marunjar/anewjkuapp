@@ -98,7 +98,7 @@ public class KusssHandler {
     private static final String SELECT_MY_STUDIES = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > form > table > tbody > tr[class]:has(td)";
 
     private static final int TIMEOUT_LOGIN = 15 * 1000; // 15s
-    private static final int TIMEOUT_SEARCH_EXAM_BY_LVA = 10 * 1000; //10s
+    private static final int TIMEOUT_SEARCH_EXAM_BY_LVA = 15 * 1000; //15s
 
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
@@ -278,6 +278,10 @@ public class KusssHandler {
     }
 
     private boolean isLoggedIn(Context c, Document doc) {
+        if (!isNetworkAvailable(c)) {
+            return false;
+        }
+
         Elements logoutAction = doc.select(SELECT_LOGOUT);
 
         return (logoutAction.size() > 0);
@@ -333,6 +337,12 @@ public class KusssHandler {
                 conn.disconnect();
                 return null;
             }
+
+            if (!isNetworkAvailable(c)) {
+                conn.disconnect();
+                return null;
+            }
+
             final long length = copyStream(conn.getInputStream(), data);
 
             conn.disconnect();
@@ -392,6 +402,12 @@ public class KusssHandler {
                 conn.disconnect();
                 return null;
             }
+
+            if (!isNetworkAvailable(c)) {
+                conn.disconnect();
+                return null;
+            }
+
             final long length = copyStream(conn.getInputStream(), data);
 
             conn.disconnect();
@@ -616,6 +632,9 @@ public class KusssHandler {
     }
 
     public List<Exam> getNewExamsByCourseId(Context c, List<Course> courses, List<Term> terms) {
+        if (!isNetworkAvailable(c)) {
+            return null;
+        }
 
         List<Exam> exams = new ArrayList<>();
         try {
@@ -678,6 +697,10 @@ public class KusssHandler {
     }
 
     private List<Exam> getNewExamsByCourseId(Context c, String courseId) {
+        if (!isNetworkAvailable(c)) {
+            return null;
+        }
+
         List<Exam> exams = new ArrayList<>();
         try {
             final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);

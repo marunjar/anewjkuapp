@@ -127,8 +127,8 @@ public class ImportExamTask implements Callable<Void> {
     }
 
 
-    private String getEventString(Exam exam) {
-        return AppUtils.getEventString(exam.getDtStart().getTime(), exam.getDtEnd().getTime(), exam.getTitle());
+    private String getEventString(Context c, Exam exam) {
+        return AppUtils.getEventString(c, exam.getDtStart().getTime(), exam.getDtEnd().getTime(), exam.getTitle(), false);
     }
 
     @Override
@@ -230,7 +230,7 @@ public class ImportExamTask implements Callable<Void> {
                                         new Date(examDtStart), exam.getDtStart())
                                         || !new Date(examDtEnd).equals(exam.getDtEnd())
                                         || !examLocation.equals(exam.getLocation())) {
-                                    mNewExamNotification.addUpdate(getEventString(exam));
+                                    mNewExamNotification.addUpdate(getEventString(mContext, exam));
                                 }
 
                                 batch.add(ContentProviderOperation
@@ -284,7 +284,7 @@ public class ImportExamTask implements Callable<Void> {
                                     "Scheduling insert: " + exam.getTerm()
                                             + " " + exam.getCourseId());
 
-                            mNewExamNotification.addInsert(getEventString(exam));
+                            mNewExamNotification.addInsert(getEventString(mContext, exam));
 
                             mSyncResult.stats.numInserts++;
                         }

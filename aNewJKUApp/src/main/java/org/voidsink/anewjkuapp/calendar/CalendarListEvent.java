@@ -41,9 +41,10 @@ public class CalendarListEvent implements CalendarListItem {
     private final String mLocation;
     private final long mDtStart;
     private final long mDtEnd;
+    private final boolean mAllDay;
 
-    public CalendarListEvent(long eventId, int color, String title, String descr,
-                             String location, long dtStart, long dtEnd) {
+    public CalendarListEvent(Context c, long eventId, int color, String title, String descr,
+                             String location, long dtStart, long dtEnd, boolean allDay) {
         this.mEventId = eventId;
         this.mColor = color;
         this.mTitle = title;
@@ -51,11 +52,12 @@ public class CalendarListEvent implements CalendarListItem {
         this.mLocation = location;
         this.mDtStart = dtStart;
         this.mDtEnd = dtEnd;
+        this.mAllDay = allDay;
 
         Date mDtStart = new Date(dtStart);
         Date mDtEnd = new Date(dtEnd);
 
-        this.mTime = AppUtils.getTimeString(mDtStart, mDtEnd);
+        this.mTime = AppUtils.getTimeString(c, mDtStart, mDtEnd, mAllDay);
     }
 
     @Override
@@ -90,6 +92,10 @@ public class CalendarListEvent implements CalendarListItem {
 
     public long getDtEnd() {
         return mDtEnd;
+    }
+
+    public boolean isAllDay() {
+        return mAllDay;
     }
 
     public String getDescr() {
