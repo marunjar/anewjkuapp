@@ -1,8 +1,8 @@
 apply plugin: 'java'
 
 dependencies {
-    compile 'org.jsoup:jsoup:1.8.1'
-    compile 'org.mnode.ical4j:ical4j:1.0.6'
+    compile 'org.jsoup:jsoup:1.10.2'
+    compile 'org.mnode.ical4j:ical4j:1.0.7'
 }
 
 

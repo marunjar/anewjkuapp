@@ -467,13 +467,15 @@ public final class CalendarUtils {
                                 }
 
                                 if (!TextUtils.isEmpty(eventKusssId)) {
-                                    Uri deleteUri = calUri.buildUpon()
-                                            .appendPath(eventId)
-                                            .build();
-                                    Log.d(TAG, "Scheduling delete: " + deleteUri);
-                                    batch.add(ContentProviderOperation
-                                            .newDelete(deleteUri)
-                                            .build());
+                                    if (eventKusssId.startsWith("at-jku-kusss-exam-") || eventKusssId.startsWith("at-jku-kusss-coursedate-")) {
+                                        Uri deleteUri = calUri.buildUpon()
+                                                .appendPath(eventId)
+                                                .build();
+                                        Log.d(TAG, "Scheduling delete: " + deleteUri);
+                                        batch.add(ContentProviderOperation
+                                                .newDelete(deleteUri)
+                                                .build());
+                                    }
                                 }
                             }
                         }
