@@ -1,2 +1,0 @@
-# kusssLibrary
-foo
