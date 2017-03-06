@@ -10,42 +10,55 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/mensa_menu_item_name"
-            style="@style/Text.ItemTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/separator_top_bottom_margin"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/mensa_menu_item_price"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Title" />
-
-        <TextView
-            android:id="@+id/mensa_menu_item_price"
-            style="@style/Text.ItemTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/separator_top_bottom_margin"
-            android:textColor="?attr/colorAccent"
-            android:textStyle="bold"
-            app:layout_constraintBaseline_toBaselineOf="@+id/mensa_menu_item_name"
-            app:layout_constraintLeft_toRightOf="@+id/mensa_menu_item_name"
-            app:layout_constraintRight_toLeftOf="@+id/mensa_menu_item_oeh_bonus"
-            tools:text="Price" />
-
-        <TextView
-            android:id="@+id/mensa_menu_item_oeh_bonus"
-            style="@style/Text.Body2"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/mensa_title_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="@dimen/separator_top_bottom_margin"
-            android:textColor="?android:attr/textColorSecondary"
-            app:layout_constraintBaseline_toBaselineOf="@+id/mensa_menu_item_price"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toRightOf="@+id/mensa_menu_item_price"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            tools:text="ÖH Bonus" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/mensa_menu_item_name"
+                style="@style/Text.ItemTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/separator_top_bottom_margin"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/mensa_menu_item_price"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Title" />
+
+            <TextView
+                android:id="@+id/mensa_menu_item_price"
+                style="@style/Text.ItemTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/separator_top_bottom_margin"
+                android:textColor="?attr/colorAccent"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@+id/mensa_menu_item_name"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toRightOf="@+id/mensa_menu_item_name"
+                app:layout_constraintRight_toLeftOf="@+id/mensa_menu_item_oeh_bonus"
+                tools:text="Price" />
+
+            <TextView
+                android:id="@+id/mensa_menu_item_oeh_bonus"
+                style="@style/Text.Body2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/separator_top_bottom_margin"
+                android:textColor="?android:attr/textColorSecondary"
+                app:layout_constraintBaseline_toBaselineOf="@+id/mensa_menu_item_price"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toRightOf="@+id/mensa_menu_item_price"
+                app:layout_constraintRight_toRightOf="parent"
+                tools:text="ÖH Bonus" />
+
+        </android.support.constraint.ConstraintLayout>
 
         <TextView
             android:id="@+id/mensa_menu_item_soup"
@@ -53,9 +66,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="@dimen/separator_top_bottom_margin"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mensa_menu_item_name"
+            app:layout_constraintTop_toBottomOf="@+id/mensa_title_layout"
             tools:text="Soup" />
 
         <TextView
@@ -65,6 +79,7 @@
             android:layout_height="wrap_content"
             android:minLines="2"
             android:padding="@dimen/separator_top_bottom_margin"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mensa_menu_item_soup"
