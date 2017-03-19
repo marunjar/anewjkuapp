@@ -95,8 +95,8 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:preference-v14:25.2.0'
-    compile 'com.android.support:design:25.2.0'
+    compile 'com.android.support:preference-v14:25.3.0'
+    compile 'com.android.support:design:25.3.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     googleCompile 'com.google.android.gms:play-services-analytics:10.2.0'
     compile 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
