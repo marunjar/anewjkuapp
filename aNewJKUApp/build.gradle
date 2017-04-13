@@ -95,10 +95,10 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:preference-v14:25.3.0'
-    compile 'com.android.support:design:25.3.0'
+    compile 'com.android.support:preference-v14:25.3.1'
+    compile 'com.android.support:design:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    googleCompile 'com.google.android.gms:play-services-analytics:10.2.0'
+    googleCompile 'com.google.android.gms:play-services-analytics:10.2.1'
     compile 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
     compile 'org.mapsforge:mapsforge-core:0.8.0'
     compile 'org.mapsforge:mapsforge-map:0.8.0'
@@ -108,13 +108,13 @@ dependencies {
     compile 'org.jsoup:jsoup:1.10.2'
     compile 'org.mnode.ical4j:ical4j:1.0.7'
 //    compile 'org.mnode.ical4j:ical4j-extensions:1.0.0'
-    debugCompile 'org.slf4j:slf4j-android:1.7.24'
+    debugCompile 'org.slf4j:slf4j-android:1.7.25'
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
     //compile 'com.github.alamkanak:android-week-view:1.2.3'
     compile 'de.cketti.library.changelog:ckchangelog:1.2.2'
-    compile('com.mikepenz:aboutlibraries:5.9.4@aar') {
+    compile('com.mikepenz:aboutlibraries:5.9.5@aar') {
         transitive = true
     }
     compile project(':sectionedRecyclerAdapter')
