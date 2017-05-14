@@ -253,9 +253,7 @@
     <string name="all_terms">alle Semester</string>
     <string name="about_force_logout">Ausloggen</string>
     <string name="menu_exam_register">in KUSSS anzeigen</string>
-    <string name="action_show_rss_entry_in_browser">in Browser anzeigen</string>
     <string name="title_curricula">Studienrichtungen</string>
-    <string name="content_descr_rss_feed_item_image">Das erste Bild das in dem News-Eintrag vorkommt.</string>
     <string name="missing_app_permission">Berechtigungen fehlen</string>
     <string name="button_ok">OK</string>
 </resources>

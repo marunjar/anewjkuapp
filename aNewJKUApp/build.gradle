@@ -22,7 +22,6 @@ android {
 
         proguardFiles getDefaultProguardFile('proguard-android.txt'),
                 'proguard-rules.txt',
-                'proguard-rules-glide.txt',
                 'proguard-rules-google-play-services.txt',
                 'proguard-rules-ical4j.txt',
                 'proguard-rules-aboutlibraries.pro',
@@ -110,7 +109,6 @@ dependencies {
 //    compile 'org.mnode.ical4j:ical4j-extensions:1.0.0'
     debugCompile 'org.slf4j:slf4j-android:1.7.25'
     compile 'uk.co.chrisjenx:calligraphy:2.3.0'
-    compile 'com.github.bumptech.glide:glide:3.8.0'
     compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
     //compile 'com.github.alamkanak:android-week-view:1.2.3'
     compile 'de.cketti.library.changelog:ckchangelog:1.2.2'
