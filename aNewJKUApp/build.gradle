@@ -97,7 +97,7 @@ dependencies {
     compile 'com.android.support:preference-v14:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    googleCompile 'com.google.android.gms:play-services-analytics:10.2.4'
+    googleCompile 'com.google.android.gms:play-services-analytics:10.2.6'
     compile 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
     compile 'org.mapsforge:mapsforge-core:0.8.0'
     compile 'org.mapsforge:mapsforge-map:0.8.0'
