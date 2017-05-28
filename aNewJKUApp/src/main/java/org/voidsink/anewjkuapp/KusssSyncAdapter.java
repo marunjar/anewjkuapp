@@ -28,7 +28,6 @@ import android.accounts.Account;
 import android.annotation.TargetApi;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Build;
@@ -54,8 +53,6 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
 
     // Global variables
     // Define a variable to contain a content resolver instance
-    private final ContentResolver mContentResolver;
-    private final Context mContext;
     private ExecutorService mExecutorService = null;
 
     /**
@@ -63,12 +60,6 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
      */
     public KusssSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
-        /*
-         * If your app uses a content resolver, get an instance of it from the
-		 * incoming Context
-		 */
-        this.mContext = context;
-        this.mContentResolver = context.getContentResolver();
     }
 
     /**
@@ -79,12 +70,6 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
     public KusssSyncAdapter(Context context, boolean autoInitialize,
                             boolean allowParallelSyncs) {
         super(context, autoInitialize, allowParallelSyncs);
-        /*
-         * If your app uses a content resolver, get an instance of it from the
-		 * incoming Context
-		 */
-        this.mContext = context;
-        this.mContentResolver = context.getContentResolver();
     }
 
     @Override
@@ -92,7 +77,7 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
                               ContentProviderClient provider, SyncResult syncResult) {
 
         if (account == null || account.name == null) {
-            KusssNotificationBuilder.showErrorNotification(mContext,
+            KusssNotificationBuilder.showErrorNotification(getContext(),
                     R.string.notification_error_account_is_null, null);
             syncResult.stats.numAuthExceptions++;
             return;
@@ -100,12 +85,10 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
 
         Log.d(TAG, "starting sync of account: " + account.name);
 
-        if (!KusssHandler.getInstance().isAvailable(mContext,
-                AppUtils.getAccountAuthToken(mContext, account),
-                AppUtils.getAccountName(mContext, account),
-                AppUtils.getAccountPassword(mContext, account))) {
-//            KusssNotificationBuilder.showErrorNotification(mContext,
-//                    R.string.notification_error_account_not_available, null);
+        if (!KusssHandler.getInstance().isAvailable(getContext(),
+                AppUtils.getAccountAuthToken(getContext(), account),
+                AppUtils.getAccountName(getContext(), account),
+                AppUtils.getAccountPassword(getContext(), account))) {
             syncResult.stats.numAuthExceptions++;
             return;
         }
@@ -114,21 +97,21 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
 
         this.mExecutorService = Executors.newSingleThreadExecutor();
         try {
-            AppUtils.executeEm(mExecutorService, mContext,
+            AppUtils.executeEm(mExecutorService, getContext(),
                     new Callable[]{
                             new ImportCurriculaTask(account, extras,
-                                    authority, provider, syncResult, mContext),
+                                    authority, provider, syncResult, getContext()),
                             new ImportCourseTask(account, extras,
-                                    authority, provider, syncResult, mContext),
+                                    authority, provider, syncResult, getContext()),
                             new ImportAssessmentTask(account, extras,
-                                    authority, provider, syncResult, mContext),
+                                    authority, provider, syncResult, getContext()),
                             new ImportExamTask(account, extras,
-                                    authority, provider, syncResult, mContext)},
+                                    authority, provider, syncResult, getContext())},
                     true);
 
         } finally {
             this.mExecutorService.shutdown();
-            KusssHandler.getInstance().logout(mContext);
+            KusssHandler.getInstance().logout(getContext());
         }
     }
 

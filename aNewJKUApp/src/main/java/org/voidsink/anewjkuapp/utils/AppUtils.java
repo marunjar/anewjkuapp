@@ -48,7 +48,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.text.format.Time;
 import android.util.Log;
 
 import org.voidsink.anewjkuapp.ImportPoiTask;
@@ -90,6 +89,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+import java.util.TimeZone;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -819,9 +819,9 @@ public class AppUtils {
 
     public static String getTimeString(Context c, Date dtStart, Date dtEnd, boolean allDay) {
         int flags = 0;
-        String tzString = Time.getCurrentTimezone();
+        String tzString = TimeZone.getDefault().getID();
         if (allDay) {
-            tzString = Time.TIMEZONE_UTC;
+            tzString = "UTC";
         } else {
             flags = DateUtils.FORMAT_SHOW_TIME;
         }
@@ -937,7 +937,7 @@ public class AppUtils {
     public static Locale getLocale(Context context) {
         Locale locale = null;
         try {
-            locale = context.getResources().getConfiguration().locale;
+            locale = context.getResources().getConfiguration().getLocales().get(0);
         } catch (Exception e) {
             locale = Locale.getDefault();
         }

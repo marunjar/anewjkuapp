@@ -26,7 +26,6 @@
 package org.voidsink.anewjkuapp.base;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -60,20 +59,10 @@ public abstract class RecyclerArrayAdapter<T, VH extends RecyclerView.ViewHolder
 
     public void addAll(Collection<? extends T> collection) {
         if (collection != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                items.addAll(collection);
-            } else {
-                for (T item : collection) {
-                    items.add(item);
-                }
-            }
+            items.addAll(collection);
             notifyDataSetChanged();
         }
     }
-
-//    public final void addAll(T... items) {
-//        addAll(Arrays.asList(items));
-//    }
 
     public void clear() {
         items.clear();

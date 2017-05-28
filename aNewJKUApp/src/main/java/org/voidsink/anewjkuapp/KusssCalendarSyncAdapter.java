@@ -54,7 +54,6 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 
     // Global variables
     // Define a variable to contain a content resolver instance
-    private final Context mContext;
     private final CalendarBuilder mCalendarBuilder;
     private ExecutorService mExecutorService = null;
 
@@ -67,7 +66,6 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
          * If your app uses a content resolver, get an instance of it from the
 		 * incoming Context
 		 */
-        this.mContext = context;
         this.mCalendarBuilder = CalendarUtils.newCalendarBuilder(); // must create in main
     }
 
@@ -83,7 +81,6 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
          * If your app uses a content resolver, get an instance of it from the
 		 * incoming Context
 		 */
-        this.mContext = context;
         this.mCalendarBuilder = CalendarUtils.newCalendarBuilder(); // must create in main
     }
 
@@ -92,7 +89,7 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
                               ContentProviderClient provider, SyncResult syncResult) {
 
         if (account == null || account.name == null) {
-            KusssNotificationBuilder.showErrorNotification(mContext,
+            KusssNotificationBuilder.showErrorNotification(getContext(),
                     R.string.notification_error_account_is_null, null);
             syncResult.stats.numAuthExceptions++;
             return;
@@ -100,10 +97,10 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 
         Log.d(TAG, "starting sync of account: " + account.name);
 
-        if (!KusssHandler.getInstance().isAvailable(mContext,
-                AppUtils.getAccountAuthToken(mContext, account),
-                AppUtils.getAccountName(mContext, account),
-                AppUtils.getAccountPassword(mContext, account))) {
+        if (!KusssHandler.getInstance().isAvailable(getContext(),
+                AppUtils.getAccountAuthToken(getContext(), account),
+                AppUtils.getAccountName(getContext(), account),
+                AppUtils.getAccountPassword(getContext(), account))) {
             syncResult.stats.numAuthExceptions++;
             return;
         }
@@ -112,7 +109,7 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 
         mExecutorService = Executors.newSingleThreadExecutor();
         try {
-            AppUtils.executeEm(mExecutorService, mContext,
+            AppUtils.executeEm(mExecutorService, getContext(),
                     new Callable[]{
                             new ImportCalendarTask(account, extras,
                                     authority, provider, syncResult, getContext(),
@@ -125,7 +122,7 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
             );
         } finally {
             mExecutorService.shutdown();
-            KusssHandler.getInstance().logout(mContext);
+            KusssHandler.getInstance().logout(getContext());
         }
     }
 

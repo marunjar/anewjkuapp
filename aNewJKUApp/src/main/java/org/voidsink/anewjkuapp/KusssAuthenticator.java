@@ -67,10 +67,11 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
 
     private static final String TAG = KusssAuthenticator.class.getSimpleName();
 
-    private Context mContext = null;
+    private final Context mContext;
 
     public KusssAuthenticator(Context context) {
         super(context);
+
         this.mContext = context;
     }
 

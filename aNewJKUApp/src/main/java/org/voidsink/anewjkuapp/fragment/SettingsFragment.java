@@ -26,7 +26,6 @@
 package org.voidsink.anewjkuapp.fragment;
 
 import android.app.ProgressDialog;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -76,22 +75,20 @@ public class SettingsFragment extends BasePreferenceFragment {
     @Override
     public boolean onPreferenceTreeClick(Preference preference) {
         if (preference instanceof PreferenceScreen) {
-            if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
-                if (preference.getFragment() != null) {
-                    try {
-                        Class<?> clazz = getActivity().getClassLoader().loadClass(preference.getFragment());
-                        if (PreferenceFragmentCompat.class.isAssignableFrom(clazz)) {
-                            Fragment pf = (Fragment) clazz.newInstance();
-                            getActivity().getSupportFragmentManager()
-                                    .beginTransaction()
-                                    .replace(R.id.content_container, pf, SettingsActivity.ARG_SHOW_FRAGMENT)
-                                    .addToBackStack(pf.getClass().getCanonicalName())
-                                    .commit();
-                            return true;
-                        }
-                    } catch (Exception e) {
-                        Analytics.sendException(getActivity(), e, false);
+            if (preference.getFragment() != null) {
+                try {
+                    Class<?> clazz = getActivity().getClassLoader().loadClass(preference.getFragment());
+                    if (PreferenceFragmentCompat.class.isAssignableFrom(clazz)) {
+                        Fragment pf = (Fragment) clazz.newInstance();
+                        getActivity().getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.content_container, pf, SettingsActivity.ARG_SHOW_FRAGMENT)
+                                .addToBackStack(pf.getClass().getCanonicalName())
+                                .commit();
+                        return true;
                     }
+                } catch (Exception e) {
+                    Analytics.sendException(getActivity(), e, false);
                 }
             }
         }
@@ -256,14 +253,6 @@ public class SettingsFragment extends BasePreferenceFragment {
                     return true;
                 }
             });
-
-            if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                // disable calendar extension before ICS
-                calendarLva.setEnabled(false);
-                findPreference(PreferenceWrapper.PREF_EXTEND_CALENDAR_LVA).setEnabled(false);
-                calendarExam.setEnabled(false);
-                findPreference(PreferenceWrapper.PREF_EXTEND_CALENDAR_EXAM).setEnabled(false);
-            }
         }
 
         @Override
