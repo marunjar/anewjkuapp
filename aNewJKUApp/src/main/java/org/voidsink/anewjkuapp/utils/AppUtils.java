@@ -926,9 +926,13 @@ public class AppUtils {
     private static float mLastHue = new Random(System.currentTimeMillis()).nextFloat() * 360;
 
     public static Locale getLocale(Context context) {
-        Locale locale = null;
+        Locale locale;
         try {
-            locale = context.getResources().getConfiguration().getLocales().get(0);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                locale = context.getResources().getConfiguration().getLocales().get(0);
+            } else {
+                locale = context.getResources().getConfiguration().locale;
+            }
         } catch (Exception e) {
             locale = Locale.getDefault();
         }

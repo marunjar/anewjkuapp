@@ -25,6 +25,7 @@
 
 package org.voidsink.anewjkuapp.calendar;
 
+import android.annotation.TargetApi;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.CalendarContract;
@@ -133,6 +134,7 @@ public final class CalendarContractWrapper {
             return CalendarContract.Calendars._ID;
         }
 
+        @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
         public static String ALLOWED_ATTENDEE_TYPES() {
             return CalendarContract.Calendars.ALLOWED_ATTENDEE_TYPES;
         }
