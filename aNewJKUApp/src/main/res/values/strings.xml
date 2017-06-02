@@ -173,7 +173,6 @@
     <string name="progress_load_calendar">Termine werden geladen…</string>
     <string name="progress_load_map_files">Karten werden geladen…</string>
     <string name="progress_login">Anmelden…</string>
-    <string name="progress_load_feed">News werden geladen…</string>
 
     <string name="mensa_menu_not_available">kein Speiseplan verfügbar</string>
     <string name="mensa_menu_today">Heute</string>
@@ -219,12 +218,6 @@
     <string name="account_login_failed_wrong_pwd">Anmeldung fehlgeschlagen: falsches Passwort</string>
     <string name="account_login_failed_wrong_auth_token">Anmeldung fehlgeschlagen: falscher Authentifizierungstoken</string>
     <string name="account_login">Anmelden</string>
-
-    <string name="feed_title_oeh" translatable="false">ÖH</string>
-    <string name="feed_title_rewi" translatable="false">ReWi</string>
-    <string name="feed_title_sowi" translatable="false">SoWi</string>
-    <string name="feed_title_tnf" translatable="false">TNF</string>
-    <string name="feed_title_med" translatable="false">Medizin</string>
 
     <string name="studies_is_standard">Standard</string>
     <string name="curriculum_is_standard_yes">Ja</string>
