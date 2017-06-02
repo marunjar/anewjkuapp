@@ -150,7 +150,6 @@
     <string name="notification_sync_lva_loading">Loading courses</string>
     <string name="notification_sync_lva_saving">Saving courses</string>
     <string name="notification_sync_lva_updating">Updating courses</string>
-    <string name="progress_load_feed">Loading news…</string>
     <string name="pref_stats_positive_grades_only_title">Improved grade point average</string>
     <string name="pref_stats_positive_grades_only_summary">Grade point average is calculated for positive grades only</string>
     <string name="notification_sync_curricula">Synchronizing curricula</string>
