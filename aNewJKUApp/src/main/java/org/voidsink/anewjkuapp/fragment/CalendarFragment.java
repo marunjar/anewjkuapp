@@ -191,24 +191,28 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
     }
 
     private void loadMoreData() {
-        now = System.currentTimeMillis(); // if someone changed the time since last click
+        if (this.isVisible() && !getLoaderManager().hasRunningLoaders()) {
+            now = System.currentTimeMillis(); // if someone changed the time since last click
 
-        // increase in month steps
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(then);
+            // increase in month steps
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeInMillis(then);
 
-        then += cal.getActualMaximum(Calendar.DAY_OF_MONTH) * DateUtils.DAY_IN_MILLIS;
+            then += cal.getActualMaximum(Calendar.DAY_OF_MONTH) * DateUtils.DAY_IN_MILLIS;
 
-        // set button text
-        setButtonLoadText();
+            // set button text
+            setButtonLoadText();
 
-        Analytics.eventLoadMoreEvents(getContext(), then - now);
+            Analytics.eventLoadMoreEvents(getContext(), then - now);
 
-        loadData();
+            loadData();
+        }
     }
 
     private void loadData() {
-        getLoaderManager().restartLoader(0, null, this);
+        if (this.isVisible() && !getLoaderManager().hasRunningLoaders()) {
+            getLoaderManager().restartLoader(0, null, this);
+        }
     }
 
     @Override

@@ -78,7 +78,9 @@ public abstract class MensaFragmentDetail extends BaseFragment implements Loader
     }
 
     private void updateData() {
-        getLoaderManager().restartLoader(0, null, this);
+        if (this.isVisible() && !getLoaderManager().hasRunningLoaders()) {
+            getLoaderManager().restartLoader(0, null, this);
+        }
     }
 
     protected abstract MenuLoader createLoader();

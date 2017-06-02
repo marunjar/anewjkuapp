@@ -117,18 +117,20 @@ public class UIUtils {
      * @param icon - today's icon from the options menu
      */
     public static void setTodayIcon(LayerDrawable icon, Context c, String timezone) {
-        DayOfMonthDrawable today;
+        DayOfMonthDrawable today = null;
 
         // Reuse current drawable if possible
         Drawable currentDrawable = icon.findDrawableByLayerId(R.id.today_icon_day);
         if (currentDrawable != null && currentDrawable instanceof DayOfMonthDrawable) {
             today = (DayOfMonthDrawable) currentDrawable;
-        } else {
+        } else if (c != null) {
             today = new DayOfMonthDrawable(c);
         }
         // Set the day and update the icon
-        today.setDayOfMonth(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-        icon.mutate();
-        icon.setDrawableByLayerId(R.id.today_icon_day, today);
+        if (today != null) {
+            today.setDayOfMonth(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+            icon.mutate();
+            icon.setDrawableByLayerId(R.id.today_icon_day, today);
+        }
     }
 }
