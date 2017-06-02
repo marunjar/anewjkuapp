@@ -243,6 +243,10 @@ public class MapFragment extends BaseFragment implements
     private void finishSearch(Uri uri) {
         Log.i(TAG, "finish search: " + uri.toString());
 
+        if (uri.getScheme() == null && uri.toString().contains(PoiContentContract.AUTHORITY)) {
+            uri = Uri.parse(String.format("content://%1$s", uri));
+        }
+
         // jump to point with given Uri
         ContentResolver cr = getActivity().getContentResolver();
 
