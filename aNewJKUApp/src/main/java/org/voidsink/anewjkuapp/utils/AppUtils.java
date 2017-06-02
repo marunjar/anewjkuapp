@@ -30,7 +30,6 @@ import android.accounts.AccountManager;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
-import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.SearchManager;
@@ -557,23 +556,15 @@ public class AppUtils {
         return AccountManager.get(context).getPassword(account);
     }
 
-    @SuppressLint("NewApi")
     public static String getAccountAuthToken(Context context, Account account) {
         if (account == null) {
             return null;
         }
 
         AccountManager am = AccountManager.get(context);
-        AccountManagerFuture<Bundle> response = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            response = am.getAuthToken(account,
-                    KusssAuthenticator.AUTHTOKEN_TYPE_READ_ONLY, null, true,
-                    null, null);
-        } else {
-            response = am.getAuthToken(account,
-                    KusssAuthenticator.AUTHTOKEN_TYPE_READ_ONLY, null, true, null,
-                    null);
-        }
+        AccountManagerFuture<Bundle> response = am.getAuthToken(account,
+                KusssAuthenticator.AUTHTOKEN_TYPE_READ_ONLY, null, true,
+                null, null);
 
         if (response == null) return null;
 
@@ -854,7 +845,7 @@ public class AppUtils {
             Intent intent = new Intent(Intent.ACTION_VIEW)
                     .setData(uri);
             context.startActivity(intent);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+        } else {
             Uri.Builder builder = CalendarContractWrapper.CONTENT_URI().buildUpon();
             builder.appendPath("time");
             ContentUris.appendId(builder, dtStart);

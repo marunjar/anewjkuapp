@@ -150,26 +150,19 @@ public final class CalendarUtils {
                     displayName);
             values.put(CalendarContractWrapper.Calendars.CALENDAR_COLOR(), color);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                values.put(CalendarContractWrapper.Calendars.CALENDAR_ACCESS_LEVEL(),
-                        CalendarContractWrapper.Calendars.CAL_ACCESS_OWNER());
-            } else {
-                values.put(CalendarContractWrapper.Calendars.CALENDAR_ACCESS_LEVEL(),
-                        CalendarContractWrapper.Calendars.CAL_ACCESS_READ());
-            }
+            values.put(CalendarContractWrapper.Calendars.CALENDAR_ACCESS_LEVEL(),
+                    CalendarContractWrapper.Calendars.CAL_ACCESS_OWNER());
 
             values.put(CalendarContractWrapper.Calendars.SYNC_EVENTS(), 1);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                values.put(CalendarContractWrapper.Calendars.VISIBLE(), 1);
+            values.put(CalendarContractWrapper.Calendars.VISIBLE(), 1);
 
-                values.put(
-                        CalendarContractWrapper.Calendars.CAN_PARTIALLY_UPDATE(), 0);
+            values.put(
+                    CalendarContractWrapper.Calendars.CAN_PARTIALLY_UPDATE(), 0);
 
-                values.put(
-                        CalendarContractWrapper.Calendars.ALLOWED_ATTENDEE_TYPES(),
-                        CalendarContractWrapper.Attendees.TYPE_NONE());
-            }
+            values.put(
+                    CalendarContractWrapper.Calendars.ALLOWED_ATTENDEE_TYPES(),
+                    CalendarContractWrapper.Attendees.TYPE_NONE());
 
             return context.getContentResolver().insert(target, values);
         } catch (Exception e) {
@@ -443,25 +436,22 @@ public final class CalendarUtils {
                                 String eventId = c.getString(COLUMN_EVENT_ID);
                                 //                        Log.d(TAG, "---------");
                                 String eventKusssId = null;
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 
-                                    // get kusssId from extended properties
-                                    Cursor c2 = provider.query(CalendarContract.ExtendedProperties.CONTENT_URI, CalendarUtils.EXTENDED_PROPERTIES_PROJECTION,
-                                            CalendarContract.ExtendedProperties.EVENT_ID + " = ?",
-                                            new String[]{eventId},
-                                            null);
+                                // get kusssId from extended properties
+                                Cursor c2 = provider.query(CalendarContract.ExtendedProperties.CONTENT_URI, CalendarUtils.EXTENDED_PROPERTIES_PROJECTION,
+                                        CalendarContract.ExtendedProperties.EVENT_ID + " = ?",
+                                        new String[]{eventId},
+                                        null);
 
-                                    if (c2 != null) {
-                                        while (c2.moveToNext()) {
-                                            if (c2.getString(1).contains(EXTENDED_PROPERTY_NAME_KUSSS_ID)) {
-                                                eventKusssId = c2.getString(2);
-                                            }
+                                if (c2 != null) {
+                                    while (c2.moveToNext()) {
+                                        if (c2.getString(1).contains(EXTENDED_PROPERTY_NAME_KUSSS_ID)) {
+                                            eventKusssId = c2.getString(2);
                                         }
-                                        c2.close();
                                     }
-                                } else {
-                                    eventKusssId = c.getString(COLUMN_EVENT_KUSSS_ID);
+                                    c2.close();
                                 }
+
                                 if (TextUtils.isEmpty(eventKusssId)) {
                                     eventKusssId = c.getString(COLUMN_EVENT_KUSSS_ID_LEGACY);
                                 }

@@ -354,16 +354,15 @@ public class ImportCalendarTask implements Callable<Void> {
 
 //                        Log.d(TAG, "---------");
                         eventKusssId = null;
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 
-                            // get kusssId from extended properties
-                            Cursor c2 = mProvider.query(CalendarContract.ExtendedProperties.CONTENT_URI, CalendarUtils.EXTENDED_PROPERTIES_PROJECTION,
-                                    CalendarContract.ExtendedProperties.EVENT_ID + " = ?",
-                                    new String[]{eventId},
-                                    null);
+                        // get kusssId from extended properties
+                        Cursor c2 = mProvider.query(CalendarContract.ExtendedProperties.CONTENT_URI, CalendarUtils.EXTENDED_PROPERTIES_PROJECTION,
+                                CalendarContract.ExtendedProperties.EVENT_ID + " = ?",
+                                new String[]{eventId},
+                                null);
 
-                            if (c2 != null) {
-                                while (c2.moveToNext()) {
+                        if (c2 != null) {
+                            while (c2.moveToNext()) {
 
 //                                    String extra = "";
 //                                    for (int i = 0; i < c2.getColumnCount(); i++) {
@@ -371,15 +370,13 @@ public class ImportCalendarTask implements Callable<Void> {
 //                                    }
 //                                    Log.d(TAG, "Extended: " + extra);
 
-                                    if (c2.getString(1).contains(CalendarUtils.EXTENDED_PROPERTY_NAME_KUSSS_ID)) {
-                                        eventKusssId = c2.getString(2);
-                                    }
+                                if (c2.getString(1).contains(CalendarUtils.EXTENDED_PROPERTY_NAME_KUSSS_ID)) {
+                                    eventKusssId = c2.getString(2);
                                 }
-                                c2.close();
                             }
-                        } else {
-                            eventKusssId = c.getString(CalendarUtils.COLUMN_EVENT_KUSSS_ID);
+                            c2.close();
                         }
+
                         if (TextUtils.isEmpty(eventKusssId)) {
                             eventKusssId = c.getString(CalendarUtils.COLUMN_EVENT_KUSSS_ID_LEGACY);
                         }
@@ -479,65 +476,47 @@ public class ImportCalendarTask implements Callable<Void> {
                                 mNotification.addInsert(getEventString(mContext, v));
                             }
 
-                            Builder builder = null;
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                                builder = ContentProviderOperation
-                                        .newInsert(CalendarContractWrapper.Events.CONTENT_URI());
-                            } else {
-                                builder = ContentProviderOperation
-                                        .newInsert(
-                                                KusssContentContract
-                                                        .asEventSyncAdapter(
-                                                                CalendarContractWrapper.Events
-                                                                        .CONTENT_URI(),
-                                                                mCalendarAccountName,
-                                                                mCalendarAccountType))
-                                        .withValue(
-                                                CalendarContractWrapper.Events.SYNC_ID_CUSTOM(),
-                                                v.getUid().getValue());
-                            }
+                            Builder builder = ContentProviderOperation
+                                    .newInsert(CalendarContractWrapper.Events.CONTENT_URI());
 
-                            builder
-                                    .withValue(
-                                            CalendarContractWrapper.Events
-                                                    .CALENDAR_ID(),
-                                            calendarId)
+                            builder.withValue(
+                                    CalendarContractWrapper.Events
+                                            .CALENDAR_ID(),
+                                    calendarId)
                                     .withValues(getContentValuesFromEvent(v))
                                     .withValue(
                                             CalendarContractWrapper.Events
                                                     .EVENT_TIMEZONE(),
                                             TimeZone.getDefault().getID());
 
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                                boolean busy = false;
+                            boolean busy = false;
 
 //                                Property p = v.getProperty(ShowAs.PROPERTY_NAME);
 //                                if (p != null) {
 //                                    busy = p.getValue().equals(ShowAs.BUSY.getValue());
 //                                }
 //                                if (!busy) {
-                                    busy = mCalendarName.equals(CalendarUtils.ARG_CALENDAR_EXAM);
+                            busy = mCalendarName.equals(CalendarUtils.ARG_CALENDAR_EXAM);
 //                                }
 
-                                if (busy) {
-                                    builder.withValue(
-                                            CalendarContractWrapper.Events
-                                                    .AVAILABILITY(),
-                                            CalendarContractWrapper.Events
-                                                    .AVAILABILITY_BUSY());
-                                } else {
-                                    builder.withValue(
-                                            CalendarContractWrapper.Events
-                                                    .AVAILABILITY(),
-                                            CalendarContractWrapper.Events
-                                                    .AVAILABILITY_FREE());
-                                }
-
-                                builder.withValue(CalendarContract.Events.STATUS, CalendarContract.Events.STATUS_TENTATIVE);
-                                builder.withValue(CalendarContract.Events.HAS_ALARM, "0");
-                                builder.withValue(CalendarContract.Events.HAS_ATTENDEE_DATA, "0");
-                                builder.withValue(CalendarContract.Events.HAS_EXTENDED_PROPERTIES, "1");
+                            if (busy) {
+                                builder.withValue(
+                                        CalendarContractWrapper.Events
+                                                .AVAILABILITY(),
+                                        CalendarContractWrapper.Events
+                                                .AVAILABILITY_BUSY());
+                            } else {
+                                builder.withValue(
+                                        CalendarContractWrapper.Events
+                                                .AVAILABILITY(),
+                                        CalendarContractWrapper.Events
+                                                .AVAILABILITY_FREE());
                             }
+
+                            builder.withValue(CalendarContract.Events.STATUS, CalendarContract.Events.STATUS_TENTATIVE);
+                            builder.withValue(CalendarContract.Events.HAS_ALARM, "0");
+                            builder.withValue(CalendarContract.Events.HAS_ATTENDEE_DATA, "0");
+                            builder.withValue(CalendarContract.Events.HAS_EXTENDED_PROPERTIES, "1");
 
                             ContentProviderOperation op = builder.build();
                             Log.d(TAG, "Scheduling insert: " + v.getUid().getValue());
@@ -545,30 +524,29 @@ public class ImportCalendarTask implements Callable<Void> {
 
                             int eventIndex = batch.size() - 1;
 
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                                // add kusssid as extendet property
-                                batch.add(ContentProviderOperation
-                                        .newInsert(
-                                                KusssContentContract
-                                                        .asEventSyncAdapter(
-                                                                CalendarContract.ExtendedProperties.CONTENT_URI,
-                                                                mAccount.name,
-                                                                mAccount.type))
-                                        .withValueBackReference(CalendarContract.ExtendedProperties.EVENT_ID, eventIndex)
-                                        .withValue(CalendarContract.ExtendedProperties.NAME, CalendarUtils.EXTENDED_PROPERTY_NAME_KUSSS_ID)
-                                        .withValue(CalendarContract.ExtendedProperties.VALUE, v.getUid().getValue()).build());
-                                // add location extra for google maps
-                                batch.add(ContentProviderOperation
-                                        .newInsert(
-                                                KusssContentContract
-                                                        .asEventSyncAdapter(
-                                                                CalendarContract.ExtendedProperties.CONTENT_URI,
-                                                                mAccount.name,
-                                                                mAccount.type))
-                                        .withValueBackReference(CalendarContract.ExtendedProperties.EVENT_ID, eventIndex)
-                                        .withValue(CalendarContract.ExtendedProperties.NAME, CalendarUtils.EXTENDED_PROPERTY_LOCATION_EXTRA)
-                                        .withValue(CalendarContract.ExtendedProperties.VALUE, getLocationExtra(v)).build());
-                            }
+                            // add kusssid as extendet property
+                            batch.add(ContentProviderOperation
+                                    .newInsert(
+                                            KusssContentContract
+                                                    .asEventSyncAdapter(
+                                                            CalendarContract.ExtendedProperties.CONTENT_URI,
+                                                            mAccount.name,
+                                                            mAccount.type))
+                                    .withValueBackReference(CalendarContract.ExtendedProperties.EVENT_ID, eventIndex)
+                                    .withValue(CalendarContract.ExtendedProperties.NAME, CalendarUtils.EXTENDED_PROPERTY_NAME_KUSSS_ID)
+                                    .withValue(CalendarContract.ExtendedProperties.VALUE, v.getUid().getValue()).build());
+                            // add location extra for google maps
+                            batch.add(ContentProviderOperation
+                                    .newInsert(
+                                            KusssContentContract
+                                                    .asEventSyncAdapter(
+                                                            CalendarContract.ExtendedProperties.CONTENT_URI,
+                                                            mAccount.name,
+                                                            mAccount.type))
+                                    .withValueBackReference(CalendarContract.ExtendedProperties.EVENT_ID, eventIndex)
+                                    .withValue(CalendarContract.ExtendedProperties.NAME, CalendarUtils.EXTENDED_PROPERTY_LOCATION_EXTRA)
+                                    .withValue(CalendarContract.ExtendedProperties.VALUE, getLocationExtra(v)).build());
+
                             mSyncResult.stats.numInserts++;
                         } else {
                             mSyncResult.stats.numSkippedEntries++;
