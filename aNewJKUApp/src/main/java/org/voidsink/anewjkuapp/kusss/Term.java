@@ -101,10 +101,6 @@ public class Term implements Comparable<Term> {
 
     @Override
     public int compareTo(@NonNull Term o) {
-        if (o == null) {
-            return -1;
-        }
-
         if (this.year < o.getYear()) {
             return -1;
         } else if (this.year > o.getYear()) {

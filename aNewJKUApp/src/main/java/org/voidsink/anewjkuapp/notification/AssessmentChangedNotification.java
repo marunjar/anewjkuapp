@@ -63,11 +63,11 @@ public class AssessmentChangedNotification {
         mUpdates.add(text);
     }
 
-    private void showInternal(List<String> lines, int notificationId, int resIdtitle, int resIdContent) {
+    private void showInternal(List<String> lines) {
         if (PreferenceWrapper.getNotifyGrade(mContext) && (lines.size() > 0)) {
             PendingIntent pendingIntent = PendingIntent.getActivity(
                     mContext,
-                    notificationId,
+                    R.string.notification_grades_changed,
                     new Intent(mContext, MainActivity.class).putExtra(
                             MainActivity.ARG_SHOW_FRAGMENT_ID,
                             R.id.nav_grades).addFlags(
@@ -76,8 +76,8 @@ public class AssessmentChangedNotification {
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                     mContext)
                     .setContentIntent(pendingIntent)
-                    .setContentTitle(mContext.getString(resIdtitle))
-                    .setContentText(mContext.getString(resIdContent, lines.size()))
+                    .setContentTitle(mContext.getString(R.string.notification_grades_changed_title))
+                    .setContentText(mContext.getString(R.string.notification_grades_changed, lines.size()))
                     .setContentIntent(pendingIntent)
                     .setCategory(NotificationCompat.CATEGORY_EMAIL)
                     .setAutoCancel(true)
@@ -96,13 +96,14 @@ public class AssessmentChangedNotification {
             // creates big view with all grades in inbox style
             NotificationCompat.InboxStyle inBoxStyle = new NotificationCompat.InboxStyle();
 
-            inBoxStyle.setBigContentTitle(mContext.getString(resIdContent, lines.size()));
+            inBoxStyle.setBigContentTitle(mContext.getString(R.string.notification_grades_changed, lines.size()));
 
             Collections.sort(lines);
 
             for (int i = 0; i < MAX_LINES; i++) {
                 if (i < lines.size()) {
-                    inBoxStyle.addLine(lines.get(i));                }
+                    inBoxStyle.addLine(lines.get(i));
+                }
             }
 
             if (lines.size() > MAX_LINES) {
@@ -113,7 +114,7 @@ public class AssessmentChangedNotification {
 
             ((NotificationManager) mContext
                     .getSystemService(Context.NOTIFICATION_SERVICE)).notify(
-                    notificationId,
+                    R.string.notification_grades_changed,
                     mBuilder.build());
         }
     }
@@ -122,6 +123,6 @@ public class AssessmentChangedNotification {
         List<String> changed = new ArrayList<>(mInserts.size() + mUpdates.size());
         changed.addAll(mInserts);
         changed.addAll(mUpdates);
-        showInternal(changed, R.string.notification_grades_changed, R.string.notification_grades_changed_title, R.string.notification_grades_changed);
+        showInternal(changed);
     }
 }

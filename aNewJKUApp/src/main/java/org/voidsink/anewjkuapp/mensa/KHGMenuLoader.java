@@ -75,12 +75,12 @@ public class KHGMenuLoader implements MenuLoader {
                     for (Element element : elements) {
                         Elements columns = element.children();
 
-                        String[] strings = null;
-                        String meal = null;
-                        String soup = null;
-                        double price = 0;
-                        double priceBig = 0;
-                        double oehBonus = 0;
+                        String[] strings;
+                        String meal;
+                        String soup;
+                        double price;
+                        double priceBig;
+                        double oehBonus;
 
                         switch (columns.size()) {
                             case 4:

@@ -196,8 +196,8 @@ public class ImportCalendarTask implements Callable<Void> {
 
                 Log.d(TAG, "loading calendar");
 
-                Calendar iCal = null;
-                String kusssIdPrefix = null;
+                Calendar iCal;
+                String kusssIdPrefix;
                 // {{ Load calendar events from resource
                 switch (this.mCalendarName) {
                     case CalendarUtils.ARG_CALENDAR_EXAM:
@@ -489,17 +489,7 @@ public class ImportCalendarTask implements Callable<Void> {
                                                     .EVENT_TIMEZONE(),
                                             TimeZone.getDefault().getID());
 
-                            boolean busy = false;
-
-//                                Property p = v.getProperty(ShowAs.PROPERTY_NAME);
-//                                if (p != null) {
-//                                    busy = p.getValue().equals(ShowAs.BUSY.getValue());
-//                                }
-//                                if (!busy) {
-                            busy = mCalendarName.equals(CalendarUtils.ARG_CALENDAR_EXAM);
-//                                }
-
-                            if (busy) {
+                            if (mCalendarName.equals(CalendarUtils.ARG_CALENDAR_EXAM)) {
                                 builder.withValue(
                                         CalendarContractWrapper.Events
                                                 .AVAILABILITY(),

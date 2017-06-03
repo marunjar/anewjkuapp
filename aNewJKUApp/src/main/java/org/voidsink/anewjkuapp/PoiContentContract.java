@@ -25,7 +25,6 @@
 package org.voidsink.anewjkuapp;
 
 import android.net.Uri;
-import android.os.Build;
 
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 
