@@ -1,7 +1,6 @@
 package com.alamkanak.weekview;
 
 import android.graphics.Shader;
-import android.widget.ShareActionProvider;
 
 import java.util.ArrayList;
 import java.util.Calendar;
