@@ -25,7 +25,7 @@ configurations {
     javadocDeps
 }
 dependencies {
-    compile 'com.android.support:support-core-ui:25.3.1'
+    compile 'com.android.support:support-core-ui:25.4.0'
 }
 
 //apply from: 'gradle-mvn-push.gradle'
