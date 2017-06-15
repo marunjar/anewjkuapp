@@ -232,27 +232,19 @@ public class KusssHandler {
         wr.flush();
     }
 
-    public synchronized boolean logout(Context c) {
+    public synchronized void logout(Context c) {
         if (!isNetworkAvailable(c)) {
             mCookies.getCookieStore().removeAll();
-            return true;
         }
         try {
             Connection.Response r = Jsoup.connect(URL_LOGOUT).cookies(getCookieMap()).method(Connection.Method.GET).execute();
 
-            if (r == null) {
-                return false;
-            }
-
             if (!isLoggedIn(c, (String) null)) {
                 mCookies.getCookieStore().removeAll();
-                return true;
             }
-            return false;
         } catch (Exception e) {
             Log.w(TAG, "logout failed", e);
             Analytics.sendException(c, e, true);
-            return true;
         }
     }
 
@@ -296,7 +288,7 @@ public class KusssHandler {
 
         final byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
         long count = 0;
-        int n = 0;
+        int n;
         while (-1 != (n = input.read(buffer))) {
             output.write(buffer, 0, n);
             count += n;
@@ -531,9 +523,7 @@ public class KusssHandler {
             if (termSelector == null) return false;
 
             Elements selectable = termSelector.getElementsByAttributeValue("value", term.toString());
-            if (selectable.size() != 1) return false;
-
-            return true;
+            return selectable.size() == 1;
         } catch (Exception e) {
             Analytics.sendException(c, e, true);
             return false;

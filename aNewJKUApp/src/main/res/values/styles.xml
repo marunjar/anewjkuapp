@@ -7,29 +7,37 @@
         <item name="colorAccent">@color/default_accent</item>
     </style>
     <!--colors for sowi theme-->
+    <!--
     <style name="colorStyle.sowi">
         <item name="colorPrimary">@color/sowi_primary</item>
         <item name="colorPrimaryDark">@color/sowi_primaryDark</item>
         <item name="colorAccent">@color/sowi_accent</item>
     </style>
+    -->
     <!--colors for re theme-->
+    <!--
     <style name="colorStyle.re">
         <item name="colorPrimary">@color/re_primary</item>
         <item name="colorPrimaryDark">@color/re_primaryDark</item>
         <item name="colorAccent">@color/re_accent</item>
     </style>
+    -->
     <!--colors for tnf theme-->
+    <!--
     <style name="colorStyle.tnf">
         <item name="colorPrimary">@color/tnf_primary</item>
         <item name="colorPrimaryDark">@color/tnf_primaryDark</item>
         <item name="colorAccent">@color/tnf_accent</item>
     </style>
+    -->
     <!--colors for med theme-->
+    <!--
     <style name="colorStyle.med">
         <item name="colorPrimary">@color/med_primary</item>
         <item name="colorPrimaryDark">@color/med_primaryDark</item>
         <item name="colorAccent">@color/med_accent</item>
     </style>
+    -->
 
     <style name="chip">
         <item name="android:layout_width">8dp</item>

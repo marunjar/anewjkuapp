@@ -107,9 +107,9 @@ public final class PreferenceWrapper {
 
     }
 
-    public static int getSyncInterval(Context mContext) {
+    public static int getSyncInterval(Context context) {
         SharedPreferences sp = PreferenceManager
-                .getDefaultSharedPreferences(mContext);
+                .getDefaultSharedPreferences(context);
         try {
             return Math.max(Integer.parseInt(sp.getString(PREF_SYNC_INTERVAL_KEY,
                     Integer.toString(PREF_SYNC_INTERVAL_DEFAULT))), 12); // min. 12h interval
@@ -119,8 +119,8 @@ public final class PreferenceWrapper {
         }
     }
 
-    public static void applySyncInterval(Context mContext) {
-        Account mAccount = AppUtils.getAccount(mContext);
+    public static void applySyncInterval(Context context) {
+        Account mAccount = AppUtils.getAccount(context);
 
         if (mAccount != null) {
             List<PeriodicSync> syncs = ContentResolver.getPeriodicSyncs(
@@ -140,7 +140,7 @@ public final class PreferenceWrapper {
                     KusssContentContract.AUTHORITY, new Bundle());
 
             // Turn on periodic syncing
-            int interval = getSyncInterval(mContext);
+            int interval = getSyncInterval(context);
 
             ContentResolver.addPeriodicSync(mAccount,
                     CalendarContractWrapper.AUTHORITY(), new Bundle(),
@@ -149,12 +149,12 @@ public final class PreferenceWrapper {
                     KusssContentContract.AUTHORITY, new Bundle(),
                     60 * 60 * interval);
         }
-        AppUtils.updateSyncAlarm(mContext, true);
+        AppUtils.updateSyncAlarm(context, true);
     }
 
-    public static boolean getNotifyCalendar(Context mContext) {
+    public static boolean getNotifyCalendar(Context context) {
         SharedPreferences sp = PreferenceManager
-                .getDefaultSharedPreferences(mContext);
+                .getDefaultSharedPreferences(context);
         try {
             return sp.getBoolean(PREF_NOTIFY_CALENDAR_KEY,
                     PREF_NOTIFY_CALENDAR_DEFAULT);
@@ -164,9 +164,9 @@ public final class PreferenceWrapper {
         }
     }
 
-    public static boolean getUseCalendarView(Context mContext) {
+    public static boolean getUseCalendarView(Context context) {
         SharedPreferences sp = PreferenceManager
-                .getDefaultSharedPreferences(mContext);
+                .getDefaultSharedPreferences(context);
         try {
             return sp.getBoolean(PREF_USE_CALENDAR_VIEW_KEY,
                     PREF_USE_CALENDAR_VIEW_DEFAULT);
@@ -176,9 +176,9 @@ public final class PreferenceWrapper {
         }
     }
 
-    public static boolean getNewExamsByCourseId(Context mContext) {
+    public static boolean getNewExamsByCourseId(Context context) {
         SharedPreferences sp = PreferenceManager
-                .getDefaultSharedPreferences(mContext);
+                .getDefaultSharedPreferences(context);
         try {
             return sp.getBoolean(PREF_GET_NEW_EXAMS,
                     PREF_GET_NEW_EXAMS_DEFAULT);
@@ -188,9 +188,9 @@ public final class PreferenceWrapper {
         }
     }
 
-    public static boolean getNotifyExam(Context mContext) {
+    public static boolean getNotifyExam(Context context) {
         SharedPreferences sp = PreferenceManager
-                .getDefaultSharedPreferences(mContext);
+                .getDefaultSharedPreferences(context);
         try {
             return sp
                     .getBoolean(PREF_NOTIFY_EXAM_KEY, PREF_NOTIFY_EXAM_DEFAULT);
@@ -200,9 +200,9 @@ public final class PreferenceWrapper {
         }
     }
 
-    public static boolean getNotifyGrade(Context mContext) {
+    public static boolean getNotifyGrade(Context context) {
         SharedPreferences sp = PreferenceManager
-                .getDefaultSharedPreferences(mContext);
+                .getDefaultSharedPreferences(context);
         try {
             return sp.getBoolean(PREF_NOTIFY_GRADE_KEY,
                     PREF_NOTIFY_GRADE_DEFAULT);
@@ -212,9 +212,9 @@ public final class PreferenceWrapper {
         }
     }
 
-    public static boolean getUseLightDesign(Context mContext) {
+    public static boolean getUseLightDesign(Context context) {
         SharedPreferences sp = PreferenceManager
-                .getDefaultSharedPreferences(mContext);
+                .getDefaultSharedPreferences(context);
         try {
             return sp.getBoolean(PREF_USE_LIGHT_THEME,
                     PREF_USE_LIGHT_THEME_DEFAULT);
@@ -224,15 +224,12 @@ public final class PreferenceWrapper {
         }
     }
 
-    public static File getMapFile(Context mContext) {
+    public static File getMapFile(Context context) {
         SharedPreferences sp = PreferenceManager
-                .getDefaultSharedPreferences(mContext);
-        File mapFile = null;
+                .getDefaultSharedPreferences(context);
+        File mapFile;
         try {
-            String file = sp.getString(PREF_MAP_FILE, PREF_MAP_FILE_DEFAULT);
-            if (file != null) {
-                mapFile = new File(file);
-            }
+            mapFile = new File(sp.getString(PREF_MAP_FILE, PREF_MAP_FILE_DEFAULT));
         } catch (Exception e) {
             Log.e(TAG, "Failure", e);
             mapFile = null;
@@ -243,9 +240,9 @@ public final class PreferenceWrapper {
         return mapFile;
     }
 
-    public static int getLastFragment(Context mContext) {
+    public static int getLastFragment(Context context) {
         SharedPreferences sp = PreferenceManager
-                .getDefaultSharedPreferences(mContext);
+                .getDefaultSharedPreferences(context);
         try {
             return sp.getInt(PREF_LAST_FRAGMENT, PREF_LAST_FRAGMENT_DEFAULT);
         } catch (Exception e) {
@@ -254,19 +251,19 @@ public final class PreferenceWrapper {
         }
     }
 
-    public static void setLastFragment(Context mContext, int id) {
+    public static void setLastFragment(Context context, int id) {
         try {
             SharedPreferences sp = PreferenceManager
-                    .getDefaultSharedPreferences(mContext);
+                    .getDefaultSharedPreferences(context);
             sp.edit().putInt(PREF_LAST_FRAGMENT, id).commit();
         } catch (Exception e) {
-            Analytics.sendException(mContext, e, false);
+            Analytics.sendException(context, e, false);
         }
     }
 
-    public static int getLastVersion(Context mContext) {
+    public static int getLastVersion(Context context) {
         SharedPreferences sp = PreferenceManager
-                .getDefaultSharedPreferences(mContext);
+                .getDefaultSharedPreferences(context);
         try {
             return sp.getInt(PREF_LAST_VERSION, PREF_LAST_VERSION_NONE);
         } catch (Exception e) {
@@ -275,10 +272,10 @@ public final class PreferenceWrapper {
         }
     }
 
-    public static int getCurrentVersion(Context mContext) {
+    public static int getCurrentVersion(Context context) {
         try {
-            PackageInfo packageInfo = mContext.getPackageManager().getPackageInfo(
-                    mContext.getPackageName(), 0);
+            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(
+                    context.getPackageName(), 0);
 
             return packageInfo.versionCode;
         } catch (NameNotFoundException e) {
@@ -288,19 +285,19 @@ public final class PreferenceWrapper {
 
     }
 
-    public static void setLastVersion(Context mContext, int version) {
+    public static void setLastVersion(Context context, int version) {
         try {
             SharedPreferences sp = PreferenceManager
-                    .getDefaultSharedPreferences(mContext);
+                    .getDefaultSharedPreferences(context);
             sp.edit().putInt(PREF_LAST_VERSION, version).commit();
         } catch (Exception e) {
-            Analytics.sendException(mContext, e, false);
+            Analytics.sendException(context, e, false);
         }
     }
 
-    public static boolean getUseLvaBarChart(Context mContext) {
+    public static boolean getUseLvaBarChart(Context context) {
         SharedPreferences sp = PreferenceManager
-                .getDefaultSharedPreferences(mContext);
+                .getDefaultSharedPreferences(context);
         try {
             return sp.getBoolean(PREF_USE_LVA_BAR_CHART,
                     PREF_USE_LVA_BAR_CHART_DEFAULT);
@@ -310,9 +307,9 @@ public final class PreferenceWrapper {
         }
     }
 
-    public static boolean getPositiveGradesOnly(Context mContext) {
+    public static boolean getPositiveGradesOnly(Context context) {
         SharedPreferences sp = PreferenceManager
-                .getDefaultSharedPreferences(mContext);
+                .getDefaultSharedPreferences(context);
         try {
             return sp.getBoolean(PREF_POSITIVE_GRADES_ONLY,
                     PREF_POSITIVE_GRADES_ONLY_DEFAULT);
@@ -322,19 +319,19 @@ public final class PreferenceWrapper {
         }
     }
 
-    public static void setPrefPositiveGradesOnly(Context mContext, boolean positiveOnly) {
+    public static void setPrefPositiveGradesOnly(Context context, boolean positiveOnly) {
         try {
             SharedPreferences sp = PreferenceManager
-                    .getDefaultSharedPreferences(mContext);
+                    .getDefaultSharedPreferences(context);
             sp.edit().putBoolean(PREF_POSITIVE_GRADES_ONLY, positiveOnly).apply();
         } catch (Exception e) {
-            Analytics.sendException(mContext, e, false);
+            Analytics.sendException(context, e, false);
         }
     }
 
-    public static boolean getGroupMenuByDay(Context mContext) {
+    public static boolean getGroupMenuByDay(Context context) {
         SharedPreferences sp = PreferenceManager
-                .getDefaultSharedPreferences(mContext);
+                .getDefaultSharedPreferences(context);
         try {
             return sp.getBoolean(PREF_MENSA_GROUP_MENU_BY_DAY,
                     PREF_MENSA_GROUP_MENU_BY_DAY_DEFAULT);
@@ -466,10 +463,10 @@ public final class PreferenceWrapper {
         }
     }
 
-    public static boolean getShowCoursesWithAssessmentOnly(Context mContext) {
+    public static boolean getShowCoursesWithAssessmentOnly(Context context) {
         try {
             SharedPreferences sp = PreferenceManager
-                    .getDefaultSharedPreferences(mContext);
+                    .getDefaultSharedPreferences(context);
             return sp.getBoolean(PREF_COURSES_SHOW_WITH_ASSESSMENT_ONLY,
                     PREF_COURSES_SHOW_WITH_ASSESSMENT_ONLY_DEFAULT);
         } catch (Exception e) {
@@ -478,13 +475,13 @@ public final class PreferenceWrapper {
         }
     }
 
-    public static void setShowCoursesWithAssessmentOnly(Context mContext, boolean value) {
+    public static void setShowCoursesWithAssessmentOnly(Context context, boolean value) {
         try {
             SharedPreferences sp = PreferenceManager
-                    .getDefaultSharedPreferences(mContext);
+                    .getDefaultSharedPreferences(context);
             sp.edit().putBoolean(PREF_COURSES_SHOW_WITH_ASSESSMENT_ONLY, value).apply();
         } catch (Exception e) {
-            Analytics.sendException(mContext, e, false);
+            Analytics.sendException(context, e, false);
         }
     }
 

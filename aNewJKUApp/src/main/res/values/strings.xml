@@ -173,7 +173,6 @@
     <string name="progress_load_calendar">Termine werden geladen…</string>
     <string name="progress_load_map_files">Karten werden geladen…</string>
     <string name="progress_login">Anmelden…</string>
-    <string name="progress_load_feed">News werden geladen…</string>
 
     <string name="mensa_menu_not_available">kein Speiseplan verfügbar</string>
     <string name="mensa_menu_today">Heute</string>
@@ -220,12 +219,6 @@
     <string name="account_login_failed_wrong_auth_token">Anmeldung fehlgeschlagen: falscher Authentifizierungstoken</string>
     <string name="account_login">Anmelden</string>
 
-    <string name="feed_title_oeh" translatable="false">ÖH</string>
-    <string name="feed_title_rewi" translatable="false">ReWi</string>
-    <string name="feed_title_sowi" translatable="false">SoWi</string>
-    <string name="feed_title_tnf" translatable="false">TNF</string>
-    <string name="feed_title_med" translatable="false">Medizin</string>
-
     <string name="studies_is_standard">Standard</string>
     <string name="curriculum_is_standard_yes">Ja</string>
     <string name="curriculum_is_standard_no">Nein</string>
@@ -253,9 +246,7 @@
     <string name="all_terms">alle Semester</string>
     <string name="about_force_logout">Ausloggen</string>
     <string name="menu_exam_register">in KUSSS anzeigen</string>
-    <string name="action_show_rss_entry_in_browser">in Browser anzeigen</string>
     <string name="title_curricula">Studienrichtungen</string>
-    <string name="content_descr_rss_feed_item_image">Das erste Bild das in dem News-Eintrag vorkommt.</string>
     <string name="missing_app_permission">Berechtigungen fehlen</string>
     <string name="button_ok">OK</string>
 </resources>

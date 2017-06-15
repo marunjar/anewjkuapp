@@ -166,13 +166,16 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 
         new AsyncTask<String, Void, Intent>() {
             private ProgressDialog progressDialog;
+            private Context mContext;
 
             @Override
             protected void onPreExecute() {
+                mContext = KusssAuthenticatorActivity.this;
+
                 progressDialog = ProgressDialog.show(
                         KusssAuthenticatorActivity.this,
-                        getString(R.string.progress_title),
-                        getString(R.string.progress_login), true);
+                        mContext.getString(R.string.progress_title),
+                        mContext.getString(R.string.progress_login), true);
             }
 
             @Override
@@ -210,18 +213,20 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
                         finishLogin(intent);
                     } else {
                         Toast.makeText(getBaseContext(),
-                                getString(R.string.account_login_failed_wrong_pwd),
+                                mContext.getString(R.string.account_login_failed_wrong_pwd),
                                 Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(getBaseContext(),
-                            getString(R.string.account_login_failed_wrong_auth_token),
+                            mContext.getString(R.string.account_login_failed_wrong_auth_token),
                             Toast.LENGTH_SHORT).show();
                 }
 
                 progressDialog.dismiss();
 
                 mSubmit.setEnabled(true);
+
+                mContext = null;
             }
         }.execute();
     }

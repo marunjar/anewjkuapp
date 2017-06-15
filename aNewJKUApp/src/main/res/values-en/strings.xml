@@ -150,8 +150,6 @@
     <string name="notification_sync_lva_loading">Loading courses</string>
     <string name="notification_sync_lva_saving">Saving courses</string>
     <string name="notification_sync_lva_updating">Updating courses</string>
-    <string name="action_show_rss_entry_in_browser">Show in browser</string>
-    <string name="progress_load_feed">Loading news…</string>
     <string name="pref_stats_positive_grades_only_title">Improved grade point average</string>
     <string name="pref_stats_positive_grades_only_summary">Grade point average is calculated for positive grades only</string>
     <string name="notification_sync_curricula">Synchronizing curricula</string>
@@ -192,7 +190,6 @@
     <string name="pref_cat_app_courses">Courses</string>
     <string name="pref_courses_show_with_assessment_only_summary">Show courses for last terms only if assessments exists.</string>
     <string name="pref_courses_show_with_assessment_only_title">Only courses with assessments</string>
-    <string name="content_descr_rss_feed_item_image">The first image of the news entry</string>
     <string name="action_tap_to_login">Tap to login</string>
     <string name="missing_app_permission">Missing App permissions</string>
     <string name="alert_permission_get_accounts">Missing contacts permission for creating and reading accounts.</string>

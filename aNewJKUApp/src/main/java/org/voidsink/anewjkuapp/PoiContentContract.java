@@ -25,7 +25,6 @@
 package org.voidsink.anewjkuapp;
 
 import android.net.Uri;
-import android.os.Build;
 
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 
@@ -40,11 +39,7 @@ public class PoiContentContract {
             AUTHORITY));
 
     public static String getFTS() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            return "fts4";
-        } else {
-            return "fts3";
-        }
+        return "fts4";
     }
 
     public static class Poi {

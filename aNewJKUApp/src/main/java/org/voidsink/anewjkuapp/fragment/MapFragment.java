@@ -243,6 +243,10 @@ public class MapFragment extends BaseFragment implements
     private void finishSearch(Uri uri) {
         Log.i(TAG, "finish search: " + uri.toString());
 
+        if (uri.getScheme() == null && uri.toString().contains(PoiContentContract.AUTHORITY)) {
+            uri = Uri.parse(String.format("content://%1$s", uri));
+        }
+
         // jump to point with given Uri
         ContentResolver cr = getActivity().getContentResolver();
 
@@ -430,11 +434,6 @@ public class MapFragment extends BaseFragment implements
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
     private void createLayers() {
         if (AndroidSupportUtil.runtimePermissionRequiredForReadExternalStorage(this.getActivity(), getMapFileDirectory())) {
             // note that this the Fragment method, not compat lib
@@ -487,11 +486,6 @@ public class MapFragment extends BaseFragment implements
         removeLayers();
 
         super.onDestroyView();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
     }
 
     private void removeLayers() {
@@ -547,11 +541,6 @@ public class MapFragment extends BaseFragment implements
         }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
     private File getMapFile() {
         File mapFile = PreferenceWrapper.getMapFile(getContext());
         if (mapFile == null || !mapFile.exists() || !mapFile.canRead()) {
@@ -580,8 +569,6 @@ public class MapFragment extends BaseFragment implements
 
     @Override
     public boolean onQueryTextSubmit(String newText) {
-        // Toast.makeText(mContext, newText + " submitted", Toast.LENGTH_SHORT)
-        // .show();
         return false;
     }
 

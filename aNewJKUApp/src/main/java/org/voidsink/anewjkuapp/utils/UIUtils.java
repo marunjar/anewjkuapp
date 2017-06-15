@@ -33,7 +33,6 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.text.format.Time;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -41,6 +40,8 @@ import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.calendar.DayOfMonthDrawable;
 import org.voidsink.anewjkuapp.kusss.Assessment;
+
+import java.util.Calendar;
 
 public class UIUtils {
 
@@ -116,21 +117,20 @@ public class UIUtils {
      * @param icon - today's icon from the options menu
      */
     public static void setTodayIcon(LayerDrawable icon, Context c, String timezone) {
-        DayOfMonthDrawable today;
+        DayOfMonthDrawable today = null;
 
         // Reuse current drawable if possible
         Drawable currentDrawable = icon.findDrawableByLayerId(R.id.today_icon_day);
         if (currentDrawable != null && currentDrawable instanceof DayOfMonthDrawable) {
             today = (DayOfMonthDrawable) currentDrawable;
-        } else {
+        } else if (c != null) {
             today = new DayOfMonthDrawable(c);
         }
         // Set the day and update the icon
-        Time now = new Time();
-        now.setToNow();
-        now.normalize(false);
-        today.setDayOfMonth(now.monthDay);
-        icon.mutate();
-        icon.setDrawableByLayerId(R.id.today_icon_day, today);
+        if (today != null) {
+            today.setDayOfMonth(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+            icon.mutate();
+            icon.setDrawableByLayerId(R.id.today_icon_day, today);
+        }
     }
 }

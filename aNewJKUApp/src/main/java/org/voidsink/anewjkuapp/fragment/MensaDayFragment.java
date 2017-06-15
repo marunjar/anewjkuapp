@@ -169,7 +169,7 @@ public class MensaDayFragment extends BaseFragment {
                         }
                     } else {
                         // add no menu card
-                        menus.add(new MensaInfoItem(mensa, day, getString(R.string.mensa_menu_not_available), null));
+                        menus.add(new MensaInfoItem(mensa, day, mContext.getString(R.string.mensa_menu_not_available), null));
                         noMenuCount++;
                     }
                 }
@@ -178,7 +178,7 @@ public class MensaDayFragment extends BaseFragment {
             // add default no menu card
             if (menus.size() == 0 || menus.size() == noMenuCount) {
                 menus.clear();
-                menus.add(new MensaInfoItem(null, null, getString(R.string.mensa_menu_not_available), null));
+                menus.add(new MensaInfoItem(null, null, mContext.getString(R.string.mensa_menu_not_available), null));
             }
 
             if (mAdapter != null) {
@@ -188,6 +188,8 @@ public class MensaDayFragment extends BaseFragment {
             }
 
             super.onPostExecute(result);
+
+            mContext = null;
         }
     }
 }

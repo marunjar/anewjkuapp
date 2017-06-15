@@ -16,7 +16,7 @@
         android:padding="10dp"
         android:textColorHint="?attr/colorAccent">
 
-        <EditText
+        <android.support.design.widget.TextInputEditText
             android:id="@+id/accountName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
         android:textColorHint="?attr/colorAccent"
         app:passwordToggleEnabled="true">
 
-        <EditText
+        <android.support.design.widget.TextInputEditText
             android:id="@+id/accountPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

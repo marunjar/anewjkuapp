@@ -30,7 +30,6 @@ import android.accounts.AccountManager;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
-import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.SearchManager;
@@ -48,7 +47,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.text.format.Time;
 import android.util.Log;
 
 import org.voidsink.anewjkuapp.ImportPoiTask;
@@ -90,6 +88,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+import java.util.TimeZone;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -557,23 +556,15 @@ public class AppUtils {
         return AccountManager.get(context).getPassword(account);
     }
 
-    @SuppressLint("NewApi")
     public static String getAccountAuthToken(Context context, Account account) {
         if (account == null) {
             return null;
         }
 
         AccountManager am = AccountManager.get(context);
-        AccountManagerFuture<Bundle> response = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            response = am.getAuthToken(account,
-                    KusssAuthenticator.AUTHTOKEN_TYPE_READ_ONLY, null, true,
-                    null, null);
-        } else {
-            response = am.getAuthToken(account,
-                    KusssAuthenticator.AUTHTOKEN_TYPE_READ_ONLY, null, true, null,
-                    null);
-        }
+        AccountManagerFuture<Bundle> response = am.getAuthToken(account,
+                KusssAuthenticator.AUTHTOKEN_TYPE_READ_ONLY, null, true,
+                null, null);
 
         if (response == null) return null;
 
@@ -819,9 +810,9 @@ public class AppUtils {
 
     public static String getTimeString(Context c, Date dtStart, Date dtEnd, boolean allDay) {
         int flags = 0;
-        String tzString = Time.getCurrentTimezone();
+        String tzString = TimeZone.getDefault().getID();
         if (allDay) {
-            tzString = Time.TIMEZONE_UTC;
+            tzString = "UTC";
         } else {
             flags = DateUtils.FORMAT_SHOW_TIME;
         }
@@ -854,7 +845,7 @@ public class AppUtils {
             Intent intent = new Intent(Intent.ACTION_VIEW)
                     .setData(uri);
             context.startActivity(intent);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+        } else {
             Uri.Builder builder = CalendarContractWrapper.CONTENT_URI().buildUpon();
             builder.appendPath("time");
             ContentUris.appendId(builder, dtStart);
@@ -935,9 +926,13 @@ public class AppUtils {
     private static float mLastHue = new Random(System.currentTimeMillis()).nextFloat() * 360;
 
     public static Locale getLocale(Context context) {
-        Locale locale = null;
+        Locale locale;
         try {
-            locale = context.getResources().getConfiguration().locale;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                locale = context.getResources().getConfiguration().getLocales().get(0);
+            } else {
+                locale = context.getResources().getConfiguration().locale;
+            }
         } catch (Exception e) {
             locale = Locale.getDefault();
         }

@@ -25,45 +25,27 @@
 
 package org.voidsink.anewjkuapp.calendar;
 
-import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.CalendarContract;
 
-@SuppressLint("NewApi")
 public final class CalendarContractWrapper {
 
     private CalendarContractWrapper() {
 
     }
 
-    private static boolean useSDK() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
-    }
-
     public static String AUTHORITY() {
-        if (useSDK()) {
-            return CalendarContract.AUTHORITY;
-        } else {
-            return "com.android.calendar";
-        }
+        return CalendarContract.AUTHORITY;
     }
 
     public static String CALLER_IS_SYNCADAPTER() {
-        if (useSDK()) {
-            return CalendarContract.CALLER_IS_SYNCADAPTER;
-        } else {
-            return "caller_is_syncadapter";
-        }
+        return CalendarContract.CALLER_IS_SYNCADAPTER;
     }
 
     public static Uri CONTENT_URI() {
-        if (useSDK()) {
-            return CalendarContract.CONTENT_URI;
-        } else {
-            return Uri.parse(String.format("content://%1$s",
-                    AUTHORITY()));
-        }
+        return CalendarContract.CONTENT_URI;
     }
 
     public static class Calendars {
@@ -73,168 +55,88 @@ public final class CalendarContractWrapper {
         }
 
         public static String OWNER_ACCOUNT() {
-            if (useSDK()) {
-                return CalendarContract.Calendars.OWNER_ACCOUNT;
-            } else {
-                return "ownerAccount";
-            }
+            return CalendarContract.Calendars.OWNER_ACCOUNT;
         }
 
         public static String ACCOUNT_NAME() {
-            if (useSDK()) {
-                return CalendarContract.Calendars.ACCOUNT_NAME;
-            } else {
-                return "_sync_account";
-            }
+            return CalendarContract.Calendars.ACCOUNT_NAME;
         }
 
         public static String ACCOUNT_TYPE() {
-            if (useSDK()) {
-                return CalendarContract.Calendars.ACCOUNT_TYPE;
-            } else {
-                return "_sync_account_type";
-            }
+            return CalendarContract.Calendars.ACCOUNT_TYPE;
         }
 
         public static String NAME() {
-            if (useSDK()) {
-                return CalendarContract.Calendars.NAME;
-            } else {
-                return "name";
-            }
+            return CalendarContract.Calendars.NAME;
         }
 
         public static String CALENDAR_DISPLAY_NAME() {
-            if (useSDK()) {
-                return CalendarContract.Calendars.CALENDAR_DISPLAY_NAME;
-            } else {
-                return "displayName";
-            }
+            return CalendarContract.Calendars.CALENDAR_DISPLAY_NAME;
         }
 
         public static String CALENDAR_COLOR() {
-            if (useSDK()) {
-                return CalendarContract.Calendars.CALENDAR_COLOR;
-            } else {
-                return "color";
-            }
+            return CalendarContract.Calendars.CALENDAR_COLOR;
         }
 
         public static String CALENDAR_ACCESS_LEVEL() {
-            if (useSDK()) {
-                return CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL;
-            } else {
-                return "access_level";
-            }
+            return CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL;
         }
 
         public static int CAL_ACCESS_CONTRIBUTOR() {
-            if (useSDK()) {
-                return CalendarContract.Calendars.CAL_ACCESS_CONTRIBUTOR;
-            }
-            return 500;
+            return CalendarContract.Calendars.CAL_ACCESS_CONTRIBUTOR;
         }
 
         public static int CAL_ACCESS_EDITOR() {
-            if (useSDK()) {
-                return CalendarContract.Calendars.CAL_ACCESS_EDITOR;
-            }
-            return 600;
+            return CalendarContract.Calendars.CAL_ACCESS_EDITOR;
         }
 
         public static int CAL_ACCESS_FREEBUSY() {
-            if (useSDK()) {
-                return CalendarContract.Calendars.CAL_ACCESS_FREEBUSY;
-            }
-            return 100;
+            return CalendarContract.Calendars.CAL_ACCESS_FREEBUSY;
         }
 
         public static int CAL_ACCESS_NONE() {
-            if (useSDK()) {
-                return CalendarContract.Calendars.CAL_ACCESS_NONE;
-            }
-            return 0;
+            return CalendarContract.Calendars.CAL_ACCESS_NONE;
         }
 
         public static int CAL_ACCESS_OWNER() {
-            if (useSDK()) {
-                return CalendarContract.Calendars.CAL_ACCESS_OWNER;
-            } else {
-                return 700;
-            }
+            return CalendarContract.Calendars.CAL_ACCESS_OWNER;
         }
 
         public static int CAL_ACCESS_READ() {
-            if (useSDK()) {
-                return CalendarContract.Calendars.CAL_ACCESS_READ;
-            } else {
-                return 200;
-            }
+            return CalendarContract.Calendars.CAL_ACCESS_READ;
         }
 
         public static int CAL_ACCESS_RESPOND() {
-            if (useSDK()) {
-                return CalendarContract.Calendars.CAL_ACCESS_RESPOND;
-            } else {
-                return 300;
-            }
+            return CalendarContract.Calendars.CAL_ACCESS_RESPOND;
         }
 
         public static int CAL_ACCESS_ROOT() {
-            if (useSDK()) {
-                return CalendarContract.Calendars.CAL_ACCESS_ROOT;
-            } else {
-                return 800;
-            }
+            return CalendarContract.Calendars.CAL_ACCESS_ROOT;
         }
 
         public static String VISIBLE() {
-            if (useSDK()) {
-                return CalendarContract.Calendars.VISIBLE;
-            } else {
-                return null;
-            }
+            return CalendarContract.Calendars.VISIBLE;
         }
 
         public static String SYNC_EVENTS() {
-            if (useSDK()) {
-                return CalendarContract.Calendars.SYNC_EVENTS;
-            } else {
-                return "sync_events";
-            }
+            return CalendarContract.Calendars.SYNC_EVENTS;
         }
 
         public static String CAN_PARTIALLY_UPDATE() {
-            if (useSDK()) {
-                return CalendarContract.Calendars.CAN_PARTIALLY_UPDATE;
-            } else {
-                return null;
-            }
+            return CalendarContract.Calendars.CAN_PARTIALLY_UPDATE;
         }
 
         public static Uri CONTENT_URI() {
-            if (useSDK()) {
-                return CalendarContract.Calendars.CONTENT_URI;
-            } else {
-                return Uri.parse(String.format("content://%1$s/%2$s",
-                        AUTHORITY(), "calendars"));
-            }
+            return CalendarContract.Calendars.CONTENT_URI;
         }
 
         public static String _ID() {
-            if (useSDK()) {
-                return CalendarContract.Calendars._ID;
-            } else {
-                return "_id";
-            }
+            return CalendarContract.Calendars._ID;
         }
 
+        @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
         public static String ALLOWED_ATTENDEE_TYPES() {
-            if (useSDK()) {
-                return CalendarContract.Calendars.ALLOWED_ATTENDEE_TYPES;
-            } else {
-                return null;
-            }
+            return CalendarContract.Calendars.ALLOWED_ATTENDEE_TYPES;
         }
 
     }
@@ -242,11 +144,7 @@ public final class CalendarContractWrapper {
     public static class Attendees {
 
         public static int TYPE_NONE() {
-            if (useSDK()) {
-                return CalendarContract.Attendees.TYPE_NONE;
-            } else {
-                return 0;
-            }
+            return CalendarContract.Attendees.TYPE_NONE;
         }
 
     }
@@ -254,20 +152,12 @@ public final class CalendarContractWrapper {
     public static class Events {
 
         public static String ACCOUNT_NAME() {
-            if (useSDK()) {
-                return CalendarContract.Events.ACCOUNT_NAME;
-            } else {
-                return "_sync_account";
-            }
+            return CalendarContract.Events.ACCOUNT_NAME;
 
         }
 
         public static String ACCOUNT_TYPE() {
-            if (useSDK()) {
-                return CalendarContract.Events.ACCOUNT_TYPE;
-            } else {
-                return "_sync_account_type";
-            }
+            return CalendarContract.Events.ACCOUNT_TYPE;
         }
 
         public static String UID_2445() {
@@ -279,148 +169,75 @@ public final class CalendarContractWrapper {
         }
 
         public static String DTSTART() {
-            if (useSDK()) {
-                return CalendarContract.Events.DTSTART;
-            } else {
-                return "dtstart";
-            }
+            return CalendarContract.Events.DTSTART;
         }
 
         public static String DTEND() {
-            if (useSDK()) {
-                return CalendarContract.Events.DTEND;
-            } else {
-                return "dtend";
-            }
+            return CalendarContract.Events.DTEND;
         }
 
         public static String TITLE() {
-            if (useSDK()) {
-                return CalendarContract.Events.TITLE;
-            } else {
-                return "title";
-            }
+            return CalendarContract.Events.TITLE;
         }
 
         public static String DESCRIPTION() {
-            if (useSDK()) {
-                return CalendarContract.Events.DESCRIPTION;
-            } else {
-                return "description";
-            }
+            return CalendarContract.Events.DESCRIPTION;
         }
 
         public static String EVENT_LOCATION() {
-            if (useSDK()) {
-                return CalendarContract.Events.EVENT_LOCATION;
-            } else {
-                return "eventLocation";
-            }
+            return CalendarContract.Events.EVENT_LOCATION;
         }
 
         public static String _SYNC_ID() {
-            if (useSDK()) {
-                return CalendarContract.Events._SYNC_ID;
-            } else {
-                return "_sync_id";
-            }
+            return CalendarContract.Events._SYNC_ID;
         }
 
         public static String SYNC_LOCAL_ID() {
-            if (useSDK()) {
-                return CalendarContract.Events.SYNC_DATA2; // sync_data2 : _sync_local_id
-            } else {
-                return "_sync_local_id";
-            }
+            return CalendarContract.Events.SYNC_DATA2; // sync_data2 : _sync_local_id
         }
 
         public static String DIRTY() {
-            if (useSDK()) {
-                return CalendarContract.Events.DIRTY;
-            } else {
-                return "_sync_dirty";
-            }
+            return CalendarContract.Events.DIRTY;
         }
 
         public static String _ID() {
-            if (useSDK()) {
-                return CalendarContract.Events._ID;
-            } else {
-                return "_id";
-            }
+            return CalendarContract.Events._ID;
         }
 
         public static Uri CONTENT_URI() {
-            if (useSDK()) {
-                return CalendarContract.Events.CONTENT_URI;
-            } else {
-                return Uri.parse(String.format("content://%1$s/%2$s",
-                        AUTHORITY(), "events"));
-            }
+            return CalendarContract.Events.CONTENT_URI;
         }
 
         public static String CALENDAR_ID() {
-            if (useSDK()) {
-                return CalendarContract.Events.CALENDAR_ID;
-            } else {
-                return "calendar_id";
-            }
+            return CalendarContract.Events.CALENDAR_ID;
         }
 
         public static String EVENT_TIMEZONE() {
-            if (useSDK()) {
-                return CalendarContract.Events.EVENT_TIMEZONE;
-            } else {
-                return "eventTimezone";
-            }
+            return CalendarContract.Events.EVENT_TIMEZONE;
         }
 
         public static String AVAILABILITY() {
-            if (useSDK()) {
-                return CalendarContract.Events.AVAILABILITY;
-            } else {
-                return null;
-            }
+            return CalendarContract.Events.AVAILABILITY;
         }
 
         public static Object AVAILABILITY_BUSY() {
-            if (useSDK()) {
-                return CalendarContract.Events.AVAILABILITY_BUSY;
-            } else {
-                return null;
-            }
+            return CalendarContract.Events.AVAILABILITY_BUSY;
         }
 
         public static Object AVAILABILITY_FREE() {
-            if (useSDK()) {
-                return CalendarContract.Events.AVAILABILITY_FREE;
-            } else {
-                return null;
-            }
+            return CalendarContract.Events.AVAILABILITY_FREE;
         }
 
         public static String DELETED() {
-            if (useSDK()) {
-                return CalendarContract.Events.DELETED;
-            } else {
-                return "deleted";
-            }
+            return CalendarContract.Events.DELETED;
         }
 
         public static String SYNC_ID_CUSTOM() {
-            if (useSDK()) {
-                return CalendarContract.Events.SYNC_DATA10;
-            } else {
-                return SYNC_LOCAL_ID();
-            }
+            return CalendarContract.Events.SYNC_DATA10;
         }
 
         public static String ALL_DAY() {
-            if (useSDK()) {
-                return CalendarContract.Events.ALL_DAY;
-            } else {
-                return "allDay";
-            }
+            return CalendarContract.Events.ALL_DAY;
         }
     }
 }
