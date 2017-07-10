@@ -128,6 +128,9 @@ public final class CalendarUtils {
         if (context == null || account == null) {
             return null;
         }
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            return null;
+        }
         try {
             String accountName = account.name;
             String accountType = account.type;
@@ -178,6 +181,9 @@ public final class CalendarUtils {
         if (account == null) {
             return true;
         }
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
 
         String id = getCalIDByName(context, account, name, false);
         if (id == null) {
@@ -225,6 +231,9 @@ public final class CalendarUtils {
 
     public static boolean createCalendarsIfNecessary(Context context,
                                                      Account account) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
 
         boolean calendarCreated = true;
 
