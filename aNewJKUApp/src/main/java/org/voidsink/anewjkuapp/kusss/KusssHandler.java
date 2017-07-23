@@ -311,7 +311,7 @@ public class KusssHandler {
     }
 
     public Calendar getLVAIcal(Context c, CalendarBuilder mCalendarBuilder) {
-        if (!isNetworkAvailable(c)) {
+        if (!isLoggedIn(c, getSessionIDFromCookie())) {
             return null;
         }
 
@@ -378,7 +378,7 @@ public class KusssHandler {
     }
 
     public Calendar getExamIcal(Context c, CalendarBuilder mCalendarBuilder) {
-        if (!isNetworkAvailable(c)) {
+        if (!isLoggedIn(c, getSessionIDFromCookie())) {
             return null;
         }
 
