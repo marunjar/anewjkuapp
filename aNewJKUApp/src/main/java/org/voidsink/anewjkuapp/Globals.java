@@ -25,10 +25,13 @@
 package org.voidsink.anewjkuapp;
 
 import android.app.Application;
+import android.text.TextUtils;
+import android.webkit.WebView;
 
 import net.fortuna.ical4j.util.CompatibilityHints;
 
 import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -51,6 +54,10 @@ public class Globals extends Application {
 
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
 //        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
-    }
 
+        try {
+            KusssHandler.getInstance().setUserAgent(new WebView(this).getSettings().getUserAgentString());
+        } catch (Exception ignored) {
+        }
+    }
 }
