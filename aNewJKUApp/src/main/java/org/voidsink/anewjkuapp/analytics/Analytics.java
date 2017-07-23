@@ -25,8 +25,16 @@
 
 package org.voidsink.anewjkuapp.analytics;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
+import android.text.TextUtils;
+
+import org.jsoup.HttpStatusException;
+
+import java.net.NoRouteToHostException;
+
+import javax.net.ssl.SSLException;
 
 public class Analytics {
     private static IAnalytics sAnalytics;
@@ -48,8 +56,28 @@ public class Analytics {
         sendException(c, e, fatal, null);
     }
 
+    @SuppressLint("DefaultLocale")
     public static void sendException(Context c, Exception e, boolean fatal, String additionalData) {
-        getAnalytics().sendException(c, e, fatal, additionalData);
+        boolean send = true;
+        if (e instanceof java.net.UnknownHostException || e instanceof NoRouteToHostException) {
+            fatal = false;
+        } else if (e instanceof HttpStatusException) {
+            if (TextUtils.isEmpty(additionalData)) {
+                additionalData = String.format("%d: %s", ((HttpStatusException) e).getStatusCode(), ((HttpStatusException) e).getUrl());
+            }
+
+            send = (((HttpStatusException) e).getStatusCode() != 503);
+        } else if (e instanceof SSLException) {
+            if (!TextUtils.isEmpty(additionalData)) {
+                additionalData = additionalData + ", ";
+            } else {
+                additionalData = "";
+            }
+            additionalData = additionalData + getAnalytics().getPsStatus().toString();
+        }
+        if (send) {
+            getAnalytics().sendException(c, e, fatal, additionalData);
+        }
     }
 
     public static void sendScreen(Context c, String screenName) {

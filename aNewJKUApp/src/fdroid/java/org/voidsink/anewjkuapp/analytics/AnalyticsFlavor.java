@@ -74,4 +74,9 @@ public class AnalyticsFlavor implements IAnalytics {
             Log.d(TAG, String.format("setEnabled: %s", enabled));
         }
     }
+
+    @Override
+    public PlayServiceStatus getPsStatus() {
+        return PlayServiceStatus.PS_NOT_AVAILABLE;
+    }
 }

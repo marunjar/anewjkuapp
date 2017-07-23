@@ -28,6 +28,7 @@ package org.voidsink.anewjkuapp.kusss;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
 
@@ -104,10 +105,22 @@ public class KusssHandler {
 
     private static KusssHandler handler = null;
     private final CookieManager mCookies;
+    private String mUserAgent;
 
     private KusssHandler() {
         this.mCookies = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
         CookieHandler.setDefault(mCookies);
+
+        String userAgent = null;
+        try {
+            userAgent = System.getProperty("http.agent");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (TextUtils.isEmpty(userAgent)) {
+            userAgent = "Mozilla/5.0";
+        }
+        this.mUserAgent = userAgent;
     }
 
     public static boolean isNetworkAvailable(Context context) {
@@ -166,12 +179,12 @@ public class KusssHandler {
 
             mCookies.getCookieStore().removeAll();
 
-            Jsoup.connect(URL_KUSSS_INDEX).timeout(TIMEOUT_LOGIN).followRedirects(true).get();
+            Jsoup.connect(URL_KUSSS_INDEX).userAgent(getUserAgent()).timeout(TIMEOUT_LOGIN).followRedirects(true).get();
 
-            Connection.Response r = Jsoup.connect(URL_LOGIN).cookies(getCookieMap()).data("j_username", user).data("j_password", password).timeout(TIMEOUT_LOGIN).followRedirects(true).method(Connection.Method.POST).execute();
+            Connection.Response r = Jsoup.connect(URL_LOGIN).userAgent(getUserAgent()).cookies(getCookieMap()).data("j_username", user).data("j_password", password).timeout(TIMEOUT_LOGIN).followRedirects(true).method(Connection.Method.POST).execute();
 
             if (r.url() != null) {
-                r = Jsoup.connect(r.url().toString()).cookies(getCookieMap()).method(Connection.Method.GET).execute();
+                r = Jsoup.connect(r.url().toString()).userAgent(getUserAgent()).cookies(getCookieMap()).method(Connection.Method.GET).execute();
             }
 
             Document doc = r.parse();
@@ -237,7 +250,7 @@ public class KusssHandler {
             mCookies.getCookieStore().removeAll();
         }
         try {
-            Connection.Response r = Jsoup.connect(URL_LOGOUT).cookies(getCookieMap()).method(Connection.Method.GET).execute();
+            Connection.Response r = Jsoup.connect(URL_LOGOUT).userAgent(getUserAgent()).cookies(getCookieMap()).method(Connection.Method.GET).execute();
 
             if (!isLoggedIn(c, (String) null)) {
                 mCookies.getCookieStore().removeAll();
@@ -256,7 +269,7 @@ public class KusssHandler {
             return false;
         }
         try {
-            Document doc = Jsoup.connect(URL_START_PAGE).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true).get();
+            Document doc = Jsoup.connect(URL_START_PAGE).userAgent(getUserAgent()).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true).get();
 
             return isLoggedIn(c, doc);
         } catch (SocketTimeoutException e) {
@@ -297,7 +310,7 @@ public class KusssHandler {
     }
 
     public Calendar getLVAIcal(Context c, CalendarBuilder mCalendarBuilder) {
-        if (!isNetworkAvailable(c)) {
+        if (!isLoggedIn(c, getSessionIDFromCookie())) {
             return null;
         }
 
@@ -313,6 +326,7 @@ public class KusssHandler {
             conn.setConnectTimeout(5000);
             conn.setReadTimeout(15000);
             conn.setRequestMethod("POST");
+            conn.setRequestProperty("User-Agent", getUserAgent());
 
             writeParams(conn, new String[]{"selectAll"},
                     new String[]{"ical.category.mycourses"});
@@ -363,7 +377,7 @@ public class KusssHandler {
     }
 
     public Calendar getExamIcal(Context c, CalendarBuilder mCalendarBuilder) {
-        if (!isNetworkAvailable(c)) {
+        if (!isLoggedIn(c, getSessionIDFromCookie())) {
             return null;
         }
 
@@ -378,6 +392,7 @@ public class KusssHandler {
             conn.setConnectTimeout(5000);
             conn.setReadTimeout(15000);
             conn.setRequestMethod("POST");
+            conn.setRequestProperty("User-Agent", getUserAgent());
 
             writeParams(conn, new String[]{"selectAll"},
                     new String[]{"ical.category.examregs"});
@@ -431,9 +446,10 @@ public class KusssHandler {
         if (!isNetworkAvailable(c)) {
             return null;
         }
+
         Map<String, String> terms = new HashMap<>();
         try {
-            Document doc = Jsoup.connect(URL_GET_TERMS).cookies(getCookieMap()).get();
+            Document doc = Jsoup.connect(URL_GET_TERMS).userAgent(getUserAgent()).cookies(getCookieMap()).get();
             Element termDropdown = doc.getElementById("term");
             if (termDropdown != null) {
                 Elements termDropdownEntries = termDropdown
@@ -457,6 +473,7 @@ public class KusssHandler {
             return false;
         }
         Jsoup.connect(URL_SELECT_TERM)
+                .userAgent(getUserAgent())
                 .cookies(getCookieMap())
                 .data("term", term.toString())
                 .data("previousQueryString", "")
@@ -484,7 +501,7 @@ public class KusssHandler {
             for (Term term : terms) {
                 term.setLoaded(false); // init loaded flag
                 if (selectTerm(c, term)) {
-                    Document doc = Jsoup.connect(URL_MY_LVAS).cookies(getCookieMap()).get();
+                    Document doc = Jsoup.connect(URL_MY_LVAS).userAgent(getUserAgent()).cookies(getCookieMap()).get();
 
                     if (isSelectable(c, doc, term)) {
                         if (isSelected(c, doc, term)) {
@@ -553,7 +570,7 @@ public class KusssHandler {
         }
         List<Assessment> grades = new ArrayList<>();
         try {
-            Document doc = Jsoup.connect(URL_MY_GRADES).cookies(getCookieMap()).data("months", "0")
+            Document doc = Jsoup.connect(URL_MY_GRADES).userAgent(getUserAgent()).cookies(getCookieMap()).data("months", "0")
                     .get();
 
             Elements rows = doc.select(SELECT_MY_GRADES);
@@ -589,6 +606,7 @@ public class KusssHandler {
         List<Exam> exams = new ArrayList<>();
         try {
             Document doc = Jsoup.connect(URL_GET_NEW_EXAMS)
+                    .userAgent(getUserAgent())
                     .cookies(getCookieMap())
                     .data("search", "true").data("searchType", "mylvas").get();
 
@@ -698,6 +716,8 @@ public class KusssHandler {
             Log.d(TAG, "getNewExamsByCourseId: " + courseId);
             Document doc = Jsoup
                     .connect(URL_GET_NEW_EXAMS)
+                    .userAgent(getUserAgent())
+                    .cookies(getCookieMap())
                     .timeout(TIMEOUT_SEARCH_EXAM_BY_LVA)
                     .data("search", "true")
                     .data("searchType", "specific")
@@ -742,7 +762,7 @@ public class KusssHandler {
 
         Log.d(TAG, "loadExams");
 
-        Document doc = Jsoup.connect(URL_GET_EXAMS).cookies(getCookieMap()).get();
+        Document doc = Jsoup.connect(URL_GET_EXAMS).userAgent(getUserAgent()).cookies(getCookieMap()).get();
 
         Elements rows = doc.select(SELECT_EXAMS);
 
@@ -770,7 +790,7 @@ public class KusssHandler {
         try {
             List<Curriculum> mCurricula = new ArrayList<>();
 
-            Document doc = Jsoup.connect(URL_MY_STUDIES).cookies(getCookieMap()).get();
+            Document doc = Jsoup.connect(URL_MY_STUDIES).userAgent(getUserAgent()).cookies(getCookieMap()).get();
 
             Elements rows = doc.select(SELECT_MY_STUDIES);
             for (Element row : rows) {
@@ -786,4 +806,13 @@ public class KusssHandler {
         }
     }
 
+    public String getUserAgent() {
+        return this.mUserAgent;
+    }
+
+    public void setUserAgent(String userAgent) {
+        if (!TextUtils.isEmpty(userAgent)) {
+            this.mUserAgent = userAgent;
+        }
+    }
 }
