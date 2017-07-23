@@ -28,7 +28,7 @@ package org.voidsink.anewjkuapp.analytics;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Point;
-import android.os.Build;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
@@ -40,8 +40,10 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.StandardExceptionParser;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.security.ProviderInstaller;
 
-import org.jsoup.HttpStatusException;
 import org.voidsink.anewjkuapp.BuildConfig;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.utils.Consts;
@@ -52,6 +54,7 @@ public class AnalyticsFlavor implements IAnalytics {
 
     private static final String TAG = AnalyticsFlavor.class.getSimpleName();
     private Application mApp = null;
+    private PlayServiceStatus mPlayServiceStatus = PlayServiceStatus.PS_NOT_AVAILABLE;
 
     public enum TrackerName {
         APP_TRACKER
@@ -94,14 +97,10 @@ public class AnalyticsFlavor implements IAnalytics {
                         WindowManager wm = (WindowManager) mApp.getSystemService(Context.WINDOW_SERVICE);
                         Display display = wm.getDefaultDisplay();
 
-                        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-                            Point size = new Point();
-                            display.getSize(size);
+                        Point size = new Point();
+                        display.getSize(size);
 
-                            t.setScreenResolution(size.x, size.y);
-                        } else {
-                            t.setScreenResolution(display.getWidth(), display.getHeight());
-                        }
+                        t.setScreenResolution(size.x, size.y);
                     } catch (Exception e) {
                         Log.e(TAG, "get sceen size", e);
                     }
@@ -117,14 +116,14 @@ public class AnalyticsFlavor implements IAnalytics {
     }
 
     @Override
-    public void init(Application app) {
+    public void init(@NonNull Application app) {
         if (mApp == null) {
             mApp = app;
 
             final GoogleAnalytics analytics = GoogleAnalytics.getInstance(mApp);
             if (BuildConfig.DEBUG) {
                 analytics.setDryRun(true);
-                analytics.setAppOptOut(!PreferenceWrapper.trackingErrors(mApp));
+                analytics.setAppOptOut(true);
                 analytics.getLogger().setLogLevel(Logger.LogLevel.VERBOSE);
                 Log.i(TAG, "debug enabled");
             } else {
@@ -132,8 +131,17 @@ public class AnalyticsFlavor implements IAnalytics {
                 analytics.setAppOptOut(!PreferenceWrapper.trackingErrors(mApp));
                 Log.i(TAG, "debug disabled");
             }
-        } else {
-            throw new UnknownError("Analytics already initialized");
+
+            try {
+                ProviderInstaller.installIfNeeded(mApp);
+                mPlayServiceStatus = PlayServiceStatus.PS_INSTALLED;
+            } catch (GooglePlayServicesRepairableException e) {
+                mPlayServiceStatus = PlayServiceStatus.PS_REPAIRABLE;
+                // Prompt the user to install/update/enable Google Play services.
+                //GoogleApiAvailability.getInstance().showErrorNotification(mApp, e.getConnectionStatusCode());
+            } catch (GooglePlayServicesNotAvailableException e) {
+                mPlayServiceStatus = PlayServiceStatus.PS_NOT_AVAILABLE;
+            }
         }
     }
 
@@ -151,11 +159,6 @@ public class AnalyticsFlavor implements IAnalytics {
                                         .getDescription(Thread.currentThread()
                                                 .getName(), e)
                         );
-
-                if (TextUtils.isEmpty(additionalData) && (e instanceof HttpStatusException)) {
-                    additionalData = String.format("%d: %s", ((HttpStatusException) e).getStatusCode(), ((HttpStatusException) e).getUrl());
-                }
-
                 if (!TextUtils.isEmpty(additionalData)) {
                     eb.setCustomDimension(GA_DIM_ADDITIONAL_DATA, additionalData.substring(0, Math.min(additionalData.length(), 4096)));
                 }
@@ -219,10 +222,16 @@ public class AnalyticsFlavor implements IAnalytics {
     @Override
     public void setEnabled(boolean enabled) {
         final GoogleAnalytics analytics = GoogleAnalytics.getInstance(mApp);
-        analytics.setAppOptOut(!enabled);
 
         if (BuildConfig.DEBUG) {
             Log.d(TAG, String.format("setEnabled: %s", enabled));
+        } else {
+            analytics.setAppOptOut(!enabled);
         }
+    }
+
+    @Override
+    public PlayServiceStatus getPsStatus() {
+        return mPlayServiceStatus;
     }
 }

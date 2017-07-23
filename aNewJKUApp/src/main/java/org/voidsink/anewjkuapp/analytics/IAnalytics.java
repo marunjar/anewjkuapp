@@ -28,6 +28,10 @@ package org.voidsink.anewjkuapp.analytics;
 import android.app.Application;
 import android.content.Context;
 
+enum PlayServiceStatus {
+    PS_INSTALLED, PS_NOT_AVAILABLE, PS_REPAIRABLE
+}
+
 public interface IAnalytics {
 
     void init(Application app);
@@ -41,4 +45,8 @@ public interface IAnalytics {
     void sendPreferenceChanged(String key, String value);
 
     void setEnabled(boolean enabled);
+
+    PlayServiceStatus getPsStatus();
 }
+
+

@@ -31,7 +31,6 @@ import android.net.NetworkInfo;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
-import android.webkit.WebView;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
