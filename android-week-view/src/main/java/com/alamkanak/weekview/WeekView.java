@@ -2364,6 +2364,8 @@ public class WeekView extends View {
                         // Allow moving into scroll direction only
                         mCurrentOrigin.y = mScroller.getCurrY();
                         break;
+                    case NONE:
+                        break;
                     default:
                         // Allow moving into all directions for finishing animation and goToNearestOrigin()
                         mCurrentOrigin.x = mScroller.getCurrX();
