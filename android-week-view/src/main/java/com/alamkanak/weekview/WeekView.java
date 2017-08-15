@@ -221,6 +221,8 @@ public class WeekView extends View {
                     }
                     break;
                 }
+                default:
+                    break;
             }
 
             // Calculate the new origin after scroll.
@@ -254,6 +256,8 @@ public class WeekView extends View {
                     }
                     ViewCompat.postInvalidateOnAnimation(WeekView.this);
                     break;
+                default:
+                    break;
             }
             return true;
         }
@@ -279,6 +283,8 @@ public class WeekView extends View {
                     break;
                 case VERTICAL:
                     mScroller.fling((int) mCurrentOrigin.x, (int) mCurrentOrigin.y, 0, (int) velocityY, (int) getXMinLimit(), (int) getXMaxLimit(), (int) getYMinLimit(), (int) getYMaxLimit());
+                    break;
+                default:
                     break;
             }
 
@@ -689,12 +695,15 @@ public class WeekView extends View {
                 }
             }
         }
+
+        final float mOldHeaderHeight = mHeaderHeight;
         if(containsAllDayEvent) {
             mHeaderHeight = mHeaderTextHeight + (mAllDayEventHeight + mHeaderMarginBottom);
         }
         else{
             mHeaderHeight = mHeaderTextHeight;
         }
+        mCurrentOrigin.y -= mHeaderHeight - mOldHeaderHeight;
     }
 
     private void drawTimeColumnAndAxes(Canvas canvas) {
@@ -1133,14 +1142,14 @@ public class WeekView extends View {
 
         // Prepare the name of the event.
         SpannableStringBuilder bob = new SpannableStringBuilder();
-        if (event.getName() != null) {
+        if (!TextUtils.isEmpty(event.getName())) {
             bob.append(event.getName());
             bob.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, bob.length(), 0);
-            bob.append(' ');
         }
-
-        // Prepare the location of the event.
-        if (event.getLocation() != null) {
+        if (!TextUtils.isEmpty(event.getLocation())) {
+            if (bob.length() > 0) {
+                bob.append('\n');
+            }
             bob.append(event.getLocation());
         }
 
@@ -1155,16 +1164,25 @@ public class WeekView extends View {
             if (availableHeight >= lineHeight) {
                 // Calculate available number of line counts.
                 int availableLineCount = availableHeight / lineHeight;
-                do {
-                    // Ellipsize text to fit into event rect.
-                    if (event.getId() != mNewEventId)
-                        textLayout = new StaticLayout(TextUtils.ellipsize(bob, mEventTextPaint, availableLineCount * availableWidth, TextUtils.TruncateAt.END), mEventTextPaint, (int) (rect.right - originalLeft - mEventPadding * 2), Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
 
-                    // Reduce line count.
-                    availableLineCount--;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    textLayout = StaticLayout.Builder.obtain(bob, 0, bob.length(), mEventTextPaint, availableWidth)
+                            .setEllipsize(TextUtils.TruncateAt.END)
+                            .setMaxLines(availableLineCount)
+                            .setBreakStrategy(Layout.BREAK_STRATEGY_BALANCED)
+                            .build();
+                } else {
+                    do {
+                      // Ellipsize text to fit into event rect.
+                      if (event.getId() != mNewEventId)
+                          textLayout = new StaticLayout(TextUtils.ellipsize(bob, mEventTextPaint, availableLineCount * availableWidth, TextUtils.TruncateAt.END), mEventTextPaint, (int) (rect.right - originalLeft - mEventPadding * 2), Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
 
-                    // Repeat until text is short enough.
-                } while (textLayout.getHeight() > availableHeight);
+                      // Reduce line count.
+                      availableLineCount--;
+
+                      // Repeat until text is short enough.
+                    } while (textLayout.getHeight() > availableHeight);
+                }
 
                 // Draw text.
                 canvas.save();
@@ -1198,7 +1216,7 @@ public class WeekView extends View {
      * stored in "originalEvent". But the event that corresponds to rectangle the rectangle
      * instance will be stored in "event".
      */
-    private class EventRect {
+    private static class EventRect {
         public WeekViewEvent event;
         public WeekViewEvent originalEvent;
         public RectF rectF;
@@ -1206,6 +1224,8 @@ public class WeekView extends View {
         public float width;
         public float top;
         public float bottom;
+        private int column;
+        private int maxColumns;
 
         /**
          * Create a new instance of event rect. An EventRect is actually the rectangle that is drawn
@@ -1222,6 +1242,22 @@ public class WeekView extends View {
             this.event = event;
             this.rectF = rectF;
             this.originalEvent = originalEvent;
+        }
+
+        public void setColumn(int column) {
+            this.column = column;
+        }
+
+        public void setMaxColumns(int maxColumns) {
+            this.maxColumns = maxColumns;
+        }
+
+        public int getColumn() {
+            return column;
+        }
+
+        public int getMaxColumns() {
+            return maxColumns;
         }
     }
 
@@ -1253,7 +1289,9 @@ public class WeekView extends View {
 
                 // Clear events.
                 mEventRects.clear();
-                sortAndCacheEvents(newEvents);
+                cacheEvents(newEvents);
+                sortEventRects(mEventRects);
+
                 calculateHeaderHeight();
 
                 mFetchedPeriod = periodToFetch;
@@ -1301,11 +1339,10 @@ public class WeekView extends View {
     }
 
     /**
-     * Sort and cache events.
-     * @param events The events to be sorted and cached.
+     * cache events
+     * @param events The events to be cached.
      */
-    private void sortAndCacheEvents(List<? extends WeekViewEvent> events) {
-        sortEvents(events);
+    private void cacheEvents(List<? extends WeekViewEvent> events) {
         for (WeekViewEvent event : events) {
             cacheEvent(event);
         }
@@ -1313,18 +1350,18 @@ public class WeekView extends View {
 
     /**
      * Sorts the events in ascending order.
-     * @param events The events to be sorted.
+     * @param eventRects The events to be sorted.
      */
-    private void sortEvents(List<? extends WeekViewEvent> events) {
-        Collections.sort(events, new Comparator<WeekViewEvent>() {
+    private void sortEventRects(List<EventRect> eventRects) {
+        Collections.sort(eventRects, new Comparator<EventRect>() {
             @Override
-            public int compare(WeekViewEvent event1, WeekViewEvent event2) {
-                long start1 = event1.getStartTime().getTimeInMillis();
-                long start2 = event2.getStartTime().getTimeInMillis();
+            public int compare(EventRect left, EventRect right) {
+                long start1 = left.event.getStartTime().getTimeInMillis();
+                long start2 = right.event.getStartTime().getTimeInMillis();
                 int comparator = start1 > start2 ? 1 : (start1 < start2 ? -1 : 0);
                 if (comparator == 0) {
-                    long end1 = event1.getEndTime().getTimeInMillis();
-                    long end2 = event2.getEndTime().getTimeInMillis();
+                    long end1 = left.event.getEndTime().getTimeInMillis();
+                    long end2 = right.event.getEndTime().getTimeInMillis();
                     comparator = end1 > end2 ? 1 : (end1 < end2 ? -1 : 0);
                 }
                 return comparator;
@@ -1557,8 +1594,14 @@ public class WeekView extends View {
                 @Override
                 public String interpretDate(Calendar date) {
                     try {
-                        SimpleDateFormat sdf = mDayNameLength == LENGTH_SHORT ? new SimpleDateFormat("EEEEE M/dd", Locale.getDefault()) : new SimpleDateFormat("EEE M/dd", Locale.getDefault());
-                        return sdf.format(date.getTime()).toUpperCase();
+                        Locale locale = getContext().getResources().getConfiguration().locale;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                            SimpleDateFormat sdf = mDayNameLength == LENGTH_SHORT ? new SimpleDateFormat(DateFormat.getBestDateTimePattern(locale, "EEEEE M dd"), locale) : new SimpleDateFormat(DateFormat.getBestDateTimePattern(locale, "EEE M dd"), locale);
+                            return sdf.format(date.getTime()).toUpperCase();
+                        } else {
+                            SimpleDateFormat sdf = mDayNameLength == LENGTH_SHORT ? new SimpleDateFormat("EEEEE M/dd", locale) : new SimpleDateFormat("EEE M/dd", locale);
+                            return sdf.format(date.getTime()).toUpperCase();
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                         return "";
@@ -1572,17 +1615,7 @@ public class WeekView extends View {
                     calendar.set(Calendar.MINUTE, minutes);
 
                     try {
-                        SimpleDateFormat sdf;
-                        if (DateFormat.is24HourFormat(getContext())) {
-                            sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-                        } else {
-                            if ((mTimeColumnResolution % 60 != 0)) {
-                                sdf = new SimpleDateFormat("hh:mm a", Locale.getDefault());
-                            } else {
-                                sdf = new SimpleDateFormat("hh a", Locale.getDefault());
-                            }
-                        }
-                        return sdf.format(calendar.getTime());
+                        return DateFormat.getTimeFormat(getContext()).format(calendar.getTime());
                     } catch (Exception e) {
                         e.printStackTrace();
                         return "";
@@ -2347,8 +2380,22 @@ public class WeekView extends View {
             if (mCurrentFlingDirection != Direction.NONE && forceFinishScroll()) {
                 goToNearestOrigin();
             } else if (mScroller.computeScrollOffset()) {
-                mCurrentOrigin.y = mScroller.getCurrY();
-                mCurrentOrigin.x = mScroller.getCurrX();
+                switch (mCurrentScrollDirection) {
+                    case LEFT:
+                    case RIGHT:
+                        // Allow moving into scroll direction only
+                        mCurrentOrigin.x = mScroller.getCurrX();
+                        break;
+                    case VERTICAL:
+                        // Allow moving into scroll direction only
+                        mCurrentOrigin.y = mScroller.getCurrY();
+                        break;
+                    default:
+                        // Allow moving into all directions for finishing animation and goToNearestOrigin()
+                        mCurrentOrigin.x = mScroller.getCurrX();
+                        mCurrentOrigin.y = mScroller.getCurrY();
+                        break;
+                }
                 ViewCompat.postInvalidateOnAnimation(this);
             }
         }
