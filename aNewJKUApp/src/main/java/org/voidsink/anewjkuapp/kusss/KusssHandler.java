@@ -69,10 +69,10 @@ import java.util.Map;
 
 public class KusssHandler {
 
-    public static final String PATTERN_LVA_NR_WITH_DOT = "\\d{3}\\.\\w{3}";
-    public static final String PATTERN_LVA_NR = "\\d{3}\\w{3}";
-    public static final String PATTERN_TERM = "\\d{4}[swSW]";
-    public static final String PATTERN_LVA_NR_COMMA_TERM = "\\("
+    static final String PATTERN_LVA_NR_WITH_DOT = "\\d{3}\\.\\w{3}";
+    static final String PATTERN_LVA_NR = "\\d{3}\\w{3}";
+    static final String PATTERN_TERM = "\\d{4}[swSW]";
+    static final String PATTERN_LVA_NR_COMMA_TERM = "\\("
             + PATTERN_LVA_NR + "," + PATTERN_TERM + "\\)";
     public static final String PATTERN_LVA_NR_SLASH_TERM = "\\("
             + PATTERN_LVA_NR + "\\/" + PATTERN_TERM + "\\)";
@@ -120,10 +120,10 @@ public class KusssHandler {
         if (TextUtils.isEmpty(userAgent)) {
             userAgent = "Mozilla/5.0";
         }
-        this.mUserAgent = userAgent;
+        setUserAgent(userAgent);
     }
 
-    public static boolean isNetworkAvailable(Context context) {
+    private static boolean isNetworkAvailable(Context context) {
         try {
             ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
@@ -146,7 +146,7 @@ public class KusssHandler {
         return handler;
     }
 
-    public String getSessionIDFromCookie() {
+    private String getSessionIDFromCookie() {
         try {
             List<HttpCookie> cookies = mCookies.getCookieStore().get(
                     new URI("https://www.kusss.jku.at/"));
@@ -297,7 +297,7 @@ public class KusssHandler {
         return isNetworkAvailable(c) && (isLoggedIn(c, sessionId) || login(c, user, password) != null);
     }
 
-    public static long copyStream(final InputStream input, final OutputStream output) throws IOException {
+    private static long copyStream(final InputStream input, final OutputStream output) throws IOException {
 
         final byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
         long count = 0;
@@ -468,7 +468,7 @@ public class KusssHandler {
         return terms;
     }
 
-    public boolean selectTerm(Context c, Term term) throws IOException {
+    private boolean selectTerm(Context c, Term term) throws IOException {
         if (!isNetworkAvailable(c)) {
             return false;
         }
@@ -806,7 +806,7 @@ public class KusssHandler {
         }
     }
 
-    public String getUserAgent() {
+    private String getUserAgent() {
         return this.mUserAgent;
     }
 
