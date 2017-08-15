@@ -136,7 +136,7 @@ public class MapFragment extends BaseFragment implements
     }
 
 
-    class MyMarker {
+    static class MyMarker {
         private final LatLong mLatLon;
         private final String mName;
 

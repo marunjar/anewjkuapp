@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+
 android {
     signingConfigs {
     }
@@ -118,4 +119,11 @@ dependencies {
     compile project(':sectionedRecyclerAdapter')
     compile project(':android-week-view')
     //compile project(':kussslibrary')
+
+}
+
+apply plugin: "net.ltgt.errorprone"
+
+configurations.errorprone {
+    resolutionStrategy.force 'com.google.errorprone:error_prone_core:2.0.21'
 }

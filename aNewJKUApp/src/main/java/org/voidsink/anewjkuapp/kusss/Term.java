@@ -72,6 +72,7 @@ public class Term implements Comparable<Term> {
             this.value = value;
         }
 
+        @Override
         public String toString() {
             return value;
         }
@@ -126,6 +127,7 @@ public class Term implements Comparable<Term> {
         return type;
     }
 
+    @Override
     public String toString() {
         return String.format(Locale.GERMAN, "%d%s", year, type.toString());
     }

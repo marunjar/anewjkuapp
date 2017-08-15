@@ -49,10 +49,12 @@ public class Mensa implements IMensa {
         }
     }
 
+    @Override
     public boolean isEmpty() {
         return this.days.size() == 0;
     }
 
+    @Override
     public List<IDay> getDays() {
         return this.days;
     }
@@ -62,10 +64,12 @@ public class Mensa implements IMensa {
         return this.key;
     }
 
+    @Override
     public String getName() {
         return this.name;
     }
 
+    @Override
     public IDay getDay(Date now) {
         for (IDay mensaDay : this.days) {
             if (!mensaDay.isEmpty()

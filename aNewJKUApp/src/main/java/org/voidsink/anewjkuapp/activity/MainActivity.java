@@ -486,7 +486,7 @@ public class MainActivity extends ThemedActivity {
                     }
                 }
 
-                Fragment f = startFragment.newInstance();
+                Fragment f = startFragment.getConstructor().newInstance();
 
                 Bundle b = new Bundle();
                 b.putCharSequence(Consts.ARG_FRAGMENT_TITLE, menuItem.getTitle());

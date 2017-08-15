@@ -103,7 +103,7 @@ public class KusssHandler {
 
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
-    private static KusssHandler handler = null;
+    private volatile static KusssHandler handler = null;
     private final CookieManager mCookies;
     private String mUserAgent;
 

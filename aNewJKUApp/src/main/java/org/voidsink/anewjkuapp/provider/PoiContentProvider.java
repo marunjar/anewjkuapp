@@ -147,6 +147,8 @@ public class PoiContentProvider extends ContentProvider {
         SQLiteDatabase db = KusssDatabaseHelper.getInstance(getContext()).getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 
+        builder.setTables(PoiContentContract.Poi.TABLE_NAME);
+
 		/*
          * Choose the table to query and a sort order based on the code returned
 		 * for the incoming URI. Here, too, only the statements for table 3 are
@@ -156,25 +158,21 @@ public class PoiContentProvider extends ContentProvider {
             case CODE_POI_ID:
                 builder.appendWhere(PoiContentContract.Poi.COL_ROWID + "="
                         + uri.getLastPathSegment());
+                break;
             case CODE_POI:
                 if (TextUtils.isEmpty(sortOrder))
                     sortOrder = PoiContentContract.Poi.COL_NAME + " ASC";
-                builder.setTables(PoiContentContract.Poi.TABLE_NAME);
-                return builder.query(db, projection, selection, selectionArgs,
-                        null, null, sortOrder);
+                break;
             case CODE_POI_BY_NAME:
                 builder.appendWhere(PoiContentContract.Poi.COL_NAME + "='"
                         + Uri.decode(uri.getLastPathSegment()) + "'");
                 if (TextUtils.isEmpty(sortOrder))
                     sortOrder = PoiContentContract.Poi.COL_NAME + " ASC";
-                builder.setTables(PoiContentContract.Poi.TABLE_NAME);
-                return builder.query(db, projection, selection, selectionArgs,
-                        null, null, sortOrder);
+                break;
             case CODE_POI_SEARCH:
+                // TODO respect limit
                 final String limit = uri
                         .getQueryParameter(SearchManager.SUGGEST_PARAMETER_LIMIT);
-
-                builder.setTables(PoiContentContract.Poi.TABLE_NAME);
 
                 if (selection == null) {
                     selection = PoiContentContract.Poi.TABLE_NAME + " MATCH ?";
@@ -194,12 +192,13 @@ public class PoiContentProvider extends ContentProvider {
                             PoiContentContract.Poi.COL_ROWID + " AS "
                                     + SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID};
                 }
-                return builder.query(db, projection, selection, selectionArgs,
-                        null, null, sortOrder, limit);
+                break;
             default:
                 throw new IllegalArgumentException("URI " + uri
                         + " is not supported.");
         }
+        return builder.query(db, projection, selection, selectionArgs,
+                null, null, sortOrder);
     }
 
     @Override

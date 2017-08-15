@@ -46,6 +46,7 @@ public class TermTabItem extends SlidingTabItem {
         return mTerms;
     }
 
+    @Override
     protected Bundle getArguments() {
         Bundle b = new Bundle();
 

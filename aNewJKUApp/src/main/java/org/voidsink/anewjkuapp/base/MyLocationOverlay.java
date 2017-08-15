@@ -278,10 +278,10 @@ public class MyLocationOverlay extends Layer implements LocationListener, Activi
         this.myLocationEnabled = result;
     }
 
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION == requestCode && AndroidSupportUtil.verifyPermissions(grantResults)) {
             enableBestAvailableProviderPermissionGranted();
         }
     }
-
 }

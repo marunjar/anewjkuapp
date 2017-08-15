@@ -127,6 +127,7 @@ public class ExamFragment extends BaseFragment implements ContentObserverListene
                 Intent mUpdateService = new Intent(getActivity(), UpdateService.class);
                 mUpdateService.putExtra(Consts.ARG_UPDATE_KUSSS_EXAMS, true);
                 getActivity().startService(mUpdateService);
+                return true;
             }
             default:
                 return super.onOptionsItemSelected(item);

@@ -106,7 +106,7 @@ public class MensaDayFragment extends BaseFragment {
         mMensen.set(index, mensa);
     }
 
-    private class MenuDayLoader extends BaseAsyncTaskLoader<ArrayList<MensaItem>> {
+    private static class MenuDayLoader extends BaseAsyncTaskLoader<ArrayList<MensaItem>> {
         private final Date mDay;
 
         public MenuDayLoader(Context c, Date day) {

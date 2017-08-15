@@ -117,6 +117,7 @@ public abstract class JSONMenuLoader implements MenuLoader {
         }
     }
 
+    @Override
     public IMensa getMensa(Context context) {
         Mensa mensa = null;
         try {

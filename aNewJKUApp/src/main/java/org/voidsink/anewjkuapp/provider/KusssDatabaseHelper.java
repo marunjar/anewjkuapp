@@ -40,7 +40,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "kusss.db";
     private static final int DATABASE_VERSION = 11;
-    private static KusssDatabaseHelper instance = null;
+    private volatile static KusssDatabaseHelper instance = null;
 
     // Database creation sql statement
     public static final String DB_CREATE_COURSE = "create table if not exists "

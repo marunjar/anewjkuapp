@@ -80,7 +80,7 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
                 if (clazzname != null) {
                     Class<?> clazz = getClassLoader().loadClass(clazzname);
                     if (PreferenceFragmentCompat.class.isAssignableFrom(clazz)) {
-                        fragment = (Fragment) clazz.newInstance();
+                        fragment = (Fragment) clazz.getConstructor().newInstance();
                     }
                 }
             } catch (Exception e) {

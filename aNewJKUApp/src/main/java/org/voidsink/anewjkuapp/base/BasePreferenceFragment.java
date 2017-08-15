@@ -97,6 +97,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
             return (TwoLinesListPreference) this.getPreference();
         }
 
+        @Override
         protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {
             super.onPrepareDialogBuilder(builder);
             ListPreference preference = this.getListPreference();
@@ -117,6 +118,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
 
                     @NonNull
                     @SuppressLint("InflateParams")
+                    @Override
                     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
                         final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -147,6 +149,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
 
                 this.mClickedDialogEntryIndex = preference.findIndexOfValue(preference.getValue());
                 builder.setSingleChoiceItems(adapter, this.mClickedDialogEntryIndex, new DialogInterface.OnClickListener() {
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         TwoLinesListPreferenceDialogFragment.this.mClickedDialogEntryIndex = which;
                         TwoLinesListPreferenceDialogFragment.this.onClick(dialog, -1);
@@ -159,6 +162,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
             }
         }
 
+        @Override
         public void onDialogClosed(boolean positiveResult) {
             ListPreference preference = this.getListPreference();
             if (positiveResult && this.mClickedDialogEntryIndex >= 0 && preference.getEntryValues() != null) {
@@ -202,6 +206,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
             getTimePreference().setTime(mTime);
         }
 
+        @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             final Calendar c = Calendar.getInstance();
             c.setTimeInMillis(0);

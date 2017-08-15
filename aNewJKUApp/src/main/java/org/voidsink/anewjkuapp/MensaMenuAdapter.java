@@ -194,7 +194,7 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
     }
 
 
-    public class MenuHeaderHolder extends RecyclerView.ViewHolder {
+    public static class MenuHeaderHolder extends RecyclerView.ViewHolder {
         public final TextView mText;
 
         public MenuHeaderHolder(View itemView) {

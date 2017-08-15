@@ -501,7 +501,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         }
     }
 
-    private class CalendarDateTimeInterpreter implements DateTimeInterpreter {
+    private static class CalendarDateTimeInterpreter implements DateTimeInterpreter {
 
         final DateFormat mDateFormat;
         final DateFormat mTimeFormat;

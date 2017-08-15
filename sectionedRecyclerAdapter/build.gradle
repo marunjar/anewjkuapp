@@ -54,3 +54,9 @@ android {
 dependencies {
     compile 'com.android.support:recyclerview-v7:25.4.0'
 }
+
+apply plugin: "net.ltgt.errorprone"
+
+configurations.errorprone {
+    resolutionStrategy.force 'com.google.errorprone:error_prone_core:2.0.21'
+}

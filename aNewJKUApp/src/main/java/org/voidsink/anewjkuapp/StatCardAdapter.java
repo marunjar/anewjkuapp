@@ -455,7 +455,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         return this.getItem(position).getType();
     }
 
-    private class LvaStatItem {
+    private static class LvaStatItem {
 
         private final LvaState mType;
         private final double mEcts;
@@ -474,7 +474,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         }
     }
 
-    private class GradeStatItem {
+    private static class GradeStatItem {
         private final AssessmentType mType;
         private final double mAvgGrade;
 
@@ -492,7 +492,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         }
     }
 
-    public class StatViewHolder extends RecyclerView.ViewHolder {
+    public static class StatViewHolder extends RecyclerView.ViewHolder {
 
         public final Toolbar mToolbar;
         public final TextView mTitle;

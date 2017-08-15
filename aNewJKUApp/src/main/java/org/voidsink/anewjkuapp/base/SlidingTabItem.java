@@ -43,7 +43,7 @@ public class SlidingTabItem {
      */
     public Fragment createFragment() {
         try {
-            Fragment f = mFragment.newInstance();
+            Fragment f = mFragment.getConstructor().newInstance();
             Bundle b = getArguments();
             if (b != null) {
                 f.setArguments(b);

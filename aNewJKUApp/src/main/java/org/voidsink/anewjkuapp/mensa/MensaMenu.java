@@ -75,10 +75,12 @@ public class MensaMenu implements IMenu {
         return this.name;
     }
 
+    @Override
     public String getSoup() {
         return this.soup;
     }
 
+    @Override
     public String getMeal() {
         return this.meal;
     }
@@ -88,14 +90,17 @@ public class MensaMenu implements IMenu {
         return null;
     }
 
+    @Override
     public double getPrice() {
         return this.price;
     }
 
+    @Override
     public double getPriceBig() {
         return this.priceBig;
     }
 
+    @Override
     public double getOehBonus() {
         return this.oehBonus;
     }

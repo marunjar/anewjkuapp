@@ -72,7 +72,7 @@ public class PoiAdapter extends BaseArrayAdapter<Poi> {
         return convertView;
     }
 
-    private final class PoiHolder {
+    private static final class PoiHolder {
         TextView text1;
         TextView text2;
     }

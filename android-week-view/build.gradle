@@ -28,4 +28,10 @@ dependencies {
     compile 'com.android.support:support-core-ui:25.4.0'
 }
 
+apply plugin: "net.ltgt.errorprone"
+
+configurations.errorprone {
+    resolutionStrategy.force 'com.google.errorprone:error_prone_core:2.0.21'
+}
+
 //apply from: 'gradle-mvn-push.gradle'
