@@ -220,6 +220,8 @@ public class WeekView extends View {
                     }
                     break;
                 }
+                default:
+                    break;
             }
 
             // Calculate the new origin after scroll.
@@ -253,6 +255,8 @@ public class WeekView extends View {
                     }
                     ViewCompat.postInvalidateOnAnimation(WeekView.this);
                     break;
+                default:
+                    break;
             }
             return true;
         }
@@ -278,6 +282,8 @@ public class WeekView extends View {
                     break;
                 case VERTICAL:
                     mScroller.fling((int) mCurrentOrigin.x, (int) mCurrentOrigin.y, 0, (int) velocityY, (int) getXMinLimit(), (int) getXMaxLimit(), (int) getYMinLimit(), (int) getYMaxLimit());
+                    break;
+                default:
                     break;
             }
 
@@ -1149,7 +1155,7 @@ public class WeekView extends View {
      * stored in "originalEvent". But the event that corresponds to rectangle the rectangle
      * instance will be stored in "event".
      */
-    private class EventRect {
+    private static class EventRect {
         public WeekViewEvent event;
         public WeekViewEvent originalEvent;
         public RectF rectF;
