@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import static com.alamkanak.weekview.WeekViewUtil.*;
+import static com.alamkanak.weekview.WeekViewUtil.isSameDay;
 
 /**
  * Created by Raquib-ul-Alam Kanak on 7/21/2014.
