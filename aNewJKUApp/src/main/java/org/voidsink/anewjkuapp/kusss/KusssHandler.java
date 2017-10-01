@@ -28,6 +28,7 @@ package org.voidsink.anewjkuapp.kusss;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -59,6 +60,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -240,7 +243,7 @@ public class KusssHandler {
             }
         }
 
-        OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+        OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), Charset.defaultCharset());
         wr.write(builder.toString());
         wr.flush();
     }
@@ -350,11 +353,12 @@ public class KusssHandler {
             }
 
             final long length = copyStream(conn.getInputStream(), data);
+            String encoding = getEncoding(conn);
 
             conn.disconnect();
 
             if (length > 0) {
-                iCal = mCalendarBuilder.build(new ByteArrayInputStream(getModifiedData(data)));
+                iCal = mCalendarBuilder.build(new ByteArrayInputStream(getModifiedData(data, encoding)));
             } else {
                 iCal = new Calendar();
             }
@@ -371,9 +375,39 @@ public class KusssHandler {
         return iCal;
     }
 
-    private byte[] getModifiedData(ByteArrayOutputStream data) {
+    private String getEncoding(@NonNull HttpURLConnection conn) {
+        String encoding = conn.getContentEncoding();
+
+        if (TextUtils.isEmpty(encoding)) {
+            String contentType = conn.getContentType();
+            String[] values = contentType.split(";");
+
+            for (String value : values) {
+                value = value.trim();
+
+                if (value.toLowerCase().startsWith("charset=")) {
+                    encoding = value.substring("charset=".length());
+                }
+            }
+        }
+
+        return encoding;
+    }
+
+    private byte[] getModifiedData(ByteArrayOutputStream data, String encoding) {
+        Charset charset;
+        if (TextUtils.isEmpty(encoding)) {
+            charset = Charset.defaultCharset();
+        } else {
+            try {
+                charset = Charset.forName(encoding);
+            } catch (UnsupportedCharsetException e) {
+                Analytics.sendException(null, e, false, encoding);
+                charset = Charset.defaultCharset();
+            }
+        }
         // replace crlf with \n, kusss ics uses lf only as content line separator
-        return data.toString().replace("\r\n", "\\n").getBytes();
+        return data.toString().replace("\r\n", "\\n").getBytes(charset);
     }
 
     public Calendar getExamIcal(Context c, CalendarBuilder mCalendarBuilder) {
@@ -417,6 +451,8 @@ public class KusssHandler {
 
             final long length = copyStream(conn.getInputStream(), data);
 
+            String encoding = getEncoding(conn);
+
             conn.disconnect();
 
             /*
@@ -425,7 +461,7 @@ public class KusssHandler {
             */
 
             if (length > 0) {
-                iCal = mCalendarBuilder.build(new ByteArrayInputStream(getModifiedData(data)));
+                iCal = mCalendarBuilder.build(new ByteArrayInputStream(getModifiedData(data, encoding)));
             } else {
                 iCal = new Calendar();
             }
