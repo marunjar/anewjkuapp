@@ -272,7 +272,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
             mAccountManager.setPassword(account, accountPassword);
 
             // Turn on periodic syncing
-            long interval = PreferenceWrapper.getSyncInterval(this) * 60 * 60;
+            long interval = PreferenceWrapper.getSyncInterval(this) * 60L * 60;
 
             ContentResolver.addPeriodicSync(account,
                     CalendarContractWrapper.AUTHORITY(), new Bundle(),
