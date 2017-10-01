@@ -25,7 +25,6 @@
 package org.voidsink.anewjkuapp;
 
 import android.app.Application;
-import android.text.TextUtils;
 import android.webkit.WebView;
 
 import net.fortuna.ical4j.util.CompatibilityHints;
@@ -34,18 +33,11 @@ import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
-
 public class Globals extends Application {
 
     @Override
     public void onCreate() {
         super.onCreate();
-
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/Roboto-Regular.ttf")
-                .setFontAttrId(R.attr.fontPath)
-                .build());
 
         // initialize analytics
         Analytics.init(this);

@@ -71,6 +71,7 @@
     <!-- Material Text Styles -->
     <style name="Text">
         <item name="fontPath">fonts/Roboto-Regular.ttf</item>
+        <item name="android:textStyle">normal</item>
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
@@ -82,22 +83,25 @@
     <style name="Text.Body2" parent="@style/Text">
         <item name="android:lineSpacingMultiplier">1.1</item>
         <item name="android:textSize">@dimen/text_size_body</item>
-        <item name="fontPath">fonts/Roboto-Light.ttf</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
 
     <style name="Text.Title" parent="@style/Text">
-        <item name="fontPath">fonts/Roboto-Medium.ttf</item>
+        <item name="fontPath">fonts/Roboto-Regular.ttf</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/text_size_title</item>
     </style>
 
     <style name="Text.ItemTitle" parent="@style/Text">
-        <item name="fontPath">fonts/Roboto-Medium.ttf</item>
+        <item name="fontPath">fonts/Roboto-Regular.ttf</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/text_size_subtitle</item>
     </style>
 
     <style name="Text.Button" parent="@style/Text">
         <item name="android:textSize">@dimen/text_size_button</item>
-        <item name="fontPath">fonts/Roboto-Medium.ttf</item>
+        <item name="fontPath">fonts/Roboto-Regular.ttf</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:textAllCaps">true</item>
     </style>
 

@@ -60,8 +60,6 @@ import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.anewjkuapp.utils.UIUtils;
 import org.voidsink.anewjkuapp.workaround.AccountAuthenticatorActivity;
 
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
-
 public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 
     public static final String KEY_ERROR_MESSAGE = "ERR_MSG";
@@ -316,11 +314,6 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override

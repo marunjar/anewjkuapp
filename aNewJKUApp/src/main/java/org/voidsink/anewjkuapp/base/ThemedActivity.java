@@ -37,8 +37,6 @@ import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.anewjkuapp.utils.UIUtils;
 
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
-
 public class ThemedActivity extends AppCompatActivity {
 
     static {
@@ -62,11 +60,6 @@ public class ThemedActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         initActionBar();
-    }
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     protected final void initActionBar() {
