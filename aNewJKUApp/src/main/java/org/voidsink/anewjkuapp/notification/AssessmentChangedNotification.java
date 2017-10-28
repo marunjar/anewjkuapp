@@ -36,6 +36,7 @@ import android.support.v4.app.NotificationCompat;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -74,7 +75,7 @@ public class AssessmentChangedNotification {
                             Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-                    mContext)
+                    mContext, Consts.CHANNEL_ID_GRADES)
                     .setContentIntent(pendingIntent)
                     .setContentTitle(mContext.getString(R.string.notification_grades_changed_title))
                     .setContentText(mContext.getString(R.string.notification_grades_changed, lines.size()))

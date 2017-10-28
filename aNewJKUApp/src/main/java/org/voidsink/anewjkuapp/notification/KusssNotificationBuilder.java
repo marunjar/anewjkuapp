@@ -34,6 +34,7 @@ import android.support.v4.app.NotificationCompat;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 public class KusssNotificationBuilder {
 
@@ -45,7 +46,7 @@ public class KusssNotificationBuilder {
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
                 new Intent(mContext, MainActivity.class), 0);
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext)
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext, Consts.CHANNEL_ID_DEFAULT)
                 .setContentTitle(mContext.getText(stringResID))
                 .setContentIntent(pendingIntent)
                 .setCategory(NotificationCompat.CATEGORY_ERROR)

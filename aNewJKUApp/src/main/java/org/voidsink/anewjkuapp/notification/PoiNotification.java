@@ -35,6 +35,7 @@ import android.support.v4.app.NotificationCompat;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,7 +72,7 @@ public class PoiNotification {
                             .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-                    mContext)
+                    mContext, Consts.CHANNEL_ID_DEFAULT)
                     .setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp)
                     .setContentIntent(pendingIntent)
                     .setContentTitle(mContext.getText(R.string.notification_poi_changed_title))

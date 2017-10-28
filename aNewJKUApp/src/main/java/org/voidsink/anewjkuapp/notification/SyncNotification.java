@@ -35,6 +35,7 @@ import android.support.v4.app.NotificationCompat;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 public class SyncNotification {
     private final Context mContext;
@@ -51,7 +52,7 @@ public class SyncNotification {
         ((NotificationManager) mContext
                 .getSystemService(Context.NOTIFICATION_SERVICE)).cancel(id);
 
-        this.mBuilder = new NotificationCompat.Builder(this.mContext)
+        this.mBuilder = new NotificationCompat.Builder(this.mContext, Consts.CHANNEL_ID_DEFAULT)
                 .setOngoing(true)
                 .setCategory(NotificationCompat.CATEGORY_SERVICE)
                 .setAutoCancel(true)

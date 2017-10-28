@@ -36,6 +36,7 @@ import android.support.v4.app.NotificationCompat;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -82,7 +83,7 @@ public class CalendarChangedNotification {
                             Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-                    mContext)
+                    mContext, Consts.CHANNEL_ID_DEFAULT)
                     .setContentIntent(pendingIntent)
                     .setContentTitle(mContext.getString(resIdtitle, mName))
                     .setContentText(mContext.getString(resIdContent, lines.size(), mName))

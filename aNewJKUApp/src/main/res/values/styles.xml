@@ -70,7 +70,7 @@
 
     <!-- Material Text Styles -->
     <style name="Text">
-        <item name="fontPath">fonts/Roboto-Regular.ttf</item>
+        <item name="android:fontFamily">@font/appfont</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
@@ -87,20 +87,20 @@
     </style>
 
     <style name="Text.Title" parent="@style/Text">
-        <item name="fontPath">fonts/Roboto-Regular.ttf</item>
+        <item name="android:fontFamily">@font/appfont</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/text_size_title</item>
     </style>
 
     <style name="Text.ItemTitle" parent="@style/Text">
-        <item name="fontPath">fonts/Roboto-Regular.ttf</item>
+        <item name="android:fontFamily">@font/appfont</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/text_size_subtitle</item>
     </style>
 
     <style name="Text.Button" parent="@style/Text">
         <item name="android:textSize">@dimen/text_size_button</item>
-        <item name="fontPath">fonts/Roboto-Regular.ttf</item>
+        <item name="android:fontFamily">@font/appfont</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAllCaps">true</item>
     </style>
@@ -125,14 +125,14 @@
         <item name="android:layout_marginBottom">@dimen/card_content_padding</item>
     </style>
 
-    <!--this themes are for toolbars in cards-->
+<!--this themes are for toolbars in cards-->
     <style name="cardToolbar.ActionButton.Overflow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
         <item name="android:minWidth">0dp</item>
         <item name="android:paddingLeft">0dp</item>
         <item name="android:paddingRight">0dp</item>
     </style>
 
-    <style name="cardToolbar.light.ActionButton.Overflow" parent="@style/Widget.AppCompat.Light.ActionButton.Overflow">
+    <style name="cardToolbar.Light.ActionButton.Overflow" parent="@style/Widget.AppCompat.Light.ActionButton.Overflow">
         <item name="android:minWidth">0dp</item>
         <item name="android:paddingLeft">0dp</item>
         <item name="android:paddingRight">0dp</item>
@@ -146,10 +146,10 @@
         <item name="actionOverflowButtonStyle">@style/cardToolbar.ActionButton.Overflow</item>
     </style>
 
-    <style name="cardToolbar.light" parent="AppTheme.Light">
+    <style name="cardToolbar.Light" parent="AppTheme.Light">
         <item name="colorPrimary">@android:color/transparent</item>
         <item name="colorPrimaryDark">@android:color/transparent</item>
-        <item name="actionOverflowButtonStyle">@style/cardToolbar.light.ActionButton.Overflow</item>
+        <item name="actionOverflowButtonStyle">@style/cardToolbar.Light.ActionButton.Overflow</item>
     </style>
 
     <style name="cardToolbarStyle">
@@ -160,5 +160,11 @@
         <item name="contentInsetLeft">0dp</item>
         <item name="contentInsetRight">0dp</item>
         <item name="contentInsetStart">0dp</item>
+    </style>
+
+    <style name="mainToolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    </style>
+
+    <style name="mainToolbarStyle">
     </style>
 </resources>

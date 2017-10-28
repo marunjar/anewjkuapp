@@ -26,8 +26,8 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -35,8 +35,8 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 9
-        targetSdkVersion 25
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
     }
@@ -52,11 +52,11 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:recyclerview-v7:25.4.0'
+    implementation "com.android.support:recyclerview-v7:${rootProject.ext.supportLibVersion}"
 }
 
 apply plugin: "net.ltgt.errorprone"
 
 configurations.errorprone {
-    resolutionStrategy.force 'com.google.errorprone:error_prone_core:2.0.21'
+    resolutionStrategy.force 'com.google.errorprone:error_prone_core:2.1.2'
 }

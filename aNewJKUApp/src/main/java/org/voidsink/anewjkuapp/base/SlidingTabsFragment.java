@@ -87,8 +87,8 @@ public abstract class SlidingTabsFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
-        mTabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
+        mViewPager = view.findViewById(R.id.viewpager);
+        mTabLayout = view.findViewById(R.id.sliding_tabs);
     }
 
     @Override

@@ -31,6 +31,9 @@ import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.ContentResolver;
@@ -43,12 +46,14 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
 
+import org.voidsink.anewjkuapp.Globals;
 import org.voidsink.anewjkuapp.ImportPoiTask;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.KusssContentContract;
@@ -941,5 +946,58 @@ public class AppUtils {
 
     public static String format(Context c, String format, Object... args) {
         return String.format(getLocale(c), format, args);
+    }
+
+    public static void setupNotificationChannels(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            try {
+                // create default channel
+                NotificationChannel defaultChannel = new NotificationChannel(Consts.CHANNEL_ID_EXAMS,
+                        context.getString(R.string.app_name), NotificationManager.IMPORTANCE_LOW);
+                // Sets whether notifications posted to this channel should display notification lights
+                defaultChannel.enableLights(true);
+                // Sets whether notification posted to this channel should vibrate.
+                defaultChannel.enableVibration(true);
+                // Sets the notification light color for notifications posted to this channel
+                defaultChannel.setLightColor(Color.BLUE);
+                // Sets whether notifications posted to this channel appear on the lockscreen or not
+                defaultChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+                defaultChannel.setShowBadge(false);
+
+                ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(defaultChannel);
+
+                // create exams channel
+                NotificationChannel examsChannel = new NotificationChannel(Consts.CHANNEL_ID_EXAMS,
+                        context.getString(R.string.title_exams), NotificationManager.IMPORTANCE_DEFAULT);
+                // Sets whether notifications posted to this channel should display notification lights
+                examsChannel.enableLights(true);
+                // Sets whether notification posted to this channel should vibrate.
+                examsChannel.enableVibration(true);
+                // Sets the notification light color for notifications posted to this channel
+                examsChannel.setLightColor(Color.RED);
+                // Sets whether notifications posted to this channel appear on the lockscreen or not
+                examsChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+                defaultChannel.setShowBadge(false);
+
+                ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(examsChannel);
+
+                // create grades channel
+                NotificationChannel gradesChannel = new NotificationChannel(Consts.CHANNEL_ID_GRADES,
+                        context.getString(R.string.title_grades), NotificationManager.IMPORTANCE_HIGH);
+                // Sets whether notifications posted to this channel should display notification lights
+                gradesChannel.enableLights(true);
+                // Sets whether notification posted to this channel should vibrate.
+                gradesChannel.enableVibration(true);
+                // Sets the notification light color for notifications posted to this channel
+                gradesChannel.setLightColor(Color.GREEN);
+                // Sets whether notifications posted to this channel appear on the lockscreen or not
+                gradesChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+                defaultChannel.setShowBadge(true);
+
+                ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(gradesChannel);
+            } catch (Exception e) {
+                Analytics.sendException(context, e, true);
+            }
+        }
     }
 }

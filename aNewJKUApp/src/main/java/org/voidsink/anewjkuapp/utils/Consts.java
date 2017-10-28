@@ -24,6 +24,8 @@
 
 package org.voidsink.anewjkuapp.utils;
 
+import org.voidsink.anewjkuapp.BuildConfig;
+
 public class Consts {
 
     public static final String ARG_RECREATE_SYNC_ALARM = "RECREATE_SYNC_ALARM";
@@ -96,6 +98,10 @@ public class Consts {
     public static final int LOADER_ID_ASSESSMENTS = 2;
 
     public static final String PROPERTY_ID = "UA-51633871-1";
+
+    public static final String CHANNEL_ID_GRADES = BuildConfig.APPLICATION_ID + ".GRADES";
+    public static final String CHANNEL_ID_EXAMS = BuildConfig.APPLICATION_ID + ".EXAMS";
+    public static final String CHANNEL_ID_DEFAULT = BuildConfig.APPLICATION_ID + ".DEFAULT";
 
     private Consts() {
     }

@@ -42,6 +42,8 @@ public class Globals extends Application {
         // initialize analytics
         Analytics.init(this);
 
+        AppUtils.setupNotificationChannels(this);
+
         AppUtils.updateSyncAlarm(this, false);
 
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
