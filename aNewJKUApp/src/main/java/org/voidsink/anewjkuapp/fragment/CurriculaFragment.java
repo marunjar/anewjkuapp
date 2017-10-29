@@ -1,25 +1,25 @@
 /*
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
- * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
- * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
+ *       ____.____  __.____ ___     _____
+ *      |    |    |/ _|    |   \   /  _  \ ______ ______
+ *      |    |      < |    |   /  /  /_\  \\____ \\____ \
+ *  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ *  \________|____|__ \______/   \____|__  /   __/|   __/
+ *                   \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -98,7 +98,7 @@ public class CurriculaFragment extends BaseFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        mRecyclerView = view.findViewById(R.id.recyclerView);
 
         return view;
     }
@@ -232,13 +232,13 @@ public class CurriculaFragment extends BaseFragment implements
         public CurriculumViewHolder(View itemView) {
             super(itemView);
 
-            isStandard = (TextView) itemView.findViewById(R.id.curriculum_is_standard);
-            cid = (TextView) itemView.findViewById(R.id.curriculum_id);
-            title = (TextView) itemView.findViewById(R.id.curriculum_title);
-            steopDone = (TextView) itemView.findViewById(R.id.curriculum_steop_done);
-            activeStatus = (TextView) itemView.findViewById(R.id.curriculum_active_status);
-            dtStart = (TextView) itemView.findViewById(R.id.curriculum_dt_start);
-            dtEnd = (TextView) itemView.findViewById(R.id.curriculum_dt_end);
+            isStandard = itemView.findViewById(R.id.curriculum_is_standard);
+            cid = itemView.findViewById(R.id.curriculum_id);
+            title = itemView.findViewById(R.id.curriculum_title);
+            steopDone = itemView.findViewById(R.id.curriculum_steop_done);
+            activeStatus = itemView.findViewById(R.id.curriculum_active_status);
+            dtStart = itemView.findViewById(R.id.curriculum_dt_start);
+            dtEnd = itemView.findViewById(R.id.curriculum_dt_end);
         }
     }
 
@@ -247,7 +247,7 @@ public class CurriculaFragment extends BaseFragment implements
 
         public CurriculumHeaderHolder(View itemView) {
             super(itemView);
-            mText = (TextView) itemView.findViewById(R.id.list_header_text);
+            mText = itemView.findViewById(R.id.list_header_text);
         }
     }
 

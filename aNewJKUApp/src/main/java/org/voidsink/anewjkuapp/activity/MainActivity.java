@@ -1,25 +1,26 @@
 /*
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
- * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
- * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
+ *       ____.____  __.____ ___     _____
+ *      |    |    |/ _|    |   \   /  _  \ ______ ______
+ *      |    |      < |    |   /  /  /_\  \\____ \\____ \
+ *  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ *  \________|____|__ \______/   \____|__  /   __/|   __/
+ *                   \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
 
 package org.voidsink.anewjkuapp.activity;
@@ -228,7 +229,7 @@ public class MainActivity extends ThemedActivity {
         // set up drawer
         mUserLearnedDrawer = PreferenceWrapper.getUserLearnedDrawer(this);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
 
         mDrawerListener = new DrawerLayout.SimpleDrawerListener() {
             @Override
@@ -237,7 +238,7 @@ public class MainActivity extends ThemedActivity {
                     PreferenceWrapper.setPrefUserLearnedDrawer(MainActivity.this, true);
                 }
 
-                TextView mDrawerUser = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.drawer_user);
+                TextView mDrawerUser = mNavigationView.getHeaderView(0).findViewById(R.id.drawer_user);
 
                 if (mDrawerUser != null) {
                     if ((android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M) && (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED)) {
@@ -281,7 +282,7 @@ public class MainActivity extends ThemedActivity {
             }
         };
 
-        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mNavigationView = findViewById(R.id.nav_view);
         if (mNavigationView != null) {
             setupDrawerContent(mNavigationView);
         }
@@ -361,8 +362,6 @@ public class MainActivity extends ThemedActivity {
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                        checkNavItem(menuItem);
-
                         switch (menuItem.getItemId()) {
                             case R.id.nav_settings: {
                                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
@@ -528,46 +527,6 @@ public class MainActivity extends ThemedActivity {
 
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
-
-        if (mNavigationView != null) {
-            Fragment f = getSupportFragmentManager().findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
-            if (f instanceof StackedFragment) {
-                int id = ((StackedFragment) f).getId(this);
-                if (id > 0) {
-                    MenuItem menuItem = mNavigationView.getMenu().findItem(id);
-                    checkNavItem(menuItem);
-                }
-            }
-        }
-    }
-
-    private void uncheckMenuItems(Menu menu) {
-        if (menu != null) {
-            for (int i = 0; i < menu.size(); i++) {
-                MenuItem item = menu.getItem(i);
-
-                if (item.isCheckable()) {
-                    item.setChecked(false);
-                }
-
-                if (item.hasSubMenu()) {
-                    uncheckMenuItems(item.getSubMenu());
-                }
-            }
-        }
-    }
-
-    private void checkNavItem(MenuItem menuItem) {
-        /*if (mNavigationView != null) {
-            if (menuItem != null) {
-                if (menuItem.isCheckable() && !menuItem.isChecked()) {
-                    // iterate over all items and uncheck them, groups doesn't work with submenus for grouping entries in NavigationView
-                    uncheckMenuItems(mNavigationView.getMenu());
-
-                    menuItem.setChecked(true);
-                }
-            }
-        }*/
     }
 
     @Override

@@ -172,14 +172,14 @@ public class MyLocationOverlay extends Layer implements LocationListener, Activi
     /**
      * @return true if the receiving of location updates is currently enabled, false otherwise.
      */
-    public synchronized boolean isMyLocationEnabled() {
+    protected synchronized boolean isMyLocationEnabled() {
         return this.myLocationEnabled;
     }
 
     /**
      * @return true if the snap-to-location mode is enabled, false otherwise.
      */
-    public synchronized boolean isSnapToLocationEnabled() {
+    protected synchronized boolean isSnapToLocationEnabled() {
         return this.snapToLocationEnabled && isMyLocationEnabled();
     }
 

@@ -1,25 +1,25 @@
 /*
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
- * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
- * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
+ *       ____.____  __.____ ___     _____
+ *      |    |    |/ _|    |   \   /  _  \ ______ ______
+ *      |    |      < |    |   /  /  /_\  \\____ \\____ \
+ *  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ *  \________|____|__ \______/   \____|__  /   __/|   __/
+ *                   \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -91,8 +91,8 @@ public class MensaDashclockExtension extends DashClockExtension {
         calendar.set(Calendar.MINUTE, minute);
         long mNow = calendar.getTimeInMillis();
 
-        String status = "";
-        String body = "";
+        StringBuilder status = new StringBuilder();
+        StringBuilder body = new StringBuilder();
 
         Log.i(TAG, "onUpdateData: " + reason + ", " + mFromTime + " - "
                 + mToTime + "(" + mNow + ")");
@@ -122,26 +122,27 @@ public class MensaDashclockExtension extends DashClockExtension {
                     // get menu for today
                     IDay mensaDay = mensa.getDay(now);
                     if (mensaDay != null) {
-                        if (!status.isEmpty()) {
-                            status += ", ";
+                        if (status.length() > 0) {
+                            status.append(", ");
                         } else {
-                            status += getString(R.string.title_mensa);
-                            status += ": ";
+                            status.append(getString(R.string.title_mensa));
+                            status.append(": ");
                         }
-                        status += mensa.getName();
+                        status.append(mensa.getName());
 
                         for (IMenu mensaMenu : mensaDay.getMenus()) {
                             // show menu if found
                             mShowMenu = true;
 
-                            if (!body.isEmpty()) {
-                                body += "\n";
+                            if (body.length() > 0) {
+                                body.append("\n");
                             }
                             String meal = mensaMenu.getMeal();
                             if (meal.length() >= 55) {
                                 meal = meal.substring(0, 52) + "...";
                             }
-                            body += "* " + meal;
+                            body.append("* ");
+                            body.append(meal);
                         }
                     }
                 }
@@ -153,8 +154,8 @@ public class MensaDashclockExtension extends DashClockExtension {
                     .visible(true)
                     .icon(R.drawable.ic_food_24dp)
                     .status(getString(R.string.title_mensa))
-                    .expandedTitle(status)
-                    .expandedBody(body)
+                    .expandedTitle(status.toString())
+                    .expandedBody(body.toString())
                     .clickIntent(
                             new Intent(getApplicationContext(),
                                     MainActivity.class).putExtra(

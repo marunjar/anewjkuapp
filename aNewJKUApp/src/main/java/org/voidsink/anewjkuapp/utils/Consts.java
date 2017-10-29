@@ -1,25 +1,26 @@
 /*
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
- * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
- * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
+ *       ____.____  __.____ ___     _____
+ *      |    |    |/ _|    |   \   /  _  \ ______ ______
+ *      |    |      < |    |   /  /  /_\  \\____ \\____ \
+ *  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ *  \________|____|__ \______/   \____|__  /   __/|   __/
+ *                   \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
 
 package org.voidsink.anewjkuapp.utils;
@@ -51,22 +52,6 @@ public class Consts {
     public static final String ARG_TAB_FRAGMENT_TITLE = "st_title";
     public static final String ARG_TAB_FRAGMENT_POS = "st_pos";
 
-    public static final String ARG_FEED_URL = "feedURL";
-    public static final String ARG_FEED_ID = "feedID";
-    public static final String ARG_FEED_ENTRY = "feedEntry";
-
-    public static final Integer FEED_ID_OEH = 1;
-    public static final Integer FEED_ID_REWI = 2;
-    public static final Integer FEED_ID_SOWI = 3;
-    public static final Integer FEED_ID_TNF = 4;
-    public static final Integer FEED_ID_MED = 5;
-
-    public static final String FEED_URL_OEH = "http://oeh.jku.at/news.xml";
-    public static final String FEED_URL_REWI = "http://oeh.jku.at/news/49/news.xml";
-    public static final String FEED_URL_SOWI = "http://oeh.jku.at/news/23/news.xml";
-    public static final String FEED_URL_TNF = "http://oeh.jku.at/news/31/news.xml";
-    public static final String FEED_URL_MED = "http://oeh.jku.at/news/58/news.xml";
-
     //strings for logging of screens
 
     public static final String SCREEN_CALENDAR = "/calendar";
@@ -89,8 +74,6 @@ public class Consts {
 
     public static final String SCREEN_SETTINGS_DASHCLOCK = "/settings/dashclock";
     public static final String SCREEN_LOGIN = "/login";
-    public static final String SCREEN_RSS_FEED = "/rssFeed";
-    public static final String SCREEN_RSS_FEED_ENTRY = "/rssFeed/entry";
     public static final String SCREEN_DASHCLOCK = "/dashclock";
 
     // Laoder IDs

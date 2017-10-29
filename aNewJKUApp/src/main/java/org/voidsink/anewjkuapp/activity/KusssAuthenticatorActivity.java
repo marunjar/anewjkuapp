@@ -1,25 +1,26 @@
 /*
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
- * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
- * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
- * <p>
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *       ____.____  __.____ ___     _____
+ *      |    |    |/ _|    |   \   /  _  \ ______ ______
+ *      |    |      < |    |   /  /  /_\  \\____ \\____ \
+ *  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ *  \________|____|__ \______/   \____|__  /   __/|   __/
+ *                   \/                  \/|__|   |__|
+ *
+ *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
 
 package org.voidsink.anewjkuapp.activity;
@@ -62,8 +63,8 @@ import org.voidsink.anewjkuapp.workaround.AccountAuthenticatorActivity;
 
 public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 
-    public static final String KEY_ERROR_MESSAGE = "ERR_MSG";
-    public final static String PARAM_USER_PASS = "USER_PASS";
+    private static final String KEY_ERROR_MESSAGE = "ERR_MSG";
+    private final static String PARAM_USER_PASS = "USER_PASS";
 
     private final static String TAG = KusssAuthenticatorActivity.class.getSimpleName();
 
@@ -79,7 +80,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 
         setContentView(R.layout.activity_login);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
 
         initActionBar();
@@ -119,7 +120,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 
         if (!mIsNewAccount) {
             if (accountName != null) {
-                final TextView tvAccountName = (TextView) findViewById(R.id.accountName);
+                final TextView tvAccountName = findViewById(R.id.accountName);
                 if (tvAccountName != null) {
                     tvAccountName.setText(accountName);
                     tvAccountName.setEnabled(false);
@@ -127,7 +128,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
             }
         }
 
-        mSubmit = (Button) findViewById(R.id.accountLogin);
+        mSubmit = findViewById(R.id.accountLogin);
         mSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

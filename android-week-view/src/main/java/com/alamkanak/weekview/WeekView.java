@@ -1219,8 +1219,8 @@ public class WeekView extends View {
      * instance will be stored in "event".
      */
     private static class EventRect {
-        public WeekViewEvent event;
-        public WeekViewEvent originalEvent;
+        public final WeekViewEvent event;
+        public final WeekViewEvent originalEvent;
         public RectF rectF;
         public float left;
         public float width;

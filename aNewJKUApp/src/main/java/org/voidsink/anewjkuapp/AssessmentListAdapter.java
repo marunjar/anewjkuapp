@@ -1,26 +1,27 @@
-/*******************************************************************************
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
- * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
- * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
+/*
+ *       ____.____  __.____ ___     _____
+ *      |    |    |/ _|    |   \   /  _  \ ______ ______
+ *      |    |      < |    |   /  /  /_\  \\____ \\____ \
+ *  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ *  \________|____|__ \______/   \____|__  /   __/|   __/
+ *                   \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- ******************************************************************************/
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
+ */
 
 package org.voidsink.anewjkuapp;
 
@@ -113,15 +114,15 @@ public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, Asse
         public GradeViewHolder(View itemView) {
             super(itemView);
 
-            mTitle = (TextView) itemView.findViewById(R.id.grade_list_grade_title);
-            mCourseId = (TextView) itemView.findViewById(R.id.grade_list_grade_courseId);
-            mTerm = (TextView) itemView.findViewById(R.id.grade_list_grade_term);
-            mCid = (TextView) itemView.findViewById(R.id.grade_list_grade_cid);
-            mDate = (TextView) itemView.findViewById(R.id.grade_list_grade_date);
-            mGrade = (TextView) itemView.findViewById(R.id.grade_list_grade_grade);
+            mTitle = itemView.findViewById(R.id.grade_list_grade_title);
+            mCourseId = itemView.findViewById(R.id.grade_list_grade_courseId);
+            mTerm = itemView.findViewById(R.id.grade_list_grade_term);
+            mCid = itemView.findViewById(R.id.grade_list_grade_cid);
+            mDate = itemView.findViewById(R.id.grade_list_grade_date);
+            mGrade = itemView.findViewById(R.id.grade_list_grade_grade);
             mChipBack = itemView.findViewById(R.id.grade_chip);
-            mChipInfo = (TextView) itemView.findViewById(R.id.grade_chip_info);
-            mChipGrade = (TextView) itemView.findViewById(R.id.grade_chip_grade);
+            mChipInfo = itemView.findViewById(R.id.grade_chip_info);
+            mChipGrade = itemView.findViewById(R.id.grade_chip_grade);
         }
     }
 
@@ -131,7 +132,7 @@ public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, Asse
         public GradeHeaderHolder(View itemView) {
             super(itemView);
 
-            mText = (TextView) itemView.findViewById(R.id.list_header_text);
+            mText = itemView.findViewById(R.id.list_header_text);
         }
     }
 }

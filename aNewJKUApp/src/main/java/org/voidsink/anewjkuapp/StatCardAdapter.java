@@ -1,25 +1,25 @@
 /*
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
- * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
- * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
+ *       ____.____  __.____ ___     _____
+ *      |    |    |/ _|    |   \   /  _  \ ______ ______
+ *      |    |      < |    |   /  /  /_\  \\____ \\____ \
+ *  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ *  \________|____|__ \______/   \____|__  /   __/|   __/
+ *                   \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -107,8 +107,8 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             final LayoutInflater mInflater = LayoutInflater.from(getContext());
             View view = mInflater.inflate(R.layout.stat_card_lva_list_entry, null, false);
 
-            TextView type = (TextView) view.findViewById(R.id.stat_card_lva_list_entry_type);
-            TextView ects = (TextView) view.findViewById(R.id.stat_card_lva_list_entry_ects);
+            TextView type = view.findViewById(R.id.stat_card_lva_list_entry_type);
+            TextView ects = view.findViewById(R.id.stat_card_lva_list_entry_ects);
 
             type.setText(getContext().getString(item.getType().getStringResID()));
             ects.setText(AppUtils.format(getContext(), "%.2f ECTS", item.getEcts()));
@@ -278,8 +278,8 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             final LayoutInflater mInflater = LayoutInflater.from(getContext());
 
             View view = mInflater.inflate(R.layout.stat_card_grade_list_entry, null, false);
-            TextView type = (TextView) view.findViewById(R.id.stat_card_grade_list_entry_type);
-            TextView avgGrade = (TextView) view.findViewById(R.id.stat_card_grade_list_entry_grade);
+            TextView type = view.findViewById(R.id.stat_card_grade_list_entry_type);
+            TextView avgGrade = view.findViewById(R.id.stat_card_grade_list_entry_grade);
 
             type.setText(getContext().getString(item.getType().getStringResID()));
             avgGrade.setText(AppUtils.format(getContext(), "ø %.2f", item.getAvgGrade()));
@@ -503,11 +503,11 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         public StatViewHolder(View itemView) {
             super(itemView);
 
-            mToolbar = (Toolbar) itemView.findViewById(R.id.stat_card_toolbar);
-            mTitle = (TextView) itemView.findViewById(R.id.stat_card_title);
-            mItems = (LinearLayout) itemView.findViewById(R.id.stat_card_items);
-            mBarChart = (ComboLineColumnChartView) itemView.findViewById(R.id.stat_card_diagram_bar);
-            mPieChart = (PieChartView) itemView.findViewById(R.id.stat_card_diagram_pie);
+            mToolbar = itemView.findViewById(R.id.stat_card_toolbar);
+            mTitle = itemView.findViewById(R.id.stat_card_title);
+            mItems = itemView.findViewById(R.id.stat_card_items);
+            mBarChart = itemView.findViewById(R.id.stat_card_diagram_bar);
+            mPieChart = itemView.findViewById(R.id.stat_card_diagram_pie);
         }
     }
 }
