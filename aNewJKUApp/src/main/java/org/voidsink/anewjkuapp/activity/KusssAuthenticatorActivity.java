@@ -163,71 +163,81 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
         final String accountType = getIntent().getStringExtra(
                 KusssAuthenticator.ARG_ACCOUNT_TYPE);
 
-        new AsyncTask<String, Void, Intent>() {
-            private ProgressDialog progressDialog;
-            private Context mContext;
+        new LoginTask(this, accountType, userName, userPass).execute();
+    }
 
-            @Override
-            protected void onPreExecute() {
-                mContext = KusssAuthenticatorActivity.this;
+    private class LoginTask extends AsyncTask<String, Void, Intent> {
+        private final String mAccountType;
+        private final String mUserName;
+        private final String mUserPass;
+        private ProgressDialog progressDialog;
+        private final Context mContext;
 
-                progressDialog = ProgressDialog.show(
-                        KusssAuthenticatorActivity.this,
-                        mContext.getString(R.string.progress_title),
-                        mContext.getString(R.string.progress_login), true);
+        public LoginTask(Context context, String accountType, String userName, String userPass) {
+            super();
+
+            this.mContext = context;
+            this.mAccountType = accountType;
+            this.mUserName = userName;
+            this.mUserPass = userPass;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = ProgressDialog.show(
+                    mContext,
+                    mContext.getString(R.string.progress_title),
+                    mContext.getString(R.string.progress_login), true);
+        }
+
+        @Override
+        protected Intent doInBackground(String... params) {
+            Bundle data = new Bundle();
+            try {
+                final String authtoken = KusssHandler.getInstance().login(mContext, mUserName, mUserPass);
+
+                KusssHandler.getInstance().logout(mContext);
+
+                data.putString(AccountManager.KEY_ACCOUNT_NAME, mUserName);
+                data.putString(AccountManager.KEY_ACCOUNT_TYPE, mAccountType);
+                data.putString(AccountManager.KEY_AUTHTOKEN, authtoken);
+                data.putString(PARAM_USER_PASS, mUserPass);
+
+            } catch (Exception e) {
+                data.putString(KEY_ERROR_MESSAGE, e.getMessage());
             }
 
-            @Override
-            protected Intent doInBackground(String... params) {
-                Bundle data = new Bundle();
-                try {
-                    final String authtoken = KusssHandler.getInstance().login(KusssAuthenticatorActivity.this, userName, userPass);
+            final Intent res = new Intent();
+            res.putExtras(data);
+            return res;
+        }
 
-                    KusssHandler.getInstance().logout(KusssAuthenticatorActivity.this);
-
-                    data.putString(AccountManager.KEY_ACCOUNT_NAME, userName);
-                    data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
-                    data.putString(AccountManager.KEY_AUTHTOKEN, authtoken);
-                    data.putString(PARAM_USER_PASS, userPass);
-
-                } catch (Exception e) {
-                    data.putString(KEY_ERROR_MESSAGE, e.getMessage());
-                }
-
-                final Intent res = new Intent();
-                res.putExtras(data);
-                return res;
-            }
-
-            @Override
-            protected void onPostExecute(Intent intent) {
-                if (intent.hasExtra(KEY_ERROR_MESSAGE)) {
-                    Toast.makeText(getBaseContext(),
-                            intent.getStringExtra(KEY_ERROR_MESSAGE),
-                            Toast.LENGTH_SHORT).show();
-                } else if (intent.hasExtra(AccountManager.KEY_AUTHTOKEN)) {
-                    String authToken = intent
-                            .getStringExtra(AccountManager.KEY_AUTHTOKEN);
-                    if ((authToken != null) && !TextUtils.isEmpty(authToken)) {
-                        finishLogin(intent);
-                    } else {
-                        Toast.makeText(getBaseContext(),
-                                mContext.getString(R.string.account_login_failed_wrong_pwd),
-                                Toast.LENGTH_SHORT).show();
-                    }
+        @Override
+        protected void onPostExecute(Intent intent) {
+            if (intent.hasExtra(KEY_ERROR_MESSAGE)) {
+                Toast.makeText(mContext,
+                        intent.getStringExtra(KEY_ERROR_MESSAGE),
+                        Toast.LENGTH_SHORT).show();
+            } else if (intent.hasExtra(AccountManager.KEY_AUTHTOKEN)) {
+                String authToken = intent
+                        .getStringExtra(AccountManager.KEY_AUTHTOKEN);
+                if ((authToken != null) && !TextUtils.isEmpty(authToken)) {
+                    finishLogin(intent);
                 } else {
-                    Toast.makeText(getBaseContext(),
-                            mContext.getString(R.string.account_login_failed_wrong_auth_token),
+                    Toast.makeText(mContext,
+                            mContext.getString(R.string.account_login_failed_wrong_pwd),
                             Toast.LENGTH_SHORT).show();
                 }
-
-                progressDialog.dismiss();
-
-                mSubmit.setEnabled(true);
-
-                mContext = null;
+            } else {
+                Toast.makeText(mContext,
+                        mContext.getString(R.string.account_login_failed_wrong_auth_token),
+                        Toast.LENGTH_SHORT).show();
             }
-        }.execute();
+
+            progressDialog.dismiss();
+
+            mSubmit.setEnabled(true);
+        }
     }
 
     private void finishLogin(Intent intent) {
@@ -271,7 +281,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
             mAccountManager.setPassword(account, accountPassword);
 
             // Turn on periodic syncing
-            long interval = PreferenceWrapper.getSyncInterval(this) * 60L * 60;
+            long interval = PreferenceWrapper.getSyncInterval(KusssAuthenticatorActivity.this) * 60L * 60;
 
             ContentResolver.addPeriodicSync(account,
                     CalendarContractWrapper.AUTHORITY(), new Bundle(),
@@ -298,10 +308,10 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
         }
 
         // Kalender aktualisieren
-        CalendarUtils.createCalendarsIfNecessary(this, account);
+        CalendarUtils.createCalendarsIfNecessary(KusssAuthenticatorActivity.this, account);
 
         // Sync NOW
-        KusssAuthenticator.triggerSync(this);
+        KusssAuthenticator.triggerSync(KusssAuthenticatorActivity.this);
 
         setAccountAuthenticatorResult(intent.getExtras());
         setResult(RESULT_OK, intent);

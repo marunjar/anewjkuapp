@@ -1,25 +1,25 @@
 /*
- *       ____.____  __.____ ___     _____
- *      |    |    |/ _|    |   \   /  _  \ ______ ______
- *      |    |      < |    |   /  /  /_\  \\____ \\____ \
- *  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
- *  \________|____|__ \______/   \____|__  /   __/|   __/
- *                   \/                  \/|__|   |__|
+ *      ____.____  __.____ ___     _____
+ *     |    |    |/ _|    |   \   /  _  \ ______ ______
+ *     |    |      < |    |   /  /  /_\  \\____ \\____ \
+ * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ * \________|____|__ \______/   \____|__  /   __/|   __/
+ *                  \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -76,7 +76,7 @@ public class MensaDayFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_recycler_view, container,
                 false);
 
-        final RecyclerView mRecyclerView = view.findViewById(R.id.recyclerView);
+        final RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         mAdapter = new MensaMenuAdapter(getContext(), false);
         mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter(mRecyclerView, mAdapter));
@@ -88,10 +88,10 @@ public class MensaDayFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        new MenuLoadTask(new ClassicMenuLoader(), 0).execute();
-        new MenuLoadTask(new ChoiceMenuLoader(), 1).execute();
-        new MenuLoadTask(new KHGMenuLoader(), 2).execute();
-        new MenuLoadTask(new RaabMenuLoader(), 3).execute();
+        new MenuLoadTask(getContext(), new ClassicMenuLoader(), 0).execute();
+        new MenuLoadTask(getContext(), new ChoiceMenuLoader(), 1).execute();
+        new MenuLoadTask(getContext(), new KHGMenuLoader(), 2).execute();
+        new MenuLoadTask(getContext(), new RaabMenuLoader(), 3).execute();
     }
 
     public void setDate(Date mDate) {
@@ -122,14 +122,15 @@ public class MensaDayFragment extends BaseFragment {
 
 
     private class MenuLoadTask extends AsyncTask<String, Void, Void> {
-        private Context mContext;
+        private final Context mContext;
         private final MenuLoader mLoader;
         private final int mIndex;
         private IMensa mMensa;
 
-        public MenuLoadTask(MenuLoader loader, int index) {
+        public MenuLoadTask(Context context, MenuLoader loader, int index) {
             super();
 
+            this.mContext = context;
             this.mLoader = loader;
             this.mIndex = index;
         }
@@ -146,11 +147,6 @@ public class MensaDayFragment extends BaseFragment {
             super.onPreExecute();
 
             mMensa = null;
-
-            mContext = MensaDayFragment.this.getContext();
-            if (mContext == null) {
-                Log.e(TAG, "context is null");
-            }
         }
 
         @Override
@@ -188,8 +184,6 @@ public class MensaDayFragment extends BaseFragment {
             }
 
             super.onPostExecute(result);
-
-            mContext = null;
         }
     }
 }
