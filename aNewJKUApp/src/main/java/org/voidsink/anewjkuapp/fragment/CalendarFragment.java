@@ -25,16 +25,19 @@
 
 package org.voidsink.anewjkuapp.fragment;
 
+import android.Manifest;
 import android.accounts.Account;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.UriMatcher;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
@@ -218,24 +221,31 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
     public void onStart() {
         super.onStart();
 
-        UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(CalendarContractWrapper.AUTHORITY(), CalendarContractWrapper.Events.CONTENT_URI().buildUpon().appendPath("#").build().toString(), 0);
+        if ((getContext() != null) && (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED)) {
+            // check permission
+            UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+            uriMatcher.addURI(CalendarContractWrapper.AUTHORITY(), CalendarContractWrapper.Events.CONTENT_URI().buildUpon().appendPath("#").build().toString(), 0);
 
-        mDataObserver = new BaseContentObserver(uriMatcher, this);
+            mDataObserver = new BaseContentObserver(uriMatcher, this);
 
-        // listen to all changes
-        getActivity().getContentResolver().registerContentObserver(
-                CalendarContractWrapper.Events.CONTENT_URI().buildUpon()
-                        .appendPath("#").build(), false, mDataObserver);
+            // listen to all changes
+            getActivity().getContentResolver().registerContentObserver(
+                    CalendarContractWrapper.Events.CONTENT_URI().buildUpon()
+                            .appendPath("#").build(), false, mDataObserver);
+        } else {
+            mDataObserver = null;
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        getActivity().getContentResolver().unregisterContentObserver(
-                mDataObserver);
-        mDataObserver = null;
+        if (mDataObserver != null) {
+            getActivity().getContentResolver().unregisterContentObserver(
+                    mDataObserver);
+            mDataObserver = null;
+        }
     }
 
     @Override
