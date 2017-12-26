@@ -1,0 +1,38 @@
+<!--
+  ~       ____.____  __.____ ___     _____
+  ~      |    |    |/ _|    |   \   /  _  \ ______ ______
+  ~      |    |      < |    |   /  /  /_\  \\____ \\____ \
+  ~  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+  ~  \________|____|__ \______/   \____|__  /   __/|   __/
+  ~                   \/                  \/|__|   |__|
+  ~
+  ~  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>
+  ~
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="108dp"
+        android:height="108dp"
+        android:viewportWidth="173.55373"
+        android:viewportHeight="173.55373">
+    <group android:translateX="32.77686"
+            android:translateY="28.759413">
+        <path
+            android:pathData="m19.67,88.74c-0.48,-0.75 1.13,-5.5 3.58,-10.56 2.45,-5.06 4.92,-12.73 5.5,-17.03 0,0 -0.68,-5.73 1.05,-7.82 1.76,-2.13 8.05,-3.06 8.05,-3.06 6.97,-2.65 8.6,-4.03 12.07,-10.23 3.85,-6.86 4.58,-7.38 17.34,-12.26 7.33,-2.8 13.92,-4.74 14.65,-4.3 4.53,2.68 -1.86,8.13 -12.12,10.33 -6.17,1.32 -9.67,4.19 -16.4,13.45 -1.52,2.09 -6.29,5.35 -10.61,7.24 -6.07,2.66 -8.03,4.29 -8.61,7.19C30.33,80.68 23.14,94.11 19.67,88.74ZM35.57,85.62C34.11,83.35 35.5,82.62 55.3,75.24c10,-3.73 19.39,-7.94 20.87,-9.35 1.72,-1.65 2.71,-4.7 2.77,-8.52 0.13,-9.08 2.96,-15.68 6.96,-16.22 3.16,-0.43 3.32,-0.11 2.42,4.9 -3.17,17.67 -6.56,25.2 -13.23,29.38 -3.11,1.95 -34.23,11.66 -37.51,11.7 -0.56,0.01 -1.45,-0.67 -2,-1.51zM37.13,74.54c-1.33,-2.06 0.47,-4.3 10.97,-13.59 10.65,-9.42 21.38,-16.36 23.43,-15.15 2.75,1.63 -1.96,7.52 -8.9,11.13 -4.58,2.38 -8.23,5.64 -10.32,9.19 -1.79,3.04 -5.35,6.46 -7.97,7.65 -5.59,2.54 -6.04,2.59 -7.22,0.76z"
+            android:fillColor="#ffffff"
+            android:strokeWidth="3.33636212"/>
+    </group>
+</vector>
