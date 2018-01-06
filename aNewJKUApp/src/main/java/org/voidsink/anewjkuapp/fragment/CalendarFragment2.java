@@ -365,7 +365,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
                         endTime.add(Calendar.MILLISECOND, -1);
                     }
 
-                    WeekViewEvent event = new WeekViewEvent(data.getLong(CalendarUtils.COLUMN_EVENT_ID),
+                    WeekViewEvent event = new WeekViewEvent(data.getString(CalendarUtils.COLUMN_EVENT_ID),
                             data.getString(CalendarUtils.COLUMN_EVENT_TITLE),
                             data.getString(CalendarUtils.COLUMN_EVENT_LOCATION),
                             startTime,
