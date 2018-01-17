@@ -25,12 +25,9 @@
 
 package org.voidsink.anewjkuapp.fragment;
 
-import android.Manifest;
 import android.accounts.Account;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.UriMatcher;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
@@ -38,7 +35,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
@@ -56,8 +52,6 @@ import android.widget.Button;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
-import org.voidsink.anewjkuapp.base.BaseContentObserver;
-import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarEventAdapter;
@@ -75,13 +69,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class CalendarFragment extends BaseFragment implements ContentObserverListener, LoaderManager.LoaderCallbacks<Cursor> {
+public class CalendarFragment extends CalendarPermissionFragment implements ContentObserverListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = CalendarFragment.class.getSimpleName();
     private long now = 0, then = 0;
 
     private CalendarEventAdapter mAdapter;
-    private BaseContentObserver mDataObserver;
     private RecyclerView mRecyclerView;
     private Button mLoadMoreButton;
 
@@ -215,37 +208,6 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
     private void loadData() {
         if (this.isVisible() && !getLoaderManager().hasRunningLoaders()) {
             getLoaderManager().restartLoader(0, null, this);
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        if ((getContext() != null) && (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED)) {
-            // check permission
-            UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-            uriMatcher.addURI(CalendarContractWrapper.AUTHORITY(), CalendarContractWrapper.Events.CONTENT_URI().buildUpon().appendPath("#").build().toString(), 0);
-
-            mDataObserver = new BaseContentObserver(uriMatcher, this);
-
-            // listen to all changes
-            getActivity().getContentResolver().registerContentObserver(
-                    CalendarContractWrapper.Events.CONTENT_URI().buildUpon()
-                            .appendPath("#").build(), false, mDataObserver);
-        } else {
-            mDataObserver = null;
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        if (mDataObserver != null) {
-            getActivity().getContentResolver().unregisterContentObserver(
-                    mDataObserver);
-            mDataObserver = null;
         }
     }
 

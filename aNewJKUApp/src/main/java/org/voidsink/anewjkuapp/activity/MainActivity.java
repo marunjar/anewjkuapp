@@ -27,9 +27,7 @@ package org.voidsink.anewjkuapp.activity;
 
 import android.Manifest;
 import android.accounts.Account;
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -38,7 +36,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -46,7 +43,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -64,7 +60,6 @@ import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.base.StackedFragment;
 import org.voidsink.anewjkuapp.base.ThemedActivity;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
-import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.fragment.AssessmentFragment;
 import org.voidsink.anewjkuapp.fragment.CalendarFragment;
 import org.voidsink.anewjkuapp.fragment.CalendarFragment2;
@@ -80,6 +75,8 @@ import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 import de.cketti.library.changelog.ChangeLog;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends ThemedActivity {
 
@@ -89,9 +86,8 @@ public class MainActivity extends ThemedActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private static final int MY_PERMISSION_READ_CALENDAR = 0;
-    private static final int MY_PERMISSION_WRITE_CALENDAR = 1;
-    private static final int MY_PERMISSION_ACCOUNTS = 2;
+    private static final int PERMISSIONS_REQUEST_ACCOUNT = 2;
+    private static final String[] ACCOUNT_PERMISSIONS = {Manifest.permission.GET_ACCOUNTS};
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the
@@ -101,22 +97,6 @@ public class MainActivity extends ThemedActivity {
     private DrawerLayout.DrawerListener mDrawerListener;
     private NavigationView mNavigationView;
     private boolean mUserLearnedDrawer;
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-    private static void StartCreateAccount(Context context) {
-        if ((android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) || (ContextCompat.checkSelfPermission(context, Manifest.permission.GET_ACCOUNTS) == PackageManager.PERMISSION_GRANTED)) {
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                context.startActivity(new Intent(Settings.ACTION_ADD_ACCOUNT)
-                        .putExtra(Settings.EXTRA_ACCOUNT_TYPES,
-                                new String[]{KusssAuthenticator.ACCOUNT_TYPE}));
-            } else {
-                context.startActivity(new Intent(Settings.ACTION_ADD_ACCOUNT)
-                        .putExtra(
-                                Settings.EXTRA_AUTHORITIES,
-                                new String[]{CalendarContractWrapper.AUTHORITY()}));
-            }
-        }
-    }
 
     private static void StartMyCurricula(Context context) {
         //
@@ -157,61 +137,6 @@ public class MainActivity extends ThemedActivity {
         }
 
         setContentView(R.layout.activity_main);
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CALENDAR)) {
-                new AlertDialog.Builder(this)
-                        .setMessage(getString(R.string.alert_permission_read_calendar))
-                        .setPositiveButton(R.string.button_ok, null)
-                        .setCancelable(false)
-                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialogInterface) {
-                                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-                                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_CALENDAR}, MY_PERMISSION_READ_CALENDAR);
-                                }
-                            }
-                        }).show();
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR}, MY_PERMISSION_READ_CALENDAR);
-            }
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_CALENDAR)) {
-                new AlertDialog.Builder(this)
-                        .setMessage(getString(R.string.alert_permission_write_calendar))
-                        .setPositiveButton(R.string.button_ok, null)
-                        .setCancelable(false)
-                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialogInterface) {
-                                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-                                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_CALENDAR}, MY_PERMISSION_WRITE_CALENDAR);
-                                }
-                            }
-                        }).show();
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_CALENDAR}, MY_PERMISSION_WRITE_CALENDAR);
-            }
-        }
-        if ((android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M) && (ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED)) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.GET_ACCOUNTS)) {
-                new AlertDialog.Builder(this)
-                        .setMessage(getString(R.string.alert_permission_get_accounts))
-                        .setPositiveButton(R.string.button_ok, null)
-                        .setCancelable(false)
-                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialogInterface) {
-                                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
-                                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.GET_ACCOUNTS}, MY_PERMISSION_ACCOUNTS);
-                                }
-                            }
-                        }).show();
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.GET_ACCOUNTS}, MY_PERMISSION_ACCOUNTS);
-            }
-        }
 
         // do things if new version was installed
         AppUtils.doOnNewVersion(this);
@@ -263,7 +188,7 @@ public class MainActivity extends ThemedActivity {
                             mDrawerUser.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    MainActivity.StartCreateAccount(MainActivity.this);
+                                    startCreateAccount();
                                 }
                             });
                         } else {
@@ -301,40 +226,40 @@ public class MainActivity extends ThemedActivity {
             cl.getLogDialog().show();
         }
 
-        if (AppUtils.getAccount(this) == null) {
-            StartCreateAccount(this);
-        }
+        startCreateAccount();
 
         Log.d(TAG, "onCreate finished");
     }
 
+    @AfterPermissionGranted(PERMISSIONS_REQUEST_ACCOUNT)
+    private void startCreateAccount() {
+        if (((android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) || (EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS))) {
+            if (AppUtils.getAccount(this) == null) {
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                    this.startActivity(new Intent(Settings.ACTION_ADD_ACCOUNT)
+                            .putExtra(Settings.EXTRA_ACCOUNT_TYPES,
+                                    new String[]{KusssAuthenticator.ACCOUNT_TYPE}));
+                } else {
+                    this.startActivity(new Intent(Settings.ACTION_ADD_ACCOUNT)
+                            .putExtra(Settings.EXTRA_AUTHORITIES,
+                                    new String[]{CalendarContractWrapper.AUTHORITY()}));
+                }
+            }
+        } else {
+            EasyPermissions.requestPermissions(
+                    this,
+                    getString(R.string.alert_permission_get_accounts),
+                    PERMISSIONS_REQUEST_ACCOUNT,
+                    ACCOUNT_PERMISSIONS);
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSION_READ_CALENDAR:
-            case MY_PERMISSION_WRITE_CALENDAR:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Account account = AppUtils.getAccount(this);
-                    CalendarUtils.createCalendarsIfNecessary(this, account);
-                    Log.d(TAG, String.format("Permission granted: %d", requestCode));
-                } else {
-                    Log.d(TAG, String.format("Permission denied: %d", requestCode));
-                }
-                return;
-            case MY_PERMISSION_ACCOUNTS: {
-                if ((android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) || (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    if (AppUtils.getAccount(this) == null) {
-                        StartCreateAccount(this);
-                    }
-                    Log.d(TAG, String.format("Permission granted: %d", requestCode));
-                } else {
-                    Log.d(TAG, String.format("Permission denied: %d", requestCode));
-                }
-                return;
-            }
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // EasyPermissions handles the request result.
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
     private Fragment attachFragmentById(int id, boolean saveLastFragment) {
@@ -573,5 +498,12 @@ public class MainActivity extends ThemedActivity {
         mDrawerLayout.removeDrawerListener(mDrawerListener);
 
         Analytics.clearScreen(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //startCreateAccount();
     }
 }

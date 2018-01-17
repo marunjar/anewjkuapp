@@ -25,13 +25,10 @@
 
 package org.voidsink.anewjkuapp.fragment;
 
-import android.Manifest;
 import android.accounts.Account;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.UriMatcher;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.RectF;
@@ -40,7 +37,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.graphics.ColorUtils;
@@ -61,9 +57,6 @@ import com.alamkanak.weekview.WeekViewEvent;
 import com.alamkanak.weekview.WeekViewLoader;
 
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.base.BaseContentObserver;
-import org.voidsink.anewjkuapp.base.BaseFragment;
-import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.update.UpdateService;
@@ -79,13 +72,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class CalendarFragment2 extends BaseFragment implements ContentObserverListener,
+public class CalendarFragment2 extends CalendarPermissionFragment implements
         WeekView.EventClickListener, WeekView.EventLongPressListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = CalendarFragment2.class.getSimpleName();
     private static final String ARG_CAL_LOAD_NOW = "CLN";
     private static final String ARG_CAL_LOAD_THEN = "CLT";
-    private BaseContentObserver mDataObserver;
     private WeekView mWeekView;
     private final MyWeekViewLoader mWeekViewLoader = new MyWeekViewLoader();
 
@@ -150,36 +142,6 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        if ((getContext() != null) && (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED)) {
-            UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-            uriMatcher.addURI(CalendarContractWrapper.AUTHORITY(), CalendarContractWrapper.Events.CONTENT_URI().buildUpon().appendPath("#").build().toString(), 0);
-
-            mDataObserver = new BaseContentObserver(uriMatcher, this);
-
-            // listen to all changes
-            getActivity().getContentResolver().registerContentObserver(
-                    CalendarContractWrapper.Events.CONTENT_URI().buildUpon()
-                            .appendPath("#").build(), false, mDataObserver);
-        } else {
-            mDataObserver = null;
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        if (mDataObserver != null) {
-            getActivity().getContentResolver().unregisterContentObserver(
-                    mDataObserver);
-            mDataObserver = null;
         }
     }
 
