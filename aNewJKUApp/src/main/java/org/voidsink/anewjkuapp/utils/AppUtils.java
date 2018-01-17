@@ -741,26 +741,28 @@ public class AppUtils {
         Log.d(TAG, String.format("MasterSync=%b, CalendarSync=%b, KusssSync=%b", mIsMasterSyncEnabled, mIsCalendarSyncEnabled, mIsKusssSyncEnable));
 
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, SyncAlarmService.class);
-        intent.putExtra(Consts.ARG_UPDATE_CAL, !mIsCalendarSyncEnabled);
-        intent.putExtra(Consts.ARG_UPDATE_KUSSS, !mIsKusssSyncEnable);
-        intent.putExtra(Consts.ARG_RECREATE_SYNC_ALARM, true);
-        intent.putExtra(Consts.SYNC_SHOW_PROGRESS, true);
+        if (am != null) {
+            Intent intent = new Intent(context, SyncAlarmService.class);
+            intent.putExtra(Consts.ARG_UPDATE_CAL, !mIsCalendarSyncEnabled);
+            intent.putExtra(Consts.ARG_UPDATE_KUSSS, !mIsKusssSyncEnable);
+            intent.putExtra(Consts.ARG_RECREATE_SYNC_ALARM, true);
+            intent.putExtra(Consts.SYNC_SHOW_PROGRESS, true);
 
-        // check if pending intent exists
-        reCreateAlarm = reCreateAlarm || (PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE) == null);
+            // check if pending intent exists
+            reCreateAlarm = reCreateAlarm || (PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE) == null);
 
-        // new pending intent
-        PendingIntent alarmIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        if (!mIsMasterSyncEnabled || !mIsCalendarSyncEnabled || !mIsKusssSyncEnable) {
-            if (reCreateAlarm) {
-                long interval = PreferenceWrapper.getSyncInterval(context) * DateUtils.HOUR_IN_MILLIS;
+            // new pending intent
+            PendingIntent alarmIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            if (!mIsMasterSyncEnabled || !mIsCalendarSyncEnabled || !mIsKusssSyncEnable) {
+                if (reCreateAlarm) {
+                    long interval = PreferenceWrapper.getSyncInterval(context) * DateUtils.HOUR_IN_MILLIS;
 
-                // synchronize in half an hour
-                am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + AlarmManager.INTERVAL_HALF_HOUR, interval, alarmIntent);
+                    // synchronize in half an hour
+                    am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + AlarmManager.INTERVAL_HALF_HOUR, interval, alarmIntent);
+                }
+            } else {
+                am.cancel(alarmIntent);
             }
-        } else {
-            am.cancel(alarmIntent);
         }
     }
 

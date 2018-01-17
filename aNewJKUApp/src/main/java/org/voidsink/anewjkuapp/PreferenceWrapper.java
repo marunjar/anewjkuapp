@@ -341,7 +341,7 @@ public final class PreferenceWrapper {
         }
     }
 
-    public static boolean useDefaultExamCalendarId(Context context) {
+    private static boolean useDefaultExamCalendarId(Context context) {
         try {
             SharedPreferences sp = PreferenceManager
                     .getDefaultSharedPreferences(context);
@@ -369,7 +369,7 @@ public final class PreferenceWrapper {
         }
     }
 
-    public static boolean useDefaultLvaCalendarId(Context context) {
+    private static boolean useDefaultLvaCalendarId(Context context) {
         try {
             SharedPreferences sp = PreferenceManager
                     .getDefaultSharedPreferences(context);

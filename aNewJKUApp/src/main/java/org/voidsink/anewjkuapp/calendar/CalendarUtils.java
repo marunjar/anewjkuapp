@@ -578,7 +578,7 @@ public final class CalendarUtils {
         return isSameDay(cal1, cal2);
     }
 
-    public static boolean isSameDay(Calendar cal1, Calendar cal2) {
+    private static boolean isSameDay(Calendar cal1, Calendar cal2) {
         if (cal1 == null || cal2 == null) {
             throw new IllegalArgumentException("The date must not be null");
         }

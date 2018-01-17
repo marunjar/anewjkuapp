@@ -32,7 +32,7 @@ enum PlayServiceStatus {
     PS_INSTALLED, PS_NOT_AVAILABLE, PS_REPAIRABLE
 }
 
-public interface IAnalytics {
+interface IAnalytics {
 
     void init(Application app);
 

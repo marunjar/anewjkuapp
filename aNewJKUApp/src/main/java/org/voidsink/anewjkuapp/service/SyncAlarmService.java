@@ -47,8 +47,6 @@ public class SyncAlarmService extends IntentService {
         if (intent.getBooleanExtra(Consts.ARG_RECREATE_SYNC_ALARM, false)) {
             AppUtils.updateSyncAlarm(this, false);
         }
-        if (intent != null) {
-            AppUtils.triggerSync(this, AppUtils.getAccount(this), intent.getBooleanExtra(Consts.ARG_UPDATE_CAL, false), intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false));
-        }
+        AppUtils.triggerSync(this, AppUtils.getAccount(this), intent.getBooleanExtra(Consts.ARG_UPDATE_CAL, false), intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false));
     }
 }

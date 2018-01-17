@@ -28,6 +28,7 @@ package org.voidsink.anewjkuapp.base;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.util.Log;
@@ -55,7 +56,7 @@ public class BaseFragment extends Fragment implements StackedFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         if (savedInstanceState != null) {
@@ -89,7 +90,7 @@ public class BaseFragment extends Fragment implements StackedFragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
         outState.putInt(Consts.ARG_FRAGMENT_ID, mId);

@@ -25,6 +25,7 @@
 package org.voidsink.anewjkuapp.base;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -68,7 +69,7 @@ public abstract class SlidingTabsFragment extends BaseFragment {
      * resources.
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return LayoutInflater.from(getContext()).inflate(R.layout.fragment_sliding_tabs, container, false);
     }
