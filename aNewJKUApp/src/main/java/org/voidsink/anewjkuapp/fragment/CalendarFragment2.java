@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -119,13 +119,11 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
 
         inflater.inflate(R.menu.calendar, menu);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            MenuItem menuItem = menu.findItem(R.id.action_cal_goto_today);
-            // replace the default top layer drawable of the today icon with a
-            // custom drawable that shows the day of the month of today
-            LayerDrawable icon = (LayerDrawable) menuItem.getIcon();
-            UIUtils.setTodayIcon(icon, getContext(), "");
-        }
+        MenuItem menuItem = menu.findItem(R.id.action_cal_goto_today);
+        // replace the default top layer drawable of the today icon with a
+        // custom drawable that shows the day of the month of today
+        LayerDrawable icon = (LayerDrawable) menuItem.getIcon();
+        UIUtils.setTodayIcon(icon, getContext(), "");
     }
 
     @Override

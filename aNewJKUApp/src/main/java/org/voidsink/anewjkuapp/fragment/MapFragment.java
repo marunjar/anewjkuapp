@@ -287,7 +287,7 @@ public class MapFragment extends BaseFragment implements
                 if (!marker.getName().isEmpty()) {
                     // generate Bubble image
                     TextView bubbleView = new TextView(this.getContext());
-                    MapUtils.setBackground(bubbleView, ContextCompat.getDrawable(getContext(), R.drawable.balloon_overlay));
+                    bubbleView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.balloon_overlay));
                     bubbleView.setGravity(Gravity.CENTER);
                     bubbleView.setMaxEms(20);
                     bubbleView.setTextSize(15);
