@@ -40,6 +40,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.StandardExceptionParser;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.security.ProviderInstaller;
@@ -138,7 +139,7 @@ public class AnalyticsFlavor implements IAnalytics {
             } catch (GooglePlayServicesRepairableException e) {
                 mPlayServiceStatus = PlayServiceStatus.PS_REPAIRABLE;
                 // Prompt the user to install/update/enable Google Play services.
-                //GoogleApiAvailability.getInstance().showErrorNotification(mApp, e.getConnectionStatusCode());
+                GoogleApiAvailability.getInstance().showErrorNotification(mApp, e.getConnectionStatusCode());
             } catch (GooglePlayServicesNotAvailableException e) {
                 mPlayServiceStatus = PlayServiceStatus.PS_NOT_AVAILABLE;
             }
