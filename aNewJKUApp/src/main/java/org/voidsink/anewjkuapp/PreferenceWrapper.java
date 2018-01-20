@@ -98,8 +98,6 @@ public final class PreferenceWrapper {
     public static final String PREF_TRACKING_ERRORS = "pref_key_tracking_errors";
     public static final boolean PREF_TRACKING_ERRORS_DEFAULT = true;
 
-    private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
-
     public static final String PREF_COURSES_SHOW_WITH_ASSESSMENT_ONLY = "pref_key_courses_show_with_assessment_only";
     private static final boolean PREF_COURSES_SHOW_WITH_ASSESSMENT_ONLY_DEFAULT = false;
 
@@ -437,29 +435,6 @@ public final class PreferenceWrapper {
         } catch (Exception e) {
             Log.e(TAG, "Failure", e);
             return PREF_TRACKING_ERRORS_DEFAULT;
-        }
-    }
-
-    public static boolean getUserLearnedDrawer(Context context) {
-        try {
-            SharedPreferences sp = PreferenceManager
-                    .getDefaultSharedPreferences(context);
-
-            return sp.getBoolean(PREF_USER_LEARNED_DRAWER,
-                    false);
-        } catch (Exception e) {
-            Log.e(TAG, "Failure", e);
-            return false;
-        }
-    }
-
-    public static void setPrefUserLearnedDrawer(Context c, boolean b) {
-        try {
-            SharedPreferences sp = PreferenceManager
-                    .getDefaultSharedPreferences(c);
-            sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, b).apply();
-        } catch (Exception e) {
-            Analytics.sendException(c, e, false);
         }
     }
 

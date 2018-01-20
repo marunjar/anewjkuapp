@@ -96,7 +96,6 @@ public class MainActivity extends ThemedActivity {
     private DrawerLayout mDrawerLayout;
     private DrawerLayout.DrawerListener mDrawerListener;
     private NavigationView mNavigationView;
-    private boolean mUserLearnedDrawer;
 
     private static void StartMyCurricula(Context context) {
         //
@@ -152,17 +151,11 @@ public class MainActivity extends ThemedActivity {
         });
 
         // set up drawer
-        mUserLearnedDrawer = PreferenceWrapper.getUserLearnedDrawer(this);
-
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
         mDrawerListener = new DrawerLayout.SimpleDrawerListener() {
             @Override
             public void onDrawerOpened(View drawerView) {
-                if (!mUserLearnedDrawer) {
-                    PreferenceWrapper.setPrefUserLearnedDrawer(MainActivity.this, true);
-                }
-
                 TextView mDrawerUser = mNavigationView.getHeaderView(0).findViewById(R.id.drawer_user);
 
                 if (mDrawerUser != null) {
@@ -305,10 +298,6 @@ public class MainActivity extends ThemedActivity {
                         return menuItem.isCheckable();
                     }
                 });
-
-        if (!mUserLearnedDrawer) {
-            mDrawerLayout.openDrawer(navigationView);
-        }
     }
 
     private Fragment attachFragment(Intent intent, Bundle savedInstanceState,
