@@ -272,7 +272,7 @@ public class WeekViewEvent {
 
         WeekViewEvent that = (WeekViewEvent) o;
 
-        return mId == that.mId;
+        return mId.equals(that.mId);
 
     }
 
