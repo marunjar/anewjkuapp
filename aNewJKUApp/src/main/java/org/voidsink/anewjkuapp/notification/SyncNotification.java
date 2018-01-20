@@ -62,7 +62,7 @@ public class SyncNotification {
                 .setGroup("Sync Group");
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            this.mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp)
+            this.mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp_anim)
                     .setLargeIcon(
                             BitmapFactory.decodeResource(
                                     this.mContext.getResources(),
