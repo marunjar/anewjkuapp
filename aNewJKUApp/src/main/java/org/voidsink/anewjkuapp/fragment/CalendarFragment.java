@@ -132,8 +132,24 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
                 }
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
 
         getLoaderManager().initLoader(0, null, this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (getLoaderManager().hasRunningLoaders()) {
+            Log.d(TAG, "stop loading events");
+
+            getLoaderManager().destroyLoader(0);
+        }
     }
 
     @Override
@@ -224,9 +240,13 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
         String calIDExam = CalendarUtils.getCalIDByName(getContext(),
                 mAccount, CalendarUtils.ARG_CALENDAR_EXAM, true);
 
-        if (calIDLva == null || calIDExam == null) {
+        if (calIDLva == null && calIDExam == null) {
             Log.w(TAG, "no events loaded, calendars not found");
             return null;
+        } else if (calIDLva == null) {
+            calIDLva = calIDExam;
+        } else if (calIDExam == null) {
+            calIDExam = calIDLva;
         }
 
         return new CursorLoader(getContext(), CalendarContractWrapper.Events.CONTENT_URI(),

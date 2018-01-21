@@ -193,16 +193,24 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
             date = savedInstanceState.getLong(Consts.ARG_CALENDAR_NOW);
         }
         goToDate(date);
+    }
 
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(date);
+    @Override
+    public void onStart() {
+        super.onStart();
 
-        loadData(cal);
+        loadData(mWeekView.getFirstVisibleDay());
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        mWeekViewLoader.stopLoading();
     }
 
     private void loadData(Calendar date) {
-        if (mWeekViewLoader != null && date != null) {
+        if (date != null) {
             int periodIndex = (int) mWeekViewLoader.toWeekViewPeriodIndex(date);
 
             mWeekViewLoader.loadPeriod(periodIndex - 1, true);
@@ -237,9 +245,13 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
         String calIDExam = CalendarUtils.getCalIDByName(getContext(),
                 mAccount, CalendarUtils.ARG_CALENDAR_EXAM, true);
 
-        if (calIDLva == null || calIDExam == null) {
+        if (calIDLva == null && calIDExam == null) {
             Log.w(TAG, "no events loaded, calendars not found");
             return null;
+        } else if (calIDLva == null) {
+            calIDLva = calIDExam;
+        } else if (calIDExam == null) {
+            calIDExam = calIDLva;
         }
 
         return new CursorLoader(getContext(), CalendarContractWrapper.Events.CONTENT_URI(),
@@ -467,6 +479,17 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
                 loadPeriod(periodIndex - 1, false);
                 loadPeriod(periodIndex, false);
                 loadPeriod(periodIndex + 1, false);
+            }
+        }
+
+        public void stopLoading() {
+            if (getLoaderManager().hasRunningLoaders()) {
+                Log.d(TAG, "stop loading events");
+
+                for (int id : mLastLoadedPeriods) {
+                    getLoaderManager().destroyLoader(id);
+                }
+                getLoaderManager().destroyLoader(mLastPeriodIndex);
             }
         }
     }
