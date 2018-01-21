@@ -1,25 +1,25 @@
 /*
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
- * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
- * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
+ *       ____.____  __.____ ___     _____
+ *      |    |    |/ _|    |   \   /  _  \ ______ ______
+ *      |    |      < |    |   /  /  /_\  \\____ \\____ \
+ *  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ *  \________|____|__ \______/   \____|__  /   __/|   __/
+ *                   \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -28,6 +28,7 @@ package org.voidsink.anewjkuapp.kusss;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -59,6 +60,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,10 +72,10 @@ import java.util.Map;
 
 public class KusssHandler {
 
-    public static final String PATTERN_LVA_NR_WITH_DOT = "\\d{3}\\.\\w{3}";
-    public static final String PATTERN_LVA_NR = "\\d{3}\\w{3}";
-    public static final String PATTERN_TERM = "\\d{4}[swSW]";
-    public static final String PATTERN_LVA_NR_COMMA_TERM = "\\("
+    static final String PATTERN_LVA_NR_WITH_DOT = "\\d{3}\\.\\w{3}";
+    static final String PATTERN_LVA_NR = "\\d{3}\\w{3}";
+    static final String PATTERN_TERM = "\\d{4}[swSW]";
+    static final String PATTERN_LVA_NR_COMMA_TERM = "\\("
             + PATTERN_LVA_NR + "," + PATTERN_TERM + "\\)";
     public static final String PATTERN_LVA_NR_SLASH_TERM = "\\("
             + PATTERN_LVA_NR + "\\/" + PATTERN_TERM + "\\)";
@@ -103,7 +106,7 @@ public class KusssHandler {
 
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
-    private static KusssHandler handler = null;
+    private volatile static KusssHandler handler = null;
     private final CookieManager mCookies;
     private String mUserAgent;
 
@@ -120,10 +123,10 @@ public class KusssHandler {
         if (TextUtils.isEmpty(userAgent)) {
             userAgent = "Mozilla/5.0";
         }
-        this.mUserAgent = userAgent;
+        setUserAgent(userAgent);
     }
 
-    public static boolean isNetworkAvailable(Context context) {
+    private static boolean isNetworkAvailable(Context context) {
         try {
             ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
@@ -146,7 +149,7 @@ public class KusssHandler {
         return handler;
     }
 
-    public String getSessionIDFromCookie() {
+    private String getSessionIDFromCookie() {
         try {
             List<HttpCookie> cookies = mCookies.getCookieStore().get(
                     new URI("https://www.kusss.jku.at/"));
@@ -220,11 +223,11 @@ public class KusssHandler {
     }
 
     private String getCookieString() {
-        String cookies = "";
+        StringBuilder cookies = new StringBuilder();
         for (HttpCookie cookie : mCookies.getCookieStore().getCookies()) {
-            cookies += String.format("%s=%s;", cookie.getName(), cookie.getValue());
+            cookies.append(String.format("%s=%s;", cookie.getName(), cookie.getValue()));
         }
-        return cookies;
+        return cookies.toString();
     }
 
 
@@ -240,7 +243,7 @@ public class KusssHandler {
             }
         }
 
-        OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+        OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), Charset.defaultCharset());
         wr.write(builder.toString());
         wr.flush();
     }
@@ -297,7 +300,7 @@ public class KusssHandler {
         return isNetworkAvailable(c) && (isLoggedIn(c, sessionId) || login(c, user, password) != null);
     }
 
-    public static long copyStream(final InputStream input, final OutputStream output) throws IOException {
+    private static long copyStream(final InputStream input, final OutputStream output) throws IOException {
 
         final byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
         long count = 0;
@@ -350,11 +353,12 @@ public class KusssHandler {
             }
 
             final long length = copyStream(conn.getInputStream(), data);
+            String encoding = getEncoding(conn);
 
             conn.disconnect();
 
             if (length > 0) {
-                iCal = mCalendarBuilder.build(new ByteArrayInputStream(getModifiedData(data)));
+                iCal = mCalendarBuilder.build(new ByteArrayInputStream(getModifiedData(data, encoding)));
             } else {
                 iCal = new Calendar();
             }
@@ -371,9 +375,39 @@ public class KusssHandler {
         return iCal;
     }
 
-    private byte[] getModifiedData(ByteArrayOutputStream data) {
+    private String getEncoding(@NonNull HttpURLConnection conn) {
+        String encoding = conn.getContentEncoding();
+
+        if (TextUtils.isEmpty(encoding)) {
+            String contentType = conn.getContentType();
+            String[] values = contentType.split(";");
+
+            for (String value : values) {
+                value = value.trim();
+
+                if (value.toLowerCase().startsWith("charset=")) {
+                    encoding = value.substring("charset=".length());
+                }
+            }
+        }
+
+        return encoding;
+    }
+
+    private byte[] getModifiedData(ByteArrayOutputStream data, String encoding) {
+        Charset charset;
+        if (TextUtils.isEmpty(encoding)) {
+            charset = Charset.defaultCharset();
+        } else {
+            try {
+                charset = Charset.forName(encoding);
+            } catch (UnsupportedCharsetException e) {
+                Analytics.sendException(null, e, false, encoding);
+                charset = Charset.defaultCharset();
+            }
+        }
         // replace crlf with \n, kusss ics uses lf only as content line separator
-        return data.toString().replace("\r\n", "\\n").getBytes();
+        return data.toString().replace("\r\n", "\\n").getBytes(charset);
     }
 
     public Calendar getExamIcal(Context c, CalendarBuilder mCalendarBuilder) {
@@ -417,6 +451,8 @@ public class KusssHandler {
 
             final long length = copyStream(conn.getInputStream(), data);
 
+            String encoding = getEncoding(conn);
+
             conn.disconnect();
 
             /*
@@ -425,7 +461,7 @@ public class KusssHandler {
             */
 
             if (length > 0) {
-                iCal = mCalendarBuilder.build(new ByteArrayInputStream(getModifiedData(data)));
+                iCal = mCalendarBuilder.build(new ByteArrayInputStream(getModifiedData(data, encoding)));
             } else {
                 iCal = new Calendar();
             }
@@ -468,7 +504,7 @@ public class KusssHandler {
         return terms;
     }
 
-    public boolean selectTerm(Context c, Term term) throws IOException {
+    private boolean selectTerm(Context c, Term term) throws IOException {
         if (!isNetworkAvailable(c)) {
             return false;
         }
@@ -806,7 +842,7 @@ public class KusssHandler {
         }
     }
 
-    public String getUserAgent() {
+    private String getUserAgent() {
         return this.mUserAgent;
     }
 

@@ -1,25 +1,25 @@
 /*
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
- * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
- * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
+ *       ____.____  __.____ ___     _____
+ *      |    |    |/ _|    |   \   /  _  \ ______ ______
+ *      |    |      < |    |   /  /  /_\  \\____ \\____ \
+ *  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ *  \________|____|__ \______/   \____|__  /   __/|   __/
+ *                   \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2016 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -47,30 +47,30 @@ public final class PreferenceWrapper {
     private static final String TAG = PreferenceWrapper.class.getSimpleName();
 
     public static final String PREF_SYNC_INTERVAL_KEY = "pref_key_sync_interval";
-    public static final int PREF_SYNC_INTERVAL_DEFAULT = 85;
+    private static final int PREF_SYNC_INTERVAL_DEFAULT = 85;
 
-    public static final String PREF_NOTIFY_CALENDAR_KEY = "pref_key_notify_calendar";
-    public static final boolean PREF_NOTIFY_CALENDAR_DEFAULT = true;
+    private static final String PREF_NOTIFY_CALENDAR_KEY = "pref_key_notify_calendar";
+    private static final boolean PREF_NOTIFY_CALENDAR_DEFAULT = true;
 
-    public static final String PREF_USE_CALENDAR_VIEW_KEY = "pref_key_use_calendar_view";
-    public static final boolean PREF_USE_CALENDAR_VIEW_DEFAULT = false;
+    private static final String PREF_USE_CALENDAR_VIEW_KEY = "pref_key_use_calendar_view";
+    private static final boolean PREF_USE_CALENDAR_VIEW_DEFAULT = false;
 
-    public static final String PREF_NOTIFY_EXAM_KEY = "pref_key_notify_exam";
-    public static final boolean PREF_NOTIFY_EXAM_DEFAULT = true;
+    private static final String PREF_NOTIFY_EXAM_KEY = "pref_key_notify_exam";
+    private static final boolean PREF_NOTIFY_EXAM_DEFAULT = true;
 
-    public static final String PREF_NOTIFY_GRADE_KEY = "pref_key_notify_grade";
-    public static final boolean PREF_NOTIFY_GRADE_DEFAULT = true;
+    private static final String PREF_NOTIFY_GRADE_KEY = "pref_key_notify_grade";
+    private static final boolean PREF_NOTIFY_GRADE_DEFAULT = true;
 
     public static final String PREF_USE_LIGHT_THEME = "pref_key_use_light_theme";
-    public static final boolean PREF_USE_LIGHT_THEME_DEFAULT = true;
+    private static final boolean PREF_USE_LIGHT_THEME_DEFAULT = true;
 
     public static final String PREF_MAP_FILE = "pref_key_map_file";
-    public static final String PREF_MAP_FILE_DEFAULT = "";
+    private static final String PREF_MAP_FILE_DEFAULT = "";
 
     public static final int PREF_LAST_FRAGMENT_DEFAULT = 0;
     public static final String PREF_GET_NEW_EXAMS = "pref_key_get_exams_from_lva";
     public static final int PREF_LAST_VERSION_NONE = -1;
-    public static final String PREF_USE_LVA_BAR_CHART = "pref_key_use_lva_bar_chart";
+    private static final String PREF_USE_LVA_BAR_CHART = "pref_key_use_lva_bar_chart";
     public static final String PREF_MENSA_GROUP_MENU_BY_DAY = "pref_key_group_menu_by_day";
     public static final String PREF_POSITIVE_GRADES_ONLY = "pref_key_positive_grades_only";
     private static final String PREF_LAST_FRAGMENT = "pref_key_last_fragment";
@@ -80,12 +80,12 @@ public final class PreferenceWrapper {
     private static final boolean PREF_MENSA_GROUP_MENU_BY_DAY_DEFAULT = false;
     private static final boolean PREF_POSITIVE_GRADES_ONLY_DEFAULT = false;
 
-    public static final String PREF_EXTEND_CALENDAR_LVA = "pref_key_extend_calendar_lva";
+    private static final String PREF_EXTEND_CALENDAR_LVA = "pref_key_extend_calendar_lva";
     private static final boolean PREF_EXTEND_CALENDAR_LVA_DEFAULT = false;
     public static final String PREF_EXTENDED_CALENDAR_LVA = "pref_key_extended_calendar_lva";
     private static final String PREF_EXTENDED_CALENDAR_LVA_DEFAULT = null;
 
-    public static final String PREF_EXTEND_CALENDAR_EXAM = "pref_key_extend_calendar_exam";
+    private static final String PREF_EXTEND_CALENDAR_EXAM = "pref_key_extend_calendar_exam";
     private static final boolean PREF_EXTEND_CALENDAR_EXAM_DEFAULT = false;
     public static final String PREF_EXTENDED_CALENDAR_EXAM = "pref_key_extended_calendar_exam";
     private static final String PREF_EXTENDED_CALENDAR_EXAM_DEFAULT = null;
@@ -97,8 +97,6 @@ public final class PreferenceWrapper {
 
     public static final String PREF_TRACKING_ERRORS = "pref_key_tracking_errors";
     public static final boolean PREF_TRACKING_ERRORS_DEFAULT = true;
-
-    private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
 
     public static final String PREF_COURSES_SHOW_WITH_ASSESSMENT_ONLY = "pref_key_courses_show_with_assessment_only";
     private static final boolean PREF_COURSES_SHOW_WITH_ASSESSMENT_ONLY_DEFAULT = false;
@@ -341,7 +339,7 @@ public final class PreferenceWrapper {
         }
     }
 
-    public static boolean useDefaultExamCalendarId(Context context) {
+    private static boolean useDefaultExamCalendarId(Context context) {
         try {
             SharedPreferences sp = PreferenceManager
                     .getDefaultSharedPreferences(context);
@@ -369,7 +367,7 @@ public final class PreferenceWrapper {
         }
     }
 
-    public static boolean useDefaultLvaCalendarId(Context context) {
+    private static boolean useDefaultLvaCalendarId(Context context) {
         try {
             SharedPreferences sp = PreferenceManager
                     .getDefaultSharedPreferences(context);
@@ -437,29 +435,6 @@ public final class PreferenceWrapper {
         } catch (Exception e) {
             Log.e(TAG, "Failure", e);
             return PREF_TRACKING_ERRORS_DEFAULT;
-        }
-    }
-
-    public static boolean getUserLearnedDrawer(Context context) {
-        try {
-            SharedPreferences sp = PreferenceManager
-                    .getDefaultSharedPreferences(context);
-
-            return sp.getBoolean(PREF_USER_LEARNED_DRAWER,
-                    false);
-        } catch (Exception e) {
-            Log.e(TAG, "Failure", e);
-            return false;
-        }
-    }
-
-    public static void setPrefUserLearnedDrawer(Context c, boolean b) {
-        try {
-            SharedPreferences sp = PreferenceManager
-                    .getDefaultSharedPreferences(c);
-            sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, b).apply();
-        } catch (Exception e) {
-            Analytics.sendException(c, e, false);
         }
     }
 

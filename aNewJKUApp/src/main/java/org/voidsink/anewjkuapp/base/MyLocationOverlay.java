@@ -25,7 +25,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 
 import org.mapsforge.core.graphics.Bitmap;
@@ -37,7 +36,6 @@ import org.mapsforge.core.model.BoundingBox;
 import org.mapsforge.core.model.LatLong;
 import org.mapsforge.core.model.Point;
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
-import org.mapsforge.map.android.util.AndroidSupportUtil;
 import org.mapsforge.map.layer.Layer;
 import org.mapsforge.map.layer.overlay.Circle;
 import org.mapsforge.map.layer.overlay.Marker;
@@ -50,8 +48,7 @@ import org.mapsforge.map.model.MapViewPosition;
  * Play Services. Also note that MyLocationOverlay needs to be added to a view before requesting location updates
  * (otherwise no DisplayModel is set).
  */
-public class MyLocationOverlay extends Layer implements LocationListener, ActivityCompat.OnRequestPermissionsResultCallback {
-    public static final byte PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 10;
+public class MyLocationOverlay extends Layer implements LocationListener {
     private static final GraphicFactory GRAPHIC_FACTORY = AndroidGraphicFactory.INSTANCE;
     private float minDistance = 0.0f;
     private long minTime = 0;
@@ -172,14 +169,14 @@ public class MyLocationOverlay extends Layer implements LocationListener, Activi
     /**
      * @return true if the receiving of location updates is currently enabled, false otherwise.
      */
-    public synchronized boolean isMyLocationEnabled() {
+    protected synchronized boolean isMyLocationEnabled() {
         return this.myLocationEnabled;
     }
 
     /**
      * @return true if the snap-to-location mode is enabled, false otherwise.
      */
-    public synchronized boolean isSnapToLocationEnabled() {
+    protected synchronized boolean isSnapToLocationEnabled() {
         return this.snapToLocationEnabled && isMyLocationEnabled();
     }
 
@@ -252,11 +249,7 @@ public class MyLocationOverlay extends Layer implements LocationListener, Activi
     }
 
     private synchronized void enableBestAvailableProvider() {
-        if (!AndroidSupportUtil.runtimePermissionRequiredForAccessFineLocation(this.activity)) {
-            enableBestAvailableProviderPermissionGranted();
-        } else {
-            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-        }
+        enableBestAvailableProviderPermissionGranted();
     }
 
     private void enableBestAvailableProviderPermissionGranted() {
@@ -277,11 +270,4 @@ public class MyLocationOverlay extends Layer implements LocationListener, Activi
         }
         this.myLocationEnabled = result;
     }
-
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION == requestCode && AndroidSupportUtil.verifyPermissions(grantResults)) {
-            enableBestAvailableProviderPermissionGranted();
-        }
-    }
-
 }

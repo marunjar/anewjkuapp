@@ -63,80 +63,56 @@ public class KHGMenuLoader implements MenuLoader {
         MensaDay day = null;
         try {
             Document doc = getData(context);
-
-            Elements elements = doc.getElementsByClass("detailContent");
-            if (elements.size() == 1) {
-                elements = elements.get(0).getElementsByTag("table");
+            if (doc != null) {
+                Elements elements = doc.getElementsByClass("detailContent");
                 if (elements.size() == 1) {
-                    elements = elements.get(0).getElementsByTag("tr");
+                    elements = elements.get(0).getElementsByTag("table");
+                    if (elements.size() == 1) {
+                        elements = elements.get(0).getElementsByTag("tr");
 
-                    NumberFormat nf = NumberFormat.getInstance(Locale.FRENCH);
+                        NumberFormat nf = NumberFormat.getInstance(Locale.FRENCH);
 
-                    for (Element element : elements) {
-                        Elements columns = element.children();
+                        for (Element element : elements) {
+                            Elements columns = element.children();
 
-                        String[] strings;
-                        String meal;
-                        String soup;
-                        double price;
-                        double priceBig;
-                        double oehBonus;
+                            String[] strings;
+                            String meal;
+                            String soup;
+                            double price;
+                            double priceBig;
+                            double oehBonus;
 
-                        switch (columns.size()) {
-                            case 4:
-                                Calendar cal = Calendar.getInstance();
-                                cal.add(Calendar.DAY_OF_YEAR, -cal.get(Calendar.DAY_OF_WEEK));
-                                switch (columns.get(0).text()) {
-                                    case "SO":
-                                        cal.add(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-                                        break;
-                                    case "MO":
-                                        cal.add(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-                                        break;
-                                    case "DI":
-                                        cal.add(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
-                                        break;
-                                    case "MI":
-                                        cal.add(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
-                                        break;
-                                    case "DO":
-                                        cal.add(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
-                                        break;
-                                    case "FR":
-                                        cal.add(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
-                                        break;
-                                    case "SA":
-                                        cal.add(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
-                                        break;
-                                }
-                                day = new MensaDay(cal.getTime());
-                                mensa.addDay(day);
+                            switch (columns.size()) {
+                                case 4:
+                                    Calendar cal = Calendar.getInstance();
+                                    cal.add(Calendar.DAY_OF_YEAR, -cal.get(Calendar.DAY_OF_WEEK));
+                                    switch (columns.get(0).text()) {
+                                        case "SO":
+                                            cal.add(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+                                            break;
+                                        case "MO":
+                                            cal.add(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+                                            break;
+                                        case "DI":
+                                            cal.add(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
+                                            break;
+                                        case "MI":
+                                            cal.add(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+                                            break;
+                                        case "DO":
+                                            cal.add(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
+                                            break;
+                                        case "FR":
+                                            cal.add(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
+                                            break;
+                                        case "SA":
+                                            cal.add(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+                                            break;
+                                    }
+                                    day = new MensaDay(cal.getTime());
+                                    mensa.addDay(day);
 
-                                strings = columns.get(1).text().split(",", 2);
-                                if (strings.length == 2) {
-                                    soup = strings[0].trim();
-                                    meal = strings[1].trim();
-                                } else {
-                                    soup = null;
-                                    meal = strings[0];
-                                }
-                                try {
-                                    price = nf.parse(columns.get(2).text()).doubleValue();
-                                    priceBig = nf.parse(columns.get(3).text()).doubleValue();
-                                    oehBonus = priceBig - price;
-                                } catch (ParseException e) {
-                                    price = 0;
-                                    priceBig = 0;
-                                    oehBonus = 0;
-                                }
-
-                                day.addMenu(new MensaMenu(null, soup, meal, price, priceBig, oehBonus));
-
-                                break;
-                            case 3:
-                                //IMenu menu = new MensaMenu()
-                                if (day != null) {
-                                    strings = columns.get(0).text().split(",", 2);
+                                    strings = columns.get(1).text().split(",", 2);
                                     if (strings.length == 2) {
                                         soup = strings[0].trim();
                                         meal = strings[1].trim();
@@ -145,8 +121,8 @@ public class KHGMenuLoader implements MenuLoader {
                                         meal = strings[0];
                                     }
                                     try {
-                                        price = nf.parse(columns.get(1).text()).doubleValue();
-                                        priceBig = nf.parse(columns.get(2).text()).doubleValue();
+                                        price = nf.parse(columns.get(2).text()).doubleValue();
+                                        priceBig = nf.parse(columns.get(3).text()).doubleValue();
                                         oehBonus = priceBig - price;
                                     } catch (ParseException e) {
                                         price = 0;
@@ -155,8 +131,33 @@ public class KHGMenuLoader implements MenuLoader {
                                     }
 
                                     day.addMenu(new MensaMenu(null, soup, meal, price, priceBig, oehBonus));
-                                }
-                                break;
+
+                                    break;
+                                case 3:
+                                    //IMenu menu = new MensaMenu()
+                                    if (day != null) {
+                                        strings = columns.get(0).text().split(",", 2);
+                                        if (strings.length == 2) {
+                                            soup = strings[0].trim();
+                                            meal = strings[1].trim();
+                                        } else {
+                                            soup = null;
+                                            meal = strings[0];
+                                        }
+                                        try {
+                                            price = nf.parse(columns.get(1).text()).doubleValue();
+                                            priceBig = nf.parse(columns.get(2).text()).doubleValue();
+                                            oehBonus = priceBig - price;
+                                        } catch (ParseException e) {
+                                            price = 0;
+                                            priceBig = 0;
+                                            oehBonus = 0;
+                                        }
+
+                                        day.addMenu(new MensaMenu(null, soup, meal, price, priceBig, oehBonus));
+                                    }
+                                    break;
+                            }
                         }
                     }
                 }

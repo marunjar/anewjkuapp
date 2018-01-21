@@ -1,25 +1,25 @@
 /*
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
- * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
- * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
+ *       ____.____  __.____ ___     _____
+ *      |    |    |/ _|    |   \   /  _  \ ______ ______
+ *      |    |      < |    |   /  /  /_\  \\____ \\____ \
+ *  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ *  \________|____|__ \______/   \____|__  /   __/|   __/
+ *                   \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -97,6 +97,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
             return (TwoLinesListPreference) this.getPreference();
         }
 
+        @Override
         protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {
             super.onPrepareDialogBuilder(builder);
             ListPreference preference = this.getListPreference();
@@ -117,6 +118,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
 
                     @NonNull
                     @SuppressLint("InflateParams")
+                    @Override
                     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
                         final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -124,9 +126,9 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
                             convertView = inflater.inflate(R.layout.custom_simple_list_item_2_single_choice, null);
 
                             holder = new ViewHolder();
-                            holder.title = (TextView) convertView.findViewById(android.R.id.text1);
-                            holder.subTitle = (TextView) convertView.findViewById(android.R.id.text2);
-                            holder.radio = (RadioButton) convertView.findViewById(R.id.radio);
+                            holder.title = convertView.findViewById(android.R.id.text1);
+                            holder.subTitle = convertView.findViewById(android.R.id.text2);
+                            holder.radio = convertView.findViewById(R.id.radio);
 
                             convertView.setTag(holder);
                         } else {
@@ -147,6 +149,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
 
                 this.mClickedDialogEntryIndex = preference.findIndexOfValue(preference.getValue());
                 builder.setSingleChoiceItems(adapter, this.mClickedDialogEntryIndex, new DialogInterface.OnClickListener() {
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         TwoLinesListPreferenceDialogFragment.this.mClickedDialogEntryIndex = which;
                         TwoLinesListPreferenceDialogFragment.this.onClick(dialog, -1);
@@ -159,6 +162,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
             }
         }
 
+        @Override
         public void onDialogClosed(boolean positiveResult) {
             ListPreference preference = this.getListPreference();
             if (positiveResult && this.mClickedDialogEntryIndex >= 0 && preference.getEntryValues() != null) {
@@ -202,6 +206,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
             getTimePreference().setTime(mTime);
         }
 
+        @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             final Calendar c = Calendar.getInstance();
             c.setTimeInMillis(0);

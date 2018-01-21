@@ -1,25 +1,25 @@
 /*
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
- * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
- * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
+ *       ____.____  __.____ ___     _____
+ *      |    |    |/ _|    |   \   /  _  \ ______ ______
+ *      |    |      < |    |   /  /  /_\  \\____ \\____ \
+ *  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ *  \________|____|__ \______/   \____|__  /   __/|   __/
+ *                   \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -40,10 +40,10 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "kusss.db";
     private static final int DATABASE_VERSION = 11;
-    private static KusssDatabaseHelper instance = null;
+    private volatile static KusssDatabaseHelper instance = null;
 
     // Database creation sql statement
-    public static final String DB_CREATE_COURSE = "create table if not exists "
+    private static final String DB_CREATE_COURSE = "create table if not exists "
             + KusssContentContract.Course.TABLE_NAME + "("
             + KusssContentContract.Course.COL_ID
             + " integer primary key autoincrement not null, "
@@ -57,7 +57,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
             + KusssContentContract.Course.COL_ECTS + " real, "
             + KusssContentContract.Course.COL_SWS + " real" + ");";
 
-    public static final String DB_CREATE_EXAM = "create table if not exists "
+    private static final String DB_CREATE_EXAM = "create table if not exists "
             + KusssContentContract.Exam.TABLE_NAME + "("
             + KusssContentContract.Exam.COL_ID
             + " integer primary key autoincrement not null, "
@@ -71,7 +71,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
             + KusssContentContract.Exam.COL_IS_REGISTERED + " integer, "
             + KusssContentContract.Exam.COL_TITLE + " text" + ");";
 
-    public static final String DB_CREATE_ASSESSMENT = "create table if not exists "
+    private static final String DB_CREATE_ASSESSMENT = "create table if not exists "
             + KusssContentContract.Assessment.TABLE_NAME + "("
             + KusssContentContract.Assessment.COL_ID
             + " integer primary key autoincrement not null, "
@@ -86,7 +86,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
             + KusssContentContract.Assessment.COL_TITLE + " text, "
             + KusssContentContract.Assessment.COL_TYPE + " integer" + ");";
 
-    public static final String DB_CREATE_POI = "create virtual table "
+    private static final String DB_CREATE_POI = "create virtual table "
             + PoiContentContract.Poi.TABLE_NAME + " using "
             + PoiContentContract.getFTS() + " ("
             + PoiContentContract.Poi.COL_NAME + " text primary key not null, "
@@ -100,7 +100,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
             + PoiContentContract.Poi.COL_ADR_STREET + " text, "
             + PoiContentContract.Poi.COL_DESCR + " text " + ");";
 
-    public static final String DB_CREATE_CURRICULUM = "create table if not exists "
+    private static final String DB_CREATE_CURRICULUM = "create table if not exists "
             + KusssContentContract.Curricula.TABLE_NAME + "("
             + KusssContentContract.Curricula.COL_ID
             + " integer primary key autoincrement not null, "
@@ -153,7 +153,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public static void drop(Context context) {
+    private static void drop(Context context) {
         try {
             context.deleteDatabase(DATABASE_NAME);
         } catch (Exception e) {

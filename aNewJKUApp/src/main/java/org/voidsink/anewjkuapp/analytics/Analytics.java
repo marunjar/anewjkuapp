@@ -37,7 +37,7 @@ import java.net.NoRouteToHostException;
 import javax.net.ssl.SSLException;
 
 public class Analytics {
-    private static IAnalytics sAnalytics;
+    private volatile static IAnalytics sAnalytics;
 
     private static synchronized IAnalytics getAnalytics() {
         if (sAnalytics == null) {

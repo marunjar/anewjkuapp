@@ -1,25 +1,25 @@
 /*
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
- * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
- * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
+ *       ____.____  __.____ ___     _____
+ *      |    |    |/ _|    |   \   /  _  \ ______ ______
+ *      |    |      < |    |   /  /  /_\  \\____ \\____ \
+ *  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ *  \________|____|__ \______/   \____|__  /   __/|   __/
+ *                   \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -78,11 +78,11 @@ public final class CalendarUtils {
             CalendarContractWrapper.Calendars.ACCOUNT_TYPE(),
             CalendarContractWrapper.Calendars.CALENDAR_ACCESS_LEVEL()};
     public static final int COLUMN_CAL_ID = 0;
-    public static final int COLUMN_CAL_NAME = 1;
-    public static final int COLUMN_CAL_DISPLAY_NAME = 2;
+    private static final int COLUMN_CAL_NAME = 1;
+    private static final int COLUMN_CAL_DISPLAY_NAME = 2;
     public static final int COLUMN_CAL_ACCOUNT_NAME = 3;
     public static final int COLUMN_CAL_ACCOUNT_TYPE = 4;
-    public static final int COLUMN_CAL_ACCESS_LEVEL = 5;
+    private static final int COLUMN_CAL_ACCESS_LEVEL = 5;
 
     public static final String[] EVENT_PROJECTION = new String[]{
             CalendarContractWrapper.Events._ID(), //
@@ -578,7 +578,7 @@ public final class CalendarUtils {
         return isSameDay(cal1, cal2);
     }
 
-    public static boolean isSameDay(Calendar cal1, Calendar cal2) {
+    private static boolean isSameDay(Calendar cal1, Calendar cal2) {
         if (cal1 == null || cal2 == null) {
             throw new IllegalArgumentException("The date must not be null");
         }

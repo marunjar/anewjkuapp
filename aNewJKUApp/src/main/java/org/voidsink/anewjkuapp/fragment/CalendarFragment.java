@@ -1,25 +1,25 @@
 /*
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
- * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
- * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
+ *       ____.____  __.____ ___     _____
+ *      |    |    |/ _|    |   \   /  _  \ ______ ______
+ *      |    |      < |    |   /  /  /_\  \\____ \\____ \
+ *  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ *  \________|____|__ \______/   \____|__  /   __/|   __/
+ *                   \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -28,11 +28,10 @@ package org.voidsink.anewjkuapp.fragment;
 import android.accounts.Account;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.UriMatcher;
 import android.database.Cursor;
 import android.graphics.drawable.LayerDrawable;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -52,8 +51,6 @@ import android.widget.Button;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
-import org.voidsink.anewjkuapp.base.BaseContentObserver;
-import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarEventAdapter;
@@ -71,25 +68,24 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class CalendarFragment extends BaseFragment implements ContentObserverListener, LoaderManager.LoaderCallbacks<Cursor> {
+public class CalendarFragment extends CalendarPermissionFragment implements ContentObserverListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = CalendarFragment.class.getSimpleName();
     private long now = 0, then = 0;
 
     private CalendarEventAdapter mAdapter;
-    private BaseContentObserver mDataObserver;
     private RecyclerView mRecyclerView;
     private Button mLoadMoreButton;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar, container,
                 false);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.calendar_card_events);
+        mRecyclerView = view.findViewById(R.id.calendar_card_events);
 
-        mLoadMoreButton = (Button) view.findViewById(R.id.calendar_card_load);
+        mLoadMoreButton = view.findViewById(R.id.calendar_card_load);
         mLoadMoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,8 +132,24 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
                 }
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
 
         getLoaderManager().initLoader(0, null, this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (getLoaderManager().hasRunningLoaders()) {
+            Log.d(TAG, "stop loading events");
+
+            getLoaderManager().destroyLoader(0);
+        }
     }
 
     @Override
@@ -150,7 +162,7 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
         outState.putLong(Consts.ARG_CALENDAR_NOW, now);
@@ -162,13 +174,11 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.calendar, menu);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            MenuItem menuItem = menu.findItem(R.id.action_cal_goto_today);
-            // replace the default top layer drawable of the today icon with a
-            // custom drawable that shows the day of the month of today
-            LayerDrawable icon = (LayerDrawable) menuItem.getIcon();
-            UIUtils.setTodayIcon(icon, getContext(), "");
-        }
+        MenuItem menuItem = menu.findItem(R.id.action_cal_goto_today);
+        // replace the default top layer drawable of the today icon with a
+        // custom drawable that shows the day of the month of today
+        LayerDrawable icon = (LayerDrawable) menuItem.getIcon();
+        UIUtils.setTodayIcon(icon, getContext(), "");
     }
 
     @Override
@@ -215,30 +225,6 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-        UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(CalendarContractWrapper.AUTHORITY(), CalendarContractWrapper.Events.CONTENT_URI().buildUpon().appendPath("#").build().toString(), 0);
-
-        mDataObserver = new BaseContentObserver(uriMatcher, this);
-
-        // listen to all changes
-        getActivity().getContentResolver().registerContentObserver(
-                CalendarContractWrapper.Events.CONTENT_URI().buildUpon()
-                        .appendPath("#").build(), false, mDataObserver);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        getActivity().getContentResolver().unregisterContentObserver(
-                mDataObserver);
-        mDataObserver = null;
-    }
-
-    @Override
     protected String getScreenName() {
         return Consts.SCREEN_CALENDAR;
     }
@@ -254,9 +240,13 @@ public class CalendarFragment extends BaseFragment implements ContentObserverLis
         String calIDExam = CalendarUtils.getCalIDByName(getContext(),
                 mAccount, CalendarUtils.ARG_CALENDAR_EXAM, true);
 
-        if (calIDLva == null || calIDExam == null) {
+        if (calIDLva == null && calIDExam == null) {
             Log.w(TAG, "no events loaded, calendars not found");
             return null;
+        } else if (calIDLva == null) {
+            calIDLva = calIDExam;
+        } else if (calIDExam == null) {
+            calIDExam = calIDLva;
         }
 
         return new CursorLoader(getContext(), CalendarContractWrapper.Events.CONTENT_URI(),

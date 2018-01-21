@@ -61,14 +61,17 @@ public class MensaDay implements IDay {
         this.menus.add(menu);
     }
 
+    @Override
     public List<IMenu> getMenus() {
         return this.menus;
     }
 
+    @Override
     public boolean isEmpty() {
         return (this.date == null) || (this.menus.size() == 0);
     }
 
+    @Override
     public Date getDate() {
         return this.date;
     }

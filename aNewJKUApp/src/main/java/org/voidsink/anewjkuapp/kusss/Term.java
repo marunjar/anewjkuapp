@@ -1,29 +1,31 @@
 /*
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
- * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
- * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
+ *       ____.____  __.____ ___     _____
+ *      |    |    |/ _|    |   \   /  _  \ ______ ______
+ *      |    |      < |    |   /  /  /_\  \\____ \\____ \
+ *  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ *  \________|____|__ \______/   \____|__  /   __/|   __/
+ *                   \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
 
 package org.voidsink.anewjkuapp.kusss;
 
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -31,6 +33,7 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -72,6 +75,7 @@ public class Term implements Comparable<Term> {
             this.value = value;
         }
 
+        @Override
         public String toString() {
             return value;
         }
@@ -94,7 +98,7 @@ public class Term implements Comparable<Term> {
     private final TermType type;
     private boolean loaded = false;
 
-    public Term(int year, TermType type) {
+    private Term(int year, @NonNull TermType type) {
         this.year = year;
         this.type = type;
     }
@@ -118,14 +122,29 @@ public class Term implements Comparable<Term> {
         return this.compareTo(t) == 0;
     }
 
-    public int getYear() {
+    @Override
+    public int hashCode() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            return Objects.hash(this.year, this.type);
+        } else {
+            int result = 1;
+
+            result = 31 * result + this.year;
+            result = 31 * result + this.type.hashCode();
+
+            return result;
+        }
+    }
+
+    private int getYear() {
         return year;
     }
 
-    public TermType getType() {
+    private TermType getType() {
         return type;
     }
 
+    @Override
     public String toString() {
         return String.format(Locale.GERMAN, "%d%s", year, type.toString());
     }
@@ -155,7 +174,7 @@ public class Term implements Comparable<Term> {
     }
 
     public boolean isEmpty() {
-        return this.year < 0 || this.type == null;
+        return this.year < 0;
     }
 
 }

@@ -79,7 +79,7 @@ public class SettingsFragment extends BasePreferenceFragment {
                 try {
                     Class<?> clazz = getActivity().getClassLoader().loadClass(preference.getFragment());
                     if (PreferenceFragmentCompat.class.isAssignableFrom(clazz)) {
-                        Fragment pf = (Fragment) clazz.newInstance();
+                        Fragment pf = (Fragment) clazz.getConstructor().newInstance();
                         getActivity().getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.content_container, pf, SettingsActivity.ARG_SHOW_FRAGMENT)

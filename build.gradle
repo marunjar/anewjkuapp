@@ -2,23 +2,40 @@
 
 // Running 'gradle wrapper' will generate gradlew - Getting gradle wrapper working and using it will save you a lot of pain.
 /*task wrapper(type: Wrapper) {
-    gradleVersion = '3.5'
+    gradleVersion = '4.4'
 }
 */
 
 buildscript {
     repositories {
+        google()
         jcenter()
+        maven {
+            // for gradle-errorprone-plugin
+            url "https://plugins.gradle.org/m2/"
+        }
     }
+
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.11'
     }
 }
+
+ext {
+    compileSdkVersion = 27
+    buildToolsVersion = "27.0.3"
+    supportLibVersion = "27.0.2"
+    targetSdkVersion = 27
+    minSdkVersion = 16
+}
+
 allprojects {
     repositories {
         jcenter()
         maven {
             url "https://maven.google.com"
         }
+        mavenCentral()
     }
 }

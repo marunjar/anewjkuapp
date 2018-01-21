@@ -1,10 +1,11 @@
 apply plugin: 'com.android.application'
+
 android {
     signingConfigs {
     }
 
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -15,8 +16,8 @@ android {
         applicationId "org.voidsink.anewjkuapp"
         versionCode 140058
         versionName "0.45.4"
-        minSdkVersion 14
-        targetSdkVersion 25
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
 
         vectorDrawables.useSupportLibrary = true // Android Plugin for Gradle 2.0.0
 
@@ -59,11 +60,15 @@ android {
         }
     }
 
+    flavorDimensions "tier"
+
     productFlavors {
         google {
+            dimension "tier"
             return void // fix lint warning "Not all execution paths return a value"
         }
         fdroid {
+            dimension "tier"
             buildConfigField "boolean", "FOSS_ONLY", "true"
             return void // fix lint warning "Not all execution paths return a value"
         }
@@ -85,37 +90,45 @@ android {
     }
 
     applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            output.outputFile = new File(
-                    output.outputFile.parent,
-                    output.outputFile.name.replace(".apk", "-${variant.versionName}.apk"))
+        variant.outputs.all { output ->
+            outputFileName = outputFileName.replace(".apk", "-${variant.versionName}.apk")
         }
     }
 }
 
 dependencies {
-    compile 'com.android.support:preference-v14:25.4.0'
-    compile 'com.android.support:design:25.4.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    googleCompile 'com.google.android.gms:play-services-analytics:11.0.2'
-    compile 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
-    compile 'org.mapsforge:mapsforge-core:0.8.0'
-    compile 'org.mapsforge:mapsforge-map:0.8.0'
-    compile 'org.mapsforge:mapsforge-themes:0.8.0'
-    compile 'org.mapsforge:mapsforge-map-android:0.8.0'
-    compile 'org.mapsforge:mapsforge-map-android-extras:0.8.0'
-    compile 'org.jsoup:jsoup:1.10.3'
-    compile 'org.mnode.ical4j:ical4j:1.0.7'
-//    compile 'org.mnode.ical4j:ical4j-extensions:1.0.0'
-    debugCompile 'org.slf4j:slf4j-android:1.7.25'
-    compile 'uk.co.chrisjenx:calligraphy:2.3.0'
-    compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
-    //compile 'com.github.alamkanak:android-week-view:1.2.3'
-    compile 'de.cketti.library.changelog:ckchangelog:1.2.2'
-    compile('com.mikepenz:aboutlibraries:5.9.6@aar') {
+    implementation "com.android.support:preference-v14:${rootProject.ext.supportLibVersion}"
+    implementation "com.android.support:design:${rootProject.ext.supportLibVersion}"
+    implementation "com.android.support:cardview-v7:${rootProject.ext.supportLibVersion}"
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    googleImplementation 'com.google.android.gms:play-services-analytics:11.8.0'
+    implementation 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
+    implementation 'org.mapsforge:mapsforge-core:0.9.1'
+    implementation 'org.mapsforge:mapsforge-map:0.9.1'
+    implementation 'org.mapsforge:mapsforge-themes:0.9.1'
+    implementation 'org.mapsforge:mapsforge-map-android:0.9.1'
+    implementation 'pub.devrel:easypermissions:1.1.2'
+    implementation 'org.jsoup:jsoup:1.10.3' // Mark-Bug will be resolved by version 1.11.3
+    implementation 'org.mnode.ical4j:ical4j:1.0.7' // https://github.com/ical4j/ical4j/issues/143 https://github.com/ical4j/ical4j/pull/116
+//    implementation 'org.mnode.ical4j:ical4j-extensions:1.0.0'
+    debugImplementation 'org.slf4j:slf4j-android:1.7.25'
+    implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
+    //implementation 'com.github.alamkanak:android-week-view:1.2.3'
+    implementation 'de.cketti.library.changelog:ckchangelog:1.2.2'
+    implementation('com.mikepenz:aboutlibraries:6.0.2@aar'){
         transitive = true
     }
-    compile project(':sectionedRecyclerAdapter')
-    compile project(':android-week-view')
-    //compile project(':kussslibrary')
+    implementation project(':sectionedRecyclerAdapter')
+    implementation project(':android-week-view')
+    //implementation project(':kussslibrary')
+
+}
+
+apply plugin: "net.ltgt.errorprone"
+
+configurations.errorprone {
+    resolutionStrategy.force 'com.google.errorprone:error_prone_core:2.2.0'
+}
+configurations {
+    all*.exclude module: 'commons-logging'
 }

@@ -1,25 +1,26 @@
 /*
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
- * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
- * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
+ *       ____.____  __.____ ___     _____
+ *      |    |    |/ _|    |   \   /  _  \ ______ ______
+ *      |    |      < |    |   /  /  /_\  \\____ \\____ \
+ *  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ *  \________|____|__ \______/   \____|__  /   __/|   __/
+ *                   \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
 
 package org.voidsink.anewjkuapp.utils;
@@ -31,6 +32,9 @@ import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.ContentResolver;
@@ -38,7 +42,6 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -722,22 +725,6 @@ public class AppUtils {
         Collections.sort(mCurricula, CurriculaComparator);
     }
 
-    public static String getRowString(Cursor c) {
-        if (c == null) {
-            return null;
-        }
-
-        String row = "";
-        for (int i = 0; i < c.getColumnCount(); i++) {
-            try {
-                row = row + c.getColumnName(i) + "=" + c.getString(i) + ";";
-            } catch (Exception e) {
-                row = row + "@" + Integer.toString(i) + "=?;";
-            }
-        }
-        return row;
-    }
-
     public static void updateSyncAlarm(Context context, boolean reCreateAlarm) {
         boolean mIsCalendarSyncEnabled = false;
         boolean mIsKusssSyncEnable = false;
@@ -754,26 +741,28 @@ public class AppUtils {
         Log.d(TAG, String.format("MasterSync=%b, CalendarSync=%b, KusssSync=%b", mIsMasterSyncEnabled, mIsCalendarSyncEnabled, mIsKusssSyncEnable));
 
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, SyncAlarmService.class);
-        intent.putExtra(Consts.ARG_UPDATE_CAL, !mIsCalendarSyncEnabled);
-        intent.putExtra(Consts.ARG_UPDATE_KUSSS, !mIsKusssSyncEnable);
-        intent.putExtra(Consts.ARG_RECREATE_SYNC_ALARM, true);
-        intent.putExtra(Consts.SYNC_SHOW_PROGRESS, true);
+        if (am != null) {
+            Intent intent = new Intent(context, SyncAlarmService.class);
+            intent.putExtra(Consts.ARG_UPDATE_CAL, !mIsCalendarSyncEnabled);
+            intent.putExtra(Consts.ARG_UPDATE_KUSSS, !mIsKusssSyncEnable);
+            intent.putExtra(Consts.ARG_RECREATE_SYNC_ALARM, true);
+            intent.putExtra(Consts.SYNC_SHOW_PROGRESS, true);
 
-        // check if pending intent exists
-        reCreateAlarm = reCreateAlarm || (PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE) == null);
+            // check if pending intent exists
+            reCreateAlarm = reCreateAlarm || (PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE) == null);
 
-        // new pending intent
-        PendingIntent alarmIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        if (!mIsMasterSyncEnabled || !mIsCalendarSyncEnabled || !mIsKusssSyncEnable) {
-            if (reCreateAlarm) {
-                long interval = PreferenceWrapper.getSyncInterval(context) * DateUtils.HOUR_IN_MILLIS;
+            // new pending intent
+            PendingIntent alarmIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            if (!mIsMasterSyncEnabled || !mIsCalendarSyncEnabled || !mIsKusssSyncEnable) {
+                if (reCreateAlarm) {
+                    long interval = PreferenceWrapper.getSyncInterval(context) * DateUtils.HOUR_IN_MILLIS;
 
-                // synchronize in half an hour
-                am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + AlarmManager.INTERVAL_HALF_HOUR, interval, alarmIntent);
+                    // synchronize in half an hour
+                    am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + AlarmManager.INTERVAL_HALF_HOUR, interval, alarmIntent);
+                }
+            } else {
+                am.cancel(alarmIntent);
             }
-        } else {
-            am.cancel(alarmIntent);
         }
     }
 
@@ -871,7 +860,7 @@ public class AppUtils {
     }
 
     public static boolean executeEm(Context context, Callable<?>[] callables, boolean wait) {
-        boolean result = true;
+        boolean result;
 
         ExecutorService es = Executors.newSingleThreadExecutor();
         try {
@@ -941,5 +930,62 @@ public class AppUtils {
 
     public static String format(Context c, String format, Object... args) {
         return String.format(getLocale(c), format, args);
+    }
+
+    public static void setupNotificationChannels(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            try {
+                NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+                if (mNotificationManager != null) {
+                    // create default channel
+                    NotificationChannel defaultChannel = new NotificationChannel(Consts.CHANNEL_ID_DEFAULT,
+                            context.getString(R.string.app_name), NotificationManager.IMPORTANCE_LOW);
+                    // Sets whether notifications posted to this channel should display notification lights
+                    defaultChannel.enableLights(true);
+                    // Sets whether notification posted to this channel should vibrate.
+                    defaultChannel.enableVibration(true);
+                    // Sets the notification light color for notifications posted to this channel
+                    defaultChannel.setLightColor(Color.BLUE);
+                    // Sets whether notifications posted to this channel appear on the lockscreen or not
+                    defaultChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+                    defaultChannel.setShowBadge(false);
+
+                    mNotificationManager.createNotificationChannel(defaultChannel);
+
+                    // create exams channel
+                    NotificationChannel examsChannel = new NotificationChannel(Consts.CHANNEL_ID_EXAMS,
+                            context.getString(R.string.title_exams), NotificationManager.IMPORTANCE_DEFAULT);
+                    // Sets whether notifications posted to this channel should display notification lights
+                    examsChannel.enableLights(true);
+                    // Sets whether notification posted to this channel should vibrate.
+                    examsChannel.enableVibration(true);
+                    // Sets the notification light color for notifications posted to this channel
+                    examsChannel.setLightColor(Color.RED);
+                    // Sets whether notifications posted to this channel appear on the lockscreen or not
+                    examsChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+                    defaultChannel.setShowBadge(false);
+
+                    mNotificationManager.createNotificationChannel(examsChannel);
+
+                    // create grades channel
+                    NotificationChannel gradesChannel = new NotificationChannel(Consts.CHANNEL_ID_GRADES,
+                            context.getString(R.string.title_grades), NotificationManager.IMPORTANCE_HIGH);
+                    // Sets whether notifications posted to this channel should display notification lights
+                    gradesChannel.enableLights(true);
+                    // Sets whether notification posted to this channel should vibrate.
+                    gradesChannel.enableVibration(true);
+                    // Sets the notification light color for notifications posted to this channel
+                    gradesChannel.setLightColor(Color.GREEN);
+                    // Sets whether notifications posted to this channel appear on the lockscreen or not
+                    gradesChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+                    defaultChannel.setShowBadge(true);
+
+                    mNotificationManager.createNotificationChannel(gradesChannel);
+                }
+            } catch (Exception e) {
+                Analytics.sendException(context, e, true);
+            }
+        }
     }
 }

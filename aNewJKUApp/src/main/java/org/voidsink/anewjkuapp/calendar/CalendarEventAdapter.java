@@ -1,25 +1,25 @@
 /*
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
- * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
- * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
+ *       ____.____  __.____ ___     _____
+ *      |    |    |/ _|    |   \   /  _  \ ______ ______
+ *      |    |      < |    |   /  /  /_\  \\____ \\____ \
+ *  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ *  \________|____|__ \______/   \____|__  /   __/|   __/
+ *                   \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -66,13 +66,13 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
         public EventItemHolder(View itemView) {
             super(itemView);
 
-            mToolbar = (Toolbar) itemView.findViewById(R.id.calendar_list_item_toolbar);
+            mToolbar = itemView.findViewById(R.id.calendar_list_item_toolbar);
             mToolbar.inflateMenu(R.menu.calendar_card_popup_menu);
 
-            mTitle = (TextView) itemView.findViewById(R.id.calendar_list_item_title);
-            mDescr = (TextView) itemView.findViewById(R.id.calendar_list_item_descr);
-            mTime = (TextView) itemView.findViewById(R.id.calendar_list_item_time);
-            mLocation = (TextView) itemView.findViewById(R.id.calendar_list_item_location);
+            mTitle = itemView.findViewById(R.id.calendar_list_item_title);
+            mDescr = itemView.findViewById(R.id.calendar_list_item_descr);
+            mTime = itemView.findViewById(R.id.calendar_list_item_time);
+            mLocation = itemView.findViewById(R.id.calendar_list_item_location);
         }
     }
 
@@ -82,7 +82,7 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
         public DateHeaderHolder(View itemView) {
             super(itemView);
 
-            mText = (TextView) itemView.findViewById(R.id.list_header_text);
+            mText = itemView.findViewById(R.id.list_header_text);
         }
     }
     

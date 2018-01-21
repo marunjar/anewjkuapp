@@ -35,6 +35,7 @@ import android.support.v4.app.NotificationCompat;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 public class SyncNotification {
     private final Context mContext;
@@ -51,7 +52,7 @@ public class SyncNotification {
         ((NotificationManager) mContext
                 .getSystemService(Context.NOTIFICATION_SERVICE)).cancel(id);
 
-        this.mBuilder = new NotificationCompat.Builder(this.mContext)
+        this.mBuilder = new NotificationCompat.Builder(this.mContext, Consts.CHANNEL_ID_DEFAULT)
                 .setOngoing(true)
                 .setCategory(NotificationCompat.CATEGORY_SERVICE)
                 .setAutoCancel(true)
@@ -61,13 +62,13 @@ public class SyncNotification {
                 .setGroup("Sync Group");
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            this.mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp)
+            this.mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp_anim)
                     .setLargeIcon(
                             BitmapFactory.decodeResource(
                                     this.mContext.getResources(),
                                     R.drawable.ic_refresh_white_24dp));
         } else {
-            this.mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_compat_24dp);
+            this.mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_compat_24dp_anim);
         }
 
         // contenIntent required for all Versions before ICS

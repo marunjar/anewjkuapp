@@ -1,25 +1,25 @@
 /*
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
- * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
- * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
+ *       ____.____  __.____ ___     _____
+ *      |    |    |/ _|    |   \   /  _  \ ______ ______
+ *      |    |      < |    |   /  /  /_\  \\____ \\____ \
+ *  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ *  \________|____|__ \______/   \____|__  /   __/|   __/
+ *                   \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -29,13 +29,13 @@ import android.accounts.Account;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.UriMatcher;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.RectF;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -57,9 +57,6 @@ import com.alamkanak.weekview.WeekViewEvent;
 import com.alamkanak.weekview.WeekViewLoader;
 
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.base.BaseContentObserver;
-import org.voidsink.anewjkuapp.base.BaseFragment;
-import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.update.UpdateService;
@@ -75,24 +72,23 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class CalendarFragment2 extends BaseFragment implements ContentObserverListener,
+public class CalendarFragment2 extends CalendarPermissionFragment implements
         WeekView.EventClickListener, WeekView.EventLongPressListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = CalendarFragment2.class.getSimpleName();
     private static final String ARG_CAL_LOAD_NOW = "CLN";
     private static final String ARG_CAL_LOAD_THEN = "CLT";
-    private BaseContentObserver mDataObserver;
     private WeekView mWeekView;
     private final MyWeekViewLoader mWeekViewLoader = new MyWeekViewLoader();
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar_2, container,
                 false);
 
 
-        mWeekView = (WeekView) view.findViewById(R.id.weekView);
+        mWeekView = view.findViewById(R.id.weekView);
 
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, -1);
@@ -123,13 +119,11 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
 
         inflater.inflate(R.menu.calendar, menu);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            MenuItem menuItem = menu.findItem(R.id.action_cal_goto_today);
-            // replace the default top layer drawable of the today icon with a
-            // custom drawable that shows the day of the month of today
-            LayerDrawable icon = (LayerDrawable) menuItem.getIcon();
-            UIUtils.setTodayIcon(icon, getContext(), "");
-        }
+        MenuItem menuItem = menu.findItem(R.id.action_cal_goto_today);
+        // replace the default top layer drawable of the today icon with a
+        // custom drawable that shows the day of the month of today
+        LayerDrawable icon = (LayerDrawable) menuItem.getIcon();
+        UIUtils.setTodayIcon(icon, getContext(), "");
     }
 
     @Override
@@ -150,30 +144,6 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-        UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(CalendarContractWrapper.AUTHORITY(), CalendarContractWrapper.Events.CONTENT_URI().buildUpon().appendPath("#").build().toString(), 0);
-
-        mDataObserver = new BaseContentObserver(uriMatcher, this);
-
-        // listen to all changes
-        getActivity().getContentResolver().registerContentObserver(
-                CalendarContractWrapper.Events.CONTENT_URI().buildUpon()
-                        .appendPath("#").build(), false, mDataObserver);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        getActivity().getContentResolver().unregisterContentObserver(
-                mDataObserver);
-        mDataObserver = null;
-    }
-
-    @Override
     protected String getScreenName() {
         return Consts.SCREEN_CALENDAR_2;
     }
@@ -189,7 +159,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
         if (mWeekView != null) {
@@ -223,16 +193,24 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
             date = savedInstanceState.getLong(Consts.ARG_CALENDAR_NOW);
         }
         goToDate(date);
+    }
 
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(date);
+    @Override
+    public void onStart() {
+        super.onStart();
 
-        loadData(cal);
+        loadData(mWeekView.getFirstVisibleDay());
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        mWeekViewLoader.stopLoading();
     }
 
     private void loadData(Calendar date) {
-        if (mWeekViewLoader != null && date != null) {
+        if (date != null) {
             int periodIndex = (int) mWeekViewLoader.toWeekViewPeriodIndex(date);
 
             mWeekViewLoader.loadPeriod(periodIndex - 1, true);
@@ -267,9 +245,13 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
         String calIDExam = CalendarUtils.getCalIDByName(getContext(),
                 mAccount, CalendarUtils.ARG_CALENDAR_EXAM, true);
 
-        if (calIDLva == null || calIDExam == null) {
+        if (calIDLva == null && calIDExam == null) {
             Log.w(TAG, "no events loaded, calendars not found");
             return null;
+        } else if (calIDLva == null) {
+            calIDLva = calIDExam;
+        } else if (calIDExam == null) {
+            calIDExam = calIDLva;
         }
 
         return new CursorLoader(getContext(), CalendarContractWrapper.Events.CONTENT_URI(),
@@ -356,7 +338,7 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
                         endTime.add(Calendar.MILLISECOND, -1);
                     }
 
-                    WeekViewEvent event = new WeekViewEvent(data.getLong(CalendarUtils.COLUMN_EVENT_ID),
+                    WeekViewEvent event = new WeekViewEvent(data.getString(CalendarUtils.COLUMN_EVENT_ID),
                             data.getString(CalendarUtils.COLUMN_EVENT_TITLE),
                             data.getString(CalendarUtils.COLUMN_EVENT_LOCATION),
                             startTime,
@@ -499,9 +481,20 @@ public class CalendarFragment2 extends BaseFragment implements ContentObserverLi
                 loadPeriod(periodIndex + 1, false);
             }
         }
+
+        public void stopLoading() {
+            if (getLoaderManager().hasRunningLoaders()) {
+                Log.d(TAG, "stop loading events");
+
+                for (int id : mLastLoadedPeriods) {
+                    getLoaderManager().destroyLoader(id);
+                }
+                getLoaderManager().destroyLoader(mLastPeriodIndex);
+            }
+        }
     }
 
-    private class CalendarDateTimeInterpreter implements DateTimeInterpreter {
+    private static class CalendarDateTimeInterpreter implements DateTimeInterpreter {
 
         final DateFormat mDateFormat;
         final DateFormat mTimeFormat;

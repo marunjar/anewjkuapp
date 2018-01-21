@@ -10,6 +10,7 @@
         android:id="@+id/calendar_list_item_toolbar"
         style="@style/cardToolbarStyle"
         android:clickable="true"
+        android:focusable="true"
         android:theme="?attr/cardToolbarTheme">
 
         <android.support.constraint.ConstraintLayout
