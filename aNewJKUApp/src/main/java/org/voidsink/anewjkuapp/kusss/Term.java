@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 
 package org.voidsink.anewjkuapp.kusss;
 
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -32,6 +33,7 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -96,7 +98,7 @@ public class Term implements Comparable<Term> {
     private final TermType type;
     private boolean loaded = false;
 
-    public Term(int year, TermType type) {
+    private Term(int year, @NonNull TermType type) {
         this.year = year;
         this.type = type;
     }
@@ -118,6 +120,20 @@ public class Term implements Comparable<Term> {
         if (!(o instanceof Term)) return false;
         Term t = (Term) o;
         return this.compareTo(t) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            return Objects.hash(this.year, this.type);
+        } else {
+            int result = 1;
+
+            result = 31 * result + this.year;
+            result = 31 * result + this.type.hashCode();
+
+            return result;
+        }
     }
 
     private int getYear() {
@@ -158,7 +174,7 @@ public class Term implements Comparable<Term> {
     }
 
     public boolean isEmpty() {
-        return this.year < 0 || this.type == null;
+        return this.year < 0;
     }
 
 }

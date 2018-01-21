@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/drawer_header_height"
@@ -16,18 +16,18 @@
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:contentDescription="@string/drawer_menu_item_icon"
         android:scaleType="fitXY"
-        android:src="@drawable/person_image_empty"/>
+        app:srcCompat="@drawable/person_image_empty" />
 
     <TextView
         android:id="@+id/drawer_user"
         style="@style/Text"
-        android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@android:color/white"
-        tools:text="k123456"/>
+        android:textStyle="bold"
+        tools:text="k123456" />
 
 </LinearLayout>

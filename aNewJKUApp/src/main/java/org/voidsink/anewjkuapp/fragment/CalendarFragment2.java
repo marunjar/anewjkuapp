@@ -159,7 +159,7 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
         if (mWeekView != null) {

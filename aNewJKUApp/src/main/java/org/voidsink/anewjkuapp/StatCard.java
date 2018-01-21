@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ public class StatCard {
     private final boolean mPositiveOnly;
     private final List<Term> mTerms;
 
-    public StatCard(int type, List<Term> terms, List<Course> courses, List<Assessment> assessments, boolean weighted, boolean positiveOnly) {
+    private StatCard(int type, List<Term> terms, List<Course> courses, List<Assessment> assessments, boolean weighted, boolean positiveOnly) {
         this.mType = type;
         this.mTerms = terms;
         this.mCourses = courses;

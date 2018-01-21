@@ -146,7 +146,7 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
         outState.putLong(Consts.ARG_CALENDAR_NOW, now);
