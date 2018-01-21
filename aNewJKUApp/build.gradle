@@ -108,14 +108,14 @@ dependencies {
     implementation 'org.mapsforge:mapsforge-themes:0.9.1'
     implementation 'org.mapsforge:mapsforge-map-android:0.9.1'
     implementation 'pub.devrel:easypermissions:1.1.2'
-    implementation 'org.jsoup:jsoup:1.11.2'
-    implementation 'org.mnode.ical4j:ical4j:1.0.7'
+    implementation 'org.jsoup:jsoup:1.10.3' // Mark-Bug will be resolved by version 1.11.3
+    implementation 'org.mnode.ical4j:ical4j:1.0.7' // https://github.com/ical4j/ical4j/issues/143 https://github.com/ical4j/ical4j/pull/116
 //    implementation 'org.mnode.ical4j:ical4j-extensions:1.0.0'
     debugImplementation 'org.slf4j:slf4j-android:1.7.25'
     implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
     //implementation 'com.github.alamkanak:android-week-view:1.2.3'
     implementation 'de.cketti.library.changelog:ckchangelog:1.2.2'
-    implementation('com.mikepenz:aboutlibraries:6.0.1@aar'){
+    implementation('com.mikepenz:aboutlibraries:6.0.2@aar'){
         transitive = true
     }
     implementation project(':sectionedRecyclerAdapter')
