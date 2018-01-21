@@ -6,7 +6,7 @@
     <path
         android:pathData="M0,0L108,0A0,0 0,0 1,108 0L108,108A0,0 0,0 1,108 108L0,108A0,0 0,0 1,0 108L0,0A0,0 0,0 1,0 0z"
         android:fillAlpha="1"
-        android:fillColor="#0f60bd"/>
+        android:fillColor="@color/default_primary"/>
     <path
         android:pathData="M32,74l44,0l0,-9.57l-44,0z"
         android:fillAlpha="1"

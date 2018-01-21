@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--colors for default style-->
+    <color name="default_accent">#ee2b8c</color>
+    <color name="default_accentTransparent">#55ee2b8c</color>
+</resources>

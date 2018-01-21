@@ -1,0 +1,103 @@
+<!--
+  ~       ____.____  __.____ ___     _____
+  ~      |    |    |/ _|    |   \   /  _  \ ______ ______
+  ~      |    |      < |    |   /  /  /_\  \\____ \\____ \
+  ~  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+  ~  \________|____|__ \______/   \____|__  /   __/|   __/
+  ~                   \/                  \/|__|   |__|
+  ~
+  ~  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>
+  ~
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="161dp"
+    android:height="91dp"
+    android:viewportWidth="161.925"
+    android:viewportHeight="91.44">
+    <path
+        android:pathData="M48.57,0 L74.65,26.05 63.31,91.44 161.93,91.44V0Z"
+        android:strokeLineCap="butt"
+        android:fillAlpha="1"
+        android:strokeColor="#000000"
+        android:fillColor="@color/default_primary"
+        android:strokeWidth="0.1"
+        android:strokeLineJoin="miter"
+        android:strokeAlpha="1"/>
+    <path
+        android:pathData="M0,-0C48.57,0 48.57,0 48.57,0L74.65,26.05 63.31,91.44 0,91.44Z"
+        android:strokeLineCap="butt"
+        android:fillAlpha="1"
+        android:strokeColor="#000000"
+        android:fillColor="@color/default_accent"
+        android:strokeWidth="0.1"
+        android:strokeLineJoin="miter"
+        android:strokeAlpha="1"/>
+    <path
+        android:pathData="M22.11,0 L54.05,91.44H62L67.99,19.44 48.57,0Z"
+        android:strokeLineCap="butt"
+        android:fillAlpha="0.06666667"
+        android:strokeColor="#000000"
+        android:fillColor="#000000"
+        android:strokeWidth="0.1"
+        android:strokeLineJoin="miter"
+        android:strokeAlpha="1"/>
+    <path
+        android:pathData="M63.31,91.44 L74.65,26.05 67.99,19.44 62,91.44Z"
+        android:strokeLineCap="butt"
+        android:fillAlpha="0.13333333"
+        android:strokeColor="#000000"
+        android:fillColor="#000000"
+        android:strokeWidth="0.1"
+        android:strokeLineJoin="miter"
+        android:strokeAlpha="1"/>
+    <path
+        android:pathData="M74.65,26.05 L96.53,47.97 70.49,91.44l-7.18,0z"
+        android:strokeLineCap="butt"
+        android:fillAlpha="0.53333285"
+        android:strokeColor="#000000"
+        android:fillColor="#ffffff"
+        android:strokeWidth="0.1"
+        android:strokeLineJoin="miter"
+        android:strokeAlpha="1"/>
+    <path
+        android:pathData="M74.27,91.44 L103,54.45 96.53,47.97 70.49,91.44Z"
+        android:strokeLineCap="butt"
+        android:fillAlpha="0.6"
+        android:strokeColor="#000000"
+        android:fillColor="#ffffff"
+        android:strokeWidth="0.1"
+        android:strokeLineJoin="miter"
+        android:strokeAlpha="1"/>
+    <path
+        android:pathData="m103,54.45 l3.87,3.87L76.82,91.44h-2.55z"
+        android:strokeLineCap="butt"
+        android:fillAlpha="0.33333333"
+        android:strokeColor="#000000"
+        android:fillColor="#000000"
+        android:strokeWidth="0.1"
+        android:strokeLineJoin="miter"
+        android:strokeAlpha="1"/>
+    <path
+        android:pathData="m106.87,58.32 l-30.05,33.12 62.93,-0z"
+        android:strokeLineCap="butt"
+        android:fillAlpha="0.2"
+        android:strokeColor="#000000"
+        android:fillColor="#000000"
+        android:strokeWidth="0.1"
+        android:strokeLineJoin="miter"
+        android:strokeAlpha="1"/>
+</vector>
