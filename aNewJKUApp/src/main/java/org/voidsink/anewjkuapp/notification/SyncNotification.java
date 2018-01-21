@@ -68,7 +68,7 @@ public class SyncNotification {
                                     this.mContext.getResources(),
                                     R.drawable.ic_refresh_white_24dp));
         } else {
-            this.mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_compat_24dp);
+            this.mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_compat_24dp_anim);
         }
 
         // contenIntent required for all Versions before ICS
