@@ -4,6 +4,11 @@
 		    - fixed
 		    * changed
 		    + added -->
+    <release version="0.50.0" versioncode="140059">
+        <change>+ App: jetzt auch für Android O</change>
+        <change>- App: viele Korrekturen und Optimierungen</change>
+        <change>* Karte: neue Daten von OpenStreetMap</change>
+    </release>
     <release version="0.45.4" versioncode="140058">
         <change>- App: kleine Korrekturen und Optimierungen beim Laden der Daten</change>
         <change>* Karte: neue Daten von OpenStreetMap</change>
