@@ -76,7 +76,7 @@ public class Consts {
     public static final String SCREEN_LOGIN = "/login";
     public static final String SCREEN_DASHCLOCK = "/dashclock";
 
-    // Laoder IDs
+    // Loader IDs
     public static final int LOADER_ID_COURSES = 1;
     public static final int LOADER_ID_ASSESSMENTS = 2;
 

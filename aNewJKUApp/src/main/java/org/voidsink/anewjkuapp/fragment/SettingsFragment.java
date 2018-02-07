@@ -48,7 +48,6 @@ import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.util.ArrayList;
 
 public class SettingsFragment extends BasePreferenceFragment {
@@ -180,14 +179,9 @@ public class SettingsFragment extends BasePreferenceFragment {
         private void IterateDir(File f, ArrayList<String> entries,
                                 ArrayList<String> entryValues) {
 
-            File[] files = f.listFiles(new FileFilter() {
-                @Override
-                public boolean accept(File pathname) {
-                    return pathname.isDirectory()
-                            || (pathname.isFile() && pathname.toString().endsWith(
-                            ".map"));
-                }
-            });
+            File[] files = f.listFiles(pathname -> pathname.isDirectory()
+                    || (pathname.isFile() && pathname.toString().endsWith(
+                    ".map")));
             if (files != null) {
                 for (File file : files) {
                     if (file.isDirectory()) {
@@ -235,23 +229,17 @@ public class SettingsFragment extends BasePreferenceFragment {
             TwoLinesListPreference calendarLva = (TwoLinesListPreference) findPreference(PreferenceWrapper.PREF_EXTENDED_CALENDAR_LVA);
             setEntries(calendars, calendarLva);
             updateTextPrefSummary(calendarLva, null, R.string.pref_kusss_calendar_extended_summary);
-            calendarLva.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    updateTextPrefSummary((ListPreference) preference, newValue.toString(), R.string.pref_kusss_calendar_extended_summary);
-                    return true;
-                }
+            calendarLva.setOnPreferenceChangeListener((preference, newValue) -> {
+                updateTextPrefSummary((ListPreference) preference, newValue.toString(), R.string.pref_kusss_calendar_extended_summary);
+                return true;
             });
 
             TwoLinesListPreference calendarExam = (TwoLinesListPreference) findPreference(PreferenceWrapper.PREF_EXTENDED_CALENDAR_EXAM);
             setEntries(calendars, calendarExam);
             updateTextPrefSummary(calendarExam, null, R.string.pref_kusss_calendar_extended_summary);
-            calendarExam.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    updateTextPrefSummary((ListPreference) preference, newValue.toString(), R.string.pref_kusss_calendar_extended_summary);
-                    return true;
-                }
+            calendarExam.setOnPreferenceChangeListener((preference, newValue) -> {
+                updateTextPrefSummary((ListPreference) preference, newValue.toString(), R.string.pref_kusss_calendar_extended_summary);
+                return true;
             });
         }
 

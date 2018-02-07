@@ -1,25 +1,25 @@
 /*
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
- * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
- * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
+ *       ____.____  __.____ ___     _____
+ *      |    |    |/ _|    |   \   /  _  \ ______ ______
+ *      |    |      < |    |   /  /  /_\  \\____ \\____ \
+ *  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ *  \________|____|__ \______/   \____|__  /   __/|   __/
+ *                   \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -61,40 +61,22 @@ public class AboutFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_about, container, false);
 
         (view.findViewById(R.id.about_libraries))
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        new LibsBuilder()
-                                .withFields(R.string.class.getFields()) // pass the fields of your application to the lib so it can find all external lib information
-                                .withLibraries("jsoup")
-                                .withAutoDetect(true)
-                                .withVersionShown(false)
-                                .withLicenseShown(true)
-                                .withActivityStyle(getActivityStyle(getActivity()))
-                                .withActivityColor(getActivityColor(getActivity()))
-                                .withActivityTitle(getActivity().getString(R.string.title_about))
-                                .withAboutAppName(getString(R.string.app_name))
-                                .withAboutIconShown(true)
-                                .withAboutVersionShown(true)
-                                .start(getActivity());
-                    }
-                });
+                .setOnClickListener(v -> new LibsBuilder()
+                        .withFields(R.string.class.getFields()) // pass the fields of your application to the lib so it can find all external lib information
+                        .withLibraries("jsoup")
+                        .withAutoDetect(true)
+                        .withVersionShown(false)
+                        .withLicenseShown(true)
+                        .withActivityStyle(getActivityStyle(getActivity()))
+                        .withActivityColor(getActivityColor(getActivity()))
+                        .withActivityTitle(getActivity().getString(R.string.title_about))
+                        .withAboutAppName(getString(R.string.app_name))
+                        .withAboutIconShown(true)
+                        .withAboutVersionShown(true)
+                        .start(getActivity()));
 
         (view.findViewById(R.id.about_changelog))
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        new ChangeLog(getActivity()).getFullLogDialog().show();
-                    }
-                });
-
-//        view.findViewById(R.id.force_logout).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                KusssHandler.getInstance().logout(getContext());
-//            }
-//        });
+                .setOnClickListener(v -> new ChangeLog(getActivity()).getFullLogDialog().show());
 
         return view;
     }

@@ -103,15 +103,12 @@ public class AppUtils {
     private static final String DEFAULT_POI_FILE_NAME = "JKU.gpx";
     private static final String TAG = AppUtils.class.getSimpleName();
 
-    private static final Comparator<Course> CourseComparator = new Comparator<Course>() {
-        @Override
-        public int compare(Course lhs, Course rhs) {
-            int value = lhs.getTitle().compareTo(rhs.getTitle());
-            if (value == 0) {
-                value = lhs.getTerm().compareTo(rhs.getTerm());
-            }
-            return value;
+    private static final Comparator<Course> CourseComparator = (lhs, rhs) -> {
+        int value = lhs.getTitle().compareTo(rhs.getTitle());
+        if (value == 0) {
+            value = lhs.getTerm().compareTo(rhs.getTerm());
         }
+        return value;
     };
 
     private static final Comparator<LvaWithGrade> LvaWithGradeComparator = new Comparator<LvaWithGrade>() {
@@ -129,19 +126,15 @@ public class AppUtils {
         }
     };
 
-    private static final Comparator<Curriculum> CurriculaComparator = new Comparator<Curriculum>() {
-
-        @Override
-        public int compare(Curriculum lhs, Curriculum rhs) {
-            int value = lhs.getUni().compareToIgnoreCase(rhs.getUni());
-            if (value == 0) {
-                value = lhs.getDtStart().compareTo(rhs.getDtStart());
-            }
-            if (value == 0) {
-                value = lhs.getCid().compareTo(rhs.getCid());
-            }
-            return value;
+    private static final Comparator<Curriculum> CurriculaComparator = (lhs, rhs) -> {
+        int value = lhs.getUni().compareToIgnoreCase(rhs.getUni());
+        if (value == 0) {
+            value = lhs.getDtStart().compareTo(rhs.getDtStart());
         }
+        if (value == 0) {
+            value = lhs.getCid().compareTo(rhs.getCid());
+        }
+        return value;
     };
 
     private static final Comparator<Assessment> AssessmentComparator = new Comparator<Assessment>() {
@@ -161,15 +154,12 @@ public class AppUtils {
         }
     };
 
-    private static final Comparator<Term> TermComparator = new Comparator<Term>() {
-        @Override
-        public int compare(Term lhs, Term rhs) {
-            if (lhs == null && rhs == null) return 0;
-            if (lhs == null) return -1;
-            if (rhs == null) return 1;
+    private static final Comparator<Term> TermComparator = (lhs, rhs) -> {
+        if (lhs == null && rhs == null) return 0;
+        if (lhs == null) return -1;
+        if (rhs == null) return 1;
 
-            return rhs.compareTo(lhs);
-        }
+        return rhs.compareTo(lhs);
     };
 
 

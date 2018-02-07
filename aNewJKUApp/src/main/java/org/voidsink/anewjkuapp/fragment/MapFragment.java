@@ -30,7 +30,6 @@ import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -218,21 +217,10 @@ public class MapFragment extends BaseFragment implements
             arrayAdapter.addAll(pois);
 
             poiSelector.setNegativeButton(android.R.string.cancel,
-                    new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
+                    (dialog, which) -> dialog.dismiss());
 
             poiSelector.setAdapter(arrayAdapter,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finishSearch(arrayAdapter.getItem(which));
-                        }
-                    });
+                    (dialog, which) -> finishSearch(arrayAdapter.getItem(which)));
             poiSelector.show();
         }
     }

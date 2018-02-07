@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,7 +29,6 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -148,13 +147,10 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
 
 
                 this.mClickedDialogEntryIndex = preference.findIndexOfValue(preference.getValue());
-                builder.setSingleChoiceItems(adapter, this.mClickedDialogEntryIndex, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        TwoLinesListPreferenceDialogFragment.this.mClickedDialogEntryIndex = which;
-                        TwoLinesListPreferenceDialogFragment.this.onClick(dialog, -1);
-                        dialog.dismiss();
-                    }
+                builder.setSingleChoiceItems(adapter, this.mClickedDialogEntryIndex, (dialog, which) -> {
+                    TwoLinesListPreferenceDialogFragment.this.mClickedDialogEntryIndex = which;
+                    TwoLinesListPreferenceDialogFragment.this.onClick(dialog, -1);
+                    dialog.dismiss();
                 });
                 builder.setPositiveButton(null, null);
             } else {

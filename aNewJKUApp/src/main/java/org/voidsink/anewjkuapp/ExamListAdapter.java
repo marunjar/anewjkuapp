@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,7 +29,6 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -61,17 +60,14 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
         final ExamListExam exam = getItem(position);
 
         if (exam != null) {
-            holder.mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem menuItem) {
-                    switch (menuItem.getItemId()) {
-                        case R.id.menu_exam_register: {
-                            KusssHelper.showExamInBrowser(getContext(), exam.getCourseId());
-                            return true;
-                        }
+            holder.mToolbar.setOnMenuItemClickListener(menuItem -> {
+                switch (menuItem.getItemId()) {
+                    case R.id.menu_exam_register: {
+                        KusssHelper.showExamInBrowser(getContext(), exam.getCourseId());
+                        return true;
                     }
-                    return false;
                 }
+                return false;
             });
 
             holder.mTitle.setText(exam.getTitle());
@@ -81,7 +77,7 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
             UIUtils.setTextAndVisibility(holder.mTerm, AppUtils.termToString(exam.getTerm()));
 
             if (exam.getCid() > 0) {
-                holder.mCid.setText(AppUtils.format(getContext(),"[%d]", exam.getCid()));
+                holder.mCid.setText(AppUtils.format(getContext(), "[%d]", exam.getCid()));
                 holder.mCid.setVisibility(View.VISIBLE);
             } else {
                 holder.mCid.setVisibility(View.GONE);

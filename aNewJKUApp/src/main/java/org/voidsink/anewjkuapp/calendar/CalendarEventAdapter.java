@@ -29,7 +29,6 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -92,15 +91,12 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
 
     @Override
     public EventItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.calendar_list_item, parent, false);
-        final EventItemHolder vh = new EventItemHolder(v);
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.calendar_list_item, parent, false);
+        final EventItemHolder vh = new EventItemHolder(view);
 
-        v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mItemClickListener != null) {
-                    mItemClickListener.onItemClick(v, vh.getItemViewType(), vh.getAdapterPosition());
-                }
+        view.setOnClickListener(v -> {
+            if (mItemClickListener != null) {
+                mItemClickListener.onItemClick(v, vh.getItemViewType(), vh.getAdapterPosition());
             }
         });
 
@@ -112,21 +108,18 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
         final CalendarListEvent eventItem = getItem(position);
 
         if (eventItem != null) {
-            holder.mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem menuItem) {
-                    switch (menuItem.getItemId()) {
-                        case R.id.show_in_calendar: {
-                            eventItem.showInCalendar(getContext());
-                            return true;
-                        }
-                        case R.id.show_on_map: {
-                            eventItem.showOnMap(getContext());
-                            return true;
-                        }
+            holder.mToolbar.setOnMenuItemClickListener(menuItem -> {
+                switch (menuItem.getItemId()) {
+                    case R.id.show_in_calendar: {
+                        eventItem.showInCalendar(getContext());
+                        return true;
                     }
-                    return false;
+                    case R.id.show_on_map: {
+                        eventItem.showOnMap(getContext());
+                        return true;
+                    }
                 }
+                return false;
             });
 
             holder.mTitle.setText(eventItem.getTitle());
