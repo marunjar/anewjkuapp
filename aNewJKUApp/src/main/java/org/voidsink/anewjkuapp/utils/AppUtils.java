@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -177,10 +177,10 @@ public class AppUtils {
         int mLastVersion = PreferenceWrapper.getLastVersion(context);
         int mCurrentVersion = PreferenceWrapper.getCurrentVersion(context);
 
+        boolean errorOccured = false;
+
         if (mLastVersion != mCurrentVersion
                 || mLastVersion == PreferenceWrapper.PREF_LAST_VERSION_NONE) {
-            boolean errorOccured = false;
-
             try {
                 if (!initPreferences(context)) {
                     errorOccured = true;
@@ -191,6 +191,17 @@ public class AppUtils {
                 if (!copyDefaultMap(context)) {
                     errorOccured = true;
                 }
+            } catch (Exception e) {
+                Log.e(TAG, "doOnNewVersion failed", e);
+                Analytics.sendException(context, e, false);
+                errorOccured = true;
+            }
+        }
+
+        // only if another version was installed before
+        if (mLastVersion != mCurrentVersion
+                && mLastVersion != PreferenceWrapper.PREF_LAST_VERSION_NONE) {
+            try {
                 if (shouldRemoveOldAccount(mLastVersion, mCurrentVersion)) {
                     if (!removeAccount(context)) {
                         errorOccured = true;
@@ -216,13 +227,13 @@ public class AppUtils {
 
                 PreferenceWrapper.applySyncInterval(context);
             } catch (Exception e) {
-                Log.e(TAG, "doOnNewVersion failed", e);
+                Log.e(TAG, "doOnVersionChange failed", e);
                 Analytics.sendException(context, e, false);
                 errorOccured = true;
             }
-            if (!errorOccured) {
-                PreferenceWrapper.setLastVersion(context, mCurrentVersion);
-            }
+        }
+        if (!errorOccured) {
+            PreferenceWrapper.setLastVersion(context, mCurrentVersion);
         }
     }
 
@@ -255,8 +266,7 @@ public class AppUtils {
     private static boolean shouldImportCurricula(int lastVersion, int currentVersion) {
         // curricula added with 140026
         // import on startup to avoid strange behaviour and missing tabs
-        return (lastVersion < 100026 && currentVersion >= 100026) ||
-                (lastVersion < 140026 && currentVersion >= 140026);
+        return (lastVersion < 140026 && currentVersion >= 140026);
     }
 
     private static boolean importCurricula(Context context) {
@@ -285,8 +295,7 @@ public class AppUtils {
                                                   int currentVersion) {
         // calendar names changed with 100017, remove account for avoiding
         // corrupted data
-        return (lastVersion < 100017 && currentVersion >= 100017) ||
-                (lastVersion < 140017 && currentVersion >= 140017);
+        return (lastVersion < 140017 && currentVersion >= 140017);
     }
 
     private static boolean initPreferences(Context context) {

@@ -1,25 +1,26 @@
 /*
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
- * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
- * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
+ *       ____.____  __.____ ___     _____
+ *      |    |    |/ _|    |   \   /  _  \ ______ ______
+ *      |    |      < |    |   /  /  /_\  \\____ \\____ \
+ *  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ *  \________|____|__ \______/   \____|__  /   __/|   __/
+ *                   \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
 
 package org.voidsink.anewjkuapp.update;
@@ -46,7 +47,6 @@ import android.text.format.DateUtils;
 import android.util.Log;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
-//import net.fortuna.ical4j.extensions.groupwise.ShowAs;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
@@ -70,7 +70,6 @@ import org.voidsink.anewjkuapp.utils.Consts;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,8 +80,6 @@ import java.util.regex.Pattern;
 public class ImportCalendarTask implements Callable<Void> {
 
     private static final String TAG = ImportCalendarTask.class.getSimpleName();
-
-    private static final Object sync_lock = new Object();
 
     private final CalendarBuilder mCalendarBuilder;
 
@@ -130,6 +127,7 @@ public class ImportCalendarTask implements Callable<Void> {
         this.mCalendarName = calendarName;
         this.mCalendarBuilder = calendarBuilder;
         this.mSyncFromNow = System.currentTimeMillis();
+        this.mReleaseProvider = false;
         this.mShowProgress = (extras != null && extras.getBoolean(Consts.SYNC_SHOW_PROGRESS, false));
     }
 
@@ -180,7 +178,6 @@ public class ImportCalendarTask implements Callable<Void> {
         }
         CalendarChangedNotification mNotification = new CalendarChangedNotification(mContext,
                 CalendarUtils.getCalendarName(mContext, this.mCalendarName));
-
 
         try {
             Log.d(TAG, "setup connection");
@@ -299,26 +296,6 @@ public class ImportCalendarTask implements Callable<Void> {
                     return null;
                 }
 
-                String mCalendarAccountName = mAccount.name;
-                String mCalendarAccountType = mAccount.type;
-
-                try {
-                    Cursor c = mProvider.query(CalendarContractWrapper.Calendars.CONTENT_URI(),
-                            CalendarUtils.CALENDAR_PROJECTION, null, null, null);
-                    if (c != null) {
-                        while (c.moveToNext()) {
-                            if (calendarId.equals(c.getString(CalendarUtils.COLUMN_CAL_ID))) {
-                                mCalendarAccountName = c.getString(CalendarUtils.COLUMN_CAL_ACCOUNT_NAME);
-                                mCalendarAccountType = c.getString(CalendarUtils.COLUMN_CAL_ACCOUNT_TYPE);
-                                break;
-                            }
-                        }
-                        c.close();
-                    }
-                } catch (Exception e) {
-                    return null;
-                }
-
                 Log.d(TAG, "Fetching local entries for merge with: " + calendarId);
 
                 Uri calUri = CalendarContractWrapper.Events
@@ -344,7 +321,7 @@ public class ImportCalendarTask implements Callable<Void> {
 
                     // calc date for notifiying only future changes
                     // max update interval is 1 week
-                    long notifyFrom = new Date().getTime()
+                    long notifyFrom = System.currentTimeMillis()
                             - (DateUtils.DAY_IN_MILLIS * 7);
 
                     while (c.moveToNext()) {
@@ -395,7 +372,7 @@ public class ImportCalendarTask implements Callable<Void> {
                         eventDeleted = "1".equals(c
                                 .getString(CalendarUtils.COLUMN_EVENT_DELETED));
 
-                        if (eventKusssId != null && kusssIdPrefix != null && eventKusssId.startsWith(kusssIdPrefix)) {
+                        if (eventKusssId != null && eventKusssId.startsWith(kusssIdPrefix)) {
                             VEvent match = eventsMap.get(eventKusssId);
                             if (match != null && !eventDeleted) {
                                 // Entry exists. Remove from entry

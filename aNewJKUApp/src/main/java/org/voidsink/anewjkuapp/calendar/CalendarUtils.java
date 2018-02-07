@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -46,7 +46,6 @@ import android.util.Log;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.CalendarParserFactory;
-//import net.fortuna.ical4j.extensions.groupwise.ShowAs;
 import net.fortuna.ical4j.model.ParameterFactoryRegistry;
 import net.fortuna.ical4j.model.PropertyFactoryRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
@@ -70,18 +69,18 @@ public final class CalendarUtils {
     public static final String ARG_CALENDAR_COURSE = "ARG_LVA_CALENDAR";
 
     // Constants representing column positions from PROJECTION.
-    public static final String[] CALENDAR_PROJECTION = new String[]{
+    private static final String[] CALENDAR_PROJECTION = new String[]{
             CalendarContractWrapper.Calendars._ID(),
             CalendarContractWrapper.Calendars.NAME(),
             CalendarContractWrapper.Calendars.CALENDAR_DISPLAY_NAME(),
             CalendarContractWrapper.Calendars.ACCOUNT_NAME(),
             CalendarContractWrapper.Calendars.ACCOUNT_TYPE(),
             CalendarContractWrapper.Calendars.CALENDAR_ACCESS_LEVEL()};
-    public static final int COLUMN_CAL_ID = 0;
+    private static final int COLUMN_CAL_ID = 0;
     private static final int COLUMN_CAL_NAME = 1;
     private static final int COLUMN_CAL_DISPLAY_NAME = 2;
-    public static final int COLUMN_CAL_ACCOUNT_NAME = 3;
-    public static final int COLUMN_CAL_ACCOUNT_TYPE = 4;
+    private static final int COLUMN_CAL_ACCOUNT_NAME = 3;
+    private static final int COLUMN_CAL_ACCOUNT_TYPE = 4;
     private static final int COLUMN_CAL_ACCESS_LEVEL = 5;
 
     public static final String[] EVENT_PROJECTION = new String[]{
@@ -440,7 +439,7 @@ public final class CalendarUtils {
                 if (c != null) {
                     try {
                         ArrayList<ContentProviderOperation> batch = new ArrayList<>();
-                        long deleteFrom = new Date().getTime() - DateUtils.DAY_IN_MILLIS;
+                        long deleteFrom = System.currentTimeMillis() - DateUtils.DAY_IN_MILLIS;
                         while (c.moveToNext()) {
                             long eventDTStart = c.getLong(CalendarUtils.COLUMN_EVENT_DTSTART);
                             if (eventDTStart > deleteFrom) {
