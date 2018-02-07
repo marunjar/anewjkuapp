@@ -8,8 +8,8 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     defaultConfig {
@@ -121,7 +121,6 @@ dependencies {
     implementation project(':sectionedRecyclerAdapter')
     implementation project(':android-week-view')
     //implementation project(':kussslibrary')
-
 }
 
 apply plugin: "net.ltgt.errorprone"
