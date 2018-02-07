@@ -238,7 +238,6 @@
     <string name="alert_permission_get_accounts">Es können keine Accounts gelesen und angelegt werden da die nötige Berectigungen für Kontakte fehlt.</string>
 
     <string name="default_chip_color" translatable="false">#ff2b7fc2</string>
-    <string name="drawer_menu_item_icon">Icon</string>
     <string name="kusss_service_title">KUSSS Service</string>
     <string name="kusss_provider_name">KUSSS</string>
     <string name="poi_provider_name">POIs</string>

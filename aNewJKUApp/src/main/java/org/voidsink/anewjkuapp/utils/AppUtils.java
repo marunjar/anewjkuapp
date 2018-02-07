@@ -885,7 +885,7 @@ public class AppUtils {
 
         List<Future<?>> futures = new ArrayList<>();
 
-        for (Callable c : callables) {
+        for (Callable<?> c : callables) {
             futures.add(es.submit(c));
         }
 

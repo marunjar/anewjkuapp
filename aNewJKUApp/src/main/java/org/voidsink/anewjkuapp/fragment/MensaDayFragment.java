@@ -60,7 +60,7 @@ import java.util.List;
 
 public class MensaDayFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<List<MensaItem>> {
 
-    private static final String TAG = MensaDayFragment.class.getSimpleName();
+    //private static final String TAG = MensaDayFragment.class.getSimpleName();
     private Date mDate;
     private MensaMenuAdapter mAdapter;
 

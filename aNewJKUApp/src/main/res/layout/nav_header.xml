@@ -9,6 +9,7 @@
         android:id="@+id/drawer_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:contentDescription="@null"
         android:gravity="center"
         android:scaleType="fitXY"
         app:srcCompat="@drawable/drawer_image" />
@@ -21,7 +22,7 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:contentDescription="@string/drawer_menu_item_icon"
+        android:contentDescription="@null"
         android:gravity="center"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"

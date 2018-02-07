@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -45,14 +45,14 @@ import java.util.Date;
 
 public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent, CalendarEventAdapter.EventItemHolder> implements SectionedAdapter<CalendarEventAdapter.DateHeaderHolder> {
 
+    public interface OnItemClickListener {
+        void onItemClick(View view, int viewType, int position);
+    }
+
     private OnItemClickListener mItemClickListener;
 
     public CalendarEventAdapter(Context context) {
         super(context);
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(View view, int viewType, int position);
     }
 
     protected static class EventItemHolder extends RecyclerView.ViewHolder {
@@ -85,7 +85,7 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
             mText = itemView.findViewById(R.id.list_header_text);
         }
     }
-    
+
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
     }
@@ -134,9 +134,7 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
             UIUtils.setTextAndVisibility(holder.mDescr, eventItem.getDescr());
             UIUtils.setTextAndVisibility(holder.mTime, eventItem.getTime());
             UIUtils.setTextAndVisibility(holder.mLocation, eventItem.getLocation());
-
         }
-
     }
 
     @Override
