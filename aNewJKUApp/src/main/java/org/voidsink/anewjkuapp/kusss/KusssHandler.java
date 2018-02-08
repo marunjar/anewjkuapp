@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -84,6 +84,7 @@ public class KusssHandler {
     private static final String URL_MY_LVAS = "https://www.kusss.jku.at/kusss/assignment-results.action";
     private static final String URL_GET_TERMS = "https://www.kusss.jku.at/kusss/listmystudentlvas.action";
     private static final String URL_GET_ICAL = "https://www.kusss.jku.at/kusss/ical-multi-sz.action";
+    private static final String URL_GET_ICAL_FORM = "https://www.kusss.jku.at/kusss/ical-multi-form-sz.action";
     private static final String URL_MY_GRADES = "https://www.kusss.jku.at/kusss/gradeinfo.action";
     private static final String URL_START_PAGE = "https://www.kusss.jku.at/kusss/studentwelcome.action";
     private static final String URL_LOGOUT = "https://www.kusss.jku.at/kusss/logout.action";
@@ -312,7 +313,7 @@ public class KusssHandler {
         return count;
     }
 
-    public Calendar getLVAIcal(Context c, CalendarBuilder mCalendarBuilder) {
+    public Calendar getLVAIcal(Context c, CalendarBuilder mCalendarBuilder, Term term) {
         if (!isLoggedIn(c, getSessionIDFromCookie())) {
             return null;
         }
@@ -321,6 +322,11 @@ public class KusssHandler {
         ByteArrayOutputStream data = new ByteArrayOutputStream();
 
         try {
+            selectTerm(c, term);
+            Document doc = Jsoup.connect(URL_GET_ICAL_FORM).userAgent(getUserAgent()).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true).get();
+            if (!isSelected(c, doc, term)) {
+                return null;
+            }
 
             URL url = new URL(URL_GET_ICAL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -410,7 +416,7 @@ public class KusssHandler {
         return data.toString().replace("\r\n", "\\n").getBytes(charset);
     }
 
-    public Calendar getExamIcal(Context c, CalendarBuilder mCalendarBuilder) {
+    public Calendar getExamIcal(Context c, CalendarBuilder mCalendarBuilder, Term term) {
         if (!isLoggedIn(c, getSessionIDFromCookie())) {
             return null;
         }
@@ -419,6 +425,12 @@ public class KusssHandler {
         ByteArrayOutputStream data = new ByteArrayOutputStream();
 
         try {
+            selectTerm(c, term);
+            Document doc = Jsoup.connect(URL_GET_ICAL_FORM).userAgent(getUserAgent()).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true).get();
+            if (!isSelected(c, doc, term)) {
+                return null;
+            }
+
             URL url = new URL(URL_GET_ICAL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);

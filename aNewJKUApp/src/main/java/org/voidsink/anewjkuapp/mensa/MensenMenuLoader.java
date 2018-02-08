@@ -54,7 +54,7 @@ public abstract class MensenMenuLoader implements MenuLoader {
         return "http://menu.mensen.at/index/index/locid/1";
     }
 
-    final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
+    private static final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 
     @Override
     public IMensa getMensa(Context context) {

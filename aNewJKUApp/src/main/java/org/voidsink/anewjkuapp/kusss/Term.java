@@ -144,6 +144,47 @@ public class Term implements Comparable<Term> {
         return type;
     }
 
+    public Date getStart() {
+        final Calendar cal = Calendar.getInstance();
+
+        switch (type) {
+            case WINTER:
+                cal.set(year, Calendar.OCTOBER, 1);
+                break;
+            case SUMMER:
+                cal.set(year, Calendar.MARCH, 1);
+                break;
+        }
+
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        return cal.getTime();
+    }
+
+    public Date getEnd() {
+        final Calendar cal = Calendar.getInstance();
+
+        switch (type) {
+            case WINTER:
+                cal.set(year + 1, Calendar.FEBRUARY, 1, 23, 59, 59);
+                cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+                break;
+            case SUMMER:
+                cal.set(year, Calendar.SEPTEMBER, 30, 23, 59, 59);
+                break;
+        }
+
+        cal.set(Calendar.HOUR_OF_DAY, cal.getActualMaximum(Calendar.HOUR_OF_DAY));
+        cal.set(Calendar.MINUTE, cal.getActualMaximum(Calendar.MINUTE));
+        cal.set(Calendar.SECOND, cal.getActualMaximum(Calendar.SECOND));
+        cal.set(Calendar.MILLISECOND, cal.getActualMaximum(Calendar.MILLISECOND));
+
+        return cal.getTime();
+    }
+
     @Override
     public String toString() {
         return String.format(Locale.GERMAN, "%d%s", year, type.toString());

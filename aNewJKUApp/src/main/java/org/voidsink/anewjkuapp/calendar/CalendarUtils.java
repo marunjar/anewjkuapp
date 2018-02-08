@@ -435,11 +435,11 @@ public final class CalendarUtils {
                 Uri calUri = CalendarContractWrapper.Events
                         .CONTENT_URI();
 
-                Cursor c = loadEvent(provider, calUri, calId);
+                long deleteFrom = System.currentTimeMillis() / DateUtils.DAY_IN_MILLIS * DateUtils.DAY_IN_MILLIS;
+                Cursor c = loadEvents(provider, calUri, calId, new Date(deleteFrom));
                 if (c != null) {
                     try {
                         ArrayList<ContentProviderOperation> batch = new ArrayList<>();
-                        long deleteFrom = System.currentTimeMillis() - DateUtils.DAY_IN_MILLIS;
                         while (c.moveToNext()) {
                             long eventDTStart = c.getLong(CalendarUtils.COLUMN_EVENT_DTSTART);
                             if (eventDTStart > deleteFrom) {
@@ -504,13 +504,31 @@ public final class CalendarUtils {
         return true;
     }
 
-    public static Cursor loadEvent(ContentProviderClient mProvider, Uri calUri, String calendarId) {
-        // The ID of the recurring event whose instances you are
-        // searching
-        // for in the Instances table
+    private static Cursor loadEvents(ContentProviderClient mProvider, Uri calUri, String calendarId, Date fromDate) {
+        // The ID of the recurring event whose instances you are searching for in the Instances table
         String selection = CalendarContractWrapper.Events
-                .CALENDAR_ID() + " = ?";
-        String[] selectionArgs = new String[]{calendarId};
+                .CALENDAR_ID() + " = ? and "
+                + CalendarContractWrapper.Events.DTSTART()
+                + " >= ?";
+        String[] selectionArgs = new String[]{calendarId, Long.toString(fromDate.getTime())};
+
+        try {
+            return mProvider.query(calUri, EVENT_PROJECTION,
+                    selection, selectionArgs, null);
+        } catch (RemoteException e) {
+            return null;
+        }
+    }
+
+    public static Cursor loadEventsBetween(ContentProviderClient mProvider, Uri calUri, String calendarId, Date start, Date end) {
+        // The ID of the recurring event whose instances you are searching for in the Instances table
+        String selection = CalendarContractWrapper.Events
+                .CALENDAR_ID() + " = ? and "
+                + CalendarContractWrapper.Events.DTSTART()
+                + " >= ? and "
+                + CalendarContractWrapper.Events.DTSTART()
+                + " <= ?";
+        String[] selectionArgs = new String[]{calendarId, Long.toString(start.getTime()), Long.toString(end.getTime())};
 
         try {
             return mProvider.query(calUri, EVENT_PROJECTION,

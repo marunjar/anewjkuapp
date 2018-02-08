@@ -118,7 +118,7 @@ public class ImportExamTask implements Callable<Void> {
         this.mResolver = context.getContentResolver();
         this.mContext = context;
         this.mShowProgress = (extras != null && extras.getBoolean(Consts.SYNC_SHOW_PROGRESS, false));
-        this.mSyncFromNow = System.currentTimeMillis();
+        this.mSyncFromNow = System.currentTimeMillis() / DateUtils.DAY_IN_MILLIS * DateUtils.DAY_IN_MILLIS;
     }
 
     private void updateNotify(String string) {
@@ -247,7 +247,7 @@ public class ImportExamTask implements Callable<Void> {
                                         .withValues(KusssHelper.getExamContentValues(exam))
                                         .build());
                                 mSyncResult.stats.numUpdates++;
-                            } else if (examDtStart > mSyncFromNow - DateUtils.DAY_IN_MILLIS) {
+                            } else if (examDtStart >= mSyncFromNow) {
                                 // Entry doesn't exist. Remove only newer
                                 // events from the database.
                                 Uri deleteUri = examUri
