@@ -26,6 +26,8 @@
 package org.voidsink.anewjkuapp.fragment;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -34,6 +36,9 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -52,6 +57,7 @@ import org.voidsink.anewjkuapp.mensa.IMenu;
 import org.voidsink.anewjkuapp.mensa.KHGMenuLoader;
 import org.voidsink.anewjkuapp.mensa.MenuLoader;
 import org.voidsink.anewjkuapp.mensa.RaabMenuLoader;
+import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.sectionedrecycleradapter.SectionedRecyclerViewAdapter;
 
 import java.util.ArrayList;
@@ -178,5 +184,48 @@ public class MensaDayFragment extends BaseFragment implements LoaderManager.Load
             return menus;
         }
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.mensa_day, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_refresh_mensa_day:
+                updateData();
+                return true;
+            case R.id.action_open_in_browser_classic:
+                if (getContext() != null) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Consts.MENSA_MENU_CLASSIC));
+                    getContext().startActivity(intent);
+                }
+                return true;
+            case R.id.action_open_in_browser_choice:
+                if (getContext() != null) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Consts.MENSA_MENU_CHOICE));
+                    getContext().startActivity(intent);
+                }
+                return true;
+            case R.id.action_open_in_browser_khg:
+                if (getContext() != null) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Consts.MENSA_MENU_KHG));
+                    getContext().startActivity(intent);
+                }
+                return true;
+            case R.id.action_open_in_browser_raab:
+                if (getContext() != null) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Consts.MENSA_MENU_RAAB));
+                    getContext().startActivity(intent);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
 }

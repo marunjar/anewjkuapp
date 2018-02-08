@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,12 +27,18 @@ package org.voidsink.anewjkuapp.fragment;
 
 import org.voidsink.anewjkuapp.mensa.KHGMenuLoader;
 import org.voidsink.anewjkuapp.mensa.MenuLoader;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 public class MensaKHGFragment extends MensaFragmentDetail {
 
     @Override
     protected MenuLoader createLoader() {
         return new KHGMenuLoader();
+    }
+
+    @Override
+    protected String getMensaLink() {
+        return Consts.MENSA_MENU_KHG;
     }
 
 }

@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,21 +25,14 @@
 
 package org.voidsink.anewjkuapp.mensa;
 
-public class RaabMenuLoader extends JSONMenuLoader {
+import android.content.Context;
+
+import org.voidsink.anewjkuapp.R;
+
+public class RaabMenuLoader implements MenuLoader {
 
     @Override
-    public String getUrl() {
-        return "http://oehjku.appspot.com/rest/mensa?location=4";
+    public IMensa getMensa(Context context) {
+        return new Mensa(Mensen.MENSA_RAAB, context.getString(R.string.mensa_title_raab));
     }
-
-    @Override
-    protected String getCacheKey() {
-        return "Raab";
-    }
-
-    @Override
-    protected String getMensaKey() {
-        return Mensen.MENSA_RAAB;
-    }
-
 }

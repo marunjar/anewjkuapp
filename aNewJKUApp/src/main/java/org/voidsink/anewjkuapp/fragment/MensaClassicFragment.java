@@ -27,6 +27,7 @@ package org.voidsink.anewjkuapp.fragment;
 
 import org.voidsink.anewjkuapp.mensa.ClassicMenuLoader;
 import org.voidsink.anewjkuapp.mensa.MenuLoader;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 public class MensaClassicFragment extends MensaFragmentDetail {
 
@@ -35,4 +36,8 @@ public class MensaClassicFragment extends MensaFragmentDetail {
         return new ClassicMenuLoader();
     }
 
+    @Override
+    protected String getMensaLink() {
+        return Consts.MENSA_MENU_CLASSIC;
+    }
 }

@@ -182,6 +182,7 @@
     <string name="mensa_title_khg" translatable="false">KHG</string>
     <string name="mensa_title_raab" translatable="false">Raab</string>
     <string name="mensa_title_unknown">eine Mensa</string>
+    <string name="mensa_open_in_browser">in Browser anzeigen</string>
 
     <string name="stat_title_grade_weighted">Noten (gewichtet)</string>
     <string name="stat_title_grade">Noten</string>

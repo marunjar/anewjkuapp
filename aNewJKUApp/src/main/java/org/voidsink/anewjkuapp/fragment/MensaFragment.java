@@ -65,7 +65,7 @@ public class MensaFragment extends SlidingTabsFragment implements SharedPreferen
             Calendar cal = Calendar.getInstance();
             cal.setTime(new Date());
             // jump to next day if later than 4pm
-            if (cal.get(Calendar.HOUR_OF_DAY) >= 16) {
+            if (cal.get(Calendar.HOUR_OF_DAY) >= 19) {
                 cal.add(Calendar.DATE, 1);
             }
             // add days until next friday
