@@ -4,6 +4,14 @@
 		    - fixed
 		    * changed
 		    + added -->
+    <release version="0.50.1" versioncode="140060">
+        <change>- Kalender: Termine in den Semesterferien werden nicht mehr gelöscht</change>
+        <change>- Kalender: vergangene Termine werden nach dem Update nicht mehr gelöscht</change>
+        <change>- Mensa: sollte wieder ein Weilchen funktionieren</change>
+        <change>+ Mensa: der Speiseplan kann manuell aktualisiert werden</change>
+        <change>+ Mensa: Links zu den Speiseplänen der Mensen hinzugefügt</change>
+        <change>* Karte: neue Daten von OpenStreetMap</change>
+    </release>
     <release version="0.50.0" versioncode="140059">
         <change>+ App: jetzt auch für Android O</change>
         <change>- App: viele Korrekturen und Optimierungen</change>
@@ -221,37 +229,37 @@
     </release>
     <release version="0.09" versioncode="140009">
        <change>+ KUSSS Update: neue Kategorien für Beurteilungen</change>
-       <change>+ Prüfungen können nach LVA-Nr (ohne Semester) geladen werden</change> 
+       <change>+ Prüfungen können nach LVA-Nr (ohne Semester) geladen werden</change>
     </release>
     <release version="0.08" versioncode="140008">
-       <change>- Menü vom Choice kann wieder geladen werden</change> 
+       <change>- Menü vom Choice kann wieder geladen werden</change>
     </release>
     <release version="0.07" versioncode="140007">
-       <change>+ für Betatest vorbereiten</change> 
+       <change>+ für Betatest vorbereiten</change>
     </release>
     <release version="0.06" versioncode="140006">
         <change>* Speiseplan wird gecached</change>
         <change>- Rotation vorläufig deaktiviert</change>
         <change>+ Karte vom Campus hinzugefügt</change>
         <change>+ eigener Standort kann angezeigt werden</change>
-    </release>   
+    </release>
     <release version="0.05" versioncode="140005">
         <change>+ erweiterbarer Zeitraum in dem Termine angezeigt werden</change>
         <change>- Konto anlegen erzeugt Kalender nicht mehr doppelt</change>
         <change>+ KHG und Raab Mensa hinzugefügt</change>
-    </release>   
+    </release>
     <release version="0.04" versioncode="140004">
         <change>* Gingerbread Support hinzugefügt</change>
-    </release>   
+    </release>
     <release version="0.03" versioncode="140003">
         <change>+ JKU Mensa hinzugefügt</change>
-    </release>   
+    </release>
     <release version="0.02" versioncode="140002">
         <change>+ Termine werden importiert</change>
         <change>+ LVAs werden importiert</change>
         <change>+ Noten werden importiert</change>
         <change>+ neue Prüfungen werden importiert</change>
-    </release>   
+    </release>
     <release version="0.01" versioncode="140001">
         <change>+ initial release</change>
         <change>+ KUSSS Konto kann erstellt werden</change>
