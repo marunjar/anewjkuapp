@@ -45,7 +45,7 @@ import java.util.regex.Pattern;
 
 public class ChoiceMenuLoader extends MensenMenuLoader {
 
-    final SimpleDateFormat df = new SimpleDateFormat("EEEE, dd. MMMM yyyy", Locale.GERMAN);
+    private static final SimpleDateFormat df = new SimpleDateFormat("EEEE, dd. MMMM yyyy", Locale.GERMAN);
 
     private static final String PATTER_EURO = "\\s*Euro";
 

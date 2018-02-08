@@ -62,6 +62,7 @@ import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
+import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.notification.CalendarChangedNotification;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
 import org.voidsink.anewjkuapp.utils.AppUtils;
@@ -70,6 +71,7 @@ import org.voidsink.anewjkuapp.utils.Consts;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -126,7 +128,7 @@ public class ImportCalendarTask implements Callable<Void> {
         this.mContext = context;
         this.mCalendarName = calendarName;
         this.mCalendarBuilder = calendarBuilder;
-        this.mSyncFromNow = System.currentTimeMillis();
+        this.mSyncFromNow = System.currentTimeMillis() / DateUtils.DAY_IN_MILLIS * DateUtils.DAY_IN_MILLIS;
         this.mReleaseProvider = false;
         this.mShowProgress = (extras != null && extras.getBoolean(Consts.SYNC_SHOW_PROGRESS, false));
     }
@@ -189,6 +191,8 @@ public class ImportCalendarTask implements Callable<Void> {
                     AppUtils.getAccountName(mContext, mAccount),
                     AppUtils.getAccountPassword(mContext, mAccount))) {
 
+                Term importTerm = Term.fromDate(new Date(mSyncFromNow));
+
                 updateNotify(mContext.getString(R.string.notification_sync_calendar_loading, CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
 
                 Log.d(TAG, "loading calendar");
@@ -199,12 +203,12 @@ public class ImportCalendarTask implements Callable<Void> {
                 switch (this.mCalendarName) {
                     case CalendarUtils.ARG_CALENDAR_EXAM:
                         iCal = KusssHandler.getInstance().getExamIcal(mContext,
-                                mCalendarBuilder);
+                                mCalendarBuilder, importTerm);
                         kusssIdPrefix = "at-jku-kusss-exam-";
                         break;
                     case CalendarUtils.ARG_CALENDAR_COURSE:
                         iCal = KusssHandler.getInstance().getLVAIcal(mContext,
-                                mCalendarBuilder);
+                                mCalendarBuilder, importTerm);
                         kusssIdPrefix = "at-jku-kusss-coursedate-";
                         break;
                     default: {
@@ -301,7 +305,7 @@ public class ImportCalendarTask implements Callable<Void> {
                 Uri calUri = CalendarContractWrapper.Events
                         .CONTENT_URI();
 
-                Cursor c = CalendarUtils.loadEvent(mProvider, calUri, calendarId);
+                Cursor c = CalendarUtils.loadEventsBetween(mProvider, calUri, calendarId, importTerm.getStart(), importTerm.getEnd());
 
                 if (c == null) {
                     Log.w(TAG, "selection failed");
@@ -321,13 +325,11 @@ public class ImportCalendarTask implements Callable<Void> {
 
                     // calc date for notifiying only future changes
                     // max update interval is 1 week
-                    long notifyFrom = System.currentTimeMillis()
-                            - (DateUtils.DAY_IN_MILLIS * 7);
+                    long notifyFrom = System.currentTimeMillis() / DateUtils.DAY_IN_MILLIS * DateUtils.DAY_IN_MILLIS - (DateUtils.DAY_IN_MILLIS * 7);
 
                     while (c.moveToNext()) {
                         mSyncResult.stats.numEntries++;
                         eventId = c.getString(CalendarUtils.COLUMN_EVENT_ID);
-
 
 //                        Log.d(TAG, "---------");
                         eventKusssId = null;
@@ -407,7 +409,9 @@ public class ImportCalendarTask implements Callable<Void> {
                                     mSyncResult.stats.numSkippedEntries++;
                                 }
                             } else {
-                                if (eventDTStart > (mSyncFromNow - DateUtils.DAY_IN_MILLIS)) {
+                                if ((eventDTStart >= mSyncFromNow) &&
+                                        (eventDTStart >= importTerm.getStart().getTime()) &&
+                                        (eventDTStart <= importTerm.getEnd().getTime())) {
                                     // Entry doesn't exist. Remove only newer events from the database.
                                     Uri deleteUri = calUri.buildUpon()
                                             .appendPath(eventId)
@@ -446,8 +450,9 @@ public class ImportCalendarTask implements Callable<Void> {
 
                     // Add new items
                     for (VEvent v : eventsMap.values()) {
-
-                        if (v.getUid().getValue().startsWith(kusssIdPrefix)) {
+                        if ((v.getUid().getValue().startsWith(kusssIdPrefix) &&
+                                (v.getStartDate().getDate().getTime() >= importTerm.getStart().getTime()) &&
+                                (v.getStartDate().getDate().getTime() <= importTerm.getEnd().getTime()))) {
                             // notify only future changes
                             if (v.getStartDate().getDate().getTime() > notifyFrom) {
                                 mNotification.addInsert(getEventString(mContext, v));
