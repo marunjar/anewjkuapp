@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,16 +25,128 @@
 
 package org.voidsink.anewjkuapp.mensa;
 
-public class ChoiceMenuLoader extends JSONMenuLoader {
+import android.content.Context;
+
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
+import org.jsoup.select.Elements;
+import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.analytics.Analytics;
+
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class ChoiceMenuLoader extends MensenMenuLoader {
+
+    final SimpleDateFormat df = new SimpleDateFormat("EEEE, dd. MMMM yyyy", Locale.GERMAN);
+
+    private static final String PATTER_EURO = "\\s*Euro";
+
+    private static final Pattern betragEuroPattern = Pattern.compile(PATTERN_BETRAG + PATTER_EURO);
+    private static final Pattern betrag2EuroPattern = Pattern.compile(PATTERN_BETRAG + "\\/" + PATTERN_BETRAG + PATTER_EURO);
 
     @Override
-    public String getUrl() {
-        return "http://oehjku.appspot.com/rest/mensa?location=2";
-    }
+    protected void addCategories(Context c, MensaDay day, Elements categories) {
+        for (Element category : categories) {
+            // filter choice
+            String categoryTitle = category.getElementsByClass("category-title").text();
+            if ("Choice".equals(categoryTitle)) {
+                Elements paragraphs = category.getElementsByTag("p");
+                if (paragraphs.size() > 1) {
+                    try {
+                        Date date = df.parse(paragraphs.get(0).text().replace((char) 0xA0, ' ')); // parse after replacing &nbsp; with normal space
 
-    @Override
-    protected boolean getNameFromMeal() {
-        return true;
+                        if (date.equals(day.getDate())) {
+                            for (int i = 1; i < paragraphs.size(); i++) {
+                                try {
+                                    String name = null;
+
+                                    StringBuilder meal = new StringBuilder();
+                                    double price = 0;
+                                    double priceBig = 0;
+                                    boolean hasData = false;
+
+                                    final List<Node> nodes = paragraphs.get(i).childNodes();
+
+                                    for (int n = 0; n < nodes.size(); n++) {
+                                        Node node = nodes.get(n);
+
+                                        if (node instanceof TextNode) {
+                                            TextNode textNode = (TextNode) node;
+
+                                            String text = textNode.text().replace((char) 0xA0, ' ').trim();
+
+                                            final NumberFormat nf = NumberFormat.getInstance(Locale.FRENCH);
+
+                                            Matcher betrag2EuroMatcher = betrag2EuroPattern.matcher(text);
+                                            if (betrag2EuroMatcher.find()) {
+                                                Matcher betragMatcher = betragPattern.matcher(text.substring(betrag2EuroMatcher.start(), betrag2EuroMatcher.end()));
+                                                if (betragMatcher.find()) {
+                                                    price = nf.parse(betragMatcher.group()).doubleValue();
+                                                }
+                                                if (betragMatcher.find()) {
+                                                    priceBig = nf.parse(betragMatcher.group()).doubleValue();
+                                                }
+                                                text = text.substring(0, betrag2EuroMatcher.start()) + text.substring(betrag2EuroMatcher.end(), text.length());
+                                            }
+
+                                            Matcher betragEuroMatcher = betragEuroPattern.matcher(text);
+                                            if (betragEuroMatcher.find()) {
+                                                Matcher betragMatcher = betragPattern.matcher(text.substring(betragEuroMatcher.start(), betragEuroMatcher.end()));
+                                                if (betragMatcher.find()) {
+                                                    price = nf.parse(betragMatcher.group()).doubleValue();
+                                                }
+
+                                                text = text.substring(0, betragEuroMatcher.start()) + text.substring(betragEuroMatcher.end(), text.length());
+                                            }
+
+                                            meal.append(" ");
+                                            meal.append(text.trim());
+                                            hasData = true;
+                                        } else if (node instanceof Element) {
+                                            Element elementNode = (Element) node;
+                                            switch (elementNode.tag().toString()) {
+                                                case "br":
+                                                    if (hasData) {
+                                                        day.addMenu(new MensaMenu(name, null, meal.toString().trim(), price, priceBig, 0));
+                                                        meal.setLength(0);
+                                                        price = 0;
+                                                        priceBig = 0;
+                                                        hasData = false;
+                                                    }
+                                                    break;
+                                                case "strong":
+                                                    name = elementNode.text().replace((char) 0xA0, ' ').trim();
+                                                    break;
+                                            }
+                                        }
+
+                                        if (hasData && (n == nodes.size() - 1)) {
+                                            day.addMenu(new MensaMenu(name, null, meal.toString().trim(), price, priceBig, 0));
+                                            meal.setLength(0);
+                                            price = 0;
+                                            priceBig = 0;
+                                            hasData = false;
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    Analytics.sendException(c, e, false, paragraphs.get(i).text());
+                                }
+                            }
+                        }
+                    } catch (ParseException e) {
+                        Analytics.sendException(c, e, false, category.text());
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -45,5 +157,10 @@ public class ChoiceMenuLoader extends JSONMenuLoader {
     @Override
     protected String getMensaKey() {
         return Mensen.MENSA_CHOICE;
+    }
+
+    @Override
+    protected String getLocation(Context c) {
+        return c.getString(R.string.mensa_title_choice);
     }
 }

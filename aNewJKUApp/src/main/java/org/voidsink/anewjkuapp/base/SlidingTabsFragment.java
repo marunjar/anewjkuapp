@@ -49,7 +49,7 @@ public abstract class SlidingTabsFragment extends BaseFragment {
      * {@link TabLayout}.
      */
 
-    static final String TAG = SlidingTabsFragment.class.getSimpleName();
+    //static final String TAG = SlidingTabsFragment.class.getSimpleName();
 
     /**
      * A {@link android.support.v4.view.ViewPager} which will be used in conjunction with the {@link TabLayout} above.

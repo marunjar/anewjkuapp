@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,6 +26,8 @@
 package org.voidsink.anewjkuapp.fragment;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,7 +35,11 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -55,7 +61,7 @@ import java.util.Calendar;
 
 public abstract class MensaFragmentDetail extends BaseFragment implements LoaderManager.LoaderCallbacks<ArrayList<MensaItem>> {
 
-    public static final String TAG = MensaFragmentDetail.class.getSimpleName();
+    //public static final String TAG = MensaFragmentDetail.class.getSimpleName();
     private MensaMenuAdapter mAdapter;
 
     @Override
@@ -153,4 +159,31 @@ public abstract class MensaFragmentDetail extends BaseFragment implements Loader
             return mMenus;
         }
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.mensa, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_refresh_mensa:
+                updateData();
+                return true;
+            case R.id.action_open_in_browser:
+                String link = getMensaLink();
+                if (!TextUtils.isEmpty(link) && getContext() != null) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+                    getContext().startActivity(intent);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    protected abstract String getMensaLink();
 }

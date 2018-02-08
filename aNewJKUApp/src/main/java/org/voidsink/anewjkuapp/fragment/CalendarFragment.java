@@ -86,12 +86,7 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
         mRecyclerView = view.findViewById(R.id.calendar_card_events);
 
         mLoadMoreButton = view.findViewById(R.id.calendar_card_load);
-        mLoadMoreButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadMoreData();
-            }
-        });
+        mLoadMoreButton.setOnClickListener(v -> loadMoreData());
         mLoadMoreButton.setClickable(true);
 
         setButtonLoadText();
@@ -120,15 +115,11 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter(mRecyclerView, mAdapter));
 
-        mAdapter.setOnItemClickListener(new CalendarEventAdapter.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(View view, int viewType, int position) {
-                if (position != RecyclerView.NO_POSITION) {
-                    CalendarListItem item = mAdapter.getItem(position);
-                    if (item != null) {
-                        ((CalendarListEvent) item).showOnMap(getContext());
-                    }
+        mAdapter.setOnItemClickListener((view, viewType, position) -> {
+            if (position != RecyclerView.NO_POSITION) {
+                CalendarListItem item = mAdapter.getItem(position);
+                if (item != null) {
+                    ((CalendarListEvent) item).showOnMap(getContext());
                 }
             }
         });

@@ -1,0 +1,38 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="org.voidsink.anewjkuapp.fragment.CalendarFragment">
+
+    <item
+        android:id="@+id/action_refresh_mensa_day"
+        android:icon="@drawable/ic_refresh_white_24dp"
+        android:orderInCategory="100"
+        android:title="@string/action_refresh"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_open_in_browser_classic"
+        android:icon="@drawable/ic_open_in_browser_white_24dp"
+        android:orderInCategory="200"
+        android:title="@string/mensa_title_classic"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_open_in_browser_choice"
+        android:icon="@drawable/ic_open_in_browser_white_24dp"
+        android:orderInCategory="300"
+        android:title="@string/mensa_title_choice"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_open_in_browser_khg"
+        android:icon="@drawable/ic_open_in_browser_white_24dp"
+        android:orderInCategory="400"
+        android:title="@string/mensa_title_khg"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_open_in_browser_raab"
+        android:icon="@drawable/ic_open_in_browser_white_24dp"
+        android:orderInCategory="500"
+        android:title="@string/mensa_title_raab"
+        app:showAsAction="never" />
+
+</menu>

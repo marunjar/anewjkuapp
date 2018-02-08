@@ -43,7 +43,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -129,18 +128,15 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
         }
 
         mSubmit = findViewById(R.id.accountLogin);
-        mSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if ((android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M) && (ContextCompat.checkSelfPermission(KusssAuthenticatorActivity.this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED)) {
-                    new AlertDialog.Builder(KusssAuthenticatorActivity.this)
-                            .setMessage(R.string.alert_permission_get_accounts)
-                            .setPositiveButton(R.string.button_ok, null)
-                            .setCancelable(false)
-                            .show();
-                } else {
-                    submit();
-                }
+        mSubmit.setOnClickListener(v -> {
+            if ((Build.VERSION.SDK_INT < Build.VERSION_CODES.M) && (ContextCompat.checkSelfPermission(KusssAuthenticatorActivity.this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED)) {
+                new AlertDialog.Builder(KusssAuthenticatorActivity.this)
+                        .setMessage(R.string.alert_permission_get_accounts)
+                        .setPositiveButton(R.string.button_ok, null)
+                        .setCancelable(false)
+                        .show();
+            } else {
+                submit();
             }
         });
     }

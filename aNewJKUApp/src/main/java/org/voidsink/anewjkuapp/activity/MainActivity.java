@@ -37,7 +37,6 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -143,12 +142,7 @@ public class MainActivity extends ThemedActivity {
         // initialize graphic factory for mapsforge
         AndroidGraphicFactory.createInstance(this.getApplication());
 
-        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                initActionBar();
-            }
-        });
+        getSupportFragmentManager().addOnBackStackChangedListener(this::initActionBar);
 
         // set up drawer
         mDrawerLayout = findViewById(R.id.drawer_layout);
@@ -161,37 +155,24 @@ public class MainActivity extends ThemedActivity {
                 if (mDrawerUser != null) {
                     if ((android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M) && (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED)) {
                         mDrawerUser.setText(R.string.missing_app_permission);
-                        mDrawerUser.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                try {
-                                    MainActivity.this.startActivity(
-                                            new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                                                    .addCategory(Intent.CATEGORY_DEFAULT)
-                                                    .setData(Uri.parse("package:org.voidsink.anewjkuapp")));
-                                } catch (Exception e) {
-                                    Analytics.sendException(MainActivity.this, e, false);
-                                }
+                        mDrawerUser.setOnClickListener(v -> {
+                            try {
+                                MainActivity.this.startActivity(
+                                        new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                                                .addCategory(Intent.CATEGORY_DEFAULT)
+                                                .setData(Uri.parse("package:org.voidsink.anewjkuapp")));
+                            } catch (Exception e) {
+                                Analytics.sendException(MainActivity.this, e, false);
                             }
                         });
                     } else {
                         Account account = AppUtils.getAccount(MainActivity.this);
                         if (account == null) {
                             mDrawerUser.setText(R.string.action_tap_to_login);
-                            mDrawerUser.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    startCreateAccount();
-                                }
-                            });
+                            mDrawerUser.setOnClickListener(v -> startCreateAccount());
                         } else {
                             mDrawerUser.setText(account.name);
-                            mDrawerUser.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    MainActivity.StartMyCurricula(MainActivity.this);
-                                }
-                            });
+                            mDrawerUser.setOnClickListener(v -> MainActivity.StartMyCurricula(MainActivity.this));
                         }
                     }
                 }
@@ -277,26 +258,23 @@ public class MainActivity extends ThemedActivity {
         actionBar.setHomeButtonEnabled(true);
 
         navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                        switch (menuItem.getItemId()) {
-                            case R.id.nav_settings: {
-                                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                                break;
-                            }
-                            case R.id.nav_about: {
-                                startActivity(new Intent(MainActivity.this, AboutActivity.class));
-                                break;
-                            }
-                            default:
-                                attachFragment(menuItem, true);
-                                break;
+                menuItem -> {
+                    switch (menuItem.getItemId()) {
+                        case R.id.nav_settings: {
+                            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                            break;
                         }
-
-                        mDrawerLayout.closeDrawers();
-                        return menuItem.isCheckable();
+                        case R.id.nav_about: {
+                            startActivity(new Intent(MainActivity.this, AboutActivity.class));
+                            break;
+                        }
+                        default:
+                            attachFragment(menuItem, true);
+                            break;
                     }
+
+                    mDrawerLayout.closeDrawers();
+                    return menuItem.isCheckable();
                 });
     }
 

@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -103,15 +103,12 @@ public class AppUtils {
     private static final String DEFAULT_POI_FILE_NAME = "JKU.gpx";
     private static final String TAG = AppUtils.class.getSimpleName();
 
-    private static final Comparator<Course> CourseComparator = new Comparator<Course>() {
-        @Override
-        public int compare(Course lhs, Course rhs) {
-            int value = lhs.getTitle().compareTo(rhs.getTitle());
-            if (value == 0) {
-                value = lhs.getTerm().compareTo(rhs.getTerm());
-            }
-            return value;
+    private static final Comparator<Course> CourseComparator = (lhs, rhs) -> {
+        int value = lhs.getTitle().compareTo(rhs.getTitle());
+        if (value == 0) {
+            value = lhs.getTerm().compareTo(rhs.getTerm());
         }
+        return value;
     };
 
     private static final Comparator<LvaWithGrade> LvaWithGradeComparator = new Comparator<LvaWithGrade>() {
@@ -129,19 +126,15 @@ public class AppUtils {
         }
     };
 
-    private static final Comparator<Curriculum> CurriculaComparator = new Comparator<Curriculum>() {
-
-        @Override
-        public int compare(Curriculum lhs, Curriculum rhs) {
-            int value = lhs.getUni().compareToIgnoreCase(rhs.getUni());
-            if (value == 0) {
-                value = lhs.getDtStart().compareTo(rhs.getDtStart());
-            }
-            if (value == 0) {
-                value = lhs.getCid().compareTo(rhs.getCid());
-            }
-            return value;
+    private static final Comparator<Curriculum> CurriculaComparator = (lhs, rhs) -> {
+        int value = lhs.getUni().compareToIgnoreCase(rhs.getUni());
+        if (value == 0) {
+            value = lhs.getDtStart().compareTo(rhs.getDtStart());
         }
+        if (value == 0) {
+            value = lhs.getCid().compareTo(rhs.getCid());
+        }
+        return value;
     };
 
     private static final Comparator<Assessment> AssessmentComparator = new Comparator<Assessment>() {
@@ -161,15 +154,12 @@ public class AppUtils {
         }
     };
 
-    private static final Comparator<Term> TermComparator = new Comparator<Term>() {
-        @Override
-        public int compare(Term lhs, Term rhs) {
-            if (lhs == null && rhs == null) return 0;
-            if (lhs == null) return -1;
-            if (rhs == null) return 1;
+    private static final Comparator<Term> TermComparator = (lhs, rhs) -> {
+        if (lhs == null && rhs == null) return 0;
+        if (lhs == null) return -1;
+        if (rhs == null) return 1;
 
-            return rhs.compareTo(lhs);
-        }
+        return rhs.compareTo(lhs);
     };
 
 
@@ -177,10 +167,10 @@ public class AppUtils {
         int mLastVersion = PreferenceWrapper.getLastVersion(context);
         int mCurrentVersion = PreferenceWrapper.getCurrentVersion(context);
 
+        boolean errorOccured = false;
+
         if (mLastVersion != mCurrentVersion
                 || mLastVersion == PreferenceWrapper.PREF_LAST_VERSION_NONE) {
-            boolean errorOccured = false;
-
             try {
                 if (!initPreferences(context)) {
                     errorOccured = true;
@@ -191,6 +181,17 @@ public class AppUtils {
                 if (!copyDefaultMap(context)) {
                     errorOccured = true;
                 }
+            } catch (Exception e) {
+                Log.e(TAG, "doOnNewVersion failed", e);
+                Analytics.sendException(context, e, false);
+                errorOccured = true;
+            }
+        }
+
+        // only if another version was installed before
+        if (mLastVersion != mCurrentVersion
+                && mLastVersion != PreferenceWrapper.PREF_LAST_VERSION_NONE) {
+            try {
                 if (shouldRemoveOldAccount(mLastVersion, mCurrentVersion)) {
                     if (!removeAccount(context)) {
                         errorOccured = true;
@@ -216,13 +217,13 @@ public class AppUtils {
 
                 PreferenceWrapper.applySyncInterval(context);
             } catch (Exception e) {
-                Log.e(TAG, "doOnNewVersion failed", e);
+                Log.e(TAG, "doOnVersionChange failed", e);
                 Analytics.sendException(context, e, false);
                 errorOccured = true;
             }
-            if (!errorOccured) {
-                PreferenceWrapper.setLastVersion(context, mCurrentVersion);
-            }
+        }
+        if (!errorOccured) {
+            PreferenceWrapper.setLastVersion(context, mCurrentVersion);
         }
     }
 
@@ -255,8 +256,7 @@ public class AppUtils {
     private static boolean shouldImportCurricula(int lastVersion, int currentVersion) {
         // curricula added with 140026
         // import on startup to avoid strange behaviour and missing tabs
-        return (lastVersion < 100026 && currentVersion >= 100026) ||
-                (lastVersion < 140026 && currentVersion >= 140026);
+        return (lastVersion < 140026 && currentVersion >= 140026);
     }
 
     private static boolean importCurricula(Context context) {
@@ -285,8 +285,7 @@ public class AppUtils {
                                                   int currentVersion) {
         // calendar names changed with 100017, remove account for avoiding
         // corrupted data
-        return (lastVersion < 100017 && currentVersion >= 100017) ||
-                (lastVersion < 140017 && currentVersion >= 140017);
+        return (lastVersion < 140017 && currentVersion >= 140017);
     }
 
     private static boolean initPreferences(Context context) {
@@ -876,7 +875,7 @@ public class AppUtils {
 
         List<Future<?>> futures = new ArrayList<>();
 
-        for (Callable c : callables) {
+        for (Callable<?> c : callables) {
             futures.add(es.submit(c));
         }
 

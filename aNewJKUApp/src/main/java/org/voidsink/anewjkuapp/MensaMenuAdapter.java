@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -93,15 +93,24 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
                             menu.getPrice()));
                     mensaMenuItemHolder.mPrice.setVisibility(View.VISIBLE);
 
+                    if (menu.getPriceBig() > 0 && menu.getPriceBig() != menu.getPrice()) {
+                        mensaMenuItemHolder.mPriceBig.setText(AppUtils.format(getContext(), "%.2f €",
+                                menu.getPriceBig()));
+                        mensaMenuItemHolder.mPriceBig.setVisibility(View.VISIBLE);
+                    } else {
+                        mensaMenuItemHolder.mPriceBig.setVisibility(View.GONE);
+                    }
+
                     if (menu.getOehBonus() > 0) {
                         mensaMenuItemHolder.mOehBonus.setText(AppUtils.format(getContext(),
-                                "inkl %.2f € ÖH Bonus", menu.getOehBonus()));
+                                "%.2f € ÖH Bonus", menu.getOehBonus()));
                         mensaMenuItemHolder.mOehBonus.setVisibility(View.VISIBLE);
                     } else {
                         mensaMenuItemHolder.mOehBonus.setVisibility(View.GONE);
                     }
                 } else {
                     mensaMenuItemHolder.mPrice.setVisibility(View.GONE);
+                    mensaMenuItemHolder.mPriceBig.setVisibility(View.GONE);
                     mensaMenuItemHolder.mOehBonus.setVisibility(View.GONE);
                 }
                 break;
@@ -169,6 +178,7 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
         public final TextView mSoup;
         public final TextView mMeal;
         public final TextView mPrice;
+        public final TextView mPriceBig;
         public final TextView mOehBonus;
 
         public MenuViewHolder(View itemView) {
@@ -178,6 +188,7 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
             mSoup = itemView.findViewById(R.id.mensa_menu_item_soup);
             mMeal = itemView.findViewById(R.id.mensa_menu_item_meal);
             mPrice = itemView.findViewById(R.id.mensa_menu_item_price);
+            mPriceBig = itemView.findViewById(R.id.mensa_menu_item_price_big);
             mOehBonus = itemView.findViewById(R.id.mensa_menu_item_oeh_bonus);
         }
     }
@@ -201,6 +212,5 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
             super(itemView);
             mText = itemView.findViewById(R.id.list_header_text);
         }
-
     }
 }

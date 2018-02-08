@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ package org.voidsink.anewjkuapp.mensa;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
 
@@ -48,13 +49,7 @@ public class KHGMenuLoader implements MenuLoader {
     private static final String PREF_DATE_PREFIX = "MENSA_DATE_";
 
     private String getUrl() {
-        if (Calendar.getInstance().get(Calendar.WEEK_OF_YEAR) % 2 == 0) {
-            //return "http://www.dioezese-linz.at/khg/menueplan/33420";
-            return "http://www.dioezese-linz.at/institution/8075/essen/menueplan/article/33420.html";
-        } else {
-            //return "http://www.dioezese-linz.at/khg/menueplan/33077";
-            return "http://www.dioezese-linz.at/institution/8075/essen/menueplan/article/33077.html";
-        }
+        return "https://www.dioezese-linz.at/institution/8075/essen/menueplan";
     }
 
     @Override
@@ -64,7 +59,7 @@ public class KHGMenuLoader implements MenuLoader {
         try {
             Document doc = getData(context);
             if (doc != null) {
-                Elements elements = doc.getElementsByClass("detailContent");
+                Elements elements = doc.select("div.contentSection div.listContent");
                 if (elements.size() == 1) {
                     elements = elements.get(0).getElementsByTag("table");
                     if (elements.size() == 1) {
@@ -76,6 +71,7 @@ public class KHGMenuLoader implements MenuLoader {
                             Elements columns = element.children();
 
                             String[] strings;
+                            String name = "Menü";
                             String meal;
                             String soup;
                             double price;
@@ -86,7 +82,7 @@ public class KHGMenuLoader implements MenuLoader {
                                 case 4:
                                     Calendar cal = Calendar.getInstance();
                                     cal.add(Calendar.DAY_OF_YEAR, -cal.get(Calendar.DAY_OF_WEEK));
-                                    switch (columns.get(0).text()) {
+                                    switch (columns.get(0).text().replace((char) 0xA0, ' ').trim()) {
                                         case "SO":
                                             cal.add(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
                                             break;
@@ -112,7 +108,7 @@ public class KHGMenuLoader implements MenuLoader {
                                     day = new MensaDay(cal.getTime());
                                     mensa.addDay(day);
 
-                                    strings = columns.get(1).text().split(",", 2);
+                                    strings = columns.get(1).text().replace((char) 0xA0, ' ').trim().split(",", 2);
                                     if (strings.length == 2) {
                                         soup = strings[0].trim();
                                         meal = strings[1].trim();
@@ -121,22 +117,33 @@ public class KHGMenuLoader implements MenuLoader {
                                         meal = strings[0];
                                     }
                                     try {
-                                        price = nf.parse(columns.get(2).text()).doubleValue();
-                                        priceBig = nf.parse(columns.get(3).text()).doubleValue();
-                                        oehBonus = priceBig - price;
+                                        if (columns.get(2).text().replace((char) 0xA0, ' ').trim().isEmpty()) {
+                                            price = nf.parse(columns.get(3).text()).doubleValue();
+                                            priceBig = 0;
+                                            oehBonus = 0;
+                                            if (price == 1.3) {
+                                                name = "Mehlspeise";
+                                            }
+                                        } else {
+                                            price = nf.parse(columns.get(2).text()).doubleValue();
+                                            priceBig = nf.parse(columns.get(3).text()).doubleValue();
+                                            oehBonus = priceBig - price;
+                                        }
                                     } catch (ParseException e) {
                                         price = 0;
                                         priceBig = 0;
                                         oehBonus = 0;
                                     }
 
-                                    day.addMenu(new MensaMenu(null, soup, meal, price, priceBig, oehBonus));
+                                    if (!TextUtils.isEmpty(meal)) {
+                                        day.addMenu(new MensaMenu(name, soup, meal, price, priceBig, oehBonus));
+                                    }
 
                                     break;
                                 case 3:
                                     //IMenu menu = new MensaMenu()
                                     if (day != null) {
-                                        strings = columns.get(0).text().split(",", 2);
+                                        strings = columns.get(0).text().replace((char) 0xA0, ' ').trim().split(",", 2);
                                         if (strings.length == 2) {
                                             soup = strings[0].trim();
                                             meal = strings[1].trim();
@@ -145,16 +152,27 @@ public class KHGMenuLoader implements MenuLoader {
                                             meal = strings[0];
                                         }
                                         try {
-                                            price = nf.parse(columns.get(1).text()).doubleValue();
-                                            priceBig = nf.parse(columns.get(2).text()).doubleValue();
-                                            oehBonus = priceBig - price;
+                                            if (columns.get(1).text().replace((char) 0xA0, ' ').trim().isEmpty()) {
+                                                price = nf.parse(columns.get(2).text()).doubleValue();
+                                                priceBig = 0;
+                                                oehBonus = 0;
+                                                if (price == 1.3) {
+                                                    name = "Mehlspeise";
+                                                }
+                                            } else {
+                                                price = nf.parse(columns.get(1).text()).doubleValue();
+                                                priceBig = nf.parse(columns.get(2).text()).doubleValue();
+                                                oehBonus = priceBig - price;
+                                            }
                                         } catch (ParseException e) {
                                             price = 0;
                                             priceBig = 0;
                                             oehBonus = 0;
                                         }
 
-                                        day.addMenu(new MensaMenu(null, soup, meal, price, priceBig, oehBonus));
+                                        if (!TextUtils.isEmpty(meal)) {
+                                            day.addMenu(new MensaMenu(name, soup, meal, price, priceBig, oehBonus));
+                                        }
                                     }
                                     break;
                             }

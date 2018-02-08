@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,7 +29,6 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -45,14 +44,14 @@ import java.util.Date;
 
 public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent, CalendarEventAdapter.EventItemHolder> implements SectionedAdapter<CalendarEventAdapter.DateHeaderHolder> {
 
+    public interface OnItemClickListener {
+        void onItemClick(View view, int viewType, int position);
+    }
+
     private OnItemClickListener mItemClickListener;
 
     public CalendarEventAdapter(Context context) {
         super(context);
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(View view, int viewType, int position);
     }
 
     protected static class EventItemHolder extends RecyclerView.ViewHolder {
@@ -85,22 +84,19 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
             mText = itemView.findViewById(R.id.list_header_text);
         }
     }
-    
+
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
     }
 
     @Override
     public EventItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.calendar_list_item, parent, false);
-        final EventItemHolder vh = new EventItemHolder(v);
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.calendar_list_item, parent, false);
+        final EventItemHolder vh = new EventItemHolder(view);
 
-        v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mItemClickListener != null) {
-                    mItemClickListener.onItemClick(v, vh.getItemViewType(), vh.getAdapterPosition());
-                }
+        view.setOnClickListener(v -> {
+            if (mItemClickListener != null) {
+                mItemClickListener.onItemClick(v, vh.getItemViewType(), vh.getAdapterPosition());
             }
         });
 
@@ -112,21 +108,18 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
         final CalendarListEvent eventItem = getItem(position);
 
         if (eventItem != null) {
-            holder.mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem menuItem) {
-                    switch (menuItem.getItemId()) {
-                        case R.id.show_in_calendar: {
-                            eventItem.showInCalendar(getContext());
-                            return true;
-                        }
-                        case R.id.show_on_map: {
-                            eventItem.showOnMap(getContext());
-                            return true;
-                        }
+            holder.mToolbar.setOnMenuItemClickListener(menuItem -> {
+                switch (menuItem.getItemId()) {
+                    case R.id.show_in_calendar: {
+                        eventItem.showInCalendar(getContext());
+                        return true;
                     }
-                    return false;
+                    case R.id.show_on_map: {
+                        eventItem.showOnMap(getContext());
+                        return true;
+                    }
                 }
+                return false;
             });
 
             holder.mTitle.setText(eventItem.getTitle());
@@ -134,9 +127,7 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
             UIUtils.setTextAndVisibility(holder.mDescr, eventItem.getDescr());
             UIUtils.setTextAndVisibility(holder.mTime, eventItem.getTime());
             UIUtils.setTextAndVisibility(holder.mLocation, eventItem.getLocation());
-
         }
-
     }
 
     @Override
