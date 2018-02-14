@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = KusssDatabaseHelper.class.getSimpleName();
 
     private static final String DATABASE_NAME = "kusss.db";
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 12;
     private volatile static KusssDatabaseHelper instance = null;
 
     // Database creation sql statement
@@ -51,7 +51,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
             + KusssContentContract.Course.COL_COURSEID + " text not null, "
             + KusssContentContract.Course.COL_CLASS_CODE + " text not null, "
             + KusssContentContract.Course.COL_TITLE + " text not null, "
-            + KusssContentContract.Course.COL_TYPE + " integer not null, "
+            + KusssContentContract.Course.COL_LVATYPE + " integer not null, "
             + KusssContentContract.Course.COL_LECTURER + " text, "
             + KusssContentContract.Course.COL_CURRICULA_ID + " integer, "
             + KusssContentContract.Course.COL_ECTS + " real, "
@@ -84,7 +84,8 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
             + KusssContentContract.Assessment.COL_SWS + " real, "
             + KusssContentContract.Assessment.COL_CODE + " text not null, "
             + KusssContentContract.Assessment.COL_TITLE + " text, "
-            + KusssContentContract.Assessment.COL_TYPE + " integer" + ");";
+            + KusssContentContract.Assessment.COL_TYPE + " integer, "
+            + KusssContentContract.Assessment.COL_LVATYPE + " text" + ");";
 
     private static final String DB_CREATE_POI = "create virtual table "
             + PoiContentContract.Poi.TABLE_NAME + " using "
@@ -149,6 +150,10 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 11) {
             db.execSQL("DROP TABLE IF EXISTS "
                     + KusssContentContract.Exam.TABLE_NAME);
+        }
+        if (oldVersion < 12) {
+            db.execSQL("DROP TABLE IF EXISTS "
+                    + KusssContentContract.Assessment.TABLE_NAME);
         }
         onCreate(db);
     }

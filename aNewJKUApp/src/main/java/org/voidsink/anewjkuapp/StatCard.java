@@ -87,7 +87,7 @@ public class StatCard {
         return mPositiveOnly;
     }
 
-    public List<LvaWithGrade> getLvasWithGrades() {
-        return AppUtils.getLvasWithGrades(getTerms(), getLvas(), getAssessments(), false, null);
+    public List<LvaWithGrade> getGradesWithLva() {
+        return AppUtils.getGradesWithLva(getTerms(), getLvas(), getAssessments(), false, null);
     }
 }

@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -82,7 +82,8 @@ public class ImportAssessmentTask implements Callable<Void> {
             KusssContentContract.Assessment.COL_TITLE,
             KusssContentContract.Assessment.COL_CODE,
             KusssContentContract.Assessment.COL_ECTS,
-            KusssContentContract.Assessment.COL_SWS};
+            KusssContentContract.Assessment.COL_SWS,
+            KusssContentContract.Assessment.COL_LVATYPE};
 
     // Constants representing column positions from PROJECTION.
     private static final int COLUMN_ASSESSMENT_ID = 0;
@@ -96,6 +97,7 @@ public class ImportAssessmentTask implements Callable<Void> {
     public static final int COLUMN_ASSESSMENT_CODE = 8;
     public static final int COLUMN_ASSESSMENT_ECTS = 9;
     public static final int COLUMN_ASSESSMENT_SWS = 10;
+    public static final int COLUMN_ASSESSMENT_LVATYPE = 11;
 
     public ImportAssessmentTask(Account account, Context context) {
         this(account, null, null, null, null, context);
@@ -293,10 +295,9 @@ public class ImportAssessmentTask implements Callable<Void> {
                             mSyncResult.stats.numInserts++;
                         }
 
+                        updateNotify(mContext.getString(R.string.notification_sync_assessment_saving));
 
                         if (batch.size() > 0) {
-                            updateNotify(mContext.getString(R.string.notification_sync_assessment_saving));
-
                             Log.d(TAG, "Applying batch update");
                             mProvider.applyBatch(batch);
                             Log.d(TAG, "Notify resolver");

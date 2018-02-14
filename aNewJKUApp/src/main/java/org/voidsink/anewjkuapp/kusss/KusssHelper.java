@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -83,7 +83,7 @@ public class KusssHelper {
         cv.put(KusssContentContract.Course.COL_CLASS_CODE, course.getCode());
         cv.put(KusssContentContract.Course.COL_LECTURER, course.getTeacher());
         cv.put(KusssContentContract.Course.COL_TERM, AppUtils.termToString(course.getTerm()));
-        cv.put(KusssContentContract.Course.COL_TYPE, course.getLvaType());
+        cv.put(KusssContentContract.Course.COL_LVATYPE, course.getLvaType());
 
         return cv;
     }
@@ -173,7 +173,8 @@ public class KusssHelper {
                 c.getString(ImportAssessmentTask.COLUMN_ASSESSMENT_TITLE),
                 c.getString(ImportAssessmentTask.COLUMN_ASSESSMENT_CODE),
                 c.getDouble(ImportAssessmentTask.COLUMN_ASSESSMENT_ECTS),
-                c.getDouble(ImportAssessmentTask.COLUMN_ASSESSMENT_SWS));
+                c.getDouble(ImportAssessmentTask.COLUMN_ASSESSMENT_SWS),
+                c.getString(ImportAssessmentTask.COLUMN_ASSESSMENT_LVATYPE));
     }
 
     public static ContentValues getAssessmentContentValues(Assessment assessment) {
@@ -188,6 +189,7 @@ public class KusssHelper {
         cv.put(KusssContentContract.Assessment.COL_TITLE, assessment.getTitle());
         cv.put(KusssContentContract.Assessment.COL_ECTS, assessment.getEcts());
         cv.put(KusssContentContract.Assessment.COL_SWS, assessment.getSws());
+        cv.put(KusssContentContract.Assessment.COL_LVATYPE, assessment.getLvaType());
         return cv;
     }
 

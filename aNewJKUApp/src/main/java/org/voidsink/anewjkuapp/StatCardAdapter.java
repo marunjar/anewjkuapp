@@ -81,7 +81,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
     }
 
     private void initLvaListItems(StatViewHolder holder, StatCard card) {
-        List<LvaWithGrade> mLvas = card.getLvasWithGrades();
+        List<LvaWithGrade> mLvas = card.getGradesWithLva();
         List<LvaStatItem> lvaStats = new ArrayList<>();
 
         LvaStatItem lva = new LvaStatItem(LvaState.OPEN, AppUtils.getECTS(LvaState.OPEN, mLvas));
@@ -116,7 +116,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
     }
 
     private void updateLvaPlot(StatViewHolder holder, StatCard card) {
-        List<LvaWithGrade> mLvas = card.getLvasWithGrades();
+        List<LvaWithGrade> mLvas = card.getGradesWithLva();
         double mOpenEcts = AppUtils.getECTS(LvaState.OPEN, mLvas);
         double mDoneEcts = AppUtils.getECTS(LvaState.DONE, mLvas);
         //double minEcts = (card.getTerms() != null) ? card.getTerms().size() * 30 : 0;

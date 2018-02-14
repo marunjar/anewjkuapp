@@ -43,6 +43,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.calendar.CalendarUtils;
+import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -62,8 +64,11 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -313,74 +318,6 @@ public class KusssHandler {
         return count;
     }
 
-    public Calendar getLVAIcal(Context c, CalendarBuilder mCalendarBuilder, Term term) {
-        if (!isLoggedIn(c, getSessionIDFromCookie())) {
-            return null;
-        }
-
-        Calendar iCal;
-        ByteArrayOutputStream data = new ByteArrayOutputStream();
-
-        try {
-            selectTerm(c, term);
-            Document doc = Jsoup.connect(URL_GET_ICAL_FORM).userAgent(getUserAgent()).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true).get();
-            if (!isSelected(c, doc, term)) {
-                return null;
-            }
-
-            URL url = new URL(URL_GET_ICAL);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            conn.setRequestProperty("Cookie", getCookieString());
-            conn.setConnectTimeout(5000);
-            conn.setReadTimeout(15000);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("User-Agent", getUserAgent());
-
-            writeParams(conn, new String[]{"selectAll"},
-                    new String[]{"ical.category.mycourses"});
-
-            final String contentType = conn.getContentType();
-
-            if (contentType == null) {
-                conn.disconnect();
-                return null;
-            }
-
-            Log.d(TAG, String.format("getExamIcal: RequestMethod: %s", contentType));
-            if (!contentType.contains("text/calendar")) {
-                conn.disconnect();
-                return null;
-            }
-
-            if (!isNetworkAvailable(c)) {
-                conn.disconnect();
-                return null;
-            }
-
-            final long length = copyStream(conn.getInputStream(), data);
-            String encoding = getEncoding(conn);
-
-            conn.disconnect();
-
-            if (length > 0) {
-                iCal = mCalendarBuilder.build(new ByteArrayInputStream(getModifiedData(data, encoding)));
-            } else {
-                iCal = new Calendar();
-            }
-        } catch (ParserException e) {
-            Log.e(TAG, "getLVAIcal: " + data.toString(), e);
-            Analytics.sendException(c, e, true, data.toString());
-            iCal = null;
-        } catch (Exception e) {
-            Log.e(TAG, "getLVAIcal", e);
-            Analytics.sendException(c, e, true);
-            iCal = null;
-        }
-
-        return iCal;
-    }
-
     private String getEncoding(@NonNull HttpURLConnection conn) {
         String encoding = conn.getContentEncoding();
 
@@ -416,7 +353,40 @@ public class KusssHandler {
         return data.toString().replace("\r\n", "\\n").getBytes(charset);
     }
 
-    public Calendar getExamIcal(Context c, CalendarBuilder mCalendarBuilder, Term term) {
+    private String getUidPrefix(String calendarName) {
+        switch (calendarName) {
+            case CalendarUtils.ARG_CALENDAR_EXAM:
+                return "at-jku-kusss-exam-";
+            case CalendarUtils.ARG_CALENDAR_COURSE:
+                return "at-jku-kusss-coursedate-";
+            default:
+                return null;
+        }
+    }
+
+    public List<KusssCalendar> getIcal(Context c, CalendarBuilder calendarBuilder, String calendarName, Date date, boolean loadAll) {
+        List<KusssCalendar> calendars = new ArrayList<>();
+
+        Term currentTerm = Term.fromDate(date);
+
+        if (loadAll) {
+            List<Term> terms = getTerms(c);
+            for (Term term : terms) {
+                calendars.add(new KusssCalendar(CalendarUtils.getCalendarName(c, calendarName), term, getUidPrefix(calendarName), term.equals(currentTerm), loadIcal(c, calendarBuilder, calendarName, term)));
+            }
+        } else {
+            calendars.add(new KusssCalendar(CalendarUtils.getCalendarName(c, calendarName), currentTerm, getUidPrefix(calendarName), true, loadIcal(c, calendarBuilder, calendarName, currentTerm)));
+
+            Term nextTerm = Term.fromDate(new Date(date.getTime() + (4 * DateUtils.WEEK_IN_MILLIS)));
+            if (!nextTerm.equals(currentTerm)) {
+                calendars.add(new KusssCalendar(CalendarUtils.getCalendarName(c, calendarName), nextTerm, getUidPrefix(calendarName), false, loadIcal(c, calendarBuilder, calendarName, nextTerm)));
+            }
+        }
+
+        return calendars;
+    }
+
+    private Calendar loadIcal(Context c, CalendarBuilder calendarBuilder, String calendarName, Term term) {
         if (!isLoggedIn(c, getSessionIDFromCookie())) {
             return null;
         }
@@ -440,8 +410,17 @@ public class KusssHandler {
             conn.setRequestMethod("POST");
             conn.setRequestProperty("User-Agent", getUserAgent());
 
-            writeParams(conn, new String[]{"selectAll"},
-                    new String[]{"ical.category.examregs"});
+            switch (calendarName) {
+                case CalendarUtils.ARG_CALENDAR_EXAM:
+                    writeParams(conn, new String[]{"selectAll"}, new String[]{"ical.category.examregs"});
+                    break;
+                case CalendarUtils.ARG_CALENDAR_COURSE:
+                    writeParams(conn, new String[]{"selectAll"}, new String[]{"ical.category.mycourses"});
+                    break;
+                default: {
+                    return null;
+                }
+            }
 
             final String contentType = conn.getContentType();
 
@@ -450,7 +429,7 @@ public class KusssHandler {
                 return null;
             }
 
-            Log.d(TAG, String.format("getExamIcal: RequestMethod: %s", contentType));
+            Log.d(TAG, String.format("loadIcal: RequestMethod: %s", contentType));
             if (!contentType.contains("text/calendar")) {
                 conn.disconnect();
                 return null;
@@ -467,22 +446,17 @@ public class KusssHandler {
 
             conn.disconnect();
 
-            /*
-            AssetManager am = c.getAssets();
-            long length = copyStream(am.open("ical1.ics", AssetManager.ACCESS_STREAMING), data);
-            */
-
             if (length > 0) {
-                iCal = mCalendarBuilder.build(new ByteArrayInputStream(getModifiedData(data, encoding)));
+                iCal = calendarBuilder.build(new ByteArrayInputStream(getModifiedData(data, encoding)));
             } else {
                 iCal = new Calendar();
             }
         } catch (ParserException e) {
-            Log.e(TAG, "getExamIcal: " + data.toString(), e);
+            Log.e(TAG, "loadIcal: " + data.toString(), e);
             Analytics.sendException(c, e, true, data.toString());
             iCal = null;
         } catch (Exception e) {
-            Log.e(TAG, "getExamIcal", e);
+            Log.e(TAG, "loadIcal", e);
             Analytics.sendException(c, e, true);
             iCal = null;
         }
@@ -490,7 +464,26 @@ public class KusssHandler {
         return iCal;
     }
 
-    public Map<String, String> getTerms(Context c) {
+    public List<Term> getTerms(Context c) {
+        List<Term> terms = new ArrayList<>();
+
+        Map<String, String> termMap = getTermMap(c);
+        if (termMap != null) {
+            for (String termValue : termMap.values()) {
+                try {
+                    Term term = Term.parseTerm(termValue);
+                    terms.add(term);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            Collections.sort(terms);
+        }
+        return terms;
+    }
+
+    private Map<String, String> getTermMap(Context c) {
         if (!isNetworkAvailable(c)) {
             return null;
         }
