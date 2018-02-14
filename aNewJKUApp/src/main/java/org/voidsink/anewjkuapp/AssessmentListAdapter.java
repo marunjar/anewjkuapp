@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, Asse
     @Override
     public void onBindViewHolder(GradeViewHolder holder, int position) {
         Assessment assessment = getItem(position);
-        holder.mTitle.setText(assessment.getTitle());
+        holder.mTitle.setText((assessment.getTitle() + " " + assessment.getLvaType()).trim());
 
         UIUtils.setTextAndVisibility(holder.mCourseId, assessment.getCourseId());
         UIUtils.setTextAndVisibility(holder.mTerm, AppUtils.termToString(assessment.getTerm()));

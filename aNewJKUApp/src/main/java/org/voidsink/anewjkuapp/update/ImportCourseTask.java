@@ -75,7 +75,7 @@ public class ImportCourseTask implements Callable<Void> {
             KusssContentContract.Course.COL_COURSEID,
             KusssContentContract.Course.COL_TITLE,
             KusssContentContract.Course.COL_CURRICULA_ID,
-            KusssContentContract.Course.COL_TYPE,
+            KusssContentContract.Course.COL_LVATYPE,
             KusssContentContract.Course.COL_LECTURER,
             KusssContentContract.Course.COL_SWS,
             KusssContentContract.Course.COL_ECTS,

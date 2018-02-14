@@ -615,7 +615,7 @@ public class AppUtils {
     }
 
 
-    public static List<LvaWithGrade> getLvasWithGrades(List<Term> terms, List<Course> courses, List<Assessment> assessments, boolean withAssessmentOnly, Term forLastTerm) {
+    public static List<LvaWithGrade> getGradesWithLva(List<Term> terms, List<Course> courses, List<Assessment> assessments, boolean withAssessmentOnly, Term forLastTerm) {
         List<LvaWithGrade> result = new ArrayList<>();
 
         Map<String, Term> termMap = null;
@@ -626,11 +626,14 @@ public class AppUtils {
             }
         }
 
+        List<Assessment> done = new ArrayList<>();
+
         for (Course course : courses) {
             if (termMap == null || termMap.containsKey(course.getTerm().toString())) {
                 Assessment assessment = findAssessment(assessments, course);
                 if (!withAssessmentOnly || assessment != null || (forLastTerm != null && forLastTerm.equals(course.getTerm()))) {
                     result.add(new LvaWithGrade(course, assessment));
+                    done.add(assessment);
                 }
             }
         }
@@ -638,6 +641,15 @@ public class AppUtils {
         AppUtils.removeDuplicates(result);
 
         AppUtils.sortLVAsWithGrade(result);
+
+        for (Assessment assessment : assessments) {
+            if (!done.contains(assessment)) {
+                Term assessmentTerm = Term.fromDate(assessment.getDate());
+                if (termMap == null || termMap.containsKey(assessmentTerm.toString())) {
+                    result.add(new LvaWithGrade(new Course(assessmentTerm, assessment.getCourseId(), assessment.getTitle(), assessment.getCid(), null, assessment.getSws(), assessment.getEcts(), assessment.getLvaType(), assessment.getCode()), assessment));
+                }
+            }
+        }
 
         return result;
     }

@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ public class KusssContentContract {
         public static final String COL_TERM = "term";
         public static final String COL_COURSEID = "lvanr";
         public static final String COL_TITLE = "title";
-        public static final String COL_TYPE = "type";
+        public static final String COL_LVATYPE = "type";
         public static final String COL_LECTURER = "teacher";
         public static final String COL_CURRICULA_ID = "skz";
         public static final String COL_ECTS = "ects";
@@ -103,6 +103,7 @@ public class KusssContentContract {
         public static final String COL_CODE = "code";
         public static final String COL_ECTS = "ects";
         public static final String COL_SWS = "sws";
+        public static final String COL_LVATYPE = "lvatype";
     }
 
     public static class Curricula {

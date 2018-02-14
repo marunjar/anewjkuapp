@@ -82,7 +82,8 @@ public class ImportAssessmentTask implements Callable<Void> {
             KusssContentContract.Assessment.COL_TITLE,
             KusssContentContract.Assessment.COL_CODE,
             KusssContentContract.Assessment.COL_ECTS,
-            KusssContentContract.Assessment.COL_SWS};
+            KusssContentContract.Assessment.COL_SWS,
+            KusssContentContract.Assessment.COL_LVATYPE};
 
     // Constants representing column positions from PROJECTION.
     private static final int COLUMN_ASSESSMENT_ID = 0;
@@ -96,6 +97,7 @@ public class ImportAssessmentTask implements Callable<Void> {
     public static final int COLUMN_ASSESSMENT_CODE = 8;
     public static final int COLUMN_ASSESSMENT_ECTS = 9;
     public static final int COLUMN_ASSESSMENT_SWS = 10;
+    public static final int COLUMN_ASSESSMENT_LVATYPE = 11;
 
     public ImportAssessmentTask(Account account, Context context) {
         this(account, null, null, null, null, context);

@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -81,7 +81,7 @@ public class Course {
         }
     }
 
-    public Course(Term term, String courseId, String title, int cid, String teacher, double sws, double ects, String type, String code) {
+    public Course(Term term, String courseId, String title, int cid, String teacher, double sws, double ects, String lvaType, String code) {
         this.term = term;
         this.courseId = courseId;
         this.title = title;
@@ -89,7 +89,7 @@ public class Course {
         this.teacher = teacher;
         this.ects = ects;
         this.sws = sws;
-        this.lvaType = type;
+        this.lvaType = lvaType;
         this.code = code;
     }
 
