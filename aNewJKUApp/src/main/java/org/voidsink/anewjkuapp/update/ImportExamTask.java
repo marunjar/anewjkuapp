@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -290,9 +290,9 @@ public class ImportExamTask implements Callable<Void> {
                             mSyncResult.stats.numInserts++;
                         }
 
-                        if (batch.size() > 0) {
-                            updateNotify(mContext.getString(R.string.notification_sync_exam_saving));
+                        updateNotify(mContext.getString(R.string.notification_sync_exam_saving));
 
+                        if (batch.size() > 0) {
                             Log.d(TAG, "Applying batch update");
                             mProvider.applyBatch(batch);
                             Log.d(TAG, "Notify resolver");
