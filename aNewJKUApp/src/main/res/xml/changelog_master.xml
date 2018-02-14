@@ -4,6 +4,10 @@
 		    - fixed
 		    * changed
 		    + added -->
+    <release version="0.50.2" versioncode="140061">
+        <change>- Kalender: Termine vom kommenden Semester werden auch geladen</change>
+        <change>+ LVAs: fehlende LVAs werden aus den Noten hergeleitet</change>
+    </release>
     <release version="0.50.1" versioncode="140060">
         <change>- Kalender: Termine in den Semesterferien werden nicht mehr gelöscht</change>
         <change>- Kalender: vergangene Termine werden nach dem Update nicht mehr gelöscht</change>
