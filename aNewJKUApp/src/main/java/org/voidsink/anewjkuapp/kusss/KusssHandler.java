@@ -397,6 +397,9 @@ public class KusssHandler {
         try {
             selectTerm(c, term);
             Document doc = Jsoup.connect(URL_GET_ICAL_FORM).userAgent(getUserAgent()).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true).get();
+            if (!isSelectable(c, doc, term)) {
+                return null;
+            }
             if (!isSelected(c, doc, term)) {
                 return null;
             }
