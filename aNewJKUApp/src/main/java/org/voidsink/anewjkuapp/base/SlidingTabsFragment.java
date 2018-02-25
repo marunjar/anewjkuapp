@@ -42,12 +42,11 @@ import org.voidsink.anewjkuapp.utils.Consts;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represents a tab to be displayed by {@link android.support.v4.view.ViewPager} and it's associated
+ * {@link TabLayout}.
+ */
 public abstract class SlidingTabsFragment extends BaseFragment {
-
-    /**
-     * This class represents a tab to be displayed by {@link android.support.v4.view.ViewPager} and it's associated
-     * {@link TabLayout}.
-     */
 
     //static final String TAG = SlidingTabsFragment.class.getSimpleName();
 

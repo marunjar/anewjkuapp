@@ -86,7 +86,7 @@ android {
         exclude 'META-INF/NOTICE.txt'
         //exclude 'META-INF/ASL2.0'
 
-        return void // fix lint warning "Not all execution pathsreturn a value"
+        return void // fix lint warning "Not all execution paths return a value"
     }
 
     applicationVariants.all { variant ->
