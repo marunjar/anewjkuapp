@@ -129,7 +129,9 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
     public void onStart() {
         super.onStart();
 
-        getLoaderManager().initLoader(0, null, this);
+        if (hasCalendarPermission()) {
+            getLoaderManager().initLoader(0, null, this);
+        }
     }
 
     @Override
@@ -211,7 +213,9 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
 
     private void loadData() {
         if (this.isVisible() && !getLoaderManager().hasRunningLoaders()) {
-            getLoaderManager().restartLoader(0, null, this);
+            if (hasCalendarPermission()) {
+                getLoaderManager().restartLoader(0, null, this);
+            }
         }
     }
 
