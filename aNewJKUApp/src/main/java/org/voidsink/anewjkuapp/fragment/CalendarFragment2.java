@@ -246,13 +246,13 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
         String calIDExam = CalendarUtils.getCalIDByName(getContext(),
                 mAccount, CalendarUtils.ARG_CALENDAR_EXAM, true);
 
-        if (calIDLva == null && calIDExam == null) {
-            Log.w(TAG, "no events loaded, calendars not found");
-            return null;
-        } else if (calIDLva == null) {
-            calIDLva = calIDExam;
-        } else if (calIDExam == null) {
-            calIDExam = calIDLva;
+        if (calIDLva == null) {
+            Log.w(TAG, "cannot load courses, calendar not found");
+            calIDLva = "";
+        }
+        if (calIDExam == null) {
+            Log.w(TAG, "cannot load exams, calendar not found");
+            calIDExam = "";
         }
 
         return new CursorLoader(getContext(), CalendarContractWrapper.Events.CONTENT_URI(),
