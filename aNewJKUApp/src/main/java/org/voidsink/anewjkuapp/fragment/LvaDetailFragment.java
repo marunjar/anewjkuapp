@@ -169,6 +169,7 @@ public class LvaDetailFragment extends TermFragment implements
         getLoaderManager().restartLoader(Consts.LOADER_ID_ASSESSMENTS, null, this);
     }
 
+    @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id) {
@@ -187,12 +188,13 @@ public class LvaDetailFragment extends TermFragment implements
                                 + KusssContentContract.Assessment.COL_DATE
                                 + " DESC");
             }
+            default:
+                return new CursorLoader(getContext());
         }
-        return null;
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         switch (loader.getId()) {
             case Consts.LOADER_ID_COURSES: {
                 mCourseCursor = data;
@@ -208,7 +210,7 @@ public class LvaDetailFragment extends TermFragment implements
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         switch (loader.getId()) {
             case Consts.LOADER_ID_COURSES: {
                 mCourseCursor = null;

@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -160,6 +160,7 @@ public class StatFragmentDetail extends TermFragment implements
         mDataObserver = null;
     }
 
+    @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id) {
@@ -182,12 +183,13 @@ public class StatFragmentDetail extends TermFragment implements
                                 + KusssContentContract.Assessment.COL_DATE
                                 + " DESC");
             }
+            default:
+                return new CursorLoader(getContext());
         }
-        return null;
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         switch (loader.getId()) {
             case Consts.LOADER_ID_COURSES: {
                 mCourseCursor = data;
@@ -205,7 +207,7 @@ public class StatFragmentDetail extends TermFragment implements
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         switch (loader.getId()) {
             case Consts.LOADER_ID_COURSES: {
                 mCourseCursor = null;

@@ -118,6 +118,7 @@ public class MensaDayFragment extends BaseFragment implements LoaderManager.Load
         return loaders;
     }
 
+    @NonNull
     @Override
     public Loader<List<MensaItem>> onCreateLoader(int id, Bundle args) {
         showProgressIndeterminate();
@@ -126,7 +127,7 @@ public class MensaDayFragment extends BaseFragment implements LoaderManager.Load
     }
 
     @Override
-    public void onLoadFinished(Loader<List<MensaItem>> loader, List<MensaItem> data) {
+    public void onLoadFinished(@NonNull Loader<List<MensaItem>> loader, List<MensaItem> data) {
         mAdapter.clear();
         if (data != null) {
             mAdapter.addAll(data);
@@ -137,7 +138,7 @@ public class MensaDayFragment extends BaseFragment implements LoaderManager.Load
     }
 
     @Override
-    public void onLoaderReset(Loader<List<MensaItem>> loader) {
+    public void onLoaderReset(@NonNull Loader<List<MensaItem>> loader) {
         mAdapter.clear();
         mAdapter.notifyDataSetChanged();
 

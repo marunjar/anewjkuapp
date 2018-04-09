@@ -26,6 +26,7 @@
 package org.voidsink.anewjkuapp.calendar;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -54,15 +55,15 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
         super(context);
     }
 
-    protected static class EventItemHolder extends RecyclerView.ViewHolder {
+    static class EventItemHolder extends RecyclerView.ViewHolder {
 
-        public final Toolbar mToolbar;
-        public final TextView mTitle;
-        public final TextView mDescr;
-        public final TextView mLocation;
-        public final TextView mTime;
+        final Toolbar mToolbar;
+        final TextView mTitle;
+        final TextView mDescr;
+        final TextView mLocation;
+        final TextView mTime;
 
-        public EventItemHolder(View itemView) {
+        EventItemHolder(View itemView) {
             super(itemView);
 
             mToolbar = itemView.findViewById(R.id.calendar_list_item_toolbar);
@@ -75,10 +76,10 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
         }
     }
 
-    protected static class DateHeaderHolder extends RecyclerView.ViewHolder {
-        public final TextView mText;
+    static class DateHeaderHolder extends RecyclerView.ViewHolder {
+        final TextView mText;
 
-        public DateHeaderHolder(View itemView) {
+        DateHeaderHolder(View itemView) {
             super(itemView);
 
             mText = itemView.findViewById(R.id.list_header_text);
@@ -89,8 +90,9 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
         this.mItemClickListener = mItemClickListener;
     }
 
+    @NonNull
     @Override
-    public EventItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public EventItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.calendar_list_item, parent, false);
         final EventItemHolder vh = new EventItemHolder(view);
 
@@ -104,7 +106,7 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
     }
 
     @Override
-    public void onBindViewHolder(EventItemHolder holder, int position) {
+    public void onBindViewHolder(@NonNull EventItemHolder holder, int position) {
         final CalendarListEvent eventItem = getItem(position);
 
         if (eventItem != null) {

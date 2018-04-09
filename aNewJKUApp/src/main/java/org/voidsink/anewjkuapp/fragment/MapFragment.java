@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -108,7 +108,7 @@ public class MapFragment extends BaseFragment implements
     private static final String KEY_GOAL_NAME = "GOAL_NAME";
 
     private static final byte PERMISSIONS_REQUEST_READ_STORAGE = 122;
-    public static final byte PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 10;
+    private static final byte PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 10;
 
     // Map Layer
     private MyMarker goalLocation = null;
@@ -203,25 +203,29 @@ public class MapFragment extends BaseFragment implements
             c.close();
         }
 
-        if (pois.size() == 0) {
-            Toast.makeText(getContext(), getContext().getString(R.string.map_place_not_found, query), Toast.LENGTH_LONG)
-                    .show();
-        } else if (pois.size() == 1) {
-            finishSearch(pois.get(0));
-        } else {
-            AlertDialog.Builder poiSelector = new AlertDialog.Builder(getContext());
+        switch (pois.size()) {
+            case 0:
+                Toast.makeText(getContext(), getContext().getString(R.string.map_place_not_found, query), Toast.LENGTH_LONG)
+                        .show();
+                break;
+            case 1:
+                finishSearch(pois.get(0));
+                break;
+            default:
+                AlertDialog.Builder poiSelector = new AlertDialog.Builder(getContext());
 
-            poiSelector.setTitle(R.string.map_select_location);
+                poiSelector.setTitle(R.string.map_select_location);
 
-            final PoiAdapter arrayAdapter = new PoiAdapter(getContext());
-            arrayAdapter.addAll(pois);
+                final PoiAdapter arrayAdapter = new PoiAdapter(getContext());
+                arrayAdapter.addAll(pois);
 
-            poiSelector.setNegativeButton(android.R.string.cancel,
-                    (dialog, which) -> dialog.dismiss());
+                poiSelector.setNegativeButton(android.R.string.cancel,
+                        (dialog, which) -> dialog.dismiss());
 
-            poiSelector.setAdapter(arrayAdapter,
-                    (dialog, which) -> finishSearch(arrayAdapter.getItem(which)));
-            poiSelector.show();
+                poiSelector.setAdapter(arrayAdapter,
+                        (dialog, which) -> finishSearch(arrayAdapter.getItem(which)));
+                poiSelector.show();
+                break;
         }
     }
 

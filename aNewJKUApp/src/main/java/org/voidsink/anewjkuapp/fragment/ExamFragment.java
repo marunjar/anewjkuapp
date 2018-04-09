@@ -140,6 +140,7 @@ public class ExamFragment extends BaseFragment implements ContentObserverListene
         return Consts.SCREEN_EXAMS;
     }
 
+    @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         showProgressIndeterminate();
@@ -151,7 +152,7 @@ public class ExamFragment extends BaseFragment implements ContentObserverListene
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         mAdapter.clear();
 
         if (data != null) {
@@ -177,7 +178,7 @@ public class ExamFragment extends BaseFragment implements ContentObserverListene
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         mAdapter.clear();
         mAdapter.notifyDataSetChanged();
 

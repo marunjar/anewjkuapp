@@ -181,7 +181,6 @@ public abstract class SlidingTabsFragment extends BaseFragment {
         if (mViewPager != null) {
             int pos = mViewPager.getCurrentItem();
             if (pos >= 0) {
-                outState.putCharSequence(Consts.ARG_TAB_FRAGMENT_TITLE, mViewPager.getAdapter().getPageTitle(pos));
                 outState.putInt(Consts.ARG_TAB_FRAGMENT_POS, pos);
             }
         }

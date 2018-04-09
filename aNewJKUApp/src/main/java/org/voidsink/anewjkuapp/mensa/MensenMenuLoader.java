@@ -47,8 +47,8 @@ public abstract class MensenMenuLoader implements MenuLoader {
     private static final String PREF_DATA_PREFIX = "MENSA_DATA_";
     private static final String PREF_DATE_PREFIX = "MENSA_DATE_";
 
-    protected static final String PATTERN_BETRAG = "\\d+,\\d{2}";
-    protected static final Pattern betragPattern = Pattern.compile(PATTERN_BETRAG);
+    static final String PATTERN_BETRAG = "\\d+,\\d{2}";
+    static final Pattern betragPattern = Pattern.compile(PATTERN_BETRAG);
 
     private String getUrl() {
         return "http://menu.mensen.at/index/index/locid/1";

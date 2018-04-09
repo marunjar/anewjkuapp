@@ -224,6 +224,7 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
         return Consts.SCREEN_CALENDAR;
     }
 
+    @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         showProgressIndeterminate();
@@ -264,7 +265,7 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         mAdapter.clear();
 
         Account mAccount = AppUtils.getAccount(getContext());
@@ -316,7 +317,7 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         mAdapter.clear();
         mAdapter.notifyDataSetChanged();
 

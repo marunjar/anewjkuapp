@@ -236,6 +236,7 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
         AppUtils.showEventInCalendar(getContext(), event.getId(), event.getStartTime().getTimeInMillis());
     }
 
+    @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
@@ -275,7 +276,7 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         ArrayList<WeekViewEvent> events = mWeekViewLoader.getEvents(loader.getId());
         events.clear();
 
@@ -357,7 +358,7 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         mWeekViewLoader.removeEvents(loader.getId());
     }
 

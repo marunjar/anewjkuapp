@@ -26,6 +26,7 @@
 package org.voidsink.anewjkuapp;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -48,15 +49,16 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
         super(context);
     }
 
+    @NonNull
     @Override
-    public ExamViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ExamViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.exam_list_item, parent, false);
 
         return new ExamViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(ExamViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ExamViewHolder holder, int position) {
         final ExamListExam exam = getItem(position);
 
         if (exam != null) {
@@ -120,19 +122,19 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
         }
     }
 
-    public static class ExamViewHolder extends RecyclerView.ViewHolder {
-        public final Toolbar mToolbar;
-        public final View mChip;
-        public final TextView mLocation;
-        public final TextView mTime;
-        public final TextView mCid;
-        public final TextView mTerm;
-        public final TextView mCourseId;
-        public final TextView mInfo;
-        public final TextView mDescription;
-        public final TextView mTitle;
+    static class ExamViewHolder extends RecyclerView.ViewHolder {
+        final Toolbar mToolbar;
+        final View mChip;
+        final TextView mLocation;
+        final TextView mTime;
+        final TextView mCid;
+        final TextView mTerm;
+        final TextView mCourseId;
+        final TextView mInfo;
+        final TextView mDescription;
+        final TextView mTitle;
 
-        public ExamViewHolder(View itemView) {
+        ExamViewHolder(View itemView) {
             super(itemView);
 
             mToolbar = itemView.findViewById(R.id.exam_list_item_toolbar);
@@ -150,10 +152,10 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
         }
     }
 
-    protected static class DateHeaderHolder extends RecyclerView.ViewHolder {
-        public final TextView mText;
+    static class DateHeaderHolder extends RecyclerView.ViewHolder {
+        final TextView mText;
 
-        public DateHeaderHolder(View itemView) {
+        DateHeaderHolder(View itemView) {
             super(itemView);
 
             mText = itemView.findViewById(R.id.list_header_text);

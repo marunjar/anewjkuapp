@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@
 package org.voidsink.anewjkuapp;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,14 +46,15 @@ public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, Course
         super(context);
     }
 
+    @NonNull
     @Override
-    public LvaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public LvaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.lva_list_item, parent, false);
         return new LvaViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(LvaViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull LvaViewHolder holder, int position) {
         LvaWithGrade lva = getItem(position);
 
         holder.mTitle.setText(lva.getCourse().getTitle());
@@ -96,7 +98,7 @@ public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, Course
         }
     }
 
-    protected static class LvaViewHolder extends RecyclerView.ViewHolder {
+    static class LvaViewHolder extends RecyclerView.ViewHolder {
         private final TextView mTitle;
         private final TextView mCourseId;
         private final TextView mCode;
@@ -107,7 +109,7 @@ public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, Course
         private final TextView mChipGrade;
         private final TextView mTerm;
 
-        public LvaViewHolder(View itemView) {
+        LvaViewHolder(View itemView) {
             super(itemView);
 
             mTitle = itemView.findViewById(R.id.lva_list2_item_title);
@@ -123,10 +125,10 @@ public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, Course
         }
     }
 
-    protected static class LvaHeaderHolder extends RecyclerView.ViewHolder {
-        public final TextView mText;
+    static class LvaHeaderHolder extends RecyclerView.ViewHolder {
+        final TextView mText;
 
-        public LvaHeaderHolder(View itemView) {
+        LvaHeaderHolder(View itemView) {
             super(itemView);
             mText = itemView.findViewById(R.id.list_header_text);
         }

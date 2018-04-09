@@ -467,7 +467,7 @@ public class KusssHandler {
         return iCal;
     }
 
-    public List<Term> getTerms(Context c) {
+    private List<Term> getTerms(Context c) {
         List<Term> terms = new ArrayList<>();
 
         Map<String, String> termMap = getTermMap(c);
