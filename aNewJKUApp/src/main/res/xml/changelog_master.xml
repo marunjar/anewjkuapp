@@ -4,6 +4,11 @@
 		    - fixed
 		    * changed
 		    + added -->
+    <release version="0.50.3" versioncode="140062">
+        <change>- Kalender: Berechtigungen prüfen</change>
+        <change>- KUSSS: Fehler beim Laden der Daten behoben</change>
+        <change>* Karte: neue Daten von OpenStreetMap</change>
+    </release>
     <release version="0.50.2" versioncode="140061">
         <change>- Kalender: Termine vom kommenden Semester werden auch geladen</change>
         <change>+ LVAs: fehlende LVAs werden aus den Noten hergeleitet</change>
