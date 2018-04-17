@@ -28,6 +28,7 @@ package org.voidsink.anewjkuapp;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -414,14 +415,15 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         chart.setValueSelectionEnabled(true);
     }
 
+    @NonNull
     @Override
-    public StatViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public StatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.stat_card, parent, false);
         return new StatViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(StatViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull StatViewHolder holder, int position) {
         StatCard item = getItem(position);
         switch (getItemViewType(position)) {
             case StatCard.TYPE_GRADE: {
@@ -490,15 +492,15 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         }
     }
 
-    public static class StatViewHolder extends RecyclerView.ViewHolder {
+    static class StatViewHolder extends RecyclerView.ViewHolder {
 
-        public final Toolbar mToolbar;
-        public final TextView mTitle;
-        public final LinearLayout mItems;
-        public final ComboLineColumnChartView mBarChart;
-        public final PieChartView mPieChart;
+        final Toolbar mToolbar;
+        final TextView mTitle;
+        final LinearLayout mItems;
+        final ComboLineColumnChartView mBarChart;
+        final PieChartView mPieChart;
 
-        public StatViewHolder(View itemView) {
+        StatViewHolder(View itemView) {
             super(itemView);
 
             mToolbar = itemView.findViewById(R.id.stat_card_toolbar);

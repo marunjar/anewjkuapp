@@ -236,6 +236,7 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
         AppUtils.showEventInCalendar(getContext(), event.getId(), event.getStartTime().getTimeInMillis());
     }
 
+    @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
@@ -246,13 +247,13 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
         String calIDExam = CalendarUtils.getCalIDByName(getContext(),
                 mAccount, CalendarUtils.ARG_CALENDAR_EXAM, true);
 
-        if (calIDLva == null && calIDExam == null) {
-            Log.w(TAG, "no events loaded, calendars not found");
-            return null;
-        } else if (calIDLva == null) {
-            calIDLva = calIDExam;
-        } else if (calIDExam == null) {
-            calIDExam = calIDLva;
+        if (calIDLva == null) {
+            Log.w(TAG, "cannot load courses, calendar not found");
+            calIDLva = "";
+        }
+        if (calIDExam == null) {
+            Log.w(TAG, "cannot load exams, calendar not found");
+            calIDExam = "";
         }
 
         return new CursorLoader(getContext(), CalendarContractWrapper.Events.CONTENT_URI(),
@@ -275,7 +276,7 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         ArrayList<WeekViewEvent> events = mWeekViewLoader.getEvents(loader.getId());
         events.clear();
 
@@ -357,7 +358,7 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         mWeekViewLoader.removeEvents(loader.getId());
     }
 
@@ -451,9 +452,13 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
                     //Log.d(TAG, String.format("loadPeriod %d(%d) %s - %s", periodIndex, index, SimpleDateFormat.getDateTimeInstance().format(now.getTime()), SimpleDateFormat.getDateTimeInstance().format(then.getTime())));
                     if (index >= 0) {
                         mLastLoadedPeriods.remove(index);
-                        getLoaderManager().restartLoader(periodIndex, args, CalendarFragment2.this);
+                        if (hasCalendarPermission()) {
+                            getLoaderManager().restartLoader(periodIndex, args, CalendarFragment2.this);
+                        }
                     } else {
-                        getLoaderManager().initLoader(periodIndex, args, CalendarFragment2.this);
+                        if (hasCalendarPermission()) {
+                            getLoaderManager().initLoader(periodIndex, args, CalendarFragment2.this);
+                        }
                     }
 
                     while (mLastLoadedPeriods.size() > 3) {

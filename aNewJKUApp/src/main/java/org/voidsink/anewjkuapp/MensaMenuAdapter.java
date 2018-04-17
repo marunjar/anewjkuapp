@@ -26,6 +26,7 @@
 package org.voidsink.anewjkuapp;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,8 +56,9 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
         this.mUseDateHeader = useDateHeader;
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
             case MensaItem.TYPE_INFO: {
                 View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.mensa_info_item, parent, false);
@@ -72,7 +74,7 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         switch (getItemViewType(position)) {
             case MensaItem.TYPE_INFO: {
                 MensaInfoItem mensaInfoItem = (MensaInfoItem) getItem(position);
@@ -172,16 +174,16 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
         }
     }
 
-    public static class MenuViewHolder extends RecyclerView.ViewHolder {
+    static class MenuViewHolder extends RecyclerView.ViewHolder {
 
-        public final TextView mName;
-        public final TextView mSoup;
-        public final TextView mMeal;
-        public final TextView mPrice;
-        public final TextView mPriceBig;
-        public final TextView mOehBonus;
+        final TextView mName;
+        final TextView mSoup;
+        final TextView mMeal;
+        final TextView mPrice;
+        final TextView mPriceBig;
+        final TextView mOehBonus;
 
-        public MenuViewHolder(View itemView) {
+        MenuViewHolder(View itemView) {
             super(itemView);
 
             mName = itemView.findViewById(R.id.mensa_menu_item_name);
@@ -193,11 +195,11 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
         }
     }
 
-    public static class MensaInfoHolder extends RecyclerView.ViewHolder {
-        public final TextView mTitle;
-        public final TextView mDescr;
+    static class MensaInfoHolder extends RecyclerView.ViewHolder {
+        final TextView mTitle;
+        final TextView mDescr;
 
-        public MensaInfoHolder(View itemView) {
+        MensaInfoHolder(View itemView) {
             super(itemView);
             mTitle = itemView.findViewById(R.id.mensa_info_item_title);
             mDescr = itemView.findViewById(R.id.mensa_info_item_descr);
@@ -205,10 +207,10 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
     }
 
 
-    public static class MenuHeaderHolder extends RecyclerView.ViewHolder {
-        public final TextView mText;
+    static class MenuHeaderHolder extends RecyclerView.ViewHolder {
+        final TextView mText;
 
-        public MenuHeaderHolder(View itemView) {
+        MenuHeaderHolder(View itemView) {
             super(itemView);
             mText = itemView.findViewById(R.id.list_header_text);
         }

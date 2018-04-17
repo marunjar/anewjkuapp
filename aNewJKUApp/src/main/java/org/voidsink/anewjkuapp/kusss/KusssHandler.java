@@ -44,7 +44,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
-import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -68,7 +67,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -395,8 +393,13 @@ public class KusssHandler {
         ByteArrayOutputStream data = new ByteArrayOutputStream();
 
         try {
-            selectTerm(c, term);
+            if (!selectTerm(c, term)) {
+                return null;
+            }
             Document doc = Jsoup.connect(URL_GET_ICAL_FORM).userAgent(getUserAgent()).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true).get();
+            if (!isSelectable(c, doc, term)) {
+                return null;
+            }
             if (!isSelected(c, doc, term)) {
                 return null;
             }
@@ -464,7 +467,7 @@ public class KusssHandler {
         return iCal;
     }
 
-    public List<Term> getTerms(Context c) {
+    private List<Term> getTerms(Context c) {
         List<Term> terms = new ArrayList<>();
 
         Map<String, String> termMap = getTermMap(c);
@@ -484,7 +487,7 @@ public class KusssHandler {
     }
 
     private Map<String, String> getTermMap(Context c) {
-        if (!isNetworkAvailable(c)) {
+        if (!isLoggedIn(c, getSessionIDFromCookie())) {
             return null;
         }
 
@@ -510,7 +513,7 @@ public class KusssHandler {
     }
 
     private boolean selectTerm(Context c, Term term) throws IOException {
-        if (!isNetworkAvailable(c)) {
+        if (!isLoggedIn(c, getSessionIDFromCookie())) {
             return false;
         }
         Jsoup.connect(URL_SELECT_TERM)
@@ -531,7 +534,7 @@ public class KusssHandler {
         if (terms == null || terms.size() == 0) {
             return null;
         }
-        if (!isNetworkAvailable(c)) {
+        if (!isLoggedIn(c, getSessionIDFromCookie())) {
             return null;
         }
 
@@ -594,7 +597,7 @@ public class KusssHandler {
                     "selected");
 
             for (Element termEntry : terms) {
-                if (termEntry.attr("value").equals(term.toString())) {
+                if (termEntry.attr("value").equalsIgnoreCase(term.toString())) {
                     return true;
                 }
             }
@@ -614,22 +617,26 @@ public class KusssHandler {
             Document doc = Jsoup.connect(URL_MY_GRADES).userAgent(getUserAgent()).cookies(getCookieMap()).data("months", "0")
                     .get();
 
-            Elements rows = doc.select(SELECT_MY_GRADES);
+            if (isLoggedIn(c, doc)) {
+                Elements rows = doc.select(SELECT_MY_GRADES);
 
-            AssessmentType type = null;
-            for (Element row : rows) {
-                if (row.tag().toString().equals("h3")) {
-                    type = AssessmentType.parseGradeType(row.text());
-                } else if (row.tag().toString().equals("table")) {
-                    Elements gradeRows = row
-                            .select("tbody > tr[class]:has(td)");
-                    for (Element gradeRow : gradeRows) {
-                        Assessment grade = new Assessment(c, type, gradeRow);
-                        if (grade.isInitialized()) {
-                            grades.add(grade);
+                AssessmentType type = null;
+                for (Element row : rows) {
+                    if (row.tag().toString().equals("h3")) {
+                        type = AssessmentType.parseGradeType(row.text());
+                    } else if (row.tag().toString().equals("table")) {
+                        Elements gradeRows = row
+                                .select("tbody > tr[class]:has(td)");
+                        for (Element gradeRow : gradeRows) {
+                            Assessment grade = new Assessment(c, type, gradeRow);
+                            if (grade.isInitialized()) {
+                                grades.add(grade);
+                            }
                         }
                     }
                 }
+            } else {
+                return null;
             }
         } catch (IOException e) {
             Log.e(TAG, "getAssessments", e);
@@ -650,28 +657,31 @@ public class KusssHandler {
                     .userAgent(getUserAgent())
                     .cookies(getCookieMap())
                     .data("search", "true").data("searchType", "mylvas").get();
+            if (isLoggedIn(c, doc)) {
+                Elements rows = doc.select(SELECT_NEW_EXAMS);
 
-            Elements rows = doc.select(SELECT_NEW_EXAMS);
+                int i = 0;
+                while (i < rows.size()) {
+                    Element row = rows.get(i);
+                    Exam exam = new Exam(c, row, true);
+                    i++;
 
-            int i = 0;
-            while (i < rows.size()) {
-                Element row = rows.get(i);
-                Exam exam = new Exam(c, row, true);
-                i++;
-
-                if (exam.isInitialized()) {
-                    while (i < rows.size()
-                            && rows.get(i).attr("class")
-                            .equals(row.attr("class"))) {
-                        exam.addAdditionalInfo(rows.get(i));
-                        i++;
+                    if (exam.isInitialized()) {
+                        while (i < rows.size()
+                                && rows.get(i).attr("class")
+                                .equals(row.attr("class"))) {
+                            exam.addAdditionalInfo(rows.get(i));
+                            i++;
+                        }
+                        exams.add(exam);
                     }
-                    exams.add(exam);
                 }
-            }
 
-            // add registered exams
-            loadExams(c, exams);
+                // add registered exams
+                loadExams(c, exams);
+            } else {
+                exams = null;
+            }
         } catch (Exception e) {
             Log.e(TAG, "getNewExams", e);
             Analytics.sendException(c, e, true);
@@ -681,7 +691,7 @@ public class KusssHandler {
     }
 
     public List<Exam> getNewExamsByCourseId(Context c, List<Course> courses, List<Term> terms) {
-        if (!isNetworkAvailable(c)) {
+        if (!isLoggedIn(c, getSessionIDFromCookie())) {
             return null;
         }
 
@@ -770,23 +780,27 @@ public class KusssHandler {
                     .data("searchLvaNr", courseId).data("searchLvaTitle", "")
                     .data("searchCourseClass", "").post();
 
-            Elements rows = doc.select(SELECT_NEW_EXAMS);
+            if (isLoggedIn(c, doc)) {
+                Elements rows = doc.select(SELECT_NEW_EXAMS);
 
-            int i = 0;
-            while (i < rows.size()) {
-                Element row = rows.get(i);
-                Exam exam = new Exam(c, row, true);
-                i++;
+                int i = 0;
+                while (i < rows.size()) {
+                    Element row = rows.get(i);
+                    Exam exam = new Exam(c, row, true);
+                    i++;
 
-                if (exam.isInitialized()) {
-                    while (i < rows.size()
-                            && rows.get(i).attr("class")
-                            .equals(row.attr("class"))) {
-                        exam.addAdditionalInfo(rows.get(i));
-                        i++;
+                    if (exam.isInitialized()) {
+                        while (i < rows.size()
+                                && rows.get(i).attr("class")
+                                .equals(row.attr("class"))) {
+                            exam.addAdditionalInfo(rows.get(i));
+                            i++;
+                        }
+                        exams.add(exam);
                     }
-                    exams.add(exam);
                 }
+            } else {
+                return null;
             }
         } catch (IOException e) {
             Log.e(TAG, "getNewExamsByCourseId", e);
@@ -805,21 +819,23 @@ public class KusssHandler {
 
         Document doc = Jsoup.connect(URL_GET_EXAMS).userAgent(getUserAgent()).cookies(getCookieMap()).get();
 
-        Elements rows = doc.select(SELECT_EXAMS);
+        if (isLoggedIn(c, doc)) {
+            Elements rows = doc.select(SELECT_EXAMS);
 
-        int i = 0;
-        while (i < rows.size()) {
-            Element row = rows.get(i);
-            Exam exam = new Exam(c, row, false);
-            i++;
+            int i = 0;
+            while (i < rows.size()) {
+                Element row = rows.get(i);
+                Exam exam = new Exam(c, row, false);
+                i++;
 
-            if (exam.isInitialized()) {
-                while (i < rows.size()
-                        && rows.get(i).attr("class").equals(row.attr("class"))) {
-                    exam.addAdditionalInfo(rows.get(i));
-                    i++;
+                if (exam.isInitialized()) {
+                    while (i < rows.size()
+                            && rows.get(i).attr("class").equals(row.attr("class"))) {
+                        exam.addAdditionalInfo(rows.get(i));
+                        i++;
+                    }
+                    exams.add(exam);
                 }
-                exams.add(exam);
             }
         }
     }
@@ -833,14 +849,18 @@ public class KusssHandler {
 
             Document doc = Jsoup.connect(URL_MY_STUDIES).userAgent(getUserAgent()).cookies(getCookieMap()).get();
 
-            Elements rows = doc.select(SELECT_MY_STUDIES);
-            for (Element row : rows) {
-                Curriculum s = new Curriculum(c, row);
-                if (s.isInitialized()) {
-                    mCurricula.add(s);
+            if (isLoggedIn(c, doc)) {
+                Elements rows = doc.select(SELECT_MY_STUDIES);
+                for (Element row : rows) {
+                    Curriculum s = new Curriculum(c, row);
+                    if (s.isInitialized()) {
+                        mCurricula.add(s);
+                    }
                 }
+                return mCurricula;
+            } else {
+                return null;
             }
-            return mCurricula;
         } catch (Exception e) {
             Analytics.sendException(c, e, true);
             return null;

@@ -33,7 +33,7 @@ public class KusssCalendar {
     private final boolean mMandatory;
     private final String mUidPrefix;
     private final Calendar mCalendar;
-    private String mName;
+    private final String mName;
 
     public KusssCalendar(String name, Term term, String uidPrefix, boolean mandatory, Calendar calendar) {
         this.mTerm = term;

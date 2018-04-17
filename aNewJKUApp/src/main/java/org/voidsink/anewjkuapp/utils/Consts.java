@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -49,7 +49,6 @@ public class Consts {
     public static final String ARG_CALENDAR_NOW = "cal_now";
     public static final String ARG_CALENDAR_THEN = "cal_then";
 
-    public static final String ARG_TAB_FRAGMENT_TITLE = "st_title";
     public static final String ARG_TAB_FRAGMENT_POS = "st_pos";
 
     //strings for logging of screens

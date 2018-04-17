@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -142,6 +142,7 @@ public class CurriculaFragment extends BaseFragment implements
         getLoaderManager().restartLoader(0, null, this);
     }
 
+    @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(getContext(), KusssContentContract.Curricula.CONTENT_URI,
@@ -150,7 +151,7 @@ public class CurriculaFragment extends BaseFragment implements
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         mAdapter.clear();
 
         List<Curriculum> mCurriculum = new ArrayList<>();
@@ -165,7 +166,7 @@ public class CurriculaFragment extends BaseFragment implements
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         mAdapter.clear();
         mAdapter.notifyDataSetChanged();
     }
@@ -176,14 +177,15 @@ public class CurriculaFragment extends BaseFragment implements
             super(context);
         }
 
+        @NonNull
         @Override
-        public CurriculumViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public CurriculumViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.curricula_list_item, parent, false);
             return new CurriculumViewHolder(v);
         }
 
         @Override
-        public void onBindViewHolder(CurriculumViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull CurriculumViewHolder holder, int position) {
             Curriculum item = getItem(position);
 
             holder.isStandard.setText(item.isStandard() ? getContext().getString(R.string.curriculum_is_standard_yes) : getContext().getString(R.string.curriculum_is_standard_no));
@@ -222,15 +224,15 @@ public class CurriculaFragment extends BaseFragment implements
     }
 
     public static class CurriculumViewHolder extends RecyclerView.ViewHolder {
-        public final TextView isStandard;
-        public final TextView cid;
-        public final TextView title;
-        public final TextView steopDone;
-        public final TextView activeStatus;
-        public final TextView dtStart;
-        public final TextView dtEnd;
+        final TextView isStandard;
+        final TextView cid;
+        final TextView title;
+        final TextView steopDone;
+        final TextView activeStatus;
+        final TextView dtStart;
+        final TextView dtEnd;
 
-        public CurriculumViewHolder(View itemView) {
+        CurriculumViewHolder(View itemView) {
             super(itemView);
 
             isStandard = itemView.findViewById(R.id.curriculum_is_standard);
@@ -244,9 +246,9 @@ public class CurriculaFragment extends BaseFragment implements
     }
 
     public static class CurriculumHeaderHolder extends RecyclerView.ViewHolder {
-        public final TextView mText;
+        final TextView mText;
 
-        public CurriculumHeaderHolder(View itemView) {
+        CurriculumHeaderHolder(View itemView) {
             super(itemView);
             mText = itemView.findViewById(R.id.list_header_text);
         }

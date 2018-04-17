@@ -28,6 +28,7 @@ package org.voidsink.anewjkuapp.fragment;
 import android.Manifest;
 import android.accounts.Account;
 import android.content.UriMatcher;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -68,10 +69,14 @@ public class CalendarPermissionFragment extends BaseFragment implements ContentO
         initDataObserver();
     }
 
+    protected boolean hasCalendarPermission() {
+        return EasyPermissions.hasPermissions(getContext(), CALENDAR_PERMISSIONS_READ);
+    }
+
     @AfterPermissionGranted(PERMISSIONS_REQUEST_READ_CALENDAR)
     private void initDataObserver() {
         mDataObserver = null;
-        if (EasyPermissions.hasPermissions(getContext(), CALENDAR_PERMISSIONS_READ)) {
+        if (hasCalendarPermission()) {
             // check permission
             UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
             uriMatcher.addURI(CalendarContractWrapper.AUTHORITY(), CalendarContractWrapper.Events.CONTENT_URI().buildUpon().appendPath("#").build().toString(), 0);
@@ -82,6 +87,8 @@ public class CalendarPermissionFragment extends BaseFragment implements ContentO
             getContext().getContentResolver().registerContentObserver(
                     CalendarContractWrapper.Events.CONTENT_URI().buildUpon()
                             .appendPath("#").build(), false, mDataObserver);
+
+            onContentChanged(true);
         } else {
             EasyPermissions.requestPermissions(
                     this,
@@ -94,7 +101,7 @@ public class CalendarPermissionFragment extends BaseFragment implements ContentO
 
     @AfterPermissionGranted(PERMISSIONS_REQUEST_FULL_CALENDAR)
     private void startCreateCalendars() {
-        if (EasyPermissions.hasPermissions(getContext(), Manifest.permission.GET_ACCOUNTS)) {
+        if ((android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) || EasyPermissions.hasPermissions(getContext(), Manifest.permission.GET_ACCOUNTS)) {
             if (EasyPermissions.hasPermissions(getContext(), CALENDAR_PERMISSIONS_FULL)) {
                 Account account = AppUtils.getAccount(getContext());
                 CalendarUtils.createCalendarsIfNecessary(getContext(), account);

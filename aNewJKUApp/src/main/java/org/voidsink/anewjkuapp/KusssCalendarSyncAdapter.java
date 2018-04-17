@@ -25,13 +25,16 @@
 
 package org.voidsink.anewjkuapp;
 
+import android.Manifest;
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.SyncResult;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Looper;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
@@ -87,6 +90,11 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
         }
 
         Log.d(TAG, "starting sync of account: " + account.name);
+
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            syncResult.stats.numAuthExceptions++;
+            return;
+        }
 
         if (!KusssHandler.getInstance().isAvailable(getContext(),
                 AppUtils.getAccountAuthToken(getContext(), account),

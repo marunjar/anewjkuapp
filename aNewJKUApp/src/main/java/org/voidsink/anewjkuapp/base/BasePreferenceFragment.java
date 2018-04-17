@@ -112,7 +112,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
                     class ViewHolder {
                         TextView title;
                         TextView subTitle;
-                        public RadioButton radio;
+                        RadioButton radio;
                     }
 
                     @NonNull

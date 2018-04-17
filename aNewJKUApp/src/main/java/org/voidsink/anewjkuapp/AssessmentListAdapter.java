@@ -26,6 +26,7 @@
 package org.voidsink.anewjkuapp;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,14 +47,15 @@ public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, Asse
         super(context);
     }
 
+    @NonNull
     @Override
-    public GradeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public GradeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.grade_list_item, parent, false);
         return new GradeViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(GradeViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull GradeViewHolder holder, int position) {
         Assessment assessment = getItem(position);
         holder.mTitle.setText((assessment.getTitle() + " " + assessment.getLvaType()).trim());
 
@@ -100,18 +102,18 @@ public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, Asse
         }
     }
 
-    public static class GradeViewHolder extends RecyclerView.ViewHolder {
-        public final TextView mTitle;
-        public final TextView mGrade;
-        public final TextView mCourseId;
-        public final TextView mTerm;
-        public final TextView mCid;
-        public final TextView mDate;
-        public final View mChipBack;
-        public final TextView mChipGrade;
-        public final TextView mChipInfo;
+    static class GradeViewHolder extends RecyclerView.ViewHolder {
+        final TextView mTitle;
+        final TextView mGrade;
+        final TextView mCourseId;
+        final TextView mTerm;
+        final TextView mCid;
+        final TextView mDate;
+        final View mChipBack;
+        final TextView mChipGrade;
+        final TextView mChipInfo;
 
-        public GradeViewHolder(View itemView) {
+        GradeViewHolder(View itemView) {
             super(itemView);
 
             mTitle = itemView.findViewById(R.id.grade_list_grade_title);
@@ -126,10 +128,10 @@ public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, Asse
         }
     }
 
-    protected static class GradeHeaderHolder extends RecyclerView.ViewHolder {
-        public final TextView mText;
+    static class GradeHeaderHolder extends RecyclerView.ViewHolder {
+        final TextView mText;
 
-        public GradeHeaderHolder(View itemView) {
+        GradeHeaderHolder(View itemView) {
             super(itemView);
 
             mText = itemView.findViewById(R.id.list_header_text);

@@ -92,6 +92,7 @@ public abstract class MensaFragmentDetail extends BaseFragment implements Loader
 
     protected abstract MenuLoader createLoader();
 
+    @NonNull
     @Override
     public Loader<ArrayList<MensaItem>> onCreateLoader(int i, Bundle bundle) {
         showProgressIndeterminate();
@@ -100,7 +101,7 @@ public abstract class MensaFragmentDetail extends BaseFragment implements Loader
     }
 
     @Override
-    public void onLoadFinished(Loader<ArrayList<MensaItem>> loader, ArrayList<MensaItem> mensaItems) {
+    public void onLoadFinished(@NonNull Loader<ArrayList<MensaItem>> loader, ArrayList<MensaItem> mensaItems) {
         mAdapter.clear();
         if (mensaItems != null) {
             mAdapter.addAll(mensaItems);
@@ -111,7 +112,7 @@ public abstract class MensaFragmentDetail extends BaseFragment implements Loader
     }
 
     @Override
-    public void onLoaderReset(Loader<ArrayList<MensaItem>> loader) {
+    public void onLoaderReset(@NonNull Loader<ArrayList<MensaItem>> loader) {
         mAdapter.clear();
         mAdapter.notifyDataSetChanged();
 

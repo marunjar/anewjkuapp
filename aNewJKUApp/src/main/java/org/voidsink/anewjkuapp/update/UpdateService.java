@@ -24,9 +24,12 @@
 
 package org.voidsink.anewjkuapp.update;
 
+import android.Manifest;
 import android.accounts.Account;
 import android.app.IntentService;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.content.ContextCompat;
 
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
@@ -54,16 +57,18 @@ public class UpdateService extends IntentService {
             if (account != null) {
                 List<Callable<?>> callables = new ArrayList<>();
 
-                if (intent.getBooleanExtra(Consts.ARG_UPDATE_CAL, false) ||
-                        intent.getBooleanExtra(Consts.ARG_UPDATE_CAL_COURSES, false)) {
-                    Analytics.eventReloadEventsCourse(this);
-                    callables.add(new ImportCalendarTask(account, this, CalendarUtils.ARG_CALENDAR_COURSE, CalendarUtils.newCalendarBuilder()));
-                }
-                if (intent.getBooleanExtra(Consts.ARG_UPDATE_CAL, false) ||
-                        intent.getBooleanExtra(Consts.ARG_UPDATE_CAL_EXAM, false)) {
-                    Analytics.eventReloadEventsExam(this);
-                    callables.add(new ImportCalendarTask(account, this,
-                            CalendarUtils.ARG_CALENDAR_EXAM, CalendarUtils.newCalendarBuilder()));
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+                    if (intent.getBooleanExtra(Consts.ARG_UPDATE_CAL, false) ||
+                            intent.getBooleanExtra(Consts.ARG_UPDATE_CAL_COURSES, false)) {
+                        Analytics.eventReloadEventsCourse(this);
+                        callables.add(new ImportCalendarTask(account, this, CalendarUtils.ARG_CALENDAR_COURSE, CalendarUtils.newCalendarBuilder()));
+                    }
+                    if (intent.getBooleanExtra(Consts.ARG_UPDATE_CAL, false) ||
+                            intent.getBooleanExtra(Consts.ARG_UPDATE_CAL_EXAM, false)) {
+                        Analytics.eventReloadEventsExam(this);
+                        callables.add(new ImportCalendarTask(account, this,
+                                CalendarUtils.ARG_CALENDAR_EXAM, CalendarUtils.newCalendarBuilder()));
+                    }
                 }
                 if (intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false) ||
                         intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS_CURRICULA, false)) {

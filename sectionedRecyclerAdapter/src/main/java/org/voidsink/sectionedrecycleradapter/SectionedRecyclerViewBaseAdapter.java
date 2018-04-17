@@ -25,6 +25,7 @@
 
 package org.voidsink.sectionedrecycleradapter;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
@@ -42,7 +43,7 @@ public abstract class SectionedRecyclerViewBaseAdapter extends RecyclerView.Adap
 
     private static final int SECTION_TYPE = 0;
     private boolean mValid = true;
-    protected final RecyclerView.Adapter mBaseAdapter;
+    final RecyclerView.Adapter mBaseAdapter;
     private final SparseArray<Section> mSections = new SparseArray<>();
 
     public SectionedRecyclerViewBaseAdapter(RecyclerView recyclerView,
@@ -99,8 +100,9 @@ public abstract class SectionedRecyclerViewBaseAdapter extends RecyclerView.Adap
 
     protected abstract Section[] createSections();
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int typeView) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int typeView) {
         if (typeView == SECTION_TYPE) {
             return onCreateHeaderViewHolder(parent);
         } else {
@@ -111,7 +113,7 @@ public abstract class SectionedRecyclerViewBaseAdapter extends RecyclerView.Adap
     protected abstract RecyclerView.ViewHolder onCreateHeaderViewHolder(ViewGroup parent);
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder sectionViewHolder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder sectionViewHolder, int position) {
         if (isSectionHeaderPosition(position)) {
             onBindHeaderViewHolder(mSections.get(position), sectionViewHolder, position);
         } else {
@@ -131,9 +133,7 @@ public abstract class SectionedRecyclerViewBaseAdapter extends RecyclerView.Adap
     private void setSections(Section[] sections) {
         mSections.clear();
 
-        Arrays.sort(sections, (lhs, rhs) -> (lhs.firstPosition == rhs.firstPosition)
-                ? 0
-                : ((lhs.firstPosition < rhs.firstPosition) ? -1 : 1));
+        Arrays.sort(sections, (lhs, rhs) -> Integer.compare(lhs.firstPosition, rhs.firstPosition));
 
         int offset = 0; // offset positions for the headers we're adding
         for (Section section : sections) {
