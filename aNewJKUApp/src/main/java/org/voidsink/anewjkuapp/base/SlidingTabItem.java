@@ -50,9 +50,8 @@ public class SlidingTabItem {
             }
             return f;
         } catch (Exception e) {
-            e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     protected Bundle getArguments() {

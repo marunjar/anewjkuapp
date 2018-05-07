@@ -122,7 +122,6 @@ public class KusssHandler {
         try {
             userAgent = System.getProperty("http.agent");
         } catch (Exception e) {
-            e.printStackTrace();
         }
         if (TextUtils.isEmpty(userAgent)) {
             userAgent = "Mozilla/5.0";
@@ -477,7 +476,8 @@ public class KusssHandler {
                     Term term = Term.parseTerm(termValue);
                     terms.add(term);
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "getTerms", e);
+                    Analytics.sendException(c, e, true);
                 }
             }
 
@@ -505,7 +505,7 @@ public class KusssHandler {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, "getTerms", e);
+            Log.e(TAG, "getTermMap", e);
             Analytics.sendException(c, e, true);
             return null;
         }
@@ -564,7 +564,7 @@ public class KusssHandler {
                     }
                 } else {
                     // break if selection failed
-                    throw new IOException(String.format("cannot select term: %s", term));
+                    return null;
                 }
             }
             if (courses.size() == 0) {

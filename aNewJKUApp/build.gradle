@@ -101,7 +101,7 @@ dependencies {
     implementation "com.android.support:design:${rootProject.ext.supportLibVersion}"
     implementation "com.android.support:cardview-v7:${rootProject.ext.supportLibVersion}"
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-    googleImplementation 'com.google.android.gms:play-services-analytics:12.0.1'
+    googleImplementation 'com.google.android.gms:play-services-analytics:15.0.2'
     implementation 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
     implementation 'org.mapsforge:mapsforge-core:0.9.1'
     implementation 'org.mapsforge:mapsforge-map:0.9.1'
@@ -115,7 +115,7 @@ dependencies {
     implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
     //implementation 'com.github.alamkanak:android-week-view:1.2.3'
     implementation 'de.cketti.library.changelog:ckchangelog:1.2.2'
-    implementation('com.mikepenz:aboutlibraries:6.0.6@aar'){
+    implementation('com.mikepenz:aboutlibraries:6.0.8@aar'){
         transitive = true
     }
     implementation project(':sectionedRecyclerAdapter')
@@ -126,7 +126,7 @@ dependencies {
 apply plugin: "net.ltgt.errorprone"
 
 configurations.errorprone {
-    resolutionStrategy.force 'com.google.errorprone:error_prone_core:2.2.0'
+    resolutionStrategy.force "com.google.errorprone:error_prone_core:${rootProject.ext.errorProneVersion}"
 }
 configurations {
     all*.exclude module: 'commons-logging'

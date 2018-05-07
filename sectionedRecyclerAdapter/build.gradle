@@ -58,5 +58,5 @@ dependencies {
 apply plugin: "net.ltgt.errorprone"
 
 configurations.errorprone {
-    resolutionStrategy.force 'com.google.errorprone:error_prone_core:2.2.0'
+    resolutionStrategy.force "com.google.errorprone:error_prone_core:${rootProject.ext.errorProneVersion}"
 }

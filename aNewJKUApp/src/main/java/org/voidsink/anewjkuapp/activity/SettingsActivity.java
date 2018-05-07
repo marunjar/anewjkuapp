@@ -84,7 +84,7 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                fragment = null;
             }
             if (fragment != null) {
                 Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(ARG_SHOW_FRAGMENT);
