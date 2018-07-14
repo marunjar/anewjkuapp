@@ -90,7 +90,7 @@ public class ImportCalendarTask implements Callable<Void> {
             .compile("Lva-LeiterIn:\\s+");
 
     private ContentProviderClient mProvider;
-    private boolean mReleaseProvider = false;
+    private boolean mReleaseProvider;
     private final Account mAccount;
     private final SyncResult mSyncResult;
     private final Context mContext;

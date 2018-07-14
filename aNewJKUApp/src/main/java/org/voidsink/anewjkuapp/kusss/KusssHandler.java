@@ -121,7 +121,7 @@ public class KusssHandler {
         String userAgent = null;
         try {
             userAgent = System.getProperty("http.agent");
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         if (TextUtils.isEmpty(userAgent)) {
             userAgent = "Mozilla/5.0";
