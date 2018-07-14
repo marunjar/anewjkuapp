@@ -8,15 +8,12 @@
     <string name="title_grades">Noten</string>
     <string name="title_lvas">LVAs</string>
     <string name="title_stats">Statistik</string>
-    <string name="title_studies">Studienrichtung</string>
     <string name="title_campus">Campus</string>
     <string name="title_mensa">Mensa</string>
     <string name="title_map">Karte</string>
     <string name="title_oeh" translatable="false">ÖH</string>
     <string name="title_oeh_info">Info</string>
     <string name="title_oeh_rights">Rechte</string>
-    <string name="title_oeh_news">News</string>
-    <string name="title_oeh_linz" translatable="false">ÖH Linz</string>
     <string name="title_settings">Einstellungen</string>
     <string name="title_about">About</string>
 
@@ -46,7 +43,6 @@
     <string name="grade_type_all">alle Beurteilungen</string>
     <string name="grade_type_none_available">keine Noten verfügbar</string>
 
-    <string name="notification_sync_running">Daten werden synchronisiert</string>
     <string name="notification_sync_connect">Verbindung wird aufgebaut</string>
     <string name="notification_sync_calendar">Termine werden synchronisiert</string>
     <string name="notification_sync_calendar_loading">Termine laden: %s</string>
@@ -84,12 +80,10 @@
     <string name="notification_error_account_not_available">Account konnte nicht validiert werden</string>
     <string name="notification_more">+%d weitere</string>
 
-    <string name="pref_cat_sync_settings">Einstellungen bearbeiten</string>
     <string name="pref_cat_update_password">Passwort aktualisieren</string>
     <string name="pref_cat_kusss_main">KUSSS</string>
     <string name="pref_kusss_user_title">Matrikelnummer</string>
     <string name="pref_kusss_pw_title">Passwort</string>
-    <string name="pref_kusss_sync_title">Synchronisieren</string>
     <string name="pref_kusss_sync_interval_summary">Intervall in dem die Daten synchronisiert werden</string>
     <string name="pref_kusss_sync_interval_title">Synchronisationsintervall</string>
     <string name="pref_kusss_notify_title">Benachrichtigen</string>
@@ -104,10 +98,8 @@
     <string name="pref_kusss_calendar_extended_title">Kalender</string>
     <string name="pref_kusss_calendar_extended_summary">der Kalender in den die Termine importiert werden</string>
     <string name="pref_cat_kusss_grade">Noten</string>
-    <string name="pref_kusss_grade_sync_summary">Noten synchronisieren</string>
     <string name="pref_kusss_grade_notify_summary">Benachrichtigen wenn neue Noten vorhanden sind</string>
     <string name="pref_cat_kusss_exam">Prüfungen</string>
-    <string name="pref_kusss_exam_sync_summary">LVA-Prüfungen synchronisieren</string>
     <string name="pref_kusss_exam_notify_summary">Benachrichtigen wenn neue LVA-Prüfungen zu den eigenen LVAs verfügbar sind</string>
     <string name="pref_kusss_exam_get_from_lva_title">Prüfungen nach LVA-Nr laden</string>
     <string name="pref_kusss_exam_get_from_lva_summary">findet Prüfungen zu LVAs auch aus früheren Semestern, ist dafür aber langsamer …</string>
@@ -166,11 +158,6 @@
     <string name="map_select_location">Hörsaal auswählen</string>
 
     <string name="progress_title">Bitte warten…</string>
-    <string name="progress_load_menu">Menüs werden geladen…</string>
-    <string name="progress_load_exam">Prüfungen werden geladen…</string>
-    <string name="progress_load_grade">Noten werden geladen…</string>
-    <string name="progress_load_lva">LVAs werden geladen…</string>
-    <string name="progress_load_calendar">Termine werden geladen…</string>
     <string name="progress_load_map_files">Karten werden geladen…</string>
     <string name="progress_login">Anmelden…</string>
 
@@ -181,7 +168,6 @@
     <string name="mensa_title_choice" translatable="false">Choice</string>
     <string name="mensa_title_khg" translatable="false">KHG</string>
     <string name="mensa_title_raab" translatable="false">Raab</string>
-    <string name="mensa_title_unknown">eine Mensa</string>
     <string name="mensa_open_in_browser">in Browser anzeigen</string>
 
     <string name="stat_title_grade_weighted">Noten (gewichtet)</string>
@@ -215,7 +201,6 @@
     <string name="interval_3.5d">Zweimal Wöchentlich</string>
     <string name="interval_7d">Wöchentlich</string>
 
-    <string name="account_show_password">Passwort anzeigen</string>
     <string name="account_login_failed_wrong_pwd">Anmeldung fehlgeschlagen: falsches Passwort</string>
     <string name="account_login_failed_wrong_auth_token">Anmeldung fehlgeschlagen: falscher Authentifizierungstoken</string>
     <string name="account_login">Anmelden</string>
@@ -238,13 +223,9 @@
     <string name="alert_permission_write_calendar">Es können keine Termine in den Stundenplan importiert werden da die nötige Berechtigung dazu fehlt.</string>
     <string name="alert_permission_get_accounts">Es können keine Accounts gelesen und angelegt werden da die nötige Berectigungen für Kontakte fehlt.</string>
 
-    <string name="default_chip_color" translatable="false">#ff2b7fc2</string>
-    <string name="kusss_service_title">KUSSS Service</string>
     <string name="kusss_provider_name">KUSSS</string>
-    <string name="poi_provider_name">POIs</string>
     <string name="listview_footer_button">Antippen für Termine nach dem %s</string>
     <string name="all_terms">alle Semester</string>
-    <string name="about_force_logout">Ausloggen</string>
     <string name="menu_exam_register">in KUSSS anzeigen</string>
     <string name="title_curricula">Studienrichtungen</string>
     <string name="missing_app_permission">Berechtigungen fehlen</string>
