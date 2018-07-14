@@ -581,15 +581,6 @@ public class MapFragment extends BaseFragment implements
         return mapFile;
     }
 
-    private File getMapFileDirectory() {
-        File mapFile = PreferenceWrapper.getMapFile(getContext());
-        if (mapFile == null || !mapFile.exists() || !mapFile.canRead()) {
-            return getActivity().getFilesDir();
-        } else {
-            return mapFile.getParentFile();
-        }
-    }
-
     @Override
     public boolean onQueryTextChange(String newText) {
         // Log.i(TAG, newText);

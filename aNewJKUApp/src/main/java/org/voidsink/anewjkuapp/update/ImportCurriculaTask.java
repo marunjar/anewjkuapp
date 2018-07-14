@@ -90,7 +90,7 @@ public class ImportCurriculaTask implements Callable<Void> {
     public static final int COLUMN_CURRICULUM_DT_END = 8;
 
     public ImportCurriculaTask(Account account, Context context) {
-        this(account, null, null, null, null, context);
+        this(account, null, null, null, context);
         this.mProvider = context.getContentResolver()
                 .acquireContentProviderClient(
                         KusssContentContract.Course.CONTENT_URI);
@@ -99,7 +99,7 @@ public class ImportCurriculaTask implements Callable<Void> {
         this.mShowProgress = true;
     }
 
-    public ImportCurriculaTask(Account account, Bundle extras, String authority,
+    public ImportCurriculaTask(Account account, Bundle extras,
                                ContentProviderClient provider, SyncResult syncResult,
                                Context context) {
         this.mAccount = account;
@@ -135,7 +135,7 @@ public class ImportCurriculaTask implements Callable<Void> {
 
             if (KusssHandler.getInstance().isAvailable(mContext,
                     AppUtils.getAccountAuthToken(mContext, mAccount),
-                    AppUtils.getAccountName(mContext, mAccount),
+                    AppUtils.getAccountName(mAccount),
                     AppUtils.getAccountPassword(mContext, mAccount))) {
 
                 updateNotify(mContext.getString(R.string.notification_sync_curricula_loading));

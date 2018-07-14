@@ -124,7 +124,6 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
 
     static class ExamViewHolder extends RecyclerView.ViewHolder {
         final Toolbar mToolbar;
-        final View mChip;
         final TextView mLocation;
         final TextView mTime;
         final TextView mCid;
@@ -148,7 +147,6 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
             mCid = itemView.findViewById(R.id.exam_list_item_cid);
             mTime = itemView.findViewById(R.id.exam_list_item_time);
             mLocation = itemView.findViewById(R.id.exam_list_item_location);
-            mChip = itemView.findViewById(R.id.empty_chip_background);
         }
     }
 

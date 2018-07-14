@@ -134,7 +134,6 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
                     authToken = KusssHandler.getInstance().login(mContext, account.name,
                             password);
                 } catch (Exception e) {
-                    e.printStackTrace();
                     authToken = null;
                 }
             }
@@ -170,8 +169,8 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
     public String getAuthTokenLabel(String authTokenType) {
         /*
          * if (AUTHTOKEN_TYPE_FULL_ACCESS.equals(authTokenType)) return
-		 * AUTHTOKEN_TYPE_FULL_ACCESS_LABEL; else
-		 */
+         * AUTHTOKEN_TYPE_FULL_ACCESS_LABEL; else
+         */
         if (AUTHTOKEN_TYPE_READ_ONLY.equals(authTokenType))
             return AUTHTOKEN_TYPE_READ_ONLY_LABEL;
         else
@@ -204,7 +203,8 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
     }
 
     @Override
-    public @NonNull Bundle getAccountRemovalAllowed(
+    public @NonNull
+    Bundle getAccountRemovalAllowed(
             AccountAuthenticatorResponse response, Account account)
             throws NetworkErrorException {
         final Bundle result = super.getAccountRemovalAllowed(response, account);

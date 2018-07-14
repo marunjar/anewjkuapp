@@ -33,9 +33,6 @@
     <string name="grade_unknown">Not rated</string>
     <string name="kusss_provider_name">KUSSS</string>
     <string name="listview_footer_button">Touch to view events after %s</string>
-    <string name="lva_state_ext_all">All courses</string>
-    <string name="lva_state_ext_open">Open courses</string>
-    <string name="lva_state_ext_done">Completed courses</string>
     <string name="map_place_not_found">\'%s\' not found</string>
     <string name="map_search_poi_hint">Enter lecture room here</string>
     <string name="map_search_poi_title">Search</string>

@@ -50,7 +50,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lecho.lib.hellocharts.listener.PieChartOnValueSelectListener;
-import lecho.lib.hellocharts.model.AbstractChartData;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Column;
@@ -169,12 +168,9 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
     }
 
     private void initBarChartDataSet(ComboLineColumnChartData dataSet) {
-        initBaseChartDataSet(dataSet);
     }
 
     private void initPieChartDataSet(PieChartData dataSet) {
-        initBaseChartDataSet(dataSet);
-
         dataSet.setCenterText1Color(mTextColorPrimary);
         dataSet.setCenterText1FontSize(mTextSizePrimary);
         dataSet.setCenterText2Color(mTextColorSecondary);
@@ -182,9 +178,6 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         dataSet.setHasCenterCircle(true);
         dataSet.setHasLabels(true);
         dataSet.setHasLabelsOnlyForSelected(false);
-    }
-
-    private void initBaseChartDataSet(AbstractChartData dataSet) {
     }
 
     private void addSerieToBarChart(List<Column> values, List<AxisValue> axisValues, String category,
@@ -460,7 +453,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         private final LvaState mType;
         private final double mEcts;
 
-        public LvaStatItem(LvaState type, double ects) {
+        LvaStatItem(LvaState type, double ects) {
             this.mType = type;
             this.mEcts = ects;
         }
@@ -469,7 +462,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             return mType;
         }
 
-        public double getEcts() {
+        double getEcts() {
             return mEcts;
         }
     }
@@ -478,7 +471,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         private final AssessmentType mType;
         private final double mAvgGrade;
 
-        public GradeStatItem(AssessmentType type, List<Assessment> grades, boolean isWeighted, boolean positiveOnly) {
+        GradeStatItem(AssessmentType type, List<Assessment> grades, boolean isWeighted, boolean positiveOnly) {
             this.mType = type;
             this.mAvgGrade = AppUtils.getAvgGrade(grades, isWeighted, type, positiveOnly);
         }
@@ -487,7 +480,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             return mType;
         }
 
-        public double getAvgGrade() {
+        double getAvgGrade() {
             return mAvgGrade;
         }
     }

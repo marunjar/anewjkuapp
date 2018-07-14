@@ -105,7 +105,7 @@ public final class CalendarUtils {
     public static final int COLUMN_EVENT_DESCRIPTION = 3;
     public static final int COLUMN_EVENT_DTSTART = 4;
     public static final int COLUMN_EVENT_DTEND = 5;
-    public static final int COLUMN_EVENT_KUSSS_ID = 6;
+    //    public static final int COLUMN_EVENT_KUSSS_ID = 6;
     public static final int COLUMN_EVENT_DIRTY = 7;
     public static final int COLUMN_EVENT_DELETED = 8;
     public static final int COLUMN_EVENT_CAL_ID = 9;
@@ -383,14 +383,6 @@ public final class CalendarUtils {
         return new CalendarList(ids, names, displayNames, accountNames);
     }
 
-    private static boolean isReadable(int accessLevel) {
-        return accessLevel == CalendarContractWrapper.Calendars.CAL_ACCESS_CONTRIBUTOR() ||
-                accessLevel == CalendarContractWrapper.Calendars.CAL_ACCESS_EDITOR() ||
-                accessLevel == CalendarContractWrapper.Calendars.CAL_ACCESS_OWNER() ||
-                accessLevel == CalendarContractWrapper.Calendars.CAL_ACCESS_READ() ||
-                accessLevel == CalendarContractWrapper.Calendars.CAL_ACCESS_ROOT();
-    }
-
     private static boolean isWriteable(int accessLevel) {
         return accessLevel == CalendarContractWrapper.Calendars.CAL_ACCESS_CONTRIBUTOR() ||
                 accessLevel == CalendarContractWrapper.Calendars.CAL_ACCESS_EDITOR() ||
@@ -558,10 +550,6 @@ public final class CalendarUtils {
             this.mAccountNames = accountNames;
         }
 
-        public List<String> getNames() {
-            return mNames;
-        }
-
         public List<String> getDisplayNames() {
             return mDisplayNames;
         }
@@ -570,11 +558,11 @@ public final class CalendarUtils {
             return mAccountNames;
         }
 
-        public List<Integer> getIds() {
+        List<Integer> getIds() {
             return mIds;
         }
 
-        public String getDisplayName(String name) {
+        String getDisplayName(String name) {
             for (int i = 0; i < mNames.size(); i++) {
                 if (mNames.get(i).equals(name)) {
                     return mDisplayNames.get(i);

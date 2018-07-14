@@ -79,7 +79,7 @@ public class ImportPoiTask implements Callable<Void> {
     public static final int COLUMN_POI_NAME = 1;
     public static final int COLUMN_POI_LON = 2;
     public static final int COLUMN_POI_LAT = 3;
-    public static final int COLUMN_POI_DESCR = 4;
+    //    public static final int COLUMN_POI_DESCR = 4;
     private static final int COLUMN_POI_IS_DEFAULT = 5;
 
     public ImportPoiTask(Context context, File file, boolean isDefault) {
@@ -179,11 +179,11 @@ public class ImportPoiTask implements Callable<Void> {
 
                                 batch.add(ContentProviderOperation
                                         .newUpdate(existingUri)
-                                                // PoiContentContract
-                                                // .asEventSyncAdapter(
-                                                // existingUri,
-                                                // mAccount.name,
-                                                // mAccount.type))
+                                        // PoiContentContract
+                                        // .asEventSyncAdapter(
+                                        // existingUri,
+                                        // mAccount.name,
+                                        // mAccount.type))
                                         .withValue(
                                                 PoiContentContract.Poi.COL_ROWID,
                                                 Integer.toString(poiId))
@@ -218,10 +218,10 @@ public class ImportPoiTask implements Callable<Void> {
                     for (Poi poi : poiMap.values()) {
                         batch.add(ContentProviderOperation
                                 .newInsert(poiUri)
-                                        // PoiContentContract
-                                        // .asEventSyncAdapter(poiUri,
-                                        // mAccount.name,
-                                        // mAccount.type))
+                                // PoiContentContract
+                                // .asEventSyncAdapter(poiUri,
+                                // mAccount.name,
+                                // mAccount.type))
                                 .withValues(poi.getContentValues(mIsDefault))
                                 .build());
                         Log.d(TAG, "Scheduling insert: " + poi.getName());

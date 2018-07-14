@@ -100,7 +100,7 @@ public class ImportExamTask implements Callable<Void> {
     public static final int COLUMN_EXAM_TITLE = 9;
 
     public ImportExamTask(Account account, Context context) {
-        this(account, null, null, null, null, context);
+        this(account, null, null, null, context);
         this.mProvider = context.getContentResolver()
                 .acquireContentProviderClient(
                         KusssContentContract.Exam.CONTENT_URI);
@@ -109,7 +109,7 @@ public class ImportExamTask implements Callable<Void> {
         this.mShowProgress = true;
     }
 
-    public ImportExamTask(Account account, Bundle extras, String authority,
+    public ImportExamTask(Account account, Bundle extras,
                           ContentProviderClient provider, SyncResult syncResult,
                           Context context) {
         this.mAccount = account;
@@ -152,7 +152,7 @@ public class ImportExamTask implements Callable<Void> {
 
             if (KusssHandler.getInstance().isAvailable(mContext,
                     AppUtils.getAccountAuthToken(mContext, mAccount),
-                    AppUtils.getAccountName(mContext, mAccount),
+                    AppUtils.getAccountName(mAccount),
                     AppUtils.getAccountPassword(mContext, mAccount))) {
 
                 updateNotify(mContext.getString(R.string.notification_sync_exam_loading));

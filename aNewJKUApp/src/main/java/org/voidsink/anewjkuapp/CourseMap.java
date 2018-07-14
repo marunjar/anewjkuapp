@@ -74,10 +74,6 @@ public class CourseMap {
 
     }
 
-    public Course getExactCourse(Term term, String courseId) {
-        return this.map.get(KusssHelper.getCourseKey(term, courseId));
-    }
-
     public Course getCourse(Term term, String courseId) {
         Course course = this.map.get(KusssHelper.getCourseKey(term, courseId));
         if (course != null) {

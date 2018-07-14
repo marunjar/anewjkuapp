@@ -93,7 +93,7 @@ public class ImportCourseTask implements Callable<Void> {
     public static final int COLUMN_LVA_CODE = 9;
 
     public ImportCourseTask(Account account, Context context) {
-        this(account, null, null, null, null, context);
+        this(account, null, null, null, context);
         this.mProvider = context.getContentResolver()
                 .acquireContentProviderClient(
                         KusssContentContract.Course.CONTENT_URI);
@@ -102,7 +102,7 @@ public class ImportCourseTask implements Callable<Void> {
         this.mShowProgress = true;
     }
 
-    public ImportCourseTask(Account account, Bundle extras, String authority,
+    public ImportCourseTask(Account account, Bundle extras,
                             ContentProviderClient provider, SyncResult syncResult,
                             Context context) {
         this.mAccount = account;
@@ -139,7 +139,7 @@ public class ImportCourseTask implements Callable<Void> {
 
             if (KusssHandler.getInstance().isAvailable(mContext,
                     AppUtils.getAccountAuthToken(mContext, mAccount),
-                    AppUtils.getAccountName(mContext, mAccount),
+                    AppUtils.getAccountName(mAccount),
                     AppUtils.getAccountPassword(mContext, mAccount))) {
 
                 updateNotify(mContext.getString(R.string.notification_sync_lva_loading));

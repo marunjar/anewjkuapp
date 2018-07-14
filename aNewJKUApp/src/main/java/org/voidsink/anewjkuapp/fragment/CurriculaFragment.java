@@ -158,7 +158,7 @@ public class CurriculaFragment extends BaseFragment implements
         if (data != null) {
             Account mAccount = AppUtils.getAccount(getContext());
             if (mAccount != null) {
-                mCurriculum = KusssContentProvider.getCurriculaFromCursor(getContext(), data);
+                mCurriculum = KusssContentProvider.getCurriculaFromCursor(data);
             }
         }
         mAdapter.addAll(mCurriculum);

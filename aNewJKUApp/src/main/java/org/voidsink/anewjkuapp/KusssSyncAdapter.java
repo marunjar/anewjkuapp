@@ -77,7 +77,7 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
 
         if (!KusssHandler.getInstance().isAvailable(getContext(),
                 AppUtils.getAccountAuthToken(getContext(), account),
-                AppUtils.getAccountName(getContext(), account),
+                AppUtils.getAccountName(account),
                 AppUtils.getAccountPassword(getContext(), account))) {
             syncResult.stats.numAuthExceptions++;
             return;
@@ -90,13 +90,13 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
             AppUtils.executeEm(mExecutorService, getContext(),
                     new Callable[]{
                             new ImportCurriculaTask(account, extras,
-                                    authority, provider, syncResult, getContext()),
+                                    provider, syncResult, getContext()),
                             new ImportCourseTask(account, extras,
-                                    authority, provider, syncResult, getContext()),
+                                    provider, syncResult, getContext()),
                             new ImportAssessmentTask(account, extras,
-                                    authority, provider, syncResult, getContext()),
+                                    provider, syncResult, getContext()),
                             new ImportExamTask(account, extras,
-                                    authority, provider, syncResult, getContext())},
+                                    provider, syncResult, getContext())},
                     true);
 
         } finally {

@@ -1,25 +1,26 @@
 /*
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
- * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
- * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
+ *       ____.____  __.____ ___     _____
+ *      |    |    |/ _|    |   \   /  _  \ ______ ______
+ *      |    |      < |    |   /  /  /_\  \\____ \\____ \
+ *  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ *  \________|____|__ \______/   \____|__  /   __/|   __/
+ *                   \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
 
 package org.voidsink.anewjkuapp.provider;
@@ -249,11 +250,11 @@ public class KusssContentProvider extends ContentProvider {
         SQLiteDatabase db = KusssDatabaseHelper.getInstance(getContext()).getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 
-		/*
+        /*
          * Choose the table to query and a sort order based on the code returned
-		 * for the incoming URI. Here, too, only the statements for table 3 are
-		 * shown.
-		 */
+         * for the incoming URI. Here, too, only the statements for table 3 are
+         * shown.
+         */
         switch (sUriMatcher.match(uri)) {
             case CODE_COURSE_ID:
                 builder.setTables(KusssContentContract.Course.TABLE_NAME);
@@ -422,7 +423,7 @@ public class KusssContentProvider extends ContentProvider {
         return courses;
     }
 
-    public static List<Curriculum> getCurriculaFromCursor(Context context, Cursor c) {
+    public static List<Curriculum> getCurriculaFromCursor(Cursor c) {
         List<Curriculum> mCurriculum = new ArrayList<>();
         if (c != null) {
             c.moveToFirst();
@@ -445,7 +446,7 @@ public class KusssContentProvider extends ContentProvider {
                     KusssContentContract.Curricula.COL_DT_START + " DESC");
 
             if (c != null) {
-                mCurriculum = getCurriculaFromCursor(context, c);
+                mCurriculum = getCurriculaFromCursor(c);
                 c.close();
             }
         }

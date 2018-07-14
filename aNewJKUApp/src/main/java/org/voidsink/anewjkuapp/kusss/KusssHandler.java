@@ -256,7 +256,7 @@ public class KusssHandler {
             mCookies.getCookieStore().removeAll();
         }
         try {
-            Connection.Response r = Jsoup.connect(URL_LOGOUT).userAgent(getUserAgent()).cookies(getCookieMap()).method(Connection.Method.GET).execute();
+            Jsoup.connect(URL_LOGOUT).userAgent(getUserAgent()).cookies(getCookieMap()).method(Connection.Method.GET).execute();
 
             if (!isLoggedIn(c, (String) null)) {
                 mCookies.getCookieStore().removeAll();

@@ -105,7 +105,7 @@ public class ImportCalendarTask implements Callable<Void> {
 
     public ImportCalendarTask(Account account, Context context,
                               String getTypeID, CalendarBuilder calendarBuilder) {
-        this(account, null, null, null,
+        this(account, null, null,
                 new SyncResult(), context, getTypeID, calendarBuilder);
 
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
@@ -117,7 +117,7 @@ public class ImportCalendarTask implements Callable<Void> {
         this.mShowProgress = true;
     }
 
-    public ImportCalendarTask(Account account, Bundle extras, String authority,
+    public ImportCalendarTask(Account account, Bundle extras,
                               ContentProviderClient provider, SyncResult syncResult,
                               Context context, String calendarName,
                               CalendarBuilder calendarBuilder) {
@@ -188,7 +188,7 @@ public class ImportCalendarTask implements Callable<Void> {
 
             if (KusssHandler.getInstance().isAvailable(mContext,
                     AppUtils.getAccountAuthToken(mContext, mAccount),
-                    AppUtils.getAccountName(mContext, mAccount),
+                    AppUtils.getAccountName(mAccount),
                     AppUtils.getAccountPassword(mContext, mAccount))) {
 
                 updateNotify(mContext.getString(R.string.notification_sync_calendar_loading, CalendarUtils.getCalendarName(mContext, this.mCalendarName)));

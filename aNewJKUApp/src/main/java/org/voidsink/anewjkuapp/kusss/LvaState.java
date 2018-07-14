@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -38,19 +38,6 @@ public enum LvaState {
                 return R.string.lva_state_done;
             case ALL:
                 return R.string.lva_state_all;
-            default:
-                return R.string.lva_state_unknown;
-        }
-    }
-
-    public int getStringResIDExt() {
-        switch (this) {
-            case OPEN:
-                return R.string.lva_state_ext_open;
-            case DONE:
-                return R.string.lva_state_ext_done;
-            case ALL:
-                return R.string.lva_state_ext_all;
             default:
                 return R.string.lva_state_unknown;
         }

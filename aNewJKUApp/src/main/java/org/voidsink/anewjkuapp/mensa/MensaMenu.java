@@ -53,8 +53,7 @@ public class MensaMenu implements IMenu {
             if (this.priceBig < this.price) {
                 this.priceBig = this.price + this.oehBonus;
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (JSONException ignored) {
         }
     }
 

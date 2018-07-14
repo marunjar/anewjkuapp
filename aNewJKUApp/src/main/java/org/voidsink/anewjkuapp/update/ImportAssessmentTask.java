@@ -100,7 +100,7 @@ public class ImportAssessmentTask implements Callable<Void> {
     public static final int COLUMN_ASSESSMENT_LVATYPE = 11;
 
     public ImportAssessmentTask(Account account, Context context) {
-        this(account, null, null, null, null, context);
+        this(account, null, null, null, context);
         this.mProvider = context.getContentResolver()
                 .acquireContentProviderClient(
                         KusssContentContract.Exam.CONTENT_URI);
@@ -109,7 +109,7 @@ public class ImportAssessmentTask implements Callable<Void> {
         this.mShowProgress = true;
     }
 
-    public ImportAssessmentTask(Account account, Bundle extras, String authority,
+    public ImportAssessmentTask(Account account, Bundle extras,
                                 ContentProviderClient provider, SyncResult syncResult,
                                 Context context) {
         this.mAccount = account;
@@ -146,7 +146,7 @@ public class ImportAssessmentTask implements Callable<Void> {
 
             if (KusssHandler.getInstance().isAvailable(mContext,
                     AppUtils.getAccountAuthToken(mContext, mAccount),
-                    AppUtils.getAccountName(mContext, mAccount),
+                    AppUtils.getAccountName(mAccount),
                     AppUtils.getAccountPassword(mContext, mAccount))) {
 
                 updateNotify(mContext.getString(R.string.notification_sync_assessment_loading));

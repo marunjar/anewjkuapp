@@ -465,11 +465,4 @@ public class MainActivity extends ThemedActivity {
 
         Analytics.clearScreen(this);
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        //startCreateAccount();
-    }
 }

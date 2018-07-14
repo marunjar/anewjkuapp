@@ -107,15 +107,6 @@ public abstract class SlidingTabsFragment extends BaseFragment {
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
-    public void notifyDataSetChanged() {
-        if (mViewPager != null) {
-//        Log.i(LOG_TAG, "notifyDataSetChanged");
-            if (mViewPager.getAdapter() != null) {
-                mViewPager.getAdapter().notifyDataSetChanged();
-            }
-        }
-    }
-
     /**
      * The {@link android.support.v4.app.FragmentPagerAdapter} used to display pages in this sample. The individual pages
      * are instances of {@link Fragment}. Each page is
