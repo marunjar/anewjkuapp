@@ -67,7 +67,7 @@ import org.mapsforge.map.layer.cache.TileCache;
 import org.mapsforge.map.layer.labels.LabelLayer;
 import org.mapsforge.map.layer.overlay.Marker;
 import org.mapsforge.map.layer.renderer.TileRendererLayer;
-import org.mapsforge.map.model.MapViewPosition;
+import org.mapsforge.map.model.IMapViewPosition;
 import org.mapsforge.map.reader.MapFile;
 import org.mapsforge.map.rendertheme.InternalRenderTheme;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
@@ -450,7 +450,7 @@ public class MapFragment extends BaseFragment implements
                     this.mapView.getModel().frameBufferModel.getOverdrawFactor());
 
             final Layers layers = this.mapView.getLayerManager().getLayers();
-            final MapViewPosition mapViewPosition = this.mapView.getModel().mapViewPosition;
+            final IMapViewPosition mapViewPosition = this.mapView.getModel().mapViewPosition;
 
             initializePosition(mapViewPosition);
 
@@ -480,7 +480,7 @@ public class MapFragment extends BaseFragment implements
         this.mMyLocationOverlay = null;
         if (EasyPermissions.hasPermissions(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)) {
             final Layers layers = this.mapView.getLayerManager().getLayers();
-            final MapViewPosition mapViewPosition = this.mapView.getModel().mapViewPosition;
+            final IMapViewPosition mapViewPosition = this.mapView.getModel().mapViewPosition;
 
             // overlay with a marker to show the actual position
             Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_marker_own_position);
@@ -528,7 +528,7 @@ public class MapFragment extends BaseFragment implements
     }
 
     private TileRendererLayer createTileRendererLayer(TileCache tileCache,
-                                                      MapViewPosition mapViewPosition, File mapFile,
+                                                      IMapViewPosition mapViewPosition, File mapFile,
                                                       XmlRenderTheme renderTheme) {
         MapDataStore mapDataStore = new MapFile(mapFile);
 
@@ -539,7 +539,7 @@ public class MapFragment extends BaseFragment implements
         return tileRendererLayer;
     }
 
-    private MapViewPosition initializePosition(MapViewPosition mvp) {
+    private IMapViewPosition initializePosition(IMapViewPosition mvp) {
         LatLong center = mvp.getCenter();
 
         if (center.equals(new LatLong(0, 0))) {

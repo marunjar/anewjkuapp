@@ -34,7 +34,7 @@ import android.view.MenuItem;
 
 import org.mapsforge.core.graphics.Bitmap;
 import org.mapsforge.core.graphics.Paint;
-import org.mapsforge.map.model.MapViewPosition;
+import org.mapsforge.map.model.IMapViewPosition;
 import org.voidsink.anewjkuapp.base.MyLocationOverlay;
 
 public class LocationOverlay extends MyLocationOverlay {
@@ -42,13 +42,13 @@ public class LocationOverlay extends MyLocationOverlay {
     private final Context mContext;
     private MenuItem snapToLocationItem;
 
-    public LocationOverlay(Activity activity, MapViewPosition mapViewPosition,
+    public LocationOverlay(Activity activity, IMapViewPosition mapViewPosition,
                            Bitmap bitmap) {
         super(activity, mapViewPosition, bitmap);
         this.mContext = activity;
     }
 
-    public LocationOverlay(Activity activity, MapViewPosition mapViewPosition,
+    public LocationOverlay(Activity activity, IMapViewPosition mapViewPosition,
                            Bitmap bitmap, Paint circleFill, Paint circleStroke) {
         super(activity, mapViewPosition, bitmap, circleFill, circleStroke);
         this.mContext = activity;

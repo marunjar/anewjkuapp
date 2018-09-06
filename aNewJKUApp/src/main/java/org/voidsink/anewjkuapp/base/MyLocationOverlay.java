@@ -39,7 +39,7 @@ import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.mapsforge.map.layer.Layer;
 import org.mapsforge.map.layer.overlay.Circle;
 import org.mapsforge.map.layer.overlay.Marker;
-import org.mapsforge.map.model.MapViewPosition;
+import org.mapsforge.map.model.IMapViewPosition;
 
 /**
  * A thread-safe {@link Layer} implementation to display the current location. NOTE: This code really does not reflect
@@ -82,7 +82,7 @@ public class MyLocationOverlay extends Layer implements LocationListener {
     private final Circle circle;
     private Location lastLocation;
     private final LocationManager locationManager;
-    private final MapViewPosition mapViewPosition;
+    private final IMapViewPosition mapViewPosition;
     private final Marker marker;
     private boolean myLocationEnabled;
     private boolean snapToLocationEnabled;
@@ -94,7 +94,7 @@ public class MyLocationOverlay extends Layer implements LocationListener {
      * @param mapViewPosition the {@code MapViewPosition} whose location will be updated.
      * @param bitmap          a bitmap to display at the current location (might be null).
      */
-    public MyLocationOverlay(Activity activity, MapViewPosition mapViewPosition, Bitmap bitmap) {
+    public MyLocationOverlay(Activity activity, IMapViewPosition mapViewPosition, Bitmap bitmap) {
         this(activity, mapViewPosition, bitmap, getDefaultCircleFill(), getDefaultCircleStroke());
     }
 
@@ -107,7 +107,7 @@ public class MyLocationOverlay extends Layer implements LocationListener {
      * @param circleFill      the {@code Paint} used to fill the circle that represents the accuracy of the current location (might be null).
      * @param circleStroke    the {@code Paint} used to stroke the circle that represents the accuracy of the current location (might be null).
      */
-    public MyLocationOverlay(Activity activity, MapViewPosition mapViewPosition, Bitmap bitmap, Paint circleFill,
+    public MyLocationOverlay(Activity activity, IMapViewPosition mapViewPosition, Bitmap bitmap, Paint circleFill,
                              Paint circleStroke) {
         super();
         this.activity = activity;
