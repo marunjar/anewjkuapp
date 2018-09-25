@@ -26,9 +26,6 @@
 package org.voidsink.anewjkuapp;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +39,10 @@ import org.voidsink.sectionedrecycleradapter.SectionedAdapter;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamListAdapter.ExamViewHolder> implements SectionedAdapter<ExamListAdapter.DateHeaderHolder> {
 

@@ -26,7 +26,6 @@
 package org.voidsink.anewjkuapp.kusss;
 
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.text.ParseException;
@@ -36,6 +35,8 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import androidx.annotation.NonNull;
 
 public class Term implements Comparable<Term> {
 

@@ -27,11 +27,12 @@ package org.voidsink.anewjkuapp.base;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.v7.preference.DialogPreference;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
 
 import java.util.Date;
+
+import androidx.preference.DialogPreference;
 
 public class TimePreference extends DialogPreference {
 

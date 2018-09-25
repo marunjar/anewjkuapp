@@ -34,10 +34,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.voidsink.anewjkuapp.PoiContentContract;
+
+import androidx.annotation.NonNull;
 
 public class PoiContentProvider extends ContentProvider {
 
@@ -137,11 +138,11 @@ public class PoiContentProvider extends ContentProvider {
 
         builder.setTables(PoiContentContract.Poi.TABLE_NAME);
 
-		/*
+        /*
          * Choose the table to query and a sort order based on the code returned
-		 * for the incoming URI. Here, too, only the statements for table 3 are
-		 * shown.
-		 */
+         * for the incoming URI. Here, too, only the statements for table 3 are
+         * shown.
+         */
         switch (sUriMatcher.match(uri)) {
             case CODE_POI_ID:
                 builder.appendWhere(PoiContentContract.Poi.COL_ROWID + "="

@@ -27,7 +27,6 @@ package org.voidsink.anewjkuapp.mensa;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v7.preference.PreferenceManager;
 import android.text.format.DateUtils;
 import android.util.Log;
 
@@ -41,6 +40,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.regex.Pattern;
+
+import androidx.preference.PreferenceManager;
 
 public abstract class MensenMenuLoader implements MenuLoader {
 

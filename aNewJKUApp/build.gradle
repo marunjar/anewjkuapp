@@ -97,10 +97,10 @@ android {
 }
 
 dependencies {
-    implementation "com.android.support:preference-v14:${rootProject.ext.supportLibVersion}"
-    implementation "com.android.support:design:${rootProject.ext.supportLibVersion}"
-    implementation "com.android.support:cardview-v7:${rootProject.ext.supportLibVersion}"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation "androidx.legacy:legacy-preference-v14:${rootProject.ext.androidXVersion}"
+    implementation "com.google.android.material:material:${rootProject.ext.androidXVersion}"
+    implementation "androidx.cardview:cardview:${rootProject.ext.androidXVersion}"
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     googleImplementation 'com.google.android.gms:play-services-analytics:16.0.3'
     implementation 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
     implementation 'org.mapsforge:mapsforge-core:0.10.0'

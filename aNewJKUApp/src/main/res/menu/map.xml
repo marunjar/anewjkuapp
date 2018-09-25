@@ -9,7 +9,7 @@
         android:queryHint="@string/map_search_poi_hint"
         android:searchSuggestAuthority="@string/config_poi_provider"
         android:title="@string/map_search_poi_title"
-        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
     <item
         android:id="@+id/action_snap_to_location"

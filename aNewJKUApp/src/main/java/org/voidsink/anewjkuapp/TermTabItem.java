@@ -26,13 +26,14 @@
 package org.voidsink.anewjkuapp;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 
 import org.voidsink.anewjkuapp.base.SlidingTabItem;
 import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.List;
+
+import androidx.fragment.app.Fragment;
 
 public class TermTabItem extends SlidingTabItem {
 

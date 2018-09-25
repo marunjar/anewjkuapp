@@ -27,7 +27,6 @@ package org.voidsink.anewjkuapp.mensa;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -42,6 +41,8 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Locale;
+
+import androidx.preference.PreferenceManager;
 
 public class KHGMenuLoader implements MenuLoader {
 

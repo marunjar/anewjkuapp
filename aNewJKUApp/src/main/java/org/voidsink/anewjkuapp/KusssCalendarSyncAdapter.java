@@ -34,7 +34,6 @@ import android.content.SyncResult;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Looper;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
@@ -48,6 +47,8 @@ import org.voidsink.anewjkuapp.utils.AppUtils;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import androidx.core.content.ContextCompat;
 
 public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 
