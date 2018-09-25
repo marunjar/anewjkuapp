@@ -321,7 +321,7 @@ public class KusssHandler {
 
         if (TextUtils.isEmpty(encoding)) {
             String contentType = conn.getContentType();
-            String[] values = contentType.split(";");
+            String[] values = contentType.split(";", -1);
 
             for (String value : values) {
                 value = value.trim();

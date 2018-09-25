@@ -134,7 +134,7 @@ public class Assessment {
 
             try {
                 String[] ectsSws = columns.get(5).text().replace(",", ".")
-                        .split("/");
+                        .split("/", -1);
                 if (ectsSws.length == 2) {
                     setEcts(Double.parseDouble(ectsSws[0]));
                     setSws(Double.parseDouble(ectsSws[1]));
