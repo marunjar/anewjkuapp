@@ -4,16 +4,15 @@ buildscript {
     repositories {
         google()
         jcenter()
-        maven {
-            // for gradle-errorprone-plugin
-            url "https://plugins.gradle.org/m2/"
-        }
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.0'
-        classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.16'
     }
+}
+
+plugins {
+    id "net.ltgt.errorprone" version "0.6"
 }
 
 ext {
@@ -27,10 +26,7 @@ ext {
 
 allprojects {
     repositories {
+        google()
         jcenter()
-        maven {
-            url "https://maven.google.com"
-        }
-        mavenCentral()
     }
 }

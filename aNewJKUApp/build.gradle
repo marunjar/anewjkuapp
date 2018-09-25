@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: "net.ltgt.errorprone"
 
 android {
     signingConfigs {
@@ -97,6 +98,7 @@ android {
 }
 
 dependencies {
+    errorproneJavac "com.google.errorprone:error_prone_core:${rootProject.ext.errorProneVersion}"
     implementation "androidx.legacy:legacy-preference-v14:${rootProject.ext.androidXVersion}"
     implementation "com.google.android.material:material:${rootProject.ext.androidXVersion}"
     implementation "androidx.cardview:cardview:${rootProject.ext.androidXVersion}"
@@ -123,11 +125,7 @@ dependencies {
     //implementation project(':kussslibrary')
 }
 
-apply plugin: "net.ltgt.errorprone"
 
-configurations.errorprone {
-    resolutionStrategy.force "com.google.errorprone:error_prone_core:${rootProject.ext.errorProneVersion}"
-}
 configurations {
     all*.exclude module: 'commons-logging'
 }
