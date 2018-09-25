@@ -242,7 +242,7 @@ public class Exam {
     }
 
     private void initTimeLocation(Context c, String timeLocation) {
-        String[] splitted = timeLocation.split("\\/");
+        String[] splitted = timeLocation.split("\\/", -1);
 
         String location = "";
 
