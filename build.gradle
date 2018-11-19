@@ -21,7 +21,7 @@ ext {
     androidXVersion = "1.0.0"
     targetSdkVersion = 28
     minSdkVersion = 16
-    errorProneVersion = "2.3.1"
+    errorProneVersion = "2.3.2"
 }
 
 allprojects {
