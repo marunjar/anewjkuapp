@@ -62,10 +62,6 @@ public class WeekView extends View {
         NONE, LEFT, RIGHT, VERTICAL
     }
 
-    @Deprecated
-    public static final int LENGTH_SHORT = 1;
-    @Deprecated
-    public static final int LENGTH_LONG = 2;
     private final Context mContext;
     private Calendar mHomeDate;
     private Calendar mMinDate;
@@ -93,7 +89,6 @@ public class WeekView extends View {
     private Paint mNowLinePaint;
     private Paint mTodayHeaderTextPaint;
     private Paint mEventBackgroundPaint;
-    private Paint mNewEventBackgroundPaint;
     private float mHeaderColumnWidth;
     private List<EventRect> mEventRects;
     private TextPaint mEventTextPaint;
@@ -148,8 +143,6 @@ public class WeekView extends View {
 
     private boolean mIsFirstDraw = true;
     private boolean mAreDimensionsInvalid = true;
-    @Deprecated
-    private int mDayNameLength = LENGTH_LONG;
     private int mOverlappingEventGap = 0;
     private int mEventMarginVertical = 0;
     private float mXScrollingSpeed = 1f;
@@ -446,7 +439,6 @@ public class WeekView extends View {
             mNewEventTimeResolutionInMinutes = a.getInt(R.styleable.WeekView_newEventTimeResolutionInMinutes, mNewEventTimeResolutionInMinutes);
             mEventPadding = a.getDimensionPixelSize(R.styleable.WeekView_eventPadding, mEventPadding);
             mHeaderColumnBackgroundColor = a.getColor(R.styleable.WeekView_headerColumnBackground, mHeaderColumnBackgroundColor);
-            mDayNameLength = a.getInteger(R.styleable.WeekView_dayNameLength, mDayNameLength);
             mOverlappingEventGap = a.getDimensionPixelSize(R.styleable.WeekView_overlappingEventGap, mOverlappingEventGap);
             mEventMarginVertical = a.getDimensionPixelSize(R.styleable.WeekView_eventMarginVertical, mEventMarginVertical);
             mXScrollingSpeed = a.getFloat(R.styleable.WeekView_xScrollingSpeed, mXScrollingSpeed);
@@ -546,9 +538,6 @@ public class WeekView extends View {
         // Prepare event background color.
         mEventBackgroundPaint = new Paint();
         mEventBackgroundPaint.setColor(Color.rgb(174, 208, 238));
-        // Prepare empty event background color.
-        mNewEventBackgroundPaint = new Paint();
-        mNewEventBackgroundPaint.setColor(Color.rgb(60, 147, 217));
 
         // Prepare header column background color.
         mHeaderColumnBackgroundPaint = new Paint();
@@ -1569,10 +1558,10 @@ public class WeekView extends View {
                     try {
                         Locale locale = getContext().getResources().getConfiguration().locale;
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                            SimpleDateFormat sdf = mDayNameLength == LENGTH_SHORT ? new SimpleDateFormat(DateFormat.getBestDateTimePattern(locale, "EEEEE M dd"), locale) : new SimpleDateFormat(DateFormat.getBestDateTimePattern(locale, "EEE M dd"), locale);
+                            SimpleDateFormat sdf = new SimpleDateFormat(DateFormat.getBestDateTimePattern(locale, "EEE M dd"), locale);
                             return sdf.format(date.getTime()).toUpperCase();
                         } else {
-                            SimpleDateFormat sdf = mDayNameLength == LENGTH_SHORT ? new SimpleDateFormat("EEEEE M/dd", locale) : new SimpleDateFormat("EEE M/dd", locale);
+                            SimpleDateFormat sdf = new SimpleDateFormat("EEE M/dd", locale);
                             return sdf.format(date.getTime()).toUpperCase();
                         }
                     } catch (Exception e) {
@@ -1895,35 +1884,6 @@ public class WeekView extends View {
 
     public void setNewEventTimeResolutionInMinutes(int newEventTimeResolutionInMinutes) {
         this.mNewEventTimeResolutionInMinutes = newEventTimeResolutionInMinutes;
-    }
-
-    /**
-     * <b>Note:</b> Use {@link #setDateTimeInterpreter(DateTimeInterpreter)} and
-     * {@link #getDateTimeInterpreter()} instead.
-     *
-     * @return Either long or short day name is being used.
-     */
-    @Deprecated
-    public int getDayNameLength() {
-        return mDayNameLength;
-    }
-
-    /**
-     * Set the length of the day name displayed in the header row. Example of short day names is
-     * 'M' for 'Monday' and example of long day names is 'Mon' for 'Monday'.
-     * <p>
-     * <b>Note:</b> Use {@link #setDateTimeInterpreter(DateTimeInterpreter)} instead.
-     * </p>
-     *
-     * @param length Supported values are {@link com.alamkanak.weekview.WeekView#LENGTH_SHORT} and
-     *               {@link com.alamkanak.weekview.WeekView#LENGTH_LONG}.
-     */
-    @Deprecated
-    public void setDayNameLength(int length) {
-        if (length != LENGTH_LONG && length != LENGTH_SHORT) {
-            throw new IllegalArgumentException("length parameter must be either LENGTH_LONG or LENGTH_SHORT");
-        }
-        this.mDayNameLength = length;
     }
 
     public int getOverlappingEventGap() {
