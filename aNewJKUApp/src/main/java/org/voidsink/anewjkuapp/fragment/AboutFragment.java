@@ -60,7 +60,7 @@ public class AboutFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_about, container, false);
 
-        (view.findViewById(R.id.about_libraries))
+        view.findViewById(R.id.about_libraries)
                 .setOnClickListener(v -> new LibsBuilder()
                         .withFields(R.string.class.getFields()) // pass the fields of your application to the lib so it can find all external lib information
                         .withLibraries("jsoup")
@@ -75,7 +75,7 @@ public class AboutFragment extends BaseFragment {
                         .withAboutVersionShown(true)
                         .start(getActivity()));
 
-        (view.findViewById(R.id.about_changelog))
+        view.findViewById(R.id.about_changelog)
                 .setOnClickListener(v -> new ChangeLog(getActivity()).getFullLogDialog().show());
 
         return view;

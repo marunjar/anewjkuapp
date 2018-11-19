@@ -171,7 +171,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public static int toInt(boolean bool) {
-        return (bool) ? 1 : 0;
+        return bool ? 1 : 0;
     }
 
     public static void dropUserData(Context context) {

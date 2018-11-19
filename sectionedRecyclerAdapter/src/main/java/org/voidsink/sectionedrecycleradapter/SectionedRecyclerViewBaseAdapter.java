@@ -87,7 +87,7 @@ public abstract class SectionedRecyclerViewBaseAdapter extends RecyclerView.Adap
             layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
-                    return (isSectionHeaderPosition(position)) ? layoutManager.getSpanCount() : 1;
+                    return isSectionHeaderPosition(position) ? layoutManager.getSpanCount() : 1;
                 }
             });
         }

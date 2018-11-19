@@ -208,7 +208,7 @@ public class MainActivity extends ThemedActivity {
 
     @AfterPermissionGranted(PERMISSIONS_REQUEST_ACCOUNT)
     private void startCreateAccount() {
-        if (((android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) || (EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS))) {
+        if ((android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) || EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS)) {
             if (AppUtils.getAccount(this) == null) {
                 if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                     this.startActivity(new Intent(Settings.ACTION_ADD_ACCOUNT)
@@ -385,7 +385,7 @@ public class MainActivity extends ThemedActivity {
                 b.putInt(Consts.ARG_FRAGMENT_ID, menuItem.getItemId());
                 f.setArguments(b);
 
-                final boolean addToBackstack = (oldFragment != null) && (!oldFragment.getClass().equals(f.getClass()));
+                final boolean addToBackstack = (oldFragment != null) && !oldFragment.getClass().equals(f.getClass());
 
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.container, f, Consts.ARG_FRAGMENT_TAG);

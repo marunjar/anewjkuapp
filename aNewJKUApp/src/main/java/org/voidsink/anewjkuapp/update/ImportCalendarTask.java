@@ -30,7 +30,6 @@ import android.accounts.Account;
 import android.app.SearchManager;
 import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
-import android.content.ContentProviderOperation.Builder;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -369,10 +368,10 @@ public class ImportCalendarTask implements Callable<Void> {
                                                 // check to see if the entry needs to be updated
                                                 ((match.getStartDate().getDate().getTime() != eventDTStart) ||
                                                         (match.getEndDate().getDate().getTime() != eventDTEnd) ||
-                                                        (!match.getSummary().getValue().trim().equals(eventTitle.trim())) ||
-                                                        (!match.getSummary().getValue().trim().equals(eventTitle.trim())) ||
-                                                        (!match.getLocation().getValue().trim().equals(eventLocation.trim())) ||
-                                                        (!match.getDescription().getValue().trim().equals(eventDescription.trim()))
+                                                        !match.getSummary().getValue().trim().equals(eventTitle.trim()) ||
+                                                        !match.getSummary().getValue().trim().equals(eventTitle.trim()) ||
+                                                        !match.getLocation().getValue().trim().equals(eventLocation.trim()) ||
+                                                        !match.getDescription().getValue().trim().equals(eventDescription.trim())
                                                 )) {
                                             Uri existingUri = calUri.buildUpon()
                                                     .appendPath(eventId).build();
@@ -441,7 +440,7 @@ public class ImportCalendarTask implements Callable<Void> {
                                         mNotification.addInsert(getEventString(mContext, v));
                                     }
 
-                                    Builder builder = ContentProviderOperation
+                                    ContentProviderOperation.Builder builder = ContentProviderOperation
                                             .newInsert(CalendarContractWrapper.Events.CONTENT_URI());
 
                                     builder.withValue(
