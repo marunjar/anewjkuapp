@@ -28,7 +28,7 @@ configurations {
 
 dependencies {
     errorproneJavac "com.google.errorprone:error_prone_core:${rootProject.ext.errorProneVersion}"
-    implementation "androidx.legacy:legacy-support-core-ui:${rootProject.ext.androidXVersion}"
+    implementation "androidx.legacy:legacy-support-core-ui:1.0.0"
 }
 
 //apply from: 'gradle-mvn-push.gradle'
