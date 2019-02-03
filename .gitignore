@@ -1,6 +1,10 @@
 # Open Street Map
 *.osm
 
+# output.json
+aNewJKUApp/*/*/output.json
+
+
 #################
 ## IntelliJ
 #################

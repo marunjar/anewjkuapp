@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -274,19 +274,18 @@ public final class CalendarUtils {
 
         ContentResolver cr = context.getContentResolver();
         // todo: add selection
-        Cursor c = cr.query(CalendarContractWrapper.Calendars.CONTENT_URI(),
-                CALENDAR_PROJECTION, null, null, null);
-        if (c != null) {
-            while (c.moveToNext()) {
-                if (account.name.equals(c.getString(COLUMN_CAL_ACCOUNT_NAME))
-                        && account.type.equals(c.getString(COLUMN_CAL_ACCOUNT_TYPE))) {
-                    ids.put(c.getString(COLUMN_CAL_NAME),
-                            c.getString(COLUMN_CAL_ID));
+        try (Cursor c = cr.query(CalendarContractWrapper.Calendars.CONTENT_URI(),
+                CALENDAR_PROJECTION, null, null, null)) {
+            if (c != null) {
+                while (c.moveToNext()) {
+                    if (account.name.equals(c.getString(COLUMN_CAL_ACCOUNT_NAME))
+                            && account.type.equals(c.getString(COLUMN_CAL_ACCOUNT_TYPE))) {
+                        ids.put(c.getString(COLUMN_CAL_NAME),
+                                c.getString(COLUMN_CAL_ID));
+                    }
                 }
             }
-            c.close();
         }
-
         return ids;
     }
 
@@ -356,10 +355,8 @@ public final class CalendarUtils {
         List<String> accountNames = new ArrayList<>();
         ContentResolver cr = context.getContentResolver();
 
-        Cursor c = null;
-        try {
-            c = cr.query(CalendarContractWrapper.Calendars.CONTENT_URI(),
-                    CALENDAR_PROJECTION, null, null, null);
+        try (Cursor c = cr.query(CalendarContractWrapper.Calendars.CONTENT_URI(),
+                CALENDAR_PROJECTION, null, null, null)) {
             if (c != null) {
                 while (c.moveToNext()) {
                     if (!onlyWritable || CalendarUtils.isWriteable(c.getInt(COLUMN_CAL_ACCESS_LEVEL))) {
@@ -377,8 +374,6 @@ public final class CalendarUtils {
             }
         } catch (Exception e) {
             Analytics.sendException(context, e, false);
-        } finally {
-            if (c != null) c.close();
         }
 
         return new CalendarList(ids, names, displayNames, accountNames);
@@ -448,18 +443,17 @@ public final class CalendarUtils {
                                 String eventKusssId = null;
 
                                 // get kusssId from extended properties
-                                Cursor c2 = provider.query(CalendarContract.ExtendedProperties.CONTENT_URI, CalendarUtils.EXTENDED_PROPERTIES_PROJECTION,
+                                try (Cursor c2 = provider.query(CalendarContract.ExtendedProperties.CONTENT_URI, CalendarUtils.EXTENDED_PROPERTIES_PROJECTION,
                                         CalendarContract.ExtendedProperties.EVENT_ID + " = ?",
                                         new String[]{eventId},
-                                        null);
-
-                                if (c2 != null) {
-                                    while (c2.moveToNext()) {
-                                        if (c2.getString(1).contains(EXTENDED_PROPERTY_NAME_KUSSS_ID)) {
-                                            eventKusssId = c2.getString(2);
+                                        null)) {
+                                    if (c2 != null) {
+                                        while (c2.moveToNext()) {
+                                            if (c2.getString(1).contains(EXTENDED_PROPERTY_NAME_KUSSS_ID)) {
+                                                eventKusssId = c2.getString(2);
+                                            }
                                         }
                                     }
-                                    c2.close();
                                 }
 
                                 if (TextUtils.isEmpty(eventKusssId)) {

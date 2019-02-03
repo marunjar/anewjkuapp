@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -191,16 +191,16 @@ public class MapFragment extends BaseFragment implements
         Uri searchUri = PoiContentContract.CONTENT_URI.buildUpon()
                 .appendPath(SearchManager.SUGGEST_URI_PATH_QUERY)
                 .appendPath(query).build();
-        Cursor c = cr.query(searchUri, ImportPoiTask.POI_PROJECTION, null,
-                null, null);
-        if (c != null) {
-            while (c.moveToNext()) {
-                Poi p = new Poi(c);
-                if (!isExactLocation || p.getName().equalsIgnoreCase(query)) {
-                    pois.add(p);
+        try (Cursor c = cr.query(searchUri, ImportPoiTask.POI_PROJECTION, null,
+                null, null)) {
+            if (c != null) {
+                while (c.moveToNext()) {
+                    Poi p = new Poi(c);
+                    if (!isExactLocation || p.getName().equalsIgnoreCase(query)) {
+                        pois.add(p);
+                    }
                 }
             }
-            c.close();
         }
 
         switch (pois.size()) {
@@ -246,17 +246,17 @@ public class MapFragment extends BaseFragment implements
         // jump to point with given Uri
         ContentResolver cr = getActivity().getContentResolver();
 
-        Cursor c = cr
-                .query(uri, ImportPoiTask.POI_PROJECTION, null, null, null);
-        if (c != null) {
-            if (c.moveToNext()) {
-                String name = c.getString(ImportPoiTask.COLUMN_POI_NAME);
-                double lon = c.getDouble(ImportPoiTask.COLUMN_POI_LON);
-                double lat = c.getDouble(ImportPoiTask.COLUMN_POI_LAT);
+        try (Cursor c = cr
+                .query(uri, ImportPoiTask.POI_PROJECTION, null, null, null)) {
+            if (c != null) {
+                if (c.moveToNext()) {
+                    String name = c.getString(ImportPoiTask.COLUMN_POI_NAME);
+                    double lon = c.getDouble(ImportPoiTask.COLUMN_POI_LON);
+                    double lat = c.getDouble(ImportPoiTask.COLUMN_POI_LAT);
 
-                setNewGoal(new MyMarker(lat, lon, name));
+                    setNewGoal(new MyMarker(lat, lon, name));
+                }
             }
-            c.close();
         }
 
         if (mSearchView != null) {

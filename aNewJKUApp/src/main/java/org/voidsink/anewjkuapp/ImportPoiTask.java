@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -148,103 +148,102 @@ public class ImportPoiTask implements Callable<Void> {
                 ArrayList<ContentProviderOperation> batch = new ArrayList<>();
 
                 Uri poiUri = PoiContentContract.Poi.CONTENT_URI;
-                Cursor c = mProvider.query(poiUri, POI_PROJECTION, null, null,
-                        null);
 
-                if (c != null) {
-                    Log.d(TAG, "Found " + c.getCount()
-                            + " local entries. Computing merge solution...");
+                try (Cursor c = mProvider.query(poiUri, POI_PROJECTION, null, null,
+                        null)) {
 
-                    int poiId;
-                    String poiName;
-                    boolean poiIsDefault;
+                    if (c != null) {
+                        Log.d(TAG, "Found " + c.getCount()
+                                + " local entries. Computing merge solution...");
 
-                    // TODO
-                    while (c.moveToNext()) {
-                        poiId = c.getInt(COLUMN_POI_ID);
-                        poiName = c.getString(COLUMN_POI_NAME);
-                        poiIsDefault = KusssDatabaseHelper.toBool(c
-                                .getInt(COLUMN_POI_IS_DEFAULT));
+                        int poiId;
+                        String poiName;
+                        boolean poiIsDefault;
 
-                        Poi poi = poiMap.get(poiName);
-                        if (poi != null) {
-                            poiMap.remove(poiName);
+                        // TODO
+                        while (c.moveToNext()) {
+                            poiId = c.getInt(COLUMN_POI_ID);
+                            poiName = c.getString(COLUMN_POI_NAME);
+                            poiIsDefault = KusssDatabaseHelper.toBool(c
+                                    .getInt(COLUMN_POI_IS_DEFAULT));
 
-                            if (mIsDefault || !poiIsDefault) {
-                                // Check to see if the entry needs to be updated
-                                Uri existingUri = poiUri.buildUpon()
-                                        .appendPath(Integer.toString(poiId))
-                                        .build();
-                                Log.d(TAG, String.format("Scheduling update: %s (%s)", poiName, existingUri));
+                            Poi poi = poiMap.get(poiName);
+                            if (poi != null) {
+                                poiMap.remove(poiName);
 
-                                batch.add(ContentProviderOperation
-                                        .newUpdate(existingUri)
-                                        // PoiContentContract
-                                        // .asEventSyncAdapter(
-                                        // existingUri,
-                                        // mAccount.name,
-                                        // mAccount.type))
-                                        .withValue(
-                                                PoiContentContract.Poi.COL_ROWID,
-                                                Integer.toString(poiId))
-                                        .withValues(
-                                                poi.getContentValues(
-                                                        poiIsDefault,
-                                                        mIsDefault)).build());
-                                // mSyncResult.stats.numUpdates++;
-                            }
-                        } else {
-                            if (poiIsDefault && mIsDefault) {
-                                // Entry doesn't exist.
-                                Uri deleteUri = poiUri.buildUpon()
-                                        .appendPath(Integer.toString(poiId))
-                                        .build();
-                                Log.d(TAG, String.format("Scheduling delete: %s (%s)", poiName, deleteUri));
+                                if (mIsDefault || !poiIsDefault) {
+                                    // Check to see if the entry needs to be updated
+                                    Uri existingUri = poiUri.buildUpon()
+                                            .appendPath(Integer.toString(poiId))
+                                            .build();
+                                    Log.d(TAG, String.format("Scheduling update: %s (%s)", poiName, existingUri));
 
-                                batch.add(ContentProviderOperation.newDelete(
-                                        deleteUri)
-                                        // PoiContentContract
-                                        // .asEventSyncAdapter(
-                                        // deleteUri,
-                                        // mAccount.name,
-                                        // mAccount.type))
-                                        .build());
-                                // mSyncResult.stats.numDeletes++;
+                                    batch.add(ContentProviderOperation
+                                            .newUpdate(existingUri)
+                                            // PoiContentContract
+                                            // .asEventSyncAdapter(
+                                            // existingUri,
+                                            // mAccount.name,
+                                            // mAccount.type))
+                                            .withValue(
+                                                    PoiContentContract.Poi.COL_ROWID,
+                                                    Integer.toString(poiId))
+                                            .withValues(
+                                                    poi.getContentValues(
+                                                            poiIsDefault,
+                                                            mIsDefault)).build());
+                                    // mSyncResult.stats.numUpdates++;
+                                }
+                            } else {
+                                if (poiIsDefault && mIsDefault) {
+                                    // Entry doesn't exist.
+                                    Uri deleteUri = poiUri.buildUpon()
+                                            .appendPath(Integer.toString(poiId))
+                                            .build();
+                                    Log.d(TAG, String.format("Scheduling delete: %s (%s)", poiName, deleteUri));
+
+                                    batch.add(ContentProviderOperation.newDelete(
+                                            deleteUri)
+                                            // PoiContentContract
+                                            // .asEventSyncAdapter(
+                                            // deleteUri,
+                                            // mAccount.name,
+                                            // mAccount.type))
+                                            .build());
+                                    // mSyncResult.stats.numDeletes++;
+                                }
                             }
                         }
-                    }
-                    c.close();
+                        for (Poi poi : poiMap.values()) {
+                            batch.add(ContentProviderOperation
+                                    .newInsert(poiUri)
+                                    // PoiContentContract
+                                    // .asEventSyncAdapter(poiUri,
+                                    // mAccount.name,
+                                    // mAccount.type))
+                                    .withValues(poi.getContentValues(mIsDefault))
+                                    .build());
+                            Log.d(TAG, "Scheduling insert: " + poi.getName());
+                            // mSyncResult.stats.numInserts++;
+                        }
 
-                    for (Poi poi : poiMap.values()) {
-                        batch.add(ContentProviderOperation
-                                .newInsert(poiUri)
-                                // PoiContentContract
-                                // .asEventSyncAdapter(poiUri,
-                                // mAccount.name,
-                                // mAccount.type))
-                                .withValues(poi.getContentValues(mIsDefault))
-                                .build());
-                        Log.d(TAG, "Scheduling insert: " + poi.getName());
-                        // mSyncResult.stats.numInserts++;
-                    }
+                        if (batch.size() > 0) {
+                            // mSyncNotification.update("LVAs werden gespeichert");
 
-                    if (batch.size() > 0) {
-                        // mSyncNotification.update("LVAs werden gespeichert");
-
-                        Log.d(TAG, "Applying batch update");
-                        mProvider.applyBatch(batch);
-                        Log.d(TAG, "Notify resolver");
-                        mContext.getContentResolver().notifyChange(
-                                PoiContentContract.Poi.CONTENT_URI, null, // No
-                                // local
-                                // observer
-                                false); // IMPORTANT: Do not sync to network
+                            Log.d(TAG, "Applying batch update");
+                            mProvider.applyBatch(batch);
+                            Log.d(TAG, "Notify resolver");
+                            mContext.getContentResolver().notifyChange(
+                                    PoiContentContract.Poi.CONTENT_URI, null, // No
+                                    // local
+                                    // observer
+                                    false); // IMPORTANT: Do not sync to network
+                        } else {
+                            Log.w(TAG, "No batch operations found! Do nothing");
+                        }
                     } else {
-                        Log.w(TAG, "No batch operations found! Do nothing");
+                        Log.w(TAG, "selection failed");
                     }
-
-                } else {
-                    Log.w(TAG, "selection failed");
                 }
             }
         } catch (RemoteException | OperationApplicationException e) {

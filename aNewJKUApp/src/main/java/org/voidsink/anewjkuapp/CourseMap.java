@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -56,25 +56,24 @@ public class CourseMap {
         this.map = new HashMap<>();
 
         ContentResolver cr = context.getContentResolver();
-        Cursor c = cr.query(KusssContentContract.Course.CONTENT_URI,
-                ImportCourseTask.COURSE_PROJECTION, null, null,
-                KusssContentContract.Course.COL_TERM + " DESC");
 
-        if (c != null) {
-            while (c.moveToNext()) {
-                try {
-                    Course course = KusssHelper.createCourse(c);
-                    this.map.put(KusssHelper.getCourseKey(course.getTerm(), course.getCourseId()), course);
-                } catch (ParseException e) {
-                    Analytics.sendException(context, e, true);
+        try (Cursor c = cr.query(KusssContentContract.Course.CONTENT_URI,
+                ImportCourseTask.COURSE_PROJECTION, null, null,
+                KusssContentContract.Course.COL_TERM + " DESC")) {
+            if (c != null) {
+                while (c.moveToNext()) {
+                    try {
+                        Course course = KusssHelper.createCourse(c);
+                        this.map.put(KusssHelper.getCourseKey(course.getTerm(), course.getCourseId()), course);
+                    } catch (ParseException e) {
+                        Analytics.sendException(context, e, true);
+                    }
                 }
             }
-            c.close();
         }
-
     }
 
-    public Course getCourse(Term term, String courseId) {
+    Course getCourse(Term term, String courseId) {
         Course course = this.map.get(KusssHelper.getCourseKey(term, courseId));
         if (course != null) {
             return course;

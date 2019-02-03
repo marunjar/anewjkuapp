@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -274,18 +274,17 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
             // fetch calendar colors
             final SparseIntArray mColors = new SparseIntArray();
             ContentResolver cr = getContext().getContentResolver();
-            Cursor cursor = cr
-                    .query(CalendarContractWrapper.Calendars.CONTENT_URI(),
-                            new String[]{
-                                    CalendarContractWrapper.Calendars._ID(),
-                                    CalendarContractWrapper.Calendars
-                                            .CALENDAR_COLOR()}, null, null,
-                            null);
-            if (cursor != null) {
-                while (cursor.moveToNext()) {
-                    mColors.put(cursor.getInt(0), cursor.getInt(1));
+
+            try (Cursor cursor = cr.query(CalendarContractWrapper.Calendars.CONTENT_URI(),
+                    new String[]{
+                            CalendarContractWrapper.Calendars._ID(),
+                            CalendarContractWrapper.Calendars
+                                    .CALENDAR_COLOR()}, null, null, null)) {
+                if (cursor != null) {
+                    while (cursor.moveToNext()) {
+                        mColors.put(cursor.getInt(0), cursor.getInt(1));
+                    }
                 }
-                cursor.close();
             }
 
 

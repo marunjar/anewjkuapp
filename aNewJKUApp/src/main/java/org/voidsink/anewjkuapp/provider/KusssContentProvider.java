@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -389,18 +389,17 @@ public class KusssContentProvider extends ContentProvider {
         Account mAccount = AppUtils.getAccount(context);
         if (mAccount != null) {
             ContentResolver cr = context.getContentResolver();
-            Cursor c = cr.query(KusssContentContract.Assessment.CONTENT_URI,
+            try (Cursor c = cr.query(KusssContentContract.Assessment.CONTENT_URI,
                     ImportAssessmentTask.ASSESSMENT_PROJECTION, null, null,
                     KusssContentContract.Assessment.TABLE_NAME + "."
                             + KusssContentContract.Assessment.COL_TYPE
                             + " ASC,"
                             + KusssContentContract.Assessment.TABLE_NAME + "."
                             + KusssContentContract.Assessment.COL_DATE
-                            + " DESC");
-
-            if (c != null) {
-                mAssessments = getAssessmentsFromCursor(context, c);
-                c.close();
+                            + " DESC")) {
+                if (c != null) {
+                    mAssessments = getAssessmentsFromCursor(context, c);
+                }
             }
         }
         return mAssessments;
@@ -442,13 +441,13 @@ public class KusssContentProvider extends ContentProvider {
         Account mAccount = AppUtils.getAccount(context);
         if (mAccount != null) {
             ContentResolver cr = context.getContentResolver();
-            Cursor c = cr.query(KusssContentContract.Curricula.CONTENT_URI,
-                    ImportCurriculaTask.CURRICULA_PROJECTION, null, null,
-                    KusssContentContract.Curricula.COL_DT_START + " DESC");
 
-            if (c != null) {
-                mCurriculum = getCurriculaFromCursor(c);
-                c.close();
+            try (Cursor c = cr.query(KusssContentContract.Curricula.CONTENT_URI,
+                    ImportCurriculaTask.CURRICULA_PROJECTION, null, null,
+                    KusssContentContract.Curricula.COL_DT_START + " DESC")) {
+                if (c != null) {
+                    mCurriculum = getCurriculaFromCursor(c);
+                }
             }
         }
 

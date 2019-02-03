@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -167,124 +167,125 @@ public class ImportCourseTask implements Callable<Void> {
                     ArrayList<ContentProviderOperation> batch = new ArrayList<>();
 
                     Uri lvaUri = KusssContentContract.Course.CONTENT_URI;
-                    Cursor c = mProvider.query(lvaUri, COURSE_PROJECTION,
-                            null, null, null);
 
-                    if (c == null) {
-                        Log.w(TAG, "selection failed");
-                    } else {
-                        Log.d(TAG,
-                                "Found "
-                                        + c.getCount()
-                                        + " local entries. Computing merge solution...");
+                    try (Cursor c = mProvider.query(lvaUri, COURSE_PROJECTION,
+                            null, null, null)) {
 
-                        int _id;
-                        String courseTerm;
-                        String courseId;
+                        if (c == null) {
+                            Log.w(TAG, "selection failed");
+                        } else {
+                            Log.d(TAG,
+                                    "Found "
+                                            + c.getCount()
+                                            + " local entries. Computing merge solution...");
 
-                        while (c.moveToNext()) {
-                            _id = c.getInt(COLUMN_LVA_ID);
-                            courseTerm = c.getString(COLUMN_LVA_TERM);
-                            courseId = c.getString(COLUMN_LVA_COURSEID);
+                            int _id;
+                            String courseTerm;
+                            String courseId;
 
-                            // update only lvas from loaded terms, ignore all other
-                            Term term = termMap.get(courseTerm);
-                            if (term != null && term.isLoaded()) {
-                                Course course = lvaMap.remove(KusssHelper.getCourseKey(term, courseId));
-                                if (course != null) {
-                                    // Check to see if the entry needs to be
-                                    // updated
-                                    Uri existingUri = lvaUri
-                                            .buildUpon()
-                                            .appendPath(Integer.toString(_id))
-                                            .build();
-                                    Log.d(TAG, "Scheduling update: "
-                                            + existingUri);
+                            while (c.moveToNext()) {
+                                _id = c.getInt(COLUMN_LVA_ID);
+                                courseTerm = c.getString(COLUMN_LVA_TERM);
+                                courseId = c.getString(COLUMN_LVA_COURSEID);
 
+                                // update only lvas from loaded terms, ignore all other
+                                Term term = termMap.get(courseTerm);
+                                if (term != null && term.isLoaded()) {
+                                    Course course = lvaMap.remove(KusssHelper.getCourseKey(term, courseId));
+                                    if (course != null) {
+                                        // Check to see if the entry needs to be
+                                        // updated
+                                        Uri existingUri = lvaUri
+                                                .buildUpon()
+                                                .appendPath(Integer.toString(_id))
+                                                .build();
+                                        Log.d(TAG, "Scheduling update: "
+                                                + existingUri);
+
+                                        batch.add(ContentProviderOperation
+                                                .newUpdate(
+                                                        KusssContentContract
+                                                                .asEventSyncAdapter(
+                                                                        existingUri,
+                                                                        mAccount.name,
+                                                                        mAccount.type))
+                                                .withValue(
+                                                        KusssContentContract.Course.COL_ID,
+                                                        Integer.toString(_id))
+                                                .withValues(KusssHelper.getLvaContentValues(course))
+                                                .build());
+                                        mSyncResult.stats.numUpdates++;
+                                    } else {
+                                        // delete
+                                        Log.d(TAG,
+                                                "delete: "
+                                                        + KusssHelper.getCourseKey(term, courseId));
+                                        // Entry doesn't exist. Remove only
+                                        // newer
+                                        // events from the database.
+                                        Uri deleteUri = lvaUri
+                                                .buildUpon()
+                                                .appendPath(Integer.toString(_id))
+                                                .build();
+                                        Log.d(TAG, "Scheduling delete: "
+                                                + deleteUri);
+
+                                        batch.add(ContentProviderOperation
+                                                .newDelete(
+                                                        KusssContentContract
+                                                                .asEventSyncAdapter(
+                                                                        deleteUri,
+                                                                        mAccount.name,
+                                                                        mAccount.type))
+                                                .build());
+                                        mSyncResult.stats.numDeletes++;
+                                    }
+                                } else {
+                                    mSyncResult.stats.numSkippedEntries++;
+                                }
+                            }
+
+                            for (Course course : lvaMap.values()) {
+                                // insert only lvas from loaded terms, ignore all other
+                                Term term = termMap.get(course.getTerm().toString());
+                                if (term != null && term.isLoaded()) {
                                     batch.add(ContentProviderOperation
-                                            .newUpdate(
+                                            .newInsert(
                                                     KusssContentContract
                                                             .asEventSyncAdapter(
-                                                                    existingUri,
+                                                                    lvaUri,
                                                                     mAccount.name,
                                                                     mAccount.type))
-                                            .withValue(
-                                                    KusssContentContract.Course.COL_ID,
-                                                    Integer.toString(_id))
                                             .withValues(KusssHelper.getLvaContentValues(course))
                                             .build());
-                                    mSyncResult.stats.numUpdates++;
-                                } else {
-                                    // delete
                                     Log.d(TAG,
-                                            "delete: "
-                                                    + KusssHelper.getCourseKey(term, courseId));
-                                    // Entry doesn't exist. Remove only
-                                    // newer
-                                    // events from the database.
-                                    Uri deleteUri = lvaUri
-                                            .buildUpon()
-                                            .appendPath(Integer.toString(_id))
-                                            .build();
-                                    Log.d(TAG, "Scheduling delete: "
-                                            + deleteUri);
-
-                                    batch.add(ContentProviderOperation
-                                            .newDelete(
-                                                    KusssContentContract
-                                                            .asEventSyncAdapter(
-                                                                    deleteUri,
-                                                                    mAccount.name,
-                                                                    mAccount.type))
-                                            .build());
-                                    mSyncResult.stats.numDeletes++;
+                                            "Scheduling insert: " + course.getTerm()
+                                                    + " " + course.getCourseId());
+                                    mSyncResult.stats.numInserts++;
+                                } else {
+                                    mSyncResult.stats.numSkippedEntries++;
                                 }
-                            } else {
-                                mSyncResult.stats.numSkippedEntries++;
                             }
-                        }
-                        c.close();
 
-                        for (Course course : lvaMap.values()) {
-                            // insert only lvas from loaded terms, ignore all other
-                            Term term = termMap.get(course.getTerm().toString());
-                            if (term != null && term.isLoaded()) {
-                                batch.add(ContentProviderOperation
-                                        .newInsert(
-                                                KusssContentContract
-                                                        .asEventSyncAdapter(
-                                                                lvaUri,
-                                                                mAccount.name,
-                                                                mAccount.type))
-                                        .withValues(KusssHelper.getLvaContentValues(course))
-                                        .build());
-                                Log.d(TAG,
-                                        "Scheduling insert: " + course.getTerm()
-                                                + " " + course.getCourseId());
-                                mSyncResult.stats.numInserts++;
+                            updateNotify(mContext.getString(R.string.notification_sync_lva_saving));
+
+                            if (batch.size() > 0) {
+                                Log.d(TAG, "Applying batch update");
+                                mProvider.applyBatch(batch);
+                                Log.d(TAG, "Notify resolver");
+                                mResolver
+                                        .notifyChange(
+                                                KusssContentContract.Course.CONTENT_CHANGED_URI,
+                                                null, // No
+                                                // local
+                                                // observer
+                                                false); // IMPORTANT: Do not
+                                // sync to
+                                // network
                             } else {
-                                mSyncResult.stats.numSkippedEntries++;
+                                Log.w(TAG,
+                                        "No batch operations found! Do nothing");
                             }
-                        }
-
-                        updateNotify(mContext.getString(R.string.notification_sync_lva_saving));
-
-                        if (batch.size() > 0) {
-                            Log.d(TAG, "Applying batch update");
-                            mProvider.applyBatch(batch);
-                            Log.d(TAG, "Notify resolver");
-                            mResolver
-                                    .notifyChange(
-                                            KusssContentContract.Course.CONTENT_CHANGED_URI,
-                                            null, // No
-                                            // local
-                                            // observer
-                                            false); // IMPORTANT: Do not
-                            // sync to
-                            // network
-                        } else {
-                            Log.w(TAG,
-                                    "No batch operations found! Do nothing");
                         }
                     }
                 }
