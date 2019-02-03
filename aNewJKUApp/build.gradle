@@ -24,7 +24,6 @@ android {
 
         proguardFiles getDefaultProguardFile('proguard-android.txt'),
                 'proguard-rules.txt',
-                'proguard-rules-google-play-services.txt',
                 'proguard-rules-ical4j.txt',
                 'proguard-rules-aboutlibraries.pro',
                 'proguard-rules-keep-names.txt'
@@ -103,7 +102,7 @@ dependencies {
     implementation "com.google.android.material:material:${rootProject.ext.androidXVersion}"
     implementation "androidx.cardview:cardview:${rootProject.ext.androidXVersion}"
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    googleImplementation 'com.google.android.gms:play-services-analytics:16.0.6'
+    googleImplementation 'com.google.android.gms:play-services-analytics:16.0.7'
     implementation 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
     implementation 'org.mapsforge:mapsforge-core:0.10.0'
     implementation 'org.mapsforge:mapsforge-map:0.10.0'
