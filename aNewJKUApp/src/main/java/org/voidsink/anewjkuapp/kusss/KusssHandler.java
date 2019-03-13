@@ -624,6 +624,8 @@ public class KusssHandler {
                 for (Element row : rows) {
                     if (row.tag().toString().equals("h3")) {
                         type = AssessmentType.parseGradeType(row.text());
+                        if(type.equals("Prüfungen"))
+                            continue;
                     } else if (row.tag().toString().equals("table")) {
                         Elements gradeRows = row
                                 .select("tbody > tr[class]:has(td)");
