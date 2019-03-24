@@ -54,7 +54,7 @@ public class SectionedRecyclerViewAdapter extends SectionedRecyclerViewBaseAdapt
             }
         }
 
-        return sections.toArray(new Section[sections.size()]);
+        return sections.toArray(new Section[0]);
     }
 
     @Override

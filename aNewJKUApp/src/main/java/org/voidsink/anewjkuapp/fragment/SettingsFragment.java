@@ -150,8 +150,8 @@ public class SettingsFragment extends BasePreferenceFragment {
 
                 CollectMapFiles(entries, entryValues);
 
-                mapFiles.setEntries(entries.toArray(new CharSequence[entries.size()]));
-                mapFiles.setEntryValues(entryValues.toArray(new CharSequence[entryValues.size()]));
+                mapFiles.setEntries(entries.toArray(new CharSequence[0]));
+                mapFiles.setEntryValues(entryValues.toArray(new CharSequence[0]));
 
                 int index = Math
                         .max(mapFiles.findIndexOfValue(getPreferenceManager().getSharedPreferences().getString(
@@ -265,9 +265,9 @@ public class SettingsFragment extends BasePreferenceFragment {
         }
 
         private void setEntries(CalendarUtils.CalendarList calendars, TwoLinesListPreference preference) {
-            preference.setEntries(calendars.getDisplayNames().toArray(new String[calendars.getDisplayNames().size()]));
+            preference.setEntries(calendars.getDisplayNames().toArray(new String[0]));
             preference.setEntryValues(calendars.getIdsAsStrings());
-            preference.setEntriesSubtitles(calendars.getAccountNames().toArray(new String[calendars.getAccountNames().size()]));
+            preference.setEntriesSubtitles(calendars.getAccountNames().toArray(new String[0]));
         }
 
         @Override

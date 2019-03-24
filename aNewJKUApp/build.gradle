@@ -110,7 +110,7 @@ dependencies {
     implementation 'org.mapsforge:mapsforge-map-android:0.10.0'
     implementation 'pub.devrel:easypermissions:3.0.0'
     implementation 'org.jsoup:jsoup:1.11.3'
-    implementation 'org.mnode.ical4j:ical4j:1.0.7' // https://github.com/ical4j/ical4j/issues/143 https://github.com/ical4j/ical4j/pull/116
+    implementation 'org.mnode.ical4j:ical4j:3.0.6' // https://github.com/ical4j/ical4j/issues/143 https://github.com/ical4j/ical4j/pull/116
     //implementation 'org.mnode.ical4j:ical4j-extensions:1.0.0'
     debugImplementation 'org.slf4j:slf4j-android:1.7.26'
     implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
