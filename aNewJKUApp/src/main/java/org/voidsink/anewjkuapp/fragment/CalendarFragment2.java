@@ -47,6 +47,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.core.graphics.ColorUtils;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
+
 import com.alamkanak.weekview.DateTimeInterpreter;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
@@ -67,12 +73,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
-
-import androidx.annotation.NonNull;
-import androidx.core.graphics.ColorUtils;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.CursorLoader;
-import androidx.loader.content.Loader;
 
 public class CalendarFragment2 extends CalendarPermissionFragment implements
         WeekView.EventClickListener, WeekView.EventLongPressListener, LoaderManager.LoaderCallbacks<Cursor> {
@@ -226,7 +226,7 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
 
         Calendar day = Calendar.getInstance();
         day.setTimeInMillis(time);
-        double hour = day.get(Calendar.HOUR_OF_DAY) + (day.get(Calendar.MINUTE) / 60);
+        double hour = day.get(Calendar.HOUR_OF_DAY) + (day.get(Calendar.MINUTE) / 60.0);
 
         mWeekView.goToDate(day);
         mWeekView.goToHour(hour);

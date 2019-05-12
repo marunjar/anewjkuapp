@@ -44,6 +44,8 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
 
+import androidx.core.content.ContextCompat;
+
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
@@ -75,8 +77,6 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import androidx.core.content.ContextCompat;
 
 public class ImportCalendarTask implements Callable<Void> {
 
@@ -225,7 +225,7 @@ public class ImportCalendarTask implements Callable<Void> {
                         if (lineSeparator == null) lineSeparator = ", ";
 
                         for (Object e : events) {
-                            if (VEvent.class.isInstance(e)) {
+                            if (e instanceof VEvent) {
                                 VEvent ev = ((VEvent) e);
 
                                 String summary = ev.getSummary().getValue()
@@ -273,7 +273,7 @@ public class ImportCalendarTask implements Callable<Void> {
                         // Build hash table of incoming entries
                         Map<String, VEvent> eventsMap = new HashMap<>();
                         for (Object e : events) {
-                            if (VEvent.class.isInstance(e)) {
+                            if (e instanceof VEvent) {
                                 VEvent ev = ((VEvent) e);
 
                                 if ((ev.getStartDate().getDate().getTime() >= calendar.getTerm().getStart().getTime()) &&

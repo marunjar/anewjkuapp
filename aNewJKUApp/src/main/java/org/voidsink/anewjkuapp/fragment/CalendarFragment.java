@@ -42,13 +42,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarEventAdapter;
 import org.voidsink.anewjkuapp.calendar.CalendarListEvent;
-import org.voidsink.anewjkuapp.calendar.CalendarListItem;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
@@ -60,14 +67,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.CursorLoader;
-import androidx.loader.content.Loader;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class CalendarFragment extends CalendarPermissionFragment implements ContentObserverListener, LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -118,9 +117,9 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
 
         mAdapter.setOnItemClickListener((view, viewType, position) -> {
             if (position != RecyclerView.NO_POSITION) {
-                CalendarListItem item = mAdapter.getItem(position);
+                CalendarListEvent item = mAdapter.getItem(position);
                 if (item != null) {
-                    ((CalendarListEvent) item).showOnMap(getContext());
+                    item.showOnMap(getContext());
                 }
             }
         });

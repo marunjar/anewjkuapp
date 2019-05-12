@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -94,7 +94,7 @@ public class ChoiceMenuLoader extends MensenMenuLoader {
                                                 if (betragMatcher.find()) {
                                                     priceBig = nf.parse(betragMatcher.group()).doubleValue();
                                                 }
-                                                text = text.substring(0, betrag2EuroMatcher.start()) + text.substring(betrag2EuroMatcher.end(), text.length());
+                                                text = text.substring(0, betrag2EuroMatcher.start()) + text.substring(betrag2EuroMatcher.end());
                                             }
 
                                             Matcher betragEuroMatcher = betragEuroPattern.matcher(text);
@@ -104,7 +104,7 @@ public class ChoiceMenuLoader extends MensenMenuLoader {
                                                     price = nf.parse(betragMatcher.group()).doubleValue();
                                                 }
 
-                                                text = text.substring(0, betragEuroMatcher.start()) + text.substring(betragEuroMatcher.end(), text.length());
+                                                text = text.substring(0, betragEuroMatcher.start()) + text.substring(betragEuroMatcher.end());
                                             }
 
                                             meal.append(" ");

@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -34,9 +34,9 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 
-import org.voidsink.anewjkuapp.R;
-
 import androidx.annotation.NonNull;
+
+import org.voidsink.anewjkuapp.R;
 
 /**
  * A custom view to draw the day of the month in the today button in the options menu
@@ -65,7 +65,7 @@ public class DayOfMonthDrawable extends Drawable {
         mPaint.getTextBounds(mDayOfMonth, 0, mDayOfMonth.length(), mTextBounds);
         int textHeight = mTextBounds.bottom - mTextBounds.top;
         Rect bounds = getBounds();
-        canvas.drawText(mDayOfMonth, bounds.right / 2, ((float) bounds.bottom + textHeight + 1) / 2,
+        canvas.drawText(mDayOfMonth, bounds.right / 2f, (bounds.bottom + textHeight + 1) / 2f,
                 mPaint);
     }
 

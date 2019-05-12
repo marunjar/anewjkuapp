@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -40,6 +40,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.google.android.material.navigation.NavigationView;
 
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
@@ -67,13 +75,6 @@ import org.voidsink.anewjkuapp.fragment.StatFragment;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import de.cketti.library.changelog.ChangeLog;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -305,11 +306,8 @@ public class MainActivity extends ThemedActivity {
                     .findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
         }
 
-        if (f != null) {
-            // Log.i(TAG, "fragment: " + f.getClass().getSimpleName());
-            if (BaseFragment.class.isInstance(f)) {
-                ((BaseFragment) f).handleIntent(intent);
-            }
+        if (f instanceof BaseFragment) {
+            ((BaseFragment) f).handleIntent(intent);
         }
     }
 
