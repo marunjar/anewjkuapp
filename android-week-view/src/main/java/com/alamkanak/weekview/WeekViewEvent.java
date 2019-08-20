@@ -2,6 +2,8 @@ package com.alamkanak.weekview;
 
 import android.graphics.Shader;
 
+import androidx.annotation.ColorInt;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -18,7 +20,9 @@ public class WeekViewEvent {
     private Calendar mEndTime;
     private String mName;
     private String mLocation;
-    private int mColor;
+    private
+    @ColorInt
+    int mColor;
     private boolean mAllDay;
     private Shader mShader;
 
@@ -233,7 +237,9 @@ public class WeekViewEvent {
         this.mLocation = location;
     }
 
-    public int getColor() {
+    public
+    @ColorInt
+    int getColor() {
         return mColor;
     }
 
@@ -278,12 +284,11 @@ public class WeekViewEvent {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof WeekViewEvent)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         WeekViewEvent that = (WeekViewEvent) o;
 
         return mId.equals(that.mId);
-
     }
 
     @Override
