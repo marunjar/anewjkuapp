@@ -112,7 +112,7 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.12.1'
     implementation 'org.mnode.ical4j:ical4j:1.0.7' // https://github.com/ical4j/ical4j/issues/143 https://github.com/ical4j/ical4j/pull/116
     //implementation 'org.mnode.ical4j:ical4j-extensions:1.0.0'
-    debugImplementation 'org.slf4j:slf4j-android:1.7.26'
+    debugImplementation 'org.slf4j:slf4j-android:1.7.28'
     implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
     //implementation 'com.github.alamkanak:android-week-view:1.2.3'
     implementation 'de.cketti.library.changelog:ckchangelog:1.2.2'
