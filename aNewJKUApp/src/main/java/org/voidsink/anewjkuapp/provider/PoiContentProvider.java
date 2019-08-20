@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -36,9 +36,9 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 
-import org.voidsink.anewjkuapp.PoiContentContract;
-
 import androidx.annotation.NonNull;
+
+import org.voidsink.anewjkuapp.PoiContentContract;
 
 public class PoiContentProvider extends ContentProvider {
 
@@ -96,8 +96,6 @@ public class PoiContentProvider extends ContentProvider {
                 return PoiContentContract.CONTENT_TYPE_DIR + "/"
                         + PoiContentContract.Poi.MIMETYPE;
             case CODE_POI_ID:
-                return PoiContentContract.CONTENT_TYPE_ITEM + "/"
-                        + PoiContentContract.Poi.MIMETYPE;
             case CODE_POI_BY_NAME:
                 return PoiContentContract.CONTENT_TYPE_ITEM + "/"
                         + PoiContentContract.Poi.MIMETYPE;

@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,6 +28,8 @@ package org.voidsink.anewjkuapp.kusss;
 import android.os.Build;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,8 +37,6 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import androidx.annotation.NonNull;
 
 public class Term implements Comparable<Term> {
 
@@ -76,6 +76,7 @@ public class Term implements Comparable<Term> {
             this.value = value;
         }
 
+        @NonNull
         @Override
         public String toString() {
             return value;
@@ -186,6 +187,8 @@ public class Term implements Comparable<Term> {
         return cal.getTime();
     }
 
+
+    @NonNull
     @Override
     public String toString() {
         return String.format(Locale.GERMAN, "%d%s", year, type.toString());
