@@ -25,12 +25,12 @@
 
 package org.voidsink.anewjkuapp;
 
-import android.support.v4.app.Fragment;
-
 import org.voidsink.anewjkuapp.base.SlidingTabItem;
 import org.voidsink.anewjkuapp.fragment.MensaDayFragment;
 
 import java.util.Date;
+
+import androidx.fragment.app.Fragment;
 
 public class MensaDayTabItem extends SlidingTabItem {
 

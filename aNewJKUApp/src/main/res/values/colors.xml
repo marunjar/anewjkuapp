@@ -4,14 +4,12 @@
     <color name="default_primary">#0F60BD</color>
     <color name="default_primaryDark">#0F4D9D</color>
     <color name="default_accent">#EE8C2B</color>
-    <color name="default_accentTransparent">#55EE8C2B</color>
 
     <!--colors for sowi style-->
     <!--
     <color name="sowi_primary">#adc258</color>
     <color name="sowi_primaryDark">#8da252</color>
     <color name="sowi_accent">#0049ee</color>
-    <color name="sowi_accentTransparent">#550049ee</color>
     -->
 
     <!--colors for re style-->
@@ -19,7 +17,6 @@
     <color name="re_primary">#e2001a</color>
     <color name="re_primaryDark">#cc001a</color>
     <color name="re_accent">#eeee00</color>
-    <color name="re_accentTransparent">#55eeee00</color>
     -->
 
     <!--colors for tnf style-->
@@ -27,7 +24,6 @@
     <color name="tnf_primary">#5799bf</color>
     <color name="tnf_primaryDark">#ff507a9f</color>
     <color name="tnf_accent">#ee3b33</color>
-    <color name="tnf_accentTransparent">#55ee3b33</color>
     -->
 
     <!--colors for med style-->
@@ -35,7 +31,6 @@
     <color name="med_primary">#ebbf00</color>
     <color name="med_primaryDark">#ffcb9f00</color>
     <color name="med_accent">#ee3b33</color>
-    <color name="med_accentTransparent">#55ee3b33</color>
     -->
 
     <color name="preference_fallback_accent_color">@color/default_accent</color>
@@ -53,9 +48,7 @@
     <color name="fullTransparent">#00000000</color>
 
     <!-- Material Design -->
-    <color name="text_hint">#a07f7f7f</color>
     <color name="divider">#807f7f7f</color>
-    <color name="icon">#de7f7f7f</color>
 
     <!-- Tabs -->
     <color name="tab_selected_text_color">#ffffffff</color>

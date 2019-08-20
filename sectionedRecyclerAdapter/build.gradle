@@ -24,6 +24,7 @@
  */
 
 apply plugin: 'com.android.library'
+apply plugin: "net.ltgt.errorprone"
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -52,11 +53,6 @@ android {
 }
 
 dependencies {
-    implementation "com.android.support:recyclerview-v7:${rootProject.ext.supportLibVersion}"
-}
-
-apply plugin: "net.ltgt.errorprone"
-
-configurations.errorprone {
-    resolutionStrategy.force 'com.google.errorprone:error_prone_core:2.2.0'
+    errorproneJavac "com.google.errorprone:error_prone_core:${rootProject.ext.errorProneVersion}"
+    implementation "androidx.recyclerview:recyclerview:1.0.0"
 }

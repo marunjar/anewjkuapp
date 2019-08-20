@@ -26,15 +26,11 @@
 package org.voidsink.anewjkuapp.base;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.android.material.tabs.TabLayout;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.utils.Consts;
@@ -42,8 +38,15 @@ import org.voidsink.anewjkuapp.utils.Consts;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
 /**
- * This class represents a tab to be displayed by {@link android.support.v4.view.ViewPager} and it's associated
+ * This class represents a tab to be displayed by {@link ViewPager} and it's associated
  * {@link TabLayout}.
  */
 public abstract class SlidingTabsFragment extends BaseFragment {
@@ -51,7 +54,7 @@ public abstract class SlidingTabsFragment extends BaseFragment {
     //static final String TAG = SlidingTabsFragment.class.getSimpleName();
 
     /**
-     * A {@link android.support.v4.view.ViewPager} which will be used in conjunction with the {@link TabLayout} above.
+     * A {@link ViewPager} which will be used in conjunction with the {@link TabLayout} above.
      */
     private ViewPager mViewPager;
 
@@ -107,17 +110,8 @@ public abstract class SlidingTabsFragment extends BaseFragment {
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
-    public void notifyDataSetChanged() {
-        if (mViewPager != null) {
-//        Log.i(LOG_TAG, "notifyDataSetChanged");
-            if (mViewPager.getAdapter() != null) {
-                mViewPager.getAdapter().notifyDataSetChanged();
-            }
-        }
-    }
-
     /**
-     * The {@link android.support.v4.app.FragmentPagerAdapter} used to display pages in this sample. The individual pages
+     * The {@link FragmentPagerAdapter} used to display pages in this sample. The individual pages
      * are instances of {@link Fragment}. Each page is
      * created by the relevant {@link SlidingTabItem} for the requested position.
      * <p/>
@@ -131,7 +125,7 @@ public abstract class SlidingTabsFragment extends BaseFragment {
         }
 
         /**
-         * Return the {@link android.support.v4.app.Fragment} to be displayed at {@code position}.
+         * Return the {@link Fragment} to be displayed at {@code position}.
          * <p/>
          * Here we return the value returned from {@link SlidingTabItem#createFragment()}.
          */

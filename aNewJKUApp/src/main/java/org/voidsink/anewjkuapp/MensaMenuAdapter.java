@@ -26,8 +26,6 @@
 package org.voidsink.anewjkuapp;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +42,9 @@ import org.voidsink.sectionedrecycleradapter.SectionedAdapter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerView.ViewHolder> implements SectionedAdapter<MensaMenuAdapter.MenuHeaderHolder> {
 

@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -36,11 +36,6 @@ import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
-import android.support.annotation.NonNull;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.graphics.ColorUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.util.SparseArray;
@@ -51,6 +46,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.core.graphics.ColorUtils;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
 
 import com.alamkanak.weekview.DateTimeInterpreter;
 import com.alamkanak.weekview.WeekView;
@@ -225,7 +226,7 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
 
         Calendar day = Calendar.getInstance();
         day.setTimeInMillis(time);
-        double hour = day.get(Calendar.HOUR_OF_DAY) + (day.get(Calendar.MINUTE) / 60);
+        double hour = day.get(Calendar.HOUR_OF_DAY) + (day.get(Calendar.MINUTE) / 60.0);
 
         mWeekView.goToDate(day);
         mWeekView.goToHour(hour);
@@ -285,36 +286,35 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
             // fetch calendar colors
             final SparseIntArray mColors = new SparseIntArray();
             ContentResolver cr = getContext().getContentResolver();
-            Cursor cursor = cr
-                    .query(CalendarContractWrapper.Calendars.CONTENT_URI(),
-                            new String[]{
-                                    CalendarContractWrapper.Calendars._ID(),
-                                    CalendarContractWrapper.Calendars
-                                            .CALENDAR_COLOR()}, null, null,
-                            null);
-            if (cursor != null) {
-                while (cursor.moveToNext()) {
-                    int color = cursor.getInt(1);
+            try (Cursor cursor = cr.query(CalendarContractWrapper.Calendars.CONTENT_URI(),
+                    new String[]{
+                            CalendarContractWrapper.Calendars._ID(),
+                            CalendarContractWrapper.Calendars
+                                    .CALENDAR_COLOR()}, null, null, null)) {
+                if (cursor != null) {
+                    while (cursor.moveToNext()) {
+                        int color = cursor.getInt(1);
 
-                    double lastContrast = ColorUtils.calculateContrast(color, mWeekView.getEventTextColor());
-                    //Log.d(TAG, String.format("color=%d %d %d, contrast=%f", Color.red(color), Color.green(color), Color.blue(color), lastContrast));
+                        double lastContrast = ColorUtils.calculateContrast(color, mWeekView.getEventTextColor());
+                        //Log.d(TAG, String.format("color=%d %d %d, contrast=%f", Color.red(color), Color.green(color), Color.blue(color), lastContrast));
 
-                    while (lastContrast < 1.6) {
-                        float[] hsv = new float[3];
+                        while (lastContrast < 1.6) {
+                            float[] hsv = new float[3];
 
-                        Color.colorToHSV(color, hsv);
-                        hsv[2] = Math.max(0f, hsv[2] - 0.033f); // darken
-                        color = Color.HSVToColor(hsv);
+                            Color.colorToHSV(color, hsv);
+                            hsv[2] = Math.max(0f, hsv[2] - 0.033f); // darken
+                            color = Color.HSVToColor(hsv);
 
-                        lastContrast = ColorUtils.calculateContrast(color, mWeekView.getEventTextColor());
-                        //Log.d(TAG, String.format("new color=%d %d %d, contrast=%f", Color.red(color), Color.green(color), Color.blue(color), lastContrast));
+                            lastContrast = ColorUtils.calculateContrast(color, mWeekView.getEventTextColor());
+                            //Log.d(TAG, String.format("new color=%d %d %d, contrast=%f", Color.red(color), Color.green(color), Color.blue(color), lastContrast));
 
-                        if (hsv[2] == 0) break;
+                            if (hsv[2] == 0) break;
+                        }
+
+                        mColors.put(cursor.getInt(0), color);
                     }
-
-                    mColors.put(cursor.getInt(0), color);
+                    cursor.close();
                 }
-                cursor.close();
             }
 
 

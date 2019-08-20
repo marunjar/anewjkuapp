@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,13 +31,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.util.SparseIntArray;
@@ -49,13 +42,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarEventAdapter;
 import org.voidsink.anewjkuapp.calendar.CalendarListEvent;
-import org.voidsink.anewjkuapp.calendar.CalendarListItem;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
@@ -117,9 +117,9 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
 
         mAdapter.setOnItemClickListener((view, viewType, position) -> {
             if (position != RecyclerView.NO_POSITION) {
-                CalendarListItem item = mAdapter.getItem(position);
+                CalendarListEvent item = mAdapter.getItem(position);
                 if (item != null) {
-                    ((CalendarListEvent) item).showOnMap(getContext());
+                    item.showOnMap(getContext());
                 }
             }
         });
@@ -273,18 +273,17 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
             // fetch calendar colors
             final SparseIntArray mColors = new SparseIntArray();
             ContentResolver cr = getContext().getContentResolver();
-            Cursor cursor = cr
-                    .query(CalendarContractWrapper.Calendars.CONTENT_URI(),
-                            new String[]{
-                                    CalendarContractWrapper.Calendars._ID(),
-                                    CalendarContractWrapper.Calendars
-                                            .CALENDAR_COLOR()}, null, null,
-                            null);
-            if (cursor != null) {
-                while (cursor.moveToNext()) {
-                    mColors.put(cursor.getInt(0), cursor.getInt(1));
+
+            try (Cursor cursor = cr.query(CalendarContractWrapper.Calendars.CONTENT_URI(),
+                    new String[]{
+                            CalendarContractWrapper.Calendars._ID(),
+                            CalendarContractWrapper.Calendars
+                                    .CALENDAR_COLOR()}, null, null, null)) {
+                if (cursor != null) {
+                    while (cursor.moveToNext()) {
+                        mColors.put(cursor.getInt(0), cursor.getInt(1));
+                    }
                 }
-                cursor.close();
             }
 
 

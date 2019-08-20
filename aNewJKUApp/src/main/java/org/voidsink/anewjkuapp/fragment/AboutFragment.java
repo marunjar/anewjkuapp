@@ -28,8 +28,6 @@ package org.voidsink.anewjkuapp.fragment;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +41,8 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.utils.Consts;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import de.cketti.library.changelog.ChangeLog;
 
 public class AboutFragment extends BaseFragment {
@@ -60,7 +60,7 @@ public class AboutFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_about, container, false);
 
-        (view.findViewById(R.id.about_libraries))
+        view.findViewById(R.id.about_libraries)
                 .setOnClickListener(v -> new LibsBuilder()
                         .withFields(R.string.class.getFields()) // pass the fields of your application to the lib so it can find all external lib information
                         .withLibraries("jsoup")
@@ -75,7 +75,7 @@ public class AboutFragment extends BaseFragment {
                         .withAboutVersionShown(true)
                         .start(getActivity()));
 
-        (view.findViewById(R.id.about_changelog))
+        view.findViewById(R.id.about_changelog)
                 .setOnClickListener(v -> new ChangeLog(getActivity()).getFullLogDialog().show());
 
         return view;

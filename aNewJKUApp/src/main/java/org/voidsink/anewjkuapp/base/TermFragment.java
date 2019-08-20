@@ -26,7 +26,6 @@
 package org.voidsink.anewjkuapp.base;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.kusss.Term;
@@ -35,6 +34,8 @@ import org.voidsink.anewjkuapp.utils.Consts;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 public class TermFragment extends BaseFragment {
 

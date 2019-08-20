@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,9 +28,6 @@ package org.voidsink.anewjkuapp.base;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.ContentLoadingProgressBar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +35,10 @@ import android.view.View;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.utils.Consts;
+
+import androidx.annotation.NonNull;
+import androidx.core.widget.ContentLoadingProgressBar;
+import androidx.fragment.app.Fragment;
 
 public class BaseFragment extends Fragment implements StackedFragment {
 

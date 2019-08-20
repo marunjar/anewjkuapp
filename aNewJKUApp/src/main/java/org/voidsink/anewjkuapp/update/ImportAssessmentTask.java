@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -100,7 +100,7 @@ public class ImportAssessmentTask implements Callable<Void> {
     public static final int COLUMN_ASSESSMENT_LVATYPE = 11;
 
     public ImportAssessmentTask(Account account, Context context) {
-        this(account, null, null, null, null, context);
+        this(account, null, null, null, context);
         this.mProvider = context.getContentResolver()
                 .acquireContentProviderClient(
                         KusssContentContract.Exam.CONTENT_URI);
@@ -109,7 +109,7 @@ public class ImportAssessmentTask implements Callable<Void> {
         this.mShowProgress = true;
     }
 
-    public ImportAssessmentTask(Account account, Bundle extras, String authority,
+    public ImportAssessmentTask(Account account, Bundle extras,
                                 ContentProviderClient provider, SyncResult syncResult,
                                 Context context) {
         this.mAccount = account;
@@ -146,7 +146,7 @@ public class ImportAssessmentTask implements Callable<Void> {
 
             if (KusssHandler.getInstance().isAvailable(mContext,
                     AppUtils.getAccountAuthToken(mContext, mAccount),
-                    AppUtils.getAccountName(mContext, mAccount),
+                    AppUtils.getAccountName(mAccount),
                     AppUtils.getAccountPassword(mContext, mAccount))) {
 
                 updateNotify(mContext.getString(R.string.notification_sync_assessment_loading));
@@ -175,142 +175,141 @@ public class ImportAssessmentTask implements Callable<Void> {
                     ArrayList<ContentProviderOperation> batch = new ArrayList<>();
 
                     Uri examUri = KusssContentContract.Assessment.CONTENT_URI;
-                    Cursor c = mProvider.query(examUri, ASSESSMENT_PROJECTION, null,
-                            null, null);
+                    try (Cursor c = mProvider.query(examUri, ASSESSMENT_PROJECTION, null,
+                            null, null)) {
+                        if (c == null) {
+                            Log.w(TAG, "selection failed");
+                        } else {
+                            Log.d(TAG, "Found " + c.getCount()
+                                    + " local entries. Computing merge solution...");
 
-                    if (c == null) {
-                        Log.w(TAG, "selection failed");
-                    } else {
-                        Log.d(TAG, "Found " + c.getCount()
-                                + " local entries. Computing merge solution...");
+                            int _Id;
+                            String assessmentCode;
+                            String assessmentCourseId;
+                            Date assessmentDate;
+                            AssessmentType assessmentType;
+                            Grade assessmentGrade;
+                            while (c.moveToNext()) {
+                                _Id = c.getInt(COLUMN_ASSESSMENT_ID);
+                                assessmentCode = c.getString(COLUMN_ASSESSMENT_CODE);
+                                assessmentDate = new Date(c.getLong(COLUMN_ASSESSMENT_DATE));
+                                assessmentType = AssessmentType.parseAssessmentType(c
+                                        .getInt(COLUMN_ASSESSMENT_TYPE));
+                                assessmentGrade = Grade.parseGradeType(c
+                                        .getInt(COLUMN_ASSESSMENT_GRADE));
+                                assessmentCourseId = c.getString(COLUMN_ASSESSMENT_COURSEID);
 
-                        int _Id;
-                        String assessmentCode;
-                        String assessmentCourseId;
-                        Date assessmentDate;
-                        AssessmentType assessmentType;
-                        Grade assessmentGrade;
-                        while (c.moveToNext()) {
-                            _Id = c.getInt(COLUMN_ASSESSMENT_ID);
-                            assessmentCode = c.getString(COLUMN_ASSESSMENT_CODE);
-                            assessmentDate = new Date(c.getLong(COLUMN_ASSESSMENT_DATE));
-                            assessmentType = AssessmentType.parseAssessmentType(c
-                                    .getInt(COLUMN_ASSESSMENT_TYPE));
-                            assessmentGrade = Grade.parseGradeType(c
-                                    .getInt(COLUMN_ASSESSMENT_GRADE));
-                            assessmentCourseId = c.getString(COLUMN_ASSESSMENT_COURSEID);
-
-                            if (assessmentType.isDuplicatesPossible()) {
-                                // delete
-                                Log.d(TAG,
-                                        "delete: "
-                                                + KusssHelper.getAssessmentKey(assessmentCode, assessmentCourseId, assessmentDate.getTime()));
-                                // duplicate possible. remove existing
-                                Uri deleteUri = examUri
-                                        .buildUpon()
-                                        .appendPath(Integer.toString(_Id))
-                                        .build();
-                                Log.d(TAG, "Scheduling delete: "
-                                        + deleteUri);
-
-                                batch.add(ContentProviderOperation
-                                        .newDelete(
-                                                KusssContentContract
-                                                        .asEventSyncAdapter(
-                                                                deleteUri,
-                                                                mAccount.name,
-                                                                mAccount.type))
-                                        .build());
-                                mSyncResult.stats.numDeletes++;
-                            } else {
-                                Assessment assessment = assessmentMap.remove(KusssHelper.getAssessmentKey(assessmentCode, assessmentCourseId, assessmentDate.getTime()));
-                                if (assessment != null) {
-                                    // Check to see if the entry needs to be updated
-                                    Uri existingUri = examUri.buildUpon()
+                                if (assessmentType.isDuplicatesPossible()) {
+                                    // delete
+                                    Log.d(TAG,
+                                            "delete: "
+                                                    + KusssHelper.getAssessmentKey(assessmentCode, assessmentCourseId, assessmentDate.getTime()));
+                                    // duplicate possible. remove existing
+                                    Uri deleteUri = examUri
+                                            .buildUpon()
                                             .appendPath(Integer.toString(_Id))
                                             .build();
-                                    Log.d(TAG, "Scheduling update: " + existingUri);
-
-                                    if (!assessmentType.equals(assessment.getAssessmentType())
-                                            || !assessmentGrade.equals(assessment.getGrade())) {
-                                        mAssessmentChangeNotification
-                                                .addUpdate(String.format("%s: %s",
-                                                        assessment.getTitle(),
-                                                        mContext.getString(assessment
-                                                                .getGrade()
-                                                                .getStringResID())));
-                                    }
+                                    Log.d(TAG, "Scheduling delete: "
+                                            + deleteUri);
 
                                     batch.add(ContentProviderOperation
-                                            .newUpdate(
+                                            .newDelete(
                                                     KusssContentContract
                                                             .asEventSyncAdapter(
-                                                                    existingUri,
+                                                                    deleteUri,
                                                                     mAccount.name,
                                                                     mAccount.type))
-                                            .withValue(
-                                                    KusssContentContract.Assessment.COL_ID,
-                                                    Integer.toString(_Id))
-                                            .withValues(KusssHelper.getAssessmentContentValues(assessment))
                                             .build());
-                                    mSyncResult.stats.numUpdates++;
+                                    mSyncResult.stats.numDeletes++;
+                                } else {
+                                    Assessment assessment = assessmentMap.remove(KusssHelper.getAssessmentKey(assessmentCode, assessmentCourseId, assessmentDate.getTime()));
+                                    if (assessment != null) {
+                                        // Check to see if the entry needs to be updated
+                                        Uri existingUri = examUri.buildUpon()
+                                                .appendPath(Integer.toString(_Id))
+                                                .build();
+                                        Log.d(TAG, "Scheduling update: " + existingUri);
+
+                                        if (!assessmentType.equals(assessment.getAssessmentType())
+                                                || !assessmentGrade.equals(assessment.getGrade())) {
+                                            mAssessmentChangeNotification
+                                                    .addUpdate(String.format("%s: %s",
+                                                            assessment.getTitle(),
+                                                            mContext.getString(assessment
+                                                                    .getGrade()
+                                                                    .getStringResID())));
+                                        }
+
+                                        batch.add(ContentProviderOperation
+                                                .newUpdate(
+                                                        KusssContentContract
+                                                                .asEventSyncAdapter(
+                                                                        existingUri,
+                                                                        mAccount.name,
+                                                                        mAccount.type))
+                                                .withValue(
+                                                        KusssContentContract.Assessment.COL_ID,
+                                                        Integer.toString(_Id))
+                                                .withValues(KusssHelper.getAssessmentContentValues(assessment))
+                                                .build());
+                                        mSyncResult.stats.numUpdates++;
+                                    }
                                 }
                             }
-                        }
-                        c.close();
 
-                        for (Assessment assessment : assessmentMap.values()) {
-                            batch.add(ContentProviderOperation
-                                    .newInsert(
-                                            KusssContentContract
-                                                    .asEventSyncAdapter(
-                                                            examUri,
-                                                            mAccount.name,
-                                                            mAccount.type))
-                                    .withValues(KusssHelper.getAssessmentContentValues(assessment))
-                                    .build());
-                            Log.d(TAG, "Scheduling insert: " + assessment.getTerm()
-                                    + " " + assessment.getCourseId());
+                            for (Assessment assessment : assessmentMap.values()) {
+                                batch.add(ContentProviderOperation
+                                        .newInsert(
+                                                KusssContentContract
+                                                        .asEventSyncAdapter(
+                                                                examUri,
+                                                                mAccount.name,
+                                                                mAccount.type))
+                                        .withValues(KusssHelper.getAssessmentContentValues(assessment))
+                                        .build());
+                                Log.d(TAG, "Scheduling insert: " + assessment.getTerm()
+                                        + " " + assessment.getCourseId());
 
-                            mAssessmentChangeNotification.addInsert(String.format(
-                                    "%s: %s", assessment.getTitle(), mContext
-                                            .getString(assessment.getGrade()
-                                                    .getStringResID())));
+                                mAssessmentChangeNotification.addInsert(String.format(
+                                        "%s: %s", assessment.getTitle(), mContext
+                                                .getString(assessment.getGrade()
+                                                        .getStringResID())));
 
-                            mSyncResult.stats.numInserts++;
-                        }
-                        for (Assessment assessment : possibleDuplicates) {
-                            batch.add(ContentProviderOperation
-                                    .newInsert(
-                                            KusssContentContract
-                                                    .asEventSyncAdapter(
-                                                            examUri,
-                                                            mAccount.name,
-                                                            mAccount.type))
-                                    .withValues(KusssHelper.getAssessmentContentValues(assessment))
-                                    .build());
-                            Log.d(TAG, "Scheduling insert: " + assessment.getTerm()
-                                    + " " + assessment.getCourseId());
+                                mSyncResult.stats.numInserts++;
+                            }
+                            for (Assessment assessment : possibleDuplicates) {
+                                batch.add(ContentProviderOperation
+                                        .newInsert(
+                                                KusssContentContract
+                                                        .asEventSyncAdapter(
+                                                                examUri,
+                                                                mAccount.name,
+                                                                mAccount.type))
+                                        .withValues(KusssHelper.getAssessmentContentValues(assessment))
+                                        .build());
+                                Log.d(TAG, "Scheduling insert: " + assessment.getTerm()
+                                        + " " + assessment.getCourseId());
 
-                            mSyncResult.stats.numInserts++;
-                        }
+                                mSyncResult.stats.numInserts++;
+                            }
 
-                        updateNotify(mContext.getString(R.string.notification_sync_assessment_saving));
+                            updateNotify(mContext.getString(R.string.notification_sync_assessment_saving));
 
-                        if (batch.size() > 0) {
-                            Log.d(TAG, "Applying batch update");
-                            mProvider.applyBatch(batch);
-                            Log.d(TAG, "Notify resolver");
-                            mResolver
-                                    .notifyChange(
-                                            KusssContentContract.Assessment.CONTENT_CHANGED_URI,
-                                            null, // No
-                                            // local
-                                            // observer
-                                            false); // IMPORTANT: Do not sync to
-                            // network
-                        } else {
-                            Log.w(TAG, "No batch operations found! Do nothing");
+                            if (batch.size() > 0) {
+                                Log.d(TAG, "Applying batch update");
+                                mProvider.applyBatch(batch);
+                                Log.d(TAG, "Notify resolver");
+                                mResolver
+                                        .notifyChange(
+                                                KusssContentContract.Assessment.CONTENT_CHANGED_URI,
+                                                null, // No
+                                                // local
+                                                // observer
+                                                false); // IMPORTANT: Do not sync to
+                                // network
+                            } else {
+                                Log.w(TAG, "No batch operations found! Do nothing");
+                            }
                         }
                     }
                 }

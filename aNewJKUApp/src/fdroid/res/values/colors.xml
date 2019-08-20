@@ -2,5 +2,4 @@
 <resources>
     <!--colors for default style-->
     <color name="default_accent">#19bd0f</color>
-    <color name="default_accentTransparent">#5519bd0f</color>
 </resources>

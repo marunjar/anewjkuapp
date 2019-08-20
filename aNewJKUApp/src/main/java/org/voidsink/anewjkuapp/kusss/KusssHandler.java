@@ -28,7 +28,6 @@ package org.voidsink.anewjkuapp.kusss;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -72,6 +71,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
 
 public class KusssHandler {
 
@@ -121,8 +122,7 @@ public class KusssHandler {
         String userAgent = null;
         try {
             userAgent = System.getProperty("http.agent");
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
         if (TextUtils.isEmpty(userAgent)) {
             userAgent = "Mozilla/5.0";
@@ -257,7 +257,7 @@ public class KusssHandler {
             mCookies.getCookieStore().removeAll();
         }
         try {
-            Connection.Response r = Jsoup.connect(URL_LOGOUT).userAgent(getUserAgent()).cookies(getCookieMap()).method(Connection.Method.GET).execute();
+            Jsoup.connect(URL_LOGOUT).userAgent(getUserAgent()).cookies(getCookieMap()).method(Connection.Method.GET).execute();
 
             if (!isLoggedIn(c, (String) null)) {
                 mCookies.getCookieStore().removeAll();
@@ -321,7 +321,7 @@ public class KusssHandler {
 
         if (TextUtils.isEmpty(encoding)) {
             String contentType = conn.getContentType();
-            String[] values = contentType.split(";");
+            String[] values = contentType.split(";", -1);
 
             for (String value : values) {
                 value = value.trim();
@@ -477,7 +477,8 @@ public class KusssHandler {
                     Term term = Term.parseTerm(termValue);
                     terms.add(term);
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "getTerms", e);
+                    Analytics.sendException(c, e, true);
                 }
             }
 
@@ -505,7 +506,7 @@ public class KusssHandler {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, "getTerms", e);
+            Log.e(TAG, "getTermMap", e);
             Analytics.sendException(c, e, true);
             return null;
         }
@@ -564,7 +565,7 @@ public class KusssHandler {
                     }
                 } else {
                     // break if selection failed
-                    throw new IOException(String.format("cannot select term: %s", term));
+                    return null;
                 }
             }
             if (courses.size() == 0) {

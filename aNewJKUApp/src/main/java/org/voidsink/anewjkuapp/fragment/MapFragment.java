@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -36,10 +36,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -67,7 +63,7 @@ import org.mapsforge.map.layer.cache.TileCache;
 import org.mapsforge.map.layer.labels.LabelLayer;
 import org.mapsforge.map.layer.overlay.Marker;
 import org.mapsforge.map.layer.renderer.TileRendererLayer;
-import org.mapsforge.map.model.MapViewPosition;
+import org.mapsforge.map.model.IMapViewPosition;
 import org.mapsforge.map.reader.MapFile;
 import org.mapsforge.map.rendertheme.InternalRenderTheme;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
@@ -88,6 +84,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -191,16 +191,16 @@ public class MapFragment extends BaseFragment implements
         Uri searchUri = PoiContentContract.CONTENT_URI.buildUpon()
                 .appendPath(SearchManager.SUGGEST_URI_PATH_QUERY)
                 .appendPath(query).build();
-        Cursor c = cr.query(searchUri, ImportPoiTask.POI_PROJECTION, null,
-                null, null);
-        if (c != null) {
-            while (c.moveToNext()) {
-                Poi p = new Poi(c);
-                if (!isExactLocation || p.getName().equalsIgnoreCase(query)) {
-                    pois.add(p);
+        try (Cursor c = cr.query(searchUri, ImportPoiTask.POI_PROJECTION, null,
+                null, null)) {
+            if (c != null) {
+                while (c.moveToNext()) {
+                    Poi p = new Poi(c);
+                    if (!isExactLocation || p.getName().equalsIgnoreCase(query)) {
+                        pois.add(p);
+                    }
                 }
             }
-            c.close();
         }
 
         switch (pois.size()) {
@@ -246,17 +246,17 @@ public class MapFragment extends BaseFragment implements
         // jump to point with given Uri
         ContentResolver cr = getActivity().getContentResolver();
 
-        Cursor c = cr
-                .query(uri, ImportPoiTask.POI_PROJECTION, null, null, null);
-        if (c != null) {
-            if (c.moveToNext()) {
-                String name = c.getString(ImportPoiTask.COLUMN_POI_NAME);
-                double lon = c.getDouble(ImportPoiTask.COLUMN_POI_LON);
-                double lat = c.getDouble(ImportPoiTask.COLUMN_POI_LAT);
+        try (Cursor c = cr
+                .query(uri, ImportPoiTask.POI_PROJECTION, null, null, null)) {
+            if (c != null) {
+                if (c.moveToNext()) {
+                    String name = c.getString(ImportPoiTask.COLUMN_POI_NAME);
+                    double lon = c.getDouble(ImportPoiTask.COLUMN_POI_LON);
+                    double lat = c.getDouble(ImportPoiTask.COLUMN_POI_LAT);
 
-                setNewGoal(new MyMarker(lat, lon, name));
+                    setNewGoal(new MyMarker(lat, lon, name));
+                }
             }
-            c.close();
         }
 
         if (mSearchView != null) {
@@ -450,7 +450,7 @@ public class MapFragment extends BaseFragment implements
                     this.mapView.getModel().frameBufferModel.getOverdrawFactor());
 
             final Layers layers = this.mapView.getLayerManager().getLayers();
-            final MapViewPosition mapViewPosition = this.mapView.getModel().mapViewPosition;
+            final IMapViewPosition mapViewPosition = this.mapView.getModel().mapViewPosition;
 
             initializePosition(mapViewPosition);
 
@@ -480,7 +480,7 @@ public class MapFragment extends BaseFragment implements
         this.mMyLocationOverlay = null;
         if (EasyPermissions.hasPermissions(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)) {
             final Layers layers = this.mapView.getLayerManager().getLayers();
-            final MapViewPosition mapViewPosition = this.mapView.getModel().mapViewPosition;
+            final IMapViewPosition mapViewPosition = this.mapView.getModel().mapViewPosition;
 
             // overlay with a marker to show the actual position
             Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_marker_own_position);
@@ -528,7 +528,7 @@ public class MapFragment extends BaseFragment implements
     }
 
     private TileRendererLayer createTileRendererLayer(TileCache tileCache,
-                                                      MapViewPosition mapViewPosition, File mapFile,
+                                                      IMapViewPosition mapViewPosition, File mapFile,
                                                       XmlRenderTheme renderTheme) {
         MapDataStore mapDataStore = new MapFile(mapFile);
 
@@ -539,7 +539,7 @@ public class MapFragment extends BaseFragment implements
         return tileRendererLayer;
     }
 
-    private MapViewPosition initializePosition(MapViewPosition mvp) {
+    private IMapViewPosition initializePosition(IMapViewPosition mvp) {
         LatLong center = mvp.getCenter();
 
         if (center.equals(new LatLong(0, 0))) {
@@ -579,15 +579,6 @@ public class MapFragment extends BaseFragment implements
             Log.i(TAG, "use external map: " + mapFile.toString());
         }
         return mapFile;
-    }
-
-    private File getMapFileDirectory() {
-        File mapFile = PreferenceWrapper.getMapFile(getContext());
-        if (mapFile == null || !mapFile.exists() || !mapFile.canRead()) {
-            return getActivity().getFilesDir();
-        } else {
-            return mapFile.getParentFile();
-        }
     }
 
     @Override

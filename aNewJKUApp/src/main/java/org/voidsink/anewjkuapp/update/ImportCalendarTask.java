@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,7 +30,6 @@ import android.accounts.Account;
 import android.app.SearchManager;
 import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
-import android.content.ContentProviderOperation.Builder;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -41,10 +40,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
+
+import androidx.core.content.ContextCompat;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Component;
@@ -90,7 +90,7 @@ public class ImportCalendarTask implements Callable<Void> {
             .compile("Lva-LeiterIn:\\s+");
 
     private ContentProviderClient mProvider;
-    private boolean mReleaseProvider = false;
+    private boolean mReleaseProvider;
     private final Account mAccount;
     private final SyncResult mSyncResult;
     private final Context mContext;
@@ -105,7 +105,7 @@ public class ImportCalendarTask implements Callable<Void> {
 
     public ImportCalendarTask(Account account, Context context,
                               String getTypeID, CalendarBuilder calendarBuilder) {
-        this(account, null, null, null,
+        this(account, null, null,
                 new SyncResult(), context, getTypeID, calendarBuilder);
 
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
@@ -117,7 +117,7 @@ public class ImportCalendarTask implements Callable<Void> {
         this.mShowProgress = true;
     }
 
-    public ImportCalendarTask(Account account, Bundle extras, String authority,
+    public ImportCalendarTask(Account account, Bundle extras,
                               ContentProviderClient provider, SyncResult syncResult,
                               Context context, String calendarName,
                               CalendarBuilder calendarBuilder) {
@@ -188,7 +188,7 @@ public class ImportCalendarTask implements Callable<Void> {
 
             if (KusssHandler.getInstance().isAvailable(mContext,
                     AppUtils.getAccountAuthToken(mContext, mAccount),
-                    AppUtils.getAccountName(mContext, mAccount),
+                    AppUtils.getAccountName(mAccount),
                     AppUtils.getAccountPassword(mContext, mAccount))) {
 
                 updateNotify(mContext.getString(R.string.notification_sync_calendar_loading, CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
@@ -225,7 +225,7 @@ public class ImportCalendarTask implements Callable<Void> {
                         if (lineSeparator == null) lineSeparator = ", ";
 
                         for (Object e : events) {
-                            if (VEvent.class.isInstance(e)) {
+                            if (e instanceof VEvent) {
                                 VEvent ev = ((VEvent) e);
 
                                 String summary = ev.getSummary().getValue()
@@ -273,7 +273,7 @@ public class ImportCalendarTask implements Callable<Void> {
                         // Build hash table of incoming entries
                         Map<String, VEvent> eventsMap = new HashMap<>();
                         for (Object e : events) {
-                            if (VEvent.class.isInstance(e)) {
+                            if (e instanceof VEvent) {
                                 VEvent ev = ((VEvent) e);
 
                                 if ((ev.getStartDate().getDate().getTime() >= calendar.getTerm().getStart().getTime()) &&
@@ -287,43 +287,41 @@ public class ImportCalendarTask implements Callable<Void> {
 
                         Log.d(TAG, "Fetching local entries for merge with: " + calendarId);
 
-                        Cursor c = CalendarUtils.loadEventsBetween(mProvider, calUri, calendarId, calendar.getTerm().getStart(), calendar.getTerm().getEnd());
+                        // calc date for notifiying only future changes
+                        // max update interval is 1 week
+                        long notifyFrom = System.currentTimeMillis() / DateUtils.DAY_IN_MILLIS * DateUtils.DAY_IN_MILLIS - (DateUtils.DAY_IN_MILLIS * 7);
 
-                        if (c == null) {
-                            Log.w(TAG, "selection failed");
-                        } else {
-                            Log.d(TAG, String.format("Found %d local entries. Computing merge solution...", c.getCount()));
+                        try (Cursor c = CalendarUtils.loadEventsBetween(mProvider, calUri, calendarId, calendar.getTerm().getStart(), calendar.getTerm().getEnd())) {
+                            if (c == null) {
+                                Log.w(TAG, "selection failed");
+                            } else {
+                                Log.d(TAG, String.format("Found %d local entries. Computing merge solution...", c.getCount()));
 
-                            // find stale data
-                            String eventId;
-                            String eventKusssId;
-                            String eventLocation;
-                            String eventTitle;
-                            String eventDescription;
-                            long eventDTStart;
-                            long eventDTEnd;
-                            boolean eventDirty;
-                            boolean eventDeleted;
+                                // find stale data
+                                String eventId;
+                                String eventKusssId;
+                                String eventLocation;
+                                String eventTitle;
+                                String eventDescription;
+                                long eventDTStart;
+                                long eventDTEnd;
+                                boolean eventDirty;
+                                boolean eventDeleted;
 
-                            // calc date for notifiying only future changes
-                            // max update interval is 1 week
-                            long notifyFrom = System.currentTimeMillis() / DateUtils.DAY_IN_MILLIS * DateUtils.DAY_IN_MILLIS - (DateUtils.DAY_IN_MILLIS * 7);
-
-                            while (c.moveToNext()) {
-                                mSyncResult.stats.numEntries++;
-                                eventId = c.getString(CalendarUtils.COLUMN_EVENT_ID);
+                                while (c.moveToNext()) {
+                                    mSyncResult.stats.numEntries++;
+                                    eventId = c.getString(CalendarUtils.COLUMN_EVENT_ID);
 
 //                        Log.d(TAG, "---------");
-                                eventKusssId = null;
+                                    eventKusssId = null;
 
-                                // get kusssId from extended properties
-                                Cursor c2 = mProvider.query(CalendarContract.ExtendedProperties.CONTENT_URI, CalendarUtils.EXTENDED_PROPERTIES_PROJECTION,
-                                        CalendarContract.ExtendedProperties.EVENT_ID + " = ?",
-                                        new String[]{eventId},
-                                        null);
-
-                                if (c2 != null) {
-                                    while (c2.moveToNext()) {
+                                    // get kusssId from extended properties
+                                    try (Cursor c2 = mProvider.query(CalendarContract.ExtendedProperties.CONTENT_URI, CalendarUtils.EXTENDED_PROPERTIES_PROJECTION,
+                                            CalendarContract.ExtendedProperties.EVENT_ID + " = ?",
+                                            new String[]{eventId},
+                                            null)) {
+                                        if (c2 != null) {
+                                            while (c2.moveToNext()) {
 
 //                                    String extra = "";
 //                                    for (int i = 0; i < c2.getColumnCount(); i++) {
@@ -331,100 +329,100 @@ public class ImportCalendarTask implements Callable<Void> {
 //                                    }
 //                                    Log.d(TAG, "Extended: " + extra);
 
-                                        if (c2.getString(1).contains(CalendarUtils.EXTENDED_PROPERTY_NAME_KUSSS_ID)) {
-                                            eventKusssId = c2.getString(2);
+                                                if (c2.getString(1).contains(CalendarUtils.EXTENDED_PROPERTY_NAME_KUSSS_ID)) {
+                                                    eventKusssId = c2.getString(2);
+                                                }
+                                            }
                                         }
                                     }
-                                    c2.close();
-                                }
 
-                                if (TextUtils.isEmpty(eventKusssId)) {
-                                    eventKusssId = c.getString(CalendarUtils.COLUMN_EVENT_KUSSS_ID_LEGACY);
-                                }
+                                    if (TextUtils.isEmpty(eventKusssId)) {
+                                        eventKusssId = c.getString(CalendarUtils.COLUMN_EVENT_KUSSS_ID_LEGACY);
+                                    }
 
-                                eventTitle = c.getString(CalendarUtils.COLUMN_EVENT_TITLE);
-                                Log.d(TAG, "Title: " + eventTitle);
+                                    eventTitle = c.getString(CalendarUtils.COLUMN_EVENT_TITLE);
+                                    Log.d(TAG, "Title: " + eventTitle);
 
-                                eventLocation = c
-                                        .getString(CalendarUtils.COLUMN_EVENT_LOCATION);
-                                eventDescription = c
-                                        .getString(CalendarUtils.COLUMN_EVENT_DESCRIPTION);
-                                eventDTStart = c.getLong(CalendarUtils.COLUMN_EVENT_DTSTART);
-                                eventDTEnd = c.getLong(CalendarUtils.COLUMN_EVENT_DTEND);
-                                eventDirty = "1".equals(c
-                                        .getString(CalendarUtils.COLUMN_EVENT_DIRTY));
-                                eventDeleted = "1".equals(c
-                                        .getString(CalendarUtils.COLUMN_EVENT_DELETED));
+                                    eventLocation = c
+                                            .getString(CalendarUtils.COLUMN_EVENT_LOCATION);
+                                    eventDescription = c
+                                            .getString(CalendarUtils.COLUMN_EVENT_DESCRIPTION);
+                                    eventDTStart = c.getLong(CalendarUtils.COLUMN_EVENT_DTSTART);
+                                    eventDTEnd = c.getLong(CalendarUtils.COLUMN_EVENT_DTEND);
+                                    eventDirty = "1".equals(c
+                                            .getString(CalendarUtils.COLUMN_EVENT_DIRTY));
+                                    eventDeleted = "1".equals(c
+                                            .getString(CalendarUtils.COLUMN_EVENT_DELETED));
 
-                                if (eventKusssId != null && eventKusssId.startsWith(calendar.getUidPrefix())) {
-                                    VEvent match = eventsMap.get(eventKusssId);
-                                    if (match != null && !eventDeleted) {
-                                        // Entry exists. Remove from entry
-                                        // map to prevent insert later
-                                        eventsMap.remove(eventKusssId);
+                                    if (eventKusssId != null && eventKusssId.startsWith(calendar.getUidPrefix())) {
+                                        VEvent match = eventsMap.get(eventKusssId);
+                                        if (match != null && !eventDeleted) {
+                                            // Entry exists. Remove from entry
+                                            // map to prevent insert later
+                                            eventsMap.remove(eventKusssId);
 
-                                        // update only changes after notifiyFrom
-                                        if ((match.getStartDate().getDate().getTime() > notifyFrom || eventDTStart > notifyFrom) &&
-                                                // check to see if the entry needs to be updated
-                                                ((match.getStartDate().getDate().getTime() != eventDTStart) ||
-                                                        (match.getEndDate().getDate().getTime() != eventDTEnd) ||
-                                                        (!match.getSummary().getValue().trim().equals(eventTitle.trim())) ||
-                                                        (!match.getSummary().getValue().trim().equals(eventTitle.trim())) ||
-                                                        (!match.getLocation().getValue().trim().equals(eventLocation.trim())) ||
-                                                        (!match.getDescription().getValue().trim().equals(eventDescription.trim()))
-                                                )) {
-                                            Uri existingUri = calUri.buildUpon()
-                                                    .appendPath(eventId).build();
+                                            // update only changes after notifiyFrom
+                                            if ((match.getStartDate().getDate().getTime() > notifyFrom || eventDTStart > notifyFrom) &&
+                                                    // check to see if the entry needs to be updated
+                                                    ((match.getStartDate().getDate().getTime() != eventDTStart) ||
+                                                            (match.getEndDate().getDate().getTime() != eventDTEnd) ||
+                                                            !match.getSummary().getValue().trim().equals(eventTitle.trim()) ||
+                                                            !match.getSummary().getValue().trim().equals(eventTitle.trim()) ||
+                                                            !match.getLocation().getValue().trim().equals(eventLocation.trim()) ||
+                                                            !match.getDescription().getValue().trim().equals(eventDescription.trim())
+                                                    )) {
+                                                Uri existingUri = calUri.buildUpon()
+                                                        .appendPath(eventId).build();
 
-                                            // Update existing record
-                                            Log.d(TAG, "Scheduling update: " + existingUri
-                                                    + " dirty=" + eventDirty);
+                                                // Update existing record
+                                                Log.d(TAG, "Scheduling update: " + existingUri
+                                                        + " dirty=" + eventDirty);
 
-                                            batch.add(ContentProviderOperation
-                                                    .newUpdate(existingUri)
-                                                    .withValues(getContentValuesFromEvent(match))
-                                                    .build());
-                                            mSyncResult.stats.numUpdates++;
+                                                batch.add(ContentProviderOperation
+                                                        .newUpdate(existingUri)
+                                                        .withValues(getContentValuesFromEvent(match))
+                                                        .build());
+                                                mSyncResult.stats.numUpdates++;
 
-                                            mNotification.addUpdate(getEventString(mContext, match));
+                                                mNotification.addUpdate(getEventString(mContext, match));
+                                            } else {
+                                                mSyncResult.stats.numSkippedEntries++;
+                                            }
                                         } else {
-                                            mSyncResult.stats.numSkippedEntries++;
+                                            if ((eventDTStart >= mSyncFromNow) &&
+                                                    (eventDTStart >= calendar.getTerm().getStart().getTime()) &&
+                                                    (eventDTStart <= calendar.getTerm().getEnd().getTime())) {
+                                                // Entry doesn't exist. Remove only newer events from the database.
+                                                Uri deleteUri = calUri.buildUpon()
+                                                        .appendPath(eventId)
+                                                        .build();
+                                                Log.d(TAG, "Scheduling delete: " + deleteUri);
+                                                // notify only future changes
+                                                if (eventDTStart > notifyFrom && !eventDeleted) {
+                                                    mNotification
+                                                            .addDelete(AppUtils.getEventString(
+                                                                    mContext,
+                                                                    eventDTStart,
+                                                                    eventDTEnd,
+                                                                    eventTitle, false));
+                                                }
+
+                                                batch.add(ContentProviderOperation
+                                                        .newDelete(deleteUri)
+                                                        .build());
+                                                mSyncResult.stats.numDeletes++;
+                                            } else {
+                                                mSyncResult.stats.numSkippedEntries++;
+                                            }
                                         }
                                     } else {
-                                        if ((eventDTStart >= mSyncFromNow) &&
-                                                (eventDTStart >= calendar.getTerm().getStart().getTime()) &&
-                                                (eventDTStart <= calendar.getTerm().getEnd().getTime())) {
-                                            // Entry doesn't exist. Remove only newer events from the database.
-                                            Uri deleteUri = calUri.buildUpon()
-                                                    .appendPath(eventId)
-                                                    .build();
-                                            Log.d(TAG, "Scheduling delete: " + deleteUri);
-                                            // notify only future changes
-                                            if (eventDTStart > notifyFrom && !eventDeleted) {
-                                                mNotification
-                                                        .addDelete(AppUtils.getEventString(
-                                                                mContext,
-                                                                eventDTStart,
-                                                                eventDTEnd,
-                                                                eventTitle, false));
-                                            }
-
-                                            batch.add(ContentProviderOperation
-                                                    .newDelete(deleteUri)
-                                                    .build());
-                                            mSyncResult.stats.numDeletes++;
-                                        } else {
-                                            mSyncResult.stats.numSkippedEntries++;
-                                        }
+                                        Log.i(TAG,
+                                                "Event UID not set, ignore event: uid=" + eventKusssId
+                                                        + " dirty=" + eventDirty
+                                                        + " title=" + eventTitle);
                                     }
-                                } else {
-                                    Log.i(TAG,
-                                            "Event UID not set, ignore event: uid=" + eventKusssId
-                                                    + " dirty=" + eventDirty
-                                                    + " title=" + eventTitle);
                                 }
                             }
-                            c.close();
 
                             Log.d(TAG, String.format("Cursor closed, %d events left", eventsMap.size()));
 
@@ -440,7 +438,7 @@ public class ImportCalendarTask implements Callable<Void> {
                                         mNotification.addInsert(getEventString(mContext, v));
                                     }
 
-                                    Builder builder = ContentProviderOperation
+                                    ContentProviderOperation.Builder builder = ContentProviderOperation
                                             .newInsert(CalendarContractWrapper.Events.CONTENT_URI());
 
                                     builder.withValue(
@@ -590,20 +588,20 @@ public class ImportCalendarTask implements Callable<Void> {
             Uri searchUri = PoiContentContract.CONTENT_URI.buildUpon()
                     .appendPath(SearchManager.SUGGEST_URI_PATH_QUERY)
                     .appendPath(name).build();
-            Cursor c = cr.query(searchUri, ImportPoiTask.POI_PROJECTION, null,
-                    null, null);
             Poi p = null;
 
-            if (c != null) {
-                while (c.moveToNext()) {
-                    p = new Poi(c);
+            try (Cursor c = cr.query(searchUri, ImportPoiTask.POI_PROJECTION, null,
+                    null, null)) {
+                if (c != null) {
+                    while (c.moveToNext()) {
+                        p = new Poi(c);
 
-                    if (p.getName().equalsIgnoreCase(name)) {
-                        break;
+                        if (p.getName().equalsIgnoreCase(name)) {
+                            break;
+                        }
+                        p = null;
                     }
-                    p = null;
                 }
-                c.close();
             }
 
             if (p != null) {

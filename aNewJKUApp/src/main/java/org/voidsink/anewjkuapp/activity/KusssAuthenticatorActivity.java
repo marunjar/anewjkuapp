@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -36,10 +36,6 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
@@ -59,6 +55,11 @@ import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.anewjkuapp.utils.UIUtils;
 import org.voidsink.anewjkuapp.workaround.AccountAuthenticatorActivity;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 

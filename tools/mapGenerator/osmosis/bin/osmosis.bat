@@ -8,11 +8,6 @@ REM # JAVACMD - The java command to launch osmosis.
 REM # JAVACMD_OPTIONS - The options to append to the java command, typically used to modify jvm settings such as max memory.
 REM # OSMOSIS_OPTIONS - The options to apply to all osmosis invocations, typically used to add plugins or make quiet operation the default.
 
-rem # in case of error: Error occurred during initialization of VM
-rem # Could not reserve enough space for object heap
-rem # you could also add -Xmx1000m to reduce heap size 
-if "%JAVACMD_OPTIONS%" =="" set JAVACMD_OPTIONS=-server -Xmx1000m
-
 REM if [ -f /etc/osmosis ] ; then
 REM   . /etc/osmosis
 REM fi

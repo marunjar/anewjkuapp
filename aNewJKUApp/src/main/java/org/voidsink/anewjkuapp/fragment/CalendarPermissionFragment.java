@@ -30,8 +30,6 @@ import android.accounts.Account;
 import android.content.UriMatcher;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
@@ -41,6 +39,8 @@ import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 

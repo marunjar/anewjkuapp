@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: "net.ltgt.errorprone"
 
 repositories {
     mavenCentral()
@@ -26,13 +27,8 @@ configurations {
 }
 
 dependencies {
-    implementation "com.android.support:support-core-ui:${rootProject.ext.supportLibVersion}"
-}
-
-apply plugin: "net.ltgt.errorprone"
-
-configurations.errorprone {
-    resolutionStrategy.force 'com.google.errorprone:error_prone_core:2.2.0'
+    errorproneJavac "com.google.errorprone:error_prone_core:${rootProject.ext.errorProneVersion}"
+    implementation "androidx.legacy:legacy-support-core-ui:1.0.0"
 }
 
 //apply from: 'gradle-mvn-push.gradle'

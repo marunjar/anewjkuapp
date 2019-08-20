@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,14 +28,15 @@ package org.voidsink.anewjkuapp;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.kusss.Assessment;
@@ -50,7 +51,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lecho.lib.hellocharts.listener.PieChartOnValueSelectListener;
-import lecho.lib.hellocharts.model.AbstractChartData;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Column;
@@ -124,7 +124,6 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
 
         if (holder.mBarChart.getVisibility() == View.VISIBLE) {
             ComboLineColumnChartData dataSet = new ComboLineColumnChartData();
-            initBarChartDataSet(dataSet);
 
             ArrayList<Column> yVals = new ArrayList<>();
             ArrayList<AxisValue> axisValues = new ArrayList<>();
@@ -168,13 +167,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         }
     }
 
-    private void initBarChartDataSet(ComboLineColumnChartData dataSet) {
-        initBaseChartDataSet(dataSet);
-    }
-
     private void initPieChartDataSet(PieChartData dataSet) {
-        initBaseChartDataSet(dataSet);
-
         dataSet.setCenterText1Color(mTextColorPrimary);
         dataSet.setCenterText1FontSize(mTextSizePrimary);
         dataSet.setCenterText2Color(mTextColorSecondary);
@@ -182,9 +175,6 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         dataSet.setHasCenterCircle(true);
         dataSet.setHasLabels(true);
         dataSet.setHasLabelsOnlyForSelected(false);
-    }
-
-    private void initBaseChartDataSet(AbstractChartData dataSet) {
     }
 
     private void addSerieToBarChart(List<Column> values, List<AxisValue> axisValues, String category,
@@ -303,7 +293,6 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
 
 
             ComboLineColumnChartData dataSet = new ComboLineColumnChartData();
-            initBarChartDataSet(dataSet);
 
             Axis xAxis = new Axis(axisValues);
             xAxis.setTextColor(mTextColorPrimary);
@@ -460,7 +449,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         private final LvaState mType;
         private final double mEcts;
 
-        public LvaStatItem(LvaState type, double ects) {
+        LvaStatItem(LvaState type, double ects) {
             this.mType = type;
             this.mEcts = ects;
         }
@@ -469,7 +458,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             return mType;
         }
 
-        public double getEcts() {
+        double getEcts() {
             return mEcts;
         }
     }
@@ -478,7 +467,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         private final AssessmentType mType;
         private final double mAvgGrade;
 
-        public GradeStatItem(AssessmentType type, List<Assessment> grades, boolean isWeighted, boolean positiveOnly) {
+        GradeStatItem(AssessmentType type, List<Assessment> grades, boolean isWeighted, boolean positiveOnly) {
             this.mType = type;
             this.mAvgGrade = AppUtils.getAvgGrade(grades, isWeighted, type, positiveOnly);
         }
@@ -487,7 +476,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             return mType;
         }
 
-        public double getAvgGrade() {
+        double getAvgGrade() {
             return mAvgGrade;
         }
     }

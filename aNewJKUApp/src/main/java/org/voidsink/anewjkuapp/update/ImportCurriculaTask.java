@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -90,7 +90,7 @@ public class ImportCurriculaTask implements Callable<Void> {
     public static final int COLUMN_CURRICULUM_DT_END = 8;
 
     public ImportCurriculaTask(Account account, Context context) {
-        this(account, null, null, null, null, context);
+        this(account, null, null, null, context);
         this.mProvider = context.getContentResolver()
                 .acquireContentProviderClient(
                         KusssContentContract.Course.CONTENT_URI);
@@ -99,7 +99,7 @@ public class ImportCurriculaTask implements Callable<Void> {
         this.mShowProgress = true;
     }
 
-    public ImportCurriculaTask(Account account, Bundle extras, String authority,
+    public ImportCurriculaTask(Account account, Bundle extras,
                                ContentProviderClient provider, SyncResult syncResult,
                                Context context) {
         this.mAccount = account;
@@ -135,7 +135,7 @@ public class ImportCurriculaTask implements Callable<Void> {
 
             if (KusssHandler.getInstance().isAvailable(mContext,
                     AppUtils.getAccountAuthToken(mContext, mAccount),
-                    AppUtils.getAccountName(mContext, mAccount),
+                    AppUtils.getAccountName(mAccount),
                     AppUtils.getAccountPassword(mContext, mAccount))) {
 
                 updateNotify(mContext.getString(R.string.notification_sync_curricula_loading));
@@ -158,90 +158,90 @@ public class ImportCurriculaTask implements Callable<Void> {
                     ArrayList<ContentProviderOperation> batch = new ArrayList<>();
 
                     Uri curriculaUri = KusssContentContract.Curricula.CONTENT_URI;
-                    Cursor c = mProvider.query(curriculaUri, CURRICULA_PROJECTION,
-                            null, null, null);
 
-                    if (c == null) {
-                        Log.w(TAG, "selection failed");
-                    } else {
-                        Log.d(TAG,
-                                "Found "
-                                        + c.getCount()
-                                        + " local entries. Computing merge solution...");
+                    try (Cursor c = mProvider.query(curriculaUri, CURRICULA_PROJECTION,
+                            null, null, null)) {
+                        if (c == null) {
+                            Log.w(TAG, "selection failed");
+                        } else {
+                            Log.d(TAG,
+                                    "Found "
+                                            + c.getCount()
+                                            + " local entries. Computing merge solution...");
 
-                        int _Id;
-                        String curriculumCid;
-                        Date curriculumDtStart;
+                            int _Id;
+                            String curriculumCid;
+                            Date curriculumDtStart;
 
-                        while (c.moveToNext()) {
-                            _Id = c.getInt(COLUMN_CURRICULUM_ID);
-                            curriculumCid = c.getString(COLUMN_CURRICULUM_CURRICULUM_ID);
-                            curriculumDtStart = new Date(c.getLong(COLUMN_CURRICULUM_DT_START));
+                            while (c.moveToNext()) {
+                                _Id = c.getInt(COLUMN_CURRICULUM_ID);
+                                curriculumCid = c.getString(COLUMN_CURRICULUM_CURRICULUM_ID);
+                                curriculumDtStart = new Date(c.getLong(COLUMN_CURRICULUM_DT_START));
 
-                            Curriculum curriculum = curriculaMap.remove(KusssHelper.getCurriculumKey(curriculumCid, curriculumDtStart));
-                            if (curriculum != null) {
-                                // Check to see if the entry needs to be
-                                // updated
-                                Uri existingUri = curriculaUri
-                                        .buildUpon()
-                                        .appendPath(Integer.toString(_Id))
-                                        .build();
-                                Log.d(TAG, "Scheduling update: "
-                                        + existingUri);
+                                Curriculum curriculum = curriculaMap.remove(KusssHelper.getCurriculumKey(curriculumCid, curriculumDtStart));
+                                if (curriculum != null) {
+                                    // Check to see if the entry needs to be
+                                    // updated
+                                    Uri existingUri = curriculaUri
+                                            .buildUpon()
+                                            .appendPath(Integer.toString(_Id))
+                                            .build();
+                                    Log.d(TAG, "Scheduling update: "
+                                            + existingUri);
 
+                                    batch.add(ContentProviderOperation
+                                            .newUpdate(
+                                                    KusssContentContract
+                                                            .asEventSyncAdapter(
+                                                                    existingUri,
+                                                                    mAccount.name,
+                                                                    mAccount.type))
+                                            .withValue(
+                                                    KusssContentContract.Curricula.COL_ID,
+                                                    Integer.toString(_Id))
+                                            .withValues(KusssHelper.getCurriculumContentValues(curriculum))
+                                            .build());
+                                    mSyncResult.stats.numUpdates++;
+                                } else {
+                                    // delete
+                                }
+                            }
+
+                            for (Curriculum curriculum : curriculaMap.values()) {
                                 batch.add(ContentProviderOperation
-                                        .newUpdate(
+                                        .newInsert(
                                                 KusssContentContract
                                                         .asEventSyncAdapter(
-                                                                existingUri,
+                                                                curriculaUri,
                                                                 mAccount.name,
                                                                 mAccount.type))
-                                        .withValue(
-                                                KusssContentContract.Curricula.COL_ID,
-                                                Integer.toString(_Id))
                                         .withValues(KusssHelper.getCurriculumContentValues(curriculum))
                                         .build());
-                                mSyncResult.stats.numUpdates++;
-                            } else {
-                                // delete
+                                Log.d(TAG,
+                                        "Scheduling insert: " + curriculum.getCid()
+                                                + " " + curriculum.getDtStart().toString());
+                                mSyncResult.stats.numInserts++;
                             }
-                        }
-                        c.close();
 
-                        for (Curriculum curriculum : curriculaMap.values()) {
-                            batch.add(ContentProviderOperation
-                                    .newInsert(
-                                            KusssContentContract
-                                                    .asEventSyncAdapter(
-                                                            curriculaUri,
-                                                            mAccount.name,
-                                                            mAccount.type))
-                                    .withValues(KusssHelper.getCurriculumContentValues(curriculum))
-                                    .build());
-                            Log.d(TAG,
-                                    "Scheduling insert: " + curriculum.getCid()
-                                            + " " + curriculum.getDtStart().toString());
-                            mSyncResult.stats.numInserts++;
-                        }
+                            updateNotify(mContext.getString(R.string.notification_sync_curricula_saving));
 
-                        updateNotify(mContext.getString(R.string.notification_sync_curricula_saving));
-
-                        if (batch.size() > 0) {
-                            Log.d(TAG, "Applying batch update");
-                            mProvider.applyBatch(batch);
-                            Log.d(TAG, "Notify resolver");
-                            mResolver
-                                    .notifyChange(
-                                            KusssContentContract.Curricula.CONTENT_CHANGED_URI,
-                                            null, // No
-                                            // local
-                                            // observer
-                                            false); // IMPORTANT: Do not
-                            // sync to
-                            // network
-                        } else {
-                            Log.w(TAG,
-                                    "No batch operations found! Do nothing");
+                            if (batch.size() > 0) {
+                                Log.d(TAG, "Applying batch update");
+                                mProvider.applyBatch(batch);
+                                Log.d(TAG, "Notify resolver");
+                                mResolver
+                                        .notifyChange(
+                                                KusssContentContract.Curricula.CONTENT_CHANGED_URI,
+                                                null, // No
+                                                // local
+                                                // observer
+                                                false); // IMPORTANT: Do not
+                                // sync to
+                                // network
+                            } else {
+                                Log.w(TAG,
+                                        "No batch operations found! Do nothing");
+                            }
                         }
                     }
                 }

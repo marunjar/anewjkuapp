@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -34,7 +34,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -44,6 +43,8 @@ import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
 import org.voidsink.anewjkuapp.utils.AppUtils;
+
+import androidx.annotation.NonNull;
 
 public class KusssAuthenticator extends AbstractAccountAuthenticator {
 
@@ -134,7 +135,6 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
                     authToken = KusssHandler.getInstance().login(mContext, account.name,
                             password);
                 } catch (Exception e) {
-                    e.printStackTrace();
                     authToken = null;
                 }
             }
@@ -170,8 +170,8 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
     public String getAuthTokenLabel(String authTokenType) {
         /*
          * if (AUTHTOKEN_TYPE_FULL_ACCESS.equals(authTokenType)) return
-		 * AUTHTOKEN_TYPE_FULL_ACCESS_LABEL; else
-		 */
+         * AUTHTOKEN_TYPE_FULL_ACCESS_LABEL; else
+         */
         if (AUTHTOKEN_TYPE_READ_ONLY.equals(authTokenType))
             return AUTHTOKEN_TYPE_READ_ONLY_LABEL;
         else
@@ -204,7 +204,8 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
     }
 
     @Override
-    public @NonNull Bundle getAccountRemovalAllowed(
+    public @NonNull
+    Bundle getAccountRemovalAllowed(
             AccountAuthenticatorResponse response, Account account)
             throws NetworkErrorException {
         final Bundle result = super.getAccountRemovalAllowed(response, account);

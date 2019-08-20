@@ -31,10 +31,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
 import org.voidsink.anewjkuapp.PreferenceWrapper;
@@ -44,6 +40,11 @@ import org.voidsink.anewjkuapp.base.ThemedActivity;
 import org.voidsink.anewjkuapp.fragment.SettingsFragment;
 import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.Consts;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 
 public class SettingsActivity extends ThemedActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -84,7 +85,7 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                fragment = null;
             }
             if (fragment != null) {
                 Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(ARG_SHOW_FRAGMENT);

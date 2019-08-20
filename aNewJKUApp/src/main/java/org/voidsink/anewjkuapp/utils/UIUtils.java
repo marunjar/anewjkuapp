@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,12 +30,13 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NavUtils;
 
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
@@ -122,7 +123,7 @@ public class UIUtils {
 
         // Reuse current drawable if possible
         Drawable currentDrawable = icon.findDrawableByLayerId(R.id.today_icon_day);
-        if (currentDrawable != null && currentDrawable instanceof DayOfMonthDrawable) {
+        if (currentDrawable instanceof DayOfMonthDrawable) {
             today = (DayOfMonthDrawable) currentDrawable;
         } else if (c != null) {
             today = new DayOfMonthDrawable(c);

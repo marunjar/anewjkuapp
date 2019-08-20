@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -34,19 +34,21 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.material.navigation.NavigationView;
 
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
@@ -207,7 +209,7 @@ public class MainActivity extends ThemedActivity {
 
     @AfterPermissionGranted(PERMISSIONS_REQUEST_ACCOUNT)
     private void startCreateAccount() {
-        if (((android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) || (EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS))) {
+        if ((android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) || EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS)) {
             if (AppUtils.getAccount(this) == null) {
                 if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                     this.startActivity(new Intent(Settings.ACTION_ADD_ACCOUNT)
@@ -304,11 +306,8 @@ public class MainActivity extends ThemedActivity {
                     .findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
         }
 
-        if (f != null) {
-            // Log.i(TAG, "fragment: " + f.getClass().getSimpleName());
-            if (BaseFragment.class.isInstance(f)) {
-                ((BaseFragment) f).handleIntent(intent);
-            }
+        if (f instanceof BaseFragment) {
+            ((BaseFragment) f).handleIntent(intent);
         }
     }
 
@@ -384,7 +383,7 @@ public class MainActivity extends ThemedActivity {
                 b.putInt(Consts.ARG_FRAGMENT_ID, menuItem.getItemId());
                 f.setArguments(b);
 
-                final boolean addToBackstack = (oldFragment != null) && (!oldFragment.getClass().equals(f.getClass()));
+                final boolean addToBackstack = (oldFragment != null) && !oldFragment.getClass().equals(f.getClass());
 
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.container, f, Consts.ARG_FRAGMENT_TAG);
@@ -464,12 +463,5 @@ public class MainActivity extends ThemedActivity {
         mDrawerLayout.removeDrawerListener(mDrawerListener);
 
         Analytics.clearScreen(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        //startCreateAccount();
     }
 }

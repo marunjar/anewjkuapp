@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -33,7 +33,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
-import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
 import org.voidsink.anewjkuapp.analytics.Analytics;
@@ -42,6 +41,8 @@ import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import java.io.File;
 import java.util.List;
+
+import androidx.preference.PreferenceManager;
 
 public final class PreferenceWrapper {
     private static final String TAG = PreferenceWrapper.class.getSimpleName();

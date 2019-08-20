@@ -25,13 +25,14 @@
 
 package org.voidsink.sectionedrecycleradapter;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
 import java.util.Arrays;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Adaption of SimpleSectionedListAdapter from google io 2014
@@ -86,7 +87,7 @@ public abstract class SectionedRecyclerViewBaseAdapter extends RecyclerView.Adap
             layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
-                    return (isSectionHeaderPosition(position)) ? layoutManager.getSpanCount() : 1;
+                    return isSectionHeaderPosition(position) ? layoutManager.getSpanCount() : 1;
                 }
             });
         }

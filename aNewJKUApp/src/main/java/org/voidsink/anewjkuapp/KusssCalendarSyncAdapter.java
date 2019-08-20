@@ -34,7 +34,6 @@ import android.content.SyncResult;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Looper;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
@@ -48,6 +47,8 @@ import org.voidsink.anewjkuapp.utils.AppUtils;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import androidx.core.content.ContextCompat;
 
 public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 
@@ -63,8 +64,8 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
         super(context, autoInitialize);
         /*
          * If your app uses a content resolver, get an instance of it from the
-		 * incoming Context
-		 */
+         * incoming Context
+         */
         this.mCalendarBuilder = CalendarUtils.newCalendarBuilder(); // must create in main
     }
 
@@ -73,8 +74,8 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
         super(context, autoInitialize, allowParallelSyncs);
         /*
          * If your app uses a content resolver, get an instance of it from the
-		 * incoming Context
-		 */
+         * incoming Context
+         */
         this.mCalendarBuilder = CalendarUtils.newCalendarBuilder(); // must create in main
     }
 
@@ -98,7 +99,7 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 
         if (!KusssHandler.getInstance().isAvailable(getContext(),
                 AppUtils.getAccountAuthToken(getContext(), account),
-                AppUtils.getAccountName(getContext(), account),
+                AppUtils.getAccountName(account),
                 AppUtils.getAccountPassword(getContext(), account))) {
             syncResult.stats.numAuthExceptions++;
             return;
@@ -111,9 +112,9 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
             AppUtils.executeEm(mExecutorService, getContext(),
                     new Callable[]{
                             new ImportCalendarTask(account, extras,
-                                    authority, provider, syncResult, getContext(),
+                                    provider, syncResult, getContext(),
                                     CalendarUtils.ARG_CALENDAR_EXAM, mCalendarBuilder),
-                            new ImportCalendarTask(account, extras, authority, provider,
+                            new ImportCalendarTask(account, extras, provider,
                                     syncResult, getContext(),
                                     CalendarUtils.ARG_CALENDAR_COURSE, mCalendarBuilder)
                     },

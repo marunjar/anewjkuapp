@@ -28,7 +28,6 @@ package org.voidsink.anewjkuapp.analytics;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Point;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
@@ -49,6 +48,8 @@ import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.HashMap;
+
+import androidx.annotation.NonNull;
 
 public class AnalyticsFlavor implements IAnalytics {
 

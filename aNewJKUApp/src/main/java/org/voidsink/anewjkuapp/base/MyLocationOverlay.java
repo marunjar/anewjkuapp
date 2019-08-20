@@ -1,18 +1,26 @@
 /*
- * Copyright 2010, 2011, 2012, 2013 mapsforge.org
- * Copyright 2014 Ludwig M Brinckmann
- * Copyright 2014 devemux86
+ *       ____.____  __.____ ___     _____
+ *      |    |    |/ _|    |   \   /  _  \ ______ ______
+ *      |    |      < |    |   /  /  /_\  \\____ \\____ \
+ *  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ *  \________|____|__ \______/   \____|__  /   __/|   __/
+ *                   \/                  \/|__|   |__|
  *
- * This program is free software: you can redistribute it and/or modify it under the
- * terms of the GNU Lesser General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later version.
+ *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- * PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * You should have received a copy of the GNU Lesser General Public License along with
- * this program. If not, see <http://www.gnu.org/licenses/>.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
 package org.voidsink.anewjkuapp.base;
 
@@ -25,7 +33,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 
 import org.mapsforge.core.graphics.Bitmap;
 import org.mapsforge.core.graphics.Canvas;
@@ -39,7 +46,9 @@ import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.mapsforge.map.layer.Layer;
 import org.mapsforge.map.layer.overlay.Circle;
 import org.mapsforge.map.layer.overlay.Marker;
-import org.mapsforge.map.model.MapViewPosition;
+import org.mapsforge.map.model.IMapViewPosition;
+
+import androidx.core.app.ActivityCompat;
 
 /**
  * A thread-safe {@link Layer} implementation to display the current location. NOTE: This code really does not reflect
@@ -82,7 +91,7 @@ public class MyLocationOverlay extends Layer implements LocationListener {
     private final Circle circle;
     private Location lastLocation;
     private final LocationManager locationManager;
-    private final MapViewPosition mapViewPosition;
+    private final IMapViewPosition mapViewPosition;
     private final Marker marker;
     private boolean myLocationEnabled;
     private boolean snapToLocationEnabled;
@@ -94,7 +103,7 @@ public class MyLocationOverlay extends Layer implements LocationListener {
      * @param mapViewPosition the {@code MapViewPosition} whose location will be updated.
      * @param bitmap          a bitmap to display at the current location (might be null).
      */
-    public MyLocationOverlay(Activity activity, MapViewPosition mapViewPosition, Bitmap bitmap) {
+    public MyLocationOverlay(Activity activity, IMapViewPosition mapViewPosition, Bitmap bitmap) {
         this(activity, mapViewPosition, bitmap, getDefaultCircleFill(), getDefaultCircleStroke());
     }
 
@@ -107,7 +116,7 @@ public class MyLocationOverlay extends Layer implements LocationListener {
      * @param circleFill      the {@code Paint} used to fill the circle that represents the accuracy of the current location (might be null).
      * @param circleStroke    the {@code Paint} used to stroke the circle that represents the accuracy of the current location (might be null).
      */
-    public MyLocationOverlay(Activity activity, MapViewPosition mapViewPosition, Bitmap bitmap, Paint circleFill,
+    public MyLocationOverlay(Activity activity, IMapViewPosition mapViewPosition, Bitmap bitmap, Paint circleFill,
                              Paint circleStroke) {
         super();
         this.activity = activity;

@@ -1,25 +1,26 @@
 /*
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
- * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
- * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
+ *       ____.____  __.____ ___     _____
+ *      |    |    |/ _|    |   \   /  _  \ ______ ______
+ *      |    |      < |    |   /  /  /_\  \\____ \\____ \
+ *  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ *  \________|____|__ \______/   \____|__  /   __/|   __/
+ *                   \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
 
 package org.voidsink.anewjkuapp.provider;
@@ -34,7 +35,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.voidsink.anewjkuapp.KusssContentContract;
@@ -59,6 +59,8 @@ import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import androidx.annotation.NonNull;
 
 public class KusssContentProvider extends ContentProvider {
 
@@ -249,11 +251,11 @@ public class KusssContentProvider extends ContentProvider {
         SQLiteDatabase db = KusssDatabaseHelper.getInstance(getContext()).getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 
-		/*
+        /*
          * Choose the table to query and a sort order based on the code returned
-		 * for the incoming URI. Here, too, only the statements for table 3 are
-		 * shown.
-		 */
+         * for the incoming URI. Here, too, only the statements for table 3 are
+         * shown.
+         */
         switch (sUriMatcher.match(uri)) {
             case CODE_COURSE_ID:
                 builder.setTables(KusssContentContract.Course.TABLE_NAME);
@@ -387,18 +389,17 @@ public class KusssContentProvider extends ContentProvider {
         Account mAccount = AppUtils.getAccount(context);
         if (mAccount != null) {
             ContentResolver cr = context.getContentResolver();
-            Cursor c = cr.query(KusssContentContract.Assessment.CONTENT_URI,
+            try (Cursor c = cr.query(KusssContentContract.Assessment.CONTENT_URI,
                     ImportAssessmentTask.ASSESSMENT_PROJECTION, null, null,
                     KusssContentContract.Assessment.TABLE_NAME + "."
                             + KusssContentContract.Assessment.COL_TYPE
                             + " ASC,"
                             + KusssContentContract.Assessment.TABLE_NAME + "."
                             + KusssContentContract.Assessment.COL_DATE
-                            + " DESC");
-
-            if (c != null) {
-                mAssessments = getAssessmentsFromCursor(context, c);
-                c.close();
+                            + " DESC")) {
+                if (c != null) {
+                    mAssessments = getAssessmentsFromCursor(context, c);
+                }
             }
         }
         return mAssessments;
@@ -422,7 +423,7 @@ public class KusssContentProvider extends ContentProvider {
         return courses;
     }
 
-    public static List<Curriculum> getCurriculaFromCursor(Context context, Cursor c) {
+    public static List<Curriculum> getCurriculaFromCursor(Cursor c) {
         List<Curriculum> mCurriculum = new ArrayList<>();
         if (c != null) {
             c.moveToFirst();
@@ -440,13 +441,13 @@ public class KusssContentProvider extends ContentProvider {
         Account mAccount = AppUtils.getAccount(context);
         if (mAccount != null) {
             ContentResolver cr = context.getContentResolver();
-            Cursor c = cr.query(KusssContentContract.Curricula.CONTENT_URI,
-                    ImportCurriculaTask.CURRICULA_PROJECTION, null, null,
-                    KusssContentContract.Curricula.COL_DT_START + " DESC");
 
-            if (c != null) {
-                mCurriculum = getCurriculaFromCursor(context, c);
-                c.close();
+            try (Cursor c = cr.query(KusssContentContract.Curricula.CONTENT_URI,
+                    ImportCurriculaTask.CURRICULA_PROJECTION, null, null,
+                    KusssContentContract.Curricula.COL_DT_START + " DESC")) {
+                if (c != null) {
+                    mCurriculum = getCurriculaFromCursor(c);
+                }
             }
         }
 

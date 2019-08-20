@@ -1,40 +1,31 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
-// Running 'gradle wrapper' will generate gradlew - Getting gradle wrapper working and using it will save you a lot of pain.
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.6'
-}
-
 buildscript {
     repositories {
         google()
         jcenter()
-        maven {
-            // for gradle-errorprone-plugin
-            url "https://plugins.gradle.org/m2/"
-        }
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.1'
-        classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.13'
+        classpath 'com.android.tools.build:gradle:3.5.0'
     }
 }
 
+plugins {
+    id "net.ltgt.errorprone" version "0.8.1"
+}
+
 ext {
-    compileSdkVersion = 27
-    buildToolsVersion = "27.0.3"
-    supportLibVersion = "27.1.1"
-    targetSdkVersion = 27
+    compileSdkVersion = 28
+    buildToolsVersion = "28.0.3"
+    targetSdkVersion = 28
     minSdkVersion = 16
+    errorProneVersion = "2.3.3"
 }
 
 allprojects {
     repositories {
+        google()
         jcenter()
-        maven {
-            url "https://maven.google.com"
-        }
-        mavenCentral()
     }
 }

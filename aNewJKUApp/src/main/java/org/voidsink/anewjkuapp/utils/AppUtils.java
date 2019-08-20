@@ -46,8 +46,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -97,6 +95,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 public class AppUtils {
 
@@ -428,75 +429,6 @@ public class AppUtils {
 
     }
 
-    public static void removeDuplicates(List<LvaWithGrade> mDoneLvas,
-                                        List<LvaWithGrade> mOpenLvas) {
-
-        // Log.i("removeDuplicates", "---------");
-        // for (LvaWithGrade lva : mDoneLvas) {
-        // Log.i("removeDuplicates", "done: " + lva.getLva().getCode() + " "
-        // + lva.getLva().getTitle());
-        // }
-        // for (LvaWithGrade lva : mOpenLvas) {
-        // Log.i("removeDuplicates", "open: " + lva.getLva().getCode() + " "
-        // + lva.getLva().getTitle());
-        // }
-
-        int i = 0;
-        while (i < mDoneLvas.size()) {
-            Course course = mDoneLvas.get(i).getCourse();
-            int j = i + 1;
-
-            while (j < mDoneLvas.size()) {
-                Course nextCourse = mDoneLvas.get(j).getCourse();
-                if (course.getCode().equals(nextCourse.getCode())
-                        && course.getTitle().equals(nextCourse.getTitle())) {
-                    mDoneLvas.remove(j);
-                    Log.d("removeDuplicates",
-                            "remove from done " + nextCourse.getCode() + " "
-                                    + nextCourse.getTitle());
-                } else {
-                    j++;
-                }
-            }
-
-            j = 0;
-            while (j < mOpenLvas.size()) {
-                Course nextCourse = mOpenLvas.get(j).getCourse();
-                if (course.getCode().equals(nextCourse.getCode())
-                        && course.getTitle().equals(nextCourse.getTitle())) {
-                    mOpenLvas.remove(j);
-                    Log.d("removeDuplicates",
-                            "remove from open " + nextCourse.getCode() + " "
-                                    + nextCourse.getTitle());
-                } else {
-                    j++;
-                }
-            }
-
-            i++;
-        }
-
-        i = 0;
-        while (i < mOpenLvas.size()) {
-            Course course = mOpenLvas.get(i).getCourse();
-            int j = i + 1;
-
-            while (j < mOpenLvas.size()) {
-                Course nextCourse = mOpenLvas.get(j).getCourse();
-                if (course.getCode().equals(nextCourse.getCode())
-                        && course.getTitle().equals(nextCourse.getTitle())) {
-                    mOpenLvas.remove(j);
-                    Log.d("removeDuplicates",
-                            "remove from open " + nextCourse.getCode() + " "
-                                    + nextCourse.getTitle());
-                } else {
-                    j++;
-                }
-            }
-            i++;
-        }
-    }
-
     public static double getAvgGrade(List<Assessment> assessments,
                                      boolean ectsWeighting, AssessmentType type, boolean positiveOnly) {
         double sum = 0;
@@ -544,11 +476,8 @@ public class AppUtils {
         return accounts[0];
     }
 
-    public static String getAccountName(Context context, Account account) {
-        if (account == null) {
-            return null;
-        }
-        return account.name;
+    public static String getAccountName(Account account) {
+        return account == null ? null : account.name;
     }
 
     public static String getAccountPassword(Context context, Account account) {
