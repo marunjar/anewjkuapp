@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -97,11 +97,11 @@ public class ExtendedRecyclerView extends RecyclerView {
                 GridLayoutManager mGridLM = (GridLayoutManager) getLayoutManager();
 
                 switch (mGridLM.getOrientation()) {
-                    case GridLayoutManager.VERTICAL: {
+                    case RecyclerView.VERTICAL: {
                         spanCount = getMeasuredWidth() / mFixedColumnWidth;
                         break;
                     }
-                    case GridLayoutManager.HORIZONTAL: {
+                    case RecyclerView.HORIZONTAL: {
                         spanCount = getMeasuredHeight() / mFixedColumnWidth;
                         break;
                     }

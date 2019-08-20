@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,6 +30,14 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
 
+import androidx.fragment.app.Fragment;
+import androidx.preference.CheckBoxPreference;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
+import androidx.preference.PreferenceScreen;
+
 import org.voidsink.anewjkuapp.BuildConfig;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
@@ -42,14 +50,6 @@ import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.io.File;
 import java.util.ArrayList;
-
-import androidx.fragment.app.Fragment;
-import androidx.preference.CheckBoxPreference;
-import androidx.preference.ListPreference;
-import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceManager;
-import androidx.preference.PreferenceScreen;
 
 public class SettingsFragment extends BasePreferenceFragment {
 
@@ -210,8 +210,6 @@ public class SettingsFragment extends BasePreferenceFragment {
 
     public static class TimetableSettingsFragment extends BasePreferenceFragment {
 
-        private CalendarUtils.CalendarList calendars;
-
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -225,7 +223,7 @@ public class SettingsFragment extends BasePreferenceFragment {
             // Load the preferences from an XML resource
             addPreferencesFromResource(R.xml.preference_timetable);
 
-            calendars = CalendarUtils.getCalendars(getActivity(), true);
+            CalendarUtils.CalendarList calendars = CalendarUtils.getCalendars(getActivity(), true);
 
             TwoLinesListPreference calendarLva = (TwoLinesListPreference) findPreference(PreferenceWrapper.PREF_EXTENDED_CALENDAR_LVA);
             setEntries(calendars, calendarLva);
