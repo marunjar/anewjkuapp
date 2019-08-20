@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -34,6 +34,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.kusss.AssessmentType;
@@ -46,9 +50,6 @@ import org.voidsink.anewjkuapp.utils.EctsSliceValue;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.RecyclerView;
 import lecho.lib.hellocharts.listener.PieChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
@@ -123,7 +124,6 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
 
         if (holder.mBarChart.getVisibility() == View.VISIBLE) {
             ComboLineColumnChartData dataSet = new ComboLineColumnChartData();
-            initBarChartDataSet(dataSet);
 
             ArrayList<Column> yVals = new ArrayList<>();
             ArrayList<AxisValue> axisValues = new ArrayList<>();
@@ -165,9 +165,6 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
 
             holder.mPieChart.setPieChartData(dataSet);
         }
-    }
-
-    private void initBarChartDataSet(ComboLineColumnChartData dataSet) {
     }
 
     private void initPieChartDataSet(PieChartData dataSet) {
@@ -296,7 +293,6 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
 
 
             ComboLineColumnChartData dataSet = new ComboLineColumnChartData();
-            initBarChartDataSet(dataSet);
 
             Axis xAxis = new Axis(axisValues);
             xAxis.setTextColor(mTextColorPrimary);
