@@ -40,7 +40,6 @@
     <string name="menu_exam_register">Show in KUSSS</string>
     <string name="notification_error">"JKU App" error</string>
     <string name="notification_error_account_is_null">Account not found</string>
-    <string name="notification_error_account_not_available">Account not accessible</string>
     <string name="notification_events_changed" formatted="false">Changed %d events in "%s"</string>
     <string name="notification_events_changed_title">Changed events in "%s"</string>
     <string name="notification_grades_changed">%d new grades available</string>
