@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,6 +32,8 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 
+import androidx.core.app.NotificationCompat;
+
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.utils.Consts;
@@ -40,7 +42,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import androidx.core.app.NotificationCompat;
+import static androidx.core.app.NotificationCompat.PRIORITY_LOW;
 
 public class PoiNotification {
 
@@ -82,7 +84,8 @@ public class PoiNotification {
                     .setAutoCancel(true)
                     .setCategory(NotificationCompat.CATEGORY_STATUS)
                     .setNumber(
-                            mInserts.size() + mUpdates.size());
+                            mInserts.size() + mUpdates.size())
+                    .setPriority(PRIORITY_LOW);
 
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp)

@@ -44,11 +44,9 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
 
+import androidx.core.content.ContextCompat;
+
 import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.data.CalendarParserFactory;
-import net.fortuna.ical4j.model.ParameterFactoryRegistry;
-import net.fortuna.ical4j.model.PropertyFactoryRegistry;
-import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
@@ -64,8 +62,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import androidx.core.content.ContextCompat;
 
 public final class CalendarUtils {
 
@@ -226,14 +222,7 @@ public final class CalendarUtils {
     }
 
     public static CalendarBuilder newCalendarBuilder() {
-        PropertyFactoryRegistry propertyFactoryRegistry = new PropertyFactoryRegistry();
-//        propertyFactoryRegistry.register(ShowAs.PROPERTY_NAME, ShowAs.FACTORY);
-
-        return new CalendarBuilder(
-                CalendarParserFactory.getInstance().createParser(),
-                propertyFactoryRegistry,
-                new ParameterFactoryRegistry(),
-                TimeZoneRegistryFactory.getInstance().createRegistry());
+        return new CalendarBuilder();
     }
 
     public static boolean createCalendarsIfNecessary(Context context,
