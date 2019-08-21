@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,11 +32,13 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 
+import androidx.core.app.NotificationCompat;
+
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.utils.Consts;
 
-import androidx.core.app.NotificationCompat;
+import static androidx.core.app.NotificationCompat.PRIORITY_MIN;
 
 public class SyncNotification {
     private final Context mContext;
@@ -60,7 +62,9 @@ public class SyncNotification {
                 .setContentTitle(mTitle)
                 .setVisibility(NotificationCompat.VISIBILITY_SECRET)
                 .setProgress(0, 100, true)
-                .setGroup("Sync Group");
+                .setGroup("Sync Group")
+                .setOngoing(true)
+                .setPriority(PRIORITY_MIN);
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             this.mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp_anim)
