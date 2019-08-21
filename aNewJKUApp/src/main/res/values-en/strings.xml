@@ -40,13 +40,27 @@
     <string name="menu_exam_register">Show in KUSSS</string>
     <string name="notification_error">"JKU App" error</string>
     <string name="notification_error_account_is_null">Account not found</string>
-    <string name="notification_events_changed" formatted="false">Changed %d events in "%s"</string>
+    <plurals name="notification_events_changed">
+        <item quantity="one">Changed event in "%2$s"</item>
+        <item quantity="other">Changed %1$d events in "%2$s"</item>
+    </plurals>
     <string name="notification_events_changed_title">Changed events in "%s"</string>
-    <string name="notification_grades_changed">%d new grades available</string>
+    <plurals name="notification_grades_changed">
+        <item quantity="one">One new grade available</item>
+        <item quantity="other">%d new grades available</item>
+    </plurals>
+
     <string name="notification_grades_changed_title">New grades available</string>
-    <string name="notification_new_exams">Found %d new exams</string>
+    <plurals name="notification_new_exams">
+        <item quantity="one">Found a new exam</item>
+        <item quantity="other">Found %d new exams</item>
+    </plurals>
     <string name="notification_new_exams_title">Found new exams</string>
-    <string name="notification_poi_changed">%d new places available</string>
+    <plurals name="notification_poi_changed">
+        <item quantity="one">One new place available</item>
+        <item quantity="other">%d new places available</item>
+    </plurals>
+
     <string name="notification_poi_changed_title">New places available</string>
     <string name="notification_sync_calendar">Synchronizing events</string>
     <string name="notification_sync_exam">Synchronizing exams</string>
@@ -107,7 +121,7 @@
     <string name="interval_1d">Every day</string>
     <string name="interval_12h">Twice a day</string>
     <string name="interval_7d">Weekly</string>
-    <string name="interval_3.5d">Twice a week</string>
+    <string name="interval_3_5d">Twice a week</string>
     <string name="lva_state_unknown">TODO</string>
     <string name="extension_mensa_pref_cat_mensa">Cafeteria</string>
     <string name="extension_mensa_pref_cat_visibility">Display</string>
@@ -177,7 +191,10 @@
     <string name="pref_kusss_use_calendar_view_title">Calendar view</string>
     <string name="pref_kusss_use_calendar_view_summary">Show all events in a calendar view</string>
     <string name="notification_more">+%d more</string>
-    <string name="notification_events_deleted" formatted="false">Removed %d events from "%s"</string>
+    <plurals name="notification_events_deleted">
+        <item quantity="one">Removed event from "%2$s"</item>
+        <item quantity="other">Removed %1$d events from "%2$s"</item>
+    </plurals>
     <string name="notification_events_deleted_title">Removed events from "%s"</string>
     <string name="extension_mensa_description">Show today\'s menu of selected cafeteria</string>
     <string name="mensa_open_in_browser">show in browser</string>
