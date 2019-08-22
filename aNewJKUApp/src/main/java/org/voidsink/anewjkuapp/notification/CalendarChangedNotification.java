@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,6 +32,8 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 
+import androidx.core.app.NotificationCompat;
+
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
@@ -40,8 +42,6 @@ import org.voidsink.anewjkuapp.utils.Consts;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import androidx.core.app.NotificationCompat;
 
 public class CalendarChangedNotification {
 
@@ -87,7 +87,7 @@ public class CalendarChangedNotification {
                     mContext, Consts.CHANNEL_ID_DEFAULT)
                     .setContentIntent(pendingIntent)
                     .setContentTitle(mContext.getString(resIdtitle, mName))
-                    .setContentText(mContext.getString(resIdContent, lines.size(), mName))
+                    .setContentText(mContext.getResources().getQuantityString(resIdContent, lines.size(), lines.size(), mName))
                     .setContentIntent(pendingIntent)
                     .setCategory(NotificationCompat.CATEGORY_EVENT)
                     .setAutoCancel(true)
@@ -106,7 +106,7 @@ public class CalendarChangedNotification {
             // creates big view with all grades in inbox style
             NotificationCompat.InboxStyle inBoxStyle = new NotificationCompat.InboxStyle();
 
-            inBoxStyle.setBigContentTitle(mContext.getString(resIdContent, lines.size(), mName));
+            inBoxStyle.setBigContentTitle(mContext.getResources().getQuantityString(resIdContent, lines.size(), lines.size(), mName));
 
             Collections.sort(lines);
 
@@ -133,8 +133,8 @@ public class CalendarChangedNotification {
         List<String> changed = new ArrayList<>(mInserts.size() + mUpdates.size());
         changed.addAll(mInserts);
         changed.addAll(mUpdates);
-        showInternal(changed, R.string.notification_events_changed, R.string.notification_events_changed_title, R.string.notification_events_changed);
+        showInternal(changed, R.plurals.notification_events_changed, R.string.notification_events_changed_title, R.plurals.notification_events_changed);
 
-        showInternal(mDeletes, R.string.notification_events_deleted, R.string.notification_events_deleted_title, R.string.notification_events_deleted);
+        showInternal(mDeletes, R.plurals.notification_events_deleted, R.string.notification_events_deleted_title, R.plurals.notification_events_deleted);
     }
 }

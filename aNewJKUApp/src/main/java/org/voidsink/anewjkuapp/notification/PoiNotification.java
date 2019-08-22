@@ -66,8 +66,9 @@ public class PoiNotification {
     }
 
     public void show() {
-        if (mInserts.size() > 0 || mUpdates.size() > 0) {
-            int NOTIFICATION_POI_CHANGED = R.string.notification_poi_changed;
+        int changes = mInserts.size() + mUpdates.size();
+        if (changes > 0) {
+            int NOTIFICATION_POI_CHANGED = R.plurals.notification_poi_changed;
 
             PendingIntent pendingIntent = PendingIntent
                     .getActivity(mContext, NOTIFICATION_POI_CHANGED, new Intent(mContext,
@@ -79,12 +80,11 @@ public class PoiNotification {
                     .setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp)
                     .setContentIntent(pendingIntent)
                     .setContentTitle(mContext.getText(R.string.notification_poi_changed_title))
-                    .setContentText(mContext.getString(R.string.notification_poi_changed, (mInserts.size() + mUpdates.size())))
+                    .setContentText(mContext.getResources().getQuantityString(R.plurals.notification_poi_changed, changes, changes))
                     .setContentIntent(pendingIntent)
                     .setAutoCancel(true)
                     .setCategory(NotificationCompat.CATEGORY_STATUS)
-                    .setNumber(
-                            mInserts.size() + mUpdates.size())
+                    .setNumber(changes)
                     .setPriority(PRIORITY_LOW);
 
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -100,7 +100,7 @@ public class PoiNotification {
             // creates big view with all grades in inbox style
             NotificationCompat.InboxStyle inBoxStyle = new NotificationCompat.InboxStyle();
 
-            inBoxStyle.setBigContentTitle(mContext.getString(R.string.notification_poi_changed, (mInserts.size() + mUpdates.size())));
+            inBoxStyle.setBigContentTitle(mContext.getResources().getQuantityString(R.plurals.notification_poi_changed, changes, changes));
 
             Collections.sort(mInserts);
             for (String text : mInserts) {

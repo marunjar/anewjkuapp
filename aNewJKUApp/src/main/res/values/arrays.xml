@@ -3,7 +3,7 @@
     <array name="pref_kusss_sync_interval_entries">
         <item name="12h">@string/interval_12h</item>
         <item name="1d">@string/interval_1d</item>
-        <item name="3.5d">@string/interval_3.5d</item>
+        <item name="3.5d">@string/interval_3_5d</item>
         <item name="7d">@string/interval_7d</item>
     </array>
     

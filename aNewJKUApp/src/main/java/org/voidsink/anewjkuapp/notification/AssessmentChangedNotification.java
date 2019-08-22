@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,6 +32,8 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 
+import androidx.core.app.NotificationCompat;
+
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
@@ -40,8 +42,6 @@ import org.voidsink.anewjkuapp.utils.Consts;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import androidx.core.app.NotificationCompat;
 
 public class AssessmentChangedNotification {
 
@@ -69,7 +69,7 @@ public class AssessmentChangedNotification {
         if (PreferenceWrapper.getNotifyGrade(mContext) && (lines.size() > 0)) {
             PendingIntent pendingIntent = PendingIntent.getActivity(
                     mContext,
-                    R.string.notification_grades_changed,
+                    R.plurals.notification_grades_changed,
                     new Intent(mContext, MainActivity.class).putExtra(
                             MainActivity.ARG_SHOW_FRAGMENT_ID,
                             R.id.nav_grades).addFlags(
@@ -79,7 +79,7 @@ public class AssessmentChangedNotification {
                     mContext, Consts.CHANNEL_ID_GRADES)
                     .setContentIntent(pendingIntent)
                     .setContentTitle(mContext.getString(R.string.notification_grades_changed_title))
-                    .setContentText(mContext.getString(R.string.notification_grades_changed, lines.size()))
+                    .setContentText(mContext.getResources().getQuantityString(R.plurals.notification_grades_changed, lines.size(), lines.size()))
                     .setContentIntent(pendingIntent)
                     .setCategory(NotificationCompat.CATEGORY_EMAIL)
                     .setAutoCancel(true)
@@ -98,7 +98,7 @@ public class AssessmentChangedNotification {
             // creates big view with all grades in inbox style
             NotificationCompat.InboxStyle inBoxStyle = new NotificationCompat.InboxStyle();
 
-            inBoxStyle.setBigContentTitle(mContext.getString(R.string.notification_grades_changed, lines.size()));
+            inBoxStyle.setBigContentTitle(mContext.getResources().getQuantityString(R.plurals.notification_grades_changed, lines.size(), lines.size()));
 
             Collections.sort(lines);
 
@@ -116,7 +116,7 @@ public class AssessmentChangedNotification {
 
             ((NotificationManager) mContext
                     .getSystemService(Context.NOTIFICATION_SERVICE)).notify(
-                    R.string.notification_grades_changed,
+                    R.plurals.notification_grades_changed,
                     mBuilder.build());
         }
     }
