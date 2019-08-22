@@ -50,6 +50,10 @@ public <init>(android.content.Context, android.util.AttributeSet, int);
 public void *(android.view.View);
 }
 
+# logging
+-keep class org.slf4j.** { *; }
+-keepattributes *Annotation*
+
 -keep class com.alamkanak.weekview.** { *; }
 
 # preferences
