@@ -38,6 +38,8 @@ import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.CourseMap;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
@@ -63,7 +65,8 @@ import java.util.concurrent.Callable;
 
 public class ImportExamTask implements Callable<Void> {
 
-    private static final String TAG = ImportExamTask.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(ImportExamTask.class);
+
     private final long mSyncFromNow;
 
     private ContentProviderClient mProvider;
@@ -146,7 +149,7 @@ public class ImportExamTask implements Callable<Void> {
         NewExamNotification mNewExamNotification = new NewExamNotification(mContext);
 
         try {
-            Log.d(TAG, "setup connection");
+            logger.debug("setup connection");
 
             updateNotify(mContext.getString(R.string.notification_sync_connect));
 
@@ -162,11 +165,11 @@ public class ImportExamTask implements Callable<Void> {
                     CourseMap courseMap = new CourseMap(mContext);
                     List<Term> terms = KusssContentProvider.getTerms(mContext);
 
-                    Log.d(TAG, "load exams by courseId");
+                    logger.debug("load exams by courseId");
                     exams = KusssHandler.getInstance().getNewExamsByCourseId(
                             mContext, courseMap.getCourses(), terms);
                 } else {
-                    Log.d(TAG, "load exams");
+                    logger.debug("load exams");
                     exams = KusssHandler.getInstance()
                             .getNewExams(mContext);
                 }
@@ -177,12 +180,11 @@ public class ImportExamTask implements Callable<Void> {
                     for (Exam exam : exams) {
                         Exam old = examMap.put(KusssHelper.getExamKey(exam.getCourseId(), AppUtils.termToString(exam.getTerm()), exam.getDtStart().getTime()), exam);
                         if (old != null) {
-                            Log.w(TAG,
-                                    "exam alread loaded: " + KusssHelper.getExamKey(old.getCourseId(), AppUtils.termToString(old.getTerm()), old.getDtStart().getTime()));
+                            logger.warn("exam alread loaded: {}", KusssHelper.getExamKey(old.getCourseId(), AppUtils.termToString(old.getTerm()), old.getDtStart().getTime()));
                         }
                     }
 
-                    Log.d(TAG, String.format("got %s exams", exams.size()));
+                    logger.debug("got {} exams", exams.size());
 
                     updateNotify(mContext.getString(R.string.notification_sync_exam_updating));
 
@@ -193,12 +195,9 @@ public class ImportExamTask implements Callable<Void> {
                     try (Cursor c = mProvider.query(examUri, EXAM_PROJECTION,
                             null, null, null)) {
                         if (c == null) {
-                            Log.w(TAG, "selection failed");
+                            logger.warn("selection failed");
                         } else {
-                            Log.d(TAG,
-                                    "Found "
-                                            + c.getCount()
-                                            + " local entries. Computing merge solution...");
+                            logger.debug("Found {} local entries. Computing merge solution...", c.getCount());
                             int examId;
                             String examTerm;
                             String examCourseId;
@@ -224,8 +223,7 @@ public class ImportExamTask implements Callable<Void> {
                                             .appendPath(
                                                     Integer.toString(examId))
                                             .build();
-                                    Log.d(TAG, "Scheduling update: "
-                                            + existingUri);
+                                    logger.debug("Scheduling update: {}", existingUri);
 
                                     if (!CalendarUtils.isSameDay(
                                             new Date(examDtStart), exam.getDtStart())
@@ -255,8 +253,7 @@ public class ImportExamTask implements Callable<Void> {
                                             .appendPath(
                                                     Integer.toString(examId))
                                             .build();
-                                    Log.d(TAG, "Scheduling delete: "
-                                            + deleteUri);
+                                    logger.debug("Scheduling delete: {}", deleteUri);
 
                                     batch.add(ContentProviderOperation
                                             .newDelete(
@@ -279,9 +276,7 @@ public class ImportExamTask implements Callable<Void> {
                                                                 mAccount.type))
                                         .withValues(KusssHelper.getExamContentValues(exam))
                                         .build());
-                                Log.d(TAG,
-                                        "Scheduling insert: " + exam.getTerm()
-                                                + " " + exam.getCourseId());
+                                logger.debug("Scheduling insert: {} {}", exam.getTerm(), exam.getCourseId());
 
                                 mNewExamNotification.addInsert(getEventString(mContext, exam));
 
@@ -291,9 +286,9 @@ public class ImportExamTask implements Callable<Void> {
                             updateNotify(mContext.getString(R.string.notification_sync_exam_saving));
 
                             if (batch.size() > 0) {
-                                Log.d(TAG, "Applying batch update");
+                                logger.debug("Applying batch update");
                                 mProvider.applyBatch(batch);
-                                Log.d(TAG, "Notify resolver");
+                                logger.debug("Notify resolver");
                                 mResolver
                                         .notifyChange(
                                                 KusssContentContract.Exam.CONTENT_CHANGED_URI,
@@ -304,8 +299,7 @@ public class ImportExamTask implements Callable<Void> {
                                 // sync to
                                 // network
                             } else {
-                                Log.w(TAG,
-                                        "No batch operations found! Do nothing");
+                                logger.warn("No batch operations found! Do nothing");
                             }
                         }
                     }
@@ -316,7 +310,7 @@ public class ImportExamTask implements Callable<Void> {
             }
         } catch (Exception e) {
             Analytics.sendException(mContext, e, true);
-            Log.e(TAG, "import failed", e);
+            logger.error("import failed", e);
         }
 
         if (mUpdateNotification != null) {

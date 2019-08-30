@@ -35,7 +35,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 public class ExtendedRecyclerView extends RecyclerView {
 
-    //protected static String TAG = ExtendedRecyclerView.class.getSimpleName();
     private int mFixedColumnWidth = -1;
     private int mFixedNumColumns = -1;
 

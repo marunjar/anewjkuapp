@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,7 +30,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
@@ -41,6 +42,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 
@@ -72,8 +75,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
-
 public class KusssHandler {
 
     static final String PATTERN_LVA_NR_WITH_DOT = "\\d{3}\\.\\w{3}";
@@ -83,7 +84,6 @@ public class KusssHandler {
             + PATTERN_LVA_NR + "," + PATTERN_TERM + "\\)";
     public static final String PATTERN_LVA_NR_SLASH_TERM = "\\("
             + PATTERN_LVA_NR + "\\/" + PATTERN_TERM + "\\)";
-    private static final String TAG = KusssHandler.class.getSimpleName();
     private static final String URL_KUSSS_INDEX = "https://www.kusss.jku.at/kusss/index.action";
     private static final String URL_MY_LVAS = "https://www.kusss.jku.at/kusss/assignment-results.action";
     private static final String URL_GET_TERMS = "https://www.kusss.jku.at/kusss/listmystudentlvas.action";
@@ -115,6 +115,8 @@ public class KusssHandler {
     private final CookieManager mCookies;
     private String mUserAgent;
 
+    private static final Logger logger = LoggerFactory.getLogger(KusssHandler.class);
+
     private KusssHandler() {
         this.mCookies = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
         CookieHandler.setDefault(mCookies);
@@ -137,9 +139,9 @@ public class KusssHandler {
             if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
                 return true;
             }
-            Log.i(TAG, "network not available");
+            logger.info("network not available");
         } catch (Exception e) {
-            Log.w(TAG, "network not available", e);
+            logger.warn("network not available", e);
         }
         return false;
     }
@@ -165,7 +167,7 @@ public class KusssHandler {
             }
             return null;
         } catch (URISyntaxException e) {
-            Log.e(TAG, "getSessionIDFromCookie", e);
+            logger.error("getSessionIDFromCookie", e);
             return null;
         }
     }
@@ -205,14 +207,14 @@ public class KusssHandler {
                 return sessionId;
             }
 
-            Log.w(TAG, "login failed: isLoggedIn=FALSE");
+            logger.warn("login failed: isLoggedIn=FALSE");
             return null;
         } catch (SocketTimeoutException e) {
             // bad connection, timeout
-            Log.w(TAG, "login failed: connection timeout", e);
+            logger.warn("login failed: connection timeout", e);
             return null;
         } catch (Exception e) {
-            Log.w(TAG, "login failed", e);
+            logger.warn("login failed", e);
             Analytics.sendException(c, e, true);
             return null;
         }
@@ -263,7 +265,7 @@ public class KusssHandler {
                 mCookies.getCookieStore().removeAll();
             }
         } catch (Exception e) {
-            Log.w(TAG, "logout failed", e);
+            logger.warn("logout failed", e);
             Analytics.sendException(c, e, true);
         }
     }
@@ -283,7 +285,7 @@ public class KusssHandler {
             // bad connection, timeout
             return false;
         } catch (IOException e) {
-            Log.e(TAG, "isLoggedIn", e);
+            logger.error("isLoggedIn", e);
             Analytics.sendException(c, e, true);
             return false;
         }
@@ -432,7 +434,7 @@ public class KusssHandler {
                 return null;
             }
 
-            Log.d(TAG, String.format("loadIcal: RequestMethod: %s", contentType));
+            logger.debug("loadIcal: RequestMethod: {}", contentType);
             if (!contentType.contains("text/calendar")) {
                 conn.disconnect();
                 return null;
@@ -455,11 +457,11 @@ public class KusssHandler {
                 iCal = new Calendar();
             }
         } catch (ParserException e) {
-            Log.e(TAG, "loadIcal: " + data.toString(), e);
+            logger.error("loadIcal: " + data.toString(), e);
             Analytics.sendException(c, e, true, data.toString());
             iCal = null;
         } catch (Exception e) {
-            Log.e(TAG, "loadIcal", e);
+            logger.error("loadIcal", e);
             Analytics.sendException(c, e, true);
             iCal = null;
         }
@@ -477,7 +479,7 @@ public class KusssHandler {
                     Term term = Term.parseTerm(termValue);
                     terms.add(term);
                 } catch (ParseException e) {
-                    Log.e(TAG, "getTerms", e);
+                    logger.error("getTerms", e);
                     Analytics.sendException(c, e, true);
                 }
             }
@@ -506,7 +508,7 @@ public class KusssHandler {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, "getTermMap", e);
+            logger.error("getTermMap", e);
             Analytics.sendException(c, e, true);
             return null;
         }
@@ -541,7 +543,7 @@ public class KusssHandler {
 
         ArrayList<Course> courses = new ArrayList<>();
         try {
-            Log.d(TAG, "getCourses");
+            logger.debug("getCourses");
 
             for (Term term : terms) {
                 term.setLoaded(false); // init loaded flag
@@ -640,11 +642,11 @@ public class KusssHandler {
                 return null;
             }
         } catch (IOException e) {
-            Log.e(TAG, "getAssessments", e);
+            logger.error("getAssessments", e);
             Analytics.sendException(c, e, true);
             return null;
         }
-        Log.d(TAG, grades.size() + " grades found");
+        logger.debug( "{} grades found", grades.size());
         return grades;
     }
 
@@ -684,7 +686,7 @@ public class KusssHandler {
                 exams = null;
             }
         } catch (Exception e) {
-            Log.e(TAG, "getNewExams", e);
+            logger.error("getNewExams", e);
             Analytics.sendException(c, e, true);
             return null;
         }
@@ -699,7 +701,7 @@ public class KusssHandler {
         List<Exam> exams = new ArrayList<>();
         try {
             if (courses == null || courses.size() == 0) {
-                Log.d(TAG, "no lvas found, reload");
+                logger.debug("no lvas found, reload");
                 courses = getLvas(c, terms);
             }
             if (courses != null && courses.size() > 0) {
@@ -711,9 +713,7 @@ public class KusssHandler {
                         if (!grade.getCourseId().isEmpty()) {
                             Assessment existing = gradeCache.get(grade.getCourseId());
                             if (existing != null) {
-                                Log.d(TAG,
-                                        existing.getTitle() + " --> "
-                                                + grade.getTitle());
+                                logger.debug("{} --> {}", existing.getTitle(), grade.getTitle());
                             }
                             gradeCache.put(grade.getCourseId(), grade);
                         }
@@ -726,9 +726,7 @@ public class KusssHandler {
                         if ((grade.getGrade() == Grade.G5)
                                 || (grade.getDate().getTime() > (System
                                 .currentTimeMillis() - (182 * DateUtils.DAY_IN_MILLIS)))) {
-                            Log.d(TAG,
-                                    "positive in last 6 Months: "
-                                            + grade.getTitle());
+                            logger.debug("positive in last 6 Months: {}", grade.getTitle());
                             grade = null;
                         }
                     }
@@ -749,7 +747,7 @@ public class KusssHandler {
             // add registered exams
             loadExams(c, exams);
         } catch (Exception e) {
-            Log.e(TAG, "getNewExamsByCourseId", e);
+            logger.error("getNewExamsByCourseId", e);
             Analytics.sendException(c, e, true);
             return null;
         }
@@ -765,7 +763,7 @@ public class KusssHandler {
         try {
             final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 
-            Log.d(TAG, "getNewExamsByCourseId: " + courseId);
+            logger.debug("getNewExamsByCourseId: {}", courseId);
             Document doc = Jsoup
                     .connect(URL_GET_NEW_EXAMS)
                     .userAgent(getUserAgent())
@@ -804,7 +802,7 @@ public class KusssHandler {
                 return null;
             }
         } catch (IOException e) {
-            Log.e(TAG, "getNewExamsByCourseId", e);
+            logger.error("getNewExamsByCourseId", e);
             Analytics.sendException(c, e, true);
             exams = null;
         }
@@ -816,7 +814,7 @@ public class KusssHandler {
             return;
         }
 
-        Log.d(TAG, "loadExams");
+        logger.debug("loadExams");
 
         Document doc = Jsoup.connect(URL_GET_EXAMS).userAgent(getUserAgent()).cookies(getCookieMap()).get();
 

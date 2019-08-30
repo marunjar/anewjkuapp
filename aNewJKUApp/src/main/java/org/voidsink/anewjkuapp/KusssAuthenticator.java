@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,16 +35,17 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.activity.KusssAuthenticatorActivity;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
 import org.voidsink.anewjkuapp.utils.AppUtils;
-
-import androidx.annotation.NonNull;
 
 public class KusssAuthenticator extends AbstractAccountAuthenticator {
 
@@ -66,7 +67,7 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
     public final static String ARG_ACCOUNT_NAME = "ACCOUNT_NAME";
     public final static String ARG_IS_ADDING_NEW_ACCOUNT = "IS_ADDING_ACCOUNT";
 
-    private static final String TAG = KusssAuthenticator.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(KusssAuthenticator.class);
 
     private final Context mContext;
 
@@ -124,7 +125,7 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
 
         String authToken = am.peekAuthToken(account, authTokenType);
 
-        Log.d(TAG, "authToken=" + authToken);
+        logger.debug("authToken={}", authToken);
 
         if (TextUtils.isEmpty(authToken)
                 || !KusssHandler.getInstance().isLoggedIn(mContext, authToken)) {

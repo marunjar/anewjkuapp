@@ -37,7 +37,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
@@ -48,6 +47,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
@@ -66,7 +67,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
     private static final String KEY_ERROR_MESSAGE = "ERR_MSG";
     private final static String PARAM_USER_PASS = "USER_PASS";
 
-    private final static String TAG = KusssAuthenticatorActivity.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(KusssAuthenticatorActivity.class);
 
     private AccountManager mAccountManager;
     private String mAuthTokenType;
@@ -244,7 +245,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
         String accountType = intent
                 .getStringExtra(AccountManager.KEY_ACCOUNT_TYPE);
 
-        Log.i(TAG, "finish login to " + accountName);
+        logger.info("finish login to {}", accountName);
 
         Account account;
         boolean addNewAccount;

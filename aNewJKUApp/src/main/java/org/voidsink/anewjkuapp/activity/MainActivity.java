@@ -34,7 +34,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,6 +50,8 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.navigation.NavigationView;
 
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.PoiContentContract;
@@ -85,7 +86,7 @@ public class MainActivity extends ThemedActivity {
     public static final String ARG_EXACT_LOCATION = "exact_location";
     public static final String ARG_SAVE_LAST_FRAGMENT = "save_last_fragment";
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(MainActivity.class);
 
     private static final int PERMISSIONS_REQUEST_ACCOUNT = 2;
     private static final String[] ACCOUNT_PERMISSIONS = {Manifest.permission.GET_ACCOUNTS};
@@ -125,10 +126,10 @@ public class MainActivity extends ThemedActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d(this.getClass().getCanonicalName(), KusssContentContract.AUTHORITY);
-        Log.d(this.getClass().getCanonicalName(), this.getResources().getString(R.string.config_kusss_provider));
-        Log.d(this.getClass().getCanonicalName(), PoiContentContract.AUTHORITY);
-        Log.d(this.getClass().getCanonicalName(), this.getResources().getString(R.string.config_poi_provider));
+        logger.debug(KusssContentContract.AUTHORITY);
+        logger.debug(this.getResources().getString(R.string.config_kusss_provider));
+        logger.debug(PoiContentContract.AUTHORITY);
+        logger.debug(this.getResources().getString(R.string.config_poi_provider));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             // set Statusbar color to transparent if a drawer exists
@@ -204,7 +205,7 @@ public class MainActivity extends ThemedActivity {
 
         startCreateAccount();
 
-        Log.d(TAG, "onCreate finished");
+        logger.debug("onCreate finished");
     }
 
     @AfterPermissionGranted(PERMISSIONS_REQUEST_ACCOUNT)
@@ -400,7 +401,7 @@ public class MainActivity extends ThemedActivity {
 
                 return f;
             } catch (Exception e) {
-                Log.w(TAG, "fragment instantiation failed", e);
+                logger.warn("fragment instantiation failed", e);
                 Analytics.sendException(this, e, false);
                 if (saveLastFragment) {
                     PreferenceWrapper.setLastFragment(this, PreferenceWrapper.PREF_LAST_FRAGMENT_DEFAULT);

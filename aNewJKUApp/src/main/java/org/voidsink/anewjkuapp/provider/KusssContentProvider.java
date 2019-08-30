@@ -37,6 +37,8 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.kusss.Assessment;
@@ -60,8 +62,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import androidx.annotation.NonNull;
-
 public class KusssContentProvider extends ContentProvider {
 
     private static final int CODE_COURSE = 1;
@@ -77,7 +77,6 @@ public class KusssContentProvider extends ContentProvider {
 
     private static final UriMatcher sUriMatcher = new UriMatcher(
             UriMatcher.NO_MATCH);
-//	private static final String TAG = KusssContentProvider.class.getSimpleName();
 
     static {
         sUriMatcher.addURI(KusssContentContract.AUTHORITY,

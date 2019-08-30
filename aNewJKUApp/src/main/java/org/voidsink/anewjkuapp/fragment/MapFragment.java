@@ -36,7 +36,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -46,6 +45,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 
 import org.mapsforge.core.graphics.Bitmap;
 import org.mapsforge.core.model.BoundingBox;
@@ -67,6 +71,8 @@ import org.mapsforge.map.model.IMapViewPosition;
 import org.mapsforge.map.reader.MapFile;
 import org.mapsforge.map.rendertheme.InternalRenderTheme;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.ImportPoiTask;
 import org.voidsink.anewjkuapp.LocationOverlay;
 import org.voidsink.anewjkuapp.Poi;
@@ -84,10 +90,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SearchView;
-import androidx.core.content.ContextCompat;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -97,8 +99,10 @@ public class MapFragment extends BaseFragment implements
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
+
+    private static final Logger logger = LoggerFactory.getLogger(MapFragment.class);
+
     public static final String MAP_FILE_NAME = "campus.map";
-    private static final String TAG = MapFragment.class.getSimpleName();
     private static final byte MAX_ZOOM_LEVEL = 19;
     private static final byte MIN_ZOOM_LEVEL = 14; // full campus fits to screen at zoom level 15
     private static final byte DEFAULT_ZOOM_LEVEL = 17;
@@ -183,7 +187,7 @@ public class MapFragment extends BaseFragment implements
 
     private void doSearch(String query, boolean isExactLocation) {
         query = query.trim();
-        Log.i(TAG, "query: " + query);
+        logger.info("query: {}", query);
 
         List<Poi> pois = new ArrayList<>();
 
@@ -237,7 +241,7 @@ public class MapFragment extends BaseFragment implements
     }
 
     private void finishSearch(Uri uri) {
-        Log.i(TAG, "finish search: " + uri.toString());
+        logger.info("finish search: {}", uri.toString());
 
         if (uri.getScheme() == null && uri.toString().contains(PoiContentContract.AUTHORITY)) {
             uri = Uri.parse(String.format("content://%1$s", uri));
@@ -574,16 +578,15 @@ public class MapFragment extends BaseFragment implements
         File mapFile = PreferenceWrapper.getMapFile(getContext());
         if (mapFile == null || !mapFile.exists() || !mapFile.canRead()) {
             mapFile = new File(getActivity().getFilesDir(), MAP_FILE_NAME);
-            Log.i(TAG, "use internal map: " + mapFile.toString());
+            logger.info("use internal map: {}", mapFile.toString());
         } else {
-            Log.i(TAG, "use external map: " + mapFile.toString());
+            logger.info("use external map: {}", mapFile.toString());
         }
         return mapFile;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        // Log.i(TAG, newText);
         return false;
     }
 

@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,15 +28,16 @@ package org.voidsink.anewjkuapp.provider;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.PoiContentContract;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 
 public class KusssDatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String TAG = KusssDatabaseHelper.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(KusssDatabaseHelper.class);
 
     private static final String DATABASE_NAME = "kusss.db";
     private static final int DATABASE_VERSION = 12;
@@ -120,7 +121,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.d(TAG, "Create database");
+        logger.debug("Create database");
         db.execSQL(DB_CREATE_COURSE);
         db.execSQL(DB_CREATE_EXAM);
         db.execSQL(DB_CREATE_ASSESSMENT);
@@ -132,8 +133,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
-                + newVersion + ", which will destroy most of all old data");
+        logger.warn("Upgrading database from version {} to {}, which will destroy most of all old data", oldVersion, newVersion);
         if (oldVersion < 9) {
             db.execSQL("DROP TABLE IF EXISTS "
                     + KusssContentContract.Assessment.TABLE_NAME);

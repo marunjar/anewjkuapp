@@ -37,7 +37,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -58,6 +57,8 @@ import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 import com.alamkanak.weekview.WeekViewLoader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
@@ -77,7 +78,8 @@ import java.util.TimeZone;
 public class CalendarFragment2 extends CalendarPermissionFragment implements
         WeekView.EventClickListener, WeekView.EventLongPressListener, LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String TAG = CalendarFragment2.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(CalendarFragment2.class);
+
     private static final String ARG_CAL_LOAD_NOW = "CLN";
     private static final String ARG_CAL_LOAD_THEN = "CLT";
     private WeekView mWeekView;
@@ -181,7 +183,7 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
 
                 outState.putLong(Consts.ARG_CALENDAR_NOW, day.getTimeInMillis());
 
-                Log.d(TAG, String.format("saveDateTime: %d", day.getTimeInMillis()));
+                logger.debug("saveDateTime: {}", day.getTimeInMillis());
             }
         }
     }
@@ -222,7 +224,7 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
     }
 
     private void goToDate(long time) {
-        Log.d(TAG, String.format("goToDate: %d", time));
+        logger.debug("goToDate: {}", time);
 
         Calendar day = Calendar.getInstance();
         day.setTimeInMillis(time);
@@ -249,11 +251,11 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
                 mAccount, CalendarUtils.ARG_CALENDAR_EXAM, true);
 
         if (calIDLva == null) {
-            Log.w(TAG, "cannot load courses, calendar not found");
+            logger.warn("cannot load courses, calendar not found");
             calIDLva = "";
         }
         if (calIDExam == null) {
-            Log.w(TAG, "cannot load exams, calendar not found");
+            logger.warn("cannot load exams, calendar not found");
             calIDExam = "";
         }
 
@@ -296,7 +298,6 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
                         int color = cursor.getInt(1);
 
                         double lastContrast = ColorUtils.calculateContrast(color, mWeekView.getEventTextColor());
-                        //Log.d(TAG, String.format("color=%d %d %d, contrast=%f", Color.red(color), Color.green(color), Color.blue(color), lastContrast));
 
                         while (lastContrast < 1.6) {
                             float[] hsv = new float[3];
@@ -306,7 +307,6 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
                             color = Color.HSVToColor(hsv);
 
                             lastContrast = ColorUtils.calculateContrast(color, mWeekView.getEventTextColor());
-                            //Log.d(TAG, String.format("new color=%d %d %d, contrast=%f", Color.red(color), Color.green(color), Color.blue(color), lastContrast));
 
                             if (hsv[2] == 0) break;
                         }
@@ -410,8 +410,6 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
                 periodIndex = -1 + (int) (days + halfDaysInPeriod + 1) / mDaysInPeriod;
             }
 
-            //Log.d(TAG, String.format("%s toWeekViewPeriodIndex %d (%d days)", SimpleDateFormat.getDateTimeInstance().format(instance.getTime()), periodIndex, days));
-
             return periodIndex;
         }
 
@@ -449,7 +447,7 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
                     args.putLong(ARG_CAL_LOAD_NOW, now.getTimeInMillis());
                     args.putLong(ARG_CAL_LOAD_THEN, then.getTimeInMillis());
 
-                    //Log.d(TAG, String.format("loadPeriod %d(%d) %s - %s", periodIndex, index, SimpleDateFormat.getDateTimeInstance().format(now.getTime()), SimpleDateFormat.getDateTimeInstance().format(then.getTime())));
+//                    logger.debug("loadPeriod {}({}) {} - {}", periodIndex, index, SimpleDateFormat.getDateTimeInstance().format(now.getTime()), SimpleDateFormat.getDateTimeInstance().format(then.getTime()));
                     if (index >= 0) {
                         mLastLoadedPeriods.remove(index);
                         if (hasCalendarPermission()) {
@@ -464,7 +462,7 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
                     while (mLastLoadedPeriods.size() > 3) {
                         int removed = mLastLoadedPeriods.remove(mLastLoadedPeriods.size() - 1);
 
-                        //Log.d(TAG, String.format("period removed %d", removed));
+                        //logger.debug("period removed {}", removed);
 
                         getLoaderManager().destroyLoader(removed);
                     }
@@ -487,7 +485,7 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
 
         public void stopLoading() {
             if (getLoaderManager().hasRunningLoaders()) {
-                Log.d(TAG, "stop loading events");
+                logger.debug("stop loading events");
 
                 for (int id : mLastLoadedPeriods) {
                     getLoaderManager().destroyLoader(id);

@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -48,8 +48,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.util.Log;
 
+import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.ImportPoiTask;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.KusssContentContract;
@@ -96,13 +100,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import androidx.core.content.ContextCompat;
-import androidx.preference.PreferenceManager;
-
 public class AppUtils {
 
     private static final String DEFAULT_POI_FILE_NAME = "JKU.gpx";
-    private static final String TAG = AppUtils.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(AppUtils.class);
 
     private static final Comparator<Course> CourseComparator = (lhs, rhs) -> {
         int value = lhs.getTitle().compareTo(rhs.getTitle());
@@ -183,7 +184,7 @@ public class AppUtils {
                     errorOccured = true;
                 }
             } catch (Exception e) {
-                Log.e(TAG, "doOnNewVersion failed", e);
+                logger.error("doOnNewVersion failed", e);
                 Analytics.sendException(context, e, false);
                 errorOccured = true;
             }
@@ -218,7 +219,7 @@ public class AppUtils {
 
                 PreferenceWrapper.applySyncInterval(context);
             } catch (Exception e) {
-                Log.e(TAG, "doOnVersionChange failed", e);
+                logger.error("doOnVersionChange failed", e);
                 Analytics.sendException(context, e, false);
                 errorOccured = true;
             }
@@ -279,7 +280,7 @@ public class AppUtils {
         } else {
             accountManager.removeAccount(account, null, null);
         }
-        Log.d(TAG, "account removed");
+        logger.debug("account removed");
     }
 
     private static boolean shouldRemoveOldAccount(int lastVersion,
@@ -298,7 +299,7 @@ public class AppUtils {
             PreferenceManager.setDefaultValues(context, R.xml.preference_kusss,
                     true);
         } catch (Exception e) {
-            Log.e(TAG, "initPreferences", e);
+            logger.error("initPreferences", e);
             return false;
         }
         return true;
@@ -321,10 +322,10 @@ public class AppUtils {
             }
             mapFileWriter.close();
         } catch (FileNotFoundException e) {
-            Log.e(TAG, "copyDefaultMap", e);
+            logger.error("copyDefaultMap", e);
             return false;
         } catch (IOException e) {
-            Log.e(TAG, "copyDefaultMap", e);
+            logger.error("copyDefaultMap", e);
             return false;
         }
         return true;
@@ -393,9 +394,7 @@ public class AppUtils {
                     if (course.getCode().equals(nextCourse.getCode())
                             && course.getTitle().equals(nextCourse.getTitle())) {
                         mCourses.remove(j);
-                        Log.d("removeDuplicates",
-                                "remove from done " + nextCourse.getCode() + " "
-                                        + nextCourse.getTitle());
+                        logger.debug("remove from done {} {}", nextCourse.getCode(), nextCourse.getTitle());
                     } else {
                         j++;
                     }
@@ -416,9 +415,7 @@ public class AppUtils {
                     if (course.getCode().equals(nextCourse.getCode())
                             && course.getTitle().equals(nextCourse.getTitle())) {
                         mCourses.remove(j);
-                        Log.d("removeDuplicates",
-                                "remove from other " + nextCourse.getCode() + " "
-                                        + nextCourse.getTitle());
+                        logger.debug("remove from other {} {}", nextCourse.getCode(), nextCourse.getTitle());
                     } else {
                         j++;
                     }
@@ -463,7 +460,7 @@ public class AppUtils {
         }
 
         if ((android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M) && (ContextCompat.checkSelfPermission(context, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED)) {
-            Log.w(TAG, "getAccount failed, no permission");
+            logger.warn("getAccount failed, no permission");
             return null;
         }
 
@@ -503,7 +500,7 @@ public class AppUtils {
             return response.getResult().getString(AccountManager.KEY_AUTHTOKEN);
         } catch (OperationCanceledException | AuthenticatorException
                 | IOException e) {
-            Log.e(TAG, "getAccountAuthToken", e);
+            logger.error("getAccountAuthToken", e);
             return null;
         }
     }
@@ -605,10 +602,10 @@ public class AppUtils {
                 }
             }
             if (finalAssessment != null) {
-                Log.d(TAG, String.format("found by code/title: %s/%s -> %s", course.getCode(), course.getTitle(), course.getCourseId()));
+                logger.debug("found by code/title: {}/{} -> {}", course.getCode(), course.getTitle(), course.getCourseId());
             }
         } else {
-            Log.d(TAG, String.format("found by code/courseId: %s/%s -> %s", course.getCode(), course.getCourseId(), course.getTitle()));
+            logger.debug("found by code/courseId: {}/{} -> {}", course.getCode(), course.getCourseId(), course.getTitle());
         }
 
         return finalAssessment;
@@ -678,7 +675,7 @@ public class AppUtils {
             }
         }
 
-        Log.d(TAG, String.format("MasterSync=%b, CalendarSync=%b, KusssSync=%b", mIsMasterSyncEnabled, mIsCalendarSyncEnabled, mIsKusssSyncEnable));
+        logger.debug("MasterSync={}, CalendarSync={}, KusssSync={}", mIsMasterSyncEnabled, mIsCalendarSyncEnabled, mIsKusssSyncEnable);
 
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (am != null) {

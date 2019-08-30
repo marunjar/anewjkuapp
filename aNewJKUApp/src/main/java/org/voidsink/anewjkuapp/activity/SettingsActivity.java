@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,8 +31,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
@@ -41,17 +47,12 @@ import org.voidsink.anewjkuapp.fragment.SettingsFragment;
 import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.Consts;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.fragment.app.Fragment;
-import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceManager;
-
 public class SettingsActivity extends ThemedActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String ACTION_PREFS_LEGACY = "org.voidsink.anewjkuapp.prefs.LEGACY";
     public static final String ARG_SHOW_FRAGMENT = "show_fragment";
 
-    private static final String TAG = SettingsActivity.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(SettingsActivity.class);
 
     private boolean mThemeChanged = false;
 
@@ -116,7 +117,7 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
                 .unregisterOnSharedPreferenceChangeListener(this);
 
         if (mThemeChanged) {
-            Log.i(TAG, "theme changed");
+            logger.info("theme changed");
 
             AlarmManager alm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             alm.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0));

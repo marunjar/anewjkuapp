@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -34,10 +34,13 @@ import android.content.SyncResult;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Looper;
-import android.util.Log;
+
+import androidx.core.content.ContextCompat;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.notification.KusssNotificationBuilder;
@@ -48,12 +51,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import androidx.core.content.ContextCompat;
-
 public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 
-    private static final String TAG = KusssCalendarSyncAdapter.class
-            .getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(KusssCalendarSyncAdapter.class);
 
     // Global variables
     // Define a variable to contain a content resolver instance
@@ -90,7 +90,7 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
             return;
         }
 
-        Log.d(TAG, "starting sync of account: " + account.name);
+        logger.debug("starting sync of account: " + account.name);
 
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             syncResult.stats.numAuthExceptions++;

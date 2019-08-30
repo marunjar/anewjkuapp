@@ -32,7 +32,6 @@ import android.database.Cursor;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -50,6 +49,8 @@ import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
@@ -70,7 +71,8 @@ import java.util.List;
 
 public class CalendarFragment extends CalendarPermissionFragment implements ContentObserverListener, LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String TAG = CalendarFragment.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(CalendarFragment.class);
+
     private long now = 0, then = 0;
 
     private CalendarEventAdapter mAdapter;
@@ -139,7 +141,7 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
         super.onPause();
 
         if (getLoaderManager().hasRunningLoaders()) {
-            Log.d(TAG, "stop loading events");
+            logger.debug("stop loading events");
 
             getLoaderManager().destroyLoader(0);
         }
@@ -237,11 +239,11 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
                 mAccount, CalendarUtils.ARG_CALENDAR_EXAM, true);
 
         if (calIDLva == null) {
-            Log.w(TAG, "cannot load courses, calendar not found");
+            logger.warn("cannot load courses, calendar not found");
             calIDLva = "";
         }
         if (calIDExam == null) {
-            Log.w(TAG, "cannot load exams, calendar not found");
+            logger.warn("cannot load exams, calendar not found");
             calIDExam = "";
         }
 

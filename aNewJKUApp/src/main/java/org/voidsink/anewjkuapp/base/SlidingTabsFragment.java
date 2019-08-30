@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,6 +30,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
 import com.google.android.material.tabs.TabLayout;
 
 import org.voidsink.anewjkuapp.R;
@@ -38,20 +45,11 @@ import org.voidsink.anewjkuapp.utils.Consts;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-
 /**
  * This class represents a tab to be displayed by {@link ViewPager} and it's associated
  * {@link TabLayout}.
  */
 public abstract class SlidingTabsFragment extends BaseFragment {
-
-    //static final String TAG = SlidingTabsFragment.class.getSimpleName();
 
     /**
      * A {@link ViewPager} which will be used in conjunction with the {@link TabLayout} above.
@@ -133,23 +131,6 @@ public abstract class SlidingTabsFragment extends BaseFragment {
         public Fragment getItem(int i) {
             return mTabs.get(i).createFragment();
         }
-
-//        @Override
-//        public Object instantiateItem(ViewGroup container, int position) {
-//            return super.instantiateItem(container, position);
-//            Log.i(LOG_TAG, "instantiateItem() [position: " + position + "]");
-//        }
-
-//        @Override
-//        public void destroyItem(ViewGroup container, int position, Object object) {
-//            super.destroyItem(container, position, object);
-//            Log.i(LOG_TAG, "destroyItem() [position: " + position + "]");
-//        }
-
-//        @Override
-//        public int getItemPosition(Object object) {
-//            return super.getItemPosition(object);
-//        }
 
         @Override
         public int getCount() {

@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,8 +32,9 @@ import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
 import android.os.Looper;
-import android.util.Log;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.notification.KusssNotificationBuilder;
 import org.voidsink.anewjkuapp.update.ImportAssessmentTask;
@@ -48,7 +49,7 @@ import java.util.concurrent.Executors;
 
 public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
 
-    private static final String TAG = KusssSyncAdapter.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(KusssSyncAdapter.class);
 
     // Global variables
     // Define a variable to contain a content resolver instance
@@ -73,7 +74,7 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
             return;
         }
 
-        Log.d(TAG, "starting sync of account: " + account.name);
+        logger.debug("starting sync of account: {}", account.name);
 
         if (!KusssHandler.getInstance().isAvailable(getContext(),
                 AppUtils.getAccountAuthToken(getContext(), account),

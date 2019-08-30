@@ -33,8 +33,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.RemoteException;
-import android.util.Log;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.notification.PoiNotification;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
@@ -61,7 +62,7 @@ import javax.xml.xpath.XPathFactory;
 
 public class ImportPoiTask implements Callable<Void> {
 
-    private static final String TAG = ImportPoiTask.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(ImportPoiTask.class);
 
     private final Context mContext;
     private final File mFile;
@@ -97,7 +98,7 @@ public class ImportPoiTask implements Callable<Void> {
             return null;
         }
 
-        Log.d(TAG, "start importing POIs");
+        logger.debug("start importing POIs");
         PoiNotification mNotification = new PoiNotification(mContext);
         try {
             Map<String, Poi> poiMap = new HashMap<>();
@@ -127,7 +128,7 @@ public class ImportPoiTask implements Callable<Void> {
 
                         Poi poi = new Poi(name, lat, lon);
                         if (!poiMap.containsKey(poi.getName())) {
-                            Log.d(TAG, "poi found: " + poi.getName());
+                            logger.debug("poi found: {}", poi.getName());
 
                             poiMap.put(poi.getName(), poi);
                             poi.parse(wpt);
@@ -138,12 +139,12 @@ public class ImportPoiTask implements Callable<Void> {
             } catch (ParserConfigurationException | SAXException | IOException
                     | XPathExpressionException e) {
                 poiMap.clear();
-                Log.e(TAG, "parse failed", e);
+                logger.error("parse failed", e);
                 Analytics.sendException(mContext, e, true);
             }
 
             if (!poiMap.isEmpty()) {
-                Log.i(TAG, String.format("got %s pois", poiMap.size()));
+                logger.info("got {} pois", poiMap.size());
 
                 ArrayList<ContentProviderOperation> batch = new ArrayList<>();
 
@@ -153,8 +154,7 @@ public class ImportPoiTask implements Callable<Void> {
                         null)) {
 
                     if (c != null) {
-                        Log.d(TAG, "Found " + c.getCount()
-                                + " local entries. Computing merge solution...");
+                        logger.debug("Found {} local entries. Computing merge solution...", c.getCount());
 
                         int poiId;
                         String poiName;
@@ -176,7 +176,7 @@ public class ImportPoiTask implements Callable<Void> {
                                     Uri existingUri = poiUri.buildUpon()
                                             .appendPath(Integer.toString(poiId))
                                             .build();
-                                    Log.d(TAG, String.format("Scheduling update: %s (%s)", poiName, existingUri));
+                                    logger.debug("Scheduling update: {} ({})", poiName, existingUri);
 
                                     batch.add(ContentProviderOperation
                                             .newUpdate(existingUri)
@@ -200,7 +200,7 @@ public class ImportPoiTask implements Callable<Void> {
                                     Uri deleteUri = poiUri.buildUpon()
                                             .appendPath(Integer.toString(poiId))
                                             .build();
-                                    Log.d(TAG, String.format("Scheduling delete: %s (%s)", poiName, deleteUri));
+                                    logger.debug("Scheduling delete: {} ({})", poiName, deleteUri);
 
                                     batch.add(ContentProviderOperation.newDelete(
                                             deleteUri)
@@ -223,26 +223,26 @@ public class ImportPoiTask implements Callable<Void> {
                                     // mAccount.type))
                                     .withValues(poi.getContentValues(mIsDefault))
                                     .build());
-                            Log.d(TAG, "Scheduling insert: " + poi.getName());
+                            logger.debug("Scheduling insert: {}", poi.getName());
                             // mSyncResult.stats.numInserts++;
                         }
 
                         if (batch.size() > 0) {
                             // mSyncNotification.update("LVAs werden gespeichert");
 
-                            Log.d(TAG, "Applying batch update");
+                            logger.debug("Applying batch update");
                             mProvider.applyBatch(batch);
-                            Log.d(TAG, "Notify resolver");
+                            logger.debug("Notify resolver");
                             mContext.getContentResolver().notifyChange(
                                     PoiContentContract.Poi.CONTENT_URI, null, // No
                                     // local
                                     // observer
                                     false); // IMPORTANT: Do not sync to network
                         } else {
-                            Log.w(TAG, "No batch operations found! Do nothing");
+                            logger.warn("No batch operations found! Do nothing");
                         }
                     } else {
-                        Log.w(TAG, "selection failed");
+                        logger.warn("selection failed");
                     }
                 }
             }

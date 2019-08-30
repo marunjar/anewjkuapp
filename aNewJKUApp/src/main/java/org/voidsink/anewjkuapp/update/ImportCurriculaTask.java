@@ -35,8 +35,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
@@ -56,7 +57,7 @@ import java.util.concurrent.Callable;
 
 public class ImportCurriculaTask implements Callable<Void> {
 
-    private static final String TAG = ImportCurriculaTask.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(ImportCurriculaTask.class);
 
     private ContentProviderClient mProvider;
     private boolean mReleaseProvider = false;
@@ -129,7 +130,7 @@ public class ImportCurriculaTask implements Callable<Void> {
         }
 
         try {
-            Log.d(TAG, "setup connection");
+            logger.debug("setup connection");
 
             updateNotify(mContext.getString(R.string.notification_sync_connect));
 
@@ -140,7 +141,7 @@ public class ImportCurriculaTask implements Callable<Void> {
 
                 updateNotify(mContext.getString(R.string.notification_sync_curricula_loading));
 
-                Log.d(TAG, "load lvas");
+                logger.debug("load lvas");
 
                 List<Curriculum> curricula = KusssHandler.getInstance().getCurricula(mContext);
                 if (curricula == null) {
@@ -151,7 +152,7 @@ public class ImportCurriculaTask implements Callable<Void> {
                         curriculaMap.put(KusssHelper.getCurriculumKey(curriculum.getCid(), curriculum.getDtStart()), curriculum);
                     }
 
-                    Log.d(TAG, String.format("got %s lvas", curricula.size()));
+                    logger.debug("got {} lvas", curricula.size());
 
                     updateNotify(mContext.getString(R.string.notification_sync_curricula_updating));
 
@@ -162,12 +163,9 @@ public class ImportCurriculaTask implements Callable<Void> {
                     try (Cursor c = mProvider.query(curriculaUri, CURRICULA_PROJECTION,
                             null, null, null)) {
                         if (c == null) {
-                            Log.w(TAG, "selection failed");
+                            logger.warn("selection failed");
                         } else {
-                            Log.d(TAG,
-                                    "Found "
-                                            + c.getCount()
-                                            + " local entries. Computing merge solution...");
+                            logger.debug("Found {} local entries. Computing merge solution...", c.getCount());
 
                             int _Id;
                             String curriculumCid;
@@ -186,8 +184,7 @@ public class ImportCurriculaTask implements Callable<Void> {
                                             .buildUpon()
                                             .appendPath(Integer.toString(_Id))
                                             .build();
-                                    Log.d(TAG, "Scheduling update: "
-                                            + existingUri);
+                                    logger.debug("Scheduling update: {}", existingUri);
 
                                     batch.add(ContentProviderOperation
                                             .newUpdate(
@@ -217,18 +214,16 @@ public class ImportCurriculaTask implements Callable<Void> {
                                                                 mAccount.type))
                                         .withValues(KusssHelper.getCurriculumContentValues(curriculum))
                                         .build());
-                                Log.d(TAG,
-                                        "Scheduling insert: " + curriculum.getCid()
-                                                + " " + curriculum.getDtStart().toString());
+                                logger.debug("Scheduling insert: {} {}", curriculum.getCid(), curriculum.getDtStart().toString());
                                 mSyncResult.stats.numInserts++;
                             }
 
                             updateNotify(mContext.getString(R.string.notification_sync_curricula_saving));
 
                             if (batch.size() > 0) {
-                                Log.d(TAG, "Applying batch update");
+                                logger.debug("Applying batch update");
                                 mProvider.applyBatch(batch);
-                                Log.d(TAG, "Notify resolver");
+                                logger.debug("Notify resolver");
                                 mResolver
                                         .notifyChange(
                                                 KusssContentContract.Curricula.CONTENT_CHANGED_URI,
@@ -239,8 +234,7 @@ public class ImportCurriculaTask implements Callable<Void> {
                                 // sync to
                                 // network
                             } else {
-                                Log.w(TAG,
-                                        "No batch operations found! Do nothing");
+                                logger.warn("No batch operations found! Do nothing");
                             }
                         }
                     }
@@ -251,7 +245,7 @@ public class ImportCurriculaTask implements Callable<Void> {
             }
         } catch (Exception e) {
             Analytics.sendException(mContext, e, true);
-            Log.e(TAG, "import failed", e);
+            logger.error("import failed", e);
         }
         if (mUpdateNotification != null) {
             mUpdateNotification.cancel();

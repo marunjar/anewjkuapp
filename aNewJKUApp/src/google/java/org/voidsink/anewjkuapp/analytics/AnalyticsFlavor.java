@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,9 +29,10 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.Point;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
+
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.analytics.ExceptionReporter;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -43,17 +44,18 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.security.ProviderInstaller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.BuildConfig;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.HashMap;
 
-import androidx.annotation.NonNull;
-
 public class AnalyticsFlavor implements IAnalytics {
 
-    private static final String TAG = AnalyticsFlavor.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(AnalyticsFlavor.class);
+
     private Application mApp = null;
     private PlayServiceStatus mPlayServiceStatus = PlayServiceStatus.PS_NOT_AVAILABLE;
 
@@ -104,7 +106,7 @@ public class AnalyticsFlavor implements IAnalytics {
 
                         t.setScreenResolution(size.x, size.y);
                     } catch (Exception e) {
-                        Log.e(TAG, "get sceen size", e);
+                        logger.error("get sceen size", e);
                     }
 
                     break;
@@ -126,11 +128,11 @@ public class AnalyticsFlavor implements IAnalytics {
             if (BuildConfig.DEBUG) {
                 analytics.setDryRun(true);
                 analytics.setAppOptOut(true);
-                Log.i(TAG, "debug enabled");
+                logger.info("debug enabled");
             } else {
                 analytics.enableAutoActivityReports(mApp);
                 analytics.setAppOptOut(!PreferenceWrapper.trackingErrors(mApp));
-                Log.i(TAG, "debug disabled");
+                logger.info("debug disabled");
             }
 
             try {
@@ -168,11 +170,11 @@ public class AnalyticsFlavor implements IAnalytics {
                 t.send(eb.build());
             }
         } catch (Exception e2) {
-            Log.e(TAG, "sendException", e2);
+            logger.error("sendException", e2);
         }
         if (BuildConfig.DEBUG) {
             if (e != null) {
-                Log.d(TAG, String.format("%s (%s)", e.getMessage(), additionalData));
+                logger.debug("{} ({})", e.getMessage(), additionalData);
             }
         }
     }
@@ -184,9 +186,7 @@ public class AnalyticsFlavor implements IAnalytics {
             t.setScreenName(screenName);
             t.send(new HitBuilders.ScreenViewBuilder().build());
         }
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, String.format("screen: %s", screenName));
-        }
+        logger.debug("screen: {}", screenName);
     }
 
     @Override
@@ -199,9 +199,7 @@ public class AnalyticsFlavor implements IAnalytics {
                     .setLabel(label)
                     .build());
         }
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, String.format("buttonEvent: %s", label));
-        }
+        logger.debug("buttonEvent: {}", label);
     }
 
     @Override
@@ -215,18 +213,15 @@ public class AnalyticsFlavor implements IAnalytics {
                     .setLabel(value)
                     .build());
         }
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, String.format("preferenceChanged: %s=%s", key, value));
-        }
+        logger.debug("preferenceChanged: {}={}", key, value);
     }
 
     @Override
     public void setEnabled(boolean enabled) {
         final GoogleAnalytics analytics = GoogleAnalytics.getInstance(mApp);
 
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, String.format("setEnabled: %s", enabled));
-        } else {
+        logger.debug("setEnabled: {}", enabled);
+        if (!BuildConfig.DEBUG) {
             analytics.setAppOptOut(!enabled);
         }
     }

@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,21 +28,23 @@ package org.voidsink.anewjkuapp.base;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-
-import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.analytics.Analytics;
-import org.voidsink.anewjkuapp.utils.Consts;
 
 import androidx.annotation.NonNull;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.utils.Consts;
+
 public class BaseFragment extends Fragment implements StackedFragment {
 
-    private static final String TAG = BaseFragment.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(StackedFragment.class);
+
     private Intent mPendingIntent = null;
     private CharSequence mTitle = null;
     private int mId = 0;
@@ -52,7 +54,6 @@ public class BaseFragment extends Fragment implements StackedFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Log.i(getClass().getSimpleName(), "onCreate");
         setHasOptionsMenu(true);
     }
 
@@ -85,8 +86,6 @@ public class BaseFragment extends Fragment implements StackedFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.i(TAG, "onOptionsItemSelected");
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -137,7 +136,7 @@ public class BaseFragment extends Fragment implements StackedFragment {
             if (getContext() != null) {
                 handlePendingIntent(mPendingIntent);
             } else {
-                Log.w(TAG, "context not set, can't call handlePendingIntent");
+                logger.warn("context not set, can't call handlePendingIntent");
             }
             this.mPendingIntent = null;
         }

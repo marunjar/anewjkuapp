@@ -42,7 +42,6 @@ import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
@@ -52,6 +51,8 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.component.VEvent;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.ImportPoiTask;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.Poi;
@@ -80,7 +81,7 @@ import java.util.regex.Pattern;
 
 public class ImportCalendarTask implements Callable<Void> {
 
-    private static final String TAG = ImportCalendarTask.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(ImportCalendarTask.class);
 
     private final CalendarBuilder mCalendarBuilder;
 
@@ -182,7 +183,7 @@ public class ImportCalendarTask implements Callable<Void> {
                 CalendarUtils.getCalendarName(mContext, this.mCalendarName));
 
         try {
-            Log.d(TAG, "setup connection");
+            logger.debug("setup connection");
 
             updateNotify(mContext.getString(R.string.notification_sync_connect));
 
@@ -193,7 +194,7 @@ public class ImportCalendarTask implements Callable<Void> {
 
                 updateNotify(mContext.getString(R.string.notification_sync_calendar_loading, CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
 
-                Log.d(TAG, "loading calendar");
+                logger.debug("loading calendar");
 
                 ArrayList<ContentProviderOperation> batch = new ArrayList<>();
                 Uri calUri = CalendarContractWrapper.Events.CONTENT_URI();
@@ -201,7 +202,7 @@ public class ImportCalendarTask implements Callable<Void> {
                 String calendarId = CalendarUtils.getCalIDByName(mContext, mAccount, mCalendarName, true);
 
                 if (calendarId == null) {
-                    Log.w(TAG, "calendarId not found");
+                    logger.warn("calendarId not found");
                     return null;
                 }
 
@@ -211,12 +212,12 @@ public class ImportCalendarTask implements Callable<Void> {
                     if (calendar.getCalendar() == null) {
                         if (calendar.isMandatory()) {
                             mSyncResult.stats.numParseExceptions++;
-                            Log.w(TAG, "calendar not loaded: " + calendar.getName());
+                            logger.warn("calendar not loaded: {}", calendar.getName());
                         }
                     } else {
                         List<?> events = calendar.getCalendar().getComponents(Component.VEVENT);
 
-                        Log.d(TAG, String.format("got %d events", events.size()));
+                        logger.debug("got {} events", events.size());
 
                         updateNotify(mContext.getString(R.string.notification_sync_calendar_updating, calendar.getName()));
 
@@ -285,7 +286,7 @@ public class ImportCalendarTask implements Callable<Void> {
                             }
                         }
 
-                        Log.d(TAG, "Fetching local entries for merge with: " + calendarId);
+                        logger.debug("Fetching local entries for merge with: {}", calendarId);
 
                         // calc date for notifiying only future changes
                         // max update interval is 1 week
@@ -293,9 +294,9 @@ public class ImportCalendarTask implements Callable<Void> {
 
                         try (Cursor c = CalendarUtils.loadEventsBetween(mProvider, calUri, calendarId, calendar.getTerm().getStart(), calendar.getTerm().getEnd())) {
                             if (c == null) {
-                                Log.w(TAG, "selection failed");
+                                logger.warn("selection failed");
                             } else {
-                                Log.d(TAG, String.format("Found %d local entries. Computing merge solution...", c.getCount()));
+                                logger.debug("Found {} local entries. Computing merge solution...", c.getCount());
 
                                 // find stale data
                                 String eventId;
@@ -312,7 +313,6 @@ public class ImportCalendarTask implements Callable<Void> {
                                     mSyncResult.stats.numEntries++;
                                     eventId = c.getString(CalendarUtils.COLUMN_EVENT_ID);
 
-//                        Log.d(TAG, "---------");
                                     eventKusssId = null;
 
                                     // get kusssId from extended properties
@@ -327,7 +327,7 @@ public class ImportCalendarTask implements Callable<Void> {
 //                                    for (int i = 0; i < c2.getColumnCount(); i++) {
 //                                        extra = extra + i + "=" + c2.getString(i) + ";";
 //                                    }
-//                                    Log.d(TAG, "Extended: " + extra);
+//                                    logger.debug("Extended: {}", extra);
 
                                                 if (c2.getString(1).contains(CalendarUtils.EXTENDED_PROPERTY_NAME_KUSSS_ID)) {
                                                     eventKusssId = c2.getString(2);
@@ -341,7 +341,7 @@ public class ImportCalendarTask implements Callable<Void> {
                                     }
 
                                     eventTitle = c.getString(CalendarUtils.COLUMN_EVENT_TITLE);
-                                    Log.d(TAG, "Title: " + eventTitle);
+                                    logger.debug("Title: {}", eventTitle);
 
                                     eventLocation = c
                                             .getString(CalendarUtils.COLUMN_EVENT_LOCATION);
@@ -375,8 +375,7 @@ public class ImportCalendarTask implements Callable<Void> {
                                                         .appendPath(eventId).build();
 
                                                 // Update existing record
-                                                Log.d(TAG, "Scheduling update: " + existingUri
-                                                        + " dirty=" + eventDirty);
+                                                logger.debug("Scheduling update: {} dirty={}", existingUri, eventDirty);
 
                                                 batch.add(ContentProviderOperation
                                                         .newUpdate(existingUri)
@@ -396,7 +395,7 @@ public class ImportCalendarTask implements Callable<Void> {
                                                 Uri deleteUri = calUri.buildUpon()
                                                         .appendPath(eventId)
                                                         .build();
-                                                Log.d(TAG, "Scheduling delete: " + deleteUri);
+                                                logger.debug("Scheduling delete: {}", deleteUri);
                                                 // notify only future changes
                                                 if (eventDTStart > notifyFrom && !eventDeleted) {
                                                     mNotification
@@ -416,15 +415,12 @@ public class ImportCalendarTask implements Callable<Void> {
                                             }
                                         }
                                     } else {
-                                        Log.i(TAG,
-                                                "Event UID not set, ignore event: uid=" + eventKusssId
-                                                        + " dirty=" + eventDirty
-                                                        + " title=" + eventTitle);
+                                        logger.info("Event UID not set, ignore event: uid={} dirty={} title={}" + eventKusssId, eventDirty, eventTitle);
                                     }
                                 }
                             }
 
-                            Log.d(TAG, String.format("Cursor closed, %d events left", eventsMap.size()));
+                            logger.debug("Cursor closed, {} events left", eventsMap.size());
 
                             updateNotify(mContext.getString(R.string.notification_sync_calendar_adding, calendar.getName()));
 
@@ -471,7 +467,7 @@ public class ImportCalendarTask implements Callable<Void> {
                                     builder.withValue(CalendarContract.Events.HAS_EXTENDED_PROPERTIES, "1");
 
                                     ContentProviderOperation op = builder.build();
-                                    Log.d(TAG, "Scheduling insert: " + v.getUid().getValue());
+                                    logger.debug("Scheduling insert: {}", v.getUid().getValue());
                                     batch.add(op);
 
                                     int eventIndex = batch.size() - 1;
@@ -511,9 +507,9 @@ public class ImportCalendarTask implements Callable<Void> {
                 updateNotify(mContext.getString(R.string.notification_sync_calendar_saving, CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
 
                 if (batch.size() > 0) {
-                    Log.d(TAG, "Applying batch update");
+                    logger.debug("Applying batch update");
                     mProvider.applyBatch(batch);
-                    Log.d(TAG, "Notify resolver");
+                    logger.debug("Notify resolver");
                     mResolver.notifyChange(calUri.buildUpon()
                                     .appendPath(calendarId).build(), // URI
                             // where
@@ -524,8 +520,7 @@ public class ImportCalendarTask implements Callable<Void> {
                             false); // IMPORTANT: Do not sync to
                     // network
                 } else {
-                    Log.w(TAG,
-                            "No batch operations found! Do nothing");
+                    logger.warn("No batch operations found! Do nothing");
                 }
 
                 KusssHandler.getInstance().logout(mContext);
@@ -533,8 +528,8 @@ public class ImportCalendarTask implements Callable<Void> {
                 mSyncResult.stats.numAuthExceptions++;
             }
         } catch (Exception e) {
+            logger.error("import calendar failed", e);
             Analytics.sendException(mContext, e, true);
-            Log.e(TAG, "import calendar failed", e);
         }
 
         if (mUpdateNotification != null) {

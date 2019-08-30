@@ -42,12 +42,13 @@ import android.os.RemoteException;
 import android.provider.CalendarContract;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
@@ -117,7 +118,7 @@ public final class CalendarUtils {
     public static final String EXTENDED_PROPERTY_NAME_KUSSS_ID = "kusssId";
     public static final String EXTENDED_PROPERTY_LOCATION_EXTRA = "locationExtra";
 
-    private static final String TAG = CalendarUtils.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(CalendarUtils.class);
 
     private CalendarUtils() {
     }
@@ -197,7 +198,7 @@ public final class CalendarUtils {
                         account.type),
                 CalendarContractWrapper.Calendars._ID() + "=?", new String[]{id});
 
-        Log.i(TAG, String.format("calendar %s (id=%s) removed", name, id));
+        logger.info("calendar {} (id={}) removed", name, id);
 
         return true;
     }
@@ -208,13 +209,13 @@ public final class CalendarUtils {
         if (calId == null) {
             createCalendar(context, account, name, color);
             if (getCalIDByName(context, account, name, false) != null) {
-                Log.d(TAG, String.format("calendar '%s' created", name));
+                logger.debug("calendar '{}' created", name);
 
                 Intent mUpdateService = new Intent(context, UpdateService.class);
                 mUpdateService.putExtra(Consts.ARG_UPDATE_CAL, true);
                 context.startService(mUpdateService);
             } else {
-                Log.d(TAG, String.format("can't create calendar '%s'", name));
+                logger.debug("can't create calendar '{}'", name);
                 return false;
             }
         }
@@ -281,7 +282,7 @@ public final class CalendarUtils {
     public static String getCalIDByName(Context context, Account account,
                                         String name, boolean usePreferences) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-            Log.w(TAG, String.format("no id for '%s' found, no permission", name));
+            logger.warn("no id for '{}' found, no permission", name);
             return null;
         }
 
@@ -313,9 +314,9 @@ public final class CalendarUtils {
         }
 
         if (id == null) {
-            Log.w(TAG, String.format("no id for '%s' found", name));
+            logger.warn("no id for '{}' found", name);
         } else {
-            Log.d(TAG, String.format("id for '%s' found: %s", name, id));
+            logger.debug("id for '{}' found: {}", name, id);
         }
         return id;
     }
@@ -428,7 +429,6 @@ public final class CalendarUtils {
                             long eventDTStart = c.getLong(CalendarUtils.COLUMN_EVENT_DTSTART);
                             if (eventDTStart > deleteFrom) {
                                 String eventId = c.getString(COLUMN_EVENT_ID);
-                                //                        Log.d(TAG, "---------");
                                 String eventKusssId = null;
 
                                 // get kusssId from extended properties
@@ -454,7 +454,7 @@ public final class CalendarUtils {
                                         Uri deleteUri = calUri.buildUpon()
                                                 .appendPath(eventId)
                                                 .build();
-                                        Log.d(TAG, "Scheduling delete: " + deleteUri);
+                                        logger.debug("Scheduling delete: {}", deleteUri);
                                         batch.add(ContentProviderOperation
                                                 .newDelete(deleteUri)
                                                 .build());
@@ -463,12 +463,11 @@ public final class CalendarUtils {
                             }
                         }
                         if (batch.size() > 0) {
-                            Log.d(TAG, "Applying batch update");
+                            logger.debug("Applying batch update");
                             provider.applyBatch(batch);
-                            Log.d(TAG, "Notify resolver");
+                            logger.debug("Notify resolver");
                         } else {
-                            Log.w(TAG,
-                                    "No batch operations found! Do nothing");
+                            logger.warn("No batch operations found! Do nothing");
                         }
                     } catch (RemoteException | OperationApplicationException e) {
                         Analytics.sendException(context, e, true);

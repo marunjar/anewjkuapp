@@ -111,7 +111,7 @@ dependencies {
     implementation 'pub.devrel:easypermissions:3.0.0'
     implementation 'org.jsoup:jsoup:1.12.1'
     implementation 'org.mnode.ical4j:ical4j:3.0.9'
-    debugImplementation 'org.slf4j:slf4j-android:1.7.28'
+    implementation 'org.slf4j:slf4j-android:1.7.28'
     implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
     implementation 'de.cketti.library.changelog:ckchangelog:1.2.2'
     implementation('com.mikepenz:aboutlibraries:6.2.3@aar') {

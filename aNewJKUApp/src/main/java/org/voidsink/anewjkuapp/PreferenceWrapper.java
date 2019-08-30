@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -33,8 +33,11 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
-import android.util.Log;
 
+import androidx.preference.PreferenceManager;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.utils.AppUtils;
@@ -42,10 +45,8 @@ import org.voidsink.anewjkuapp.utils.AppUtils;
 import java.io.File;
 import java.util.List;
 
-import androidx.preference.PreferenceManager;
-
 public final class PreferenceWrapper {
-    private static final String TAG = PreferenceWrapper.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(PreferenceWrapper.class);
 
     public static final String PREF_SYNC_INTERVAL_KEY = "pref_key_sync_interval";
     private static final int PREF_SYNC_INTERVAL_DEFAULT = 85;
@@ -113,7 +114,7 @@ public final class PreferenceWrapper {
             return Math.max(Integer.parseInt(sp.getString(PREF_SYNC_INTERVAL_KEY,
                     Integer.toString(PREF_SYNC_INTERVAL_DEFAULT))), 12); // min. 12h interval
         } catch (Exception e) {
-            Log.e(TAG, "Failure", e);
+            logger.error("Failure", e);
             return PREF_SYNC_INTERVAL_DEFAULT;
         }
     }
@@ -125,7 +126,7 @@ public final class PreferenceWrapper {
             List<PeriodicSync> syncs = ContentResolver.getPeriodicSyncs(
                     mAccount, CalendarContractWrapper.AUTHORITY());
             for (PeriodicSync sync : syncs) {
-                Log.d(TAG, "old sync: " + sync.period);
+                logger.debug("old sync: {}", sync.period);
             }
 
             // Inform the system that this account supports sync
@@ -158,7 +159,7 @@ public final class PreferenceWrapper {
             return sp.getBoolean(PREF_NOTIFY_CALENDAR_KEY,
                     PREF_NOTIFY_CALENDAR_DEFAULT);
         } catch (Exception e) {
-            Log.e(TAG, "Failure", e);
+            logger.error("Failure", e);
             return PREF_NOTIFY_CALENDAR_DEFAULT;
         }
     }
@@ -170,7 +171,7 @@ public final class PreferenceWrapper {
             return sp.getBoolean(PREF_USE_CALENDAR_VIEW_KEY,
                     PREF_USE_CALENDAR_VIEW_DEFAULT);
         } catch (Exception e) {
-            Log.e(TAG, "Failure", e);
+            logger.error("Failure", e);
             return PREF_USE_CALENDAR_VIEW_DEFAULT;
         }
     }
@@ -182,7 +183,7 @@ public final class PreferenceWrapper {
             return sp.getBoolean(PREF_GET_NEW_EXAMS,
                     PREF_GET_NEW_EXAMS_DEFAULT);
         } catch (Exception e) {
-            Log.e(TAG, "Failure", e);
+            logger.error("Failure", e);
             return PREF_GET_NEW_EXAMS_DEFAULT;
         }
     }
@@ -194,7 +195,7 @@ public final class PreferenceWrapper {
             return sp
                     .getBoolean(PREF_NOTIFY_EXAM_KEY, PREF_NOTIFY_EXAM_DEFAULT);
         } catch (Exception e) {
-            Log.e(TAG, "Failure", e);
+            logger.error("Failure", e);
             return PREF_NOTIFY_EXAM_DEFAULT;
         }
     }
@@ -206,7 +207,7 @@ public final class PreferenceWrapper {
             return sp.getBoolean(PREF_NOTIFY_GRADE_KEY,
                     PREF_NOTIFY_GRADE_DEFAULT);
         } catch (Exception e) {
-            Log.e(TAG, "Failure", e);
+            logger.error("Failure", e);
             return PREF_NOTIFY_GRADE_DEFAULT;
         }
     }
@@ -218,7 +219,7 @@ public final class PreferenceWrapper {
             return sp.getBoolean(PREF_USE_LIGHT_THEME,
                     PREF_USE_LIGHT_THEME_DEFAULT);
         } catch (Exception e) {
-            Log.e(TAG, "Failure", e);
+            logger.error("Failure", e);
             return PREF_USE_LIGHT_THEME_DEFAULT;
         }
     }
@@ -230,7 +231,7 @@ public final class PreferenceWrapper {
         try {
             mapFile = new File(sp.getString(PREF_MAP_FILE, PREF_MAP_FILE_DEFAULT));
         } catch (Exception e) {
-            Log.e(TAG, "Failure", e);
+            logger.error("Failure", e);
             mapFile = null;
         }
         if (mapFile != null && (!mapFile.exists() || !mapFile.canRead())) {
@@ -245,7 +246,7 @@ public final class PreferenceWrapper {
         try {
             return sp.getInt(PREF_LAST_FRAGMENT, PREF_LAST_FRAGMENT_DEFAULT);
         } catch (Exception e) {
-            Log.e(TAG, "Failure", e);
+            logger.error("Failure", e);
             return PREF_LAST_FRAGMENT_DEFAULT;
         }
     }
@@ -266,7 +267,7 @@ public final class PreferenceWrapper {
         try {
             return sp.getInt(PREF_LAST_VERSION, PREF_LAST_VERSION_NONE);
         } catch (Exception e) {
-            Log.e(TAG, "Failure", e);
+            logger.error("Failure", e);
             return PREF_LAST_VERSION_NONE;
         }
     }
@@ -278,7 +279,7 @@ public final class PreferenceWrapper {
 
             return packageInfo.versionCode;
         } catch (NameNotFoundException e) {
-            Log.e(TAG, "Could not get version information from manifest!", e);
+            logger.error("Could not get version information from manifest!", e);
             return PREF_LAST_VERSION_NONE;
         }
 
@@ -301,7 +302,7 @@ public final class PreferenceWrapper {
             return sp.getBoolean(PREF_USE_LVA_BAR_CHART,
                     PREF_USE_LVA_BAR_CHART_DEFAULT);
         } catch (Exception e) {
-            Log.e(TAG, "Failure", e);
+            logger.error("Failure", e);
             return PREF_USE_LVA_BAR_CHART_DEFAULT;
         }
     }
@@ -313,7 +314,7 @@ public final class PreferenceWrapper {
             return sp.getBoolean(PREF_POSITIVE_GRADES_ONLY,
                     PREF_POSITIVE_GRADES_ONLY_DEFAULT);
         } catch (Exception e) {
-            Log.e(TAG, "Failure", e);
+            logger.error("Failure", e);
             return PREF_POSITIVE_GRADES_ONLY_DEFAULT;
         }
     }
@@ -335,7 +336,7 @@ public final class PreferenceWrapper {
             return sp.getBoolean(PREF_MENSA_GROUP_MENU_BY_DAY,
                     PREF_MENSA_GROUP_MENU_BY_DAY_DEFAULT);
         } catch (Exception e) {
-            Log.e(TAG, "Failure", e);
+            logger.error("Failure", e);
             return PREF_MENSA_GROUP_MENU_BY_DAY_DEFAULT;
         }
     }
@@ -348,7 +349,7 @@ public final class PreferenceWrapper {
             return !sp.getBoolean(PREF_EXTEND_CALENDAR_EXAM,
                     PREF_EXTEND_CALENDAR_EXAM_DEFAULT);
         } catch (Exception e) {
-            Log.e(TAG, "Failure", e);
+            logger.error("Failure", e);
             return !PREF_EXTEND_CALENDAR_EXAM_DEFAULT;
         }
     }
@@ -363,7 +364,7 @@ public final class PreferenceWrapper {
 
             return sp.getString(PREF_EXTENDED_CALENDAR_EXAM, PREF_EXTENDED_CALENDAR_EXAM_DEFAULT);
         } catch (Exception e) {
-            Log.e(TAG, "Failure", e);
+            logger.error("Failure", e);
             return PREF_EXTENDED_CALENDAR_EXAM_DEFAULT;
         }
     }
@@ -376,7 +377,7 @@ public final class PreferenceWrapper {
             return !sp.getBoolean(PREF_EXTEND_CALENDAR_LVA,
                     PREF_EXTEND_CALENDAR_LVA_DEFAULT);
         } catch (Exception e) {
-            Log.e(TAG, "Failure", e);
+            logger.error("Failure", e);
             return !PREF_EXTEND_CALENDAR_LVA_DEFAULT;
         }
     }
@@ -391,7 +392,7 @@ public final class PreferenceWrapper {
 
             return sp.getString(PREF_EXTENDED_CALENDAR_LVA, PREF_EXTENDED_CALENDAR_LVA_DEFAULT);
         } catch (Exception e) {
-            Log.e(TAG, "Failure", e);
+            logger.error("Failure", e);
             return PREF_EXTENDED_CALENDAR_LVA_DEFAULT;
         }
     }
@@ -406,7 +407,7 @@ public final class PreferenceWrapper {
 
             return sp.getBoolean(PREF_SYNC_CALENDAR_LVA, PREF_SYNC_CALENDAR_LVA_DEFAULT);
         } catch (Exception e) {
-            Log.e(TAG, "Failure", e);
+            logger.error("Failure", e);
             return PREF_SYNC_CALENDAR_LVA_DEFAULT;
         }
     }
@@ -421,7 +422,7 @@ public final class PreferenceWrapper {
 
             return sp.getBoolean(PREF_SYNC_CALENDAR_EXAM, PREF_SYNC_CALENDAR_EXAM_DEFAULT);
         } catch (Exception e) {
-            Log.e(TAG, "Failure", e);
+            logger.error("Failure", e);
             return PREF_SYNC_CALENDAR_EXAM_DEFAULT;
         }
     }
@@ -434,7 +435,7 @@ public final class PreferenceWrapper {
             return sp.getBoolean(PREF_TRACKING_ERRORS,
                     PREF_TRACKING_ERRORS_DEFAULT);
         } catch (Exception e) {
-            Log.e(TAG, "Failure", e);
+            logger.error("Failure", e);
             return PREF_TRACKING_ERRORS_DEFAULT;
         }
     }
@@ -446,7 +447,7 @@ public final class PreferenceWrapper {
             return sp.getBoolean(PREF_COURSES_SHOW_WITH_ASSESSMENT_ONLY,
                     PREF_COURSES_SHOW_WITH_ASSESSMENT_ONLY_DEFAULT);
         } catch (Exception e) {
-            Log.e(TAG, "Failure", e);
+            logger.error("Failure", e);
             return PREF_COURSES_SHOW_WITH_ASSESSMENT_ONLY_DEFAULT;
         }
     }

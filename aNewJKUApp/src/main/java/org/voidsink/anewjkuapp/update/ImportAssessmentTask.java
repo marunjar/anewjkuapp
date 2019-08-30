@@ -35,8 +35,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
@@ -59,7 +60,7 @@ import java.util.concurrent.Callable;
 
 public class ImportAssessmentTask implements Callable<Void> {
 
-    private static final String TAG = ImportCourseTask.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(ImportCourseTask.class);
 
     private ContentProviderClient mProvider;
     private boolean mReleaseProvider = false;
@@ -142,7 +143,7 @@ public class ImportAssessmentTask implements Callable<Void> {
         updateNotify(mContext.getString(R.string.notification_sync_connect));
 
         try {
-            Log.d(TAG, "setup connection");
+            logger.debug("setup connection");
 
             if (KusssHandler.getInstance().isAvailable(mContext,
                     AppUtils.getAccountAuthToken(mContext, mAccount),
@@ -150,7 +151,7 @@ public class ImportAssessmentTask implements Callable<Void> {
                     AppUtils.getAccountPassword(mContext, mAccount))) {
 
                 updateNotify(mContext.getString(R.string.notification_sync_assessment_loading));
-                Log.d(TAG, "load assessments");
+                logger.debug("load assessments");
 
                 List<Assessment> assessments = KusssHandler.getInstance()
                         .getAssessments(mContext);
@@ -168,7 +169,7 @@ public class ImportAssessmentTask implements Callable<Void> {
                         }
                     }
 
-                    Log.d(TAG, String.format("got %s assessments", assessments.size()));
+                    logger.debug("got {} assessments", assessments.size());
 
                     updateNotify(mContext.getString(R.string.notification_sync_assessment_updating));
 
@@ -178,10 +179,9 @@ public class ImportAssessmentTask implements Callable<Void> {
                     try (Cursor c = mProvider.query(examUri, ASSESSMENT_PROJECTION, null,
                             null, null)) {
                         if (c == null) {
-                            Log.w(TAG, "selection failed");
+                            logger.warn("selection failed");
                         } else {
-                            Log.d(TAG, "Found " + c.getCount()
-                                    + " local entries. Computing merge solution...");
+                            logger.debug("Found {} local entries. Computing merge solution...", c.getCount());
 
                             int _Id;
                             String assessmentCode;
@@ -201,16 +201,13 @@ public class ImportAssessmentTask implements Callable<Void> {
 
                                 if (assessmentType.isDuplicatesPossible()) {
                                     // delete
-                                    Log.d(TAG,
-                                            "delete: "
-                                                    + KusssHelper.getAssessmentKey(assessmentCode, assessmentCourseId, assessmentDate.getTime()));
+                                    logger.debug("delete: {}", KusssHelper.getAssessmentKey(assessmentCode, assessmentCourseId, assessmentDate.getTime()));
                                     // duplicate possible. remove existing
                                     Uri deleteUri = examUri
                                             .buildUpon()
                                             .appendPath(Integer.toString(_Id))
                                             .build();
-                                    Log.d(TAG, "Scheduling delete: "
-                                            + deleteUri);
+                                    logger.debug("Scheduling delete: {}", deleteUri);
 
                                     batch.add(ContentProviderOperation
                                             .newDelete(
@@ -228,7 +225,7 @@ public class ImportAssessmentTask implements Callable<Void> {
                                         Uri existingUri = examUri.buildUpon()
                                                 .appendPath(Integer.toString(_Id))
                                                 .build();
-                                        Log.d(TAG, "Scheduling update: " + existingUri);
+                                        logger.debug("Scheduling update: {}", existingUri);
 
                                         if (!assessmentType.equals(assessment.getAssessmentType())
                                                 || !assessmentGrade.equals(assessment.getGrade())) {
@@ -267,8 +264,7 @@ public class ImportAssessmentTask implements Callable<Void> {
                                                                 mAccount.type))
                                         .withValues(KusssHelper.getAssessmentContentValues(assessment))
                                         .build());
-                                Log.d(TAG, "Scheduling insert: " + assessment.getTerm()
-                                        + " " + assessment.getCourseId());
+                                logger.debug("Scheduling insert: {} {}", assessment.getTerm(), assessment.getCourseId());
 
                                 mAssessmentChangeNotification.addInsert(String.format(
                                         "%s: %s", assessment.getTitle(), mContext
@@ -287,8 +283,7 @@ public class ImportAssessmentTask implements Callable<Void> {
                                                                 mAccount.type))
                                         .withValues(KusssHelper.getAssessmentContentValues(assessment))
                                         .build());
-                                Log.d(TAG, "Scheduling insert: " + assessment.getTerm()
-                                        + " " + assessment.getCourseId());
+                                logger.debug("Scheduling insert: {} {}", assessment.getTerm(), assessment.getCourseId());
 
                                 mSyncResult.stats.numInserts++;
                             }
@@ -296,9 +291,9 @@ public class ImportAssessmentTask implements Callable<Void> {
                             updateNotify(mContext.getString(R.string.notification_sync_assessment_saving));
 
                             if (batch.size() > 0) {
-                                Log.d(TAG, "Applying batch update");
+                                logger.debug("Applying batch update");
                                 mProvider.applyBatch(batch);
-                                Log.d(TAG, "Notify resolver");
+                                logger.debug("Notify resolver");
                                 mResolver
                                         .notifyChange(
                                                 KusssContentContract.Assessment.CONTENT_CHANGED_URI,
@@ -308,7 +303,7 @@ public class ImportAssessmentTask implements Callable<Void> {
                                                 false); // IMPORTANT: Do not sync to
                                 // network
                             } else {
-                                Log.w(TAG, "No batch operations found! Do nothing");
+                                logger.warn("No batch operations found! Do nothing");
                             }
                         }
                     }
@@ -319,7 +314,7 @@ public class ImportAssessmentTask implements Callable<Void> {
             }
         } catch (Exception e) {
             Analytics.sendException(mContext, e, true);
-            Log.e(TAG, "import failed", e);
+            logger.error("import failed", e);
         }
 
         if (mUpdateNotification != null) {

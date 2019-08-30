@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,12 +28,15 @@ package org.voidsink.anewjkuapp.mensa;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.format.DateUtils;
-import android.util.Log;
+
+import androidx.preference.PreferenceManager;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 
 import java.text.ParseException;
@@ -41,9 +44,9 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-import androidx.preference.PreferenceManager;
-
 public abstract class MensenMenuLoader implements MenuLoader {
+
+    private static final Logger logger = LoggerFactory.getLogger(MensenMenuLoader.class);
 
     private static final String PREF_DATA_PREFIX = "MENSA_DATA_";
     private static final String PREF_DATE_PREFIX = "MENSA_DATE_";
@@ -94,7 +97,7 @@ public abstract class MensenMenuLoader implements MenuLoader {
                 }
             }
         } catch (Exception e) {
-            Log.e(this.getClass().getCanonicalName(), "failed", e);
+            logger.error("failed", e);
             return null;
         }
 

@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,11 +27,14 @@ package org.voidsink.anewjkuapp.dashclock;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
+
+import androidx.preference.PreferenceManager;
 
 import com.google.android.apps.dashclock.api.DashClockExtension;
 import com.google.android.apps.dashclock.api.ExtensionData;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.analytics.Analytics;
@@ -50,12 +53,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import androidx.preference.PreferenceManager;
-
 public class MensaDashclockExtension extends DashClockExtension {
 
-    private static final String TAG = MensaDashclockExtension.class
-            .getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(MensaDashclockExtension.class);
 
     @Override
     protected void onUpdateData(int reason) {
@@ -73,7 +73,7 @@ public class MensaDashclockExtension extends DashClockExtension {
             mShowAlays = sp.getBoolean("pref_key_dashclock_ext_mensa_always",
                     false);
         } catch (Exception e) {
-            Log.e(TAG, "load preferences faile", e);
+            logger.error("load preferences faile", e);
             mFromTime = 32400000;
             mToTime = 46800000;
             mShowAlays = true;
@@ -95,8 +95,7 @@ public class MensaDashclockExtension extends DashClockExtension {
         StringBuilder status = new StringBuilder();
         StringBuilder body = new StringBuilder();
 
-        Log.i(TAG, "onUpdateData: " + reason + ", " + mFromTime + " - "
-                + mToTime + "(" + mNow + ")");
+        logger.info("onUpdateData: {}, {} - {} ({})", reason, mFromTime, mToTime, mNow);
 
         if (mShowAlays || (mNow >= mFromTime && mNow <= mToTime)) {
             List<IMensa> mensaList = new ArrayList<>();
