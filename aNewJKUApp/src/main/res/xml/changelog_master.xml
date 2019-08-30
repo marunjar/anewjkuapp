@@ -4,7 +4,7 @@
 		    - fixed
 		    * changed
 		    + added -->
-    <release version="0.51.2" versioncode="140065">
+    <release version="0.51.3" versioncode="140066">
         <change>- App: viele Korrekturen und Optimierungen</change>
         <change>* Karte: neue Daten von OpenStreetMap</change>
     </release>
