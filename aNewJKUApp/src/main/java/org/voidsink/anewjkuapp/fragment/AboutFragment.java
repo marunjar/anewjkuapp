@@ -63,7 +63,6 @@ public class AboutFragment extends BaseFragment {
         view.findViewById(R.id.about_libraries)
                 .setOnClickListener(v -> new LibsBuilder()
                         .withFields(R.string.class.getFields()) // pass the fields of your application to the lib so it can find all external lib information
-                        .withLibraries("jsoup")
                         .withAutoDetect(true)
                         .withVersionShown(false)
                         .withLicenseShown(true)
