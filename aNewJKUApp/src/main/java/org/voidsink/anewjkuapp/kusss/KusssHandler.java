@@ -90,7 +90,6 @@ public class KusssHandler {
     private static final String URL_GET_ICAL = "https://www.kusss.jku.at/kusss/ical-multi-sz.action";
     private static final String URL_GET_ICAL_FORM = "https://www.kusss.jku.at/kusss/ical-multi-form-sz.action";
     private static final String URL_MY_GRADES = "https://www.kusss.jku.at/kusss/gradeinfo.action";
-    private static final String URL_START_PAGE = "https://www.kusss.jku.at/kusss/studentwelcome.action";
     private static final String URL_LOGOUT = "https://www.kusss.jku.at/kusss/logout.action";
     private static final String URL_LOGIN = "https://www.kusss.jku.at/kusss/login.action";
     private static final String URL_GET_NEW_EXAMS = "https://www.kusss.jku.at/kusss/szsearchexam.action";
@@ -278,7 +277,7 @@ public class KusssHandler {
             return false;
         }
         try {
-            Document doc = Jsoup.connect(URL_START_PAGE).userAgent(getUserAgent()).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true).get();
+            Document doc = Jsoup.connect(URL_KUSSS_INDEX).userAgent(getUserAgent()).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true).get();
 
             return isLoggedIn(c, doc);
         } catch (SocketTimeoutException e) {
