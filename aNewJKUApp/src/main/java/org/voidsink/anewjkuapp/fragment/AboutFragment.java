@@ -26,68 +26,30 @@
 package org.voidsink.anewjkuapp.fragment;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mikepenz.aboutlibraries.Libs;
-import com.mikepenz.aboutlibraries.LibsBuilder;
-import com.mikepenz.aboutlibraries.util.Colors;
+import androidx.annotation.NonNull;
 
-import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.utils.Consts;
 
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import de.cketti.library.changelog.ChangeLog;
 
 public class AboutFragment extends BaseFragment {
-
-    private Libs.ActivityStyle getActivityStyle(Context context) {
-        if (PreferenceWrapper.getUseLightDesign(context)) {
-            return Libs.ActivityStyle.LIGHT_DARK_TOOLBAR;
-        } else {
-            return Libs.ActivityStyle.DARK;
-        }
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_about, container, false);
 
-        view.findViewById(R.id.about_libraries)
-                .setOnClickListener(v -> new LibsBuilder()
-                        .withFields(R.string.class.getFields()) // pass the fields of your application to the lib so it can find all external lib information
-                        .withAutoDetect(true)
-                        .withVersionShown(false)
-                        .withLicenseShown(true)
-                        .withActivityStyle(getActivityStyle(getActivity()))
-                        .withActivityColor(getActivityColor(getActivity()))
-                        .withActivityTitle(getActivity().getString(R.string.title_about))
-                        .withAboutAppName(getString(R.string.app_name))
-                        .withAboutIconShown(true)
-                        .withAboutVersionShown(true)
-                        .start(getActivity()));
-
         view.findViewById(R.id.about_changelog)
                 .setOnClickListener(v -> new ChangeLog(getActivity()).getFullLogDialog().show());
 
         return view;
-    }
-
-    private Colors getActivityColor(Context context) {
-
-        TypedArray themeArray = context.getTheme().obtainStyledAttributes(new int[]{R.attr.colorPrimary, R.attr.colorPrimaryDark});
-        int colorPrimary = themeArray.getColor(0, ContextCompat.getColor(context, R.color.default_primary));
-        int colorPrimaryDark = themeArray.getColor(1, ContextCompat.getColor(context, R.color.default_primaryDark));
-        themeArray.recycle();
-
-        return new Colors(colorPrimary, colorPrimaryDark);
     }
 
     @Override

@@ -25,7 +25,6 @@ android {
         proguardFiles getDefaultProguardFile('proguard-android.txt'),
                 'proguard-rules.txt',
                 'proguard-rules-ical4j.txt',
-                'proguard-rules-aboutlibraries.pro',
                 'proguard-rules-keep-names.txt',
                 'proguard-rules-streamsupport.pro'
 
@@ -117,9 +116,6 @@ dependencies {
     implementation 'org.slf4j:slf4j-android:1.7.28'
     implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
     implementation 'de.cketti.library.changelog:ckchangelog:1.2.2'
-    implementation('com.mikepenz:aboutlibraries:7.0.3@aar') {
-        transitive = true
-    }
     implementation project(':sectionedRecyclerAdapter')
     implementation project(':android-week-view')
 }
