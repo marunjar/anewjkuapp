@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -45,8 +45,12 @@ public class SyncAlarmService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         // update alarm for manual sync
         if (intent.getBooleanExtra(Consts.ARG_RECREATE_SYNC_ALARM, false)) {
-            AppUtils.updateSyncAlarm(this, false);
+            AppUtils.enableSync(this, false);
         }
-        AppUtils.triggerSync(this, AppUtils.getAccount(this), intent.getBooleanExtra(Consts.ARG_UPDATE_CAL, false), intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false));
+        AppUtils.triggerSync(this, AppUtils.getAccount(this), intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false));
+
+        if (intent.getBooleanExtra(Consts.ARG_UPDATE_CAL, false)) {
+            AppUtils.syncCalendars(this);
+        }
     }
 }

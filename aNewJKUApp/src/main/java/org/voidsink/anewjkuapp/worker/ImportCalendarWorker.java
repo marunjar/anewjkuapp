@@ -23,7 +23,7 @@
  *
  */
 
-package org.voidsink.anewjkuapp.update;
+package org.voidsink.anewjkuapp.worker;
 
 import android.Manifest;
 import android.accounts.Account;
@@ -33,17 +33,18 @@ import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SyncResult;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Component;
@@ -75,151 +76,117 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ImportCalendarTask implements Callable<Void> {
+public class ImportCalendarWorker extends Worker {
 
-    private static final Logger logger = LoggerFactory.getLogger(ImportCalendarTask.class);
+    private static final Logger logger = LoggerFactory.getLogger(ImportCalendarWorker.class);
 
     private final CalendarBuilder mCalendarBuilder;
-
+    private SyncNotification mUpdateNotification = null;
     private static final Pattern courseIdTermPattern = Pattern
             .compile(KusssHandler.PATTERN_LVA_NR_SLASH_TERM);
     private static final Pattern lecturerPattern = Pattern
             .compile("Lva-LeiterIn:\\s+");
 
-    private ContentProviderClient mProvider;
-    private boolean mReleaseProvider;
-    private final Account mAccount;
-    private final SyncResult mSyncResult;
-    private final Context mContext;
-    private final String mCalendarName;
-    private final ContentResolver mResolver;
-    private final boolean mLoadAll;
+    public ImportCalendarWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+        super(context, workerParams);
 
-    private final long mSyncFromNow;
-
-    private boolean mShowProgress;
-    private SyncNotification mUpdateNotification;
-
-    public ImportCalendarTask(Account account, Context context,
-                              String getTypeID, CalendarBuilder calendarBuilder) {
-        this(account, null, null,
-                new SyncResult(), context, getTypeID, calendarBuilder);
-
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
-            this.mProvider = context.getContentResolver()
-                    .acquireContentProviderClient(
-                            CalendarContractWrapper.Events.CONTENT_URI());
-        }
-        this.mReleaseProvider = true;
-        this.mShowProgress = true;
+        this.mCalendarBuilder = CalendarUtils.newCalendarBuilder(); // must create in main
     }
 
-    public ImportCalendarTask(Account account, Bundle extras,
-                              ContentProviderClient provider, SyncResult syncResult,
-                              Context context, String calendarName,
-                              CalendarBuilder calendarBuilder) {
-        this.mAccount = account;
-        this.mProvider = provider;
-        this.mResolver = context.getContentResolver();
-        this.mSyncResult = syncResult;
-        this.mContext = context;
-        this.mCalendarName = calendarName;
-        this.mCalendarBuilder = calendarBuilder;
-        this.mSyncFromNow = System.currentTimeMillis() / DateUtils.DAY_IN_MILLIS * DateUtils.DAY_IN_MILLIS;
-        this.mReleaseProvider = false;
-        this.mShowProgress = (extras != null && extras.getBoolean(Consts.SYNC_SHOW_PROGRESS, false));
-        this.mLoadAll = false;
-    }
-
-    private ContentValues getContentValuesFromEvent(VEvent v) {
-        ContentValues cv = new ContentValues();
-
-        cv.put(CalendarContractWrapper.Events.EVENT_LOCATION(), v.getLocation().getValue().trim());
-        cv.put(CalendarContractWrapper.Events.TITLE(), v.getSummary().getValue().trim());
-        cv.put(CalendarContractWrapper.Events.DESCRIPTION(), v.getDescription().getValue().trim());
-        cv.put(CalendarContractWrapper.Events.DTSTART(), v.getStartDate().getDate().getTime());
-        cv.put(CalendarContractWrapper.Events.DTEND(), v.getEndDate().getDate().getTime());
-
-        return cv;
-    }
-
-    private void updateNotify(String string) {
-        if (mUpdateNotification != null) {
-            mUpdateNotification.update(string);
-        }
-    }
-
-    private String getEventString(Context c, VEvent v) {
-        return AppUtils.getEventString(c, v.getStartDate().getDate().getTime(), v
-                .getEndDate().getDate().getTime(), v.getSummary().getValue()
-                .trim(), false);
-    }
-
+    @NonNull
     @Override
-    public Void call() throws Exception {
+    public Result doWork() {
+        if (getTags().contains(Consts.ARG_UPDATE_CAL_COURSES)) {
+            return importCalendar(CalendarUtils.ARG_CALENDAR_COURSE);
+        } else if (getTags().contains(Consts.ARG_UPDATE_CAL_EXAM)) {
+            return importCalendar(CalendarUtils.ARG_CALENDAR_EXAM);
+        }
+        return Result.failure();
+    }
+
+    private Result importCalendar(String calendarName) {
+        Analytics.eventReloadEventsCourse(getApplicationContext());
+
+        final Account mAccount = AppUtils.getAccount(getApplicationContext());
+        if (mAccount == null) {
+            return Result.success();
+        }
+
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            return Result.failure();
+        }
+
+        final ContentResolver mResolver = getApplicationContext().getContentResolver();
+        if (mResolver == null) {
+            return Result.failure();
+        }
+
+        final ContentProviderClient mProvider = mResolver.acquireContentProviderClient(CalendarContractWrapper.Events.CONTENT_URI());
+
         if (mProvider == null) {
-            return null;
+            return Result.failure();
         }
 
-        if ((ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) ||
-                (ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED)) {
-            return null;
+        if ((ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) ||
+                (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED)) {
+            return Result.failure();
         }
 
-        if (!CalendarUtils.getSyncCalendar(mContext, this.mCalendarName)) {
-            return null;
+        if (!CalendarUtils.getSyncCalendar(getApplicationContext(), calendarName)) {
+            return Result.success();
         }
 
-        if (mShowProgress) {
-            mUpdateNotification = new SyncNotification(mContext,
+        final long mSyncFromNow = System.currentTimeMillis() / DateUtils.DAY_IN_MILLIS * DateUtils.DAY_IN_MILLIS;
+
+        if (getInputData().getBoolean(Consts.SYNC_SHOW_PROGRESS, false)) {
+            mUpdateNotification = new SyncNotification(getApplicationContext(),
                     R.string.notification_sync_calendar);
-            mUpdateNotification.show(CalendarUtils.getCalendarName(mContext, this.mCalendarName));
+            mUpdateNotification.show(CalendarUtils.getCalendarName(getApplicationContext(), calendarName));
         }
-        CalendarChangedNotification mNotification = new CalendarChangedNotification(mContext,
-                CalendarUtils.getCalendarName(mContext, this.mCalendarName));
+        CalendarChangedNotification mNotification = new CalendarChangedNotification(getApplicationContext(),
+                CalendarUtils.getCalendarName(getApplicationContext(), calendarName));
 
         try {
             logger.debug("setup connection");
 
-            updateNotify(mContext.getString(R.string.notification_sync_connect));
+            updateNotification(getApplicationContext().getString(R.string.notification_sync_connect));
 
-            if (KusssHandler.getInstance().isAvailable(mContext,
-                    AppUtils.getAccountAuthToken(mContext, mAccount),
+            if (KusssHandler.getInstance().isAvailable(getApplicationContext(),
+                    AppUtils.getAccountAuthToken(getApplicationContext(), mAccount),
                     AppUtils.getAccountName(mAccount),
-                    AppUtils.getAccountPassword(mContext, mAccount))) {
+                    AppUtils.getAccountPassword(getApplicationContext(), mAccount))) {
 
-                updateNotify(mContext.getString(R.string.notification_sync_calendar_loading, CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
+                updateNotification(getApplicationContext().getString(R.string.notification_sync_calendar_loading, CalendarUtils.getCalendarName(getApplicationContext(), calendarName)));
 
                 logger.debug("loading calendar");
 
                 ArrayList<ContentProviderOperation> batch = new ArrayList<>();
                 Uri calUri = CalendarContractWrapper.Events.CONTENT_URI();
 
-                String calendarId = CalendarUtils.getCalIDByName(mContext, mAccount, mCalendarName, true);
+                String calendarId = CalendarUtils.getCalIDByName(getApplicationContext(), mAccount, calendarName, true);
 
                 if (calendarId == null) {
                     logger.warn("calendarId not found");
-                    return null;
+                    return Result.failure();
                 }
 
-                List<KusssCalendar> calendars = KusssHandler.getInstance().getIcal(mContext, mCalendarBuilder, mCalendarName, new Date(mSyncFromNow), mLoadAll);
+                List<KusssCalendar> calendars = KusssHandler.getInstance().getIcal(getApplicationContext(), mCalendarBuilder, calendarName, new Date(mSyncFromNow), false);
 
                 for (KusssCalendar calendar : calendars) {
                     if (calendar.getCalendar() == null) {
                         if (calendar.isMandatory()) {
-                            mSyncResult.stats.numParseExceptions++;
                             logger.warn("calendar not loaded: {}", calendar.getName());
+                            return Result.retry();
                         }
                     } else {
                         List<?> events = calendar.getCalendar().getComponents(Component.VEVENT);
 
                         logger.debug("got {} events", events.size());
 
-                        updateNotify(mContext.getString(R.string.notification_sync_calendar_updating, calendar.getName()));
+                        updateNotification(getApplicationContext().getString(R.string.notification_sync_calendar_updating, calendar.getName()));
 
                         // modify events: move courseId/term and lecturer to description
                         String lineSeparator = System.getProperty("line.separator");
@@ -310,7 +277,6 @@ public class ImportCalendarTask implements Callable<Void> {
                                 boolean eventDeleted;
 
                                 while (c.moveToNext()) {
-                                    mSyncResult.stats.numEntries++;
                                     eventId = c.getString(CalendarUtils.COLUMN_EVENT_ID);
 
                                     eventKusssId = null;
@@ -381,11 +347,8 @@ public class ImportCalendarTask implements Callable<Void> {
                                                         .newUpdate(existingUri)
                                                         .withValues(getContentValuesFromEvent(match))
                                                         .build());
-                                                mSyncResult.stats.numUpdates++;
 
-                                                mNotification.addUpdate(getEventString(mContext, match));
-                                            } else {
-                                                mSyncResult.stats.numSkippedEntries++;
+                                                mNotification.addUpdate(getEventString(getApplicationContext(), match));
                                             }
                                         } else {
                                             if ((eventDTStart >= mSyncFromNow) &&
@@ -400,7 +363,7 @@ public class ImportCalendarTask implements Callable<Void> {
                                                 if (eventDTStart > notifyFrom && !eventDeleted) {
                                                     mNotification
                                                             .addDelete(AppUtils.getEventString(
-                                                                    mContext,
+                                                                    getApplicationContext(),
                                                                     eventDTStart,
                                                                     eventDTEnd,
                                                                     eventTitle, false));
@@ -409,9 +372,6 @@ public class ImportCalendarTask implements Callable<Void> {
                                                 batch.add(ContentProviderOperation
                                                         .newDelete(deleteUri)
                                                         .build());
-                                                mSyncResult.stats.numDeletes++;
-                                            } else {
-                                                mSyncResult.stats.numSkippedEntries++;
                                             }
                                         }
                                     } else {
@@ -422,7 +382,7 @@ public class ImportCalendarTask implements Callable<Void> {
 
                             logger.debug("Cursor closed, {} events left", eventsMap.size());
 
-                            updateNotify(mContext.getString(R.string.notification_sync_calendar_adding, calendar.getName()));
+                            updateNotification(getApplicationContext().getString(R.string.notification_sync_calendar_adding, calendar.getName()));
 
                             // Add new items
                             for (VEvent v : eventsMap.values()) {
@@ -431,7 +391,7 @@ public class ImportCalendarTask implements Callable<Void> {
                                         (v.getStartDate().getDate().getTime() <= calendar.getTerm().getEnd().getTime()))) {
                                     // notify only future changes
                                     if (v.getStartDate().getDate().getTime() > notifyFrom) {
-                                        mNotification.addInsert(getEventString(mContext, v));
+                                        mNotification.addInsert(getEventString(getApplicationContext(), v));
                                     }
 
                                     ContentProviderOperation.Builder builder = ContentProviderOperation
@@ -447,7 +407,7 @@ public class ImportCalendarTask implements Callable<Void> {
                                                             .EVENT_TIMEZONE(),
                                                     TimeZone.getDefault().getID());
 
-                                    if (mCalendarName.equals(CalendarUtils.ARG_CALENDAR_EXAM)) {
+                                    if (calendarName.equals(CalendarUtils.ARG_CALENDAR_EXAM)) {
                                         builder.withValue(
                                                 CalendarContractWrapper.Events
                                                         .AVAILABILITY(),
@@ -494,17 +454,13 @@ public class ImportCalendarTask implements Callable<Void> {
                                             .withValueBackReference(CalendarContract.ExtendedProperties.EVENT_ID, eventIndex)
                                             .withValue(CalendarContract.ExtendedProperties.NAME, CalendarUtils.EXTENDED_PROPERTY_LOCATION_EXTRA)
                                             .withValue(CalendarContract.ExtendedProperties.VALUE, getLocationExtra(v)).build());
-
-                                    mSyncResult.stats.numInserts++;
-                                } else {
-                                    mSyncResult.stats.numSkippedEntries++;
                                 }
                             }
                         }
                     }
                 }
 
-                updateNotify(mContext.getString(R.string.notification_sync_calendar_saving, CalendarUtils.getCalendarName(mContext, this.mCalendarName)));
+                updateNotification(getApplicationContext().getString(R.string.notification_sync_calendar_saving, CalendarUtils.getCalendarName(getApplicationContext(), calendarName)));
 
                 if (batch.size() > 0) {
                     logger.debug("Applying batch update");
@@ -523,29 +479,63 @@ public class ImportCalendarTask implements Callable<Void> {
                     logger.warn("No batch operations found! Do nothing");
                 }
 
-                KusssHandler.getInstance().logout(mContext);
+                KusssHandler.getInstance().logout(getApplicationContext());
             } else {
-                mSyncResult.stats.numAuthExceptions++;
+                return Result.retry();
             }
+
+            mNotification.show();
+            return Result.success();
         } catch (Exception e) {
             logger.error("import calendar failed", e);
-            Analytics.sendException(mContext, e, true);
-        }
+            Analytics.sendException(getApplicationContext(), e, true);
 
-        if (mUpdateNotification != null) {
-            mUpdateNotification.cancel();
-        }
-        mNotification.show();
-
-        if (mReleaseProvider) {
+            return Result.retry();
+        } finally {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 mProvider.close();
             } else {
                 mProvider.release();
             }
+            cancelUpdateNotification();
         }
+    }
 
-        return null;
+    @Override
+    public void onStopped() {
+        super.onStopped();
+
+        cancelUpdateNotification();
+    }
+
+    private void cancelUpdateNotification() {
+        if (mUpdateNotification != null) {
+            mUpdateNotification.cancel();
+        }
+    }
+
+    private void updateNotification(String string) {
+        if (mUpdateNotification != null) {
+            mUpdateNotification.update(string);
+        }
+    }
+
+    private String getEventString(Context c, VEvent v) {
+        return AppUtils.getEventString(c, v.getStartDate().getDate().getTime(), v
+                .getEndDate().getDate().getTime(), v.getSummary().getValue()
+                .trim(), false);
+    }
+
+    private ContentValues getContentValuesFromEvent(VEvent v) {
+        ContentValues cv = new ContentValues();
+
+        cv.put(CalendarContractWrapper.Events.EVENT_LOCATION(), v.getLocation().getValue().trim());
+        cv.put(CalendarContractWrapper.Events.TITLE(), v.getSummary().getValue().trim());
+        cv.put(CalendarContractWrapper.Events.DESCRIPTION(), v.getDescription().getValue().trim());
+        cv.put(CalendarContractWrapper.Events.DTSTART(), v.getStartDate().getDate().getTime());
+        cv.put(CalendarContractWrapper.Events.DTEND(), v.getEndDate().getDate().getTime());
+
+        return cv;
     }
 
     private String getLocationExtra(VEvent event) {
@@ -579,7 +569,7 @@ public class ImportCalendarTask implements Callable<Void> {
                 mapsClusterId = "CmRRAAAAztw2Q-pFchJnT32wqealtHgsRyNlzebFxGqFb_PZIRsqujQKfTNKYn0zA6mdGYelwDtmm-SIKH5srpkIGrZkwhckuYQhFo3UkpLsnFYV73hScFdrSvMJLmGuKLwRHW1bEhBTuKPtU_mvcMQplpxK-h6PGhSnVtoLUH37vZBXvWna051K_nC5PA";
             }
 
-            ContentResolver cr = mContext.getContentResolver();
+            ContentResolver cr = getApplicationContext().getContentResolver();
             Uri searchUri = PoiContentContract.CONTENT_URI.buildUpon()
                     .appendPath(SearchManager.SUGGEST_URI_PATH_QUERY)
                     .appendPath(name).build();
@@ -611,7 +601,7 @@ public class ImportCalendarTask implements Callable<Void> {
 
             return String.format("{\"locations\":[{\"address\":{\"formattedAddress\":\"%s\"},\"geo\":{\"latitude\":%s,\"longitude\":%s},\"mapsClusterId\":\"%s\",\"name\":\"%s\",\"url\":\"http://maps.google.com/maps?q=loc:%s,%s+(%s)&z=19\n\"}]}", formattedAddress, df.format(latitude), df.format(longitude), mapsClusterId, name, df.format(latitude), df.format(longitude), name);
         } catch (Exception e) {
-            Analytics.sendException(mContext, e, true);
+            Analytics.sendException(getApplicationContext(), e, true);
             return "";
         }
     }

@@ -46,7 +46,7 @@ public class Globals extends Application {
 
         AppUtils.setupNotificationChannels(this);
 
-        AppUtils.updateSyncAlarm(this, false);
+        AppUtils.enableSync(this, false);
 
         System.setProperty("net.fortuna.ical4j.timezone.cache.impl", MapTimeZoneCache.class.getName());
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);

@@ -222,7 +222,8 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
             Account[] accounts = AccountManager.get(context).getAccountsByType(
                     ACCOUNT_TYPE);
             for (Account account : accounts) {
-                AppUtils.triggerSync(context, account, true, true);
+                AppUtils.triggerSync(context, account, true);
+                AppUtils.syncCalendars(context);
             }
         } catch (SecurityException e) {
             Analytics.sendException(context, e, true);

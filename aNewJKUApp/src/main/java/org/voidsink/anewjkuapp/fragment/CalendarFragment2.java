@@ -28,7 +28,6 @@ package org.voidsink.anewjkuapp.fragment;
 import android.accounts.Account;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.RectF;
@@ -62,7 +61,6 @@ import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
-import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.anewjkuapp.utils.UIUtils;
@@ -134,10 +132,7 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh_calendar:
-                Intent mUpdateService = new Intent(getActivity(), UpdateService.class);
-                mUpdateService.putExtra(Consts.ARG_UPDATE_CAL, true);
-                getActivity().startService(mUpdateService);
-
+                AppUtils.syncCalendars(getContext());
                 return true;
             case R.id.action_cal_goto_today:
                 goToDate(System.currentTimeMillis());

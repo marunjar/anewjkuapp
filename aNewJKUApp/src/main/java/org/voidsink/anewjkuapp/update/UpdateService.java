@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,22 +25,17 @@
 
 package org.voidsink.anewjkuapp.update;
 
-import android.Manifest;
 import android.accounts.Account;
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 
 import org.voidsink.anewjkuapp.analytics.Analytics;
-import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
-
-import androidx.core.content.ContextCompat;
 
 public class UpdateService extends IntentService {
 
@@ -59,19 +54,6 @@ public class UpdateService extends IntentService {
             if (account != null) {
                 List<Callable<?>> callables = new ArrayList<>();
 
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
-                    if (intent.getBooleanExtra(Consts.ARG_UPDATE_CAL, false) ||
-                            intent.getBooleanExtra(Consts.ARG_UPDATE_CAL_COURSES, false)) {
-                        Analytics.eventReloadEventsCourse(this);
-                        callables.add(new ImportCalendarTask(account, this, CalendarUtils.ARG_CALENDAR_COURSE, CalendarUtils.newCalendarBuilder()));
-                    }
-                    if (intent.getBooleanExtra(Consts.ARG_UPDATE_CAL, false) ||
-                            intent.getBooleanExtra(Consts.ARG_UPDATE_CAL_EXAM, false)) {
-                        Analytics.eventReloadEventsExam(this);
-                        callables.add(new ImportCalendarTask(account, this,
-                                CalendarUtils.ARG_CALENDAR_EXAM, CalendarUtils.newCalendarBuilder()));
-                    }
-                }
                 if (intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false) ||
                         intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS_CURRICULA, false)) {
                     Analytics.eventReloadCurricula(this);

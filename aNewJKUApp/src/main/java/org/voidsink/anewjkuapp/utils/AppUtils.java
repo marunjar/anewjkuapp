@@ -51,6 +51,17 @@ import android.text.format.DateUtils;
 
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
+import androidx.work.BackoffPolicy;
+import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
+
+import com.google.common.util.concurrent.ListenableFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,6 +85,7 @@ import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.service.SyncAlarmService;
 import org.voidsink.anewjkuapp.update.ImportCurriculaTask;
+import org.voidsink.anewjkuapp.worker.ImportCalendarWorker;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -99,6 +111,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 public class AppUtils {
 
@@ -662,7 +675,30 @@ public class AppUtils {
         Collections.sort(mCurricula, CurriculaComparator);
     }
 
-    public static void updateSyncAlarm(Context context, boolean reCreateAlarm) {
+    public static boolean isWorkScheduled(Context context, String tag) {
+        WorkManager workManager = WorkManager.getInstance(context);
+        ListenableFuture<List<WorkInfo>> workInfosFuture = workManager.getWorkInfosByTag(tag);
+        try {
+            List<WorkInfo> workInfos = workInfosFuture.get();
+            if (workInfos == null || workInfos.isEmpty()) {
+                return false;
+            }
+            for (WorkInfo workInfo : workInfos) {
+                if (!workInfo.getState().isFinished()) {
+                    return true;
+                }
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            return false;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public static void enableSync(Context context, boolean reCreateAlarms) {
         boolean mIsCalendarSyncEnabled = false;
         boolean mIsKusssSyncEnable = false;
         boolean mIsMasterSyncEnabled = ContentResolver.getMasterSyncAutomatically();
@@ -677,21 +713,55 @@ public class AppUtils {
 
         logger.debug("MasterSync={}, CalendarSync={}, KusssSync={}", mIsMasterSyncEnabled, mIsCalendarSyncEnabled, mIsKusssSyncEnable);
 
+
+        WorkManager workManager = WorkManager.getInstance(context);
+        if (mIsCalendarSyncEnabled) {
+            if (reCreateAlarms || !isWorkScheduled(context, Consts.ARG_UPDATE_CAL)) {
+                workManager.cancelAllWorkByTag(Consts.ARG_UPDATE_CAL);
+
+                Constraints.Builder constraints = new Constraints.Builder();
+                constraints.setRequiredNetworkType(NetworkType.CONNECTED);
+
+                long interval = PreferenceWrapper.getSyncInterval(context);
+
+                PeriodicWorkRequest.Builder courseCalendarRequest = new PeriodicWorkRequest.Builder(ImportCalendarWorker.class, interval, TimeUnit.HOURS, 6, TimeUnit.HOURS);
+                courseCalendarRequest.setInitialDelay(30, TimeUnit.MINUTES);
+                courseCalendarRequest.setBackoffCriteria(BackoffPolicy.LINEAR, 10, TimeUnit.MINUTES);
+                courseCalendarRequest.setConstraints(constraints.build());
+                courseCalendarRequest.addTag(Consts.ARG_UPDATE_CAL);
+                courseCalendarRequest.addTag(Consts.ARG_UPDATE_CAL_COURSES);
+                courseCalendarRequest.setInputData(new Data.Builder().putBoolean(Consts.SYNC_SHOW_PROGRESS, true).build());
+
+                workManager.enqueue(courseCalendarRequest.build());
+
+                PeriodicWorkRequest.Builder examCalendarRequest = new PeriodicWorkRequest.Builder(ImportCalendarWorker.class, interval, TimeUnit.HOURS, 6, TimeUnit.HOURS);
+                examCalendarRequest.setInitialDelay(30, TimeUnit.MINUTES);
+                examCalendarRequest.setBackoffCriteria(BackoffPolicy.LINEAR, 10, TimeUnit.MINUTES);
+                examCalendarRequest.setConstraints(constraints.build());
+                examCalendarRequest.addTag(Consts.ARG_UPDATE_CAL);
+                examCalendarRequest.addTag(Consts.ARG_UPDATE_CAL_EXAM);
+                courseCalendarRequest.setInputData(new Data.Builder().putBoolean(Consts.SYNC_SHOW_PROGRESS, true).build());
+
+                WorkManager.getInstance(context).enqueue(examCalendarRequest.build());
+            }
+        } else {
+            workManager.cancelAllWorkByTag(Consts.ARG_UPDATE_CAL);
+        }
+
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (am != null) {
             Intent intent = new Intent(context, SyncAlarmService.class);
-            intent.putExtra(Consts.ARG_UPDATE_CAL, !mIsCalendarSyncEnabled);
             intent.putExtra(Consts.ARG_UPDATE_KUSSS, !mIsKusssSyncEnable);
             intent.putExtra(Consts.ARG_RECREATE_SYNC_ALARM, true);
             intent.putExtra(Consts.SYNC_SHOW_PROGRESS, true);
 
             // check if pending intent exists
-            reCreateAlarm = reCreateAlarm || (PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE) == null);
+            reCreateAlarms = reCreateAlarms || (PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE) == null);
 
             // new pending intent
             PendingIntent alarmIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             if (!mIsMasterSyncEnabled || !mIsCalendarSyncEnabled || !mIsKusssSyncEnable) {
-                if (reCreateAlarm) {
+                if (reCreateAlarms) {
                     long interval = PreferenceWrapper.getSyncInterval(context) * DateUtils.HOUR_IN_MILLIS;
 
                     // synchronize in half an hour
@@ -703,14 +773,36 @@ public class AppUtils {
         }
     }
 
+    public static void syncCalendars(Context context) {
+        WorkManager workManager = WorkManager.getInstance(context);
 
-    public static void triggerSync(Context context, Account account, boolean syncCalendar, boolean syncKusss) {
+        Constraints.Builder constraints = new Constraints.Builder();
+        constraints.setRequiredNetworkType(NetworkType.CONNECTED);
+
+        OneTimeWorkRequest.Builder courseCalendarRequest = new OneTimeWorkRequest.Builder(ImportCalendarWorker.class);
+        courseCalendarRequest.setInitialDelay(30, TimeUnit.MINUTES);
+        courseCalendarRequest.setBackoffCriteria(BackoffPolicy.LINEAR, 10, TimeUnit.MINUTES);
+        courseCalendarRequest.setConstraints(constraints.build());
+        courseCalendarRequest.setInputData(new Data.Builder().putBoolean(Consts.SYNC_SHOW_PROGRESS, true).build());
+        courseCalendarRequest.addTag(Consts.ARG_UPDATE_CAL_COURSES);
+
+        OneTimeWorkRequest.Builder examCalendarRequest = new OneTimeWorkRequest.Builder(ImportCalendarWorker.class);
+        examCalendarRequest.setInitialDelay(30, TimeUnit.MINUTES);
+        examCalendarRequest.setBackoffCriteria(BackoffPolicy.LINEAR, 10, TimeUnit.MINUTES);
+        examCalendarRequest.setConstraints(constraints.build());
+        courseCalendarRequest.setInputData(new Data.Builder().putBoolean(Consts.SYNC_SHOW_PROGRESS, true).build());
+        examCalendarRequest.addTag(Consts.ARG_UPDATE_CAL_EXAM);
+
+        workManager.beginUniqueWork(Consts.ARG_UPDATE_CAL_COURSES + Consts.ARG_UPDATE_CAL_EXAM, ExistingWorkPolicy.REPLACE, courseCalendarRequest.build()).then(examCalendarRequest.build()).enqueue();
+    }
+
+    public static void triggerSync(Context context, Account account, boolean syncKusss) {
         try {
             if (context == null || account == null) {
                 return;
             }
 
-            if (syncCalendar || syncKusss) {
+            if (syncKusss) {
                 Bundle b = new Bundle();
                 // Disable sync backoff and ignore sync preferences. In other
                 // words...perform sync NOW!
@@ -718,16 +810,9 @@ public class AppUtils {
                 b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
                 b.putBoolean(Consts.SYNC_SHOW_PROGRESS, true);
 
-                if (syncCalendar) {
-                    ContentResolver.requestSync(account, // Sync
-                            CalendarContractWrapper.AUTHORITY(), // Calendar Content authority
-                            b); // Extras
-                }
-                if (syncKusss) {
-                    ContentResolver.requestSync(account, // Sync
-                            KusssContentContract.AUTHORITY, // KUSSS Content authority
-                            b); // Extras
-                }
+                ContentResolver.requestSync(account, // Sync
+                        KusssContentContract.AUTHORITY, // KUSSS Content authority
+                        b); // Extras
             }
         } catch (Exception e) {
             Analytics.sendException(context, e, true);
@@ -745,6 +830,7 @@ public class AppUtils {
 
         return DateUtils.formatDateRange(c, new Formatter(Locale.getDefault()), dtStart.getTime(), dtEnd.getTime(), flags, tzString).toString();
     }
+
 
     public static String getEventString(Context c, long eventDTStart, long eventDTEnd,
                                         String eventTitle, boolean allDay) {
@@ -925,4 +1011,5 @@ public class AppUtils {
             }
         }
     }
+
 }
