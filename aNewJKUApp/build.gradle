@@ -98,6 +98,7 @@ android {
 
 dependencies {
     errorproneJavac "com.google.errorprone:error_prone_core:${rootProject.ext.errorProneVersion}"
+    implementation 'net.sourceforge.streamsupport:android-retrostreams:1.7.1'
     implementation "androidx.legacy:legacy-preference-v14:1.0.0"
     implementation "com.google.android.material:material:1.0.0"
     implementation "androidx.cardview:cardview:1.0.0"
