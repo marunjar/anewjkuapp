@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:minHeight="48dp"
         android:padding="10dp"
         android:textColorHint="?attr/colorAccent">
 
@@ -21,13 +22,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/pref_kusss_user_title"
-            android:inputType="number"/>
+            android:inputType="number" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:minHeight="48dp"
         android:padding="10dp"
         android:textColorHint="?attr/colorAccent"
         app:passwordToggleEnabled="true">
@@ -37,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/pref_kusss_pw_title"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -46,5 +48,5 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:padding="10dp"
-        android:text="@string/account_login"/>
+        android:text="@string/account_login" />
 </LinearLayout>

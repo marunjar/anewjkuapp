@@ -84,7 +84,6 @@ android {
         //exclude 'META-INF/LICENSE'
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
-        exclude 'META-INF/library-core_release.kotlin_module'
         //exclude 'META-INF/ASL2.0'
 
         return void // fix lint warning "Not all execution paths return a value"
@@ -115,7 +114,7 @@ dependencies {
     implementation 'org.slf4j:slf4j-android:1.7.28'
     implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
     implementation 'de.cketti.library.changelog:ckchangelog:1.2.2'
-    implementation('com.mikepenz:aboutlibraries:7.0.2@aar') {
+    implementation('com.mikepenz:aboutlibraries:7.0.3@aar') {
         transitive = true
     }
     implementation project(':sectionedRecyclerAdapter')
