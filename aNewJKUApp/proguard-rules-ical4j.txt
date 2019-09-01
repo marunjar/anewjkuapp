@@ -8,7 +8,8 @@
 -dontwarn groovyjarjarasm.**
 -dontwarn groovyjarjarantlr.**
 -dontwarn org.codehaus.groovy.**
--dontwarn org.slf4j.**
+
+-dontwarn net.fortuna.ical4j.util.JCacheTimeZoneCache
 
 -keep class net.fortuna.ical4j.validate.**
 -keep class net.fortuna.ical4j.model.**

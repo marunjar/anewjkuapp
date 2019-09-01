@@ -8,6 +8,8 @@
 -dontwarn com.caverock.androidsvg.**
 -dontwarn org.mapsforge.map.android.rotation.SmoothCanvas
 
+
+
 ###############
 -keepclasseswithmembernames class * {
 public <init>(android.content.Context);
@@ -60,3 +62,6 @@ public void *(android.view.View);
 -keep class androidx.preference.** { *; }
 -keep interface androidx.preference.** { *; }
 -keep public class * extends androidx.preference.Preference { *; }
+
+#
+-keep class android.view.accessibility.AccessibilityManager { *; }
