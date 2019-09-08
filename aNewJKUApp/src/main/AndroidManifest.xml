@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
+<manifest xmlns:tools="http://schemas.android.com/tools"
     package="org.voidsink.anewjkuapp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -32,7 +32,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:supportsRtl="false"
-        android:theme="@style/AppTheme.Launch">
+        android:theme="@style/AppTheme.Launch"
+        tools:ignore="GoogleAppIndexingWarning">
 
         <activity
             android:name="org.voidsink.anewjkuapp.activity.MainActivity"
@@ -104,12 +105,6 @@
             android:label="@string/extension_mensa_title"/>
 
         <service
-            android:name="org.voidsink.anewjkuapp.update.UpdateService"
-            android:exported="false"/>
-        <service
-            android:name="org.voidsink.anewjkuapp.service.SyncAlarmService"
-            android:exported="false"/>
-        <service
             android:name="org.voidsink.anewjkuapp.service.KusssAuthenticatorService"
             android:permission="android.permission.AUTHENTICATE_ACCOUNTS">
             <intent-filter>
@@ -178,6 +173,10 @@
             android:name="org.voidsink.anewjkuapp.provider.PoiContentProvider"
             android:authorities="@string/config_poi_provider"
             android:exported="false"/>
+        <provider
+            android:name="androidx.work.impl.WorkManagerInitializer"
+            android:authorities="${applicationId}.workmanager-init"
+            tools:node="remove" />
 
         <receiver android:name="org.voidsink.anewjkuapp.utils.BootReceiver">
             <intent-filter>

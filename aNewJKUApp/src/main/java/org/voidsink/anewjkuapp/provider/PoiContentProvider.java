@@ -136,6 +136,8 @@ public class PoiContentProvider extends ContentProvider {
 
         builder.setTables(PoiContentContract.Poi.TABLE_NAME);
 
+        String limit = null;
+
         /*
          * Choose the table to query and a sort order based on the code returned
          * for the incoming URI. Here, too, only the statements for table 3 are
@@ -157,9 +159,14 @@ public class PoiContentProvider extends ContentProvider {
                     sortOrder = PoiContentContract.Poi.COL_NAME + " ASC";
                 break;
             case CODE_POI_SEARCH:
-                // TODO respect limit
-                final String limit = uri
-                        .getQueryParameter(SearchManager.SUGGEST_PARAMETER_LIMIT);
+                limit = uri.getQueryParameter(SearchManager.SUGGEST_PARAMETER_LIMIT);
+                try {
+                    if (limit != null) {
+                        Integer.parseInt(limit);
+                    }
+                } catch (NumberFormatException e) {
+                    limit = null;
+                }
 
                 if (selection == null) {
                     selection = PoiContentContract.Poi.TABLE_NAME + " MATCH ?";
@@ -185,7 +192,7 @@ public class PoiContentProvider extends ContentProvider {
                         + " is not supported.");
         }
         return builder.query(db, projection, selection, selectionArgs,
-                null, null, sortOrder);
+                null, null, sortOrder, limit);
     }
 
     @Override

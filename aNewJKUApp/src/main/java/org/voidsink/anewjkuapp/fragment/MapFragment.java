@@ -73,7 +73,6 @@ import org.mapsforge.map.rendertheme.InternalRenderTheme;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.voidsink.anewjkuapp.ImportPoiTask;
 import org.voidsink.anewjkuapp.LocationOverlay;
 import org.voidsink.anewjkuapp.Poi;
 import org.voidsink.anewjkuapp.PoiAdapter;
@@ -195,7 +194,7 @@ public class MapFragment extends BaseFragment implements
         Uri searchUri = PoiContentContract.CONTENT_URI.buildUpon()
                 .appendPath(SearchManager.SUGGEST_URI_PATH_QUERY)
                 .appendPath(query).build();
-        try (Cursor c = cr.query(searchUri, ImportPoiTask.POI_PROJECTION, null,
+        try (Cursor c = cr.query(searchUri, PoiContentContract.Poi.DB.PROJECTION, null,
                 null, null)) {
             if (c != null) {
                 while (c.moveToNext()) {
@@ -251,12 +250,12 @@ public class MapFragment extends BaseFragment implements
         ContentResolver cr = getActivity().getContentResolver();
 
         try (Cursor c = cr
-                .query(uri, ImportPoiTask.POI_PROJECTION, null, null, null)) {
+                .query(uri, PoiContentContract.Poi.DB.PROJECTION, null, null, null)) {
             if (c != null) {
                 if (c.moveToNext()) {
-                    String name = c.getString(ImportPoiTask.COLUMN_POI_NAME);
-                    double lon = c.getDouble(ImportPoiTask.COLUMN_POI_LON);
-                    double lat = c.getDouble(ImportPoiTask.COLUMN_POI_LAT);
+                    String name = c.getString(PoiContentContract.Poi.DB.COL_NAME);
+                    double lon = c.getDouble(PoiContentContract.Poi.DB.COL_LON);
+                    double lat = c.getDouble(PoiContentContract.Poi.DB.COL_LAT);
 
                     setNewGoal(new MyMarker(lat, lon, name));
                 }

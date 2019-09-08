@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,7 +25,6 @@
 
 package org.voidsink.anewjkuapp.fragment;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -36,6 +35,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
+import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
@@ -48,22 +56,10 @@ import org.voidsink.anewjkuapp.base.TermFragment;
 import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.kusss.Course;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
-import org.voidsink.anewjkuapp.update.ImportAssessmentTask;
-import org.voidsink.anewjkuapp.update.ImportCourseTask;
-import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.CursorLoader;
-import androidx.loader.content.Loader;
-import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class StatFragmentDetail extends TermFragment implements
         ContentObserverListener, LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -105,10 +101,7 @@ public class StatFragmentDetail extends TermFragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh_stats:
-                Intent mUpdateService = new Intent(getActivity(), UpdateService.class);
-                mUpdateService.putExtra(Consts.ARG_UPDATE_KUSSS_COURSES, true);
-                mUpdateService.putExtra(Consts.ARG_UPDATE_KUSSS_ASSESSMENTS, true);
-                getActivity().startService(mUpdateService);
+                AppUtils.triggerSync(getContext(), true, Consts.ARG_WORKER_KUSSS_COURSES, Consts.ARG_WORKER_KUSSS_ASSESSMENTS);
 
                 return true;
             case R.id.action_toggle_grades:
@@ -169,14 +162,14 @@ public class StatFragmentDetail extends TermFragment implements
                 showProgressIndeterminate();
 
                 return new CursorLoader(getContext(), KusssContentContract.Course.CONTENT_URI,
-                        ImportCourseTask.COURSE_PROJECTION, null, null,
+                        KusssContentContract.Course.DB.PROJECTION, null, null,
                         KusssContentContract.Course.COL_TERM + " DESC");
             }
             case Consts.LOADER_ID_ASSESSMENTS: {
                 showProgressIndeterminate();
 
                 return new CursorLoader(getContext(), KusssContentContract.Assessment.CONTENT_URI,
-                        ImportAssessmentTask.ASSESSMENT_PROJECTION, null, null,
+                        KusssContentContract.Assessment.DB.PROJECTION, null, null,
                         KusssContentContract.Assessment.TABLE_NAME + "."
                                 + KusssContentContract.Assessment.COL_TYPE
                                 + " ASC,"

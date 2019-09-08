@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,15 +29,14 @@ import org.voidsink.anewjkuapp.BuildConfig;
 
 public class Consts {
 
-    public static final String ARG_RECREATE_SYNC_ALARM = "RECREATE_SYNC_ALARM";
-    public static final String ARG_UPDATE_CAL = "UPDATE_CAL";
-    public static final String ARG_UPDATE_CAL_COURSES = "UPDATE_CAL_LVA";
-    public static final String ARG_UPDATE_CAL_EXAM = "UPDATE_CAL_EXAM";
-    public static final String ARG_UPDATE_KUSSS = "UPDATE_KUSSS";
-    public static final String ARG_UPDATE_KUSSS_CURRICULA = "UPDATE_KUSSS_CURRICULA";
-    public static final String ARG_UPDATE_KUSSS_COURSES = "UPDATE_KUSSS_COURSES";
-    public static final String ARG_UPDATE_KUSSS_ASSESSMENTS = "UPDATE_KUSSS_ASSESSMENTS";
-    public static final String ARG_UPDATE_KUSSS_EXAMS = "UPDATE_KUSSS_EXAMS";
+    public static final String ARG_WORKER_CAL_COURSES = "UPDATE_CAL_LVA";
+    public static final String ARG_WORKER_CAL_EXAM = "UPDATE_CAL_EXAM";
+    public static final String ARG_WORKER_KUSSS_CURRICULA = "UPDATE_KUSSS_CURRICULA";
+    public static final String ARG_WORKER_KUSSS_COURSES = "UPDATE_KUSSS_COURSES";
+    public static final String ARG_WORKER_KUSSS_ASSESSMENTS = "UPDATE_KUSSS_ASSESSMENTS";
+    public static final String ARG_WORKER_KUSSS_EXAMS = "UPDATE_KUSSS_EXAMS";
+    public static final String ARG_WORKER_POI = "UPDATE_POI";
+
     public static final String ARG_TERMS = "TERMS";
 
     public static final String ARG_FRAGMENT_TITLE = "FRAGMENT_TITLE";
@@ -50,6 +49,9 @@ public class Consts {
     public static final String ARG_CALENDAR_THEN = "cal_then";
 
     public static final String ARG_TAB_FRAGMENT_POS = "st_pos";
+
+    public static final String ARG_FILENAME = "FILENAME";
+    public static final String ARG_IS_DEFAULT = "IS_DEFAULT";
 
     //strings for logging of screens
 

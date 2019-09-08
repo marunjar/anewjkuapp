@@ -32,7 +32,6 @@ import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -53,9 +52,7 @@ import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
-import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
-import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -210,10 +207,6 @@ public final class CalendarUtils {
             createCalendar(context, account, name, color);
             if (getCalIDByName(context, account, name, false) != null) {
                 logger.debug("calendar '{}' created", name);
-
-                Intent mUpdateService = new Intent(context, UpdateService.class);
-                mUpdateService.putExtra(Consts.ARG_UPDATE_CAL, true);
-                context.startService(mUpdateService);
             } else {
                 logger.debug("can't create calendar '{}'", name);
                 return false;

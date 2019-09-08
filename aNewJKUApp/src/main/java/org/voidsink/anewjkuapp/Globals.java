@@ -28,6 +28,9 @@ package org.voidsink.anewjkuapp;
 import android.app.Application;
 import android.webkit.WebView;
 
+import androidx.annotation.NonNull;
+import androidx.work.Configuration;
+
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.MapTimeZoneCache;
 
@@ -35,7 +38,9 @@ import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
-public class Globals extends Application {
+import java.util.concurrent.Executors;
+
+public class Globals extends Application implements Configuration.Provider {
 
     @Override
     public void onCreate() {
@@ -46,7 +51,7 @@ public class Globals extends Application {
 
         AppUtils.setupNotificationChannels(this);
 
-        AppUtils.updateSyncAlarm(this, false);
+        AppUtils.enableSync(this, false);
 
         System.setProperty("net.fortuna.ical4j.timezone.cache.impl", MapTimeZoneCache.class.getName());
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
@@ -56,5 +61,13 @@ public class Globals extends Application {
             KusssHandler.getInstance().setUserAgent(new WebView(this).getSettings().getUserAgentString());
         } catch (Exception ignored) {
         }
+    }
+
+    @NonNull
+    @Override
+    public Configuration getWorkManagerConfiguration() {
+        return new Configuration.Builder()
+                .setExecutor(Executors.newSingleThreadExecutor())
+                .build();
     }
 }

@@ -25,7 +25,6 @@
 
 package org.voidsink.anewjkuapp.fragment;
 
-import android.content.Intent;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -53,8 +52,6 @@ import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
-import org.voidsink.anewjkuapp.update.ImportExamTask;
-import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.sectionedrecycleradapter.SectionedRecyclerViewAdapter;
@@ -124,9 +121,7 @@ public class ExamFragment extends BaseFragment implements ContentObserverListene
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh_exams: {
-                Intent mUpdateService = new Intent(getActivity(), UpdateService.class);
-                mUpdateService.putExtra(Consts.ARG_UPDATE_KUSSS_EXAMS, true);
-                getActivity().startService(mUpdateService);
+                AppUtils.triggerSync(getContext(), true, Consts.ARG_WORKER_KUSSS_EXAMS);
                 return true;
             }
             default:
@@ -145,7 +140,7 @@ public class ExamFragment extends BaseFragment implements ContentObserverListene
         showProgressIndeterminate();
 
         return new CursorLoader(getContext(), KusssContentContract.Exam.CONTENT_URI,
-                ImportExamTask.EXAM_PROJECTION, null, null,
+                KusssContentContract.Exam.DB.PROJECTION, null, null,
                 KusssContentContract.Exam.COL_DTSTART + " ASC");
 
     }

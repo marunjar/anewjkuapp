@@ -23,22 +23,28 @@
  *
  */
 
-package org.voidsink.anewjkuapp;
+package org.voidsink.anewjkuapp.worker;
 
 import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
+import android.content.ContentResolver;
 import android.content.Context;
-import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
-import android.os.RemoteException;
+
+import androidx.annotation.NonNull;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.voidsink.anewjkuapp.Poi;
+import org.voidsink.anewjkuapp.PoiContentContract;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.notification.PoiNotification;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
+import org.voidsink.anewjkuapp.utils.Consts;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -49,7 +55,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -60,46 +65,48 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-public class ImportPoiTask implements Callable<Void> {
+public class ImportPoiWorker extends Worker {
 
-    private static final Logger logger = LoggerFactory.getLogger(ImportPoiTask.class);
-
-    private final Context mContext;
+    private static final Logger logger = LoggerFactory.getLogger(ImportPoiWorker.class);
     private final File mFile;
     private final boolean mIsDefault;
 
-    public static final String[] POI_PROJECTION = new String[]{
-            PoiContentContract.Poi.COL_ROWID,
-            PoiContentContract.Poi.COL_NAME,
-            PoiContentContract.Poi.COL_LON,
-            PoiContentContract.Poi.COL_LAT,
-            PoiContentContract.Poi.COL_DESCR,
-            PoiContentContract.Poi.COL_IS_DEFAULT};
+    public ImportPoiWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+        super(context, workerParams);
 
-    private static final int COLUMN_POI_ID = 0;
-    public static final int COLUMN_POI_NAME = 1;
-    public static final int COLUMN_POI_LON = 2;
-    public static final int COLUMN_POI_LAT = 3;
-    //    public static final int COLUMN_POI_DESCR = 4;
-    private static final int COLUMN_POI_IS_DEFAULT = 5;
-
-    public ImportPoiTask(Context context, File file, boolean isDefault) {
-        this.mContext = context;
-        this.mFile = file;
-        this.mIsDefault = isDefault;
+        String filename = workerParams.getInputData().getString(Consts.ARG_FILENAME);
+        if (filename != null) {
+            this.mFile = new File(context.getFilesDir(), filename);
+        } else {
+            this.mFile = null;
+        }
+        this.mIsDefault = workerParams.getInputData().getBoolean(Consts.ARG_IS_DEFAULT, false);
     }
 
+    @NonNull
     @Override
-    public Void call() throws Exception {
-        ContentProviderClient mProvider = mContext.getContentResolver()
-                .acquireContentProviderClient(PoiContentContract.CONTENT_URI);
+    public Result doWork() {
+        return importPoi();
+    }
 
-        if (mProvider == null) {
-            return null;
+    private Result importPoi() {
+        if (mFile == null || !mFile.exists() || !mFile.canRead()) {
+            return Result.failure();
         }
 
-        logger.debug("start importing POIs");
-        PoiNotification mNotification = new PoiNotification(mContext);
+        final ContentResolver mResolver = getApplicationContext().getContentResolver();
+        if (mResolver == null) {
+            return Result.failure();
+        }
+
+        final ContentProviderClient mProvider = mResolver.acquireContentProviderClient(PoiContentContract.CONTENT_URI);
+
+        if (mProvider == null) {
+            return Result.failure();
+        }
+
+        PoiNotification mNotification = new PoiNotification(getApplicationContext());
+
         try {
             Map<String, Poi> poiMap = new HashMap<>();
 
@@ -140,7 +147,7 @@ public class ImportPoiTask implements Callable<Void> {
                     | XPathExpressionException e) {
                 poiMap.clear();
                 logger.error("parse failed", e);
-                Analytics.sendException(mContext, e, true);
+                Analytics.sendException(getApplicationContext(), e, true);
             }
 
             if (!poiMap.isEmpty()) {
@@ -150,7 +157,7 @@ public class ImportPoiTask implements Callable<Void> {
 
                 Uri poiUri = PoiContentContract.Poi.CONTENT_URI;
 
-                try (Cursor c = mProvider.query(poiUri, POI_PROJECTION, null, null,
+                try (Cursor c = mProvider.query(poiUri, PoiContentContract.Poi.DB.PROJECTION, null, null,
                         null)) {
 
                     if (c != null) {
@@ -162,10 +169,10 @@ public class ImportPoiTask implements Callable<Void> {
 
                         // TODO
                         while (c.moveToNext()) {
-                            poiId = c.getInt(COLUMN_POI_ID);
-                            poiName = c.getString(COLUMN_POI_NAME);
+                            poiId = c.getInt(PoiContentContract.Poi.DB.COL_ID);
+                            poiName = c.getString(PoiContentContract.Poi.DB.COL_NAME);
                             poiIsDefault = KusssDatabaseHelper.toBool(c
-                                    .getInt(COLUMN_POI_IS_DEFAULT));
+                                    .getInt(PoiContentContract.Poi.DB.COL_IS_DEFAULT));
 
                             Poi poi = poiMap.get(poiName);
                             if (poi != null) {
@@ -233,7 +240,7 @@ public class ImportPoiTask implements Callable<Void> {
                             logger.debug("Applying batch update");
                             mProvider.applyBatch(batch);
                             logger.debug("Notify resolver");
-                            mContext.getContentResolver().notifyChange(
+                            getApplicationContext().getContentResolver().notifyChange(
                                     PoiContentContract.Poi.CONTENT_URI, null, // No
                                     // local
                                     // observer
@@ -246,18 +253,21 @@ public class ImportPoiTask implements Callable<Void> {
                     }
                 }
             }
-        } catch (RemoteException | OperationApplicationException e) {
-            Analytics.sendException(mContext, e, true);
-        } finally {
+
             mNotification.show();
-        }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            mProvider.close();
-        } else {
-            mProvider.release();
-        }
+            return Result.success();
+        } catch (Exception e) {
+            Analytics.sendException(getApplicationContext(), e, true);
+            logger.error("import failed", e);
 
-        return null;
+            return Result.retry();
+        } finally {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                mProvider.close();
+            } else {
+                mProvider.release();
+            }
+        }
     }
 }

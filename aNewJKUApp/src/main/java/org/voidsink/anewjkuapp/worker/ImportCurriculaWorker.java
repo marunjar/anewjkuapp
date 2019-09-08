@@ -23,18 +23,20 @@
  *
  */
 
-package org.voidsink.anewjkuapp.update;
+package org.voidsink.anewjkuapp.worker;
 
 import android.accounts.Account;
 import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.SyncResult;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,99 +55,71 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
-public class ImportCurriculaTask implements Callable<Void> {
+public class ImportCurriculaWorker extends Worker {
 
-    private static final Logger logger = LoggerFactory.getLogger(ImportCurriculaTask.class);
+    private static final Logger logger = LoggerFactory.getLogger(ImportCurriculaWorker.class);
 
-    private ContentProviderClient mProvider;
-    private boolean mReleaseProvider = false;
-    private final Account mAccount;
-    private SyncResult mSyncResult;
-    private final Context mContext;
-    private final ContentResolver mResolver;
-
-    private boolean mShowProgress;
     private SyncNotification mUpdateNotification;
 
-    public static final String[] CURRICULA_PROJECTION = new String[]{
-            KusssContentContract.Curricula.COL_ID,
-            KusssContentContract.Curricula.COL_IS_STD,
-            KusssContentContract.Curricula.COL_CURRICULUM_ID,
-            KusssContentContract.Curricula.COL_TITLE,
-            KusssContentContract.Curricula.COL_STEOP_DONE,
-            KusssContentContract.Curricula.COL_ACTIVE_STATE,
-            KusssContentContract.Curricula.COL_UNI,
-            KusssContentContract.Curricula.COL_DT_START,
-            KusssContentContract.Curricula.COL_DT_END};
-
-    private static final int COLUMN_CURRICULUM_ID = 0;
-    public static final int COLUMN_CURRICULUM_IS_STD = 1;
-    public static final int COLUMN_CURRICULUM_CURRICULUM_ID = 2;
-    public static final int COLUMN_CURRICULUM_TITLE = 3;
-    public static final int COLUMN_CURRICULUM_STEOP_DONE = 4;
-    public static final int COLUMN_CURRICULUM_ACTIVE_STATE = 5;
-    public static final int COLUMN_CURRICULUM_UNI = 6;
-    public static final int COLUMN_CURRICULUM_DT_START = 7;
-    public static final int COLUMN_CURRICULUM_DT_END = 8;
-
-    public ImportCurriculaTask(Account account, Context context) {
-        this(account, null, null, null, context);
-        this.mProvider = context.getContentResolver()
-                .acquireContentProviderClient(
-                        KusssContentContract.Course.CONTENT_URI);
-        this.mReleaseProvider = true;
-        this.mSyncResult = new SyncResult();
-        this.mShowProgress = true;
+    public ImportCurriculaWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+        super(context, workerParams);
     }
 
-    public ImportCurriculaTask(Account account, Bundle extras,
-                               ContentProviderClient provider, SyncResult syncResult,
-                               Context context) {
-        this.mAccount = account;
-        this.mProvider = provider;
-        this.mSyncResult = syncResult;
-        this.mResolver = context.getContentResolver();
-        this.mContext = context;
-        this.mShowProgress = (extras != null && extras.getBoolean(Consts.SYNC_SHOW_PROGRESS, false));
-    }
-
-    private void updateNotify(String string) {
-        if (mUpdateNotification != null) {
-            mUpdateNotification.update(string);
-        }
+    @NonNull
+    @Override
+    public Result doWork() {
+        return importCurricula();
     }
 
     @Override
-    public Void call() throws Exception {
-        if (mProvider == null) {
-            return null;
+    public void onStopped() {
+        super.onStopped();
+
+        cancelUpdateNotification();
+    }
+
+    private Result importCurricula() {
+        Analytics.eventReloadCurricula(getApplicationContext());
+
+        final Account mAccount = AppUtils.getAccount(getApplicationContext());
+        if (mAccount == null) {
+            return Result.success();
         }
 
-        if (mShowProgress) {
-            mUpdateNotification = new SyncNotification(mContext,
-                    R.string.notification_sync_curricula);
-            mUpdateNotification.show(mContext.getString(R.string.notification_sync_curricula_loading));
+        final ContentResolver mResolver = getApplicationContext().getContentResolver();
+        if (mResolver == null) {
+            return Result.failure();
+        }
+
+        final ContentProviderClient mProvider = mResolver.acquireContentProviderClient(KusssContentContract.Curricula.CONTENT_URI);
+
+        if (mProvider == null) {
+            return Result.failure();
+        }
+
+        if (getInputData().getBoolean(Consts.SYNC_SHOW_PROGRESS, false)) {
+            mUpdateNotification = new SyncNotification(getApplicationContext(), R.string.notification_sync_curricula);
+            mUpdateNotification.show(getApplicationContext().getString(R.string.notification_sync_curricula_loading));
         }
 
         try {
             logger.debug("setup connection");
 
-            updateNotify(mContext.getString(R.string.notification_sync_connect));
+            updateNotification(getApplicationContext().getString(R.string.notification_sync_connect));
 
-            if (KusssHandler.getInstance().isAvailable(mContext,
-                    AppUtils.getAccountAuthToken(mContext, mAccount),
+            if (KusssHandler.getInstance().isAvailable(getApplicationContext(),
+                    AppUtils.getAccountAuthToken(getApplicationContext(), mAccount),
                     AppUtils.getAccountName(mAccount),
-                    AppUtils.getAccountPassword(mContext, mAccount))) {
+                    AppUtils.getAccountPassword(getApplicationContext(), mAccount))) {
 
-                updateNotify(mContext.getString(R.string.notification_sync_curricula_loading));
+                updateNotification(getApplicationContext().getString(R.string.notification_sync_curricula_loading));
 
                 logger.debug("load lvas");
 
-                List<Curriculum> curricula = KusssHandler.getInstance().getCurricula(mContext);
+                List<Curriculum> curricula = KusssHandler.getInstance().getCurricula(getApplicationContext());
                 if (curricula == null) {
-                    mSyncResult.stats.numParseExceptions++;
+                    return Result.retry();
                 } else {
                     Map<String, Curriculum> curriculaMap = new HashMap<>();
                     for (Curriculum curriculum : curricula) {
@@ -154,13 +128,13 @@ public class ImportCurriculaTask implements Callable<Void> {
 
                     logger.debug("got {} lvas", curricula.size());
 
-                    updateNotify(mContext.getString(R.string.notification_sync_curricula_updating));
+                    updateNotification(getApplicationContext().getString(R.string.notification_sync_curricula_updating));
 
                     ArrayList<ContentProviderOperation> batch = new ArrayList<>();
 
                     Uri curriculaUri = KusssContentContract.Curricula.CONTENT_URI;
 
-                    try (Cursor c = mProvider.query(curriculaUri, CURRICULA_PROJECTION,
+                    try (Cursor c = mProvider.query(curriculaUri, KusssContentContract.Curricula.DB.PROJECTION,
                             null, null, null)) {
                         if (c == null) {
                             logger.warn("selection failed");
@@ -172,9 +146,9 @@ public class ImportCurriculaTask implements Callable<Void> {
                             Date curriculumDtStart;
 
                             while (c.moveToNext()) {
-                                _Id = c.getInt(COLUMN_CURRICULUM_ID);
-                                curriculumCid = c.getString(COLUMN_CURRICULUM_CURRICULUM_ID);
-                                curriculumDtStart = new Date(c.getLong(COLUMN_CURRICULUM_DT_START));
+                                _Id = c.getInt(KusssContentContract.Curricula.DB.COL_ID);
+                                curriculumCid = c.getString(KusssContentContract.Curricula.DB.COL_ID);
+                                curriculumDtStart = new Date(c.getLong(KusssContentContract.Curricula.DB.COL_DT_START));
 
                                 Curriculum curriculum = curriculaMap.remove(KusssHelper.getCurriculumKey(curriculumCid, curriculumDtStart));
                                 if (curriculum != null) {
@@ -198,7 +172,6 @@ public class ImportCurriculaTask implements Callable<Void> {
                                                     Integer.toString(_Id))
                                             .withValues(KusssHelper.getCurriculumContentValues(curriculum))
                                             .build());
-                                    mSyncResult.stats.numUpdates++;
                                 } else {
                                     // delete
                                 }
@@ -215,10 +188,9 @@ public class ImportCurriculaTask implements Callable<Void> {
                                         .withValues(KusssHelper.getCurriculumContentValues(curriculum))
                                         .build());
                                 logger.debug("Scheduling insert: {} {}", curriculum.getCid(), curriculum.getDtStart().toString());
-                                mSyncResult.stats.numInserts++;
                             }
 
-                            updateNotify(mContext.getString(R.string.notification_sync_curricula_saving));
+                            updateNotification(getApplicationContext().getString(R.string.notification_sync_curricula_saving));
 
                             if (batch.size() > 0) {
                                 logger.debug("Applying batch update");
@@ -239,26 +211,37 @@ public class ImportCurriculaTask implements Callable<Void> {
                         }
                     }
                 }
-                KusssHandler.getInstance().logout(mContext);
+                KusssHandler.getInstance().logout(getApplicationContext());
+
+                return Result.success();
             } else {
-                mSyncResult.stats.numAuthExceptions++;
+                return Result.retry();
             }
         } catch (Exception e) {
-            Analytics.sendException(mContext, e, true);
+            Analytics.sendException(getApplicationContext(), e, true);
             logger.error("import failed", e);
-        }
-        if (mUpdateNotification != null) {
-            mUpdateNotification.cancel();
-        }
 
-        if (mReleaseProvider) {
+            return Result.retry();
+        } finally {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 mProvider.close();
             } else {
                 mProvider.release();
             }
+            cancelUpdateNotification();
         }
-
-        return null;
     }
+
+    private void cancelUpdateNotification() {
+        if (mUpdateNotification != null) {
+            mUpdateNotification.cancel();
+        }
+    }
+
+    private void updateNotification(String string) {
+        if (mUpdateNotification != null) {
+            mUpdateNotification.update(string);
+        }
+    }
+
 }

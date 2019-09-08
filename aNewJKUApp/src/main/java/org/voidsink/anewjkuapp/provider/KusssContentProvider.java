@@ -46,9 +46,8 @@ import org.voidsink.anewjkuapp.kusss.Course;
 import org.voidsink.anewjkuapp.kusss.Curriculum;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.kusss.Term;
-import org.voidsink.anewjkuapp.update.ImportAssessmentTask;
-import org.voidsink.anewjkuapp.update.ImportCurriculaTask;
 import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -58,9 +57,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class KusssContentProvider extends ContentProvider {
 
@@ -389,7 +385,7 @@ public class KusssContentProvider extends ContentProvider {
         if (mAccount != null) {
             ContentResolver cr = context.getContentResolver();
             try (Cursor c = cr.query(KusssContentContract.Assessment.CONTENT_URI,
-                    ImportAssessmentTask.ASSESSMENT_PROJECTION, null, null,
+                    KusssContentContract.Assessment.DB.PROJECTION, null, null,
                     KusssContentContract.Assessment.TABLE_NAME + "."
                             + KusssContentContract.Assessment.COL_TYPE
                             + " ASC,"
@@ -442,7 +438,7 @@ public class KusssContentProvider extends ContentProvider {
             ContentResolver cr = context.getContentResolver();
 
             try (Cursor c = cr.query(KusssContentContract.Curricula.CONTENT_URI,
-                    ImportCurriculaTask.CURRICULA_PROJECTION, null, null,
+                    KusssContentContract.Curricula.DB.PROJECTION, null, null,
                     KusssContentContract.Curricula.COL_DT_START + " DESC")) {
                 if (c != null) {
                     mCurriculum = getCurriculaFromCursor(c);
@@ -464,15 +460,7 @@ public class KusssContentProvider extends ContentProvider {
         }
 
         if (mCurriculum.size() == 0) {
-
-            ExecutorService es = Executors.newSingleThreadExecutor();
-            try {
-                es.submit(new ImportCurriculaTask(AppUtils.getAccount(context), context)).get();
-            } catch (InterruptedException | ExecutionException e) {
-                Analytics.sendException(context, e, true);
-            } finally {
-                es.shutdown();
-            }
+            AppUtils.triggerSync(context, false, Consts.ARG_WORKER_KUSSS_CURRICULA);
 
             try {
                 List<Assessment> assessments = getAssessments(context);

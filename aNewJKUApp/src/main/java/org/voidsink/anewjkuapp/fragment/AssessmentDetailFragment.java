@@ -25,7 +25,6 @@
 
 package org.voidsink.anewjkuapp.fragment;
 
-import android.content.Intent;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -52,8 +51,6 @@ import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.base.TermFragment;
 import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
-import org.voidsink.anewjkuapp.update.ImportAssessmentTask;
-import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.sectionedrecycleradapter.SectionedRecyclerViewAdapter;
@@ -101,10 +98,7 @@ public class AssessmentDetailFragment extends TermFragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh_assessments:
-                Intent mUpdateService = new Intent(getActivity(), UpdateService.class);
-                mUpdateService.putExtra(Consts.ARG_UPDATE_KUSSS_ASSESSMENTS, true);
-                getActivity().startService(mUpdateService);
-
+                AppUtils.triggerSync(getContext(), true, Consts.ARG_WORKER_KUSSS_ASSESSMENTS);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -142,7 +136,7 @@ public class AssessmentDetailFragment extends TermFragment implements
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(getContext(), KusssContentContract.Assessment.CONTENT_URI,
-                ImportAssessmentTask.ASSESSMENT_PROJECTION, null, null,
+                KusssContentContract.Assessment.DB.PROJECTION, null, null,
                 KusssContentContract.Assessment.TABLE_NAME + "."
                         + KusssContentContract.Assessment.COL_TYPE
                         + " ASC,"

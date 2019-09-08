@@ -31,11 +31,9 @@ import android.accounts.AccountManager;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -49,14 +47,26 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
+import androidx.work.BackoffPolicy;
+import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.ListenableWorker;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
+
+import com.google.common.util.concurrent.ListenableFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.voidsink.anewjkuapp.ImportPoiTask;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
-import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
@@ -72,12 +82,15 @@ import org.voidsink.anewjkuapp.kusss.Grade;
 import org.voidsink.anewjkuapp.kusss.LvaState;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.kusss.Term;
-import org.voidsink.anewjkuapp.service.SyncAlarmService;
-import org.voidsink.anewjkuapp.update.ImportCurriculaTask;
+import org.voidsink.anewjkuapp.worker.ImportAssessmentWorker;
+import org.voidsink.anewjkuapp.worker.ImportCalendarWorker;
+import org.voidsink.anewjkuapp.worker.ImportCourseWorker;
+import org.voidsink.anewjkuapp.worker.ImportCurriculaWorker;
+import org.voidsink.anewjkuapp.worker.ImportExamWorker;
+import org.voidsink.anewjkuapp.worker.ImportPoiWorker;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -94,15 +107,14 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.TimeZone;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 public class AppUtils {
 
     private static final String DEFAULT_POI_FILE_NAME = "JKU.gpx";
+    private static final String ARG_WORKER_CAL_HELPER = "UPDATE_CAL";
+
     private static final Logger logger = LoggerFactory.getLogger(AppUtils.class);
 
     private static final Comparator<Course> CourseComparator = (lhs, rhs) -> {
@@ -177,10 +189,10 @@ public class AppUtils {
                 if (!initPreferences(context)) {
                     errorOccured = true;
                 }
-                if (!importDefaultPois(context)) {
+                if (!copyDefaultMap(context)) {
                     errorOccured = true;
                 }
-                if (!copyDefaultMap(context)) {
+                if (!importDefaultPois(context)) {
                     errorOccured = true;
                 }
             } catch (Exception e) {
@@ -200,16 +212,15 @@ public class AppUtils {
                     }
                 }
                 if (shouldImportCurricula(mLastVersion, mCurrentVersion)) {
-                    if (!importCurricula(context)) {
-                        errorOccured = true;
-                    }
+                    triggerSync(context, true, Consts.ARG_WORKER_KUSSS_CURRICULA);
                 }
                 if (shouldRecreateCalendars(mLastVersion, mCurrentVersion)) {
                     if (!removeCalendars(context)) {
                         errorOccured = true;
-                    }
-                    if (!createCalendars(context)) {
+                    } else if (!createCalendars(context)) {
                         errorOccured = true;
+                    } else {
+                        triggerSync(context, true, Consts.ARG_WORKER_CAL_COURSES, Consts.ARG_WORKER_CAL_EXAM);
                     }
                 } else if (shouldDeleteKusssEvents(mLastVersion, mCurrentVersion)) {
                     if (!deleteKusssEvents(context)) {
@@ -231,7 +242,10 @@ public class AppUtils {
 
     private static boolean createCalendars(Context context) {
         Account account = AppUtils.getAccount(context);
-        return (account == null || CalendarUtils.createCalendarsIfNecessary(context, account));
+        if (account == null) {
+            return true;
+        }
+        return CalendarUtils.createCalendarsIfNecessary(context, account);
     }
 
     private static boolean deleteKusssEvents(Context context) {
@@ -259,11 +273,6 @@ public class AppUtils {
         // curricula added with 140026
         // import on startup to avoid strange behaviour and missing tabs
         return (lastVersion < 140026 && currentVersion >= 140026);
-    }
-
-    private static boolean importCurricula(Context context) {
-        Account account = getAccount(context);
-        return account == null || executeEm(context, new Callable<?>[]{new ImportCurriculaTask(account, context)}, false);
     }
 
     private static boolean removeAccount(Context context) {
@@ -350,8 +359,14 @@ public class AppUtils {
             mapFileWriter.close();
 
             // import file
-            return executeEm(context, new Callable<?>[]{new ImportPoiTask(context, new File(context.getFilesDir(),
-                    DEFAULT_POI_FILE_NAME), true)}, false);
+            OneTimeWorkRequest.Builder importRequest = setupOneTimeWorkRequest(true, Consts.ARG_WORKER_POI);
+            if (importRequest != null) {
+                importRequest.setInputData(new Data.Builder().putString(Consts.ARG_FILENAME, DEFAULT_POI_FILE_NAME).putBoolean(Consts.ARG_IS_DEFAULT, true).build());
+
+                WorkManager workManager = WorkManager.getInstance(context);
+                workManager.enqueue(importRequest.build());
+            }
+            return true;
         } catch (IOException e) {
             Analytics.sendException(context, e, false);
             return false;
@@ -662,74 +677,161 @@ public class AppUtils {
         Collections.sort(mCurricula, CurriculaComparator);
     }
 
-    public static void updateSyncAlarm(Context context, boolean reCreateAlarm) {
-        boolean mIsCalendarSyncEnabled = false;
-        boolean mIsKusssSyncEnable = false;
-        boolean mIsMasterSyncEnabled = ContentResolver.getMasterSyncAutomatically();
-
-        if (mIsMasterSyncEnabled) {
-            final Account mAccount = getAccount(context);
-            if (mAccount != null) {
-                mIsCalendarSyncEnabled = ContentResolver.getSyncAutomatically(mAccount, CalendarContractWrapper.AUTHORITY());
-                mIsKusssSyncEnable = ContentResolver.getSyncAutomatically(mAccount, KusssContentContract.AUTHORITY);
+    private static boolean isWorkScheduled(Context context, String tag) {
+        WorkManager workManager = WorkManager.getInstance(context);
+        ListenableFuture<List<WorkInfo>> workInfosFuture = workManager.getWorkInfosByTag(tag);
+        try {
+            List<WorkInfo> workInfos = workInfosFuture.get();
+            if (workInfos == null || workInfos.isEmpty()) {
+                return false;
             }
-        }
-
-        logger.debug("MasterSync={}, CalendarSync={}, KusssSync={}", mIsMasterSyncEnabled, mIsCalendarSyncEnabled, mIsKusssSyncEnable);
-
-        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        if (am != null) {
-            Intent intent = new Intent(context, SyncAlarmService.class);
-            intent.putExtra(Consts.ARG_UPDATE_CAL, !mIsCalendarSyncEnabled);
-            intent.putExtra(Consts.ARG_UPDATE_KUSSS, !mIsKusssSyncEnable);
-            intent.putExtra(Consts.ARG_RECREATE_SYNC_ALARM, true);
-            intent.putExtra(Consts.SYNC_SHOW_PROGRESS, true);
-
-            // check if pending intent exists
-            reCreateAlarm = reCreateAlarm || (PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE) == null);
-
-            // new pending intent
-            PendingIntent alarmIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            if (!mIsMasterSyncEnabled || !mIsCalendarSyncEnabled || !mIsKusssSyncEnable) {
-                if (reCreateAlarm) {
-                    long interval = PreferenceWrapper.getSyncInterval(context) * DateUtils.HOUR_IN_MILLIS;
-
-                    // synchronize in half an hour
-                    am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + AlarmManager.INTERVAL_HALF_HOUR, interval, alarmIntent);
+            for (WorkInfo workInfo : workInfos) {
+                if (!workInfo.getState().isFinished()) {
+                    return true;
                 }
-            } else {
-                am.cancel(alarmIntent);
             }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            return false;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    private static PeriodicWorkRequest.Builder setupPeriodicWorkRequest(Context context,
+                                                                        @NonNull Class<? extends ListenableWorker> workerClass, String... tags) {
+        Constraints.Builder constraints = new Constraints.Builder();
+        constraints.setRequiredNetworkType(NetworkType.CONNECTED);
+
+        long interval = PreferenceWrapper.getSyncInterval(context);
+
+        PeriodicWorkRequest.Builder request = new PeriodicWorkRequest.Builder(workerClass, interval, TimeUnit.HOURS, 6, TimeUnit.HOURS);
+        request.setInitialDelay(30, TimeUnit.MINUTES);
+        request.setBackoffCriteria(BackoffPolicy.LINEAR, 15, TimeUnit.MINUTES);
+        request.setConstraints(constraints.build());
+        for (String tag : tags) {
+            request.addTag(tag);
+        }
+        request.setInputData(new Data.Builder().putBoolean(Consts.SYNC_SHOW_PROGRESS, true).build());
+
+        return request;
+    }
+
+    private static Class<? extends ListenableWorker> getWorkerClassByTag(String tag) {
+        if (Consts.ARG_WORKER_CAL_COURSES.equals(tag)) {
+            return ImportCalendarWorker.class;
+        } else if (Consts.ARG_WORKER_CAL_EXAM.equals(tag)) {
+            return ImportCalendarWorker.class;
+        } else if (Consts.ARG_WORKER_KUSSS_CURRICULA.equals(tag)) {
+            return ImportCurriculaWorker.class;
+        } else if (Consts.ARG_WORKER_KUSSS_ASSESSMENTS.equals(tag)) {
+            return ImportAssessmentWorker.class;
+        } else if (Consts.ARG_WORKER_KUSSS_COURSES.equals(tag)) {
+            return ImportAssessmentWorker.class;
+        } else if (Consts.ARG_WORKER_KUSSS_EXAMS.equals(tag)) {
+            return ImportAssessmentWorker.class;
+        } else if (Consts.ARG_WORKER_POI.equals(tag)) {
+            return ImportPoiWorker.class;
+        } else {
+            return null;
         }
     }
 
+    private static OneTimeWorkRequest.Builder setupOneTimeWorkRequest(boolean immediately, String tag) {
+        Class<? extends ListenableWorker> workerClass = getWorkerClassByTag(tag);
+        if (workerClass == null) {
+            return null;
+        }
 
-    public static void triggerSync(Context context, Account account, boolean syncCalendar, boolean syncKusss) {
+        Constraints.Builder constraints = new Constraints.Builder();
+        constraints.setRequiredNetworkType(NetworkType.CONNECTED);
+
+        OneTimeWorkRequest.Builder request = new OneTimeWorkRequest.Builder(workerClass);
+        request.setInitialDelay(immediately ? 0 : 30, TimeUnit.MINUTES);
+        request.setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 10, TimeUnit.MINUTES);
+        request.setConstraints(constraints.build());
+        request.setInputData(new Data.Builder().putBoolean(Consts.SYNC_SHOW_PROGRESS, true).build());
+        request.addTag(tag);
+
+        return request;
+    }
+
+    public static void enableSync(Context context, boolean reCreateAlarms) {
         try {
-            if (context == null || account == null) {
-                return;
-            }
+            if (context != null) {
+                boolean mIsCalendarSyncEnabled = false;
+                boolean mIsMasterSyncEnabled = ContentResolver.getMasterSyncAutomatically();
 
-            if (syncCalendar || syncKusss) {
-                Bundle b = new Bundle();
-                // Disable sync backoff and ignore sync preferences. In other
-                // words...perform sync NOW!
-                b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-                b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-                b.putBoolean(Consts.SYNC_SHOW_PROGRESS, true);
-
-                if (syncCalendar) {
-                    ContentResolver.requestSync(account, // Sync
-                            CalendarContractWrapper.AUTHORITY(), // Calendar Content authority
-                            b); // Extras
+                if (mIsMasterSyncEnabled) {
+                    final Account mAccount = getAccount(context);
+                    if (mAccount != null) {
+                        mIsCalendarSyncEnabled = ContentResolver.getSyncAutomatically(mAccount, CalendarContractWrapper.AUTHORITY());
+                    }
                 }
-                if (syncKusss) {
-                    ContentResolver.requestSync(account, // Sync
-                            KusssContentContract.AUTHORITY, // KUSSS Content authority
-                            b); // Extras
+
+                logger.debug("MasterSync={}, CalendarSync={}", mIsMasterSyncEnabled, mIsCalendarSyncEnabled);
+
+                WorkManager workManager = WorkManager.getInstance(context);
+                if (mIsCalendarSyncEnabled) {
+                    if (reCreateAlarms || !isWorkScheduled(context, ARG_WORKER_CAL_HELPER)) {
+                        workManager.cancelAllWorkByTag(ARG_WORKER_CAL_HELPER);
+
+                        PeriodicWorkRequest.Builder courseCalendarRequest = setupPeriodicWorkRequest(context, ImportCalendarWorker.class, ARG_WORKER_CAL_HELPER, Consts.ARG_WORKER_CAL_COURSES);
+                        workManager.enqueueUniquePeriodicWork(Consts.ARG_WORKER_CAL_COURSES, ExistingPeriodicWorkPolicy.REPLACE, courseCalendarRequest.build());
+
+                        PeriodicWorkRequest.Builder examCalendarRequest = setupPeriodicWorkRequest(context, ImportCalendarWorker.class, ARG_WORKER_CAL_HELPER, Consts.ARG_WORKER_CAL_EXAM);
+                        workManager.enqueueUniquePeriodicWork(Consts.ARG_WORKER_CAL_EXAM, ExistingPeriodicWorkPolicy.REPLACE, examCalendarRequest.build());
+                    }
+                } else {
+                    workManager.cancelAllWorkByTag(ARG_WORKER_CAL_HELPER);
+                }
+
+                if (reCreateAlarms || !isWorkScheduled(context, Consts.ARG_WORKER_KUSSS_CURRICULA)) {
+                    workManager.cancelAllWorkByTag(Consts.ARG_WORKER_KUSSS_CURRICULA);
+
+                    PeriodicWorkRequest.Builder curriculaRequest = setupPeriodicWorkRequest(context, ImportCurriculaWorker.class, Consts.ARG_WORKER_KUSSS_CURRICULA);
+                    workManager.enqueueUniquePeriodicWork(Consts.ARG_WORKER_KUSSS_CURRICULA, ExistingPeriodicWorkPolicy.REPLACE, curriculaRequest.build());
+                }
+                if (reCreateAlarms || !isWorkScheduled(context, Consts.ARG_WORKER_KUSSS_COURSES)) {
+                    workManager.cancelAllWorkByTag(Consts.ARG_WORKER_KUSSS_COURSES);
+
+                    PeriodicWorkRequest.Builder courseRequest = setupPeriodicWorkRequest(context, ImportCourseWorker.class, Consts.ARG_WORKER_KUSSS_COURSES);
+                    workManager.enqueueUniquePeriodicWork(Consts.ARG_WORKER_KUSSS_COURSES, ExistingPeriodicWorkPolicy.REPLACE, courseRequest.build());
+                }
+                if (reCreateAlarms || !isWorkScheduled(context, Consts.ARG_WORKER_KUSSS_ASSESSMENTS)) {
+                    workManager.cancelAllWorkByTag(Consts.ARG_WORKER_KUSSS_ASSESSMENTS);
+
+                    PeriodicWorkRequest.Builder assessmentRequest = setupPeriodicWorkRequest(context, ImportAssessmentWorker.class, Consts.ARG_WORKER_KUSSS_ASSESSMENTS);
+                    workManager.enqueueUniquePeriodicWork(Consts.ARG_WORKER_KUSSS_ASSESSMENTS, ExistingPeriodicWorkPolicy.REPLACE, assessmentRequest.build());
+                }
+                if (reCreateAlarms || !isWorkScheduled(context, Consts.ARG_WORKER_KUSSS_EXAMS)) {
+                    workManager.cancelAllWorkByTag(Consts.ARG_WORKER_KUSSS_EXAMS);
+
+                    PeriodicWorkRequest.Builder assessmentRequest = setupPeriodicWorkRequest(context, ImportExamWorker.class, Consts.ARG_WORKER_KUSSS_EXAMS);
+                    workManager.enqueueUniquePeriodicWork(Consts.ARG_WORKER_KUSSS_EXAMS, ExistingPeriodicWorkPolicy.REPLACE, assessmentRequest.build());
                 }
             }
         } catch (Exception e) {
+            logger.error("enableSync", e);
+            Analytics.sendException(context, e, true);
+        }
+    }
+
+    public static void triggerSync(Context context, boolean immediately, String... tags) {
+        try {
+            if (context != null && tags.length > 0) {
+                WorkManager workManager = WorkManager.getInstance(context);
+                for (String tag : tags) {
+                    OneTimeWorkRequest.Builder request = setupOneTimeWorkRequest(immediately, tag);
+                    if (request != null) {
+                        workManager.enqueueUniqueWork("ONETIME:" + tag, ExistingWorkPolicy.KEEP, request.build());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error("triggerSync", e);
             Analytics.sendException(context, e, true);
         }
     }
@@ -745,6 +847,7 @@ public class AppUtils {
 
         return DateUtils.formatDateRange(c, new Formatter(Locale.getDefault()), dtStart.getTime(), dtEnd.getTime(), flags, tzString).toString();
     }
+
 
     public static String getEventString(Context c, long eventDTStart, long eventDTEnd,
                                         String eventTitle, boolean allDay) {
@@ -794,40 +897,6 @@ public class AppUtils {
             intent.putExtra(SearchManager.QUERY, "Uniteich");
         }
         context.startActivity(intent);
-    }
-
-    public static boolean executeEm(Context context, Callable<?>[] callables, boolean wait) {
-        boolean result;
-
-        ExecutorService es = Executors.newSingleThreadExecutor();
-        try {
-            result = executeEm(es, context, callables, wait);
-        } finally {
-            es.shutdown();
-        }
-        return result;
-    }
-
-    public static boolean executeEm(ExecutorService es, Context context, Callable<?>[] callables, boolean wait) {
-        boolean result = true;
-
-        List<Future<?>> futures = new ArrayList<>();
-
-        for (Callable<?> c : callables) {
-            futures.add(es.submit(c));
-        }
-
-        if (wait) {
-            for (Future f : futures) {
-                try {
-                    f.get();
-                } catch (InterruptedException | ExecutionException e) {
-                    Analytics.sendException(context, e, false);
-                    result = false;
-                }
-            }
-        }
-        return result;
     }
 
     public static int getRandomColor() {
@@ -925,4 +994,5 @@ public class AppUtils {
             }
         }
     }
+
 }

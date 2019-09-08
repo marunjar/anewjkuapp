@@ -149,7 +149,7 @@ public final class PreferenceWrapper {
                     KusssContentContract.AUTHORITY, new Bundle(),
                     60 * 60 * interval);
         }
-        AppUtils.updateSyncAlarm(context, true);
+        AppUtils.enableSync(context, true);
     }
 
     public static boolean getNotifyCalendar(Context context) {

@@ -33,7 +33,6 @@ import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.kusss.Course;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.kusss.Term;
-import org.voidsink.anewjkuapp.update.ImportCourseTask;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -58,7 +57,7 @@ public class CourseMap {
         ContentResolver cr = context.getContentResolver();
 
         try (Cursor c = cr.query(KusssContentContract.Course.CONTENT_URI,
-                ImportCourseTask.COURSE_PROJECTION, null, null,
+                KusssContentContract.Course.DB.PROJECTION, null, null,
                 KusssContentContract.Course.COL_TERM + " DESC")) {
             if (c != null) {
                 while (c.moveToNext()) {
