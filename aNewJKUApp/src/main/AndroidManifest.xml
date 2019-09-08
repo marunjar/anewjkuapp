@@ -173,6 +173,10 @@
             android:name="org.voidsink.anewjkuapp.provider.PoiContentProvider"
             android:authorities="@string/config_poi_provider"
             android:exported="false"/>
+        <provider
+            android:name="androidx.work.impl.WorkManagerInitializer"
+            android:authorities="${applicationId}.workmanager-init"
+            tools:node="remove" />
 
         <receiver android:name="org.voidsink.anewjkuapp.utils.BootReceiver">
             <intent-filter>
