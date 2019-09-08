@@ -44,7 +44,7 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         if (extras != null && (extras.getBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, false) || extras.getBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED))) {
-            AppUtils.syncCalendars(getContext());
+            AppUtils.syncCalendars(getContext(), true);
         }
     }
 }

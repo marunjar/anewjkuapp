@@ -28,6 +28,7 @@ package org.voidsink.anewjkuapp;
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
@@ -39,7 +40,6 @@ import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.notification.KusssNotificationBuilder;
 import org.voidsink.anewjkuapp.update.ImportAssessmentTask;
 import org.voidsink.anewjkuapp.update.ImportCourseTask;
-import org.voidsink.anewjkuapp.update.ImportCurriculaTask;
 import org.voidsink.anewjkuapp.update.ImportExamTask;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
@@ -67,6 +67,11 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
     public void onPerformSync(Account account, Bundle extras, String authority,
                               ContentProviderClient provider, SyncResult syncResult) {
 
+        if (extras != null && (extras.getBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, false) || extras.getBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED))) {
+            AppUtils.syncCurricula(getContext(), true);
+        }
+
+
         if (account == null || account.name == null) {
             KusssNotificationBuilder.showErrorNotification(getContext(),
                     R.string.notification_error_account_is_null, null);
@@ -90,8 +95,6 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
         try {
             AppUtils.executeEm(mExecutorService, getContext(),
                     new Callable[]{
-                            new ImportCurriculaTask(account, extras,
-                                    provider, syncResult, getContext()),
                             new ImportCourseTask(account, extras,
                                     provider, syncResult, getContext()),
                             new ImportAssessmentTask(account, extras,

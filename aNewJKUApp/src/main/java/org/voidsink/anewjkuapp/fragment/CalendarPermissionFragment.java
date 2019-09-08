@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,6 +31,9 @@ import android.content.UriMatcher;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.BaseFragment;
@@ -39,8 +42,6 @@ import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -104,7 +105,9 @@ public class CalendarPermissionFragment extends BaseFragment implements ContentO
         if ((android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) || EasyPermissions.hasPermissions(getContext(), Manifest.permission.GET_ACCOUNTS)) {
             if (EasyPermissions.hasPermissions(getContext(), CALENDAR_PERMISSIONS_FULL)) {
                 Account account = AppUtils.getAccount(getContext());
-                CalendarUtils.createCalendarsIfNecessary(getContext(), account);
+                if (CalendarUtils.createCalendarsIfNecessary(getContext(), account)) {
+                    AppUtils.syncCalendars(getContext(), false);
+                }
             } else {
                 EasyPermissions.requestPermissions(
                         this,

@@ -49,8 +49,11 @@ public class SyncAlarmService extends IntentService {
         }
         AppUtils.triggerSync(this, AppUtils.getAccount(this), intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false));
 
-        if (intent.getBooleanExtra(Consts.ARG_UPDATE_CAL, false)) {
-            AppUtils.syncCalendars(this);
+        if (intent.getBooleanExtra(Consts.ARG_WORKER_CAL, false)) {
+            AppUtils.syncCalendars(this, false);
+        }
+        if (intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false)) {
+            AppUtils.syncCurricula(this, false);
         }
     }
 }

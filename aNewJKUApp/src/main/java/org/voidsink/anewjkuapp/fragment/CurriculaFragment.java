@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,7 +27,6 @@ package org.voidsink.anewjkuapp.fragment;
 
 import android.accounts.Account;
 import android.content.Context;
-import android.content.Intent;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -39,6 +38,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
@@ -47,23 +53,15 @@ import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.kusss.Curriculum;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
-import org.voidsink.anewjkuapp.update.ImportCurriculaTask;
-import org.voidsink.anewjkuapp.update.UpdateService;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
+import org.voidsink.anewjkuapp.worker.ImportCurriculaWorker;
 import org.voidsink.sectionedrecycleradapter.SectionedAdapter;
 import org.voidsink.sectionedrecycleradapter.SectionedRecyclerViewAdapter;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.CursorLoader;
-import androidx.loader.content.Loader;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class CurriculaFragment extends BaseFragment implements
         ContentObserverListener, LoaderManager.LoaderCallbacks<Cursor> {
@@ -127,10 +125,7 @@ public class CurriculaFragment extends BaseFragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh_curricula: {
-                Intent mUpdateService = new Intent(getActivity(), UpdateService.class);
-                mUpdateService.putExtra(Consts.ARG_UPDATE_KUSSS_CURRICULA, true);
-                getActivity().startService(mUpdateService);
-
+                AppUtils.syncCurricula(getActivity(), true);
                 return true;
             }
             default:
@@ -147,7 +142,7 @@ public class CurriculaFragment extends BaseFragment implements
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(getContext(), KusssContentContract.Curricula.CONTENT_URI,
-                ImportCurriculaTask.CURRICULA_PROJECTION, null, null,
+                ImportCurriculaWorker.CURRICULA_PROJECTION, null, null,
                 KusssContentContract.Curricula.COL_DT_START + " DESC");
     }
 

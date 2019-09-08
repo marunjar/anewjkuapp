@@ -99,9 +99,9 @@ public class ImportCalendarWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        if (getTags().contains(Consts.ARG_UPDATE_CAL_COURSES)) {
+        if (getTags().contains(Consts.ARG_WORKER_CAL_COURSES)) {
             return importCalendar(CalendarUtils.ARG_CALENDAR_COURSE);
-        } else if (getTags().contains(Consts.ARG_UPDATE_CAL_EXAM)) {
+        } else if (getTags().contains(Consts.ARG_WORKER_CAL_EXAM)) {
             return importCalendar(CalendarUtils.ARG_CALENDAR_EXAM);
         }
         return Result.failure();

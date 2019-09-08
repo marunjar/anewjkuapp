@@ -47,8 +47,8 @@ import org.voidsink.anewjkuapp.kusss.Curriculum;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.update.ImportAssessmentTask;
-import org.voidsink.anewjkuapp.update.ImportCurriculaTask;
 import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.worker.ImportCurriculaWorker;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -58,9 +58,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class KusssContentProvider extends ContentProvider {
 
@@ -442,7 +439,7 @@ public class KusssContentProvider extends ContentProvider {
             ContentResolver cr = context.getContentResolver();
 
             try (Cursor c = cr.query(KusssContentContract.Curricula.CONTENT_URI,
-                    ImportCurriculaTask.CURRICULA_PROJECTION, null, null,
+                    ImportCurriculaWorker.CURRICULA_PROJECTION, null, null,
                     KusssContentContract.Curricula.COL_DT_START + " DESC")) {
                 if (c != null) {
                     mCurriculum = getCurriculaFromCursor(c);
@@ -464,15 +461,7 @@ public class KusssContentProvider extends ContentProvider {
         }
 
         if (mCurriculum.size() == 0) {
-
-            ExecutorService es = Executors.newSingleThreadExecutor();
-            try {
-                es.submit(new ImportCurriculaTask(AppUtils.getAccount(context), context)).get();
-            } catch (InterruptedException | ExecutionException e) {
-                Analytics.sendException(context, e, true);
-            } finally {
-                es.shutdown();
-            }
+            AppUtils.syncCurricula(context, true);
 
             try {
                 List<Assessment> assessments = getAssessments(context);

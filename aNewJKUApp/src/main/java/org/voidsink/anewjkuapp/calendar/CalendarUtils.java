@@ -210,10 +210,6 @@ public final class CalendarUtils {
             createCalendar(context, account, name, color);
             if (getCalIDByName(context, account, name, false) != null) {
                 logger.debug("calendar '{}' created", name);
-
-                Intent mUpdateService = new Intent(context, UpdateService.class);
-                mUpdateService.putExtra(Consts.ARG_UPDATE_CAL, true);
-                context.startService(mUpdateService);
             } else {
                 logger.debug("can't create calendar '{}'", name);
                 return false;

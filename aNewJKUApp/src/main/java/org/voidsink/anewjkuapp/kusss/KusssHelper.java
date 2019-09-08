@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -37,9 +37,9 @@ import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
 import org.voidsink.anewjkuapp.update.ImportAssessmentTask;
 import org.voidsink.anewjkuapp.update.ImportCourseTask;
-import org.voidsink.anewjkuapp.update.ImportCurriculaTask;
 import org.voidsink.anewjkuapp.update.ImportExamTask;
 import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.worker.ImportCurriculaWorker;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -126,14 +126,14 @@ public class KusssHelper {
     }
 
     public static Curriculum createCurricula(Cursor c) {
-        return new Curriculum(KusssDatabaseHelper.toBool(c.getInt(ImportCurriculaTask.COLUMN_CURRICULUM_IS_STD)),
-                c.getString(ImportCurriculaTask.COLUMN_CURRICULUM_CURRICULUM_ID),
-                c.getString(ImportCurriculaTask.COLUMN_CURRICULUM_TITLE),
-                KusssDatabaseHelper.toBool(c.getInt(ImportCurriculaTask.COLUMN_CURRICULUM_STEOP_DONE)),
-                KusssDatabaseHelper.toBool(c.getInt(ImportCurriculaTask.COLUMN_CURRICULUM_ACTIVE_STATE)),
-                c.getString(ImportCurriculaTask.COLUMN_CURRICULUM_UNI),
-                new Date(c.getLong(ImportCurriculaTask.COLUMN_CURRICULUM_DT_START)),
-                !c.isNull(ImportCurriculaTask.COLUMN_CURRICULUM_DT_END) ? new Date(c.getLong(ImportCurriculaTask.COLUMN_CURRICULUM_DT_END)) : null);
+        return new Curriculum(KusssDatabaseHelper.toBool(c.getInt(ImportCurriculaWorker.COLUMN_CURRICULUM_IS_STD)),
+                c.getString(ImportCurriculaWorker.COLUMN_CURRICULUM_CURRICULUM_ID),
+                c.getString(ImportCurriculaWorker.COLUMN_CURRICULUM_TITLE),
+                KusssDatabaseHelper.toBool(c.getInt(ImportCurriculaWorker.COLUMN_CURRICULUM_STEOP_DONE)),
+                KusssDatabaseHelper.toBool(c.getInt(ImportCurriculaWorker.COLUMN_CURRICULUM_ACTIVE_STATE)),
+                c.getString(ImportCurriculaWorker.COLUMN_CURRICULUM_UNI),
+                new Date(c.getLong(ImportCurriculaWorker.COLUMN_CURRICULUM_DT_START)),
+                !c.isNull(ImportCurriculaWorker.COLUMN_CURRICULUM_DT_END) ? new Date(c.getLong(ImportCurriculaWorker.COLUMN_CURRICULUM_DT_END)) : null);
     }
 
     public static ContentValues getCurriculumContentValues(Curriculum curriculum) {
