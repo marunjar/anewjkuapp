@@ -38,7 +38,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.notification.KusssNotificationBuilder;
-import org.voidsink.anewjkuapp.update.ImportAssessmentTask;
 import org.voidsink.anewjkuapp.update.ImportCourseTask;
 import org.voidsink.anewjkuapp.update.ImportExamTask;
 import org.voidsink.anewjkuapp.utils.AppUtils;
@@ -96,8 +95,6 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
             AppUtils.executeEm(mExecutorService, getContext(),
                     new Callable[]{
                             new ImportCourseTask(account, extras,
-                                    provider, syncResult, getContext()),
-                            new ImportAssessmentTask(account, extras,
                                     provider, syncResult, getContext()),
                             new ImportExamTask(account, extras,
                                     provider, syncResult, getContext())},

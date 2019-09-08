@@ -61,6 +61,7 @@ import androidx.work.ListenableWorker;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkContinuation;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
@@ -87,6 +88,7 @@ import org.voidsink.anewjkuapp.kusss.LvaState;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.service.SyncAlarmService;
+import org.voidsink.anewjkuapp.worker.ImportAssessmentWorker;
 import org.voidsink.anewjkuapp.worker.ImportCalendarWorker;
 import org.voidsink.anewjkuapp.worker.ImportCurriculaWorker;
 
@@ -722,7 +724,26 @@ public class AppUtils {
         return request;
     }
 
-    private static OneTimeWorkRequest.Builder setupOneTimeWorkRequest(@NonNull Class<? extends ListenableWorker> workerClass, boolean immediately, String... tags) {
+    private static Class<? extends ListenableWorker> getWorkerClassByTag(String tag) {
+        if (Consts.ARG_WORKER_CAL_COURSES.equals(tag)) {
+            return ImportCalendarWorker.class;
+        } else if (Consts.ARG_WORKER_CAL_EXAM.equals(tag)) {
+            return ImportCalendarWorker.class;
+        } else if (Consts.ARG_WORKER_KUSSS_CURRICULA.equals(tag)) {
+            return ImportCurriculaWorker.class;
+        } else if (Consts.ARG_WORKER_KUSSS_ASSESSMENTS.equals(tag)) {
+            return ImportAssessmentWorker.class;
+        } else {
+            return null;
+        }
+    }
+
+    private static OneTimeWorkRequest.Builder setupOneTimeWorkRequest(boolean immediately, String tag) {
+        Class<? extends ListenableWorker> workerClass = getWorkerClassByTag(tag);
+        if (workerClass == null) {
+            return null;
+        }
+
         Constraints.Builder constraints = new Constraints.Builder();
         constraints.setRequiredNetworkType(NetworkType.CONNECTED);
 
@@ -731,9 +752,7 @@ public class AppUtils {
         request.setBackoffCriteria(BackoffPolicy.LINEAR, 10, TimeUnit.MINUTES);
         request.setConstraints(constraints.build());
         request.setInputData(new Data.Builder().putBoolean(Consts.SYNC_SHOW_PROGRESS, true).build());
-        for (String tag : tags) {
-            request.addTag(tag);
-        }
+        request.addTag(tag);
 
         return request;
     }
@@ -776,6 +795,12 @@ public class AppUtils {
                 PeriodicWorkRequest.Builder curriculaRequest = setupPeriodicWorkRequest(context, ImportCurriculaWorker.class, Consts.ARG_WORKER_KUSSS_CURRICULA);
                 workManager.enqueueUniquePeriodicWork(Consts.ARG_WORKER_KUSSS_CURRICULA, ExistingPeriodicWorkPolicy.REPLACE, curriculaRequest.build());
             }
+            if (reCreateAlarms || !isWorkScheduled(context, Consts.ARG_WORKER_KUSSS_ASSESSMENTS)) {
+                workManager.cancelAllWorkByTag(Consts.ARG_WORKER_KUSSS_ASSESSMENTS);
+
+                PeriodicWorkRequest.Builder assessmentRequest = setupPeriodicWorkRequest(context, ImportAssessmentWorker.class, Consts.ARG_WORKER_KUSSS_ASSESSMENTS);
+                workManager.enqueueUniquePeriodicWork(Consts.ARG_WORKER_KUSSS_ASSESSMENTS, ExistingPeriodicWorkPolicy.REPLACE, assessmentRequest.build());
+            }
         } else {
             workManager.cancelAllWorkByTag(Consts.ARG_WORKER_KUSSS_CURRICULA);
         }
@@ -806,18 +831,38 @@ public class AppUtils {
     }
 
     public static void syncCalendars(Context context, boolean immediately) {
-        OneTimeWorkRequest.Builder courseCalendarRequest = setupOneTimeWorkRequest(ImportCalendarWorker.class, immediately, Consts.ARG_WORKER_CAL_COURSES);
-        OneTimeWorkRequest.Builder examCalendarRequest = setupOneTimeWorkRequest(ImportCalendarWorker.class, immediately, Consts.ARG_WORKER_CAL_EXAM);
-
-        WorkManager workManager = WorkManager.getInstance(context);
-        workManager.beginUniqueWork(Consts.ARG_WORKER_CAL_COURSES + Consts.ARG_WORKER_CAL_EXAM, ExistingWorkPolicy.REPLACE, courseCalendarRequest.build()).then(examCalendarRequest.build()).enqueue();
+        triggerSync(context, immediately, Consts.ARG_WORKER_CAL_COURSES, Consts.ARG_WORKER_CAL_EXAM);
     }
 
     public static void syncCurricula(Context context, boolean immediately) {
-        OneTimeWorkRequest.Builder curriculaRequest = setupOneTimeWorkRequest(ImportCurriculaWorker.class, immediately, Consts.ARG_WORKER_KUSSS_CURRICULA);
+        triggerSync(context, immediately, Consts.ARG_WORKER_KUSSS_CURRICULA);
+    }
 
-        WorkManager workManager = WorkManager.getInstance(context);
-        workManager.beginUniqueWork(Consts.ARG_WORKER_KUSSS_CURRICULA, ExistingWorkPolicy.REPLACE, curriculaRequest.build()).enqueue();
+    public static void syncAssessments(Context context, boolean immediately) {
+        triggerSync(context, immediately, Consts.ARG_WORKER_KUSSS_ASSESSMENTS);
+    }
+
+    public static void triggerSync(Context context, boolean immediately, String... tags) {
+        if (tags.length > 0) {
+            String uniqueName = "";
+            List<OneTimeWorkRequest> requests = new ArrayList<>();
+            for (String tag : tags) {
+                OneTimeWorkRequest.Builder request = setupOneTimeWorkRequest(immediately, tag);
+                if (request != null) {
+                    uniqueName = uniqueName + tag;
+                    requests.add(request.build());
+                }
+            }
+
+            if (requests.size() > 0) {
+                WorkManager workManager = WorkManager.getInstance(context);
+                WorkContinuation continuation = workManager.beginUniqueWork(uniqueName, ExistingWorkPolicy.REPLACE, requests.get(0));
+                for (int i = 1; i < requests.size(); i++) {
+                    continuation = continuation.then(requests.get(i));
+                }
+                continuation.enqueue();
+            }
+        }
     }
 
     public static void triggerSync(Context context, Account account, boolean syncKusss) {

@@ -46,8 +46,8 @@ import org.voidsink.anewjkuapp.kusss.Course;
 import org.voidsink.anewjkuapp.kusss.Curriculum;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.kusss.Term;
-import org.voidsink.anewjkuapp.update.ImportAssessmentTask;
 import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.worker.ImportAssessmentWorker;
 import org.voidsink.anewjkuapp.worker.ImportCurriculaWorker;
 
 import java.text.ParseException;
@@ -386,7 +386,7 @@ public class KusssContentProvider extends ContentProvider {
         if (mAccount != null) {
             ContentResolver cr = context.getContentResolver();
             try (Cursor c = cr.query(KusssContentContract.Assessment.CONTENT_URI,
-                    ImportAssessmentTask.ASSESSMENT_PROJECTION, null, null,
+                    ImportAssessmentWorker.ASSESSMENT_PROJECTION, null, null,
                     KusssContentContract.Assessment.TABLE_NAME + "."
                             + KusssContentContract.Assessment.COL_TYPE
                             + " ASC,"

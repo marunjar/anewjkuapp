@@ -35,10 +35,10 @@ import android.text.TextUtils;
 
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
-import org.voidsink.anewjkuapp.update.ImportAssessmentTask;
 import org.voidsink.anewjkuapp.update.ImportCourseTask;
 import org.voidsink.anewjkuapp.update.ImportExamTask;
 import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.worker.ImportAssessmentWorker;
 import org.voidsink.anewjkuapp.worker.ImportCurriculaWorker;
 
 import java.text.DateFormat;
@@ -161,20 +161,20 @@ public class KusssHelper {
     }
 
     public static Assessment createAssessment(Cursor c) throws ParseException {
-        String termStr = c.getString(ImportAssessmentTask.COLUMN_ASSESSMENT_TERM);
+        String termStr = c.getString(ImportAssessmentWorker.COLUMN_ASSESSMENT_TERM);
 
         return new Assessment(
-                AssessmentType.parseAssessmentType(c.getInt(ImportAssessmentTask.COLUMN_ASSESSMENT_TYPE)),
-                new Date(c.getLong(ImportAssessmentTask.COLUMN_ASSESSMENT_DATE)),
-                c.getString(ImportAssessmentTask.COLUMN_ASSESSMENT_COURSEID),
+                AssessmentType.parseAssessmentType(c.getInt(ImportAssessmentWorker.COLUMN_ASSESSMENT_TYPE)),
+                new Date(c.getLong(ImportAssessmentWorker.COLUMN_ASSESSMENT_DATE)),
+                c.getString(ImportAssessmentWorker.COLUMN_ASSESSMENT_COURSEID),
                 TextUtils.isEmpty(termStr) ? null : Term.parseTerm(termStr),
-                Grade.parseGradeType(c.getInt(ImportAssessmentTask.COLUMN_ASSESSMENT_GRADE)),
-                c.getInt(ImportAssessmentTask.COLUMN_ASSESSMENT_CURRICULA_ID),
-                c.getString(ImportAssessmentTask.COLUMN_ASSESSMENT_TITLE),
-                c.getString(ImportAssessmentTask.COLUMN_ASSESSMENT_CODE),
-                c.getDouble(ImportAssessmentTask.COLUMN_ASSESSMENT_ECTS),
-                c.getDouble(ImportAssessmentTask.COLUMN_ASSESSMENT_SWS),
-                c.getString(ImportAssessmentTask.COLUMN_ASSESSMENT_LVATYPE));
+                Grade.parseGradeType(c.getInt(ImportAssessmentWorker.COLUMN_ASSESSMENT_GRADE)),
+                c.getInt(ImportAssessmentWorker.COLUMN_ASSESSMENT_CURRICULA_ID),
+                c.getString(ImportAssessmentWorker.COLUMN_ASSESSMENT_TITLE),
+                c.getString(ImportAssessmentWorker.COLUMN_ASSESSMENT_CODE),
+                c.getDouble(ImportAssessmentWorker.COLUMN_ASSESSMENT_ECTS),
+                c.getDouble(ImportAssessmentWorker.COLUMN_ASSESSMENT_SWS),
+                c.getString(ImportAssessmentWorker.COLUMN_ASSESSMENT_LVATYPE));
     }
 
     public static ContentValues getAssessmentContentValues(Assessment assessment) {

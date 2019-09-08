@@ -23,26 +23,30 @@
  *
  */
 
-package org.voidsink.anewjkuapp.update;
+package org.voidsink.anewjkuapp.worker;
 
 import android.accounts.Account;
 import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.SyncResult;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.kusss.AssessmentType;
+import org.voidsink.anewjkuapp.kusss.Curriculum;
 import org.voidsink.anewjkuapp.kusss.Grade;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
@@ -56,20 +60,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
-public class ImportAssessmentTask implements Callable<Void> {
+public class ImportAssessmentWorker extends Worker {
 
-    private static final Logger logger = LoggerFactory.getLogger(ImportCourseTask.class);
+    private static final Logger logger = LoggerFactory.getLogger(ImportAssessmentWorker.class);
 
-    private ContentProviderClient mProvider;
-    private boolean mReleaseProvider = false;
-    private final Account mAccount;
-    private SyncResult mSyncResult;
-    private final Context mContext;
-    private final ContentResolver mResolver;
-
-    private boolean mShowProgress;
     private SyncNotification mUpdateNotification;
 
     public static final String[] ASSESSMENT_PROJECTION = new String[]{
@@ -100,63 +95,65 @@ public class ImportAssessmentTask implements Callable<Void> {
     public static final int COLUMN_ASSESSMENT_SWS = 10;
     public static final int COLUMN_ASSESSMENT_LVATYPE = 11;
 
-    public ImportAssessmentTask(Account account, Context context) {
-        this(account, null, null, null, context);
-        this.mProvider = context.getContentResolver()
-                .acquireContentProviderClient(
-                        KusssContentContract.Exam.CONTENT_URI);
-        this.mReleaseProvider = true;
-        this.mSyncResult = new SyncResult();
-        this.mShowProgress = true;
+
+    public ImportAssessmentWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+        super(context, workerParams);
     }
 
-    public ImportAssessmentTask(Account account, Bundle extras,
-                                ContentProviderClient provider, SyncResult syncResult,
-                                Context context) {
-        this.mAccount = account;
-        this.mProvider = provider;
-        this.mSyncResult = syncResult;
-        this.mResolver = context.getContentResolver();
-        this.mContext = context;
-        this.mShowProgress = (extras != null && extras.getBoolean(Consts.SYNC_SHOW_PROGRESS, false));
-    }
-
-    private void updateNotify(String string) {
-        if (mUpdateNotification != null) {
-            mUpdateNotification.update(string);
-        }
+    @NonNull
+    @Override
+    public Result doWork() {
+        return importAssessments();
     }
 
     @Override
-    public Void call() throws Exception {
+    public void onStopped() {
+        super.onStopped();
+
+        cancelUpdateNotification();
+    }
+
+    private Result importAssessments() {
+        Analytics.eventReloadAssessments(getApplicationContext());
+
+        final Account mAccount = AppUtils.getAccount(getApplicationContext());
+        if (mAccount == null) {
+            return Result.success();
+        }
+
+        final ContentResolver mResolver = getApplicationContext().getContentResolver();
+        if (mResolver == null) {
+            return Result.failure();
+        }
+
+        final ContentProviderClient mProvider = mResolver.acquireContentProviderClient(KusssContentContract.Exam.CONTENT_URI);
+
         if (mProvider == null) {
-            return null;
+            return Result.failure();
         }
 
-        if (mShowProgress) {
-            mUpdateNotification = new SyncNotification(mContext,
-                    R.string.notification_sync_assessment);
-            mUpdateNotification.show(mContext.getString(R.string.notification_sync_assessment_loading));
+        if (getInputData().getBoolean(Consts.SYNC_SHOW_PROGRESS, false)) {
+            mUpdateNotification = new SyncNotification(getApplicationContext(), R.string.notification_sync_assessment);
+            mUpdateNotification.show(getApplicationContext().getString(R.string.notification_sync_assessment_loading));
         }
-        AssessmentChangedNotification mAssessmentChangeNotification = new AssessmentChangedNotification(mContext);
 
-        updateNotify(mContext.getString(R.string.notification_sync_connect));
+        AssessmentChangedNotification mAssessmentChangeNotification = new AssessmentChangedNotification(getApplicationContext());
 
         try {
             logger.debug("setup connection");
 
-            if (KusssHandler.getInstance().isAvailable(mContext,
-                    AppUtils.getAccountAuthToken(mContext, mAccount),
+            if (KusssHandler.getInstance().isAvailable(getApplicationContext(),
+                    AppUtils.getAccountAuthToken(getApplicationContext(), mAccount),
                     AppUtils.getAccountName(mAccount),
-                    AppUtils.getAccountPassword(mContext, mAccount))) {
+                    AppUtils.getAccountPassword(getApplicationContext(), mAccount))) {
 
-                updateNotify(mContext.getString(R.string.notification_sync_assessment_loading));
+                updateNotification(getApplicationContext().getString(R.string.notification_sync_assessment_loading));
                 logger.debug("load assessments");
 
                 List<Assessment> assessments = KusssHandler.getInstance()
-                        .getAssessments(mContext);
+                        .getAssessments(getApplicationContext());
                 if (assessments == null) {
-                    mSyncResult.stats.numParseExceptions++;
+                    return Result.retry();
                 } else {
                     Map<String, Assessment> assessmentMap = new HashMap<>();
                     ArrayList<Assessment> possibleDuplicates = new ArrayList<>();
@@ -171,7 +168,7 @@ public class ImportAssessmentTask implements Callable<Void> {
 
                     logger.debug("got {} assessments", assessments.size());
 
-                    updateNotify(mContext.getString(R.string.notification_sync_assessment_updating));
+                    updateNotification(getApplicationContext().getString(R.string.notification_sync_assessment_updating));
 
                     ArrayList<ContentProviderOperation> batch = new ArrayList<>();
 
@@ -217,7 +214,6 @@ public class ImportAssessmentTask implements Callable<Void> {
                                                                     mAccount.name,
                                                                     mAccount.type))
                                             .build());
-                                    mSyncResult.stats.numDeletes++;
                                 } else {
                                     Assessment assessment = assessmentMap.remove(KusssHelper.getAssessmentKey(assessmentCode, assessmentCourseId, assessmentDate.getTime()));
                                     if (assessment != null) {
@@ -232,7 +228,7 @@ public class ImportAssessmentTask implements Callable<Void> {
                                             mAssessmentChangeNotification
                                                     .addUpdate(String.format("%s: %s",
                                                             assessment.getTitle(),
-                                                            mContext.getString(assessment
+                                                            getApplicationContext().getString(assessment
                                                                     .getGrade()
                                                                     .getStringResID())));
                                         }
@@ -249,7 +245,6 @@ public class ImportAssessmentTask implements Callable<Void> {
                                                         Integer.toString(_Id))
                                                 .withValues(KusssHelper.getAssessmentContentValues(assessment))
                                                 .build());
-                                        mSyncResult.stats.numUpdates++;
                                     }
                                 }
                             }
@@ -267,11 +262,9 @@ public class ImportAssessmentTask implements Callable<Void> {
                                 logger.debug("Scheduling insert: {} {}", assessment.getTerm(), assessment.getCourseId());
 
                                 mAssessmentChangeNotification.addInsert(String.format(
-                                        "%s: %s", assessment.getTitle(), mContext
+                                        "%s: %s", assessment.getTitle(), getApplicationContext()
                                                 .getString(assessment.getGrade()
                                                         .getStringResID())));
-
-                                mSyncResult.stats.numInserts++;
                             }
                             for (Assessment assessment : possibleDuplicates) {
                                 batch.add(ContentProviderOperation
@@ -284,11 +277,9 @@ public class ImportAssessmentTask implements Callable<Void> {
                                         .withValues(KusssHelper.getAssessmentContentValues(assessment))
                                         .build());
                                 logger.debug("Scheduling insert: {} {}", assessment.getTerm(), assessment.getCourseId());
-
-                                mSyncResult.stats.numInserts++;
                             }
 
-                            updateNotify(mContext.getString(R.string.notification_sync_assessment_saving));
+                            updateNotification(getApplicationContext().getString(R.string.notification_sync_assessment_saving));
 
                             if (batch.size() > 0) {
                                 logger.debug("Applying batch update");
@@ -308,28 +299,38 @@ public class ImportAssessmentTask implements Callable<Void> {
                         }
                     }
                 }
-                KusssHandler.getInstance().logout(mContext);
+                KusssHandler.getInstance().logout(getApplicationContext());
             } else {
-                mSyncResult.stats.numAuthExceptions++;
+                return Result.retry();
             }
+
+            mAssessmentChangeNotification.show();
+            return Result.success();
         } catch (Exception e) {
-            Analytics.sendException(mContext, e, true);
+            Analytics.sendException(getApplicationContext(), e, true);
             logger.error("import failed", e);
-        }
 
-        if (mUpdateNotification != null) {
-            mUpdateNotification.cancel();
-        }
-        mAssessmentChangeNotification.show();
-
-        if (mReleaseProvider) {
+            return Result.retry();
+        } finally {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 mProvider.close();
             } else {
                 mProvider.release();
             }
+            cancelUpdateNotification();
         }
-
-        return null;
     }
+
+    private void cancelUpdateNotification() {
+        if (mUpdateNotification != null) {
+            mUpdateNotification.cancel();
+        }
+    }
+
+    private void updateNotification(String string) {
+        if (mUpdateNotification != null) {
+            mUpdateNotification.update(string);
+        }
+    }
+
 }

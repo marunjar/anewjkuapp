@@ -43,7 +43,6 @@ import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
-import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.kusss.Curriculum;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
@@ -113,7 +112,7 @@ public class ImportCurriculaWorker extends Worker {
             return Result.failure();
         }
 
-        final ContentProviderClient mProvider = mResolver.acquireContentProviderClient(CalendarContractWrapper.Events.CONTENT_URI());
+        final ContentProviderClient mProvider = mResolver.acquireContentProviderClient(KusssContentContract.Curricula.CONTENT_URI);
 
         if (mProvider == null) {
             return Result.failure();
