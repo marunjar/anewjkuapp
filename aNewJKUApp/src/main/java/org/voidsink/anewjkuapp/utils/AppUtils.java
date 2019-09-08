@@ -67,7 +67,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.voidsink.anewjkuapp.ImportPoiTask;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
@@ -90,10 +89,10 @@ import org.voidsink.anewjkuapp.worker.ImportCalendarWorker;
 import org.voidsink.anewjkuapp.worker.ImportCourseWorker;
 import org.voidsink.anewjkuapp.worker.ImportCurriculaWorker;
 import org.voidsink.anewjkuapp.worker.ImportExamWorker;
+import org.voidsink.anewjkuapp.worker.ImportPoiWorker;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -196,10 +195,10 @@ public class AppUtils {
                 if (!initPreferences(context)) {
                     errorOccured = true;
                 }
-                if (!importDefaultPois(context)) {
+                if (!copyDefaultMap(context)) {
                     errorOccured = true;
                 }
-                if (!copyDefaultMap(context)) {
+                if (!importDefaultPois(context)) {
                     errorOccured = true;
                 }
             } catch (Exception e) {
@@ -366,8 +365,14 @@ public class AppUtils {
             mapFileWriter.close();
 
             // import file
-            return executeEm(context, new Callable<?>[]{new ImportPoiTask(context, new File(context.getFilesDir(),
-                    DEFAULT_POI_FILE_NAME), true)}, false);
+            OneTimeWorkRequest.Builder importRequest = setupOneTimeWorkRequest(true, Consts.ARG_WORKER_POI);
+            if (importRequest != null) {
+                importRequest.setInputData(new Data.Builder().putString(Consts.ARG_FILENAME, DEFAULT_POI_FILE_NAME).putBoolean(Consts.ARG_IS_DEFAULT, true).build());
+
+                WorkManager workManager = WorkManager.getInstance(context);
+                workManager.beginWith(importRequest.build()).enqueue();
+            }
+            return true;
         } catch (IOException e) {
             Analytics.sendException(context, e, false);
             return false;
@@ -729,6 +734,8 @@ public class AppUtils {
             return ImportCurriculaWorker.class;
         } else if (Consts.ARG_WORKER_KUSSS_ASSESSMENTS.equals(tag)) {
             return ImportAssessmentWorker.class;
+        } else if (Consts.ARG_WORKER_POI.equals(tag)) {
+            return ImportPoiWorker.class;
         } else {
             return null;
         }

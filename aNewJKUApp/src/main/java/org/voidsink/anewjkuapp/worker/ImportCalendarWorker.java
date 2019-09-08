@@ -54,7 +54,6 @@ import net.fortuna.ical4j.model.component.VEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.voidsink.anewjkuapp.ImportPoiTask;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.Poi;
 import org.voidsink.anewjkuapp.PoiContentContract;
@@ -108,7 +107,11 @@ public class ImportCalendarWorker extends Worker {
     }
 
     private Result importCalendar(String calendarName) {
-        Analytics.eventReloadEventsCourse(getApplicationContext());
+        if (CalendarUtils.ARG_CALENDAR_COURSE.equals(calendarName)) {
+            Analytics.eventReloadEventsCourse(getApplicationContext());
+        } else if (CalendarUtils.ARG_CALENDAR_EXAM.equals(calendarName)) {
+            Analytics.eventReloadEventsExam(getApplicationContext());
+        }
 
         final Account mAccount = AppUtils.getAccount(getApplicationContext());
         if (mAccount == null) {
@@ -574,7 +577,7 @@ public class ImportCalendarWorker extends Worker {
                     .appendPath(name).build();
             Poi p = null;
 
-            try (Cursor c = cr.query(searchUri, ImportPoiTask.POI_PROJECTION, null,
+            try (Cursor c = cr.query(searchUri, ImportPoiWorker.POI_PROJECTION, null,
                     null, null)) {
                 if (c != null) {
                     while (c.moveToNext()) {

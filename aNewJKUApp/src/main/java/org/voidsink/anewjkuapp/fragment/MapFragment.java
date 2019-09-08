@@ -73,7 +73,6 @@ import org.mapsforge.map.rendertheme.InternalRenderTheme;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.voidsink.anewjkuapp.ImportPoiTask;
 import org.voidsink.anewjkuapp.LocationOverlay;
 import org.voidsink.anewjkuapp.Poi;
 import org.voidsink.anewjkuapp.PoiAdapter;
@@ -85,6 +84,7 @@ import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.anewjkuapp.utils.MapUtils;
+import org.voidsink.anewjkuapp.worker.ImportPoiWorker;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -195,7 +195,7 @@ public class MapFragment extends BaseFragment implements
         Uri searchUri = PoiContentContract.CONTENT_URI.buildUpon()
                 .appendPath(SearchManager.SUGGEST_URI_PATH_QUERY)
                 .appendPath(query).build();
-        try (Cursor c = cr.query(searchUri, ImportPoiTask.POI_PROJECTION, null,
+        try (Cursor c = cr.query(searchUri, ImportPoiWorker.POI_PROJECTION, null,
                 null, null)) {
             if (c != null) {
                 while (c.moveToNext()) {
@@ -251,12 +251,12 @@ public class MapFragment extends BaseFragment implements
         ContentResolver cr = getActivity().getContentResolver();
 
         try (Cursor c = cr
-                .query(uri, ImportPoiTask.POI_PROJECTION, null, null, null)) {
+                .query(uri, ImportPoiWorker.POI_PROJECTION, null, null, null)) {
             if (c != null) {
                 if (c.moveToNext()) {
-                    String name = c.getString(ImportPoiTask.COLUMN_POI_NAME);
-                    double lon = c.getDouble(ImportPoiTask.COLUMN_POI_LON);
-                    double lat = c.getDouble(ImportPoiTask.COLUMN_POI_LAT);
+                    String name = c.getString(ImportPoiWorker.COLUMN_POI_NAME);
+                    double lon = c.getDouble(ImportPoiWorker.COLUMN_POI_LON);
+                    double lat = c.getDouble(ImportPoiWorker.COLUMN_POI_LAT);
 
                     setNewGoal(new MyMarker(lat, lon, name));
                 }

@@ -105,7 +105,7 @@ public class ImportCourseWorker extends Worker {
     }
 
     private Result importCourses() {
-        Analytics.eventReloadAssessments(getApplicationContext());
+        Analytics.eventReloadCourses(getApplicationContext());
 
         final Account mAccount = AppUtils.getAccount(getApplicationContext());
         if (mAccount == null) {

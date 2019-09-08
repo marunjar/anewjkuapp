@@ -35,6 +35,7 @@ public class Consts {
     public static final String ARG_WORKER_KUSSS_COURSES = "UPDATE_KUSSS_COURSES";
     public static final String ARG_WORKER_KUSSS_ASSESSMENTS = "UPDATE_KUSSS_ASSESSMENTS";
     public static final String ARG_WORKER_KUSSS_EXAMS = "UPDATE_KUSSS_EXAMS";
+    public static final String ARG_WORKER_POI = "UPDATE_POI";
 
     public static final String ARG_TERMS = "TERMS";
 
@@ -48,6 +49,9 @@ public class Consts {
     public static final String ARG_CALENDAR_THEN = "cal_then";
 
     public static final String ARG_TAB_FRAGMENT_POS = "st_pos";
+
+    public static final String ARG_FILENAME = "FILENAME";
+    public static final String ARG_IS_DEFAULT = "IS_DEFAULT";
 
     //strings for logging of screens
 
