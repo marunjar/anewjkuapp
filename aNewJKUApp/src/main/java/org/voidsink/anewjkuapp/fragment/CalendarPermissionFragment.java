@@ -106,9 +106,7 @@ public class CalendarPermissionFragment extends BaseFragment implements ContentO
         if ((android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) || EasyPermissions.hasPermissions(getContext(), Manifest.permission.GET_ACCOUNTS)) {
             if (EasyPermissions.hasPermissions(getContext(), CALENDAR_PERMISSIONS_FULL)) {
                 Account account = AppUtils.getAccount(getContext());
-                if (CalendarUtils.createCalendarsIfNecessary(getContext(), account)) {
-                    AppUtils.triggerSync(getContext(), false, Consts.ARG_WORKER_CAL_COURSES, Consts.ARG_WORKER_CAL_EXAM);
-                }
+                CalendarUtils.createCalendarsIfNecessary(getContext(), account);
             } else {
                 EasyPermissions.requestPermissions(
                         this,

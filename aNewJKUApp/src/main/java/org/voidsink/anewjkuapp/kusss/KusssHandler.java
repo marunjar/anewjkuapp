@@ -102,7 +102,7 @@ public class KusssHandler {
     // "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > table > tbody > tr > td > form > table > tbody > tr:has(td)";
     private static final String SELECT_NEW_EXAMS = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > div.sidetable > form > table > tbody > tr:has(td)";
     private static final String SELECT_EXAMS = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > table > tbody > tr > td > form > table > tbody > tr:has(td)";
-    private static final String URL_MY_STUDIES = "https://www.kusss.jku.at/kusss/studentsettings.action";
+    private static final String URL_MY_STUDIES = "https://www.kusss.jku.at/kusss/studentsettings.action?set.studentsettings.tabbedPanel.selectedTab=studies";
     private static final String SELECT_MY_STUDIES = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > form > table > tbody > tr[class]:has(td)";
 
     private static final int TIMEOUT_LOGIN = 15 * 1000; // 15s
@@ -574,6 +574,7 @@ public class KusssHandler {
                 return null;
             }
         } catch (Exception e) {
+            logger.error("getSessionIDFromCookie", e);
             Analytics.sendException(c, e, true);
             return null;
         }
@@ -860,6 +861,7 @@ public class KusssHandler {
                 return null;
             }
         } catch (Exception e) {
+            logger.error("getCurricula", e);
             Analytics.sendException(c, e, true);
             return null;
         }

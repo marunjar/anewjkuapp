@@ -313,6 +313,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 
         finish();
 
+        AppUtils.enableSync(KusssAuthenticatorActivity.this, true);
         AppUtils.triggerSync(KusssAuthenticatorActivity.this, true, Consts.ARG_WORKER_CAL_COURSES, Consts.ARG_WORKER_CAL_COURSES, Consts.ARG_WORKER_KUSSS_CURRICULA, Consts.ARG_WORKER_KUSSS_COURSES, Consts.ARG_WORKER_KUSSS_ASSESSMENTS, Consts.ARG_WORKER_KUSSS_EXAMS);
     }
 
