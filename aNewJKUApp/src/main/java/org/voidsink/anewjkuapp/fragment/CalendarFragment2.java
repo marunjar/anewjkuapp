@@ -132,7 +132,7 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh_calendar:
-                AppUtils.syncCalendars(getContext(), true);
+                AppUtils.triggerSync(getContext(), true, Consts.ARG_WORKER_CAL_COURSES, Consts.ARG_WORKER_CAL_EXAM);
                 return true;
             case R.id.action_cal_goto_today:
                 goToDate(System.currentTimeMillis());

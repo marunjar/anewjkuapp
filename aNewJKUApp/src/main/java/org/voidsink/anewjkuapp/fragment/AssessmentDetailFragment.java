@@ -52,6 +52,7 @@ import org.voidsink.anewjkuapp.base.TermFragment;
 import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.anewjkuapp.worker.ImportAssessmentWorker;
 import org.voidsink.sectionedrecycleradapter.SectionedRecyclerViewAdapter;
 
@@ -98,8 +99,7 @@ public class AssessmentDetailFragment extends TermFragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh_assessments:
-                AppUtils.syncAssessments(getActivity(), true);
-
+                AppUtils.triggerSync(getActivity(), true, Consts.ARG_WORKER_KUSSS_ASSESSMENTS);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

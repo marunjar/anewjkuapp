@@ -250,7 +250,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
         Account account;
         boolean addNewAccount;
 
-        final Account oldAccount = AppUtils.getAccount(this);
+        final Account oldAccount = AppUtils.getAccount(KusssAuthenticatorActivity.this);
         if (oldAccount != null) {
             if (oldAccount.name.equals(accountName)) {
                 account = oldAccount;
@@ -308,13 +308,12 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
         // Kalender aktualisieren
         CalendarUtils.createCalendarsIfNecessary(KusssAuthenticatorActivity.this, account);
 
-        // Sync NOW
-        KusssAuthenticator.triggerSync(KusssAuthenticatorActivity.this);
-
         setAccountAuthenticatorResult(intent.getExtras());
         setResult(RESULT_OK, intent);
 
         finish();
+
+        AppUtils.triggerSync(KusssAuthenticatorActivity.this, true, Consts.ARG_WORKER_CAL_COURSES, Consts.ARG_WORKER_CAL_COURSES, Consts.ARG_WORKER_KUSSS_CURRICULA, Consts.ARG_WORKER_KUSSS_COURSES, Consts.ARG_WORKER_KUSSS_ASSESSMENTS, Consts.ARG_WORKER_KUSSS_EXAMS);
     }
 
     @Override

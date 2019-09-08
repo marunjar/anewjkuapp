@@ -31,11 +31,9 @@ import android.accounts.AccountManager;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -87,7 +85,6 @@ import org.voidsink.anewjkuapp.kusss.Grade;
 import org.voidsink.anewjkuapp.kusss.LvaState;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.kusss.Term;
-import org.voidsink.anewjkuapp.service.SyncAlarmService;
 import org.voidsink.anewjkuapp.worker.ImportAssessmentWorker;
 import org.voidsink.anewjkuapp.worker.ImportCalendarWorker;
 import org.voidsink.anewjkuapp.worker.ImportCourseWorker;
@@ -123,6 +120,8 @@ import java.util.concurrent.TimeUnit;
 public class AppUtils {
 
     private static final String DEFAULT_POI_FILE_NAME = "JKU.gpx";
+    private static final String ARG_WORKER_CAL_HELPER = "UPDATE_CAL";
+
     private static final Logger logger = LoggerFactory.getLogger(AppUtils.class);
 
     private static final Comparator<Course> CourseComparator = (lhs, rhs) -> {
@@ -220,14 +219,15 @@ public class AppUtils {
                     }
                 }
                 if (shouldImportCurricula(mLastVersion, mCurrentVersion)) {
-                    syncCurricula(context, true);
+                    triggerSync(context, true, Consts.ARG_WORKER_KUSSS_CURRICULA);
                 }
                 if (shouldRecreateCalendars(mLastVersion, mCurrentVersion)) {
                     if (!removeCalendars(context)) {
                         errorOccured = true;
-                    }
-                    if (!createCalendars(context)) {
+                    } else if (!createCalendars(context)) {
                         errorOccured = true;
+                    } else {
+                        triggerSync(context, true, Consts.ARG_WORKER_CAL_COURSES, Consts.ARG_WORKER_CAL_EXAM);
                     }
                 } else if (shouldDeleteKusssEvents(mLastVersion, mCurrentVersion)) {
                     if (!deleteKusssEvents(context)) {
@@ -252,13 +252,7 @@ public class AppUtils {
         if (account == null) {
             return true;
         }
-
-        if (CalendarUtils.createCalendarsIfNecessary(context, account)) {
-            syncCalendars(context, false);
-            return true;
-        } else {
-            return false;
-        }
+        return CalendarUtils.createCalendarsIfNecessary(context, account);
     }
 
     private static boolean deleteKusssEvents(Context context) {
@@ -761,102 +755,57 @@ public class AppUtils {
 
     public static void enableSync(Context context, boolean reCreateAlarms) {
         boolean mIsCalendarSyncEnabled = false;
-        boolean mIsKusssSyncEnable = false;
         boolean mIsMasterSyncEnabled = ContentResolver.getMasterSyncAutomatically();
 
         if (mIsMasterSyncEnabled) {
             final Account mAccount = getAccount(context);
             if (mAccount != null) {
                 mIsCalendarSyncEnabled = ContentResolver.getSyncAutomatically(mAccount, CalendarContractWrapper.AUTHORITY());
-                mIsKusssSyncEnable = ContentResolver.getSyncAutomatically(mAccount, KusssContentContract.AUTHORITY);
             }
         }
 
-        logger.debug("MasterSync={}, CalendarSync={}, KusssSync={}", mIsMasterSyncEnabled, mIsCalendarSyncEnabled, mIsKusssSyncEnable);
-
+        logger.debug("MasterSync={}, CalendarSync={}", mIsMasterSyncEnabled, mIsCalendarSyncEnabled);
 
         WorkManager workManager = WorkManager.getInstance(context);
         if (mIsCalendarSyncEnabled) {
-            if (reCreateAlarms || !isWorkScheduled(context, Consts.ARG_WORKER_CAL)) {
-                workManager.cancelAllWorkByTag(Consts.ARG_WORKER_CAL);
+            if (reCreateAlarms || !isWorkScheduled(context, ARG_WORKER_CAL_HELPER)) {
+                workManager.cancelAllWorkByTag(ARG_WORKER_CAL_HELPER);
 
-                PeriodicWorkRequest.Builder courseCalendarRequest = setupPeriodicWorkRequest(context, ImportCalendarWorker.class, Consts.ARG_WORKER_CAL, Consts.ARG_WORKER_CAL_COURSES);
+                PeriodicWorkRequest.Builder courseCalendarRequest = setupPeriodicWorkRequest(context, ImportCalendarWorker.class, ARG_WORKER_CAL_HELPER, Consts.ARG_WORKER_CAL_COURSES);
                 workManager.enqueueUniquePeriodicWork(Consts.ARG_WORKER_CAL_COURSES, ExistingPeriodicWorkPolicy.REPLACE, courseCalendarRequest.build());
 
 
-                PeriodicWorkRequest.Builder examCalendarRequest = setupPeriodicWorkRequest(context, ImportCalendarWorker.class, Consts.ARG_WORKER_CAL, Consts.ARG_WORKER_CAL_EXAM);
+                PeriodicWorkRequest.Builder examCalendarRequest = setupPeriodicWorkRequest(context, ImportCalendarWorker.class, ARG_WORKER_CAL_HELPER, Consts.ARG_WORKER_CAL_EXAM);
                 workManager.enqueueUniquePeriodicWork(Consts.ARG_WORKER_CAL_EXAM, ExistingPeriodicWorkPolicy.REPLACE, examCalendarRequest.build());
             }
         } else {
-            workManager.cancelAllWorkByTag(Consts.ARG_WORKER_CAL);
+            workManager.cancelAllWorkByTag(ARG_WORKER_CAL_HELPER);
         }
-        if (mIsKusssSyncEnable) {
-            if (reCreateAlarms || !isWorkScheduled(context, Consts.ARG_WORKER_KUSSS_CURRICULA)) {
-                workManager.cancelAllWorkByTag(Consts.ARG_WORKER_KUSSS_CURRICULA);
 
-                PeriodicWorkRequest.Builder curriculaRequest = setupPeriodicWorkRequest(context, ImportCurriculaWorker.class, Consts.ARG_WORKER_KUSSS_CURRICULA);
-                workManager.enqueueUniquePeriodicWork(Consts.ARG_WORKER_KUSSS_CURRICULA, ExistingPeriodicWorkPolicy.REPLACE, curriculaRequest.build());
-            }
-            if (reCreateAlarms || !isWorkScheduled(context, Consts.ARG_WORKER_KUSSS_COURSES)) {
-                workManager.cancelAllWorkByTag(Consts.ARG_WORKER_KUSSS_COURSES);
-
-                PeriodicWorkRequest.Builder courseRequest = setupPeriodicWorkRequest(context, ImportCourseWorker.class, Consts.ARG_WORKER_KUSSS_COURSES);
-                workManager.enqueueUniquePeriodicWork(Consts.ARG_WORKER_KUSSS_COURSES, ExistingPeriodicWorkPolicy.REPLACE, courseRequest.build());
-            }
-            if (reCreateAlarms || !isWorkScheduled(context, Consts.ARG_WORKER_KUSSS_ASSESSMENTS)) {
-                workManager.cancelAllWorkByTag(Consts.ARG_WORKER_KUSSS_ASSESSMENTS);
-
-                PeriodicWorkRequest.Builder assessmentRequest = setupPeriodicWorkRequest(context, ImportAssessmentWorker.class, Consts.ARG_WORKER_KUSSS_ASSESSMENTS);
-                workManager.enqueueUniquePeriodicWork(Consts.ARG_WORKER_KUSSS_ASSESSMENTS, ExistingPeriodicWorkPolicy.REPLACE, assessmentRequest.build());
-            }
-            if (reCreateAlarms || !isWorkScheduled(context, Consts.ARG_WORKER_KUSSS_EXAMS)) {
-                workManager.cancelAllWorkByTag(Consts.ARG_WORKER_KUSSS_EXAMS);
-
-                PeriodicWorkRequest.Builder assessmentRequest = setupPeriodicWorkRequest(context, ImportExamWorker.class, Consts.ARG_WORKER_KUSSS_EXAMS);
-                workManager.enqueueUniquePeriodicWork(Consts.ARG_WORKER_KUSSS_EXAMS, ExistingPeriodicWorkPolicy.REPLACE, assessmentRequest.build());
-            }
-        } else {
+        if (reCreateAlarms || !isWorkScheduled(context, Consts.ARG_WORKER_KUSSS_CURRICULA)) {
             workManager.cancelAllWorkByTag(Consts.ARG_WORKER_KUSSS_CURRICULA);
+
+            PeriodicWorkRequest.Builder curriculaRequest = setupPeriodicWorkRequest(context, ImportCurriculaWorker.class, Consts.ARG_WORKER_KUSSS_CURRICULA);
+            workManager.enqueueUniquePeriodicWork(Consts.ARG_WORKER_KUSSS_CURRICULA, ExistingPeriodicWorkPolicy.REPLACE, curriculaRequest.build());
+        }
+        if (reCreateAlarms || !isWorkScheduled(context, Consts.ARG_WORKER_KUSSS_COURSES)) {
             workManager.cancelAllWorkByTag(Consts.ARG_WORKER_KUSSS_COURSES);
+
+            PeriodicWorkRequest.Builder courseRequest = setupPeriodicWorkRequest(context, ImportCourseWorker.class, Consts.ARG_WORKER_KUSSS_COURSES);
+            workManager.enqueueUniquePeriodicWork(Consts.ARG_WORKER_KUSSS_COURSES, ExistingPeriodicWorkPolicy.REPLACE, courseRequest.build());
+        }
+        if (reCreateAlarms || !isWorkScheduled(context, Consts.ARG_WORKER_KUSSS_ASSESSMENTS)) {
             workManager.cancelAllWorkByTag(Consts.ARG_WORKER_KUSSS_ASSESSMENTS);
+
+            PeriodicWorkRequest.Builder assessmentRequest = setupPeriodicWorkRequest(context, ImportAssessmentWorker.class, Consts.ARG_WORKER_KUSSS_ASSESSMENTS);
+            workManager.enqueueUniquePeriodicWork(Consts.ARG_WORKER_KUSSS_ASSESSMENTS, ExistingPeriodicWorkPolicy.REPLACE, assessmentRequest.build());
+        }
+        if (reCreateAlarms || !isWorkScheduled(context, Consts.ARG_WORKER_KUSSS_EXAMS)) {
             workManager.cancelAllWorkByTag(Consts.ARG_WORKER_KUSSS_EXAMS);
+
+            PeriodicWorkRequest.Builder assessmentRequest = setupPeriodicWorkRequest(context, ImportExamWorker.class, Consts.ARG_WORKER_KUSSS_EXAMS);
+            workManager.enqueueUniquePeriodicWork(Consts.ARG_WORKER_KUSSS_EXAMS, ExistingPeriodicWorkPolicy.REPLACE, assessmentRequest.build());
         }
-
-        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        if (am != null) {
-            Intent intent = new Intent(context, SyncAlarmService.class);
-            intent.putExtra(Consts.ARG_UPDATE_KUSSS, !mIsKusssSyncEnable);
-            intent.putExtra(Consts.ARG_RECREATE_SYNC_ALARM, true);
-            intent.putExtra(Consts.SYNC_SHOW_PROGRESS, true);
-
-            // check if pending intent exists
-            reCreateAlarms = reCreateAlarms || (PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE) == null);
-
-            // new pending intent
-            PendingIntent alarmIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            if (!mIsMasterSyncEnabled || !mIsCalendarSyncEnabled || !mIsKusssSyncEnable) {
-                if (reCreateAlarms) {
-                    long interval = PreferenceWrapper.getSyncInterval(context) * DateUtils.HOUR_IN_MILLIS;
-
-                    // synchronize in half an hour
-                    am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + AlarmManager.INTERVAL_HALF_HOUR, interval, alarmIntent);
-                }
-            } else {
-                am.cancel(alarmIntent);
-            }
-        }
-    }
-
-    public static void syncCalendars(Context context, boolean immediately) {
-        triggerSync(context, immediately, Consts.ARG_WORKER_CAL_COURSES, Consts.ARG_WORKER_CAL_EXAM);
-    }
-
-    public static void syncCurricula(Context context, boolean immediately) {
-        triggerSync(context, immediately, Consts.ARG_WORKER_KUSSS_CURRICULA);
-    }
-
-    public static void syncAssessments(Context context, boolean immediately) {
-        triggerSync(context, immediately, Consts.ARG_WORKER_KUSSS_ASSESSMENTS);
     }
 
     public static void triggerSync(Context context, boolean immediately, String... tags) {

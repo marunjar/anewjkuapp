@@ -41,6 +41,7 @@ import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -106,7 +107,7 @@ public class CalendarPermissionFragment extends BaseFragment implements ContentO
             if (EasyPermissions.hasPermissions(getContext(), CALENDAR_PERMISSIONS_FULL)) {
                 Account account = AppUtils.getAccount(getContext());
                 if (CalendarUtils.createCalendarsIfNecessary(getContext(), account)) {
-                    AppUtils.syncCalendars(getContext(), false);
+                    AppUtils.triggerSync(getContext(), false, Consts.ARG_WORKER_CAL_COURSES, Consts.ARG_WORKER_CAL_EXAM);
                 }
             } else {
                 EasyPermissions.requestPermissions(

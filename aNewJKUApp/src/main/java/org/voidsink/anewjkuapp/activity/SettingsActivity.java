@@ -44,7 +44,7 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.base.ThemedActivity;
 import org.voidsink.anewjkuapp.fragment.SettingsFragment;
-import org.voidsink.anewjkuapp.update.UpdateService;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 public class SettingsActivity extends ThemedActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -136,10 +136,7 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         switch (key) {
             case PreferenceWrapper.PREF_GET_NEW_EXAMS:
-                Intent mUpdateService = new Intent(this, UpdateService.class);
-                mUpdateService.putExtra(Consts.ARG_UPDATE_KUSSS_EXAMS, true);
-                this.startService(mUpdateService);
-
+                AppUtils.triggerSync(this, true, Consts.ARG_WORKER_KUSSS_EXAMS);
                 break;
             case PreferenceWrapper.PREF_SYNC_INTERVAL_KEY:
                 PreferenceWrapper.applySyncInterval(this);

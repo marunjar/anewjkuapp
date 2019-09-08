@@ -47,6 +47,7 @@ import org.voidsink.anewjkuapp.kusss.Curriculum;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.anewjkuapp.worker.ImportAssessmentWorker;
 import org.voidsink.anewjkuapp.worker.ImportCurriculaWorker;
 
@@ -461,7 +462,7 @@ public class KusssContentProvider extends ContentProvider {
         }
 
         if (mCurriculum.size() == 0) {
-            AppUtils.syncCurricula(context, true);
+            AppUtils.triggerSync(context, false, Consts.ARG_WORKER_KUSSS_CURRICULA);
 
             try {
                 List<Assessment> assessments = getAssessments(context);

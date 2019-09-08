@@ -34,6 +34,7 @@ import android.content.SyncResult;
 import android.os.Bundle;
 
 import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
 
@@ -41,10 +42,14 @@ public class KusssCalendarSyncAdapter extends AbstractThreadedSyncAdapter {
         super(context, autoInitialize);
     }
 
+    public KusssCalendarSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs) {
+        super(context, autoInitialize, allowParallelSyncs);
+    }
+
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         if (extras != null && (extras.getBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, false) || extras.getBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED))) {
-            AppUtils.syncCalendars(getContext(), true);
+            AppUtils.triggerSync(getContext(), true, Consts.ARG_WORKER_CAL_COURSES, Consts.ARG_WORKER_CAL_EXAM);
         }
     }
 }

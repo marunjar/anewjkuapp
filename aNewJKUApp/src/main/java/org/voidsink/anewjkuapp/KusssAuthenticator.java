@@ -46,6 +46,7 @@ import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
 import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 public class KusssAuthenticator extends AbstractAccountAuthenticator {
 
@@ -215,22 +216,6 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
             KusssDatabaseHelper.dropUserData(mContext);
         }
         return result;
-    }
-
-    public static void triggerSync(Context context) {
-        try {
-            Account[] accounts = AccountManager.get(context).getAccountsByType(
-                    ACCOUNT_TYPE);
-            for (Account account : accounts) {
-                AppUtils.triggerSync(context, account, true);
-                AppUtils.syncCalendars(context, true);
-                AppUtils.syncCurricula(context, true);
-            }
-        } catch (SecurityException e) {
-            Analytics.sendException(context, e, true);
-        } catch (Exception e) {
-            Analytics.sendException(context, e, false);
-        }
     }
 
     /**

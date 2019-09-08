@@ -125,7 +125,7 @@ public class CurriculaFragment extends BaseFragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh_curricula: {
-                AppUtils.syncCurricula(getActivity(), true);
+                AppUtils.triggerSync(getContext(), true, Consts.ARG_WORKER_KUSSS_CURRICULA);
                 return true;
             }
             default:

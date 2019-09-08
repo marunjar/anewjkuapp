@@ -179,8 +179,7 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
 
         switch (item.getItemId()) {
             case R.id.action_refresh_calendar:
-                AppUtils.syncCalendars(getContext(), true);
-
+                AppUtils.triggerSync(getContext(), true, Consts.ARG_WORKER_CAL_COURSES, Consts.ARG_WORKER_CAL_EXAM);
                 return true;
             case R.id.action_cal_goto_today:
                 mRecyclerView.smoothScrollToPosition(0);
