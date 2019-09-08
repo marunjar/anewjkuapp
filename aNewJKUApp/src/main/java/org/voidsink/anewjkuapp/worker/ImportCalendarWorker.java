@@ -577,7 +577,7 @@ public class ImportCalendarWorker extends Worker {
                     .appendPath(name).build();
             Poi p = null;
 
-            try (Cursor c = cr.query(searchUri, ImportPoiWorker.POI_PROJECTION, null,
+            try (Cursor c = cr.query(searchUri, PoiContentContract.Poi.DB.PROJECTION, null,
                     null, null)) {
                 if (c != null) {
                     while (c.moveToNext()) {

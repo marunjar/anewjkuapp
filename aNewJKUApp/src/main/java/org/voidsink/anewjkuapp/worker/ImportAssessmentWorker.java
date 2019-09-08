@@ -43,10 +43,8 @@ import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
-import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.kusss.AssessmentType;
-import org.voidsink.anewjkuapp.kusss.Curriculum;
 import org.voidsink.anewjkuapp.kusss.Grade;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
@@ -66,35 +64,6 @@ public class ImportAssessmentWorker extends Worker {
     private static final Logger logger = LoggerFactory.getLogger(ImportAssessmentWorker.class);
 
     private SyncNotification mUpdateNotification;
-
-    public static final String[] ASSESSMENT_PROJECTION = new String[]{
-            KusssContentContract.Assessment.COL_ID,
-            KusssContentContract.Assessment.COL_TERM,
-            KusssContentContract.Assessment.COL_COURSEID,
-            KusssContentContract.Assessment.COL_DATE,
-            KusssContentContract.Assessment.COL_CURRICULA_ID,
-            KusssContentContract.Assessment.COL_TYPE,
-            KusssContentContract.Assessment.COL_GRADE,
-            KusssContentContract.Assessment.COL_TITLE,
-            KusssContentContract.Assessment.COL_CODE,
-            KusssContentContract.Assessment.COL_ECTS,
-            KusssContentContract.Assessment.COL_SWS,
-            KusssContentContract.Assessment.COL_LVATYPE};
-
-    // Constants representing column positions from PROJECTION.
-    private static final int COLUMN_ASSESSMENT_ID = 0;
-    public static final int COLUMN_ASSESSMENT_TERM = 1;
-    public static final int COLUMN_ASSESSMENT_COURSEID = 2;
-    public static final int COLUMN_ASSESSMENT_DATE = 3;
-    public static final int COLUMN_ASSESSMENT_CURRICULA_ID = 4;
-    public static final int COLUMN_ASSESSMENT_TYPE = 5;
-    public static final int COLUMN_ASSESSMENT_GRADE = 6;
-    public static final int COLUMN_ASSESSMENT_TITLE = 7;
-    public static final int COLUMN_ASSESSMENT_CODE = 8;
-    public static final int COLUMN_ASSESSMENT_ECTS = 9;
-    public static final int COLUMN_ASSESSMENT_SWS = 10;
-    public static final int COLUMN_ASSESSMENT_LVATYPE = 11;
-
 
     public ImportAssessmentWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -173,7 +142,7 @@ public class ImportAssessmentWorker extends Worker {
                     ArrayList<ContentProviderOperation> batch = new ArrayList<>();
 
                     Uri examUri = KusssContentContract.Assessment.CONTENT_URI;
-                    try (Cursor c = mProvider.query(examUri, ASSESSMENT_PROJECTION, null,
+                    try (Cursor c = mProvider.query(examUri, KusssContentContract.Assessment.DB.PROJECTION, null,
                             null, null)) {
                         if (c == null) {
                             logger.warn("selection failed");
@@ -187,14 +156,14 @@ public class ImportAssessmentWorker extends Worker {
                             AssessmentType assessmentType;
                             Grade assessmentGrade;
                             while (c.moveToNext()) {
-                                _Id = c.getInt(COLUMN_ASSESSMENT_ID);
-                                assessmentCode = c.getString(COLUMN_ASSESSMENT_CODE);
-                                assessmentDate = new Date(c.getLong(COLUMN_ASSESSMENT_DATE));
+                                _Id = c.getInt(KusssContentContract.Assessment.DB.COL_ID);
+                                assessmentCode = c.getString(KusssContentContract.Assessment.DB.COL_CODE);
+                                assessmentDate = new Date(c.getLong(KusssContentContract.Assessment.DB.COL_DATE));
                                 assessmentType = AssessmentType.parseAssessmentType(c
-                                        .getInt(COLUMN_ASSESSMENT_TYPE));
+                                        .getInt(KusssContentContract.Assessment.DB.COL_TYPE));
                                 assessmentGrade = Grade.parseGradeType(c
-                                        .getInt(COLUMN_ASSESSMENT_GRADE));
-                                assessmentCourseId = c.getString(COLUMN_ASSESSMENT_COURSEID);
+                                        .getInt(KusssContentContract.Assessment.DB.COL_GRADE));
+                                assessmentCourseId = c.getString(KusssContentContract.Assessment.DB.COL_COURSEID);
 
                                 if (assessmentType.isDuplicatesPossible()) {
                                     // delete

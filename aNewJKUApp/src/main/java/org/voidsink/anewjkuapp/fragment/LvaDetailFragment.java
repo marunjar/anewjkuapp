@@ -58,8 +58,6 @@ import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
-import org.voidsink.anewjkuapp.worker.ImportAssessmentWorker;
-import org.voidsink.anewjkuapp.worker.ImportCourseWorker;
 import org.voidsink.sectionedrecycleradapter.SectionedRecyclerViewAdapter;
 
 import java.util.List;
@@ -171,12 +169,12 @@ public class LvaDetailFragment extends TermFragment implements
         switch (id) {
             case Consts.LOADER_ID_COURSES: {
                 return new CursorLoader(getContext(), KusssContentContract.Course.CONTENT_URI,
-                        ImportCourseWorker.COURSE_PROJECTION, null, null,
+                        KusssContentContract.Course.DB.PROJECTION, null, null,
                         KusssContentContract.Course.COL_TERM + " DESC");
             }
             case Consts.LOADER_ID_ASSESSMENTS: {
                 return new CursorLoader(getContext(), KusssContentContract.Assessment.CONTENT_URI,
-                        ImportAssessmentWorker.ASSESSMENT_PROJECTION, null, null,
+                        KusssContentContract.Assessment.DB.PROJECTION, null, null,
                         KusssContentContract.Assessment.TABLE_NAME + "."
                                 + KusssContentContract.Assessment.COL_TYPE
                                 + " ASC,"

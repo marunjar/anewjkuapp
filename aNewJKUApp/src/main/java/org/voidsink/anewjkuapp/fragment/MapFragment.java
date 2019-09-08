@@ -84,7 +84,6 @@ import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.anewjkuapp.utils.MapUtils;
-import org.voidsink.anewjkuapp.worker.ImportPoiWorker;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -195,7 +194,7 @@ public class MapFragment extends BaseFragment implements
         Uri searchUri = PoiContentContract.CONTENT_URI.buildUpon()
                 .appendPath(SearchManager.SUGGEST_URI_PATH_QUERY)
                 .appendPath(query).build();
-        try (Cursor c = cr.query(searchUri, ImportPoiWorker.POI_PROJECTION, null,
+        try (Cursor c = cr.query(searchUri, PoiContentContract.Poi.DB.PROJECTION, null,
                 null, null)) {
             if (c != null) {
                 while (c.moveToNext()) {
@@ -251,12 +250,12 @@ public class MapFragment extends BaseFragment implements
         ContentResolver cr = getActivity().getContentResolver();
 
         try (Cursor c = cr
-                .query(uri, ImportPoiWorker.POI_PROJECTION, null, null, null)) {
+                .query(uri, PoiContentContract.Poi.DB.PROJECTION, null, null, null)) {
             if (c != null) {
                 if (c.moveToNext()) {
-                    String name = c.getString(ImportPoiWorker.COLUMN_POI_NAME);
-                    double lon = c.getDouble(ImportPoiWorker.COLUMN_POI_LON);
-                    double lat = c.getDouble(ImportPoiWorker.COLUMN_POI_LAT);
+                    String name = c.getString(PoiContentContract.Poi.DB.COL_NAME);
+                    double lon = c.getDouble(PoiContentContract.Poi.DB.COL_LON);
+                    double lat = c.getDouble(PoiContentContract.Poi.DB.COL_LAT);
 
                     setNewGoal(new MyMarker(lat, lon, name));
                 }

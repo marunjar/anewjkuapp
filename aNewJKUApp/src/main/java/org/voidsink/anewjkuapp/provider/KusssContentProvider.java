@@ -48,8 +48,6 @@ import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
-import org.voidsink.anewjkuapp.worker.ImportAssessmentWorker;
-import org.voidsink.anewjkuapp.worker.ImportCurriculaWorker;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -387,7 +385,7 @@ public class KusssContentProvider extends ContentProvider {
         if (mAccount != null) {
             ContentResolver cr = context.getContentResolver();
             try (Cursor c = cr.query(KusssContentContract.Assessment.CONTENT_URI,
-                    ImportAssessmentWorker.ASSESSMENT_PROJECTION, null, null,
+                    KusssContentContract.Assessment.DB.PROJECTION, null, null,
                     KusssContentContract.Assessment.TABLE_NAME + "."
                             + KusssContentContract.Assessment.COL_TYPE
                             + " ASC,"
@@ -440,7 +438,7 @@ public class KusssContentProvider extends ContentProvider {
             ContentResolver cr = context.getContentResolver();
 
             try (Cursor c = cr.query(KusssContentContract.Curricula.CONTENT_URI,
-                    ImportCurriculaWorker.CURRICULA_PROJECTION, null, null,
+                    KusssContentContract.Curricula.DB.PROJECTION, null, null,
                     KusssContentContract.Curricula.COL_DT_START + " DESC")) {
                 if (c != null) {
                     mCurriculum = getCurriculaFromCursor(c);

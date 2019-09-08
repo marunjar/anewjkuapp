@@ -53,7 +53,6 @@ import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
-import org.voidsink.anewjkuapp.worker.ImportAssessmentWorker;
 import org.voidsink.sectionedrecycleradapter.SectionedRecyclerViewAdapter;
 
 import java.util.List;
@@ -137,7 +136,7 @@ public class AssessmentDetailFragment extends TermFragment implements
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(getContext(), KusssContentContract.Assessment.CONTENT_URI,
-                ImportAssessmentWorker.ASSESSMENT_PROJECTION, null, null,
+                KusssContentContract.Assessment.DB.PROJECTION, null, null,
                 KusssContentContract.Assessment.TABLE_NAME + "."
                         + KusssContentContract.Assessment.COL_TYPE
                         + " ASC,"

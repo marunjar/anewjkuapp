@@ -63,30 +63,6 @@ public class ImportCourseWorker extends Worker {
 
     private SyncNotification mUpdateNotification;
 
-    public static final String[] COURSE_PROJECTION = new String[]{
-            KusssContentContract.Course.COL_ID,
-            KusssContentContract.Course.COL_TERM,
-            KusssContentContract.Course.COL_COURSEID,
-            KusssContentContract.Course.COL_TITLE,
-            KusssContentContract.Course.COL_CURRICULA_ID,
-            KusssContentContract.Course.COL_LVATYPE,
-            KusssContentContract.Course.COL_LECTURER,
-            KusssContentContract.Course.COL_SWS,
-            KusssContentContract.Course.COL_ECTS,
-            KusssContentContract.Course.COL_CLASS_CODE};
-
-    private static final int COLUMN_LVA_ID = 0;
-    public static final int COLUMN_LVA_TERM = 1;
-    public static final int COLUMN_LVA_COURSEID = 2;
-    public static final int COLUMN_LVA_TITLE = 3;
-    public static final int COLUMN_LVA_CURRICULA_ID = 4;
-    public static final int COLUMN_LVA_TYPE = 5;
-    public static final int COLUMN_LVA_TEACHER = 6;
-    public static final int COLUMN_LVA_SWS = 7;
-    public static final int COLUMN_LVA_ECTS = 8;
-    public static final int COLUMN_LVA_CODE = 9;
-
-
     public ImportCourseWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
@@ -164,7 +140,7 @@ public class ImportCourseWorker extends Worker {
 
                     Uri lvaUri = KusssContentContract.Course.CONTENT_URI;
 
-                    try (Cursor c = mProvider.query(lvaUri, COURSE_PROJECTION,
+                    try (Cursor c = mProvider.query(lvaUri, KusssContentContract.Course.DB.PROJECTION,
                             null, null, null)) {
 
                         if (c == null) {
@@ -177,9 +153,9 @@ public class ImportCourseWorker extends Worker {
                             String courseId;
 
                             while (c.moveToNext()) {
-                                _id = c.getInt(COLUMN_LVA_ID);
-                                courseTerm = c.getString(COLUMN_LVA_TERM);
-                                courseId = c.getString(COLUMN_LVA_COURSEID);
+                                _id = c.getInt(KusssContentContract.Course.DB.COL_ID);
+                                courseTerm = c.getString(KusssContentContract.Course.DB.COL_TERM);
+                                courseId = c.getString(KusssContentContract.Course.DB.COL_COURSEID);
 
                                 // update only lvas from loaded terms, ignore all other
                                 Term term = termMap.get(courseTerm);

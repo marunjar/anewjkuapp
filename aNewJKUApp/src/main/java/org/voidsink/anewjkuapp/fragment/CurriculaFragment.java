@@ -55,7 +55,6 @@ import org.voidsink.anewjkuapp.kusss.Curriculum;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
-import org.voidsink.anewjkuapp.worker.ImportCurriculaWorker;
 import org.voidsink.sectionedrecycleradapter.SectionedAdapter;
 import org.voidsink.sectionedrecycleradapter.SectionedRecyclerViewAdapter;
 
@@ -142,7 +141,7 @@ public class CurriculaFragment extends BaseFragment implements
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(getContext(), KusssContentContract.Curricula.CONTENT_URI,
-                ImportCurriculaWorker.CURRICULA_PROJECTION, null, null,
+                KusssContentContract.Curricula.DB.PROJECTION, null, null,
                 KusssContentContract.Curricula.COL_DT_START + " DESC");
     }
 

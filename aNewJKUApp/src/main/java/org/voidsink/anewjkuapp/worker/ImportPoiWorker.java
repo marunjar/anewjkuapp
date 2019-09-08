@@ -71,22 +71,6 @@ public class ImportPoiWorker extends Worker {
     private final File mFile;
     private final boolean mIsDefault;
 
-    public static final String[] POI_PROJECTION = new String[]{
-            PoiContentContract.Poi.COL_ROWID,
-            PoiContentContract.Poi.COL_NAME,
-            PoiContentContract.Poi.COL_LON,
-            PoiContentContract.Poi.COL_LAT,
-            PoiContentContract.Poi.COL_DESCR,
-            PoiContentContract.Poi.COL_IS_DEFAULT};
-
-    private static final int COLUMN_POI_ID = 0;
-    public static final int COLUMN_POI_NAME = 1;
-    public static final int COLUMN_POI_LON = 2;
-    public static final int COLUMN_POI_LAT = 3;
-    //    public static final int COLUMN_POI_DESCR = 4;
-    private static final int COLUMN_POI_IS_DEFAULT = 5;
-
-
     public ImportPoiWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
 
@@ -173,7 +157,7 @@ public class ImportPoiWorker extends Worker {
 
                 Uri poiUri = PoiContentContract.Poi.CONTENT_URI;
 
-                try (Cursor c = mProvider.query(poiUri, POI_PROJECTION, null, null,
+                try (Cursor c = mProvider.query(poiUri, PoiContentContract.Poi.DB.PROJECTION, null, null,
                         null)) {
 
                     if (c != null) {
@@ -185,10 +169,10 @@ public class ImportPoiWorker extends Worker {
 
                         // TODO
                         while (c.moveToNext()) {
-                            poiId = c.getInt(COLUMN_POI_ID);
-                            poiName = c.getString(COLUMN_POI_NAME);
+                            poiId = c.getInt(PoiContentContract.Poi.DB.COL_ID);
+                            poiName = c.getString(PoiContentContract.Poi.DB.COL_NAME);
                             poiIsDefault = KusssDatabaseHelper.toBool(c
-                                    .getInt(COLUMN_POI_IS_DEFAULT));
+                                    .getInt(PoiContentContract.Poi.DB.COL_IS_DEFAULT));
 
                             Poi poi = poiMap.get(poiName);
                             if (poi != null) {

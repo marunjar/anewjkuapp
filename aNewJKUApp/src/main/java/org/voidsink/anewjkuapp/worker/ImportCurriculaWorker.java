@@ -62,27 +62,6 @@ public class ImportCurriculaWorker extends Worker {
 
     private SyncNotification mUpdateNotification;
 
-    public static final String[] CURRICULA_PROJECTION = new String[]{
-            KusssContentContract.Curricula.COL_ID,
-            KusssContentContract.Curricula.COL_IS_STD,
-            KusssContentContract.Curricula.COL_CURRICULUM_ID,
-            KusssContentContract.Curricula.COL_TITLE,
-            KusssContentContract.Curricula.COL_STEOP_DONE,
-            KusssContentContract.Curricula.COL_ACTIVE_STATE,
-            KusssContentContract.Curricula.COL_UNI,
-            KusssContentContract.Curricula.COL_DT_START,
-            KusssContentContract.Curricula.COL_DT_END};
-
-    private static final int COLUMN_CURRICULUM_ID = 0;
-    public static final int COLUMN_CURRICULUM_IS_STD = 1;
-    public static final int COLUMN_CURRICULUM_CURRICULUM_ID = 2;
-    public static final int COLUMN_CURRICULUM_TITLE = 3;
-    public static final int COLUMN_CURRICULUM_STEOP_DONE = 4;
-    public static final int COLUMN_CURRICULUM_ACTIVE_STATE = 5;
-    public static final int COLUMN_CURRICULUM_UNI = 6;
-    public static final int COLUMN_CURRICULUM_DT_START = 7;
-    public static final int COLUMN_CURRICULUM_DT_END = 8;
-
     public ImportCurriculaWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
@@ -155,7 +134,7 @@ public class ImportCurriculaWorker extends Worker {
 
                     Uri curriculaUri = KusssContentContract.Curricula.CONTENT_URI;
 
-                    try (Cursor c = mProvider.query(curriculaUri, CURRICULA_PROJECTION,
+                    try (Cursor c = mProvider.query(curriculaUri, KusssContentContract.Curricula.DB.PROJECTION,
                             null, null, null)) {
                         if (c == null) {
                             logger.warn("selection failed");
@@ -167,9 +146,9 @@ public class ImportCurriculaWorker extends Worker {
                             Date curriculumDtStart;
 
                             while (c.moveToNext()) {
-                                _Id = c.getInt(COLUMN_CURRICULUM_ID);
-                                curriculumCid = c.getString(COLUMN_CURRICULUM_CURRICULUM_ID);
-                                curriculumDtStart = new Date(c.getLong(COLUMN_CURRICULUM_DT_START));
+                                _Id = c.getInt(KusssContentContract.Curricula.DB.COL_ID);
+                                curriculumCid = c.getString(KusssContentContract.Curricula.DB.COL_ID);
+                                curriculumDtStart = new Date(c.getLong(KusssContentContract.Curricula.DB.COL_DT_START));
 
                                 Curriculum curriculum = curriculaMap.remove(KusssHelper.getCurriculumKey(curriculumCid, curriculumDtStart));
                                 if (curriculum != null) {

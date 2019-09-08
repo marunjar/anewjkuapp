@@ -54,7 +54,6 @@ import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
-import org.voidsink.anewjkuapp.worker.ImportExamWorker;
 import org.voidsink.sectionedrecycleradapter.SectionedRecyclerViewAdapter;
 
 import java.text.ParseException;
@@ -141,7 +140,7 @@ public class ExamFragment extends BaseFragment implements ContentObserverListene
         showProgressIndeterminate();
 
         return new CursorLoader(getContext(), KusssContentContract.Exam.CONTENT_URI,
-                ImportExamWorker.EXAM_PROJECTION, null, null,
+                KusssContentContract.Exam.DB.PROJECTION, null, null,
                 KusssContentContract.Exam.COL_DTSTART + " ASC");
 
     }

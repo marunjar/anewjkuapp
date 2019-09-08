@@ -69,30 +69,6 @@ public class ImportExamWorker extends Worker {
 
     private SyncNotification mUpdateNotification;
 
-    public static final String[] EXAM_PROJECTION = new String[]{
-            KusssContentContract.Exam.COL_ID,
-            KusssContentContract.Exam.COL_TERM,
-            KusssContentContract.Exam.COL_COURSEID,
-            KusssContentContract.Exam.COL_DTSTART,
-            KusssContentContract.Exam.COL_DTEND,
-            KusssContentContract.Exam.COL_LOCATION,
-            KusssContentContract.Exam.COL_DESCRIPTION,
-            KusssContentContract.Exam.COL_INFO,
-            KusssContentContract.Exam.COL_IS_REGISTERED,
-            KusssContentContract.Exam.COL_TITLE};
-
-    private static final int COLUMN_EXAM_ID = 0;
-    public static final int COLUMN_EXAM_TERM = 1;
-    public static final int COLUMN_EXAM_COURSEID = 2;
-    public static final int COLUMN_EXAM_DTSTART = 3;
-    public static final int COLUMN_EXAM_DTEND = 4;
-    public static final int COLUMN_EXAM_LOCATION = 5;
-    public static final int COLUMN_EXAM_DESCRIPTION = 6;
-    public static final int COLUMN_EXAM_INFO = 7;
-    public static final int COLUMN_EXAM_IS_REGISTERED = 8;
-    public static final int COLUMN_EXAM_TITLE = 9;
-
-
     public ImportExamWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
@@ -179,7 +155,7 @@ public class ImportExamWorker extends Worker {
 
                     Uri examUri = KusssContentContract.Exam.CONTENT_URI;
 
-                    try (Cursor c = mProvider.query(examUri, EXAM_PROJECTION,
+                    try (Cursor c = mProvider.query(examUri, KusssContentContract.Exam.DB.PROJECTION,
                             null, null, null)) {
                         if (c == null) {
                             logger.warn("selection failed");
@@ -193,13 +169,12 @@ public class ImportExamWorker extends Worker {
                             String examLocation;
 
                             while (c.moveToNext()) {
-                                examId = c.getInt(COLUMN_EXAM_ID);
-                                examTerm = c.getString(COLUMN_EXAM_TERM);
-                                examCourseId = c.getString(COLUMN_EXAM_COURSEID);
-                                examDtStart = c.getLong(COLUMN_EXAM_DTSTART);
-                                examDtEnd = c.getLong(COLUMN_EXAM_DTEND);
-                                examLocation = c
-                                        .getString(COLUMN_EXAM_LOCATION);
+                                examId = c.getInt(KusssContentContract.Exam.DB.COL_ID);
+                                examTerm = c.getString(KusssContentContract.Exam.DB.COL_TERM);
+                                examCourseId = c.getString(KusssContentContract.Exam.DB.COL_COURSEID);
+                                examDtStart = c.getLong(KusssContentContract.Exam.DB.COL_DTSTART);
+                                examDtEnd = c.getLong(KusssContentContract.Exam.DB.COL_DTEND);
+                                examLocation = c.getString(KusssContentContract.Exam.DB.COL_LOCATION);
 
                                 Exam exam = examMap.remove(KusssHelper.getExamKey(examCourseId, examTerm, examDtStart));
                                 if (exam != null) {

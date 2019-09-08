@@ -36,10 +36,6 @@ import android.text.TextUtils;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
 import org.voidsink.anewjkuapp.utils.AppUtils;
-import org.voidsink.anewjkuapp.worker.ImportAssessmentWorker;
-import org.voidsink.anewjkuapp.worker.ImportCourseWorker;
-import org.voidsink.anewjkuapp.worker.ImportCurriculaWorker;
-import org.voidsink.anewjkuapp.worker.ImportExamWorker;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -62,15 +58,15 @@ public class KusssHelper {
     }
 
     public static Course createCourse(Cursor c) throws ParseException {
-        return new Course(Term.parseTerm(c.getString(ImportCourseWorker.COLUMN_LVA_TERM)),
-                c.getString(ImportCourseWorker.COLUMN_LVA_COURSEID),
-                c.getString(ImportCourseWorker.COLUMN_LVA_TITLE),
-                c.getInt(ImportCourseWorker.COLUMN_LVA_CURRICULA_ID),
-                c.getString(ImportCourseWorker.COLUMN_LVA_TEACHER),
-                c.getDouble(ImportCourseWorker.COLUMN_LVA_SWS),
-                c.getDouble(ImportCourseWorker.COLUMN_LVA_ECTS),
-                c.getString(ImportCourseWorker.COLUMN_LVA_TYPE),
-                c.getString(ImportCourseWorker.COLUMN_LVA_CODE));
+        return new Course(Term.parseTerm(c.getString(KusssContentContract.Course.DB.COL_TERM)),
+                c.getString(KusssContentContract.Course.DB.COL_COURSEID),
+                c.getString(KusssContentContract.Course.DB.COL_TITLE),
+                c.getInt(KusssContentContract.Course.DB.COL_CURRICULA_ID),
+                c.getString(KusssContentContract.Course.DB.COL_TEACHER),
+                c.getDouble(KusssContentContract.Course.DB.COL_SWS),
+                c.getDouble(KusssContentContract.Course.DB.COL_ECTS),
+                c.getString(KusssContentContract.Course.DB.COL_TYPE),
+                c.getString(KusssContentContract.Course.DB.COL_CODE));
     }
 
     public static ContentValues getLvaContentValues(Course course) {
@@ -95,15 +91,15 @@ public class KusssHelper {
 
     public static Exam createExam(Cursor c) throws ParseException {
         return new Exam(
-                c.getString(ImportExamWorker.COLUMN_EXAM_COURSEID),
-                Term.parseTerm(c.getString(ImportExamWorker.COLUMN_EXAM_TERM)),
-                new Date(c.getLong(ImportExamWorker.COLUMN_EXAM_DTSTART)),
-                new Date(c.getLong(ImportExamWorker.COLUMN_EXAM_DTEND)),
-                c.getString(ImportExamWorker.COLUMN_EXAM_LOCATION),
-                c.getString(ImportExamWorker.COLUMN_EXAM_DESCRIPTION),
-                c.getString(ImportExamWorker.COLUMN_EXAM_INFO),
-                c.getString(ImportExamWorker.COLUMN_EXAM_TITLE),
-                KusssDatabaseHelper.toBool(c.getInt(ImportExamWorker.COLUMN_EXAM_IS_REGISTERED)));
+                c.getString(KusssContentContract.Exam.DB.COL_COURSEID),
+                Term.parseTerm(c.getString(KusssContentContract.Exam.DB.COL_TERM)),
+                new Date(c.getLong(KusssContentContract.Exam.DB.COL_DTSTART)),
+                new Date(c.getLong(KusssContentContract.Exam.DB.COL_DTEND)),
+                c.getString(KusssContentContract.Exam.DB.COL_LOCATION),
+                c.getString(KusssContentContract.Exam.DB.COL_DESCRIPTION),
+                c.getString(KusssContentContract.Exam.DB.COL_INFO),
+                c.getString(KusssContentContract.Exam.DB.COL_TITLE),
+                KusssDatabaseHelper.toBool(c.getInt(KusssContentContract.Exam.DB.COL_IS_REGISTERED)));
     }
 
     public static ContentValues getExamContentValues(Exam exam) {
@@ -126,14 +122,14 @@ public class KusssHelper {
     }
 
     public static Curriculum createCurricula(Cursor c) {
-        return new Curriculum(KusssDatabaseHelper.toBool(c.getInt(ImportCurriculaWorker.COLUMN_CURRICULUM_IS_STD)),
-                c.getString(ImportCurriculaWorker.COLUMN_CURRICULUM_CURRICULUM_ID),
-                c.getString(ImportCurriculaWorker.COLUMN_CURRICULUM_TITLE),
-                KusssDatabaseHelper.toBool(c.getInt(ImportCurriculaWorker.COLUMN_CURRICULUM_STEOP_DONE)),
-                KusssDatabaseHelper.toBool(c.getInt(ImportCurriculaWorker.COLUMN_CURRICULUM_ACTIVE_STATE)),
-                c.getString(ImportCurriculaWorker.COLUMN_CURRICULUM_UNI),
-                new Date(c.getLong(ImportCurriculaWorker.COLUMN_CURRICULUM_DT_START)),
-                !c.isNull(ImportCurriculaWorker.COLUMN_CURRICULUM_DT_END) ? new Date(c.getLong(ImportCurriculaWorker.COLUMN_CURRICULUM_DT_END)) : null);
+        return new Curriculum(KusssDatabaseHelper.toBool(c.getInt(KusssContentContract.Curricula.DB.COL_IS_STD)),
+                c.getString(KusssContentContract.Curricula.DB.COL_CURRICULUM_ID),
+                c.getString(KusssContentContract.Curricula.DB.COL_TITLE),
+                KusssDatabaseHelper.toBool(c.getInt(KusssContentContract.Curricula.DB.COL_STEOP_DONE)),
+                KusssDatabaseHelper.toBool(c.getInt(KusssContentContract.Curricula.DB.COL_ACTIVE_STATE)),
+                c.getString(KusssContentContract.Curricula.DB.COL_UNI),
+                new Date(c.getLong(KusssContentContract.Curricula.DB.COL_DT_START)),
+                !c.isNull(KusssContentContract.Curricula.DB.COL_DT_END) ? new Date(c.getLong(KusssContentContract.Curricula.DB.COL_DT_END)) : null);
     }
 
     public static ContentValues getCurriculumContentValues(Curriculum curriculum) {
@@ -161,20 +157,20 @@ public class KusssHelper {
     }
 
     public static Assessment createAssessment(Cursor c) throws ParseException {
-        String termStr = c.getString(ImportAssessmentWorker.COLUMN_ASSESSMENT_TERM);
+        String termStr = c.getString(KusssContentContract.Assessment.DB.COL_TERM);
 
         return new Assessment(
-                AssessmentType.parseAssessmentType(c.getInt(ImportAssessmentWorker.COLUMN_ASSESSMENT_TYPE)),
-                new Date(c.getLong(ImportAssessmentWorker.COLUMN_ASSESSMENT_DATE)),
-                c.getString(ImportAssessmentWorker.COLUMN_ASSESSMENT_COURSEID),
+                AssessmentType.parseAssessmentType(c.getInt(KusssContentContract.Assessment.DB.COL_TYPE)),
+                new Date(c.getLong(KusssContentContract.Assessment.DB.COL_DATE)),
+                c.getString(KusssContentContract.Assessment.DB.COL_COURSEID),
                 TextUtils.isEmpty(termStr) ? null : Term.parseTerm(termStr),
-                Grade.parseGradeType(c.getInt(ImportAssessmentWorker.COLUMN_ASSESSMENT_GRADE)),
-                c.getInt(ImportAssessmentWorker.COLUMN_ASSESSMENT_CURRICULA_ID),
-                c.getString(ImportAssessmentWorker.COLUMN_ASSESSMENT_TITLE),
-                c.getString(ImportAssessmentWorker.COLUMN_ASSESSMENT_CODE),
-                c.getDouble(ImportAssessmentWorker.COLUMN_ASSESSMENT_ECTS),
-                c.getDouble(ImportAssessmentWorker.COLUMN_ASSESSMENT_SWS),
-                c.getString(ImportAssessmentWorker.COLUMN_ASSESSMENT_LVATYPE));
+                Grade.parseGradeType(c.getInt(KusssContentContract.Assessment.DB.COL_GRADE)),
+                c.getInt(KusssContentContract.Assessment.DB.COL_CURRICULA_ID),
+                c.getString(KusssContentContract.Assessment.DB.COL_TITLE),
+                c.getString(KusssContentContract.Assessment.DB.COL_CODE),
+                c.getDouble(KusssContentContract.Assessment.DB.COL_ECTS),
+                c.getDouble(KusssContentContract.Assessment.DB.COL_SWS),
+                c.getString(KusssContentContract.Assessment.DB.COL_LVATYPE));
     }
 
     public static ContentValues getAssessmentContentValues(Assessment assessment) {
