@@ -68,7 +68,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
-import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
@@ -109,11 +108,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.TimeZone;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 public class AppUtils {
@@ -838,29 +833,6 @@ public class AppUtils {
         }
     }
 
-    public static void triggerSync(Context context, Account account, boolean syncKusss) {
-        try {
-            if (context == null || account == null) {
-                return;
-            }
-
-            if (syncKusss) {
-                Bundle b = new Bundle();
-                // Disable sync backoff and ignore sync preferences. In other
-                // words...perform sync NOW!
-                b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-                b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-                b.putBoolean(Consts.SYNC_SHOW_PROGRESS, true);
-
-                ContentResolver.requestSync(account, // Sync
-                        KusssContentContract.AUTHORITY, // KUSSS Content authority
-                        b); // Extras
-            }
-        } catch (Exception e) {
-            Analytics.sendException(context, e, true);
-        }
-    }
-
     public static String getTimeString(Context c, Date dtStart, Date dtEnd, boolean allDay) {
         int flags = 0;
         String tzString = TimeZone.getDefault().getID();
@@ -922,42 +894,6 @@ public class AppUtils {
             intent.putExtra(SearchManager.QUERY, "Uniteich");
         }
         context.startActivity(intent);
-    }
-
-    @Deprecated
-    public static boolean executeEm(Context context, Callable<?>[] callables, boolean wait) {
-        boolean result;
-
-        ExecutorService es = Executors.newSingleThreadExecutor();
-        try {
-            result = executeEm(es, context, callables, wait);
-        } finally {
-            es.shutdown();
-        }
-        return result;
-    }
-
-    @Deprecated
-    public static boolean executeEm(ExecutorService es, Context context, Callable<?>[] callables, boolean wait) {
-        boolean result = true;
-
-        List<Future<?>> futures = new ArrayList<>();
-
-        for (Callable<?> c : callables) {
-            futures.add(es.submit(c));
-        }
-
-        if (wait) {
-            for (Future f : futures) {
-                try {
-                    f.get();
-                } catch (InterruptedException | ExecutionException e) {
-                    Analytics.sendException(context, e, false);
-                    result = false;
-                }
-            }
-        }
-        return result;
     }
 
     public static int getRandomColor() {
