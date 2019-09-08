@@ -15,8 +15,8 @@ android {
 
     defaultConfig {
         applicationId "org.voidsink.anewjkuapp"
-        versionCode 140069
-        versionName "0.51.6"
+        versionCode 140070
+        versionName "0.51.7"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
 
