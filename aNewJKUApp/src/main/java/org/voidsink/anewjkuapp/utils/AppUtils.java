@@ -59,7 +59,6 @@ import androidx.work.ListenableWorker;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkContinuation;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
@@ -365,7 +364,7 @@ public class AppUtils {
                 importRequest.setInputData(new Data.Builder().putString(Consts.ARG_FILENAME, DEFAULT_POI_FILE_NAME).putBoolean(Consts.ARG_IS_DEFAULT, true).build());
 
                 WorkManager workManager = WorkManager.getInstance(context);
-                workManager.beginWith(importRequest.build()).enqueue();
+                workManager.enqueue(importRequest.build());
             }
             return true;
         } catch (IOException e) {
@@ -782,7 +781,6 @@ public class AppUtils {
                         PeriodicWorkRequest.Builder courseCalendarRequest = setupPeriodicWorkRequest(context, ImportCalendarWorker.class, ARG_WORKER_CAL_HELPER, Consts.ARG_WORKER_CAL_COURSES);
                         workManager.enqueueUniquePeriodicWork(Consts.ARG_WORKER_CAL_COURSES, ExistingPeriodicWorkPolicy.REPLACE, courseCalendarRequest.build());
 
-
                         PeriodicWorkRequest.Builder examCalendarRequest = setupPeriodicWorkRequest(context, ImportCalendarWorker.class, ARG_WORKER_CAL_HELPER, Consts.ARG_WORKER_CAL_EXAM);
                         workManager.enqueueUniquePeriodicWork(Consts.ARG_WORKER_CAL_EXAM, ExistingPeriodicWorkPolicy.REPLACE, examCalendarRequest.build());
                     }
@@ -824,23 +822,12 @@ public class AppUtils {
     public static void triggerSync(Context context, boolean immediately, String... tags) {
         try {
             if (context != null && tags.length > 0) {
-                String uniqueName = "";
-                List<OneTimeWorkRequest> requests = new ArrayList<>();
+                WorkManager workManager = WorkManager.getInstance(context);
                 for (String tag : tags) {
                     OneTimeWorkRequest.Builder request = setupOneTimeWorkRequest(immediately, tag);
                     if (request != null) {
-                        uniqueName = uniqueName + tag;
-                        requests.add(request.build());
+                        workManager.enqueueUniqueWork("ONETIME:" + tag, ExistingWorkPolicy.KEEP, request.build());
                     }
-                }
-
-                if (requests.size() > 0) {
-                    WorkManager workManager = WorkManager.getInstance(context);
-                    WorkContinuation continuation = workManager.beginUniqueWork(uniqueName, ExistingWorkPolicy.REPLACE, requests.get(0));
-                    for (int i = 1; i < requests.size(); i++) {
-                        continuation = continuation.then(requests.get(i));
-                    }
-                    continuation.enqueue();
                 }
             }
         } catch (Exception e) {
