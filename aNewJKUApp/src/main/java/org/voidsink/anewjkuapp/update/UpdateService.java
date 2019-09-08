@@ -55,11 +55,6 @@ public class UpdateService extends IntentService {
                 List<Callable<?>> callables = new ArrayList<>();
 
                 if (intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false) ||
-                        intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS_COURSES, false)) {
-                    Analytics.eventReloadCourses(this);
-                    callables.add(new ImportCourseTask(account, this));
-                }
-                if (intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false) ||
                         intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS_EXAMS, false)) {
                     Analytics.eventReloadExams(this);
                     callables.add(new ImportExamTask(account, this));

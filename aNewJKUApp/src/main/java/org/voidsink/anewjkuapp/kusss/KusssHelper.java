@@ -35,10 +35,10 @@ import android.text.TextUtils;
 
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
-import org.voidsink.anewjkuapp.update.ImportCourseTask;
 import org.voidsink.anewjkuapp.update.ImportExamTask;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.worker.ImportAssessmentWorker;
+import org.voidsink.anewjkuapp.worker.ImportCourseWorker;
 import org.voidsink.anewjkuapp.worker.ImportCurriculaWorker;
 
 import java.text.DateFormat;
@@ -62,15 +62,15 @@ public class KusssHelper {
     }
 
     public static Course createCourse(Cursor c) throws ParseException {
-        return new Course(Term.parseTerm(c.getString(ImportCourseTask.COLUMN_LVA_TERM)),
-                c.getString(ImportCourseTask.COLUMN_LVA_COURSEID),
-                c.getString(ImportCourseTask.COLUMN_LVA_TITLE),
-                c.getInt(ImportCourseTask.COLUMN_LVA_CURRICULA_ID),
-                c.getString(ImportCourseTask.COLUMN_LVA_TEACHER),
-                c.getDouble(ImportCourseTask.COLUMN_LVA_SWS),
-                c.getDouble(ImportCourseTask.COLUMN_LVA_ECTS),
-                c.getString(ImportCourseTask.COLUMN_LVA_TYPE),
-                c.getString(ImportCourseTask.COLUMN_LVA_CODE));
+        return new Course(Term.parseTerm(c.getString(ImportCourseWorker.COLUMN_LVA_TERM)),
+                c.getString(ImportCourseWorker.COLUMN_LVA_COURSEID),
+                c.getString(ImportCourseWorker.COLUMN_LVA_TITLE),
+                c.getInt(ImportCourseWorker.COLUMN_LVA_CURRICULA_ID),
+                c.getString(ImportCourseWorker.COLUMN_LVA_TEACHER),
+                c.getDouble(ImportCourseWorker.COLUMN_LVA_SWS),
+                c.getDouble(ImportCourseWorker.COLUMN_LVA_ECTS),
+                c.getString(ImportCourseWorker.COLUMN_LVA_TYPE),
+                c.getString(ImportCourseWorker.COLUMN_LVA_CODE));
     }
 
     public static ContentValues getLvaContentValues(Course course) {

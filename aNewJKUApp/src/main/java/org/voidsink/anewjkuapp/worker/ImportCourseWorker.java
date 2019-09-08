@@ -1,5 +1,4 @@
 /*
-/*
  *       ____.____  __.____ ___     _____
  *      |    |    |/ _|    |   \   /  _  \ ______ ______
  *      |    |      < |    |   /  /  /_\  \\____ \\____ \
@@ -24,18 +23,20 @@
  *
  */
 
-package org.voidsink.anewjkuapp.update;
+package org.voidsink.anewjkuapp.worker;
 
 import android.accounts.Account;
 import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.SyncResult;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,26 +50,16 @@ import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.utils.AppUtils;
-import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
-public class ImportCourseTask implements Callable<Void> {
+public class ImportCourseWorker extends Worker {
 
-    private static final Logger logger = LoggerFactory.getLogger(ImportCourseTask.class);
+    private static final Logger logger = LoggerFactory.getLogger(ImportCourseWorker.class);
 
-    private ContentProviderClient mProvider;
-    private boolean mReleaseProvider = false;
-    private final Account mAccount;
-    private SyncResult mSyncResult;
-    private final Context mContext;
-    private final ContentResolver mResolver;
-
-    private boolean mShowProgress;
     private SyncNotification mUpdateNotification;
 
     public static final String[] COURSE_PROJECTION = new String[]{
@@ -94,64 +85,62 @@ public class ImportCourseTask implements Callable<Void> {
     public static final int COLUMN_LVA_ECTS = 8;
     public static final int COLUMN_LVA_CODE = 9;
 
-    public ImportCourseTask(Account account, Context context) {
-        this(account, null, null, null, context);
-        this.mProvider = context.getContentResolver()
-                .acquireContentProviderClient(
-                        KusssContentContract.Course.CONTENT_URI);
-        this.mReleaseProvider = true;
-        this.mSyncResult = new SyncResult();
-        this.mShowProgress = true;
+
+    public ImportCourseWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+        super(context, workerParams);
     }
 
-    public ImportCourseTask(Account account, Bundle extras,
-                            ContentProviderClient provider, SyncResult syncResult,
-                            Context context) {
-        this.mAccount = account;
-        this.mProvider = provider;
-        this.mSyncResult = syncResult;
-        this.mResolver = context.getContentResolver();
-        this.mContext = context;
-        this.mShowProgress = (extras != null && extras.getBoolean(Consts.SYNC_SHOW_PROGRESS, false));
-    }
-
-    private void updateNotify(String string) {
-        if (mUpdateNotification != null) {
-            mUpdateNotification.update(string);
-        }
+    @NonNull
+    @Override
+    public Result doWork() {
+        return importCourses();
     }
 
     @Override
-    public Void call() throws Exception {
-        if (mProvider == null) {
-            return null;
+    public void onStopped() {
+        super.onStopped();
+
+        cancelUpdateNotification();
+    }
+
+    private Result importCourses() {
+        Analytics.eventReloadAssessments(getApplicationContext());
+
+        final Account mAccount = AppUtils.getAccount(getApplicationContext());
+        if (mAccount == null) {
+            return Result.success();
         }
 
-        if (mShowProgress) {
-            mUpdateNotification = new SyncNotification(mContext,
-                    R.string.notification_sync_lva);
-            mUpdateNotification.show(mContext.getString(R.string.notification_sync_lva_loading));
+        final ContentResolver mResolver = getApplicationContext().getContentResolver();
+        if (mResolver == null) {
+            return Result.failure();
+        }
+
+        final ContentProviderClient mProvider = mResolver.acquireContentProviderClient(KusssContentContract.Course.CONTENT_URI);
+
+        if (mProvider == null) {
+            return Result.failure();
         }
 
 
         try {
             logger.debug("setup connection");
 
-            updateNotify(mContext.getString(R.string.notification_sync_connect));
+            updateNotification(getApplicationContext().getString(R.string.notification_sync_connect));
 
-            if (KusssHandler.getInstance().isAvailable(mContext,
-                    AppUtils.getAccountAuthToken(mContext, mAccount),
+            if (KusssHandler.getInstance().isAvailable(getApplicationContext(),
+                    AppUtils.getAccountAuthToken(getApplicationContext(), mAccount),
                     AppUtils.getAccountName(mAccount),
-                    AppUtils.getAccountPassword(mContext, mAccount))) {
+                    AppUtils.getAccountPassword(getApplicationContext(), mAccount))) {
 
-                updateNotify(mContext.getString(R.string.notification_sync_lva_loading));
+                updateNotification(getApplicationContext().getString(R.string.notification_sync_lva_loading));
 
                 logger.debug("load lvas");
 
-                List<Term> terms = KusssContentProvider.getTerms(mContext);
-                List<Course> courses = KusssHandler.getInstance().getLvas(mContext, terms);
+                List<Term> terms = KusssContentProvider.getTerms(getApplicationContext());
+                List<Course> courses = KusssHandler.getInstance().getLvas(getApplicationContext(), terms);
                 if (courses == null) {
-                    mSyncResult.stats.numParseExceptions++;
+                    return Result.retry();
                 } else {
                     Map<String, Course> lvaMap = new HashMap<>();
                     for (Course course : courses) {
@@ -164,7 +153,7 @@ public class ImportCourseTask implements Callable<Void> {
 
                     logger.debug("got {} lvas", courses.size());
 
-                    updateNotify(mContext.getString(R.string.notification_sync_lva_updating));
+                    updateNotification(getApplicationContext().getString(R.string.notification_sync_lva_updating));
 
                     ArrayList<ContentProviderOperation> batch = new ArrayList<>();
 
@@ -212,7 +201,6 @@ public class ImportCourseTask implements Callable<Void> {
                                                         Integer.toString(_id))
                                                 .withValues(KusssHelper.getLvaContentValues(course))
                                                 .build());
-                                        mSyncResult.stats.numUpdates++;
                                     } else {
                                         // delete
                                         logger.debug("delete: {}", KusssHelper.getCourseKey(term, courseId));
@@ -233,10 +221,8 @@ public class ImportCourseTask implements Callable<Void> {
                                                                         mAccount.name,
                                                                         mAccount.type))
                                                 .build());
-                                        mSyncResult.stats.numDeletes++;
                                     }
                                 } else {
-                                    mSyncResult.stats.numSkippedEntries++;
                                 }
                             }
 
@@ -254,13 +240,11 @@ public class ImportCourseTask implements Callable<Void> {
                                             .withValues(KusssHelper.getLvaContentValues(course))
                                             .build());
                                     logger.debug("Scheduling insert: {} {}", course.getTerm(), course.getCourseId());
-                                    mSyncResult.stats.numInserts++;
                                 } else {
-                                    mSyncResult.stats.numSkippedEntries++;
                                 }
                             }
 
-                            updateNotify(mContext.getString(R.string.notification_sync_lva_saving));
+                            updateNotification(getApplicationContext().getString(R.string.notification_sync_lva_saving));
 
                             if (batch.size() > 0) {
                                 logger.debug("Applying batch update");
@@ -281,27 +265,37 @@ public class ImportCourseTask implements Callable<Void> {
                         }
                     }
                 }
-                KusssHandler.getInstance().logout(mContext);
+                KusssHandler.getInstance().logout(getApplicationContext());
             } else {
-                mSyncResult.stats.numAuthExceptions++;
+                return Result.retry();
             }
+
+            return Result.success();
         } catch (Exception e) {
-            Analytics.sendException(mContext, e, true);
+            Analytics.sendException(getApplicationContext(), e, true);
             logger.error("import failed", e);
-        }
 
-        if (mUpdateNotification != null) {
-            mUpdateNotification.cancel();
-        }
-
-        if (mReleaseProvider) {
+            return Result.retry();
+        } finally {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 mProvider.close();
             } else {
                 mProvider.release();
             }
+            cancelUpdateNotification();
         }
-
-        return null;
     }
+
+    private void cancelUpdateNotification() {
+        if (mUpdateNotification != null) {
+            mUpdateNotification.cancel();
+        }
+    }
+
+    private void updateNotification(String string) {
+        if (mUpdateNotification != null) {
+            mUpdateNotification.update(string);
+        }
+    }
+
 }

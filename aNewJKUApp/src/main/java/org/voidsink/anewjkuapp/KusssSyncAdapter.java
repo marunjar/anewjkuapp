@@ -38,9 +38,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.notification.KusssNotificationBuilder;
-import org.voidsink.anewjkuapp.update.ImportCourseTask;
 import org.voidsink.anewjkuapp.update.ImportExamTask;
 import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -67,9 +67,8 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
                               ContentProviderClient provider, SyncResult syncResult) {
 
         if (extras != null && (extras.getBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, false) || extras.getBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED))) {
-            AppUtils.syncCurricula(getContext(), true);
+            AppUtils.triggerSync(getContext(), true, Consts.ARG_WORKER_KUSSS_CURRICULA, Consts.ARG_WORKER_KUSSS_COURSES, Consts.ARG_WORKER_KUSSS_ASSESSMENTS);
         }
-
 
         if (account == null || account.name == null) {
             KusssNotificationBuilder.showErrorNotification(getContext(),
@@ -94,8 +93,6 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
         try {
             AppUtils.executeEm(mExecutorService, getContext(),
                     new Callable[]{
-                            new ImportCourseTask(account, extras,
-                                    provider, syncResult, getContext()),
                             new ImportExamTask(account, extras,
                                     provider, syncResult, getContext())},
                     true);
