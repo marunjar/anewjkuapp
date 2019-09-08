@@ -37,7 +37,7 @@ public class Consts {
     public static final String ARG_WORKER_KUSSS_CURRICULA = "UPDATE_KUSSS_CURRICULA";
     public static final String ARG_WORKER_KUSSS_COURSES = "UPDATE_KUSSS_COURSES";
     public static final String ARG_WORKER_KUSSS_ASSESSMENTS = "UPDATE_KUSSS_ASSESSMENTS";
-    public static final String ARG_UPDATE_KUSSS_EXAMS = "UPDATE_KUSSS_EXAMS";
+    public static final String ARG_WORKER_KUSSS_EXAMS = "UPDATE_KUSSS_EXAMS";
     public static final String ARG_TERMS = "TERMS";
 
     public static final String ARG_FRAGMENT_TITLE = "FRAGMENT_TITLE";

@@ -126,7 +126,7 @@ public class ImportAssessmentWorker extends Worker {
             return Result.failure();
         }
 
-        final ContentProviderClient mProvider = mResolver.acquireContentProviderClient(KusssContentContract.Exam.CONTENT_URI);
+        final ContentProviderClient mProvider = mResolver.acquireContentProviderClient(KusssContentContract.Assessment.CONTENT_URI);
 
         if (mProvider == null) {
             return Result.failure();
@@ -137,7 +137,7 @@ public class ImportAssessmentWorker extends Worker {
             mUpdateNotification.show(getApplicationContext().getString(R.string.notification_sync_assessment_loading));
         }
 
-        AssessmentChangedNotification mAssessmentChangeNotification = new AssessmentChangedNotification(getApplicationContext());
+        AssessmentChangedNotification mChangedNotification = new AssessmentChangedNotification(getApplicationContext());
 
         try {
             logger.debug("setup connection");
@@ -225,7 +225,7 @@ public class ImportAssessmentWorker extends Worker {
 
                                         if (!assessmentType.equals(assessment.getAssessmentType())
                                                 || !assessmentGrade.equals(assessment.getGrade())) {
-                                            mAssessmentChangeNotification
+                                            mChangedNotification
                                                     .addUpdate(String.format("%s: %s",
                                                             assessment.getTitle(),
                                                             getApplicationContext().getString(assessment
@@ -261,7 +261,7 @@ public class ImportAssessmentWorker extends Worker {
                                         .build());
                                 logger.debug("Scheduling insert: {} {}", assessment.getTerm(), assessment.getCourseId());
 
-                                mAssessmentChangeNotification.addInsert(String.format(
+                                mChangedNotification.addInsert(String.format(
                                         "%s: %s", assessment.getTitle(), getApplicationContext()
                                                 .getString(assessment.getGrade()
                                                         .getStringResID())));
@@ -304,7 +304,7 @@ public class ImportAssessmentWorker extends Worker {
                 return Result.retry();
             }
 
-            mAssessmentChangeNotification.show();
+            mChangedNotification.show();
             return Result.success();
         } catch (Exception e) {
             Analytics.sendException(getApplicationContext(), e, true);

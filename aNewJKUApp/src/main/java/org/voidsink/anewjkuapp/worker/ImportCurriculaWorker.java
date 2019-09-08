@@ -59,6 +59,7 @@ import java.util.Map;
 public class ImportCurriculaWorker extends Worker {
 
     private static final Logger logger = LoggerFactory.getLogger(ImportCurriculaWorker.class);
+
     private SyncNotification mUpdateNotification;
 
     public static final String[] CURRICULA_PROJECTION = new String[]{

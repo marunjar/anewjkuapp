@@ -142,11 +142,10 @@ public class ImportCalendarWorker extends Worker {
         final long mSyncFromNow = System.currentTimeMillis() / DateUtils.DAY_IN_MILLIS * DateUtils.DAY_IN_MILLIS;
 
         if (getInputData().getBoolean(Consts.SYNC_SHOW_PROGRESS, false)) {
-            mUpdateNotification = new SyncNotification(getApplicationContext(),
-                    R.string.notification_sync_calendar);
+            mUpdateNotification = new SyncNotification(getApplicationContext(), R.string.notification_sync_calendar);
             mUpdateNotification.show(CalendarUtils.getCalendarName(getApplicationContext(), calendarName));
         }
-        CalendarChangedNotification mNotification = new CalendarChangedNotification(getApplicationContext(),
+        CalendarChangedNotification mChangedNotification = new CalendarChangedNotification(getApplicationContext(),
                 CalendarUtils.getCalendarName(getApplicationContext(), calendarName));
 
         try {
@@ -348,7 +347,7 @@ public class ImportCalendarWorker extends Worker {
                                                         .withValues(getContentValuesFromEvent(match))
                                                         .build());
 
-                                                mNotification.addUpdate(getEventString(getApplicationContext(), match));
+                                                mChangedNotification.addUpdate(getEventString(getApplicationContext(), match));
                                             }
                                         } else {
                                             if ((eventDTStart >= mSyncFromNow) &&
@@ -361,7 +360,7 @@ public class ImportCalendarWorker extends Worker {
                                                 logger.debug("Scheduling delete: {}", deleteUri);
                                                 // notify only future changes
                                                 if (eventDTStart > notifyFrom && !eventDeleted) {
-                                                    mNotification
+                                                    mChangedNotification
                                                             .addDelete(AppUtils.getEventString(
                                                                     getApplicationContext(),
                                                                     eventDTStart,
@@ -391,7 +390,7 @@ public class ImportCalendarWorker extends Worker {
                                         (v.getStartDate().getDate().getTime() <= calendar.getTerm().getEnd().getTime()))) {
                                     // notify only future changes
                                     if (v.getStartDate().getDate().getTime() > notifyFrom) {
-                                        mNotification.addInsert(getEventString(getApplicationContext(), v));
+                                        mChangedNotification.addInsert(getEventString(getApplicationContext(), v));
                                     }
 
                                     ContentProviderOperation.Builder builder = ContentProviderOperation
@@ -484,7 +483,7 @@ public class ImportCalendarWorker extends Worker {
                 return Result.retry();
             }
 
-            mNotification.show();
+            mChangedNotification.show();
             return Result.success();
         } catch (Exception e) {
             logger.error("import calendar failed", e);

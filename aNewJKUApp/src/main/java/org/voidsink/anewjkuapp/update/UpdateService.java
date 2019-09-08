@@ -29,9 +29,7 @@ import android.accounts.Account;
 import android.app.IntentService;
 import android.content.Intent;
 
-import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.utils.AppUtils;
-import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,11 +52,6 @@ public class UpdateService extends IntentService {
             if (account != null) {
                 List<Callable<?>> callables = new ArrayList<>();
 
-                if (intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS, false) ||
-                        intent.getBooleanExtra(Consts.ARG_UPDATE_KUSSS_EXAMS, false)) {
-                    Analytics.eventReloadExams(this);
-                    callables.add(new ImportExamTask(account, this));
-                }
                 if (callables.size() > 0) {
                     AppUtils.executeEm(this, callables.toArray(new Callable<?>[0]), false);
                 }

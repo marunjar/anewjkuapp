@@ -23,20 +23,21 @@
  *
  */
 
-package org.voidsink.anewjkuapp.update;
+package org.voidsink.anewjkuapp.worker;
 
 import android.accounts.Account;
 import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.SyncResult;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.text.format.DateUtils;
-import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,22 +62,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
-public class ImportExamTask implements Callable<Void> {
+public class ImportExamWorker extends Worker {
 
-    private static final Logger logger = LoggerFactory.getLogger(ImportExamTask.class);
+    private static final Logger logger = LoggerFactory.getLogger(ImportExamWorker.class);
 
-    private final long mSyncFromNow;
-
-    private ContentProviderClient mProvider;
-    private boolean mReleaseProvider = false;
-    private final Account mAccount;
-    private SyncResult mSyncResult;
-    private final Context mContext;
-    private final ContentResolver mResolver;
-
-    private boolean mShowProgress;
     private SyncNotification mUpdateNotification;
 
     public static final String[] EXAM_PROJECTION = new String[]{
@@ -102,79 +92,76 @@ public class ImportExamTask implements Callable<Void> {
     public static final int COLUMN_EXAM_IS_REGISTERED = 8;
     public static final int COLUMN_EXAM_TITLE = 9;
 
-    public ImportExamTask(Account account, Context context) {
-        this(account, null, null, null, context);
-        this.mProvider = context.getContentResolver()
-                .acquireContentProviderClient(
-                        KusssContentContract.Exam.CONTENT_URI);
-        this.mReleaseProvider = true;
-        this.mSyncResult = new SyncResult();
-        this.mShowProgress = true;
+
+    public ImportExamWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+        super(context, workerParams);
     }
 
-    public ImportExamTask(Account account, Bundle extras,
-                          ContentProviderClient provider, SyncResult syncResult,
-                          Context context) {
-        this.mAccount = account;
-        this.mProvider = provider;
-        this.mSyncResult = syncResult;
-        this.mResolver = context.getContentResolver();
-        this.mContext = context;
-        this.mShowProgress = (extras != null && extras.getBoolean(Consts.SYNC_SHOW_PROGRESS, false));
-        this.mSyncFromNow = System.currentTimeMillis() / DateUtils.DAY_IN_MILLIS * DateUtils.DAY_IN_MILLIS;
-    }
-
-    private void updateNotify(String string) {
-        if (mUpdateNotification != null) {
-            mUpdateNotification.update(string);
-        }
-    }
-
-
-    private String getEventString(Context c, Exam exam) {
-        return AppUtils.getEventString(c, exam.getDtStart().getTime(), exam.getDtEnd().getTime(), exam.getTitle(), false);
+    @NonNull
+    @Override
+    public Result doWork() {
+        return importExams();
     }
 
     @Override
-    public Void call() throws Exception {
-        if (mProvider == null) {
-            return null;
+    public void onStopped() {
+        super.onStopped();
+
+        cancelUpdateNotification();
+    }
+
+    private Result importExams() {
+        Analytics.eventReloadExams(getApplicationContext());
+
+        final Account mAccount = AppUtils.getAccount(getApplicationContext());
+        if (mAccount == null) {
+            return Result.success();
         }
 
-        if (mShowProgress) {
-            mUpdateNotification = new SyncNotification(mContext,
-                    R.string.notification_sync_exam);
-            mUpdateNotification.show(mContext.getString(R.string.notification_sync_exam_loading));
+        final ContentResolver mResolver = getApplicationContext().getContentResolver();
+        if (mResolver == null) {
+            return Result.failure();
         }
-        NewExamNotification mNewExamNotification = new NewExamNotification(mContext);
+
+        final ContentProviderClient mProvider = mResolver.acquireContentProviderClient(KusssContentContract.Exam.CONTENT_URI);
+
+        if (mProvider == null) {
+            return Result.failure();
+        }
+
+        final long mSyncFromNow = System.currentTimeMillis() / DateUtils.DAY_IN_MILLIS * DateUtils.DAY_IN_MILLIS;
+
+        if (getInputData().getBoolean(Consts.SYNC_SHOW_PROGRESS, false)) {
+            mUpdateNotification = new SyncNotification(getApplicationContext(), R.string.notification_sync_exam);
+            mUpdateNotification.show(getApplicationContext().getString(R.string.notification_sync_exam_loading));
+        }
+
+        NewExamNotification mChangedNotification = new NewExamNotification(getApplicationContext());
 
         try {
             logger.debug("setup connection");
 
-            updateNotify(mContext.getString(R.string.notification_sync_connect));
-
-            if (KusssHandler.getInstance().isAvailable(mContext,
-                    AppUtils.getAccountAuthToken(mContext, mAccount),
+            if (KusssHandler.getInstance().isAvailable(getApplicationContext(),
+                    AppUtils.getAccountAuthToken(getApplicationContext(), mAccount),
                     AppUtils.getAccountName(mAccount),
-                    AppUtils.getAccountPassword(mContext, mAccount))) {
-
-                updateNotify(mContext.getString(R.string.notification_sync_exam_loading));
+                    AppUtils.getAccountPassword(getApplicationContext(), mAccount))) {
+                updateNotification(getApplicationContext().getString(R.string.notification_sync_exam_loading));
 
                 List<Exam> exams;
-                if (PreferenceWrapper.getNewExamsByCourseId(mContext)) {
-                    CourseMap courseMap = new CourseMap(mContext);
-                    List<Term> terms = KusssContentProvider.getTerms(mContext);
+                if (PreferenceWrapper.getNewExamsByCourseId(getApplicationContext())) {
+                    CourseMap courseMap = new CourseMap(getApplicationContext());
+                    List<Term> terms = KusssContentProvider.getTerms(getApplicationContext());
 
                     logger.debug("load exams by courseId");
                     exams = KusssHandler.getInstance().getNewExamsByCourseId(
-                            mContext, courseMap.getCourses(), terms);
+                            getApplicationContext(), courseMap.getCourses(), terms);
                 } else {
                     logger.debug("load exams");
                     exams = KusssHandler.getInstance()
-                            .getNewExams(mContext);
+                            .getNewExams(getApplicationContext());
                 }
                 if (exams == null) {
-                    mSyncResult.stats.numParseExceptions++;
+                    return Result.retry();
                 } else {
                     Map<String, Exam> examMap = new HashMap<>();
                     for (Exam exam : exams) {
@@ -186,7 +173,7 @@ public class ImportExamTask implements Callable<Void> {
 
                     logger.debug("got {} exams", exams.size());
 
-                    updateNotify(mContext.getString(R.string.notification_sync_exam_updating));
+                    updateNotification(getApplicationContext().getString(R.string.notification_sync_exam_updating));
 
                     ArrayList<ContentProviderOperation> batch = new ArrayList<>();
 
@@ -229,7 +216,7 @@ public class ImportExamTask implements Callable<Void> {
                                             new Date(examDtStart), exam.getDtStart())
                                             || !new Date(examDtEnd).equals(exam.getDtEnd())
                                             || !examLocation.equals(exam.getLocation())) {
-                                        mNewExamNotification.addUpdate(getEventString(mContext, exam));
+                                        mChangedNotification.addUpdate(getEventString(getApplicationContext(), exam));
                                     }
 
                                     batch.add(ContentProviderOperation
@@ -244,7 +231,6 @@ public class ImportExamTask implements Callable<Void> {
                                                     Integer.toString(examId))
                                             .withValues(KusssHelper.getExamContentValues(exam))
                                             .build());
-                                    mSyncResult.stats.numUpdates++;
                                 } else if (examDtStart >= mSyncFromNow) {
                                     // Entry doesn't exist. Remove only newer
                                     // events from the database.
@@ -263,7 +249,6 @@ public class ImportExamTask implements Callable<Void> {
                                                                     mAccount.name,
                                                                     mAccount.type))
                                             .build());
-                                    mSyncResult.stats.numDeletes++;
                                 }
                             }
                             for (Exam exam : examMap.values()) {
@@ -278,12 +263,10 @@ public class ImportExamTask implements Callable<Void> {
                                         .build());
                                 logger.debug("Scheduling insert: {} {}", exam.getTerm(), exam.getCourseId());
 
-                                mNewExamNotification.addInsert(getEventString(mContext, exam));
-
-                                mSyncResult.stats.numInserts++;
+                                mChangedNotification.addInsert(getEventString(getApplicationContext(), exam));
                             }
 
-                            updateNotify(mContext.getString(R.string.notification_sync_exam_saving));
+                            updateNotification(getApplicationContext().getString(R.string.notification_sync_exam_saving));
 
                             if (batch.size() > 0) {
                                 logger.debug("Applying batch update");
@@ -304,28 +287,43 @@ public class ImportExamTask implements Callable<Void> {
                         }
                     }
                 }
-                KusssHandler.getInstance().logout(mContext);
+
+                KusssHandler.getInstance().logout(getApplicationContext());
             } else {
-                mSyncResult.stats.numAuthExceptions++;
+                return Result.retry();
             }
+
+            mChangedNotification.show();
+            return Result.success();
         } catch (Exception e) {
-            Analytics.sendException(mContext, e, true);
+            Analytics.sendException(getApplicationContext(), e, true);
             logger.error("import failed", e);
-        }
 
-        if (mUpdateNotification != null) {
-            mUpdateNotification.cancel();
-        }
-        mNewExamNotification.show();
-
-        if (mReleaseProvider) {
+            return Result.retry();
+        } finally {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 mProvider.close();
             } else {
                 mProvider.release();
             }
+            cancelUpdateNotification();
         }
-
-        return null;
     }
+
+    private void cancelUpdateNotification() {
+        if (mUpdateNotification != null) {
+            mUpdateNotification.cancel();
+        }
+    }
+
+    private void updateNotification(String string) {
+        if (mUpdateNotification != null) {
+            mUpdateNotification.update(string);
+        }
+    }
+
+    private String getEventString(Context c, Exam exam) {
+        return AppUtils.getEventString(c, exam.getDtStart().getTime(), exam.getDtEnd().getTime(), exam.getTitle(), false);
+    }
+
 }

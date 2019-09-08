@@ -50,6 +50,7 @@ import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.notification.SyncNotification;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -122,6 +123,10 @@ public class ImportCourseWorker extends Worker {
             return Result.failure();
         }
 
+        if (getInputData().getBoolean(Consts.SYNC_SHOW_PROGRESS, false)) {
+            mUpdateNotification = new SyncNotification(getApplicationContext(), R.string.notification_sync_lva);
+            mUpdateNotification.show(getApplicationContext().getString(R.string.notification_sync_lva_loading));
+        }
 
         try {
             logger.debug("setup connection");

@@ -90,7 +90,9 @@ import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.service.SyncAlarmService;
 import org.voidsink.anewjkuapp.worker.ImportAssessmentWorker;
 import org.voidsink.anewjkuapp.worker.ImportCalendarWorker;
+import org.voidsink.anewjkuapp.worker.ImportCourseWorker;
 import org.voidsink.anewjkuapp.worker.ImportCurriculaWorker;
+import org.voidsink.anewjkuapp.worker.ImportExamWorker;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -795,14 +797,29 @@ public class AppUtils {
                 PeriodicWorkRequest.Builder curriculaRequest = setupPeriodicWorkRequest(context, ImportCurriculaWorker.class, Consts.ARG_WORKER_KUSSS_CURRICULA);
                 workManager.enqueueUniquePeriodicWork(Consts.ARG_WORKER_KUSSS_CURRICULA, ExistingPeriodicWorkPolicy.REPLACE, curriculaRequest.build());
             }
+            if (reCreateAlarms || !isWorkScheduled(context, Consts.ARG_WORKER_KUSSS_COURSES)) {
+                workManager.cancelAllWorkByTag(Consts.ARG_WORKER_KUSSS_COURSES);
+
+                PeriodicWorkRequest.Builder courseRequest = setupPeriodicWorkRequest(context, ImportCourseWorker.class, Consts.ARG_WORKER_KUSSS_COURSES);
+                workManager.enqueueUniquePeriodicWork(Consts.ARG_WORKER_KUSSS_COURSES, ExistingPeriodicWorkPolicy.REPLACE, courseRequest.build());
+            }
             if (reCreateAlarms || !isWorkScheduled(context, Consts.ARG_WORKER_KUSSS_ASSESSMENTS)) {
                 workManager.cancelAllWorkByTag(Consts.ARG_WORKER_KUSSS_ASSESSMENTS);
 
                 PeriodicWorkRequest.Builder assessmentRequest = setupPeriodicWorkRequest(context, ImportAssessmentWorker.class, Consts.ARG_WORKER_KUSSS_ASSESSMENTS);
                 workManager.enqueueUniquePeriodicWork(Consts.ARG_WORKER_KUSSS_ASSESSMENTS, ExistingPeriodicWorkPolicy.REPLACE, assessmentRequest.build());
             }
+            if (reCreateAlarms || !isWorkScheduled(context, Consts.ARG_WORKER_KUSSS_EXAMS)) {
+                workManager.cancelAllWorkByTag(Consts.ARG_WORKER_KUSSS_EXAMS);
+
+                PeriodicWorkRequest.Builder assessmentRequest = setupPeriodicWorkRequest(context, ImportExamWorker.class, Consts.ARG_WORKER_KUSSS_EXAMS);
+                workManager.enqueueUniquePeriodicWork(Consts.ARG_WORKER_KUSSS_EXAMS, ExistingPeriodicWorkPolicy.REPLACE, assessmentRequest.build());
+            }
         } else {
             workManager.cancelAllWorkByTag(Consts.ARG_WORKER_KUSSS_CURRICULA);
+            workManager.cancelAllWorkByTag(Consts.ARG_WORKER_KUSSS_COURSES);
+            workManager.cancelAllWorkByTag(Consts.ARG_WORKER_KUSSS_ASSESSMENTS);
+            workManager.cancelAllWorkByTag(Consts.ARG_WORKER_KUSSS_EXAMS);
         }
 
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);

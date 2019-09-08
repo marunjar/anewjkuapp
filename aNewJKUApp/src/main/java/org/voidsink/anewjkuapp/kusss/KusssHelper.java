@@ -35,11 +35,11 @@ import android.text.TextUtils;
 
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
-import org.voidsink.anewjkuapp.update.ImportExamTask;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.worker.ImportAssessmentWorker;
 import org.voidsink.anewjkuapp.worker.ImportCourseWorker;
 import org.voidsink.anewjkuapp.worker.ImportCurriculaWorker;
+import org.voidsink.anewjkuapp.worker.ImportExamWorker;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -95,15 +95,15 @@ public class KusssHelper {
 
     public static Exam createExam(Cursor c) throws ParseException {
         return new Exam(
-                c.getString(ImportExamTask.COLUMN_EXAM_COURSEID),
-                Term.parseTerm(c.getString(ImportExamTask.COLUMN_EXAM_TERM)),
-                new Date(c.getLong(ImportExamTask.COLUMN_EXAM_DTSTART)),
-                new Date(c.getLong(ImportExamTask.COLUMN_EXAM_DTEND)),
-                c.getString(ImportExamTask.COLUMN_EXAM_LOCATION),
-                c.getString(ImportExamTask.COLUMN_EXAM_DESCRIPTION),
-                c.getString(ImportExamTask.COLUMN_EXAM_INFO),
-                c.getString(ImportExamTask.COLUMN_EXAM_TITLE),
-                KusssDatabaseHelper.toBool(c.getInt(ImportExamTask.COLUMN_EXAM_IS_REGISTERED)));
+                c.getString(ImportExamWorker.COLUMN_EXAM_COURSEID),
+                Term.parseTerm(c.getString(ImportExamWorker.COLUMN_EXAM_TERM)),
+                new Date(c.getLong(ImportExamWorker.COLUMN_EXAM_DTSTART)),
+                new Date(c.getLong(ImportExamWorker.COLUMN_EXAM_DTEND)),
+                c.getString(ImportExamWorker.COLUMN_EXAM_LOCATION),
+                c.getString(ImportExamWorker.COLUMN_EXAM_DESCRIPTION),
+                c.getString(ImportExamWorker.COLUMN_EXAM_INFO),
+                c.getString(ImportExamWorker.COLUMN_EXAM_TITLE),
+                KusssDatabaseHelper.toBool(c.getInt(ImportExamWorker.COLUMN_EXAM_IS_REGISTERED)));
     }
 
     public static ContentValues getExamContentValues(Exam exam) {
