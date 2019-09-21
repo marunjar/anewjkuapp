@@ -98,19 +98,19 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
             accountName = mAccount.name;
 
             if (mIntent != null) {
-                mIntent.removeExtra(KusssAuthenticator.ARG_IS_ADDING_NEW_ACCOUNT);
-                mIntent.putExtra(KusssAuthenticator.ARG_ACCOUNT_NAME,
+                mIntent.removeExtra(Consts.ARG_IS_ADDING_NEW_ACCOUNT);
+                mIntent.putExtra(Consts.ARG_ACCOUNT_NAME,
                         mAccount.name);
-                mIntent.putExtra(KusssAuthenticator.ARG_ACCOUNT_TYPE,
+                mIntent.putExtra(Consts.ARG_ACCOUNT_TYPE,
                         mAccount.type);
             }
         } else if (mIntent != null) {
             accountName = getIntent().getStringExtra(
-                    KusssAuthenticator.ARG_ACCOUNT_NAME);
+                    Consts.ARG_ACCOUNT_NAME);
             mIsNewAccount = mIntent.getBooleanExtra(
-                    KusssAuthenticator.ARG_IS_ADDING_NEW_ACCOUNT, false);
-            if (!mIntent.hasExtra(KusssAuthenticator.ARG_ACCOUNT_TYPE)) {
-                mIntent.putExtra(KusssAuthenticator.ARG_ACCOUNT_TYPE,
+                    Consts.ARG_IS_ADDING_NEW_ACCOUNT, false);
+            if (!mIntent.hasExtra(Consts.ARG_ACCOUNT_TYPE)) {
+                mIntent.putExtra(Consts.ARG_ACCOUNT_TYPE,
                         KusssAuthenticator.ACCOUNT_TYPE);
             }
         }
@@ -159,7 +159,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
                 .getText().toString();
 
         final String accountType = getIntent().getStringExtra(
-                KusssAuthenticator.ARG_ACCOUNT_TYPE);
+                Consts.ARG_ACCOUNT_TYPE);
 
         new LoginTask(this, accountType, userName, userPass).execute();
     }

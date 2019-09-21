@@ -117,6 +117,10 @@ public class AppUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(AppUtils.class);
 
+    public AppUtils() {
+        throw new UnsupportedOperationException();
+    }
+
     private static final Comparator<Course> CourseComparator = (lhs, rhs) -> {
         int value = lhs.getTitle().compareTo(rhs.getTitle());
         if (value == 0) {
@@ -359,7 +363,7 @@ public class AppUtils {
             mapFileWriter.close();
 
             // import file
-            OneTimeWorkRequest.Builder importRequest = setupOneTimeWorkRequest(true, Consts.ARG_WORKER_POI);
+            OneTimeWorkRequest.Builder importRequest = setupOneTimeWorkRequest(true, true, Consts.ARG_WORKER_POI);
             if (importRequest != null) {
                 importRequest.setInputData(new Data.Builder().putString(Consts.ARG_FILENAME, DEFAULT_POI_FILE_NAME).putBoolean(Consts.ARG_IS_DEFAULT, true).build());
 
@@ -703,7 +707,8 @@ public class AppUtils {
     private static PeriodicWorkRequest.Builder setupPeriodicWorkRequest(Context context,
                                                                         @NonNull Class<? extends ListenableWorker> workerClass, String... tags) {
         Constraints.Builder constraints = new Constraints.Builder();
-        constraints.setRequiredNetworkType(NetworkType.CONNECTED);
+        constraints.setRequiredNetworkType(getRequiredNetworkTypeByTags(tags));
+        constraints.setRequiresBatteryNotLow(true);
 
         long interval = PreferenceWrapper.getSyncInterval(context);
 
@@ -714,7 +719,7 @@ public class AppUtils {
         for (String tag : tags) {
             request.addTag(tag);
         }
-        request.setInputData(new Data.Builder().putBoolean(Consts.SYNC_SHOW_PROGRESS, true).build());
+        request.setInputData(new Data.Builder().putBoolean(Consts.SYNC_SHOW_PROGRESS, false).build());
 
         return request;
     }
@@ -739,20 +744,29 @@ public class AppUtils {
         }
     }
 
-    private static OneTimeWorkRequest.Builder setupOneTimeWorkRequest(boolean immediately, String tag) {
+    private static NetworkType getRequiredNetworkTypeByTags(String... tags) {
+        for (String tag : tags) {
+            if (!Consts.ARG_WORKER_POI.equals(tag)) {
+                return NetworkType.CONNECTED;
+            }
+        }
+        return NetworkType.NOT_REQUIRED;
+    }
+
+    private static OneTimeWorkRequest.Builder setupOneTimeWorkRequest(boolean immediately, boolean doNotRetry, String tag) {
         Class<? extends ListenableWorker> workerClass = getWorkerClassByTag(tag);
         if (workerClass == null) {
             return null;
         }
 
         Constraints.Builder constraints = new Constraints.Builder();
-        constraints.setRequiredNetworkType(NetworkType.CONNECTED);
+        constraints.setRequiredNetworkType(getRequiredNetworkTypeByTags(tag));
 
         OneTimeWorkRequest.Builder request = new OneTimeWorkRequest.Builder(workerClass);
         request.setInitialDelay(immediately ? 0 : 30, TimeUnit.MINUTES);
         request.setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 10, TimeUnit.MINUTES);
         request.setConstraints(constraints.build());
-        request.setInputData(new Data.Builder().putBoolean(Consts.SYNC_SHOW_PROGRESS, true).build());
+        request.setInputData(new Data.Builder().putBoolean(Consts.SYNC_SHOW_PROGRESS, immediately).putBoolean(ContentResolver.SYNC_EXTRAS_DO_NOT_RETRY, doNotRetry).build());
         request.addTag(tag);
 
         return request;
@@ -820,11 +834,15 @@ public class AppUtils {
     }
 
     public static void triggerSync(Context context, boolean immediately, String... tags) {
+        triggerSync(context, immediately, true, tags);
+    }
+
+    public static void triggerSync(Context context, boolean immediately, boolean doNotRetry, String... tags) {
         try {
             if (context != null && tags.length > 0) {
                 WorkManager workManager = WorkManager.getInstance(context);
                 for (String tag : tags) {
-                    OneTimeWorkRequest.Builder request = setupOneTimeWorkRequest(immediately, tag);
+                    OneTimeWorkRequest.Builder request = setupOneTimeWorkRequest(immediately, doNotRetry, tag);
                     if (request != null) {
                         workManager.enqueueUniqueWork("ONETIME:" + tag, ExistingWorkPolicy.KEEP, request.build());
                     }
@@ -995,4 +1013,19 @@ public class AppUtils {
         }
     }
 
+    public static boolean isManualSync(Bundle extras) {
+        if (extras == null) {
+            return false;
+        }
+
+        return extras.getBoolean(ContentResolver.SYNC_EXTRAS_IGNORE_SETTINGS, false) && extras.getBoolean(ContentResolver.SYNC_EXTRAS_IGNORE_BACKOFF, false);
+    }
+
+    public static boolean doNotRetry(Bundle extras) {
+        if (extras == null) {
+            return false;
+        }
+
+        return extras.getBoolean(ContentResolver.SYNC_EXTRAS_DO_NOT_RETRY, false) || extras.getBoolean(ContentResolver.SYNC_EXTRAS_IGNORE_BACKOFF, false);
+    }
 }

@@ -34,7 +34,6 @@ import android.net.Uri;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
-import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import org.slf4j.Logger;
@@ -42,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.Poi;
 import org.voidsink.anewjkuapp.PoiContentContract;
 import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.base.BaseWorker;
 import org.voidsink.anewjkuapp.notification.PoiNotification;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
 import org.voidsink.anewjkuapp.utils.Consts;
@@ -65,7 +65,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-public class ImportPoiWorker extends Worker {
+public class ImportPoiWorker extends BaseWorker {
 
     private static final Logger logger = LoggerFactory.getLogger(ImportPoiWorker.class);
     private final File mFile;
@@ -91,18 +91,18 @@ public class ImportPoiWorker extends Worker {
 
     private Result importPoi() {
         if (mFile == null || !mFile.exists() || !mFile.canRead()) {
-            return Result.failure();
+            return getFailure();
         }
 
         final ContentResolver mResolver = getApplicationContext().getContentResolver();
         if (mResolver == null) {
-            return Result.failure();
+            return getFailure();
         }
 
         final ContentProviderClient mProvider = mResolver.acquireContentProviderClient(PoiContentContract.CONTENT_URI);
 
         if (mProvider == null) {
-            return Result.failure();
+            return getFailure();
         }
 
         PoiNotification mNotification = new PoiNotification(getApplicationContext());
@@ -199,7 +199,6 @@ public class ImportPoiWorker extends Worker {
                                                     poi.getContentValues(
                                                             poiIsDefault,
                                                             mIsDefault)).build());
-                                    // mSyncResult.stats.numUpdates++;
                                 }
                             } else {
                                 if (poiIsDefault && mIsDefault) {
@@ -217,7 +216,6 @@ public class ImportPoiWorker extends Worker {
                                             // mAccount.name,
                                             // mAccount.type))
                                             .build());
-                                    // mSyncResult.stats.numDeletes++;
                                 }
                             }
                         }
@@ -231,7 +229,6 @@ public class ImportPoiWorker extends Worker {
                                     .withValues(poi.getContentValues(mIsDefault))
                                     .build());
                             logger.debug("Scheduling insert: {}", poi.getName());
-                            // mSyncResult.stats.numInserts++;
                         }
 
                         if (batch.size() > 0) {
@@ -256,12 +253,12 @@ public class ImportPoiWorker extends Worker {
 
             mNotification.show();
 
-            return Result.success();
+            return getSuccess();
         } catch (Exception e) {
             Analytics.sendException(getApplicationContext(), e, true);
             logger.error("import failed", e);
 
-            return Result.retry();
+            return getRetry();
         } finally {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 mProvider.close();

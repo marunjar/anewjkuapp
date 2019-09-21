@@ -28,15 +28,19 @@ package org.voidsink.anewjkuapp;
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
+
+    private static final Logger logger = LoggerFactory.getLogger(KusssSyncAdapter.class);
+
 
     public KusssSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
@@ -49,8 +53,9 @@ public class KusssSyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority,
                               ContentProviderClient provider, SyncResult syncResult) {
-        if (extras != null && (extras.getBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, false) || extras.getBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED))) {
-            AppUtils.triggerSync(getContext(), true, Consts.ARG_WORKER_KUSSS_CURRICULA, Consts.ARG_WORKER_KUSSS_COURSES, Consts.ARG_WORKER_KUSSS_ASSESSMENTS, Consts.ARG_WORKER_KUSSS_EXAMS);
+        if (AppUtils.isManualSync(extras)) {
+            logger.debug("onPerformSync: {}", extras.toString());
+            AppUtils.triggerSync(getContext(), true, AppUtils.doNotRetry(extras), Consts.ARG_WORKER_KUSSS_CURRICULA, Consts.ARG_WORKER_KUSSS_COURSES, Consts.ARG_WORKER_KUSSS_ASSESSMENTS, Consts.ARG_WORKER_KUSSS_EXAMS);
         }
     }
 }

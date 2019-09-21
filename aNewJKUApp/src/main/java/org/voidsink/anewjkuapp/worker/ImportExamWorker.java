@@ -36,7 +36,6 @@ import android.os.Build;
 import android.text.format.DateUtils;
 
 import androidx.annotation.NonNull;
-import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import org.slf4j.Logger;
@@ -46,16 +45,15 @@ import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.base.BaseWorker;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.Exam;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.notification.NewExamNotification;
-import org.voidsink.anewjkuapp.notification.SyncNotification;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.utils.AppUtils;
-import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -63,11 +61,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ImportExamWorker extends Worker {
+public class ImportExamWorker extends BaseWorker {
 
     private static final Logger logger = LoggerFactory.getLogger(ImportExamWorker.class);
-
-    private SyncNotification mUpdateNotification;
 
     public ImportExamWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -79,38 +75,28 @@ public class ImportExamWorker extends Worker {
         return importExams();
     }
 
-    @Override
-    public void onStopped() {
-        super.onStopped();
-
-        cancelUpdateNotification();
-    }
-
     private Result importExams() {
         Analytics.eventReloadExams(getApplicationContext());
 
         final Account mAccount = AppUtils.getAccount(getApplicationContext());
         if (mAccount == null) {
-            return Result.success();
+            return getSuccess();
         }
 
         final ContentResolver mResolver = getApplicationContext().getContentResolver();
         if (mResolver == null) {
-            return Result.failure();
+            return getFailure();
         }
 
         final ContentProviderClient mProvider = mResolver.acquireContentProviderClient(KusssContentContract.Exam.CONTENT_URI);
 
         if (mProvider == null) {
-            return Result.failure();
+            return getFailure();
         }
 
         final long mSyncFromNow = System.currentTimeMillis() / DateUtils.DAY_IN_MILLIS * DateUtils.DAY_IN_MILLIS;
 
-        if (getInputData().getBoolean(Consts.SYNC_SHOW_PROGRESS, false)) {
-            mUpdateNotification = new SyncNotification(getApplicationContext(), R.string.notification_sync_exam);
-            mUpdateNotification.show(getApplicationContext().getString(R.string.notification_sync_exam_loading));
-        }
+        showUpdateNotification(R.string.notification_sync_exam, R.string.notification_sync_exam_loading);
 
         NewExamNotification mChangedNotification = new NewExamNotification(getApplicationContext());
 
@@ -137,7 +123,7 @@ public class ImportExamWorker extends Worker {
                             .getNewExams(getApplicationContext());
                 }
                 if (exams == null) {
-                    return Result.retry();
+                    return getRetry();
                 } else {
                     Map<String, Exam> examMap = new HashMap<>();
                     for (Exam exam : exams) {
@@ -265,16 +251,16 @@ public class ImportExamWorker extends Worker {
 
                 KusssHandler.getInstance().logout(getApplicationContext());
             } else {
-                return Result.retry();
+                return getRetry();
             }
 
             mChangedNotification.show();
-            return Result.success();
+            return getSuccess();
         } catch (Exception e) {
             Analytics.sendException(getApplicationContext(), e, true);
             logger.error("import failed", e);
 
-            return Result.retry();
+            return getRetry();
         } finally {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 mProvider.close();
@@ -282,18 +268,6 @@ public class ImportExamWorker extends Worker {
                 mProvider.release();
             }
             cancelUpdateNotification();
-        }
-    }
-
-    private void cancelUpdateNotification() {
-        if (mUpdateNotification != null) {
-            mUpdateNotification.cancel();
-        }
-    }
-
-    private void updateNotification(String string) {
-        if (mUpdateNotification != null) {
-            mUpdateNotification.update(string);
         }
     }
 

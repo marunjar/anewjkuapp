@@ -53,6 +53,11 @@ public class Consts {
     public static final String ARG_FILENAME = "FILENAME";
     public static final String ARG_IS_DEFAULT = "IS_DEFAULT";
 
+    public static final String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
+    public static final String ARG_AUTH_TYPE = "AUTH_TYPE";
+    public static final String ARG_ACCOUNT_NAME = "ACCOUNT_NAME";
+    public static final String ARG_IS_ADDING_NEW_ACCOUNT = "IS_ADDING_ACCOUNT";
+
     //strings for logging of screens
 
     public static final String SCREEN_CALENDAR = "/calendar";

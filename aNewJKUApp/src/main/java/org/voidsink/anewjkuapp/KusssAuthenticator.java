@@ -63,11 +63,6 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
     // public static final String AUTHTOKEN_TYPE_FULL_ACCESS_LABEL =
     // "Full access to a KUSSS account";
 
-    public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
-    private final static String ARG_AUTH_TYPE = "AUTH_TYPE";
-    public final static String ARG_ACCOUNT_NAME = "ACCOUNT_NAME";
-    public final static String ARG_IS_ADDING_NEW_ACCOUNT = "IS_ADDING_ACCOUNT";
-
     private static final Logger logger = LoggerFactory.getLogger(KusssAuthenticator.class);
 
     private final Context mContext;
@@ -85,9 +80,9 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
             throws NetworkErrorException {
         final Intent intent = new Intent(mContext,
                 KusssAuthenticatorActivity.class);
-        intent.putExtra(ARG_ACCOUNT_TYPE, accountType);
-        intent.putExtra(ARG_AUTH_TYPE, authTokenType);
-        intent.putExtra(ARG_IS_ADDING_NEW_ACCOUNT, true);
+        intent.putExtra(Consts.ARG_ACCOUNT_TYPE, accountType);
+        intent.putExtra(Consts.ARG_AUTH_TYPE, authTokenType);
+        intent.putExtra(Consts.ARG_IS_ADDING_NEW_ACCOUNT, true);
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE,
                 response);
         final Bundle bundle = new Bundle();
@@ -161,8 +156,8 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
                 KusssAuthenticatorActivity.class);
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE,
                 response);
-        intent.putExtra(ARG_ACCOUNT_TYPE, account.type);
-        intent.putExtra(ARG_ACCOUNT_NAME, account.name);
+        intent.putExtra(Consts.ARG_ACCOUNT_TYPE, account.type);
+        intent.putExtra(Consts.ARG_ACCOUNT_NAME, account.name);
         final Bundle bundle = new Bundle();
         bundle.putParcelable(AccountManager.KEY_INTENT, intent);
         return bundle;
@@ -195,9 +190,9 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
 
         final Intent intent = new Intent(mContext,
                 KusssAuthenticatorActivity.class);
-        intent.putExtra(ARG_ACCOUNT_TYPE, account.type);
-        intent.putExtra(ARG_IS_ADDING_NEW_ACCOUNT, false);
-        intent.putExtra(ARG_ACCOUNT_NAME, account.name);
+        intent.putExtra(Consts.ARG_ACCOUNT_TYPE, account.type);
+        intent.putExtra(Consts.ARG_IS_ADDING_NEW_ACCOUNT, false);
+        intent.putExtra(Consts.ARG_ACCOUNT_NAME, account.name);
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE,
                 response);
         final Bundle bundle = new Bundle();

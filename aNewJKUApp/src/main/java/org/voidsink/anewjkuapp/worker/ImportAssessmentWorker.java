@@ -35,7 +35,6 @@ import android.net.Uri;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
-import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import org.slf4j.Logger;
@@ -43,15 +42,14 @@ import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.base.BaseWorker;
 import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.kusss.AssessmentType;
 import org.voidsink.anewjkuapp.kusss.Grade;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.notification.AssessmentChangedNotification;
-import org.voidsink.anewjkuapp.notification.SyncNotification;
 import org.voidsink.anewjkuapp.utils.AppUtils;
-import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -59,11 +57,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ImportAssessmentWorker extends Worker {
+public class ImportAssessmentWorker extends BaseWorker {
 
     private static final Logger logger = LoggerFactory.getLogger(ImportAssessmentWorker.class);
-
-    private SyncNotification mUpdateNotification;
 
     public ImportAssessmentWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -75,36 +71,26 @@ public class ImportAssessmentWorker extends Worker {
         return importAssessments();
     }
 
-    @Override
-    public void onStopped() {
-        super.onStopped();
-
-        cancelUpdateNotification();
-    }
-
     private Result importAssessments() {
         Analytics.eventReloadAssessments(getApplicationContext());
 
         final Account mAccount = AppUtils.getAccount(getApplicationContext());
         if (mAccount == null) {
-            return Result.success();
+            return getSuccess();
         }
 
         final ContentResolver mResolver = getApplicationContext().getContentResolver();
         if (mResolver == null) {
-            return Result.failure();
+            return getFailure();
         }
 
         final ContentProviderClient mProvider = mResolver.acquireContentProviderClient(KusssContentContract.Assessment.CONTENT_URI);
 
         if (mProvider == null) {
-            return Result.failure();
+            return getFailure();
         }
 
-        if (getInputData().getBoolean(Consts.SYNC_SHOW_PROGRESS, false)) {
-            mUpdateNotification = new SyncNotification(getApplicationContext(), R.string.notification_sync_assessment);
-            mUpdateNotification.show(getApplicationContext().getString(R.string.notification_sync_assessment_loading));
-        }
+        showUpdateNotification(R.string.notification_sync_assessment, R.string.notification_sync_assessment_loading);
 
         AssessmentChangedNotification mChangedNotification = new AssessmentChangedNotification(getApplicationContext());
 
@@ -122,7 +108,7 @@ public class ImportAssessmentWorker extends Worker {
                 List<Assessment> assessments = KusssHandler.getInstance()
                         .getAssessments(getApplicationContext());
                 if (assessments == null) {
-                    return Result.retry();
+                    return getRetry();
                 } else {
                     Map<String, Assessment> assessmentMap = new HashMap<>();
                     ArrayList<Assessment> possibleDuplicates = new ArrayList<>();
@@ -270,16 +256,16 @@ public class ImportAssessmentWorker extends Worker {
                 }
                 KusssHandler.getInstance().logout(getApplicationContext());
             } else {
-                return Result.retry();
+                return getRetry();
             }
 
             mChangedNotification.show();
-            return Result.success();
+            return getSuccess();
         } catch (Exception e) {
             Analytics.sendException(getApplicationContext(), e, true);
             logger.error("import failed", e);
 
-            return Result.retry();
+            return getRetry();
         } finally {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 mProvider.close();
@@ -289,17 +275,4 @@ public class ImportAssessmentWorker extends Worker {
             cancelUpdateNotification();
         }
     }
-
-    private void cancelUpdateNotification() {
-        if (mUpdateNotification != null) {
-            mUpdateNotification.cancel();
-        }
-    }
-
-    private void updateNotification(String string) {
-        if (mUpdateNotification != null) {
-            mUpdateNotification.update(string);
-        }
-    }
-
 }

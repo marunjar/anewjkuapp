@@ -43,7 +43,6 @@ import android.text.format.DateUtils;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
@@ -59,12 +58,12 @@ import org.voidsink.anewjkuapp.Poi;
 import org.voidsink.anewjkuapp.PoiContentContract;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.base.BaseWorker;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.KusssCalendar;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.notification.CalendarChangedNotification;
-import org.voidsink.anewjkuapp.notification.SyncNotification;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
@@ -78,12 +77,11 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ImportCalendarWorker extends Worker {
+public class ImportCalendarWorker extends BaseWorker {
 
     private static final Logger logger = LoggerFactory.getLogger(ImportCalendarWorker.class);
 
     private final CalendarBuilder mCalendarBuilder;
-    private SyncNotification mUpdateNotification = null;
     private static final Pattern courseIdTermPattern = Pattern
             .compile(KusssHandler.PATTERN_LVA_NR_SLASH_TERM);
     private static final Pattern lecturerPattern = Pattern
@@ -103,7 +101,7 @@ public class ImportCalendarWorker extends Worker {
         } else if (getTags().contains(Consts.ARG_WORKER_CAL_EXAM)) {
             return importCalendar(CalendarUtils.ARG_CALENDAR_EXAM);
         }
-        return Result.failure();
+        return getFailure();
     }
 
     private Result importCalendar(String calendarName) {
@@ -115,39 +113,37 @@ public class ImportCalendarWorker extends Worker {
 
         final Account mAccount = AppUtils.getAccount(getApplicationContext());
         if (mAccount == null) {
-            return Result.success();
+            return getSuccess();
         }
 
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-            return Result.failure();
+            return getFailure();
         }
 
         final ContentResolver mResolver = getApplicationContext().getContentResolver();
         if (mResolver == null) {
-            return Result.failure();
+            return getFailure();
         }
 
         final ContentProviderClient mProvider = mResolver.acquireContentProviderClient(CalendarContractWrapper.Events.CONTENT_URI());
 
         if (mProvider == null) {
-            return Result.failure();
+            return getFailure();
         }
 
         if ((ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) ||
                 (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED)) {
-            return Result.failure();
+            return getFailure();
         }
 
         if (!CalendarUtils.getSyncCalendar(getApplicationContext(), calendarName)) {
-            return Result.success();
+            return getSuccess();
         }
 
         final long mSyncFromNow = System.currentTimeMillis() / DateUtils.DAY_IN_MILLIS * DateUtils.DAY_IN_MILLIS;
 
-        if (getInputData().getBoolean(Consts.SYNC_SHOW_PROGRESS, false)) {
-            mUpdateNotification = new SyncNotification(getApplicationContext(), R.string.notification_sync_calendar);
-            mUpdateNotification.show(CalendarUtils.getCalendarName(getApplicationContext(), calendarName));
-        }
+        showUpdateNotification(R.string.notification_sync_calendar, CalendarUtils.getCalendarName(getApplicationContext(), calendarName));
+
         CalendarChangedNotification mChangedNotification = new CalendarChangedNotification(getApplicationContext(),
                 CalendarUtils.getCalendarName(getApplicationContext(), calendarName));
 
@@ -172,7 +168,7 @@ public class ImportCalendarWorker extends Worker {
 
                 if (calendarId == null) {
                     logger.warn("calendarId not found");
-                    return Result.failure();
+                    return getFailure();
                 }
 
                 List<KusssCalendar> calendars = KusssHandler.getInstance().getIcal(getApplicationContext(), mCalendarBuilder, calendarName, new Date(mSyncFromNow), false);
@@ -181,7 +177,7 @@ public class ImportCalendarWorker extends Worker {
                     if (calendar.getCalendar() == null) {
                         if (calendar.isMandatory()) {
                             logger.warn("calendar not loaded: {}", calendar.getName());
-                            return Result.retry();
+                            return getRetry();
                         }
                     } else {
                         List<?> events = calendar.getCalendar().getComponents(Component.VEVENT);
@@ -483,16 +479,16 @@ public class ImportCalendarWorker extends Worker {
 
                 KusssHandler.getInstance().logout(getApplicationContext());
             } else {
-                return Result.retry();
+                return getRetry();
             }
 
             mChangedNotification.show();
-            return Result.success();
+            return getSuccess();
         } catch (Exception e) {
             logger.error("import calendar failed", e);
             Analytics.sendException(getApplicationContext(), e, true);
 
-            return Result.retry();
+            return getRetry();
         } finally {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 mProvider.close();
@@ -500,25 +496,6 @@ public class ImportCalendarWorker extends Worker {
                 mProvider.release();
             }
             cancelUpdateNotification();
-        }
-    }
-
-    @Override
-    public void onStopped() {
-        super.onStopped();
-
-        cancelUpdateNotification();
-    }
-
-    private void cancelUpdateNotification() {
-        if (mUpdateNotification != null) {
-            mUpdateNotification.cancel();
-        }
-    }
-
-    private void updateNotification(String string) {
-        if (mUpdateNotification != null) {
-            mUpdateNotification.update(string);
         }
     }
 
