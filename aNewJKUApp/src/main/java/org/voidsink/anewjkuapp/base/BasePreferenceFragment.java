@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -41,36 +41,35 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import org.voidsink.anewjkuapp.R;
-
-import java.util.Calendar;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceDialogFragmentCompat;
 import androidx.preference.PreferenceFragmentCompat;
 
+import org.voidsink.anewjkuapp.R;
+
+import java.util.Calendar;
+
 public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
+
+    private static final String DIALOG_FRAGMENT_TAG = "androidx.preference.PreferenceFragment.DIALOG";
 
     @Override
     public void onDisplayPreferenceDialog(Preference preference) {
-        if (this.getFragmentManager().findFragmentByTag("android.support.v7.preference.PreferenceFragment.DIALOG") == null) {
+        if (getFragmentManager().findFragmentByTag(DIALOG_FRAGMENT_TAG) == null) {
+            DialogFragment f = null;
             if (preference instanceof TimePreference) {
-                TimePickerDialogFragment f = TimePickerDialogFragment.newInstance(preference.getKey());
-
-                f.setTargetFragment(this, 0);
-                f.show(this.getFragmentManager(), "android.support.v7.preference.PreferenceFragment.DIALOG");
-
-                return;
+                f = TimePickerDialogFragment.newInstance(preference.getKey());
+            } else if (preference instanceof TwoLinesListPreference) {
+                f = TwoLinesListPreferenceDialogFragment.newInstance(preference.getKey());
             }
-            if (preference instanceof TwoLinesListPreference) {
-                TwoLinesListPreferenceDialogFragment f = TwoLinesListPreferenceDialogFragment.newInstance(preference.getKey());
 
+            if (f != null) {
                 f.setTargetFragment(this, 0);
-                f.show(this.getFragmentManager(), "android.support.v7.preference.PreferenceFragment.DIALOG");
-
+                f.show(getFragmentManager(), DIALOG_FRAGMENT_TAG);
                 return;
             }
         }
@@ -100,6 +99,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
         @Override
         protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {
             super.onPrepareDialogBuilder(builder);
+
             ListPreference preference = this.getListPreference();
             if (preference.getEntries() != null && preference.getEntryValues() != null) {
                 // adapter
@@ -189,7 +189,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
 
             // Create a new instance of TimePickerDialog and return it
             return new TimePickerDialog(getContext(), resolveDialogTheme(getContext()), this, c.get(Calendar.HOUR_OF_DAY),
-                    c.get(Calendar.MINUTE), DateFormat.is24HourFormat(getActivity()));
+                    c.get(Calendar.MINUTE), DateFormat.is24HourFormat(getContext()));
         }
 
         private int resolveDialogTheme(Context context) {

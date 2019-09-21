@@ -62,6 +62,7 @@ public void *(android.view.View);
 -keep class androidx.preference.** { *; }
 -keep interface androidx.preference.** { *; }
 -keep public class * extends androidx.preference.Preference { *; }
+-keep public class * extends org.voidsink.anewjkuapp.base.BasePreferenceFragment { *; }
 
 #
 -keep class android.view.accessibility.AccessibilityManager { *; }

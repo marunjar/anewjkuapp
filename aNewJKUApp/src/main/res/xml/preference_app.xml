@@ -1,50 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/pref_cat_app_main">
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="pref_key_use_light_theme"
-            android:summary="@string/pref_app_use_light_theme_summary"
-            android:title="@string/pref_app_use_light_theme_title" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_cat_app_map">
-        <ListPreference
-            android:key="pref_key_map_file"
-            android:summary=""
-            android:title="@string/pref_app_map_file_title" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_cat_app_courses">
-        <CheckBoxPreference
-                    android:defaultValue="false"
-                    android:key="pref_key_courses_show_with_assessment_only"
-                    android:summary="@string/pref_courses_show_with_assessment_only_summary"
-                    android:title="@string/pref_courses_show_with_assessment_only_title" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_cat_stats">
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="pref_key_use_lva_bar_chart"
-            android:summary="@string/pref_stats_use_lva_bar_chart_summary"
-            android:title="@string/pref_stats_use_lva_bar_chart_title" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="pref_key_positive_grades_only"
-            android:summary="@string/pref_stats_positive_grades_only_summary"
-            android:title="@string/pref_stats_positive_grades_only_title" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_cat_mensa">
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="pref_key_group_menu_by_day"
-            android:summary="@string/pref_mensa_group_menu_by_day_summary"
-            android:title="@string/pref_mensa_group_menu_by_day_title" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_cat_tracking">
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="pref_key_tracking_errors"
-            android:summary="@string/pref_tracking_errors_summary"
-            android:title="@string/pref_tracking_errors_title" />
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory app:title="@string/pref_cat_app_main">
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:key="pref_key_use_light_theme"
+            app:summary="@string/pref_app_use_light_theme_summary"
+            app:title="@string/pref_app_use_light_theme_title" />
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="@string/pref_cat_app_map">
+        <ListPreference
+            app:key="pref_key_map_file"
+            app:summary=""
+            app:title="@string/pref_app_map_file_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/pref_cat_app_courses">
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="pref_key_courses_show_with_assessment_only"
+            app:summary="@string/pref_courses_show_with_assessment_only_summary"
+            app:title="@string/pref_courses_show_with_assessment_only_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/pref_cat_stats">
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="pref_key_use_lva_bar_chart"
+            app:summary="@string/pref_stats_use_lva_bar_chart_summary"
+            app:title="@string/pref_stats_use_lva_bar_chart_title" />
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="pref_key_positive_grades_only"
+            app:summary="@string/pref_stats_positive_grades_only_summary"
+            app:title="@string/pref_stats_positive_grades_only_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/pref_cat_mensa">
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="pref_key_group_menu_by_day"
+            app:summary="@string/pref_mensa_group_menu_by_day_summary"
+            app:title="@string/pref_mensa_group_menu_by_day_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/pref_cat_tracking">
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:key="pref_key_tracking_errors"
+            app:summary="@string/pref_tracking_errors_summary"
+            app:title="@string/pref_tracking_errors_title" />
+    </PreferenceCategory>
 </PreferenceScreen>

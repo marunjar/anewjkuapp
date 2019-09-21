@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/extension_mensa_pref_cat_visibility" >
-        <CheckBoxPreference
+    <PreferenceCategory android:title="@string/extension_mensa_pref_cat_visibility">
+        <SwitchPreferenceCompat
             android:defaultValue="false"
             android:disableDependentsState="true"
             android:key="pref_key_dashclock_ext_mensa_always"
@@ -19,20 +19,24 @@
             android:key="pref_key_dashclock_ext_mensa_to"
             android:title="@string/extension_mensa_pref_visible_to" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/extension_mensa_pref_cat_mensa" >
-        <CheckBoxPreference
+
+    <PreferenceCategory android:title="@string/extension_mensa_pref_cat_mensa">
+        <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="pref_key_dashclock_ext_mensa_classic"
             android:title="@string/mensa_title_classic" />
-        <CheckBoxPreference
+
+        <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="pref_key_dashclock_ext_mensa_choice"
             android:title="@string/mensa_title_choice" />
-        <CheckBoxPreference
+
+        <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="pref_key_dashclock_ext_mensa_khg"
             android:title="@string/mensa_title_khg" />
-        <CheckBoxPreference
+
+        <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="pref_key_dashclock_ext_mensa_raab"
             android:title="@string/mensa_title_raab" />

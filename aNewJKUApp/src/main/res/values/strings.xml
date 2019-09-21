@@ -124,7 +124,7 @@
     <string name="pref_cat_app_map">Karte</string>
     <string name="pref_app_map_file_title">eigene Kartendatei</string>
     <string name="pref_cat_stats">Statistik</string>
-    <string name="pref_stats_use_lva_bar_chart_summary">Barchart für offene und erledigte LVAs verwenden</string>
+    <string name="pref_stats_use_lva_bar_chart_summary">Balkendiagramm für offene und erledigte LVAs verwenden</string>
     <string name="pref_stats_use_lva_bar_chart_title">Diagramme</string>
     <string name="pref_stats_positive_grades_only_summary">Notendurchschnitt nur mit positiven Noten berechnen</string>
     <string name="pref_stats_positive_grades_only_title">besserer Notendurchschnitt für LVAs</string>

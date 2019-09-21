@@ -34,6 +34,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
@@ -47,9 +48,8 @@ import org.voidsink.anewjkuapp.fragment.SettingsFragment;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
-public class SettingsActivity extends ThemedActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsActivity extends ThemedActivity implements SharedPreferences.OnSharedPreferenceChangeListener, PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
 
-    private static final String ACTION_PREFS_LEGACY = "org.voidsink.anewjkuapp.prefs.LEGACY";
     public static final String ARG_SHOW_FRAGMENT = "show_fragment";
 
     private static final Logger logger = LoggerFactory.getLogger(SettingsActivity.class);
@@ -72,49 +72,24 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-
-        if (intent != null && ACTION_PREFS_LEGACY.equals(intent.getAction())) {
-            Fragment fragment = null;
-            try {
-                String clazzname = intent.getDataString();
-                if (clazzname != null) {
-                    Class<?> clazz = getClassLoader().loadClass(clazzname);
-                    if (PreferenceFragmentCompat.class.isAssignableFrom(clazz)) {
-                        fragment = (Fragment) clazz.getConstructor().newInstance();
-                    }
-                }
-            } catch (Exception e) {
-                fragment = null;
-            }
-            if (fragment != null) {
-                Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(ARG_SHOW_FRAGMENT);
-                if (oldFragment == null || !fragment.getClass().equals(oldFragment.getClass())) {
-                    getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.content_container, fragment, ARG_SHOW_FRAGMENT)
-                            .addToBackStack(fragment.getClass().getCanonicalName())
-                            .commit();
-                }
-            }
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
 
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
 
         PreferenceManager.getDefaultSharedPreferences(this)
                 .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
 
         if (mThemeChanged) {
             logger.info("theme changed");
@@ -152,5 +127,22 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
             default:
                 break;
         }
+    }
+
+    @Override
+    public boolean onPreferenceStartFragment(PreferenceFragmentCompat caller, Preference pref) {
+        // Instantiate the new Fragment
+        final Bundle args = pref.getExtras();
+        final Fragment fragment = getSupportFragmentManager().getFragmentFactory().instantiate(
+                getClassLoader(),
+                pref.getFragment());
+        fragment.setArguments(args);
+        fragment.setTargetFragment(caller, 0);
+        // Replace the existing Fragment with the new Fragment
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.content_container, fragment)
+                .addToBackStack(null)
+                .commit();
+        return true;
     }
 }

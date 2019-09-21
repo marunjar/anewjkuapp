@@ -28,20 +28,15 @@ package org.voidsink.anewjkuapp.fragment;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Environment;
-import android.text.TextUtils;
 
-import androidx.fragment.app.Fragment;
-import androidx.preference.CheckBoxPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
-import androidx.preference.PreferenceScreen;
+import androidx.preference.SwitchPreferenceCompat;
 
 import org.voidsink.anewjkuapp.BuildConfig;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.activity.SettingsActivity;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.base.BasePreferenceFragment;
 import org.voidsink.anewjkuapp.base.TwoLinesListPreference;
@@ -54,55 +49,25 @@ import java.util.ArrayList;
 public class SettingsFragment extends BasePreferenceFragment {
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        addPreferencesFromResource(R.xml.preferences);
-    }
-
-    @Override
     public void onCreatePreferences(Bundle bundle, String s) {
-
+        addPreferencesFromResource(R.xml.preferences);
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        Analytics.sendScreen(getActivity(), Consts.SCREEN_SETTINGS);
-    }
-
-    @Override
-    public boolean onPreferenceTreeClick(Preference preference) {
-        if (preference instanceof PreferenceScreen) {
-            if (preference.getFragment() != null) {
-                try {
-                    Class<?> clazz = getActivity().getClassLoader().loadClass(preference.getFragment());
-                    if (PreferenceFragmentCompat.class.isAssignableFrom(clazz)) {
-                        Fragment pf = (Fragment) clazz.getConstructor().newInstance();
-                        getActivity().getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.content_container, pf, SettingsActivity.ARG_SHOW_FRAGMENT)
-                                .addToBackStack(pf.getClass().getCanonicalName())
-                                .commit();
-                        return true;
-                    }
-                } catch (Exception e) {
-                    Analytics.sendException(getActivity(), e, false);
-                }
-            }
-        }
-        return super.onPreferenceTreeClick(preference);
+        Analytics.sendScreen(getContext(), Consts.SCREEN_SETTINGS);
     }
 
     public static class KusssSettingsFragment extends BasePreferenceFragment {
+
         @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
+        public void onCreatePreferences(Bundle bundle, String s) {
             // Make sure default values are applied. In a real app, you would
             // want this in a shared function that is used to retrieve the
             // SharedPreferences wherever they are needed.
-            PreferenceManager.setDefaultValues(getActivity(),
+            PreferenceManager.setDefaultValues(getContext(),
                     R.xml.preference_kusss, false);
 
             // Load the preferences from an XML resource
@@ -110,57 +75,14 @@ public class SettingsFragment extends BasePreferenceFragment {
         }
 
         @Override
-        public void onCreatePreferences(Bundle bundle, String s) {
-
-        }
-
-        @Override
         public void onStart() {
             super.onStart();
 
-            Analytics.sendScreen(getActivity(), Consts.SCREEN_SETTINGS_KUSSS);
+            Analytics.sendScreen(getContext(), Consts.SCREEN_SETTINGS_KUSSS);
         }
     }
 
     public static class AppSettingsFragment extends BasePreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-
-            // Make sure default values are applied. In a real app, you would
-            // want this in a shared function that is used to retrieve the
-            // SharedPreferences wherever they are needed.
-            PreferenceManager.setDefaultValues(getActivity(),
-                    R.xml.preference_app, false);
-
-            // Load the preferences from an XML resource
-            addPreferencesFromResource(R.xml.preference_app);
-
-            if (BuildConfig.FOSS_ONLY) {
-                // disable tracking if GA is not used
-                CheckBoxPreference trackingErrors = (CheckBoxPreference) findPreference(PreferenceWrapper.PREF_TRACKING_ERRORS);
-                trackingErrors.setEnabled(false);
-                trackingErrors.setChecked(false);
-            }
-
-            ListPreference mapFiles = (ListPreference) findPreference(PreferenceWrapper.PREF_MAP_FILE);
-            if (mapFiles != null) {
-                ArrayList<String> entries = new ArrayList<>();
-                ArrayList<String> entryValues = new ArrayList<>();
-
-                CollectMapFiles(entries, entryValues);
-
-                mapFiles.setEntries(entries.toArray(new CharSequence[0]));
-                mapFiles.setEntryValues(entryValues.toArray(new CharSequence[0]));
-
-                int index = Math
-                        .max(mapFiles.findIndexOfValue(getPreferenceManager().getSharedPreferences().getString(
-                                mapFiles.getKey(), "")), 0);
-                mapFiles.setValueIndex(index);
-
-            }
-
-        }
 
         private void CollectMapFiles(ArrayList<String> entries, ArrayList<String> entryValues) {
             entries.add("no .map file");
@@ -197,69 +119,85 @@ public class SettingsFragment extends BasePreferenceFragment {
 
         @Override
         public void onCreatePreferences(Bundle bundle, String s) {
+            // Make sure default values are applied. In a real app, you would
+            // want this in a shared function that is used to retrieve the
+            // SharedPreferences wherever they are needed.
+            PreferenceManager.setDefaultValues(getContext(),
+                    R.xml.preference_app, false);
 
+            // Load the preferences from an XML resource
+            addPreferencesFromResource(R.xml.preference_app);
+
+            if (BuildConfig.FOSS_ONLY) {
+                // disable tracking if GA is not used
+                SwitchPreferenceCompat trackingErrors = findPreference(PreferenceWrapper.PREF_TRACKING_ERRORS);
+                trackingErrors.setEnabled(false);
+                trackingErrors.setChecked(false);
+            }
+
+            ListPreference mapFiles = findPreference(PreferenceWrapper.PREF_MAP_FILE);
+            if (mapFiles != null) {
+                ArrayList<String> entries = new ArrayList<>();
+                ArrayList<String> entryValues = new ArrayList<>();
+
+                CollectMapFiles(entries, entryValues);
+
+                mapFiles.setEntries(entries.toArray(new CharSequence[0]));
+                mapFiles.setEntryValues(entryValues.toArray(new CharSequence[0]));
+
+                int index = Math
+                        .max(mapFiles.findIndexOfValue(getPreferenceManager().getSharedPreferences().getString(
+                                mapFiles.getKey(), "")), 0);
+                mapFiles.setValueIndex(index);
+
+            }
         }
 
         @Override
         public void onStart() {
             super.onStart();
 
-            Analytics.sendScreen(getActivity(), Consts.SCREEN_SETTINGS_APP);
+            Analytics.sendScreen(getContext(), Consts.SCREEN_SETTINGS_APP);
         }
     }
 
     public static class TimetableSettingsFragment extends BasePreferenceFragment {
-
         @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-
+        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             // Make sure default values are applied. In a real app, you would
             // want this in a shared function that is used to retrieve the
             // SharedPreferences wherever they are needed.
-            PreferenceManager.setDefaultValues(getActivity(),
+            PreferenceManager.setDefaultValues(getContext(),
                     R.xml.preference_timetable, false);
 
             // Load the preferences from an XML resource
             addPreferencesFromResource(R.xml.preference_timetable);
 
-            CalendarUtils.CalendarList calendars = CalendarUtils.getCalendars(getActivity(), true);
+            CalendarUtils.CalendarList calendars = CalendarUtils.getCalendars(getContext(), true);
 
-            TwoLinesListPreference calendarLva = (TwoLinesListPreference) findPreference(PreferenceWrapper.PREF_EXTENDED_CALENDAR_LVA);
-            setEntries(calendars, calendarLva);
-            updateTextPrefSummary(calendarLva, null, R.string.pref_kusss_calendar_extended_summary);
-            calendarLva.setOnPreferenceChangeListener((preference, newValue) -> {
-                updateTextPrefSummary((ListPreference) preference, newValue.toString(), R.string.pref_kusss_calendar_extended_summary);
-                return true;
-            });
+            TwoLinesListPreference calendarLva = findPreference(PreferenceWrapper.PREF_EXTENDED_CALENDAR_LVA);
+            if (calendarLva != null) {
+                calendarLva.setSummaryProvider(createCalendarSummaryProvider(R.string.pref_kusss_calendar_extended_summary));
+                setEntries(calendars, calendarLva);
+            }
 
-            TwoLinesListPreference calendarExam = (TwoLinesListPreference) findPreference(PreferenceWrapper.PREF_EXTENDED_CALENDAR_EXAM);
-            setEntries(calendars, calendarExam);
-            updateTextPrefSummary(calendarExam, null, R.string.pref_kusss_calendar_extended_summary);
-            calendarExam.setOnPreferenceChangeListener((preference, newValue) -> {
-                updateTextPrefSummary((ListPreference) preference, newValue.toString(), R.string.pref_kusss_calendar_extended_summary);
-                return true;
-            });
+            TwoLinesListPreference calendarExam = findPreference(PreferenceWrapper.PREF_EXTENDED_CALENDAR_EXAM);
+            if (calendarExam != null) {
+                calendarExam.setSummaryProvider(createCalendarSummaryProvider(R.string.pref_kusss_calendar_extended_summary));
+                setEntries(calendars, calendarExam);
+            }
         }
 
-        @Override
-        public void onCreatePreferences(Bundle bundle, String s) {
-
-        }
-
-        private void updateTextPrefSummary(ListPreference preference, String value, int defaultSummaryResId) {
-            if (preference != null) {
-                if (TextUtils.isEmpty(value)) {
-                    value = preference.getValue();
-                }
-
+        private Preference.SummaryProvider<ListPreference> createCalendarSummaryProvider(int defaultSummaryResId) {
+            return preference -> {
+                String value = preference.getValue();
                 int index = preference.findIndexOfValue(value);
                 if (index >= 0) {
-                    preference.setSummary(preference.getEntries()[index]);
+                    return preference.getEntries()[index];
                 } else {
-                    preference.setSummary(defaultSummaryResId);
+                    return getContext().getString(defaultSummaryResId);
                 }
-            }
+            };
         }
 
         private void setEntries(CalendarUtils.CalendarList calendars, TwoLinesListPreference preference) {
@@ -272,7 +210,7 @@ public class SettingsFragment extends BasePreferenceFragment {
         public void onStart() {
             super.onStart();
 
-            Analytics.sendScreen(getActivity(), Consts.SCREEN_SETTINGS_TIMETABLE);
+            Analytics.sendScreen(getContext(), Consts.SCREEN_SETTINGS_TIMETABLE);
         }
     }
 }
