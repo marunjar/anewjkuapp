@@ -50,9 +50,9 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -61,56 +61,49 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+
         <activity
             android:name="org.voidsink.anewjkuapp.activity.SettingsActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".activity.MainActivity"
+            android:parentActivityName="org.voidsink.anewjkuapp.activity.MainActivity"
+            android:permission="android.permission.MANAGE_ACCOUNTS"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="org.voidsink.anewjkuapp.activity.SyncSettingsActivity"
+            android:launchMode="singleTop"
             android:permission="android.permission.MANAGE_ACCOUNTS"
             android:screenOrientation="portrait">
 
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.voidsink.anewjkuapp.activity.MainActivity" />
-
-            <!-- Call from preference screen -->
+            <!-- Call from sync screen -->
             <intent-filter>
                 <action android:name="org.voidsink.anewjkuapp.prefs.MAIN" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="org.voidsink.anewjkuapp.activity.AboutActivity"
-            android:parentActivityName=".activity.MainActivity"
-            android:screenOrientation="portrait">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.voidsink.anewjkuapp.activity.MainActivity" />
-        </activity>
+            android:parentActivityName="org.voidsink.anewjkuapp.activity.MainActivity"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name="org.voidsink.anewjkuapp.activity.KusssAuthenticatorActivity"
-            android:parentActivityName=".activity.MainActivity"
+            android:parentActivityName="org.voidsink.anewjkuapp.activity.MainActivity"
             android:permission="android.permission.MANAGE_ACCOUNTS"
             android:screenOrientation="portrait">
 
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.voidsink.anewjkuapp.activity.MainActivity" />
-
-            <!-- Call from preference screen -->
             <intent-filter>
                 <action android:name="org.voidsink.anewjkuapp.prefs.LOGIN" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="org.voidsink.anewjkuapp.dashclock.MensaDashclockSettings"
             android:exported="true"
-            android:label="@string/extension_mensa_title" />
+            android:label="@string/extension_mensa_title"
+            android:screenOrientation="portrait" />
 
         <service
             android:name="org.voidsink.anewjkuapp.service.KusssAuthenticatorService"
@@ -176,10 +169,12 @@
             android:exported="false"
             android:label="@string/kusss_provider_name"
             android:syncable="true" />
+
         <provider
             android:name="org.voidsink.anewjkuapp.provider.PoiContentProvider"
             android:authorities="@string/config_poi_provider"
             android:exported="false" />
+
         <provider
             android:name="androidx.work.impl.WorkManagerInitializer"
             android:authorities="${applicationId}.workmanager-init"
@@ -191,5 +186,4 @@
             </intent-filter>
         </receiver>
     </application>
-
 </manifest>
