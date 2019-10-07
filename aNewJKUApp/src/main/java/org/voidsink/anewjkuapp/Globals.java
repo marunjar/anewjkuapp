@@ -31,6 +31,8 @@ import android.webkit.WebView;
 import androidx.annotation.NonNull;
 import androidx.work.Configuration;
 
+import com.jakewharton.threetenabp.AndroidThreeTen;
+
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.MapTimeZoneCache;
 
@@ -56,6 +58,8 @@ public class Globals extends Application implements Configuration.Provider {
         System.setProperty("net.fortuna.ical4j.timezone.cache.impl", MapTimeZoneCache.class.getName());
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
 //        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
+
+        AndroidThreeTen.init(this);
 
         try {
             KusssHandler.getInstance().setUserAgent(new WebView(this).getSettings().getUserAgentString());
