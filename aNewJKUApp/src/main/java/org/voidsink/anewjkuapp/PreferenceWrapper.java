@@ -32,6 +32,7 @@ import android.content.PeriodicSync;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.preference.PreferenceManager;
@@ -65,6 +66,9 @@ public final class PreferenceWrapper {
 
     public static final String PREF_USE_LIGHT_THEME = "pref_key_use_light_theme";
     private static final boolean PREF_USE_LIGHT_THEME_DEFAULT = true;
+
+    public static final String PREF_OVERRIDE_THEME = "pref_key_override_theme";
+    public static final boolean PREF_OVERRIDE_THEME_DEFAULT = false;
 
     public static final String PREF_MAP_FILE = "pref_key_map_file";
     private static final String PREF_MAP_FILE_DEFAULT = "";
@@ -215,9 +219,19 @@ public final class PreferenceWrapper {
     public static boolean getUseLightDesign(Context context) {
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(context);
-        try {
-            return sp.getBoolean(PREF_USE_LIGHT_THEME,
-                    PREF_USE_LIGHT_THEME_DEFAULT);
+
+        Configuration configuration = context.getResources().getConfiguration();
+        int lightMode = configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK;
+
+        try { // return override-setting if the system doesn't define a dark mode
+            if (sp.getBoolean(PREF_OVERRIDE_THEME,
+                    PREF_OVERRIDE_THEME_DEFAULT)
+                || lightMode == Configuration.UI_MODE_NIGHT_UNDEFINED) {
+                return sp.getBoolean(PREF_USE_LIGHT_THEME,
+                        PREF_USE_LIGHT_THEME_DEFAULT);
+            } else { // return true if dark mode is set to no
+                return lightMode == Configuration.UI_MODE_NIGHT_NO;
+            }
         } catch (Exception e) {
             logger.error("Failure", e);
             return PREF_USE_LIGHT_THEME_DEFAULT;

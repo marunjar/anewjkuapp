@@ -117,6 +117,7 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
                 PreferenceWrapper.applySyncInterval(this);
                 break;
             case PreferenceWrapper.PREF_USE_LIGHT_THEME:
+            case PreferenceWrapper.PREF_OVERRIDE_THEME:
                 mThemeChanged = true;
                 break;
             case PreferenceWrapper.PREF_TRACKING_ERRORS:

@@ -67,6 +67,8 @@
     <string name="notification_sync_assessment">Synchronizing grades</string>
     <string name="notification_sync_lva">Synchronizing courses</string>
     <string name="pref_app_map_file_title">Own map file</string>
+    <string name="pref_app_override_theme_summary">From Android10, the system decides the theme. Ignore and override?</string>
+    <string name="pref_app_override_theme_title">Override system theme</string>
     <string name="pref_app_use_light_theme_summary">Changing this setting restats the app on leaving this screen</string>
     <string name="pref_app_use_light_theme_title">Use light design</string>
     <string name="pref_cat_app_main">App</string>
