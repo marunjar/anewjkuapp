@@ -7,7 +7,6 @@
         <item name="preferenceTheme">@style/PreferenceTheme</item>
 
         <item name="cardToolbarTheme">@style/cardToolbar</item>
-        <item name="cardBackgroundColor">@color/cardview_dark_background</item>
 
         <item name="dialogTheme">@style/DialogStyle</item>
         <item name="alertDialogTheme">@style/DialogStyle.Alert</item>
@@ -25,7 +24,6 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="preferenceTheme">@style/PreferenceTheme</item>
         <item name="cardToolbarTheme">@style/cardToolbar.Light</item>
-        <item name="cardBackgroundColor">@color/cardview_light_background</item>
 
         <item name="dialogTheme">@style/DialogStyle.Light</item>
         <item name="alertDialogTheme">@style/DialogStyle.Alert.Light</item>
