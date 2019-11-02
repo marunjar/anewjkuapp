@@ -25,6 +25,7 @@
 
 package org.voidsink.anewjkuapp.analytics;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
@@ -53,7 +54,7 @@ public class AnalyticsFlavor implements IAnalytics {
     }
 
     @Override
-    public void sendScreen(Context c, String screenName) {
+    public void sendScreen(Activity activity, String screenName) {
         logger.debug("screen: {}", screenName);
     }
 

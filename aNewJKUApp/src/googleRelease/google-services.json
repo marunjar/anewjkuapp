@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "742511820971",
+    "firebase_url": "https://anewjkuapp.firebaseio.com",
+    "project_id": "anewjkuapp",
+    "storage_bucket": "anewjkuapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:742511820971:android:06a0c06056ecdd116ab7ee",
+        "android_client_info": {
+          "package_name": "org.voidsink.anewjkuapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "742511820971-trqvf40aiguveacv4vm54rqnf7p4oaep.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDml30NCWrNszJbRthAB_OeMzvU2le_jes"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "742511820971-trqvf40aiguveacv4vm54rqnf7p4oaep.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }  ],
+  "configuration_version": "1"
+}

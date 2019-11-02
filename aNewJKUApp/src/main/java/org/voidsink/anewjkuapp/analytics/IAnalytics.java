@@ -25,6 +25,7 @@
 
 package org.voidsink.anewjkuapp.analytics;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
@@ -38,7 +39,7 @@ interface IAnalytics {
 
     void sendException(Context c, Exception e, boolean fatal, String additionalData);
 
-    void sendScreen(Context c, String screenName);
+    void sendScreen(Activity activity, String screenName);
 
     void sendButtonEvent(String label);
 
