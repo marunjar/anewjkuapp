@@ -2,13 +2,16 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory app:title="@string/pref_cat_app_main">
         <SwitchPreferenceCompat
-            app:defaultValue="false"
+            app:defaultValue="@bool/pref_default_override_theme"
+            app:isPreferenceVisible="@bool/pref_visible_override_theme"
             app:key="pref_key_override_theme"
             app:summary="@string/pref_app_override_theme_summary"
             app:title="@string/pref_app_override_theme_title" />
 
         <SwitchPreferenceCompat
             app:defaultValue="true"
+            app:dependency="pref_key_override_theme"
+            app:disableDependentsState="false"
             app:key="pref_key_use_light_theme"
             app:summary="@string/pref_app_use_light_theme_summary"
             app:title="@string/pref_app_use_light_theme_title" />

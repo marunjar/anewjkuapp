@@ -220,13 +220,14 @@ public final class PreferenceWrapper {
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(context);
 
-        Configuration configuration = context.getResources().getConfiguration();
-        int lightMode = configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        try {
+            Configuration configuration = context.getResources().getConfiguration();
+            int lightMode = configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK;
 
-        try { // return override-setting if the system doesn't define a dark mode
+            // return override-setting if the system doesn't define a dark mode
             if (sp.getBoolean(PREF_OVERRIDE_THEME,
                     PREF_OVERRIDE_THEME_DEFAULT)
-                || lightMode == Configuration.UI_MODE_NIGHT_UNDEFINED) {
+                    || lightMode == Configuration.UI_MODE_NIGHT_UNDEFINED) {
                 return sp.getBoolean(PREF_USE_LIGHT_THEME,
                         PREF_USE_LIGHT_THEME_DEFAULT);
             } else { // return true if dark mode is set to no
