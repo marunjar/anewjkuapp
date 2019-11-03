@@ -1,6 +1,10 @@
 apply plugin: 'com.android.application'
 apply plugin: "net.ltgt.errorprone"
-
+if (getGradle().getStartParameter().getTaskRequests().toString().contains("Google")) {
+    apply plugin: 'io.fabric'
+} else {
+    logger.warn('io.fabric not applied')
+}
 android {
     signingConfigs {
     }

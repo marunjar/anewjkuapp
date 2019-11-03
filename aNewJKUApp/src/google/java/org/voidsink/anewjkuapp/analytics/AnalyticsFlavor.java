@@ -46,6 +46,7 @@ import org.voidsink.anewjkuapp.BuildConfig;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 
 import io.fabric.sdk.android.Fabric;
+import io.fabric.sdk.android.services.common.Crash;
 
 public class AnalyticsFlavor implements IAnalytics {
 
@@ -85,6 +86,7 @@ public class AnalyticsFlavor implements IAnalytics {
     public void sendException(Context c, Exception e, boolean fatal, String additionalData) {
         try {
             if (e != null) {
+                Crashlytics.setBool("fatal", fatal);
                 if (!TextUtils.isEmpty(additionalData)) {
                     Crashlytics.log(additionalData.substring(0, Math.min(additionalData.length(), 4096)));
                 }
