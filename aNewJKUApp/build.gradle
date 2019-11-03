@@ -103,7 +103,7 @@ android {
 dependencies {
     errorproneJavac "com.google.errorprone:error_prone_core:${rootProject.ext.errorProneVersion}"
     implementation 'net.sourceforge.streamsupport:streamsupport:1.7.1'
-    implementation 'com.jakewharton.threetenabp:threetenabp:1.0.5'
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.2.1'
     implementation "androidx.preference:preference:1.1.0"
     implementation "com.google.android.material:material:1.0.0"
     implementation "androidx.cardview:cardview:1.0.0"
@@ -119,9 +119,9 @@ dependencies {
     implementation 'org.mapsforge:mapsforge-map-android:0.12.0'
     implementation 'pub.devrel:easypermissions:3.0.0'
     implementation 'org.jsoup:jsoup:1.12.1'
-    implementation 'org.mnode.ical4j:ical4j:3.0.9'
+    implementation 'org.mnode.ical4j:ical4j:3.0.11'
     implementation 'org.apache.commons:commons-lang3:3.9'
-    implementation 'org.slf4j:slf4j-android:1.7.28'
+    implementation 'org.slf4j:slf4j-android:1.7.29'
     implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
     implementation 'de.cketti.library.changelog:ckchangelog:1.2.2'
     implementation project(':sectionedRecyclerAdapter')
