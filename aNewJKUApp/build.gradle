@@ -128,8 +128,8 @@ configurations.all {
     exclude module: 'commons-logging'
 }
 
-if (getGradle().getStartParameter().getTaskRequests().toString().contains("assembleGoogle")) {
+if (getGradle().getStartParameter().getTaskRequests().toString().contains("Google")) {
     apply plugin: 'com.google.gms.google-services'
 } else {
-    logger.quiet('com.google.gms.google-services not applied')
+    logger.warn('com.google.gms.google-services not applied')
 }
