@@ -129,7 +129,7 @@ public class BaseFragment extends Fragment implements StackedFragment {
 
         final String screenName = getScreenName();
         if (screenName != null && !screenName.isEmpty()) {
-            Analytics.sendScreen(getContext(), screenName);
+            Analytics.sendScreen(getActivity(), screenName);
         }
 
         if (mPendingIntent != null) {

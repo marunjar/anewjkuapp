@@ -57,7 +57,7 @@ public class SettingsFragment extends BasePreferenceFragment {
     public void onStart() {
         super.onStart();
 
-        Analytics.sendScreen(getContext(), Consts.SCREEN_SETTINGS);
+        Analytics.sendScreen(getActivity(), Consts.SCREEN_SETTINGS);
     }
 
     public static class KusssSettingsFragment extends BasePreferenceFragment {
@@ -78,7 +78,7 @@ public class SettingsFragment extends BasePreferenceFragment {
         public void onStart() {
             super.onStart();
 
-            Analytics.sendScreen(getContext(), Consts.SCREEN_SETTINGS_KUSSS);
+            Analytics.sendScreen(getActivity(), Consts.SCREEN_SETTINGS_KUSSS);
         }
     }
 
@@ -157,7 +157,7 @@ public class SettingsFragment extends BasePreferenceFragment {
         public void onStart() {
             super.onStart();
 
-            Analytics.sendScreen(getContext(), Consts.SCREEN_SETTINGS_APP);
+            Analytics.sendScreen(getActivity(), Consts.SCREEN_SETTINGS_APP);
         }
     }
 
@@ -210,7 +210,7 @@ public class SettingsFragment extends BasePreferenceFragment {
         public void onStart() {
             super.onStart();
 
-            Analytics.sendScreen(getContext(), Consts.SCREEN_SETTINGS_TIMETABLE);
+            Analytics.sendScreen(getActivity(), Consts.SCREEN_SETTINGS_TIMETABLE);
         }
     }
 }

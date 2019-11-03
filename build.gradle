@@ -4,17 +4,22 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven {
+            url 'https://maven.fabric.io/public'
+        }
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.1'
+        classpath 'com.google.gms:google-services:4.3.2'
+        classpath 'io.fabric.tools:gradle:1.31.2'
     }
-	
-	configurations.all {
-		resolutionStrategy {
-			force 'net.sf.proguard:proguard-gradle:6.2.0' // backporting code that uses the Java 8 stream API needs at least proguard 6.1.0
-		}
-	}
+
+    configurations.all {
+        resolutionStrategy {
+            force 'net.sf.proguard:proguard-gradle:6.2.0' // backporting code that uses the Java 8 stream API needs at least proguard 6.1.0
+        }
+    }
 }
 
 plugins {
@@ -33,5 +38,8 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven {
+            url 'https://maven.fabric.io/public'
+        }
     }
 }

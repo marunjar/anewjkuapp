@@ -25,115 +25,42 @@
 
 package org.voidsink.anewjkuapp.analytics;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.graphics.Point;
+import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.Display;
-import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.analytics.ExceptionReporter;
-import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.StandardExceptionParser;
-import com.google.android.gms.analytics.Tracker;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.security.ProviderInstaller;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.BuildConfig;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
-import org.voidsink.anewjkuapp.utils.Consts;
 
-import java.util.HashMap;
+import io.fabric.sdk.android.Fabric;
+import io.fabric.sdk.android.services.common.Crash;
 
 public class AnalyticsFlavor implements IAnalytics {
 
     private static final Logger logger = LoggerFactory.getLogger(AnalyticsFlavor.class);
 
+    private FirebaseAnalytics mAnalytics = null;
+
     private Application mApp = null;
     private PlayServiceStatus mPlayServiceStatus = PlayServiceStatus.PS_NOT_AVAILABLE;
-
-    public enum TrackerName {
-        APP_TRACKER
-    }
-
-    private static final int GA_DIM_EXCEPTION_NAME = 1;
-    private static final int GA_DIM_ADDITIONAL_DATA = 2;
-    private static final int GA_DIM_EXCEPTION_MESSAGE = 3;
-
-    // private static final int GA_METRIC_SYNC_INTERVAL = 1;
-    // private static final int GA_METRIC_LOAD_EXAM_BY_COURSEID = 2;
-    // private static final int GA_METRIC_USE_LIGHT_THEME = 3;
-    // private static final int GA_METRIC_USE_BARCHART_FOR_COURSES = 4;
-
-    private static final String GA_EVENT_CATEGORY_UI = "ui_action";
-
-    // private static final String GA_EVENT_CATEGORY_SERVICE = "service_action";
-
-    private final HashMap<TrackerName, Tracker> mTrackers = new HashMap<>();
-
-    private synchronized Tracker getTracker(TrackerName trackerId) {
-        if (!mTrackers.containsKey(trackerId)) {
-
-            GoogleAnalytics analytics = GoogleAnalytics.getInstance(mApp);
-            switch (trackerId) {
-                case APP_TRACKER:
-                    Tracker t = analytics.newTracker(Consts.PROPERTY_ID);
-                    mTrackers.put(trackerId, t);
-
-                    Thread.UncaughtExceptionHandler myHandler = new ExceptionReporter(t,
-                            Thread.getDefaultUncaughtExceptionHandler(), mApp);
-                    // Make myHandler the new default uncaught exception handler.
-                    Thread.setDefaultUncaughtExceptionHandler(myHandler);
-
-                    // disable auto activity tracking
-                    t.enableAutoActivityTracking(false);
-                    t.enableExceptionReporting(true);
-
-                    // try to initialize screen size
-                    try {
-                        WindowManager wm = (WindowManager) mApp.getSystemService(Context.WINDOW_SERVICE);
-                        Display display = wm.getDefaultDisplay();
-
-                        Point size = new Point();
-                        display.getSize(size);
-
-                        t.setScreenResolution(size.x, size.y);
-                    } catch (Exception e) {
-                        logger.error("get sceen size", e);
-                    }
-
-                    break;
-            }
-        }
-        return mTrackers.get(trackerId);
-    }
-
-    private Tracker getAppTracker() {
-        return getTracker(TrackerName.APP_TRACKER);
-    }
 
     @Override
     public void init(@NonNull Application app) {
         if (mApp == null) {
             mApp = app;
-
-            final GoogleAnalytics analytics = GoogleAnalytics.getInstance(mApp);
-            if (BuildConfig.DEBUG) {
-                analytics.setDryRun(true);
-                analytics.setAppOptOut(true);
-                logger.info("debug enabled");
-            } else {
-                analytics.enableAutoActivityReports(mApp);
-                analytics.setAppOptOut(!PreferenceWrapper.trackingErrors(mApp));
-                logger.info("debug disabled");
-            }
 
             try {
                 ProviderInstaller.installIfNeeded(mApp);
@@ -145,29 +72,25 @@ public class AnalyticsFlavor implements IAnalytics {
             } catch (GooglePlayServicesNotAvailableException e) {
                 mPlayServiceStatus = PlayServiceStatus.PS_NOT_AVAILABLE;
             }
+
+            mAnalytics = FirebaseAnalytics.getInstance(app);
+            if (BuildConfig.DEBUG) {
+                mAnalytics.resetAnalyticsData();
+            }
+
+            setEnabled(PreferenceWrapper.trackingErrors(mApp));
         }
     }
 
     @Override
     public void sendException(Context c, Exception e, boolean fatal, String additionalData) {
         try {
-            Tracker t = getAppTracker();
-            if (t != null && e != null) {
-                HitBuilders.ExceptionBuilder eb = new HitBuilders.ExceptionBuilder()
-                        .setFatal(fatal)
-                        .setCustomDimension(GA_DIM_EXCEPTION_NAME,
-                                e.getClass().getCanonicalName())
-                        .setDescription(
-                                new StandardExceptionParser(c, null)
-                                        .getDescription(Thread.currentThread()
-                                                .getName(), e)
-                        );
+            if (e != null) {
+                Crashlytics.setBool("fatal", fatal);
                 if (!TextUtils.isEmpty(additionalData)) {
-                    eb.setCustomDimension(GA_DIM_ADDITIONAL_DATA, additionalData.substring(0, Math.min(additionalData.length(), 4096)));
+                    Crashlytics.log(additionalData.substring(0, Math.min(additionalData.length(), 4096)));
                 }
-                eb.setCustomDimension(GA_DIM_EXCEPTION_MESSAGE, e.getMessage());
-
-                t.send(eb.build());
+                Crashlytics.logException(e);
             }
         } catch (Exception e2) {
             logger.error("sendException", e2);
@@ -178,49 +101,55 @@ public class AnalyticsFlavor implements IAnalytics {
     }
 
     @Override
-    public void sendScreen(Context c, String screenName) {
-        Tracker t = getAppTracker();
-        if (t != null) {
-            t.setScreenName(screenName);
-            t.send(new HitBuilders.ScreenViewBuilder().build());
+    public void sendScreen(Activity activity, String screenName) {
+        if (mAnalytics != null && activity != null) {
+            mAnalytics.setCurrentScreen(activity, TextUtils.isEmpty(screenName) ? null : screenName.substring(0, Math.min(screenName.length(), 36)), null);
         }
         logger.debug("screen: {}", screenName);
     }
 
     @Override
     public void sendButtonEvent(String label) {
-        Tracker t = getAppTracker();
-        if (t != null && TextUtils.isEmpty(label)) {
-            t.send(new HitBuilders.EventBuilder()
-                    .setCategory(GA_EVENT_CATEGORY_UI)
-                    .setAction("button_press")
-                    .setLabel(label)
-                    .build());
+        if (mAnalytics != null && !TextUtils.isEmpty(label)) {
+            Bundle bundle = new Bundle();
+
+            bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, "button");
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, label);
+
+            mAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
         }
         logger.debug("buttonEvent: {}", label);
     }
 
     @Override
     public void sendPreferenceChanged(String key, String value) {
-        Tracker t = getAppTracker();
-        if (t != null && TextUtils.isEmpty(key) && TextUtils.isEmpty(value)) {
-            t.send(new HitBuilders.EventBuilder()
-                    .setCategory(GA_EVENT_CATEGORY_UI)
-                    .setAction("preference_changed")
-                    .setCategory(key)
-                    .setLabel(value)
-                    .build());
+        if (mAnalytics != null && !TextUtils.isEmpty(key) && !TextUtils.isEmpty(value)) {
+            Bundle bundle = new Bundle();
+
+            bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, "preference");
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, key);
+            bundle.putString(FirebaseAnalytics.Param.VALUE, value);
+
+            mAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
         }
         logger.debug("preferenceChanged: {}={}", key, value);
     }
 
     @Override
     public void setEnabled(boolean enabled) {
-        final GoogleAnalytics analytics = GoogleAnalytics.getInstance(mApp);
+        if (mApp != null) {
+            logger.debug("setEnabled: {}", enabled);
+            if (mAnalytics != null) {
+                mAnalytics.setAnalyticsCollectionEnabled(enabled);
+            }
 
-        logger.debug("setEnabled: {}", enabled);
-        if (!BuildConfig.DEBUG) {
-            analytics.setAppOptOut(!enabled);
+            if (enabled) {
+                final Fabric fabric = new Fabric.Builder(mApp)
+                        .kits(new Crashlytics())
+                        .debuggable(BuildConfig.DEBUG)
+                        .build();
+                Fabric.with(fabric);
+            }
         }
     }
 
