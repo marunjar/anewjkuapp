@@ -93,9 +93,9 @@ public class Consts {
     public static final String CHANNEL_ID_DEFAULT = BuildConfig.APPLICATION_ID + ".DEFAULT";
 
     // URLs
-    public static final String MENSA_MENU_CLASSIC = "http://menu.mensen.at/index/index/locid/1";
-    public static final String MENSA_MENU_CHOICE = "http://menu.mensen.at/index/index/locid/1";
-    public static final String MENSA_MENU_KHG = "https://www.dioezese-linz.at/institution/8075/essen/menueplan";
+    public static final String MENSA_MENU_CLASSIC = "https://menu.mensen.at/index/index/locid/1";
+    public static final String MENSA_MENU_CHOICE = "https://menu.mensen.at/index/index/locid/1";
+    public static final String MENSA_MENU_KHG = "https://www.dioezese-linz.at/institution/807510/essen/menueplan";
     public static final String MENSA_MENU_RAAB = "http://www.sommerhaus-hotel.at/de/linz#speiseplan";
 
     private Consts() {
