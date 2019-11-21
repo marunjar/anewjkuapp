@@ -3,13 +3,8 @@
 
 ###############
 # ical4j also contains groovy code which is not used in android
--dontwarn aQute.bnd.**
 -dontwarn groovy.**
--dontwarn groovyjarjarasm.**
--dontwarn groovyjarjarantlr.**
 -dontwarn org.codehaus.groovy.**
-
--dontwarn net.fortuna.ical4j.util.JCacheTimeZoneCache
 
 -keep class net.fortuna.ical4j.validate.**
 -keep class net.fortuna.ical4j.model.**
@@ -21,4 +16,8 @@
 # for details see http://stackoverflow.com/questions/23883028/how-to-fix-proguard-warning-cant-find-referenced-method-for-existing-methods
 -dontwarn net.fortuna.ical4j.model.**
 
--dontwarn sun.misc.Perf
+-dontwarn com.sun.mail.**
+-dontwarn java.awt.**
+-dontwarn javax.cache.**
+-dontwarn com.sun.activation.**
+-dontwarn javax.activation.**

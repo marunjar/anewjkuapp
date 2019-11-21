@@ -1,14 +1,12 @@
 #  proguard-rules.txt
 #
 
-###############
-# TODO: some stuff that must be checked
 -dontobfuscate
+
+###############
+# Mapsforge
 -dontwarn org.xmlpull.v1.**
 -dontwarn com.caverock.androidsvg.**
--dontwarn org.mapsforge.map.android.rotation.SmoothCanvas
-
-
 
 ###############
 -keepclasseswithmembernames class * {
@@ -64,5 +62,4 @@ public void *(android.view.View);
 -keep public class * extends androidx.preference.Preference { *; }
 -keep public class * extends org.voidsink.anewjkuapp.base.BasePreferenceFragment { *; }
 
-#
 -keep class android.view.accessibility.AccessibilityManager { *; }
