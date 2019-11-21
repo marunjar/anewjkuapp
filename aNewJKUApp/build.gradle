@@ -125,6 +125,8 @@ dependencies {
     implementation 'org.slf4j:slf4j-android:1.7.29'
     implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
     implementation 'de.cketti.library.changelog:ckchangelog:1.2.2'
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
+    implementation "androidx.loader:loader:1.1.0"
     implementation project(':sectionedRecyclerAdapter')
     implementation project(':android-week-view')
 }
