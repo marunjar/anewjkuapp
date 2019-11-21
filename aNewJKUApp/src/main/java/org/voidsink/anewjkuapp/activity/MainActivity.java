@@ -76,7 +76,6 @@ import org.voidsink.anewjkuapp.fragment.StatFragment;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 
-import de.cketti.library.changelog.ChangeLog;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -108,7 +107,7 @@ public class MainActivity extends ThemedActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
         if (mNavigationView != null) {
@@ -197,11 +196,6 @@ public class MainActivity extends ThemedActivity {
             f = attachFragmentById(R.id.nav_cal, true);
         }
         handleIntent(f, intent);
-
-        ChangeLog cl = new ChangeLog(this);
-        if (cl.isFirstRun()) {
-            cl.getLogDialog().show();
-        }
 
         startCreateAccount();
 

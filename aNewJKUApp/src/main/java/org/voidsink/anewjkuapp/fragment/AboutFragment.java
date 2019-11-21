@@ -32,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
@@ -60,5 +61,15 @@ public class AboutFragment extends BaseFragment {
     @Override
     public CharSequence getTitle(Context context) {
         return context.getString(R.string.title_about);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        ChangeLog cl = new ChangeLog(getActivity());
+        if (cl.isFirstRun()) {
+            cl.getLogDialog().show();
+        }
     }
 }
