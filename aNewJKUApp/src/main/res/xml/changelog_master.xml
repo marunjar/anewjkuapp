@@ -4,6 +4,11 @@
 		    - fixed
 		    * changed
 		    + added -->
+    <release version="0.52.0" versioncode="140073">
+        <change>+ App: unterstützt jetzt auch Android Q</change>
+        <change>- App: viele Korrekturen und Optimierungen</change>
+        <change>- Mensa: Menü von KHG Mensa funktioniert wieder</change>
+    </release>
     <release version="0.51.9" versioncode="140072">
         <change>- App: viele Korrekturen und Optimierungen</change>
         <change>* Karte: neue Daten von OpenStreetMap</change>
