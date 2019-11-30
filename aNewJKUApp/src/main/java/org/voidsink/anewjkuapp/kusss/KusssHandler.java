@@ -178,7 +178,6 @@ public class KusssHandler {
         if (!isNetworkAvailable(c)) {
             return null;
         }
-        System.out.println(user + ":" + password);
 
         try {
 
