@@ -212,25 +212,30 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 
         @Override
         protected void onPostExecute(Intent intent) {
-            if (intent.hasExtra(KEY_ERROR_MESSAGE)) {
-                Toast.makeText(mContext,
-                        intent.getStringExtra(KEY_ERROR_MESSAGE),
-                        Toast.LENGTH_SHORT).show();
+            String message = null;
+            if (TextUtils.isEmpty(intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME))) {
+                message = mContext.getString(R.string.account_login_failed_wrong_user);
+            } else if (TextUtils.isEmpty(intent.getStringExtra(PARAM_USER_PASS))) {
+                message = mContext.getString(R.string.account_login_failed_wrong_pwd);
+            } else if (!TextUtils.isEmpty(intent.getStringExtra(KEY_ERROR_MESSAGE))) {
+                message = intent.getStringExtra(KEY_ERROR_MESSAGE);
             } else if (intent.hasExtra(AccountManager.KEY_AUTHTOKEN)) {
                 String authToken = intent
                         .getStringExtra(AccountManager.KEY_AUTHTOKEN);
-                if ((authToken != null) && !TextUtils.isEmpty(authToken)) {
+                if (!TextUtils.isEmpty(authToken)) {
                     finishLogin(intent);
                 } else {
-                    Toast.makeText(mContext,
-                            mContext.getString(R.string.account_login_failed_wrong_pwd),
-                            Toast.LENGTH_SHORT).show();
+                    message = mContext.getString(R.string.account_login_failed_wrong_pwd);
                 }
             } else {
+                message = mContext.getString(R.string.account_login_failed_wrong_auth_token);
+            }
+            if (!TextUtils.isEmpty(message)) {
                 Toast.makeText(mContext,
-                        mContext.getString(R.string.account_login_failed_wrong_auth_token),
+                        message,
                         Toast.LENGTH_SHORT).show();
             }
+
 
             progressDialog.dismiss();
 

@@ -215,6 +215,7 @@
     <string name="interval_3_5d">Zweimal Wöchentlich</string>
     <string name="interval_7d">Wöchentlich</string>
 
+    <string name="account_login_failed_wrong_user">Anmeldung fehlgeschlagen: falscher User</string>
     <string name="account_login_failed_wrong_pwd">Anmeldung fehlgeschlagen: falsches Passwort</string>
     <string name="account_login_failed_wrong_auth_token">Anmeldung fehlgeschlagen: falscher Authentifizierungstoken</string>
     <string name="account_login">Anmelden</string>

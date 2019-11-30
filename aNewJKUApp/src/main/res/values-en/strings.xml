@@ -132,6 +132,7 @@
     <string name="extension_mensa_pref_visible_to">to</string>
     <string name="account_login_failed_wrong_pwd">Login failed: wrong password</string>
     <string name="account_login_failed_wrong_auth_token">Login failed: wrong authentification token</string>
+    <string name="account_login_failed_wrong_user">Login faild: wrong user</string>
     <string name="notification_sync_calendar_adding">Adding events: %s</string>
     <string name="notification_sync_calendar_loading">Loading events: %s</string>
     <string name="notification_sync_calendar_saving">Saving events: %s</string>

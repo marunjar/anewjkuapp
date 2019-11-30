@@ -200,7 +200,7 @@ public class KusssHandler {
 
 
     public synchronized String login(Context c, String user, String password) {
-        if (user == null || password == null) {
+        if (TextUtils.isEmpty(user) || TextUtils.isEmpty(password)) {
             return null;
         }
         if (!isNetworkAvailable(c)) {
@@ -298,7 +298,7 @@ public class KusssHandler {
     }
 
     public synchronized boolean isLoggedIn(Context c, String sessionId) {
-        if (sessionId == null) {
+        if (TextUtils.isEmpty(sessionId)) {
             return false;
         }
         if (!isNetworkAvailable(c)) {
