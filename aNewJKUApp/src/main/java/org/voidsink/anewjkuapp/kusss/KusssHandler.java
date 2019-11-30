@@ -171,6 +171,34 @@ public class KusssHandler {
         }
     }
 
+    /**
+     * workaround for jsoup parsing error, see
+     * https://github.com/marunjar/anewjkuapp/issues/139
+     * https://github.com/jhy/jsoup/issues/1218
+     *
+     * @param response response of a Jsoup connetion.execute()
+     * @return Document the parsed html
+     */
+    private Document parseWorkaround(Connection.Response response) {
+        String body = response.body();
+        return Jsoup.parse(body);
+    }
+
+    /**
+     * workaround for jsoup parsing error, see
+     * https://github.com/marunjar/anewjkuapp/issues/139
+     * https://github.com/jhy/jsoup/issues/1218
+     *
+     * @param connection a Jsoup connection
+     * @return Document the parsed html
+     * @throws IOException of connection.execute()
+     */
+    private Document getWorkaround(Connection connection) throws IOException {
+        Connection.Response response = connection.execute();
+        return parseWorkaround(response);
+    }
+
+
     public synchronized String login(Context c, String user, String password) {
         if (user == null || password == null) {
             return null;
@@ -187,7 +215,7 @@ public class KusssHandler {
 
             mCookies.getCookieStore().removeAll();
 
-            Jsoup.connect(URL_KUSSS_INDEX).userAgent(getUserAgent()).timeout(TIMEOUT_LOGIN).followRedirects(true).get();
+            getWorkaround(Jsoup.connect(URL_KUSSS_INDEX).userAgent(getUserAgent()).timeout(TIMEOUT_LOGIN).followRedirects(true));
 
             Connection.Response r = Jsoup.connect(URL_LOGIN).userAgent(getUserAgent()).cookies(getCookieMap()).data("j_username", user).data("j_password", password).timeout(TIMEOUT_LOGIN).followRedirects(true).method(Connection.Method.POST).execute();
 
@@ -195,8 +223,7 @@ public class KusssHandler {
                 r = Jsoup.connect(r.url().toString()).userAgent(getUserAgent()).cookies(getCookieMap()).method(Connection.Method.GET).execute();
             }
 
-            String body = r.body();
-            Document doc = Jsoup.parse(body);
+            Document doc = parseWorkaround(r);
 
             String sessionId = getSessionIDFromCookie();
             if (isLoggedIn(c, doc)) {
@@ -278,7 +305,7 @@ public class KusssHandler {
             return false;
         }
         try {
-            Document doc = Jsoup.connect(URL_KUSSS_INDEX).userAgent(getUserAgent()).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true).get();
+            Document doc = getWorkaround(Jsoup.connect(URL_KUSSS_INDEX).userAgent(getUserAgent()).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true));
 
             return isLoggedIn(c, doc);
         } catch (SocketTimeoutException e) {
@@ -398,7 +425,7 @@ public class KusssHandler {
             if (!selectTerm(c, term)) {
                 return null;
             }
-            Document doc = Jsoup.connect(URL_GET_ICAL_FORM).userAgent(getUserAgent()).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true).get();
+            Document doc = getWorkaround(Jsoup.connect(URL_GET_ICAL_FORM).userAgent(getUserAgent()).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true));
             if (!isSelectable(c, doc, term)) {
                 return null;
             }
@@ -496,7 +523,7 @@ public class KusssHandler {
 
         Map<String, String> terms = new HashMap<>();
         try {
-            Document doc = Jsoup.connect(URL_GET_TERMS).userAgent(getUserAgent()).cookies(getCookieMap()).get();
+            Document doc = getWorkaround(Jsoup.connect(URL_GET_TERMS).userAgent(getUserAgent()).cookies(getCookieMap()));
             Element termDropdown = doc.getElementById("term");
             if (termDropdown != null) {
                 Elements termDropdownEntries = termDropdown
@@ -548,7 +575,7 @@ public class KusssHandler {
             for (Term term : terms) {
                 term.setLoaded(false); // init loaded flag
                 if (selectTerm(c, term)) {
-                    Document doc = Jsoup.connect(URL_MY_LVAS).userAgent(getUserAgent()).cookies(getCookieMap()).get();
+                    Document doc = getWorkaround(Jsoup.connect(URL_MY_LVAS).userAgent(getUserAgent()).cookies(getCookieMap()));
 
                     if (isSelectable(c, doc, term)) {
                         if (isSelected(c, doc, term)) {
@@ -618,8 +645,7 @@ public class KusssHandler {
         }
         List<Assessment> grades = new ArrayList<>();
         try {
-            Document doc = Jsoup.connect(URL_MY_GRADES).userAgent(getUserAgent()).cookies(getCookieMap()).data("months", "0")
-                    .get();
+            Document doc = getWorkaround(Jsoup.connect(URL_MY_GRADES).userAgent(getUserAgent()).cookies(getCookieMap()).data("months", "0"));
 
             if (isLoggedIn(c, doc)) {
                 Elements rows = doc.select(SELECT_MY_GRADES);
@@ -647,7 +673,7 @@ public class KusssHandler {
             Analytics.sendException(c, e, true);
             return null;
         }
-        logger.debug( "{} grades found", grades.size());
+        logger.debug("{} grades found", grades.size());
         return grades;
     }
 
@@ -657,10 +683,11 @@ public class KusssHandler {
         }
         List<Exam> exams = new ArrayList<>();
         try {
-            Document doc = Jsoup.connect(URL_GET_NEW_EXAMS)
-                    .userAgent(getUserAgent())
-                    .cookies(getCookieMap())
-                    .data("search", "true").data("searchType", "mylvas").get();
+            Document doc = getWorkaround(
+                    Jsoup.connect(URL_GET_NEW_EXAMS)
+                            .userAgent(getUserAgent())
+                            .cookies(getCookieMap())
+                            .data("search", "true").data("searchType", "mylvas"));
             if (isLoggedIn(c, doc)) {
                 Elements rows = doc.select(SELECT_NEW_EXAMS);
 
@@ -817,7 +844,7 @@ public class KusssHandler {
 
         logger.debug("loadExams");
 
-        Document doc = Jsoup.connect(URL_GET_EXAMS).userAgent(getUserAgent()).cookies(getCookieMap()).get();
+        Document doc = getWorkaround(Jsoup.connect(URL_GET_EXAMS).userAgent(getUserAgent()).cookies(getCookieMap()));
 
         if (isLoggedIn(c, doc)) {
             Elements rows = doc.select(SELECT_EXAMS);
@@ -847,7 +874,7 @@ public class KusssHandler {
         try {
             List<Curriculum> mCurricula = new ArrayList<>();
 
-            Document doc = Jsoup.connect(URL_MY_STUDIES).userAgent(getUserAgent()).cookies(getCookieMap()).get();
+            Document doc = getWorkaround(Jsoup.connect(URL_MY_STUDIES).userAgent(getUserAgent()).cookies(getCookieMap()));
 
             if (isLoggedIn(c, doc)) {
                 Elements rows = doc.select(SELECT_MY_STUDIES);
