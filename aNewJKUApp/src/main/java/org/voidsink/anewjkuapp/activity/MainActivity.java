@@ -366,7 +366,7 @@ public class MainActivity extends ThemedActivity {
                 final Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
 
                 if (oldFragment != null) {
-                    if (oldFragment.getClass().getCanonicalName().equals(startFragment.getCanonicalName())) {
+                    if (startFragment.getCanonicalName().equals(oldFragment.getClass().getCanonicalName())) {
                         return oldFragment;
                     }
                 }

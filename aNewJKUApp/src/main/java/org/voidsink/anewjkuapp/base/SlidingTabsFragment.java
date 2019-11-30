@@ -128,6 +128,7 @@ public abstract class SlidingTabsFragment extends BaseFragment {
          * Here we return the value returned from {@link SlidingTabItem#createFragment()}.
          */
         @Override
+        @NonNull
         public Fragment getItem(int i) {
             return mTabs.get(i).createFragment();
         }

@@ -63,7 +63,7 @@ public class ChoiceMenuLoader extends MensenMenuLoader {
                     try {
                         Date date = df.parse(paragraphs.get(0).text().replace((char) 0xA0, ' ')); // parse after replacing &nbsp; with normal space
 
-                        if (date.equals(day.getDate())) {
+                        if (day.getDate().equals(date)) {
                             for (int i = 1; i < paragraphs.size(); i++) {
                                 try {
                                     String name = null;

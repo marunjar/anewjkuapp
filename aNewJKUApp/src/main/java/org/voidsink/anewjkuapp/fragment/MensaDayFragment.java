@@ -187,7 +187,7 @@ public class MensaDayFragment extends BaseFragment implements LoaderManager.Load
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
         inflater.inflate(R.menu.mensa_day, menu);

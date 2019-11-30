@@ -163,7 +163,7 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.calendar, menu);
 
