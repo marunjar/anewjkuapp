@@ -4,8 +4,9 @@
 		    - fixed
 		    * changed
 		    + added -->
-    <release version="0.52.1" versioncode="140074">
+    <release version="0.52.2" versioncode="140075">
         <change>+ App: unterstützt jetzt auch Android Q</change>
+        <change>- KUSSS: Fehler beim Login behoben</change>
         <change>- App: viele Korrekturen und Optimierungen</change>
         <change>- Mensa: Menü von KHG Mensa funktioniert wieder</change>
     </release>
