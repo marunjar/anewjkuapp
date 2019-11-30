@@ -178,6 +178,7 @@ public class KusssHandler {
         if (!isNetworkAvailable(c)) {
             return null;
         }
+        System.out.println(user + ":" + password);
 
         try {
 
@@ -195,7 +196,8 @@ public class KusssHandler {
                 r = Jsoup.connect(r.url().toString()).userAgent(getUserAgent()).cookies(getCookieMap()).method(Connection.Method.GET).execute();
             }
 
-            Document doc = r.parse();
+            String body = r.body();
+            Document doc = Jsoup.parse(body);
 
             String sessionId = getSessionIDFromCookie();
             if (isLoggedIn(c, doc)) {
