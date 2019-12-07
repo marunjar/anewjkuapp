@@ -26,17 +26,10 @@
 package org.voidsink.anewjkuapp.mensa;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.text.format.DateUtils;
 
-import androidx.preference.PreferenceManager;
-
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 
 import java.text.ParseException;
@@ -44,18 +37,16 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-public abstract class MensenMenuLoader implements MenuLoader {
+import static org.voidsink.anewjkuapp.utils.Consts.MENSA_MENU_JKU;
 
-    private static final Logger logger = LoggerFactory.getLogger(MensenMenuLoader.class);
-
-    private static final String PREF_DATA_PREFIX = "MENSA_DATA_";
-    private static final String PREF_DATE_PREFIX = "MENSA_DATE_";
+public abstract class MensenMenuLoader extends BaseMenuLoader implements MenuLoader {
 
     static final String PATTERN_BETRAG = "\\d+,\\d{2}";
     static final Pattern betragPattern = Pattern.compile(PATTERN_BETRAG);
 
-    private String getUrl() {
-        return "http://menu.mensen.at/index/index/locid/1";
+    @Override
+    protected String getUrl() {
+        return MENSA_MENU_JKU;
     }
 
     private static final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
@@ -97,7 +88,7 @@ public abstract class MensenMenuLoader implements MenuLoader {
                 }
             }
         } catch (Exception e) {
-            logger.error("failed", e);
+            Analytics.sendException(context, e, false);
             return null;
         }
 
@@ -106,43 +97,7 @@ public abstract class MensenMenuLoader implements MenuLoader {
 
     protected abstract void addCategories(Context c, MensaDay day, Elements categories);
 
-    private Document getData(Context context) {
-        Document result = null;
-        String cacheDateKey = PREF_DATE_PREFIX + getCacheKey();
-        String cacheDataKey = PREF_DATA_PREFIX + getCacheKey();
-
-        SharedPreferences sp = PreferenceManager
-                .getDefaultSharedPreferences(context);
-        if (sp.getLong(cacheDateKey, 0) > (System.currentTimeMillis() - 6 * DateUtils.HOUR_IN_MILLIS)) {
-            String html = sp.getString(cacheDataKey, null);
-            if (html != null) {
-                result = Jsoup.parse(html);
-            }
-        }
-
-        if (result == null) {
-            try {
-                result = Jsoup.connect(getUrl()).get();
-
-                SharedPreferences.Editor editor = sp.edit();
-                editor.putString(cacheDataKey, result.html());
-                editor.putLong(cacheDateKey, System.currentTimeMillis());
-                editor.apply();
-            } catch (Exception e) {
-                Analytics.sendException(context, e, false);
-                String html = sp.getString(cacheDataKey, null);
-                if (html != null) {
-                    result = Jsoup.parse(html);
-                }
-            }
-        }
-        return result;
-    }
-
-    protected abstract String getCacheKey();
-
     protected abstract String getMensaKey();
-
 
     protected abstract String getLocation(Context c);
 }

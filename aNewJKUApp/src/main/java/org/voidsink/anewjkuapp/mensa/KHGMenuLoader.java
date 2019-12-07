@@ -26,18 +26,11 @@
 package org.voidsink.anewjkuapp.mensa;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 
-import androidx.preference.PreferenceManager;
-
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.utils.Consts;
 
@@ -46,11 +39,7 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class KHGMenuLoader implements MenuLoader {
-    private static final Logger logger = LoggerFactory.getLogger(KHGMenuLoader.class);
-
-    private static final String PREF_DATA_PREFIX = "MENSA_DATA_";
-    private static final String PREF_DATE_PREFIX = "MENSA_DATE_";
+public class KHGMenuLoader extends BaseMenuLoader implements MenuLoader {
 
     private static final String tableSelector = "div.contentSection div.listContent table tr";
     private static final NumberFormat nf = NumberFormat.getInstance(Locale.FRENCH);
@@ -68,15 +57,15 @@ public class KHGMenuLoader implements MenuLoader {
                     Elements columns = element.children();
                     if (columns.size() == 4) {
                         handle4(mensa, columns);
-                    } else if(columns.size() == 3) {
+                    } else if (columns.size() == 3) {
                         handle3(day, columns);
                     } else {
-                        throw new RuntimeException("Table with columns.size() = "+columns.size()+" found. Expected 3 or 4.");
+                        throw new RuntimeException("Table with columns.size() = " + columns.size() + " found. Expected 3 or 4.");
                     }
                 }
             }
         } catch (Exception e) {
-            logger.error("failed", e);
+            Analytics.sendException(context, e, false);
             return null;
         }
 
@@ -196,40 +185,13 @@ public class KHGMenuLoader implements MenuLoader {
         return day;
     }
 
-    private Document getData(Context context) {
-        Document result = null;
-        String cacheDateKey = PREF_DATE_PREFIX + getCacheKey();
-        String cacheDataKey = PREF_DATA_PREFIX + getCacheKey();
-
-        SharedPreferences sp = PreferenceManager
-                .getDefaultSharedPreferences(context);
-        if (sp.getLong(cacheDateKey, 0) > (System.currentTimeMillis() - 6 * DateUtils.HOUR_IN_MILLIS)) {
-            String html = sp.getString(cacheDataKey, null);
-            if (html != null) {
-                result = Jsoup.parse(html);
-            }
-        }
-
-        if (result == null) {
-            try {
-                result = Jsoup.connect(Consts.MENSA_MENU_KHG).get();
-
-                SharedPreferences.Editor editor = sp.edit();
-                editor.putString(cacheDataKey, result.html());
-                editor.putLong(cacheDateKey, System.currentTimeMillis());
-                editor.apply();
-            } catch (Exception e) {
-                Analytics.sendException(context, e, false);
-                String html = sp.getString(cacheDataKey, null);
-                if (html != null) {
-                    result = Jsoup.parse(html);
-                }
-            }
-        }
-        return result;
+    @Override
+    protected String getCacheKey() {
+        return Mensen.MENSA_KHG;
     }
 
-    private String getCacheKey() {
-        return Mensen.MENSA_KHG;
+    @Override
+    protected String getUrl() {
+        return Consts.MENSA_MENU_KHG;
     }
 }
