@@ -75,6 +75,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static org.jsoup.Connection.Method.GET;
+import static org.jsoup.Connection.Method.POST;
+
 public class KusssHandler {
 
     static final String PATTERN_LVA_NR_WITH_DOT = "\\d{3}\\.\\w{3}";
@@ -194,10 +197,23 @@ public class KusssHandler {
      * @throws IOException of connection.execute()
      */
     private Document getWorkaround(Connection connection) throws IOException {
-        Connection.Response response = connection.execute();
+        Connection.Response response = connection.method(GET).execute();
         return parseWorkaround(response);
     }
 
+    /**
+     * workaround for jsoup parsing error, see
+     * https://github.com/marunjar/anewjkuapp/issues/139
+     * https://github.com/jhy/jsoup/issues/1218
+     *
+     * @param connection a Jsoup connection
+     * @return Document the parsed html
+     * @throws IOException of connection.execute()
+     */
+    private Document postWorkaround(Connection connection) throws IOException {
+        Connection.Response response = connection.method(POST).execute();
+        return parseWorkaround(response);
+    }
 
     public synchronized String login(Context c, String user, String password) {
         if (TextUtils.isEmpty(user) || TextUtils.isEmpty(password)) {
@@ -217,10 +233,10 @@ public class KusssHandler {
 
             getWorkaround(Jsoup.connect(URL_KUSSS_INDEX).userAgent(getUserAgent()).timeout(TIMEOUT_LOGIN).followRedirects(true));
 
-            Connection.Response r = Jsoup.connect(URL_LOGIN).userAgent(getUserAgent()).cookies(getCookieMap()).data("j_username", user).data("j_password", password).timeout(TIMEOUT_LOGIN).followRedirects(true).method(Connection.Method.POST).execute();
+            Connection.Response r = Jsoup.connect(URL_LOGIN).userAgent(getUserAgent()).cookies(getCookieMap()).data("j_username", user).data("j_password", password).timeout(TIMEOUT_LOGIN).followRedirects(true).method(POST).execute();
 
             if (r.url() != null) {
-                r = Jsoup.connect(r.url().toString()).userAgent(getUserAgent()).cookies(getCookieMap()).method(Connection.Method.GET).execute();
+                r = Jsoup.connect(r.url().toString()).userAgent(getUserAgent()).cookies(getCookieMap()).method(GET).execute();
             }
 
             Document doc = parseWorkaround(r);
@@ -282,19 +298,15 @@ public class KusssHandler {
     }
 
     public synchronized void logout(Context c) {
-        if (!isNetworkAvailable(c)) {
-            mCookies.getCookieStore().removeAll();
-        }
         try {
-            Jsoup.connect(URL_LOGOUT).userAgent(getUserAgent()).cookies(getCookieMap()).method(Connection.Method.GET).execute();
-
-            if (!isLoggedIn(c, (String) null)) {
-                mCookies.getCookieStore().removeAll();
+            if (isNetworkAvailable(c)) {
+                Jsoup.connect(URL_LOGOUT).userAgent(getUserAgent()).cookies(getCookieMap()).method(GET).execute();
             }
         } catch (Exception e) {
             logger.warn("logout failed", e);
             Analytics.sendException(c, e, true);
         }
+        mCookies.getCookieStore().removeAll();
     }
 
     public synchronized boolean isLoggedIn(Context c, String sessionId) {
@@ -546,12 +558,14 @@ public class KusssHandler {
         if (!isLoggedIn(c, getSessionIDFromCookie())) {
             return false;
         }
-        Jsoup.connect(URL_SELECT_TERM)
-                .userAgent(getUserAgent())
-                .cookies(getCookieMap())
-                .data("term", term.toString())
-                .data("previousQueryString", "")
-                .data("reloadAction", "coursecatalogue-start.action").post();
+        postWorkaround(
+                Jsoup.connect(URL_SELECT_TERM)
+                        .userAgent(getUserAgent())
+                        .cookies(getCookieMap())
+                        .data("term", term.toString())
+                        .data("previousQueryString", "")
+                        .data("reloadAction", "coursecatalogue-start.action")
+        );
 
         //TODO: check document for successful selection of term
 //            if (!isSelected(doc, term)) {
@@ -792,7 +806,7 @@ public class KusssHandler {
             final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 
             logger.debug("getNewExamsByCourseId: {}", courseId);
-            Document doc = Jsoup
+            Document doc = postWorkaround(Jsoup
                     .connect(URL_GET_NEW_EXAMS)
                     .userAgent(getUserAgent())
                     .cookies(getCookieMap())
@@ -805,7 +819,8 @@ public class KusssHandler {
                             df.format(new Date(System.currentTimeMillis()
                                     + DateUtils.YEAR_IN_MILLIS)))
                     .data("searchLvaNr", courseId).data("searchLvaTitle", "")
-                    .data("searchCourseClass", "").post();
+                    .data("searchCourseClass", "")
+            );
 
             if (isLoggedIn(c, doc)) {
                 Elements rows = doc.select(SELECT_NEW_EXAMS);
