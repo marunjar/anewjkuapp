@@ -110,6 +110,7 @@ public class KusssHandler {
 
     private static final int TIMEOUT_LOGIN = 15 * 1000; // 15s
     private static final int TIMEOUT_SEARCH_EXAM_BY_LVA = 15 * 1000; //15s
+    private static final int TIMEOUT_CALENDAR_READ = 15 * 1000; // 15s
 
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
@@ -430,9 +431,6 @@ public class KusssHandler {
             return null;
         }
 
-        Calendar iCal;
-        ByteArrayOutputStream data = new ByteArrayOutputStream();
-
         try {
             if (!selectTerm(c, term)) {
                 return null;
@@ -444,13 +442,75 @@ public class KusssHandler {
             if (!isSelected(c, doc, term)) {
                 return null;
             }
+        } catch (IOException e) {
+            logger.error("loadIcal: selectTerm", e);
+            Analytics.sendException(c, e, true);
+            return null;
+        }
 
+        Calendar iCal = loadIcalJsoup(c, calendarBuilder, calendarName);
+        if (iCal == null) {
+            iCal = loadIcalLegacy(c, calendarBuilder, calendarName);
+        }
+
+        return iCal;
+    }
+
+    private Calendar loadIcalJsoup(Context c, CalendarBuilder calendarBuilder, String calendarName) {
+        Connection connection = Jsoup.connect(URL_GET_ICAL)
+                .userAgent(getUserAgent())
+                .cookies(getCookieMap())
+                .timeout(TIMEOUT_CALENDAR_READ)
+                .method(POST);
+        switch (calendarName) {
+            case CalendarUtils.ARG_CALENDAR_EXAM:
+                connection.data("selectAll", "ical.category.examregs");
+                break;
+            case CalendarUtils.ARG_CALENDAR_COURSE:
+                connection.data("selectAll", "ical.category.mycourses");
+                break;
+            default: {
+                return null;
+            }
+        }
+
+        Calendar iCal;
+        String body = null;
+        String contentType = null;
+        try {
+            Connection.Response response = connection.execute();
+
+            contentType = response.contentType();
+            logger.debug("loadIcalJsoup: RequestMethod: {}", contentType);
+            if (!contentType.contains("text/calendar")) {
+                return null;
+            }
+
+            body = response.body();
+            if (!TextUtils.isEmpty(body)) {
+                iCal = calendarBuilder.build(new ByteArrayInputStream(body.getBytes()));
+            } else {
+                iCal = new Calendar();
+            }
+        } catch (ParserException | IOException e) {
+            logger.error("loadIcalJsoup: (" + contentType + ") " + body, e);
+            Analytics.sendException(c, e, true, contentType, body);
+            iCal = null;
+        }
+        return iCal;
+    }
+
+    private Calendar loadIcalLegacy(Context c, CalendarBuilder calendarBuilder, String calendarName) {
+        ByteArrayOutputStream data = new ByteArrayOutputStream();
+        Calendar iCal;
+        String contentType = null;
+        try {
             URL url = new URL(URL_GET_ICAL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
             conn.setRequestProperty("Cookie", getCookieString());
             conn.setConnectTimeout(5000);
-            conn.setReadTimeout(15000);
+            conn.setReadTimeout(TIMEOUT_CALENDAR_READ);
             conn.setRequestMethod("POST");
             conn.setRequestProperty("User-Agent", getUserAgent());
 
@@ -466,14 +526,14 @@ public class KusssHandler {
                 }
             }
 
-            final String contentType = conn.getContentType();
+            contentType = conn.getContentType();
 
             if (contentType == null) {
                 conn.disconnect();
                 return null;
             }
 
-            logger.debug("loadIcal: RequestMethod: {}", contentType);
+            logger.debug("loadIcalLegacy: RequestMethod: {}", contentType);
             if (!contentType.contains("text/calendar")) {
                 conn.disconnect();
                 return null;
@@ -495,16 +555,11 @@ public class KusssHandler {
             } else {
                 iCal = new Calendar();
             }
-        } catch (ParserException e) {
-            logger.error("loadIcal: " + data.toString(), e);
-            Analytics.sendException(c, e, true, data.toString());
-            iCal = null;
-        } catch (Exception e) {
-            logger.error("loadIcal", e);
-            Analytics.sendException(c, e, true);
+        } catch (ParserException | IOException e) {
+            logger.error("loadIcalLegacy: (" + contentType + ") " + data.toString(), e);
+            Analytics.sendException(c, e, true, contentType, data.toString());
             iCal = null;
         }
-
         return iCal;
     }
 

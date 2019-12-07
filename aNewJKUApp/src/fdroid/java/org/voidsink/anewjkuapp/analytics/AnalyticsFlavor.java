@@ -33,6 +33,8 @@ import android.text.TextUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 public class AnalyticsFlavor implements IAnalytics {
 
 
@@ -44,12 +46,16 @@ public class AnalyticsFlavor implements IAnalytics {
     }
 
     @Override
-    public void sendException(Context c, Exception e, boolean fatal, String additionalData) {
+    public void sendException(Context c, Exception e, boolean fatal, List<String> additionalData) {
         if (e != null) {
-            if (!TextUtils.isEmpty(additionalData)) {
-                additionalData = additionalData.substring(0, Math.min(additionalData.length(), 4096));
+            logger.debug(e.getMessage());
+            if (additionalData != null) {
+                for (String value : additionalData) {
+                    if (!TextUtils.isEmpty(value)) {
+                        logger.debug("additional info: {}", value.substring(0, Math.min(value.length(), 4096)));
+                    }
+                }
             }
-            logger.debug("{} ({})", e.getMessage(), additionalData);
         }
     }
 

@@ -29,6 +29,8 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
+import java.util.List;
+
 enum PlayServiceStatus {
     PS_INSTALLED, PS_NOT_AVAILABLE, PS_REPAIRABLE
 }
@@ -37,7 +39,7 @@ interface IAnalytics {
 
     void init(Application app);
 
-    void sendException(Context c, Exception e, boolean fatal, String additionalData);
+    void sendException(Context c, Exception e, boolean fatal, List<String> additionalData);
 
     void sendScreen(Activity activity, String screenName);
 

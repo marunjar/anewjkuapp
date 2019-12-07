@@ -29,11 +29,13 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.text.TextUtils;
 
 import org.jsoup.HttpStatusException;
 
 import java.net.NoRouteToHostException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.net.ssl.SSLException;
 
@@ -54,30 +56,26 @@ public class Analytics {
     }
 
     public static void sendException(Context c, Exception e, boolean fatal) {
-        sendException(c, e, fatal, null);
+        sendException(c, e, fatal, (String[]) null);
     }
 
     @SuppressLint("DefaultLocale")
-    public static void sendException(Context c, Exception e, boolean fatal, String additionalData) {
+    public static void sendException(Context c, Exception e, boolean fatal, String... additionalData) {
+        List<String> additionalDataList = additionalData == null ? new ArrayList<>() : Arrays.asList(additionalData);
+
         boolean send = true;
         if (e instanceof java.net.UnknownHostException || e instanceof NoRouteToHostException) {
             fatal = false;
-        } else if (e instanceof HttpStatusException) {
-            if (TextUtils.isEmpty(additionalData)) {
-                additionalData = String.format("%d: %s", ((HttpStatusException) e).getStatusCode(), ((HttpStatusException) e).getUrl());
-            }
-
+        }
+        if (e instanceof HttpStatusException) {
+            additionalDataList.add(String.format("%d: %s", ((HttpStatusException) e).getStatusCode(), ((HttpStatusException) e).getUrl()));
             send = (((HttpStatusException) e).getStatusCode() != 503);
-        } else if (e instanceof SSLException) {
-            if (!TextUtils.isEmpty(additionalData)) {
-                additionalData = additionalData + ", ";
-            } else {
-                additionalData = "";
-            }
-            additionalData = additionalData + getAnalytics().getPsStatus().toString();
+        }
+        if (e instanceof SSLException) {
+            additionalDataList.add(getAnalytics().getPsStatus().toString());
         }
         if (send) {
-            getAnalytics().sendException(c, e, fatal, additionalData);
+            getAnalytics().sendException(c, e, fatal, additionalDataList);
         }
     }
 
