@@ -69,7 +69,7 @@ public abstract class BaseMenuLoader {
         try {
             return html != null ? Jsoup.parse(html) : null;
         } catch (Exception e) {
-            Analytics.sendException(context, e, true);
+            Analytics.sendException(context, e, true, getCacheKey(), getUrl());
 
             SharedPreferences.Editor editor = sp.edit();
             editor.putLong(cacheDateKey, 0);

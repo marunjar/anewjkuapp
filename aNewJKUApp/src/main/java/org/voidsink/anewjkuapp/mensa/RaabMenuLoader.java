@@ -29,10 +29,22 @@ import android.content.Context;
 
 import org.voidsink.anewjkuapp.R;
 
-public class RaabMenuLoader implements MenuLoader {
+import static org.voidsink.anewjkuapp.utils.Consts.MENSA_MENU_RAAB;
+
+public class RaabMenuLoader extends BaseMenuLoader implements MenuLoader {
 
     @Override
     public IMensa getMensa(Context context) {
         return new Mensa(Mensen.MENSA_RAAB, context.getString(R.string.mensa_title_raab));
+    }
+
+    @Override
+    protected String getCacheKey() {
+        return Mensen.MENSA_RAAB;
+    }
+
+    @Override
+    protected String getUrl() {
+        return MENSA_MENU_RAAB;
     }
 }

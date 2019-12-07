@@ -75,7 +75,7 @@ public class ClassicMenuLoader extends MensenMenuLoader {
 
     @Override
     protected String getCacheKey() {
-        return "Classic";
+        return Mensen.MENSA_CLASSIC;
     }
 
     @Override

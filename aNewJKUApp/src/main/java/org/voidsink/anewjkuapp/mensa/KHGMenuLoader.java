@@ -46,7 +46,7 @@ public class KHGMenuLoader extends BaseMenuLoader implements MenuLoader {
 
     @Override
     public IMensa getMensa(Context context) {
-        Mensa mensa = new Mensa(Consts.MENSA_MENU_KHG, "KHG");
+        Mensa mensa = new Mensa(Mensen.MENSA_KHG, "KHG");
         MensaDay day = null;
         try {
             Document doc = getData(context);

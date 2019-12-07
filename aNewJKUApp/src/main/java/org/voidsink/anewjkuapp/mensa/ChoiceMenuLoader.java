@@ -151,7 +151,7 @@ public class ChoiceMenuLoader extends MensenMenuLoader {
 
     @Override
     protected String getCacheKey() {
-        return "Choice";
+        return Mensen.MENSA_CHOICE;
     }
 
     @Override
