@@ -488,7 +488,7 @@ public class KusssHandler {
 
             body = response.body();
             if (!TextUtils.isEmpty(body)) {
-                iCal = calendarBuilder.build(new ByteArrayInputStream(body.getBytes()));
+                iCal = calendarBuilder.build(new ByteArrayInputStream(body.getBytes(response.charset() != null ? response.charset() : Charset.defaultCharset().name())));
             } else {
                 iCal = new Calendar();
             }

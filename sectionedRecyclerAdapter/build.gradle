@@ -54,5 +54,5 @@ android {
 
 dependencies {
     errorproneJavac "com.google.errorprone:error_prone_core:${rootProject.ext.errorProneVersion}"
-    implementation "androidx.recyclerview:recyclerview:1.0.0"
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
 }
