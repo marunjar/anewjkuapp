@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,6 +27,8 @@ package org.voidsink.anewjkuapp.fragment;
 
 import android.content.SharedPreferences;
 
+import androidx.preference.PreferenceManager;
+
 import org.voidsink.anewjkuapp.MensaDayTabItem;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
@@ -39,8 +41,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import androidx.preference.PreferenceManager;
 
 public class MensaFragment extends SlidingTabsFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -81,6 +81,7 @@ public class MensaFragment extends SlidingTabsFragment implements SharedPreferen
             } while (cal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY);
         } else {
             mTabs.add(new SlidingTabItem(getString(R.string.mensa_title_classic), MensaClassicFragment.class));
+            mTabs.add(new SlidingTabItem(getString(R.string.mensa_title_tagesteller), MensaTagestellerFragment.class));
             mTabs.add(new SlidingTabItem(getString(R.string.mensa_title_choice), MensaChoiceFragment.class));
             mTabs.add(new SlidingTabItem(getString(R.string.mensa_title_khg), MensaKHGFragment.class));
             mTabs.add(new SlidingTabItem(getString(R.string.mensa_title_raab), MensaRaabFragment.class));

@@ -31,9 +31,17 @@ import android.text.format.DateUtils;
 
 import androidx.preference.PreferenceManager;
 
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import org.jsoup.internal.StringUtil;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.voidsink.anewjkuapp.BuildConfig;
 import org.voidsink.anewjkuapp.analytics.Analytics;
+
+import java.text.NumberFormat;
+import java.text.ParseException;
 
 import static org.jsoup.Connection.Method.GET;
 
@@ -42,6 +50,29 @@ public abstract class BaseMenuLoader {
     private static final String PREF_DATA_PREFIX = "MENSA_DATA_";
     private static final String PREF_DATE_PREFIX = "MENSA_DATE_";
 
+    protected double parsePrice(NumberFormat nf, String value) {
+        try {
+            Number number = nf.parse(value);
+            return number != null ? number.doubleValue() : 0;
+        } catch (ParseException ignored) {
+            return 0;
+        }
+    }
+
+    protected String text(Elements elements) {
+        return text(elements, "\r\n");
+    }
+
+    protected String text(Elements elements, String separator) {
+        StringBuilder sb = StringUtil.borrowBuilder();
+        for (Element element : elements) {
+            if (sb.length() != 0)
+                sb.append(separator);
+            sb.append(element.text().replace('\r', ' ').replace('\n', ' ').trim());
+        }
+        return StringUtil.releaseBuilder(sb).trim();
+    }
+
     protected Document getData(Context context) {
         String html = null;
         String cacheDateKey = PREF_DATE_PREFIX + getCacheKey();
@@ -49,18 +80,21 @@ public abstract class BaseMenuLoader {
 
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(context);
-        if (sp.getLong(cacheDateKey, 0) > (System.currentTimeMillis() - 6 * DateUtils.HOUR_IN_MILLIS)) {
+        if (!BuildConfig.DEBUG && (sp.getLong(cacheDateKey, 0) > (System.currentTimeMillis() - 6 * DateUtils.HOUR_IN_MILLIS))) {
             html = sp.getString(cacheDataKey, null);
         }
 
         if (html == null) {
             try {
-                html = Jsoup.connect(getUrl()).method(GET).execute().body();
+                Connection connection = getConnection(getUrl());
+                if (connection != null) {
+                    html = connection.execute().body();
 
-                SharedPreferences.Editor editor = sp.edit();
-                editor.putString(cacheDataKey, html);
-                editor.putLong(cacheDateKey, System.currentTimeMillis());
-                editor.apply();
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString(cacheDataKey, html);
+                    editor.putLong(cacheDateKey, System.currentTimeMillis());
+                    editor.apply();
+                }
             } catch (Exception e) {
                 Analytics.sendException(context, e, false);
                 html = sp.getString(cacheDataKey, null);
@@ -77,6 +111,10 @@ public abstract class BaseMenuLoader {
 
             return null;
         }
+    }
+
+    protected Connection getConnection(String url) {
+        return Jsoup.connect(getUrl()).method(GET);
     }
 
     protected abstract String getCacheKey();

@@ -23,17 +23,21 @@
  *
  */
 
-package org.voidsink.anewjkuapp.mensa;
+package org.voidsink.anewjkuapp.fragment;
 
-import android.content.Context;
+import org.voidsink.anewjkuapp.mensa.MenuLoader;
+import org.voidsink.anewjkuapp.mensa.TagestellerMenuLoader;
+import org.voidsink.anewjkuapp.utils.Consts;
 
-import org.voidsink.anewjkuapp.R;
-
-public class RaabMenuLoader implements MenuLoader {
+public class MensaTagestellerFragment extends MensaFragmentDetail {
 
     @Override
-    public IMensa getMensa(Context context) {
-        return new Mensa(Mensen.MENSA_RAAB, context.getString(R.string.mensa_title_raab));
+    protected MenuLoader createLoader() {
+        return new TagestellerMenuLoader();
     }
 
+    @Override
+    protected String getMensaLink() {
+        return Consts.MENSA_MENU_TAGESTELLER;
+    }
 }

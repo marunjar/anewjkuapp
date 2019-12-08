@@ -33,13 +33,10 @@ import org.jsoup.select.Elements;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 
-import java.text.NumberFormat;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Set;
-import java.util.regex.Matcher;
 
-public class ClassicMenuLoader extends MensenMenuLoader {
+public class TagestellerMenuLoader extends MensenMenuLoader {
 
     @Override
     protected void addCategories(Context c, MensaDay day, Elements categories) {
@@ -48,21 +45,10 @@ public class ClassicMenuLoader extends MensenMenuLoader {
             // filter classic menu 1 and classic menu 2
             try {
                 String categoryTitle = text(category.getElementsByTag("h2"), " ");
-                if (!TextUtils.isEmpty(categoryTitle) && categoryTitle.toUpperCase().contains("CLASSIC") && !titles.contains(categoryTitle)) {
+                if (!TextUtils.isEmpty(categoryTitle) && categoryTitle.toUpperCase().contains("TAGESTELLER") && !titles.contains(categoryTitle)) {
                     String meal = text(category.getElementsByTag("p"));
 
-                    double price = 0;
-
-                    if (!TextUtils.isEmpty(meal)) {
-                        final NumberFormat nf = NumberFormat.getInstance(Locale.FRENCH);
-
-                        Matcher betragMatcher = betragPattern.matcher(meal);
-                        if (betragMatcher.find()) {
-                            price = parsePrice(nf, betragMatcher.group());
-                        }
-                    }
-
-                    MensaMenu menu = new MensaMenu(categoryTitle, null, meal, price, 0, 0);
+                    MensaMenu menu = new MensaMenu(null, null, meal, 0, 0, 0);
                     day.addMenu(menu);
 
                     titles.add(categoryTitle);
@@ -76,16 +62,16 @@ public class ClassicMenuLoader extends MensenMenuLoader {
 
     @Override
     protected String getCacheKey() {
-        return Mensen.MENSA_CLASSIC;
+        return Mensen.MENSA_TAGESTELLER;
     }
 
     @Override
     protected String getMensaKey() {
-        return Mensen.MENSA_CLASSIC;
+        return Mensen.MENSA_TAGESTELLER;
     }
 
     @Override
     protected String getLocation(Context c) {
-        return c.getString(R.string.mensa_title_classic);
+        return c.getString(R.string.mensa_title_tagesteller);
     }
 }

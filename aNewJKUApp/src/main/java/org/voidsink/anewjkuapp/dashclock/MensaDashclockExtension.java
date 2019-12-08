@@ -45,6 +45,7 @@ import org.voidsink.anewjkuapp.mensa.IMensa;
 import org.voidsink.anewjkuapp.mensa.IMenu;
 import org.voidsink.anewjkuapp.mensa.KHGMenuLoader;
 import org.voidsink.anewjkuapp.mensa.RaabMenuLoader;
+import org.voidsink.anewjkuapp.mensa.TagestellerMenuLoader;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.ArrayList;
@@ -102,6 +103,8 @@ public class MensaDashclockExtension extends DashClockExtension {
 
             if (sp.getBoolean("pref_key_dashclock_ext_mensa_classic", false)) {
                 mensaList.add(new ClassicMenuLoader()
+                        .getMensa(getApplicationContext()));
+                mensaList.add(new TagestellerMenuLoader()
                         .getMensa(getApplicationContext()));
             }
             if (sp.getBoolean("pref_key_dashclock_ext_mensa_choice", false)) {

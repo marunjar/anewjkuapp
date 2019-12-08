@@ -26,7 +26,9 @@
 package org.voidsink.anewjkuapp.mensa;
 
 import android.content.Context;
+import android.text.TextUtils;
 
+import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -34,6 +36,8 @@ import org.voidsink.anewjkuapp.analytics.Analytics;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -41,15 +45,40 @@ import static org.voidsink.anewjkuapp.utils.Consts.MENSA_MENU_JKU;
 
 public abstract class MensenMenuLoader extends BaseMenuLoader implements MenuLoader {
 
-    static final String PATTERN_BETRAG = "\\d+,\\d{2}";
-    static final Pattern betragPattern = Pattern.compile(PATTERN_BETRAG);
+    private static final String PATTERN_BETRAG = "\\d+,\\d{2}";
+    protected static final Pattern betragPattern = Pattern.compile(PATTERN_BETRAG);
 
     @Override
     protected String getUrl() {
         return MENSA_MENU_JKU;
     }
 
+    @Override
+    protected Connection getConnection(String url) {
+        return super.getConnection(url)
+                .cookie("mensenCookieHintClosed", "1")
+                .cookie("mensenExtLocation", "1")
+                .cookie("selectedLocation", "1");
+    }
+
     private static final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
+
+    private Date parseDate(String value) throws ParseException {
+        Date date;
+        try {
+            date = df.parse(value);
+        } catch (ParseException e) {
+            Calendar cal = Calendar.getInstance();
+            int year = cal.get(Calendar.YEAR);
+            date = df.parse(value + year);
+            cal.add(Calendar.DAY_OF_MONTH, -7);
+            if (date != null && date.before(cal.getTime())) {
+                date = df.parse(value + (year + 1));
+            }
+        }
+
+        return date;
+    }
 
     @Override
     public IMensa getMensa(Context context) {
@@ -58,27 +87,20 @@ public abstract class MensenMenuLoader extends BaseMenuLoader implements MenuLoa
         try {
             Document doc = getData(context);
             if (doc != null) {
-                Elements days = doc.select("div#speiseplan.mobile div.day");
-                if (days.size() == 0) {
-                    days = doc.select("div#speiseplan.desktop div.day");
-                }
+                Elements days = doc.select("div.menu-nav div.weekdays.desktop li.nav-item");
 
                 if (days.size() > 0) {
                     for (Element dayElement : days) {
+                        String dataIndex = dayElement.attributes().get("data-index");
                         Elements dateElements = dayElement.getElementsByClass("date");
-                        if (dateElements.size() == 1) {
+                        if (dateElements.size() == 1 && !TextUtils.isEmpty(dataIndex)) {
+                            Date date = parseDate(dateElements.get(0).text());
+                            if (date != null) {
+                                MensaDay day = new MensaDay(date);
 
-                            MensaDay day;
-                            try {
-                                day = new MensaDay(df.parse(dateElements.get(0).text()));
-                            } catch (ParseException e) {
-                                day = null;
-                            }
-
-                            if (day != null) {
                                 mensa.addDay(day);
 
-                                Elements categories = dayElement.select("div.category");
+                                Elements categories = doc.select("div.menu-plan div.menu-item.menu-item-" + dataIndex);
                                 if (categories.size() > 0) {
                                     addCategories(context, day, categories);
                                 }

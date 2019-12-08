@@ -29,6 +29,9 @@ import org.voidsink.anewjkuapp.BuildConfig;
 
 public class Consts {
 
+    private Consts() {
+    }
+
     public static final String ARG_WORKER_CAL_COURSES = "UPDATE_CAL_LVA";
     public static final String ARG_WORKER_CAL_EXAM = "UPDATE_CAL_EXAM";
     public static final String ARG_WORKER_KUSSS_CURRICULA = "UPDATE_KUSSS_CURRICULA";
@@ -86,19 +89,16 @@ public class Consts {
     public static final int LOADER_ID_COURSES = 1;
     public static final int LOADER_ID_ASSESSMENTS = 2;
 
-    public static final String PROPERTY_ID = "UA-51633871-1";
-
     public static final String CHANNEL_ID_GRADES = BuildConfig.APPLICATION_ID + ".GRADES";
     public static final String CHANNEL_ID_EXAMS = BuildConfig.APPLICATION_ID + ".EXAMS";
     public static final String CHANNEL_ID_DEFAULT = BuildConfig.APPLICATION_ID + ".DEFAULT";
 
     // URLs
-    public static final String MENSA_MENU_JKU = "https://menu.mensen.at/index/index/locid/1";
-    public static final String MENSA_MENU_CLASSIC = MENSA_MENU_JKU;
-    public static final String MENSA_MENU_CHOICE = MENSA_MENU_JKU;
+    public static final String MENSA_MENU_JKU = "https://www.mensen.at/";
+    public static final String MENSA_MENU_CLASSIC = "https://menu.mensen.at/index/index/locid/1";
+    public static final String MENSA_MENU_CHOICE = "https://menu.mensen.at/index/index/locid/1";
+    public static final String MENSA_MENU_TAGESTELLER = "https://menu.mensen.at/index/index/locid/1";
     public static final String MENSA_MENU_KHG = "https://www.dioezese-linz.at/institution/807510/essen/menueplan";
     public static final String MENSA_MENU_RAAB = "http://www.sommerhaus-hotel.at/de/linz#speiseplan";
 
-    private Consts() {
-    }
 }
