@@ -1,287 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
-    <!-- Legend:
-		    - fixed
-		    * changed
-		    + added -->
-    <release version="0.52.2" versioncode="140075">
-        <change>+ App: unterstützt jetzt auch Android Q</change>
-        <change>- KUSSS: Fehler beim Login behoben</change>
-        <change>- App: viele Korrekturen und Optimierungen</change>
-        <change>- Mensa: Menü von KHG Mensa funktioniert wieder</change>
+    <release version="0.52.3" versioncode="140076">
+        <change>unterstützt jetzt auch Android Q</change>
+        <change>Fehler beim Login behoben</change>
+        <change>Menü von KHG Mensa funktioniert wieder</change>
+        <change>viele Korrekturen und Optimierungen</change>
     </release>
     <release version="0.51.9" versioncode="140072">
-        <change>- App: viele Korrekturen und Optimierungen</change>
-        <change>* Karte: neue Daten von OpenStreetMap</change>
+        <change>viele Korrekturen und Optimierungen</change>
+        <change>neue Daten von OpenStreetMap</change>
     </release>
     <release version="0.50.3" versioncode="140062">
-        <change>- Kalender: Berechtigungen prüfen</change>
-        <change>- KUSSS: Fehler beim Laden der Daten behoben</change>
-        <change>* Karte: neue Daten von OpenStreetMap</change>
+        <change>Kalender Berechtigungen prüfen</change>
+        <change>Fehler beim Laden der Daten von KUSSS behoben</change>
+        <change>neue Daten von OpenStreetMap</change>
     </release>
     <release version="0.50.2" versioncode="140061">
-        <change>- Kalender: Termine vom kommenden Semester werden auch geladen</change>
-        <change>+ LVAs: fehlende LVAs werden aus den Noten hergeleitet</change>
+        <change>Termine vom kommenden Semester werden auch geladen</change>
+        <change>fehlende LVAs werden aus den Noten hergeleitet</change>
     </release>
     <release version="0.50.1" versioncode="140060">
-        <change>- Kalender: Termine in den Semesterferien werden nicht mehr gelöscht</change>
-        <change>- Kalender: vergangene Termine werden nach dem Update nicht mehr gelöscht</change>
-        <change>- Mensa: sollte wieder ein Weilchen funktionieren</change>
-        <change>+ Mensa: der Speiseplan kann manuell aktualisiert werden</change>
-        <change>+ Mensa: Links zu den Speiseplänen der Mensen hinzugefügt</change>
-        <change>* Karte: neue Daten von OpenStreetMap</change>
+        <change>Termine in den Semesterferien werden nicht mehr gelöscht</change>
+        <change>vergangene Termine werden nach dem Update nicht mehr gelöscht</change>
+        <change>Mensa sollte wieder ein Weilchen funktionieren</change>
+        <change>der Speiseplan kann manuell aktualisiert werden</change>
+        <change>Links zu den Speiseplänen der Mensen hinzugefügt</change>
+        <change>neue Daten von OpenStreetMap</change>
     </release>
     <release version="0.50.0" versioncode="140059">
-        <change>+ App: jetzt auch für Android O</change>
-        <change>- App: viele Korrekturen und Optimierungen</change>
-        <change>* Karte: neue Daten von OpenStreetMap</change>
+        <change>unterstützt jetzt auch Android O</change>
+        <change>viele Korrekturen und Optimierungen</change>
+        <change>neue Daten von OpenStreetMap</change>
     </release>
     <release version="0.45.4" versioncode="140058">
-        <change>- App: kleine Korrekturen und Optimierungen beim Laden der Daten</change>
-        <change>* Karte: neue Daten von OpenStreetMap</change>
+        <change>kleine Korrekturen und Optimierungen beim Laden der Daten</change>
+        <change>neue Daten von OpenStreetMap</change>
     </release>
     <release version="0.45.3" versioncode="140057">
-        <change>- App: kleine Korrekturen und Optimierungen</change>
-        <change>* Karte: neue Daten von OpenStreetMap</change>
+        <change>kleine Korrekturen und Optimierungen</change>
+        <change>neue Daten von OpenStreetMap</change>
     </release>
     <release version="0.45.2" versioncode="140056">
-        <change>- Stundenplan: falsche Termine aus Kalender wurden gelöscht</change>
-        <change>- Stundenplan: Update der Termine funktioniert nicht</change>
-        <change>- App: Korrekturen und Optimierungen</change>
-        <change>* App: unnötige Berechtigungen entfernt</change>
-        <change>* Karte: neue Daten von OpenStreetMap</change>
+        <change>falsche Termine aus Kalender werden nicht mehr gelöscht</change>
+        <change>Update der Termine funktioniert wieder</change>
+        <change>Korrekturen und Optimierungen</change>
+        <change>unnötige Berechtigungen entfernt</change>
+        <change>neue Daten von OpenStreetMap</change>
     </release>
     <release version="0.44.1" versioncode="140053">
-        <change>- Stundenplan: genauer Standort für neue Termine wird gespeichert</change>
-        <change>- App: Korrekturen und Optimierungen</change>
+        <change>genauer Standort für neue Termine wird gespeichert</change>
+        <change>Korrekturen und Optimierungen</change>
     </release>
     <release version="0.44" versioncode="140052">
-        <change>* Karte: neue Daten von OpenStreetMap</change>
+        <change>neue Daten von OpenStreetMap</change>
     </release>
     <release version="0.43.3" versioncode="140051">
-        <change>- Karte: bring App nicht mehr zum Absturz</change>
-        <change>- App: startet wieder auf Android Versionen kleiner 5.0</change>
-        <change>- App: viele kleinere Korrekturen und Optimierungen</change>
+        <change>Karte bring App nicht mehr zum Absturz</change>
+        <change>App startet wieder auf Android Versionen kleiner 5.0</change>
+        <change>viele kleinere Korrekturen und Optimierungen</change>
     </release>
     <release version="0.43.2" versioncode="140050">
-        <change>* Karte: neue Daten von OpenStreetMap</change>
+        <change>neue Daten von OpenStreetMap</change>
     </release>
     <release version="0.43" versioncode="140048">
-        <change>- Noten: laden von Noten aus Auslandssemester</change>
-        <change>+ Karte: fehlende Räume hinzugefügt</change>
-        <change>* App: Icons aktualisiert</change>
+        <change>laden von Noten aus Auslandssemester</change>
+        <change>fehlende Räume zur Karte hinzugefügt</change>
+        <change>App Icons aktualisiert</change>
     </release>
     <release version="0.42.5" versioncode="140047">
-        <change>- Mensa: Menü von KHG Mensa funktioniert wieder</change>
+        <change>Menü von KHG Mensa funktioniert wieder</change>
     </release>
     <release version="0.42.4" versioncode="140046">
-        <change>- Synchronisation: Fehler behoben</change>
-        <change>- Stundenplan: noch mehr Fehler behoben</change>
+        <change>Fehler bei Synchronisation behoben</change>
+        <change>noch mehr Fehler im Stundenplan behoben</change>
     </release>
     <release version="0.42.3" versioncode="140045">
-        <change>- Stundenplan: mehr Fehler behoben</change>
+        <change>mehr Fehler im Stundenplan behoben</change>
     </release>
     <release version="0.42.2" versioncode="140044">
-        <change>- Stundenplan: mehr Fehler bei mehrzeiligen Terminbeschreibungen behoben</change>
-        <change>- App: Fehler mit Berechtigungen für Android 6 behoben</change>
-        <change>+ Einstellungen: Kalenderansicht für Stundenplan kann aktiviert werden</change>
+        <change>mehr Fehler bei mehrzeiligen Terminbeschreibungen behoben</change>
+        <change>Fehler mit Berechtigungen für Android 6 behoben</change>
+        <change>Kalenderansicht für Stundenplan kann aktiviert werden</change>
     </release>
     <release version="0.42.1" versioncode="140043">
-        <change>- Stundenplan: Fehler bei mehrzeiligen Terminbeschreibungen behoben</change>
+        <change>Fehler bei mehrzeiligen Terminbeschreibungen behoben</change>
     </release>
     <release version="0.42" versioncode="140042">
-        <change>- App: viele Korrekturen und Optimierungen</change>
-        <change>* App: Design angepasst</change>
-        <change>* Karte: neue Daten von OpenStreetMap</change>
-        <change>+ Einstellungen: nur LVAs mit Noten anzeigen</change>
+        <change>viele Korrekturen und Optimierungen</change>
+        <change>App Design angepasst</change>
+        <change>neue Daten von OpenStreetMap</change>
+        <change>es können jetzt nur LVAs mit Noten angezeigt werden</change>
     </release>
     <release version="0.41" versioncode="140041">
-        <change>* App: Schriftarten und Farben angepasst</change>
+        <change>Schriftarten und Farben angepasst</change>
     </release>
     <release version="0.40" versioncode="140040">
-        <change>* Fehler in Statistik behoben</change>
+        <change>Fehler in Statistik behoben</change>
     </release>
     <release version="0.39" versioncode="140039">
-        <change>* Karte: neue Daten von OpenStreetMap</change>
-        <change>+ App: ist jetzt auch über F-Droid verfügbar</change>
+        <change>neue Daten von OpenStreetMap</change>
+        <change>App ist jetzt auch über F-Droid verfügbar</change>
     </release>
     <release version="0.38" versioncode="140038">
-        <change>+ Einstellungen: Tracking von Fehlern kann deaktiviert werden</change>
+        <change>Tracking von Fehlern kann deaktiviert werden</change>
     </release>
     <release version="0.37" versioncode="140037">
-        <change>- Karte: Fehler bei Anzeige von MT 226/1 behoben</change>
-        <change>* Karte: neue Farben und Symbole</change>
+        <change>Fehler bei Anzeige von MT 226/1 behoben</change>
+        <change>neue Farben und Symbole für Karte</change>
     </release>
     <release version="0.36" versioncode="140036">
-        <change>- KUSSS: Fehler beim Laden von LVAs behoben</change>
-        <change>* App: Material Design für Navigation</change>
-        <change>* App: Synchronisationsintervall "1h" entfernt</change>
+        <change>Fehler beim Laden von LVAs behoben</change>
+        <change>Material Design für Navigation</change>
+        <change>Synchronisationsintervall "1h" entfernt</change>
     </release>
     <release version="0.35" versioncode="140035">
-        <change>- KUSSS: Fehler beim Login behoben, Daten können wieder geladen werden</change>
+        <change>Fehler beim Login behoben, Daten können wieder geladen werden</change>
     </release>
     <release version="0.34" versioncode="140034">
-        <change>- KUSSS: Fehler beim Laden von Prüfungen korrigiert</change>
-        <change>- KUSSS: Fehler beim Zuordnen von Noten zu LVAs korrigiert</change>
-        <change>* App: Material App Icon</change>
-        <change>* App: kleine Änderungen an der Oberfläche</change>
+        <change>Fehler beim Laden von Prüfungen korrigiert</change>
+        <change>Fehler beim Zuordnen von Noten zu LVAs korrigiert</change>
+        <change>Material App Icon</change>
+        <change>kleine Änderungen an der Oberfläche</change>
     </release>
     <release version="0.33" versioncode="140033">
-        <change>- KUSSS: Laden von LVAs verbessert</change>
-        <change>- App: diverse Fehler korrigiert</change>
-        <change>* App: kleine Änderungen an der Oberfläche</change>
+        <change>Laden von LVAs verbessert</change>
+        <change>diverse Fehler korrigiert</change>
+        <change>kleine Änderungen an der Oberfläche</change>
     </release>
     <release version="0.32" versioncode="140032">
-        <change>- KUSSS: Fehler beim Laden von Daten behoben</change>
-        <change>- Mensa: Fehler beim Laden von Daten behoben</change>
-        <change>* App: Daten werden jetzt immer synchronisiert</change>
+        <change>Fehler beim Laden von Daten behoben</change>
+        <change>Daten werden jetzt immer synchronisiert</change>
     </release>
     <release version="0.31" versioncode="140031">
-        <change>- KUSSS: LVAs werden wieder geladen</change>
-        <change>* App: fehlerhaftes Grid entfernt (betrifft vor allem Tablets)</change>
-        <change>* App: UI leicht angepasst</change>
+        <change>LVAs werden wieder geladen</change>
+        <change>fehlerhaftes Grid entfernt (betrifft vor allem Tablets)</change>
+        <change>UI leicht angepasst</change>
     </release>
     <release version="0.30" versioncode="140030">
-        <change>* Statistik: Diagramme angepasst</change>
-        <change>+ Stundenplan: Synchronisation kann deaktiviert werden</change>
-    </release>
-    <release version="0.29" versioncode="140029">
-        <change>- Statistik: anerkannte Beurteilungen werden wieder angezeigt</change>
-        <change>- KUSSS: Fehler beim Laden von Terminen behoben</change>
-        <change>- Mensa: alte Speispläne werden nicht mehr angezeigt</change>
-        <change>* Stundenplan: "auf Karte anzeigen" verbessert</change>
-        <change>+ Stundenplan: Termine können in beliebige Google-Kalender importiert werden</change>
-    </release>
-    <release version="0.28" versioncode="140028">
-        <change>Material Design: jetzt für die ganze App</change>
-    </release>
-    <release version="0.27" versioncode="140027">
-        <change>- Statistik: Diagramme werden wieder angezeigt</change>
-    </release>
-    <release version="0.26" versioncode="140026">
-        <change>+ App: ÖH News sind jetzt verfügbar</change>
-        <change>+ KUSSS: Studienrichtungen werden geladen</change>
-        <change>+ KUSSS: folgende Beurteilungen werden jetzt erkannt: mit Erfolg Teilgenommen, bestanden, mit Auszeichnung bestanden</change>
-        <change>+ Statistik: Notendurchschnitt wird optional nur aus positiven Noten berechnet</change>
-        <change>* App: Navigation mit Zurück-Button verbessert</change>
-        <change>* Mensa: bei Start wird gleich das Menü für den aktuellen Tag angezeigt</change>
-        <change>* Stundenplan: "in Kalender anzeigen" öffnet nur mehr den Kalender</change>
-    </release>
-    <release version="0.25" versioncode="140025">
-        <change>- Mensa: Fehler beim Laden von Choice behoben</change>
-        <change>- Prüfungen: Fehler beim Laden von Ort und Zeit behoben</change>
-        <change>* App: Material Design angepasst</change>
-        <change>* App: Launcher Icon aktualisiert</change>
-    </release>
-    <release version="0.24" versioncode="140024">
-        <change>+ App: jetzt auch in Englisch</change>
-        <change>+ App: Passwort kann beim Anmelden auch als Klartext angezeigt werden</change>
-    </release>
-    <release version="0.23" versioncode="140023">
-        <change>- KUSSS: Fehler beim Laden der Semester</change>
-        <change>- Mensa: Menü von Freitag wurde nicht angezeigt</change>
-        <change>* Karte: größere Karte damit auch PE001, PE002 und PE003 zu finden sind</change>
-        <change>* App: Material Design</change>
-        <change>* App: neue Icons</change>
-        <change>* App: dunkles Design ist wieder aktivierbar</change>
-    </release>
-    <release version="0.22" versioncode="140022">
-        <change>- KUSSS: Fehler beim Laden von Noten behoben</change>
-        <change>- KUSSS: Fehler beim Laden von Prüfungen behoben</change>
-        <change>- KUSSS: Fehler beim Zugriff auf KUSSS behoben</change>
-    </release>
-    <release version="0.21" versioncode="140021">
-        <change>+ Termine: Ort am Campus anzeigen lassen</change>
-        <change>+ Mensa: Menüs optional nach Tagen gruppieren</change>
-        <change>+ Stats: LVAs, Noten</change>
-        <change>- KUSSS: Zugriffsverletzung beim Laden von LVAs und Prüfungen</change>
-        <change>* App: neues Layout</change>
-    </release>
-    <release version="0.19" versioncode="140019">
-        <change>- KUSSS: Zugriffsverletzung beim Aktualisieren der Kalender</change>
-        <change>* App: Unterstützung für alle Android Versionen vor ICS entfernt</change>
-        <change>* App: neues Layout</change>
-    </release>
-	<release version="0.18" versioncode="140018">
-	   <change>- KUSSS: Semester wurde bei Sprachkursen nicht richtig ausgelesen</change>
-	</release>
-    <release version="0.17" versioncode="140017">
-	   <change>- nach der Ersten Anmeldung fehlten Kalender</change>
-	   <change>- es wurden doppelte Noten angezeigt</change>
-	   <change>- Sprachkurse wurden nicht richtig erkannt</change>
-	   <change>- bei den Prüfungen wurden aktuelle Anmeldungen nicht angezeigt</change>
-	   <change>* Zugriffe auf KUSSS verbessert</change>
-	   <change>* es wird in einem größeren Zeitraum nach Terminen gesucht</change>
-	   <change>* LVA-Nr und LVA-Leiter werden in der Beschreibung und nicht mehr im Title von Terminen angezeigt</change>
-	   <change>+ fehlende Orte zum Campusplan hinzugefügt</change>
-	</release>
-    <release version="0.16" versioncode="140016">
-       <change>* bei den LVAs können optional die ECTS-Punkte als Balkendiagramm angezeigt werden</change>
-       <change>* die Dashclock Extension kann auch immer angezeigt werden</change>
-       <change>* bei den Noten wird auch der Notendurchschnitt angezeigt</change>
-       <change>- nach start der App wurde immer "JKU App" als Überschrift angezeigt</change>
-       <change>- unter Gingerbread konnten nur Termine für 30 Tage angezeigt werden</change>
-       <change>- in der LVA-Liste für alle Semester wurden nicht alle LVAs angezeigt</change>
-    </release>
-    <release version="0.15" versioncode="140015">
-       <change>* leeres Menü am Wochenende in Dashclock Extension nicht anzeigen</change>
-       <change>- Probleme mit Notifications</change>
-       <change>- Probleme beim Laden von Prüfungen</change>
-    </release>
-    <release version="0.14" versioncode="140014">
-       <change>* Swipe für Mensa</change>
-       <change>* LVA Liste mit Diagramm</change>
-       <change>- manuelle Updates für Dashclock Extension erlauben</change>
-    </release>
-    <release version="0.12" versioncode="140012">
-       <change>+ Campusplan Preview</change>
-       <change>- Kalender refresh</change>
-       <change>+ Mensa Dashclock Extension ab Android 4.2</change>
-    </release>
-    <release version="0.11" versioncode="140011">
-       <change>- Termine werden nach Verbindungsabbruch nicht mehr gelöscht</change>
-       <change>- Refresh funktioniert jetzt</change>
-       <change>* "Prüfungen nach LVA-Nr laden"</change>
-    </release>
-    <release version="0.10" versioncode="140010">
-       <change>- Gingerbread Force Close</change>
-    </release>
-    <release version="0.09" versioncode="140009">
-       <change>+ KUSSS Update: neue Kategorien für Beurteilungen</change>
-       <change>+ Prüfungen können nach LVA-Nr (ohne Semester) geladen werden</change>
-    </release>
-    <release version="0.08" versioncode="140008">
-       <change>- Menü vom Choice kann wieder geladen werden</change>
-    </release>
-    <release version="0.07" versioncode="140007">
-       <change>+ für Betatest vorbereiten</change>
-    </release>
-    <release version="0.06" versioncode="140006">
-        <change>* Speiseplan wird gecached</change>
-        <change>- Rotation vorläufig deaktiviert</change>
-        <change>+ Karte vom Campus hinzugefügt</change>
-        <change>+ eigener Standort kann angezeigt werden</change>
-    </release>
-    <release version="0.05" versioncode="140005">
-        <change>+ erweiterbarer Zeitraum in dem Termine angezeigt werden</change>
-        <change>- Konto anlegen erzeugt Kalender nicht mehr doppelt</change>
-        <change>+ KHG und Raab Mensa hinzugefügt</change>
-    </release>
-    <release version="0.04" versioncode="140004">
-        <change>* Gingerbread Support hinzugefügt</change>
-    </release>
-    <release version="0.03" versioncode="140003">
-        <change>+ JKU Mensa hinzugefügt</change>
-    </release>
-    <release version="0.02" versioncode="140002">
-        <change>+ Termine werden importiert</change>
-        <change>+ LVAs werden importiert</change>
-        <change>+ Noten werden importiert</change>
-        <change>+ neue Prüfungen werden importiert</change>
-    </release>
-    <release version="0.01" versioncode="140001">
-        <change>+ initial release</change>
-        <change>+ KUSSS Konto kann erstellt werden</change>
-        <change>+ etwas statischen ÖH Inhalt hinzugefügt</change>
+        <change>Diagramme angepasst</change>
+        <change>Synchronisation des Stundenplan kann deaktiviert werden</change>
     </release>
 </changelog>
