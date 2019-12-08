@@ -26,127 +26,64 @@
 package org.voidsink.anewjkuapp.mensa;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
-import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.analytics.Analytics;
-
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ChoiceMenuLoader extends MensenMenuLoader {
-
-    private static final SimpleDateFormat df = new SimpleDateFormat("EEEE, dd. MMMM yyyy", Locale.GERMAN);
-
-    private static final String PATTER_EURO = "\\s*Euro";
-
-    private static final Pattern betragEuroPattern = Pattern.compile(PATTERN_BETRAG + PATTER_EURO);
-    private static final Pattern betrag2EuroPattern = Pattern.compile(PATTERN_BETRAG + "\\/" + PATTERN_BETRAG + PATTER_EURO);
 
     @Override
     protected void addCategories(Context c, MensaDay day, Elements categories) {
         for (Element category : categories) {
             // filter choice
-            String categoryTitle = category.getElementsByClass("category-title").text();
-            if ("Choice".equals(categoryTitle)) {
+            String categoryTitle = text(category.getElementsByTag("h2"), " ");
+            if (!TextUtils.isEmpty(categoryTitle) && categoryTitle.toUpperCase().contains("CHOICE")) {
                 Elements paragraphs = category.getElementsByTag("p");
-                if (paragraphs.size() > 1) {
-                    try {
-                        Date date = df.parse(paragraphs.get(0).text().replace((char) 0xA0, ' ')); // parse after replacing &nbsp; with normal space
+                String name = null;
+                StringBuilder meal = new StringBuilder();
+                boolean hasData = false;
 
-                        if (day.getDate().equals(date)) {
-                            for (int i = 1; i < paragraphs.size(); i++) {
-                                try {
-                                    String name = null;
-
-                                    StringBuilder meal = new StringBuilder();
-                                    double price = 0;
-                                    double priceBig = 0;
-                                    boolean hasData = false;
-
-                                    final List<Node> nodes = paragraphs.get(i).childNodes();
-
-                                    for (int n = 0; n < nodes.size(); n++) {
-                                        Node node = nodes.get(n);
-
-                                        if (node instanceof TextNode) {
-                                            TextNode textNode = (TextNode) node;
-
-                                            String text = textNode.text().replace((char) 0xA0, ' ').trim();
-
-                                            final NumberFormat nf = NumberFormat.getInstance(Locale.FRENCH);
-
-                                            Matcher betrag2EuroMatcher = betrag2EuroPattern.matcher(text);
-                                            if (betrag2EuroMatcher.find()) {
-                                                Matcher betragMatcher = betragPattern.matcher(text.substring(betrag2EuroMatcher.start(), betrag2EuroMatcher.end()));
-                                                if (betragMatcher.find()) {
-                                                    price = nf.parse(betragMatcher.group()).doubleValue();
-                                                }
-                                                if (betragMatcher.find()) {
-                                                    priceBig = nf.parse(betragMatcher.group()).doubleValue();
-                                                }
-                                                text = text.substring(0, betrag2EuroMatcher.start()) + text.substring(betrag2EuroMatcher.end());
-                                            }
-
-                                            Matcher betragEuroMatcher = betragEuroPattern.matcher(text);
-                                            if (betragEuroMatcher.find()) {
-                                                Matcher betragMatcher = betragPattern.matcher(text.substring(betragEuroMatcher.start(), betragEuroMatcher.end()));
-                                                if (betragMatcher.find()) {
-                                                    price = nf.parse(betragMatcher.group()).doubleValue();
-                                                }
-
-                                                text = text.substring(0, betragEuroMatcher.start()) + text.substring(betragEuroMatcher.end());
-                                            }
-
-                                            meal.append(" ");
-                                            meal.append(text.trim());
-                                            hasData = true;
-                                        } else if (node instanceof Element) {
-                                            Element elementNode = (Element) node;
-                                            switch (elementNode.tag().toString()) {
-                                                case "br":
-                                                    if (hasData) {
-                                                        day.addMenu(new MensaMenu(name, null, meal.toString().trim(), price, priceBig, 0));
-                                                        meal.setLength(0);
-                                                        price = 0;
-                                                        priceBig = 0;
-                                                        hasData = false;
-                                                    }
-                                                    break;
-                                                case "strong":
-                                                    name = elementNode.text().replace((char) 0xA0, ' ').trim();
-                                                    break;
-                                            }
-                                        }
-
-                                        if (hasData && (n == nodes.size() - 1)) {
-                                            day.addMenu(new MensaMenu(name, null, meal.toString().trim(), price, priceBig, 0));
-                                            meal.setLength(0);
-                                            price = 0;
-                                            priceBig = 0;
-                                            hasData = false;
-                                        }
-                                    }
-                                } catch (Exception e) {
-                                    Analytics.sendException(c, e, false, paragraphs.get(i).text());
-                                }
-                            }
+                for (int i = 0; i < paragraphs.size(); i++) {
+                    String newName = parseName(paragraphs.get(i));
+                    if (newName != null) {
+                        if (hasData) {
+                            day.addMenu(new MensaMenu(name, null, meal.toString().trim(), 0, 0, 0));
                         }
-                    } catch (ParseException e) {
-                        Analytics.sendException(c, e, false, category.text());
+                        name = newName;
+                        meal.setLength(0);
+                        hasData = false;
+
+                        continue;
+                    } else {
+                        String text = paragraphs.get(i).text().trim();
+                        if (!TextUtils.isEmpty(text)) {
+                            meal.append("\r\n");
+                            meal.append(text);
+                            hasData = true;
+                        }
+                    }
+
+                    if (hasData && (i == paragraphs.size() - 1)) {
+                        day.addMenu(new MensaMenu(name, null, meal.toString().trim(), 0, 0, 0));
                     }
                 }
             }
         }
+    }
+
+    private String parseName(Element element) {
+        if (element.tag().getName().equals("p")) {
+            Elements children = element.children();
+            if (children.size() == 1) {
+                Element child = children.get(0);
+                if (child.tag().getName().equals("strong") && child.text().endsWith(":")) {
+                    return child.text();
+                }
+            }
+        }
+        return null;
     }
 
     @Override

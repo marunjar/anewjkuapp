@@ -35,7 +35,6 @@ import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -56,9 +55,9 @@ public class KHGMenuLoader extends BaseMenuLoader implements MenuLoader {
                 for (Element element : elements) {
                     Elements columns = element.children();
                     if (columns.size() == 4) {
-                        handle4(mensa, columns);
+                        day = handle4Columns(mensa, columns);
                     } else if (columns.size() == 3) {
-                        handle3(day, columns);
+                        handle3Columns(day, columns);
                     } else {
                         throw new RuntimeException("Table with columns.size() = " + columns.size() + " found. Expected 3 or 4.");
                     }
@@ -72,14 +71,15 @@ public class KHGMenuLoader extends BaseMenuLoader implements MenuLoader {
         return mensa;
     }
 
-    private void handle3(MensaDay day, Elements columns) {
-        String name = "Menü";
+    private void handle3Columns(MensaDay day, Elements columns) {
+        String name = "Menü 2";
         String[] strings;
         String soup;
         String meal;
         double price;
         double priceBig;
-        double oehBonus;//IMenu menu = new MensaMenu()
+        double oehBonus;
+        
         if (day != null) {
             strings = columns.get(0).text().replace((char) 0xA0, ' ').trim().split(",", 2);
             if (strings.length == 2) {
@@ -89,23 +89,17 @@ public class KHGMenuLoader extends BaseMenuLoader implements MenuLoader {
                 soup = null;
                 meal = strings[0];
             }
-            try {
-                if (columns.get(1).text().replace((char) 0xA0, ' ').trim().isEmpty()) {
-                    price = nf.parse(columns.get(2).text()).doubleValue();
-                    priceBig = 0;
-                    oehBonus = 0;
-                    if (price == 1.3) {
-                        name = "Mehlspeise";
-                    }
-                } else {
-                    price = nf.parse(columns.get(1).text()).doubleValue();
-                    priceBig = nf.parse(columns.get(2).text()).doubleValue();
-                    oehBonus = priceBig - price;
-                }
-            } catch (ParseException e) {
-                price = 0;
+            if (columns.get(1).text().replace((char) 0xA0, ' ').trim().isEmpty()) {
+                price = parsePrice(nf, columns.get(2).text());
                 priceBig = 0;
                 oehBonus = 0;
+                if (price == 1.3) {
+                    name = "Mehlspeise";
+                }
+            } else {
+                price = parsePrice(nf, columns.get(1).text());
+                priceBig = parsePrice(nf, columns.get(2).text());
+                oehBonus = priceBig - price;
             }
 
             if (!TextUtils.isEmpty(meal)) {
@@ -114,8 +108,8 @@ public class KHGMenuLoader extends BaseMenuLoader implements MenuLoader {
         }
     }
 
-    private MensaDay handle4(Mensa mensa, Elements columns) {
-        String name = "Menü";
+    private MensaDay handle4Columns(Mensa mensa, Elements columns) {
+        String name = "Menü 1";
         MensaDay day;
         String[] strings;
         String soup;
@@ -159,23 +153,17 @@ public class KHGMenuLoader extends BaseMenuLoader implements MenuLoader {
             soup = null;
             meal = strings[0];
         }
-        try {
-            if (columns.get(2).text().replace((char) 0xA0, ' ').trim().isEmpty()) {
-                price = nf.parse(columns.get(3).text()).doubleValue();
-                priceBig = 0;
-                oehBonus = 0;
-                if (price == 1.3) {
-                    name = "Mehlspeise";
-                }
-            } else {
-                price = nf.parse(columns.get(2).text()).doubleValue();
-                priceBig = nf.parse(columns.get(3).text()).doubleValue();
-                oehBonus = priceBig - price;
-            }
-        } catch (ParseException e) {
-            price = 0;
+        if (columns.get(2).text().replace((char) 0xA0, ' ').trim().isEmpty()) {
+            price = parsePrice(nf, columns.get(3).text());
             priceBig = 0;
             oehBonus = 0;
+            if (price == 1.3) {
+                name = "Mehlspeise";
+            }
+        } else {
+            price = parsePrice(nf, columns.get(2).text());
+            priceBig = parsePrice(nf, columns.get(3).text());
+            oehBonus = priceBig - price;
         }
 
         if (!TextUtils.isEmpty(meal)) {

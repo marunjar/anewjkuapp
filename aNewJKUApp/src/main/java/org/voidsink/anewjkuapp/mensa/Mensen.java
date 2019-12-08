@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,8 +27,13 @@ package org.voidsink.anewjkuapp.mensa;
 
 public class Mensen {
 
+    private Mensen() {
+    }
+
     public static final String MENSA_CHOICE = "CHOICE";
     public static final String MENSA_CLASSIC = "CLASSIC";
     public static final String MENSA_KHG = "KHG";
     public static final String MENSA_RAAB = "RAAB";
+    public static final String MENSA_TAGESTELLER = "TAGESTELLER";
+
 }

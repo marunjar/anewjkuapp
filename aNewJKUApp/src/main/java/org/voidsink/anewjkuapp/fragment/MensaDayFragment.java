@@ -58,6 +58,7 @@ import org.voidsink.anewjkuapp.mensa.IMenu;
 import org.voidsink.anewjkuapp.mensa.KHGMenuLoader;
 import org.voidsink.anewjkuapp.mensa.MenuLoader;
 import org.voidsink.anewjkuapp.mensa.RaabMenuLoader;
+import org.voidsink.anewjkuapp.mensa.TagestellerMenuLoader;
 import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.sectionedrecycleradapter.SectionedRecyclerViewAdapter;
 
@@ -111,6 +112,7 @@ public class MensaDayFragment extends BaseFragment implements LoaderManager.Load
         List<MenuLoader> loaders = new ArrayList<>();
 
         loaders.add(new ClassicMenuLoader());
+        loaders.add(new TagestellerMenuLoader());
         loaders.add(new ChoiceMenuLoader());
         loaders.add(new KHGMenuLoader());
         loaders.add(new RaabMenuLoader());
