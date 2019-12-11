@@ -47,9 +47,11 @@ import androidx.work.WorkerParameters;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.property.Description;
+import net.fortuna.ical4j.model.property.Location;
+import net.fortuna.ical4j.model.property.Summary;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,6 +72,7 @@ import org.voidsink.anewjkuapp.utils.Consts;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -194,45 +197,11 @@ public class ImportCalendarWorker extends BaseWorker {
                             if (e instanceof VEvent) {
                                 VEvent ev = ((VEvent) e);
 
-                                String summary = ev.getSummary().getValue()
-                                        .trim();
-                                String description = ev.getDescription()
-                                        .getValue().trim();
+                                enforceFieldsNotNull(ev);
 
-                                Matcher courseIdTermMatcher = courseIdTermPattern
-                                        .matcher(summary); // (courseId/term)
-                                if (courseIdTermMatcher.find()) {
-                                    if (!description.isEmpty()) {
-                                        description += lineSeparator;
-                                        description += lineSeparator;
-                                    }
-                                    description += summary
-                                            .substring(courseIdTermMatcher.start());
-                                    summary = summary.substring(0,
-                                            courseIdTermMatcher.start());
-                                } else {
-                                    Matcher lecturerMatcher = lecturerPattern
-                                            .matcher(summary);
-                                    if (lecturerMatcher.find()) {
-                                        if (!description.isEmpty()) {
-                                            description += lineSeparator;
-                                            description += lineSeparator;
-                                        }
-                                        description += summary
-                                                .substring(lecturerMatcher
-                                                        .start());
-                                        summary = summary.substring(0,
-                                                lecturerMatcher.start());
-                                    }
+                                if (!splitSummaryV2(ev, lineSeparator)) {
+                                    splitSummaryV1(ev, lineSeparator);
                                 }
-
-                                summary = summary.trim().replaceAll("([\\r\\n]|\\\\n)+", ", ").trim();
-                                description = description.trim();
-
-                                ev.getProperty(Property.SUMMARY).setValue(
-                                        summary);
-                                ev.getProperty(Property.DESCRIPTION).setValue(
-                                        description);
                             }
                         }
 
@@ -496,6 +465,109 @@ public class ImportCalendarWorker extends BaseWorker {
                 mProvider.release();
             }
             cancelUpdateNotification();
+        }
+    }
+
+    private void enforceFieldsNotNull(VEvent ev) {
+        if (ev.getDescription() == null) {
+            ev.getProperties().add(new Description());
+        }
+        if (ev.getDescription().getValue() == null) {
+            ev.getDescription().setValue("");
+        }
+        if (ev.getSummary() == null) {
+            ev.getProperties().add(new Summary(""));
+        }
+        if (ev.getSummary().getValue() == null) {
+            ev.getSummary().setValue("");
+        }
+        if (ev.getLocation() == null) {
+            ev.getProperties().add(new Location());
+        }
+        if (ev.getLocation().getValue() == null) {
+            ev.getLocation().setValue("");
+        }
+    }
+
+    private boolean splitSummaryV1(VEvent ev, String lineSeparator) {
+        String summary = ev.getSummary().getValue()
+                .trim();
+        String description = ev.getDescription()
+                .getValue().trim();
+
+        Matcher courseIdTermMatcher = courseIdTermPattern
+                .matcher(summary); // (courseId/term)
+        if (courseIdTermMatcher.find()) {
+            description = appendWithNewLines(
+                    description,
+                    summary.substring(courseIdTermMatcher.start()),
+                    lineSeparator);
+            summary = summary.substring(0,
+                    courseIdTermMatcher.start());
+        } else {
+            Matcher lecturerMatcher = lecturerPattern
+                    .matcher(summary);
+            if (lecturerMatcher.find()) {
+                description = appendWithNewLines(
+                        description,
+                        summary.substring(lecturerMatcher.start()),
+                        lineSeparator);
+                summary = summary.substring(0,
+                        lecturerMatcher.start());
+            }
+        }
+
+        summary = summary.trim().replaceAll("([\\r\\n]|\\\\n)+", ", ").trim();
+        description = description.trim();
+
+        ev.getSummary().setValue(summary);
+        ev.getDescription().setValue(description);
+
+        return true;
+    }
+
+    private boolean splitSummaryV2(VEvent ev, String lineSeparator) {
+        String summary = ev.getSummary().getValue().trim()
+                .replaceAll("([\\r\\n]|\\\\n)+", ", ").trim();
+        String description = ev.getDescription()
+                .getValue().trim();
+        // Summary: Lecture / Lecturer / courseId
+        List<String> values = new ArrayList<>(Arrays.asList(summary.split("\\s+/\\s+")));
+        if (values.size() >= 3) {
+            description = appendWithNewLines(description, values.get(1), lineSeparator);
+            values.remove(1);
+
+            Matcher courseIdTermMatcher = courseIdTermPattern
+                    .matcher(values.get(1)); // (courseId/term)
+            if (courseIdTermMatcher.find()) {
+                description = appendWithNewLines(description, values.get(1), lineSeparator, 1);
+                values.remove(1);
+            }
+
+            summary = TextUtils.join(" / ", values);
+
+            ev.getSummary().setValue(summary.trim());
+            ev.getDescription().setValue(description.trim());
+
+            return true;
+        }
+        return false;
+    }
+
+    private String appendWithNewLines(String content, String append, String lineSeparator) {
+        return appendWithNewLines(content, append, lineSeparator, 2);
+    }
+
+    private String appendWithNewLines(String content, String append, String lineSeparator, int separatorCount) {
+        if (TextUtils.isEmpty(content)) {
+            return append;
+        } else {
+            StringBuilder sb = new StringBuilder(content);
+            for (int i = 0; i < separatorCount; i++) {
+                sb.append(lineSeparator);
+            }
+            sb.append(append);
+            return sb.toString();
         }
     }
 
