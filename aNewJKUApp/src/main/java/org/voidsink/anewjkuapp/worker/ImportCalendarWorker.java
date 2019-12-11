@@ -558,12 +558,12 @@ public class ImportCalendarWorker extends BaseWorker {
         return appendWithNewLines(content, append, lineSeparator, 2);
     }
 
-    private String appendWithNewLines(String content, String append, String lineSeparator, int separatorCount) {
+    private String appendWithNewLines(String content, String append, String lineSeparator, int lineCount) {
         if (TextUtils.isEmpty(content)) {
             return append;
         } else {
             StringBuilder sb = new StringBuilder(content);
-            for (int i = 0; i < separatorCount; i++) {
+            for (int i = 0; i < lineCount; i++) {
                 sb.append(lineSeparator);
             }
             sb.append(append);
