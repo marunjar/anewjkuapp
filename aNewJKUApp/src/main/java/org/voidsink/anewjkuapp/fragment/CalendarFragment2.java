@@ -97,7 +97,7 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
         mWeekView.setMinDate(cal);
 
         cal = Calendar.getInstance();
-        cal.add(Calendar.MONTH, 2);
+        cal.add(Calendar.MONTH, 9);
         mWeekView.setMaxDate(cal);
 
         mWeekView.setOnEventClickListener(this);
