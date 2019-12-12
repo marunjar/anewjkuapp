@@ -47,6 +47,7 @@ import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -453,6 +454,21 @@ public class KusssHandler {
             iCal = loadIcalLegacy(c, calendarBuilder, calendarName);
         }
 
+        return iCal;
+    }
+
+    private Calendar loadIcalFromFile(Context c, CalendarBuilder calendarBuilder, String calendarname) {
+        Calendar iCal;
+
+        try (InputStream assetData = new BufferedInputStream(c.getAssets().open("kusss.ics"))) {
+            iCal = calendarBuilder.build(assetData);
+        } catch (IOException e) {
+            e.printStackTrace();
+            iCal = null;
+        } catch (ParserException e) {
+            e.printStackTrace();
+            iCal = null;
+        }
         return iCal;
     }
 
