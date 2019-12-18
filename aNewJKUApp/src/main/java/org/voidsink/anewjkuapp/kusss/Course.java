@@ -26,6 +26,7 @@
 package org.voidsink.anewjkuapp.kusss;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -68,7 +69,10 @@ public class Course {
                     setTitle(columns.get(5).text());
                     setLvaType(columns.get(4).text()); // type (UE, ...)
                     setTeacher(columns.get(7).text()); // Leiter
-                    setCid(Integer.parseInt(columns.get(2).text())); // curricula id
+                    String cidText = columns.get(2).text();
+                    if (!TextUtils.isEmpty(cidText)) {
+                        setCid(Integer.parseInt(cidText)); // curricula id
+                    }
                     setECTS(Double.parseDouble(columns.get(8).text()
                             .replace(",", "."))); // ECTS
                     // setSWS(Double.parseDouble(columns.get.child(6).text()
@@ -76,7 +80,7 @@ public class Course {
                     setCode(columns.get(3).text());
                 }
             } catch (Exception e) {
-                Analytics.sendException(c, e, true);
+                Analytics.sendException(c, e, true, row.text());
             }
         }
     }
