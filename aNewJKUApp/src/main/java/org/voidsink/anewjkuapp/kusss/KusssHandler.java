@@ -31,8 +31,6 @@ import android.net.NetworkInfo;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 
-import androidx.annotation.NonNull;
-
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
@@ -49,23 +47,16 @@ import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.HttpCookie;
-import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.Charset;
-import java.nio.charset.UnsupportedCharsetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -273,32 +264,6 @@ public class KusssHandler {
         return cookies;
     }
 
-    private String getCookieString() {
-        StringBuilder cookies = new StringBuilder();
-        for (HttpCookie cookie : mCookies.getCookieStore().getCookies()) {
-            cookies.append(String.format("%s=%s;", cookie.getName(), cookie.getValue()));
-        }
-        return cookies.toString();
-    }
-
-
-    private void writeParams(URLConnection conn, String[] keys, String[] values)
-            throws IOException {
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < keys.length; i++) {
-            builder.append(keys[i]);
-            builder.append("=");
-            builder.append(values[i]);
-            if (i < keys.length - 1) {
-                builder.append("&");
-            }
-        }
-
-        OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), Charset.defaultCharset());
-        wr.write(builder.toString());
-        wr.flush();
-    }
-
     public synchronized void logout(Context c) {
         try {
             if (isNetworkAvailable(c)) {
@@ -347,53 +312,6 @@ public class KusssHandler {
         return isNetworkAvailable(c) && (isLoggedIn(c, sessionId) || login(c, user, password) != null);
     }
 
-    private static long copyStream(final InputStream input, final OutputStream output) throws IOException {
-
-        final byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
-        long count = 0;
-        int n;
-        while (-1 != (n = input.read(buffer))) {
-            output.write(buffer, 0, n);
-            count += n;
-        }
-        return count;
-    }
-
-    private String getEncoding(@NonNull HttpURLConnection conn) {
-        String encoding = conn.getContentEncoding();
-
-        if (TextUtils.isEmpty(encoding)) {
-            String contentType = conn.getContentType();
-            String[] values = contentType.split(";", -1);
-
-            for (String value : values) {
-                value = value.trim();
-
-                if (value.toLowerCase().startsWith("charset=")) {
-                    encoding = value.substring("charset=".length());
-                }
-            }
-        }
-
-        return encoding;
-    }
-
-    private byte[] getModifiedData(ByteArrayOutputStream data, String encoding) {
-        Charset charset;
-        if (TextUtils.isEmpty(encoding)) {
-            charset = Charset.defaultCharset();
-        } else {
-            try {
-                charset = Charset.forName(encoding);
-            } catch (UnsupportedCharsetException e) {
-                Analytics.sendException(null, e, false, encoding);
-                charset = Charset.defaultCharset();
-            }
-        }
-        // replace crlf with \n, kusss ics uses lf only as content line separator
-        return data.toString().replace("\r\n", "\\n").getBytes(charset);
-    }
-
     private String getUidPrefix(String calendarName) {
         switch (calendarName) {
             case CalendarUtils.ARG_CALENDAR_EXAM:
@@ -428,6 +346,9 @@ public class KusssHandler {
     }
 
     private Calendar loadIcal(Context c, CalendarBuilder calendarBuilder, String calendarName, Term term) {
+        if (calendarName == null) {
+            return null;
+        }
         if (!isLoggedIn(c, getSessionIDFromCookie())) {
             return null;
         }
@@ -444,19 +365,14 @@ public class KusssHandler {
                 return null;
             }
         } catch (IOException e) {
-            logger.error("loadIcal: selectTerm", e);
-            Analytics.sendException(c, e, true);
+            Analytics.sendException(c, e, true, "loadIcal: selectTerm");
             return null;
         }
 
-        Calendar iCal = loadIcalJsoup(c, calendarBuilder, calendarName);
-        if (iCal == null) {
-            iCal = loadIcalLegacy(c, calendarBuilder, calendarName);
-        }
-
-        return iCal;
+        return loadIcalJsoup(c, calendarBuilder, calendarName);
     }
 
+    @SuppressWarnings("unused")
     private Calendar loadIcalFromFile(Context c, CalendarBuilder calendarBuilder, String calendarname) {
         Calendar iCal;
 
@@ -497,9 +413,8 @@ public class KusssHandler {
             Connection.Response response = connection.execute();
 
             contentType = response.contentType();
-            logger.debug("loadIcalJsoup: RequestMethod: {}", contentType);
             if (!contentType.contains("text/calendar")) {
-                return null;
+                throw new UnsupportedOperationException("wrong content type");
             }
 
             body = response.body();
@@ -509,71 +424,7 @@ public class KusssHandler {
                 iCal = new Calendar();
             }
         } catch (ParserException | IOException e) {
-            logger.error("loadIcalJsoup: (" + contentType + ") " + body, e);
-            Analytics.sendException(c, e, true, contentType, body);
-            iCal = null;
-        }
-        return iCal;
-    }
-
-    private Calendar loadIcalLegacy(Context c, CalendarBuilder calendarBuilder, String calendarName) {
-        ByteArrayOutputStream data = new ByteArrayOutputStream();
-        Calendar iCal;
-        String contentType = null;
-        try {
-            URL url = new URL(URL_GET_ICAL);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            conn.setRequestProperty("Cookie", getCookieString());
-            conn.setConnectTimeout(5000);
-            conn.setReadTimeout(TIMEOUT_CALENDAR_READ);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("User-Agent", getUserAgent());
-
-            switch (calendarName) {
-                case CalendarUtils.ARG_CALENDAR_EXAM:
-                    writeParams(conn, new String[]{"selectAll"}, new String[]{"ical.category.examregs"});
-                    break;
-                case CalendarUtils.ARG_CALENDAR_COURSE:
-                    writeParams(conn, new String[]{"selectAll"}, new String[]{"ical.category.mycourses"});
-                    break;
-                default: {
-                    return null;
-                }
-            }
-
-            contentType = conn.getContentType();
-
-            if (contentType == null) {
-                conn.disconnect();
-                return null;
-            }
-
-            logger.debug("loadIcalLegacy: RequestMethod: {}", contentType);
-            if (!contentType.contains("text/calendar")) {
-                conn.disconnect();
-                return null;
-            }
-
-            if (!isNetworkAvailable(c)) {
-                conn.disconnect();
-                return null;
-            }
-
-            final long length = copyStream(conn.getInputStream(), data);
-
-            String encoding = getEncoding(conn);
-
-            conn.disconnect();
-
-            if (length > 0) {
-                iCal = calendarBuilder.build(new ByteArrayInputStream(getModifiedData(data, encoding)));
-            } else {
-                iCal = new Calendar();
-            }
-        } catch (ParserException | IOException e) {
-            logger.error("loadIcalLegacy: (" + contentType + ") " + data.toString(), e);
-            Analytics.sendException(c, e, true, contentType, data.toString());
+            Analytics.sendException(c, e, true, "loadIcalJsoup", contentType, body);
             iCal = null;
         }
         return iCal;
