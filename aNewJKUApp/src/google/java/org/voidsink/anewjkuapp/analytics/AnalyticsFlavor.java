@@ -101,7 +101,7 @@ public class AnalyticsFlavor implements IAnalytics {
             logger.error("sendException", e2);
         }
         if (e != null) {
-            logger.debug("{} ({})", e.getMessage(), additionalData);
+            logger.error("{} (fatal={}, {})", e.getMessage(), fatal, additionalData);
         }
     }
 

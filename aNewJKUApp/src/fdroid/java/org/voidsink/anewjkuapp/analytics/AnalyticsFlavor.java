@@ -48,14 +48,7 @@ public class AnalyticsFlavor implements IAnalytics {
     @Override
     public void sendException(Context c, Exception e, boolean fatal, List<String> additionalData) {
         if (e != null) {
-            logger.debug(e.getMessage());
-            if (additionalData != null) {
-                for (String value : additionalData) {
-                    if (!TextUtils.isEmpty(value)) {
-                        logger.debug("additional info: {}", value.substring(0, Math.min(value.length(), 4096)));
-                    }
-                }
-            }
+            logger.error("{} (fatal={}, {})", e.getMessage(), fatal, additionalData);
         }
     }
 
