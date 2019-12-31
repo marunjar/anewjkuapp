@@ -220,7 +220,7 @@ public class KusssContentProvider extends ContentProvider {
         try {
             switch (sUriMatcher.match(uri)) {
                 case CODE_COURSE: {
-                    long id = db.insert(KusssContentContract.Course.TABLE_NAME, null,
+                    long id = db.insertOrThrow(KusssContentContract.Course.TABLE_NAME, null,
                             values);
                     if (id != -1)
                         getContext().getContentResolver().notifyChange(uri, null);
@@ -228,7 +228,7 @@ public class KusssContentProvider extends ContentProvider {
                             .appendPath(String.valueOf(id)).build();
                 }
                 case CODE_EXAM: {
-                    long id = db.insert(KusssContentContract.Exam.TABLE_NAME,
+                    long id = db.insertOrThrow(KusssContentContract.Exam.TABLE_NAME,
                             null, values);
                     if (id != -1)
                         getContext().getContentResolver().notifyChange(uri, null);
@@ -236,7 +236,7 @@ public class KusssContentProvider extends ContentProvider {
                             .appendPath(String.valueOf(id)).build();
                 }
                 case CODE_GRADE: {
-                    long id = db.insert(KusssContentContract.Assessment.TABLE_NAME,
+                    long id = db.insertOrThrow(KusssContentContract.Assessment.TABLE_NAME,
                             null, values);
                     if (id != -1)
                         getContext().getContentResolver().notifyChange(uri, null);
@@ -244,7 +244,7 @@ public class KusssContentProvider extends ContentProvider {
                             .appendPath(String.valueOf(id)).build();
                 }
                 case CODE_CURRICULA: {
-                    long id = db.insert(KusssContentContract.Curricula.TABLE_NAME,
+                    long id = db.insertOrThrow(KusssContentContract.Curricula.TABLE_NAME,
                             null, values);
                     if (id != -1)
                         getContext().getContentResolver().notifyChange(uri, null);

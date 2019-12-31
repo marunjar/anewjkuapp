@@ -109,8 +109,7 @@ public class PoiContentProvider extends ContentProvider {
         SQLiteDatabase db = KusssDatabaseHelper.getInstance(getContext()).getWritableDatabase();
         switch (sUriMatcher.match(uri)) {
             case CODE_POI: {
-                long id = db
-                        .insert(PoiContentContract.Poi.TABLE_NAME, null, values);
+                long id = db.insertOrThrow(PoiContentContract.Poi.TABLE_NAME, null, values);
                 if (id != -1)
                     getContext().getContentResolver().notifyChange(uri, null);
                 return PoiContentContract.Poi.CONTENT_URI.buildUpon()
