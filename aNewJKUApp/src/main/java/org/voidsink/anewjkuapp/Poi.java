@@ -1,25 +1,25 @@
 /*
- *      ____.____  __.____ ___     _____
- *     |    |    |/ _|    |   \   /  _  \ ______ ______
- *     |    |      < |    |   /  /  /_\  \\____ \\____ \
- * /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
- * \________|____|__ \______/   \____|__  /   __/|   __/
- *                  \/                  \/|__|   |__|
+ *       ____.____  __.____ ___     _____
+ *      |    |    |/ _|    |   \   /  _  \ ______ ______
+ *      |    |      < |    |   /  /  /_\  \\____ \\____ \
+ *  /\__|    |    |  \|    |  /  /    |    \  |_> >  |_> >
+ *  \________|____|__ \______/   \____|__  /   __/|   __/
+ *                   \/                  \/|__|   |__|
  *
- * Copyright (c) 2014-2015 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -27,6 +27,8 @@ package org.voidsink.anewjkuapp;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+
+import androidx.annotation.NonNull;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -41,7 +43,7 @@ public class Poi {
     private String mDescr;
     private int mId;
 
-    public Poi(String name, double lat, double lon) {
+    public Poi(@NonNull String name, double lat, double lon) {
         this.mName = name;
         this.mLat = lat;
         this.mLon = lon;
@@ -59,6 +61,7 @@ public class Poi {
         this.mId = c.getInt(c.getColumnIndex(PoiContentContract.Poi.COL_ROWID));
     }
 
+    @NonNull
     public String getName() {
         return this.mName;
     }

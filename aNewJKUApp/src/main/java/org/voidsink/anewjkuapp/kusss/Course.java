@@ -28,6 +28,8 @@ package org.voidsink.anewjkuapp.kusss;
 import android.content.Context;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.voidsink.anewjkuapp.analytics.Analytics;
@@ -49,12 +51,12 @@ public class Course {
     private String lvaType;
     private String code;
 
-    private Course(Term term, String courseId) {
+    private Course(@NonNull Term term, @NonNull String courseId) {
         this.term = term;
         this.courseId = courseId;
     }
 
-    public Course(Context c, Term term, Element row) {
+    public Course(Context c, @NonNull Term term, Element row) {
         this(term, "");
 
         Elements columns = row.getElementsByTag("td");
@@ -85,7 +87,7 @@ public class Course {
         }
     }
 
-    public Course(Term term, String courseId, String title, int cid, String teacher, double sws, double ects, String lvaType, String code) {
+    public Course(@NonNull Term term, @NonNull String courseId, @NonNull String title, int cid, String teacher, double sws, double ects, @NonNull String lvaType, @NonNull String code) {
         this.term = term;
         this.courseId = courseId;
         this.title = title;
@@ -97,7 +99,7 @@ public class Course {
         this.code = code;
     }
 
-    private void setCode(String code) {
+    private void setCode(@NonNull String code) {
         this.code = code;
     }
 
@@ -133,26 +135,30 @@ public class Course {
         return this.ects;
     }
 
-    private void setLvaType(String type) {
+    private void setLvaType(@NonNull String type) {
         this.lvaType = type;
     }
 
+    @NonNull
     public String getLvaType() {
         return this.lvaType;
     }
 
-    private void setTitle(String title) {
+    private void setTitle(@NonNull String title) {
         this.title = title;
     }
 
+    @NonNull
     public String getTitle() {
         return this.title;
     }
 
+    @NonNull
     public Term getTerm() {
         return this.term;
     }
 
+    @NonNull
     public String getCourseId() {
         return this.courseId;
     }
@@ -161,6 +167,7 @@ public class Course {
         return !term.isEmpty() && !courseId.isEmpty();
     }
 
+    @NonNull
     public String getCode() {
         return this.code;
     }

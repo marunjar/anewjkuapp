@@ -175,7 +175,7 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         switch (item.getItemId()) {
             case R.id.action_refresh_calendar:

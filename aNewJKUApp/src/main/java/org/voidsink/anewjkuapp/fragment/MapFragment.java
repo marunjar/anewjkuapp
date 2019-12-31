@@ -360,7 +360,7 @@ public class MapFragment extends BaseFragment implements
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_snap_to_location:
                 if (mMyLocationOverlay != null) {

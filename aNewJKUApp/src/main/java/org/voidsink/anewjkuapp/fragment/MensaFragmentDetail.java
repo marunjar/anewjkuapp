@@ -169,7 +169,7 @@ public abstract class MensaFragmentDetail extends BaseFragment implements Loader
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh_mensa:
                 updateData();

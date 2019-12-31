@@ -118,7 +118,7 @@ public class ExamFragment extends BaseFragment implements ContentObserverListene
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh_exams: {
                 AppUtils.triggerSync(getContext(), true, Consts.ARG_WORKER_KUSSS_EXAMS);

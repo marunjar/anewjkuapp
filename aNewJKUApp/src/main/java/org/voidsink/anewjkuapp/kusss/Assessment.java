@@ -28,6 +28,8 @@ package org.voidsink.anewjkuapp.kusss;
 import android.content.Context;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.voidsink.anewjkuapp.analytics.Analytics;
@@ -60,8 +62,8 @@ public class Assessment {
     private double sws;
     private String lvaType;
 
-    public Assessment(AssessmentType type, Date date, String courseId, Term term,
-                      Grade grade, int cid, String title, String code, double ects,
+    public Assessment(AssessmentType type, @NonNull Date date, String courseId, Term term,
+                      @NonNull Grade grade, int cid, String title, @NonNull String code, double ects,
                       double sws, String lvaType) {
         this.assessmentType = type;
         this.date = date;
@@ -162,7 +164,7 @@ public class Assessment {
         this.ects = ects;
     }
 
-    private void setCode(String code) {
+    private void setCode(@NonNull String code) {
         this.code = code;
     }
 
@@ -174,7 +176,7 @@ public class Assessment {
         this.cid = cid;
     }
 
-    private void setGrade(Grade grade) {
+    private void setGrade(@NonNull Grade grade) {
         this.grade = grade;
     }
 
@@ -186,14 +188,16 @@ public class Assessment {
         this.courseId = courseId;
     }
 
-    private void setDate(Date date) {
+    private void setDate(@NonNull Date date) {
         this.date = date;
     }
 
+    @NonNull
     public String getCode() {
         return this.code;
     }
 
+    @NonNull
     public Date getDate() {
         return this.date;
     }
@@ -206,6 +210,7 @@ public class Assessment {
         return this.term;
     }
 
+    @NonNull
     public Grade getGrade() {
         return this.grade;
     }

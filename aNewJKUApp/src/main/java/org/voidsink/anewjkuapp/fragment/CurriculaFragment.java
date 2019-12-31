@@ -121,7 +121,7 @@ public class CurriculaFragment extends BaseFragment implements
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh_curricula: {
                 AppUtils.triggerSync(getContext(), true, Consts.ARG_WORKER_KUSSS_CURRICULA);

@@ -27,6 +27,8 @@ package org.voidsink.anewjkuapp.kusss;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
@@ -155,7 +157,7 @@ public class Exam {
         this.dtEnd = cal.getTime();
     }
 
-    public Exam(String courseId, Term term, Date dtStart, Date dtEnd, String location, String description, String info, String title, boolean isRegistered) {
+    public Exam(@NonNull String courseId, @NonNull Term term, @NonNull Date dtStart, @NonNull Date dtEnd, String location, String description, String info, String title, boolean isRegistered) {
         this.courseId = courseId;
         this.term = term;
         this.dtStart = dtStart;
@@ -175,11 +177,11 @@ public class Exam {
         this.title = title;
     }
 
-    private void setCourseId(String courseId) {
+    private void setCourseId(@NonNull String courseId) {
         this.courseId = courseId;
     }
 
-    private void setTerm(Term term) {
+    private void setTerm(@NonNull Term term) {
         this.term = term;
     }
 
@@ -287,6 +289,7 @@ public class Exam {
         }
     }
 
+    @NonNull
     public Date getDtEnd() {
         return this.dtEnd;
     }
@@ -303,14 +306,17 @@ public class Exam {
         return this.description;
     }
 
+    @NonNull
     public String getCourseId() {
         return this.courseId;
     }
 
+    @NonNull
     public Term getTerm() {
         return this.term;
     }
 
+    @NonNull
     public Date getDtStart() {
         return this.dtStart;
     }

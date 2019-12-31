@@ -196,7 +196,7 @@ public class MensaDayFragment extends BaseFragment implements LoaderManager.Load
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh_mensa_day:
                 updateData();

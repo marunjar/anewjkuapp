@@ -74,8 +74,7 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
     @Override
     public Bundle addAccount(AccountAuthenticatorResponse response,
                              String accountType, String authTokenType,
-                             String[] requiredFeatures, Bundle options)
-            throws NetworkErrorException {
+                             String[] requiredFeatures, Bundle options) {
         final Intent intent = new Intent(mContext,
                 KusssAuthenticatorActivity.class);
         intent.putExtra(Consts.ARG_ACCOUNT_TYPE, accountType);
@@ -90,7 +89,7 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
 
     @Override
     public Bundle confirmCredentials(AccountAuthenticatorResponse response,
-                                     Account account, Bundle options) throws NetworkErrorException {
+                                     Account account, Bundle options) {
         return null;
     }
 
@@ -102,8 +101,7 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
 
     @Override
     public Bundle getAuthToken(AccountAuthenticatorResponse response,
-                               Account account, String authTokenType, Bundle options)
-            throws NetworkErrorException {
+                               Account account, String authTokenType, Bundle options) {
         // If the caller requested an authToken type we don't support, then
         // return an error
         if (!authTokenType.equals(AUTHTOKEN_TYPE_READ_ONLY)) {
@@ -175,7 +173,7 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
 
     @Override
     public Bundle hasFeatures(AccountAuthenticatorResponse response,
-                              Account account, String[] features) throws NetworkErrorException {
+                              Account account, String[] features) {
         final Bundle result = new Bundle();
         result.putBoolean(AccountManager.KEY_BOOLEAN_RESULT, false);
         return result;
@@ -183,8 +181,7 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
 
     @Override
     public Bundle updateCredentials(AccountAuthenticatorResponse response,
-                                    Account account, String authTokenType, Bundle options)
-            throws NetworkErrorException {
+                                    Account account, String authTokenType, Bundle options) {
 
         final Intent intent = new Intent(mContext,
                 KusssAuthenticatorActivity.class);

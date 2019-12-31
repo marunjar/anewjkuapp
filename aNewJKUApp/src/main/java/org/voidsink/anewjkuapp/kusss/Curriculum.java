@@ -28,6 +28,8 @@ package org.voidsink.anewjkuapp.kusss;
 import android.content.Context;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.voidsink.anewjkuapp.analytics.Analytics;
@@ -69,12 +71,12 @@ public class Curriculum {
         }
     }
 
-    public Curriculum(Date dtStart, Date dtEnd) {
+    public Curriculum(@NonNull Date dtStart, Date dtEnd) {
         this.mDtStart = dtStart;
         this.mDtEnd = dtEnd;
     }
 
-    public Curriculum(boolean isStandard, String cid, String title, boolean steopDone, boolean isActive, String uni, Date dtStart, Date dtEnd) {
+    public Curriculum(boolean isStandard, String cid, String title, boolean steopDone, boolean isActive, String uni, @NonNull Date dtStart, Date dtEnd) {
         this(dtStart, dtEnd);
 
         this.mIsStandard = isStandard;
@@ -135,7 +137,7 @@ public class Curriculum {
         this.mUni = uni;
     }
 
-    private void setDtStart(Date dtStart) {
+    private void setDtStart(@NonNull Date dtStart) {
         this.mDtStart = dtStart;
     }
 
@@ -167,6 +169,7 @@ public class Curriculum {
         return mUni;
     }
 
+    @NonNull
     public Date getDtStart() {
         return mDtStart;
     }

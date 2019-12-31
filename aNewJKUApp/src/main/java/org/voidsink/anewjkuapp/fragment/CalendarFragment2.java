@@ -129,7 +129,7 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh_calendar:
                 AppUtils.triggerSync(getContext(), true, Consts.ARG_WORKER_CAL_COURSES, Consts.ARG_WORKER_CAL_EXAM);
