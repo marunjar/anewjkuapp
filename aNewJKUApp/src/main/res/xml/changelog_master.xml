@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
-    <release version="0.52.4" versioncode="140077">
+    <release version="0.52.5" versioncode="140078">
         <change>unterstützt jetzt auch Android Q</change>
         <change>Fehler beim Login behoben</change>
         <change>Fehler beim Laden der Termine aus KUSSS behoben</change>
