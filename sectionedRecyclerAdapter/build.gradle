@@ -24,7 +24,7 @@
  */
 
 apply plugin: 'com.android.library'
-apply plugin: "net.ltgt.errorprone"
+apply plugin: 'net.ltgt.errorprone'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
