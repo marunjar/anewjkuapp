@@ -98,7 +98,7 @@ public class Assessment {
                     try {
                         setTerm(Term.parseTerm(termMatcher.group()));
                     } catch (ParseException e) {
-                        Analytics.sendException(c, e, true);
+                        Analytics.sendException(c, e, true, courseIdTerm);
                     }
                 }
 

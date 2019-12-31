@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,6 +27,8 @@ package org.voidsink.anewjkuapp.base;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.utils.Consts;
@@ -35,15 +37,12 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-
 public class TermFragment extends BaseFragment {
 
     private List<Term> mTerms;
 
     private void fillTermArray(String[] termArray) {
         if (termArray != null && termArray.length > 0) {
-
             try {
                 mTerms = new ArrayList<>();
                 for (String termStr : termArray) {
@@ -51,7 +50,7 @@ public class TermFragment extends BaseFragment {
                 }
             } catch (ParseException e) {
                 mTerms = null;
-                Analytics.sendException(getContext(), e, true);
+                Analytics.sendException(getContext(), e, true, termArray);
             }
         }
     }

@@ -146,7 +146,6 @@ public class ImportPoiWorker extends BaseWorker {
             } catch (ParserConfigurationException | SAXException | IOException
                     | XPathExpressionException e) {
                 poiMap.clear();
-                logger.error("parse failed", e);
                 Analytics.sendException(getApplicationContext(), e, true);
             }
 
@@ -256,7 +255,6 @@ public class ImportPoiWorker extends BaseWorker {
             return getSuccess();
         } catch (Exception e) {
             Analytics.sendException(getApplicationContext(), e, true);
-            logger.error("import failed", e);
 
             return getRetry();
         } finally {

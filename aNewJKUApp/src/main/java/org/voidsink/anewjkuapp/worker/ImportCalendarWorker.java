@@ -454,7 +454,6 @@ public class ImportCalendarWorker extends BaseWorker {
             mChangedNotification.show();
             return getSuccess();
         } catch (Exception e) {
-            logger.error("import calendar failed", e);
             Analytics.sendException(getApplicationContext(), e, true);
 
             return getRetry();

@@ -104,8 +104,6 @@ public class KusssHandler {
     private static final int TIMEOUT_SEARCH_EXAM_BY_LVA = 15 * 1000; //15s
     private static final int TIMEOUT_CALENDAR_READ = 15 * 1000; // 15s
 
-    private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
-
     private volatile static KusssHandler handler = null;
     private final CookieManager mCookies;
     private String mUserAgent;
@@ -250,7 +248,6 @@ public class KusssHandler {
             logger.warn("login failed: connection timeout", e);
             return null;
         } catch (Exception e) {
-            logger.warn("login failed", e);
             Analytics.sendException(c, e, true);
             return null;
         }
@@ -291,7 +288,6 @@ public class KusssHandler {
             // bad connection, timeout
             return false;
         } catch (IOException e) {
-            logger.error("isLoggedIn", e);
             Analytics.sendException(c, e, true);
             return false;
         }
@@ -440,7 +436,6 @@ public class KusssHandler {
                     Term term = Term.parseTerm(termValue);
                     terms.add(term);
                 } catch (ParseException e) {
-                    logger.error("getTerms", e);
                     Analytics.sendException(c, e, true);
                 }
             }
@@ -469,7 +464,6 @@ public class KusssHandler {
                 }
             }
         } catch (Exception e) {
-            logger.error("getTermMap", e);
             Analytics.sendException(c, e, true);
             return null;
         }
@@ -538,7 +532,6 @@ public class KusssHandler {
                 return null;
             }
         } catch (Exception e) {
-            logger.error("getSessionIDFromCookie", e);
             Analytics.sendException(c, e, true);
             return null;
         }
@@ -605,7 +598,6 @@ public class KusssHandler {
                 return null;
             }
         } catch (IOException e) {
-            logger.error("getAssessments", e);
             Analytics.sendException(c, e, true);
             return null;
         }
@@ -650,7 +642,6 @@ public class KusssHandler {
                 exams = null;
             }
         } catch (Exception e) {
-            logger.error("getNewExams", e);
             Analytics.sendException(c, e, true);
             return null;
         }
@@ -711,7 +702,6 @@ public class KusssHandler {
             // add registered exams
             loadExams(c, exams);
         } catch (Exception e) {
-            logger.error("getNewExamsByCourseId", e);
             Analytics.sendException(c, e, true);
             return null;
         }
@@ -767,7 +757,6 @@ public class KusssHandler {
                 return null;
             }
         } catch (IOException e) {
-            logger.error("getNewExamsByCourseId", e);
             Analytics.sendException(c, e, true);
             exams = null;
         }
@@ -826,7 +815,6 @@ public class KusssHandler {
                 return null;
             }
         } catch (Exception e) {
-            logger.error("getCurricula", e);
             Analytics.sendException(c, e, true);
             return null;
         }

@@ -99,8 +99,7 @@ public class Exam {
                         setRegistered(false);
                     }
                 } catch (ParseException e) {
-                    logger.error("Exam ctor", e);
-                    Analytics.sendException(null, e, false);
+                    Analytics.sendException(c, e, false, columns.text());
                 }
             }
         } else {
@@ -133,8 +132,7 @@ public class Exam {
                                 .size() == 0);
                     }
                 } catch (ParseException e) {
-                    logger.error("Exam ctor", e);
-                    Analytics.sendException(c, e, false);
+                    Analytics.sendException(c, e, false, columns.text());
                 }
             }
         }
@@ -185,7 +183,7 @@ public class Exam {
         this.term = term;
     }
 
-    private void initDateTimes(String timeStr) {
+    private void initDateTimes(Context context, String timeStr) {
         List<String> times = new ArrayList<>();
         // extract times
         Matcher timeMatcher = timePattern.matcher(timeStr);
@@ -210,7 +208,7 @@ public class Exam {
                 applyTime(dtStart, time);
                 applyTime(dtEnd, time);
             } catch (ParseException e) {
-                Analytics.sendException(null, e, false);
+                Analytics.sendException(context, e, false, timeStr);
             }
         } else if (times.size() == 2) {
             try {
@@ -224,7 +222,7 @@ public class Exam {
                 applyTime(dtStart, timeStart);
                 applyTime(dtEnd, timeEnd);
             } catch (ParseException e) {
-                Analytics.sendException(null, e, false);
+                Analytics.sendException(context, e, false, timeStr);
             }
         }
     }
@@ -242,21 +240,20 @@ public class Exam {
         date.setTime(calTime.getTimeInMillis());
     }
 
-    private void initTimeLocation(Context c, String timeLocation) {
+    private void initTimeLocation(Context context, String timeLocation) {
         String[] splitted = timeLocation.split("\\/", -1);
 
         String location = "";
 
         try {
             if (splitted.length > 1) {
-                initDateTimes(splitted[0]);
+                initDateTimes(context, splitted[0]);
                 location = splitted[1];
             } else {
-                initDateTimes(splitted[0]);
+                initDateTimes(context, splitted[0]);
             }
         } catch (Exception e) {
-            logger.error("cant parse string", e);
-            Analytics.sendException(c, e, false, timeLocation);
+            Analytics.sendException(context, e, false, timeLocation);
         }
         this.location = location;
     }

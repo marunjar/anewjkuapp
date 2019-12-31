@@ -205,7 +205,6 @@ public class ImportCurriculaWorker extends BaseWorker {
             }
         } catch (Exception e) {
             Analytics.sendException(getApplicationContext(), e, true);
-            logger.error("import failed", e);
 
             return getRetry();
         } finally {

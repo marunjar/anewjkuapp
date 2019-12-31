@@ -200,7 +200,6 @@ public class AppUtils {
                     errorOccured = true;
                 }
             } catch (Exception e) {
-                logger.error("doOnNewVersion failed", e);
                 Analytics.sendException(context, e, false);
                 errorOccured = true;
             }
@@ -234,7 +233,6 @@ public class AppUtils {
 
                 PreferenceWrapper.applySyncInterval(context);
             } catch (Exception e) {
-                logger.error("doOnVersionChange failed", e);
                 Analytics.sendException(context, e, false);
                 errorOccured = true;
             }
@@ -828,7 +826,6 @@ public class AppUtils {
                 }
             }
         } catch (Exception e) {
-            logger.error("enableSync", e);
             Analytics.sendException(context, e, true);
         }
     }
@@ -849,8 +846,7 @@ public class AppUtils {
                 }
             }
         } catch (Exception e) {
-            logger.error("triggerSync", e);
-            Analytics.sendException(context, e, true);
+            Analytics.sendException(context, e, true, tags);
         }
     }
 

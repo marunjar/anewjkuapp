@@ -234,7 +234,7 @@ public final class PreferenceWrapper {
                 return lightMode == Configuration.UI_MODE_NIGHT_NO;
             }
         } catch (Exception e) {
-            logger.error("Failure", e);
+            Analytics.sendException(context, e, false);
             return PREF_USE_LIGHT_THEME_DEFAULT;
         }
     }

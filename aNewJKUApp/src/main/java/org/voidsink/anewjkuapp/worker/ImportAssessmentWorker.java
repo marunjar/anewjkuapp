@@ -263,7 +263,6 @@ public class ImportAssessmentWorker extends BaseWorker {
             return getSuccess();
         } catch (Exception e) {
             Analytics.sendException(getApplicationContext(), e, true);
-            logger.error("import failed", e);
 
             return getRetry();
         } finally {

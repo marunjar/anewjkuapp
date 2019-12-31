@@ -55,12 +55,12 @@ public class Analytics {
         getAnalytics().init(app);
     }
 
-    public static void sendException(Context c, Exception e, boolean fatal) {
-        sendException(c, e, fatal, (String[]) null);
+    public static void sendException(Context context, Exception e, boolean fatal) {
+        sendException(context, e, fatal, (String[]) null);
     }
 
     @SuppressLint("DefaultLocale")
-    public static void sendException(Context c, Exception e, boolean fatal, String... additionalData) {
+    public static void sendException(Context context, Exception e, boolean fatal, String... additionalData) {
         List<String> additionalDataList = additionalData == null ? new ArrayList<>() : Arrays.asList(additionalData);
 
         boolean send = true;
@@ -75,7 +75,7 @@ public class Analytics {
             additionalDataList.add(getAnalytics().getPsStatus().toString());
         }
         if (send) {
-            getAnalytics().sendException(c, e, fatal, additionalDataList);
+            getAnalytics().sendException(context, e, fatal, additionalDataList);
         }
     }
 

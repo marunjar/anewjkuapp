@@ -395,8 +395,7 @@ public class MainActivity extends ThemedActivity {
 
                 return f;
             } catch (Exception e) {
-                logger.warn("fragment instantiation failed", e);
-                Analytics.sendException(this, e, false);
+                Analytics.sendException(this, e, false, startFragment.getName());
                 if (saveLastFragment) {
                     PreferenceWrapper.setLastFragment(this, PreferenceWrapper.PREF_LAST_FRAGMENT_DEFAULT);
                 }
