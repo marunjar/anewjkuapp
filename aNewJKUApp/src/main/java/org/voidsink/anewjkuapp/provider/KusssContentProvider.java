@@ -51,6 +51,7 @@ import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -93,71 +94,92 @@ public class KusssContentProvider extends ContentProvider {
                 KusssContentContract.Curricula.PATH + "/#", CODE_CURRICULA_ID);
     }
 
+    private String[] getAdditionalData(ContentValues values, String selection, String[] selectionArgs) {
+        List<String> additionalDataList = new ArrayList<>();
+        if (values != null) {
+            additionalDataList.add(values.toString());
+        }
+        if (!TextUtils.isEmpty(selection)) {
+            additionalDataList.add(selection);
+        }
+        if (selectionArgs != null) {
+            additionalDataList.addAll(Arrays.asList(selectionArgs));
+        }
+        return additionalDataList.toArray(new String[]{});
+    }
+
     @Override
     public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         SQLiteDatabase db = KusssDatabaseHelper.getInstance(getContext()).getWritableDatabase();
-        String whereIdClause;
-        int rowsDeleted;
-        switch (sUriMatcher.match(uri)) {
-            case CODE_COURSE:
-                rowsDeleted = db.delete(KusssContentContract.Course.TABLE_NAME,
-                        selection, selectionArgs);
-                break;
-            case CODE_EXAM:
-                rowsDeleted = db.delete(KusssContentContract.Exam.TABLE_NAME,
-                        selection, selectionArgs);
-                break;
-            case CODE_GRADE:
-                rowsDeleted = db.delete(
-                        KusssContentContract.Assessment.TABLE_NAME, selection,
-                        selectionArgs);
-                break;
-            case CODE_CURRICULA:
-                rowsDeleted = db.delete(
-                        KusssContentContract.Curricula.TABLE_NAME, selection,
-                        selectionArgs);
-                break;
-            case CODE_COURSE_ID:
-                whereIdClause = KusssContentContract.Course.COL_ID + "="
-                        + uri.getLastPathSegment();
-                if (!TextUtils.isEmpty(selection))
-                    whereIdClause += " AND " + selection;
-                rowsDeleted = db.delete(KusssContentContract.Course.TABLE_NAME,
-                        whereIdClause, selectionArgs);
-                break;
-            case CODE_EXAM_ID:
-                whereIdClause = KusssContentContract.Exam.COL_ID + "="
-                        + uri.getLastPathSegment();
-                if (!TextUtils.isEmpty(selection))
-                    whereIdClause += " AND " + selection;
-                rowsDeleted = db.delete(KusssContentContract.Exam.TABLE_NAME,
-                        whereIdClause, selectionArgs);
-                break;
-            case CODE_GRADE_ID:
-                whereIdClause = KusssContentContract.Assessment.COL_ID + "="
-                        + uri.getLastPathSegment();
-                if (!TextUtils.isEmpty(selection))
-                    whereIdClause += " AND " + selection;
-                rowsDeleted = db.delete(
-                        KusssContentContract.Assessment.TABLE_NAME, whereIdClause,
-                        selectionArgs);
-                break;
-            case CODE_CURRICULA_ID:
-                whereIdClause = KusssContentContract.Curricula.COL_ID + "="
-                        + uri.getLastPathSegment();
-                if (!TextUtils.isEmpty(selection))
-                    whereIdClause += " AND " + selection;
-                rowsDeleted = db.delete(
-                        KusssContentContract.Curricula.TABLE_NAME, whereIdClause,
-                        selectionArgs);
-                break;
-            default:
-                throw new IllegalArgumentException("Unsupported URI: " + uri);
+
+        try {
+            String whereIdClause;
+            int rowsDeleted;
+
+            switch (sUriMatcher.match(uri)) {
+                case CODE_COURSE:
+                    rowsDeleted = db.delete(KusssContentContract.Course.TABLE_NAME,
+                            selection, selectionArgs);
+                    break;
+                case CODE_EXAM:
+                    rowsDeleted = db.delete(KusssContentContract.Exam.TABLE_NAME,
+                            selection, selectionArgs);
+                    break;
+                case CODE_GRADE:
+                    rowsDeleted = db.delete(
+                            KusssContentContract.Assessment.TABLE_NAME, selection,
+                            selectionArgs);
+                    break;
+                case CODE_CURRICULA:
+                    rowsDeleted = db.delete(
+                            KusssContentContract.Curricula.TABLE_NAME, selection,
+                            selectionArgs);
+                    break;
+                case CODE_COURSE_ID:
+                    whereIdClause = KusssContentContract.Course.COL_ID + "="
+                            + uri.getLastPathSegment();
+                    if (!TextUtils.isEmpty(selection))
+                        whereIdClause += " AND " + selection;
+                    rowsDeleted = db.delete(KusssContentContract.Course.TABLE_NAME,
+                            whereIdClause, selectionArgs);
+                    break;
+                case CODE_EXAM_ID:
+                    whereIdClause = KusssContentContract.Exam.COL_ID + "="
+                            + uri.getLastPathSegment();
+                    if (!TextUtils.isEmpty(selection))
+                        whereIdClause += " AND " + selection;
+                    rowsDeleted = db.delete(KusssContentContract.Exam.TABLE_NAME,
+                            whereIdClause, selectionArgs);
+                    break;
+                case CODE_GRADE_ID:
+                    whereIdClause = KusssContentContract.Assessment.COL_ID + "="
+                            + uri.getLastPathSegment();
+                    if (!TextUtils.isEmpty(selection))
+                        whereIdClause += " AND " + selection;
+                    rowsDeleted = db.delete(
+                            KusssContentContract.Assessment.TABLE_NAME, whereIdClause,
+                            selectionArgs);
+                    break;
+                case CODE_CURRICULA_ID:
+                    whereIdClause = KusssContentContract.Curricula.COL_ID + "="
+                            + uri.getLastPathSegment();
+                    if (!TextUtils.isEmpty(selection))
+                        whereIdClause += " AND " + selection;
+                    rowsDeleted = db.delete(
+                            KusssContentContract.Curricula.TABLE_NAME, whereIdClause,
+                            selectionArgs);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported URI: " + uri);
+            }
+            // Notifying the changes, if there are any
+            if (rowsDeleted != -1)
+                getContext().getContentResolver().notifyChange(uri, null);
+            return rowsDeleted;
+        } catch (Exception e) {
+            Analytics.sendException(getContext(), e, true, getAdditionalData(null, selection, selectionArgs));
+            throw e;
         }
-        // Notifying the changes, if there are any
-        if (rowsDeleted != -1)
-            getContext().getContentResolver().notifyChange(uri, null);
-        return rowsDeleted;
     }
 
     @Override
@@ -195,42 +217,47 @@ public class KusssContentProvider extends ContentProvider {
     @Override
     public Uri insert(@NonNull Uri uri, ContentValues values) {
         SQLiteDatabase db = KusssDatabaseHelper.getInstance(getContext()).getWritableDatabase();
-        switch (sUriMatcher.match(uri)) {
-            case CODE_COURSE: {
-                long id = db.insert(KusssContentContract.Course.TABLE_NAME, null,
-                        values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return KusssContentContract.Course.CONTENT_URI.buildUpon()
-                        .appendPath(String.valueOf(id)).build();
+        try {
+            switch (sUriMatcher.match(uri)) {
+                case CODE_COURSE: {
+                    long id = db.insert(KusssContentContract.Course.TABLE_NAME, null,
+                            values);
+                    if (id != -1)
+                        getContext().getContentResolver().notifyChange(uri, null);
+                    return KusssContentContract.Course.CONTENT_URI.buildUpon()
+                            .appendPath(String.valueOf(id)).build();
+                }
+                case CODE_EXAM: {
+                    long id = db.insert(KusssContentContract.Exam.TABLE_NAME,
+                            null, values);
+                    if (id != -1)
+                        getContext().getContentResolver().notifyChange(uri, null);
+                    return KusssContentContract.Exam.CONTENT_URI.buildUpon()
+                            .appendPath(String.valueOf(id)).build();
+                }
+                case CODE_GRADE: {
+                    long id = db.insert(KusssContentContract.Assessment.TABLE_NAME,
+                            null, values);
+                    if (id != -1)
+                        getContext().getContentResolver().notifyChange(uri, null);
+                    return KusssContentContract.Assessment.CONTENT_URI.buildUpon()
+                            .appendPath(String.valueOf(id)).build();
+                }
+                case CODE_CURRICULA: {
+                    long id = db.insert(KusssContentContract.Curricula.TABLE_NAME,
+                            null, values);
+                    if (id != -1)
+                        getContext().getContentResolver().notifyChange(uri, null);
+                    return KusssContentContract.Curricula.CONTENT_URI.buildUpon()
+                            .appendPath(String.valueOf(id)).build();
+                }
+                default: {
+                    throw new IllegalArgumentException("Unsupported URI: " + uri);
+                }
             }
-            case CODE_EXAM: {
-                long id = db.insert(KusssContentContract.Exam.TABLE_NAME,
-                        null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return KusssContentContract.Exam.CONTENT_URI.buildUpon()
-                        .appendPath(String.valueOf(id)).build();
-            }
-            case CODE_GRADE: {
-                long id = db.insert(KusssContentContract.Assessment.TABLE_NAME,
-                        null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return KusssContentContract.Assessment.CONTENT_URI.buildUpon()
-                        .appendPath(String.valueOf(id)).build();
-            }
-            case CODE_CURRICULA: {
-                long id = db.insert(KusssContentContract.Curricula.TABLE_NAME,
-                        null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return KusssContentContract.Curricula.CONTENT_URI.buildUpon()
-                        .appendPath(String.valueOf(id)).build();
-            }
-            default: {
-                throw new IllegalArgumentException("Unsupported URI: " + uri);
-            }
+        } catch (Exception e) {
+            Analytics.sendException(getContext(), e, true, getAdditionalData(values, null, null));
+            throw e;
         }
     }
 
@@ -305,58 +332,63 @@ public class KusssContentProvider extends ContentProvider {
                       String[] selectionArgs) {
         SQLiteDatabase db = KusssDatabaseHelper.getInstance(getContext()).getWritableDatabase();
 
-        switch (sUriMatcher.match(uri)) {
-            case CODE_COURSE: {
-                return db.update(KusssContentContract.Course.TABLE_NAME, values,
-                        selection, selectionArgs);
+        try {
+            switch (sUriMatcher.match(uri)) {
+                case CODE_COURSE: {
+                    return db.update(KusssContentContract.Course.TABLE_NAME, values,
+                            selection, selectionArgs);
+                }
+                case CODE_EXAM: {
+                    return db.update(KusssContentContract.Exam.TABLE_NAME, values,
+                            selection, selectionArgs);
+                }
+                case CODE_GRADE: {
+                    return db.update(KusssContentContract.Assessment.TABLE_NAME,
+                            values, selection, selectionArgs);
+                }
+                case CODE_CURRICULA: {
+                    return db.update(KusssContentContract.Curricula.TABLE_NAME,
+                            values, selection, selectionArgs);
+                }
+                case CODE_COURSE_ID: {
+                    String whereIdClause = KusssContentContract.Course.COL_ID + "="
+                            + uri.getLastPathSegment();
+                    if (!TextUtils.isEmpty(selection))
+                        whereIdClause += " AND " + selection;
+                    return db.update(KusssContentContract.Course.TABLE_NAME, values,
+                            whereIdClause, selectionArgs);
+                }
+                case CODE_EXAM_ID: {
+                    String whereIdClause = KusssContentContract.Exam.COL_ID + "="
+                            + uri.getLastPathSegment();
+                    if (!TextUtils.isEmpty(selection))
+                        whereIdClause += " AND " + selection;
+                    return db.update(KusssContentContract.Exam.TABLE_NAME, values,
+                            whereIdClause, selectionArgs);
+                }
+                case CODE_GRADE_ID: {
+                    String whereIdClause = KusssContentContract.Assessment.COL_ID + "="
+                            + uri.getLastPathSegment();
+                    if (!TextUtils.isEmpty(selection))
+                        whereIdClause += " AND " + selection;
+                    return db.update(KusssContentContract.Assessment.TABLE_NAME,
+                            values, whereIdClause, selectionArgs);
+                }
+                case CODE_CURRICULA_ID: {
+                    String whereIdClause = KusssContentContract.Curricula.COL_ID + "="
+                            + uri.getLastPathSegment();
+                    if (!TextUtils.isEmpty(selection))
+                        whereIdClause += " AND " + selection;
+                    return db.update(KusssContentContract.Curricula.TABLE_NAME,
+                            values, whereIdClause, selectionArgs);
+                }
+                default:
+                    throw new IllegalArgumentException("URI " + uri
+                            + " is not supported.");
             }
-            case CODE_EXAM: {
-                return db.update(KusssContentContract.Exam.TABLE_NAME, values,
-                        selection, selectionArgs);
-            }
-            case CODE_GRADE: {
-                return db.update(KusssContentContract.Assessment.TABLE_NAME,
-                        values, selection, selectionArgs);
-            }
-            case CODE_CURRICULA: {
-                return db.update(KusssContentContract.Curricula.TABLE_NAME,
-                        values, selection, selectionArgs);
-            }
-            case CODE_COURSE_ID: {
-                String whereIdClause = KusssContentContract.Course.COL_ID + "="
-                        + uri.getLastPathSegment();
-                if (!TextUtils.isEmpty(selection))
-                    whereIdClause += " AND " + selection;
-                return db.update(KusssContentContract.Course.TABLE_NAME, values,
-                        whereIdClause, selectionArgs);
-            }
-            case CODE_EXAM_ID: {
-                String whereIdClause = KusssContentContract.Exam.COL_ID + "="
-                        + uri.getLastPathSegment();
-                if (!TextUtils.isEmpty(selection))
-                    whereIdClause += " AND " + selection;
-                return db.update(KusssContentContract.Exam.TABLE_NAME, values,
-                        whereIdClause, selectionArgs);
-            }
-            case CODE_GRADE_ID: {
-                String whereIdClause = KusssContentContract.Assessment.COL_ID + "="
-                        + uri.getLastPathSegment();
-                if (!TextUtils.isEmpty(selection))
-                    whereIdClause += " AND " + selection;
-                return db.update(KusssContentContract.Assessment.TABLE_NAME,
-                        values, whereIdClause, selectionArgs);
-            }
-            case CODE_CURRICULA_ID: {
-                String whereIdClause = KusssContentContract.Curricula.COL_ID + "="
-                        + uri.getLastPathSegment();
-                if (!TextUtils.isEmpty(selection))
-                    whereIdClause += " AND " + selection;
-                return db.update(KusssContentContract.Curricula.TABLE_NAME,
-                        values, whereIdClause, selectionArgs);
-            }
-            default:
-                throw new IllegalArgumentException("URI " + uri
-                        + " is not supported.");
+        } catch (Exception e) {
+            Analytics.sendException(getContext(), e, true, getAdditionalData(values, selection, selectionArgs));
+            throw e;
         }
     }
 
@@ -468,8 +500,8 @@ public class KusssContentProvider extends ContentProvider {
                 Date dtStart = null;
 
                 for (Assessment assessment : assessments) {
-                    Date date = assessment.getDate();
-                    if (date != null) {
+                    if (assessment.isInitialized()) {
+                        Date date = assessment.getDate();
                         if (dtStart == null || date.before(dtStart)) {
                             dtStart = date;
                         }
