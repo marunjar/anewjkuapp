@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -984,7 +984,7 @@ public class AppUtils {
                     examsChannel.setLightColor(Color.RED);
                     // Sets whether notifications posted to this channel appear on the lockscreen or not
                     examsChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-                    defaultChannel.setShowBadge(false);
+                    examsChannel.setShowBadge(false);
 
                     mNotificationManager.createNotificationChannel(examsChannel);
 
@@ -999,7 +999,7 @@ public class AppUtils {
                     gradesChannel.setLightColor(Color.GREEN);
                     // Sets whether notifications posted to this channel appear on the lockscreen or not
                     gradesChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-                    defaultChannel.setShowBadge(true);
+                    gradesChannel.setShowBadge(true);
 
                     mNotificationManager.createNotificationChannel(gradesChannel);
                 }
