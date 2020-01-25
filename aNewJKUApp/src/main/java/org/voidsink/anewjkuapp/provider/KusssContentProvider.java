@@ -272,6 +272,7 @@ public class KusssContentProvider extends ContentProvider {
 
         SQLiteDatabase db = KusssDatabaseHelper.getInstance(getContext()).getReadableDatabase();
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        String table;
 
         /*
          * Choose the table to query and a sort order based on the code returned
@@ -280,42 +281,42 @@ public class KusssContentProvider extends ContentProvider {
          */
         switch (sUriMatcher.match(uri)) {
             case CODE_COURSE_ID:
-                builder.setTables(KusssContentContract.Course.TABLE_NAME);
+                table = KusssContentContract.Course.TABLE_NAME;
                 builder.appendWhere(KusssContentContract.Course.COL_ID + "="
                         + uri.getLastPathSegment());
                 break;
             case CODE_COURSE:
-                builder.setTables(KusssContentContract.Course.TABLE_NAME);
+                table = KusssContentContract.Course.TABLE_NAME;
                 if (TextUtils.isEmpty(sortOrder))
                     sortOrder = KusssContentContract.Course.COL_ID + " ASC";
                 break;
             case CODE_EXAM_ID:
-                builder.setTables(KusssContentContract.Exam.TABLE_NAME);
+                table = KusssContentContract.Exam.TABLE_NAME;
                 builder.appendWhere(KusssContentContract.Exam.COL_ID + "="
                         + uri.getLastPathSegment());
                 break;
             case CODE_EXAM:
-                builder.setTables(KusssContentContract.Exam.TABLE_NAME);
+                table = KusssContentContract.Exam.TABLE_NAME;
                 if (TextUtils.isEmpty(sortOrder))
                     sortOrder = KusssContentContract.Exam.COL_ID + " ASC";
                 break;
             case CODE_GRADE_ID:
-                builder.setTables(KusssContentContract.Assessment.TABLE_NAME);
+                table = KusssContentContract.Assessment.TABLE_NAME;
                 builder.appendWhere(KusssContentContract.Assessment.COL_ID + "="
                         + uri.getLastPathSegment());
                 break;
             case CODE_GRADE:
-                builder.setTables(KusssContentContract.Assessment.TABLE_NAME);
+                table = KusssContentContract.Assessment.TABLE_NAME;
                 if (TextUtils.isEmpty(sortOrder))
                     sortOrder = KusssContentContract.Assessment.COL_ID + " ASC";
                 break;
             case CODE_CURRICULA_ID:
-                builder.setTables(KusssContentContract.Curricula.TABLE_NAME);
+                table = KusssContentContract.Curricula.TABLE_NAME;
                 builder.appendWhere(KusssContentContract.Curricula.COL_ID + "="
                         + uri.getLastPathSegment());
                 break;
             case CODE_CURRICULA:
-                builder.setTables(KusssContentContract.Curricula.TABLE_NAME);
+                table = KusssContentContract.Curricula.TABLE_NAME;
                 if (TextUtils.isEmpty(sortOrder))
                     sortOrder = KusssContentContract.Curricula.COL_ID + " ASC";
                 break;
@@ -323,6 +324,7 @@ public class KusssContentProvider extends ContentProvider {
                 throw new IllegalArgumentException("URI " + uri
                         + " is not supported.");
         }
+        builder.setTables(table);
         return builder.query(db, projection, selection, selectionArgs,
                 null, null, sortOrder);
     }
