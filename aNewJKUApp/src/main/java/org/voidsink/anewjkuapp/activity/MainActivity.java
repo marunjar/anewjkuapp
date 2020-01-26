@@ -144,8 +144,6 @@ public class MainActivity extends ThemedActivity {
         // initialize graphic factory for mapsforge
         AndroidGraphicFactory.createInstance(this.getApplication());
 
-        getSupportFragmentManager().addOnBackStackChangedListener(this::initActionBar);
-
         // set up drawer
         mDrawerLayout = findViewById(R.id.drawer_layout);
 

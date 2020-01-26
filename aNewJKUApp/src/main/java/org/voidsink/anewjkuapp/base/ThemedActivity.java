@@ -71,22 +71,29 @@ public abstract class ThemedActivity extends AppCompatActivity {
     public final void initActionBar(Fragment fragment) {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            boolean setDisplayHomeAsUpEnabled = true;
-            CharSequence title = null;
+            if (fragment != null && Consts.ARG_FRAGMENT_TAG.equals(fragment.getTag())) {
+                boolean setDisplayHomeAsUpEnabled = true;
+                CharSequence title = null;
 
-            if (fragment instanceof StackedFragment) {
-                setDisplayHomeAsUpEnabled = ((StackedFragment) fragment).getDisplayHomeAsUpEnabled();
-                title = ((StackedFragment) fragment).getTitle(this);
-            }
+                if (fragment instanceof StackedFragment) {
+                    setDisplayHomeAsUpEnabled = ((StackedFragment) fragment).getDisplayHomeAsUpEnabled();
+                    title = ((StackedFragment) fragment).getTitle(this);
+                }
 
-            actionBar.setDisplayHomeAsUpEnabled(setDisplayHomeAsUpEnabled);
-            if (title != null) {
-                actionBar.setTitle(title);
-            } else {
+                actionBar.setDisplayHomeAsUpEnabled(setDisplayHomeAsUpEnabled);
+                if (title != null) {
+                    actionBar.setTitle(title);
+                } else {
+                    actionBar.setTitle(R.string.app_name);
+                }
+
+                onInitActionBar(actionBar);
+            } else if (fragment == null) {
+                actionBar.setDisplayHomeAsUpEnabled(true);
                 actionBar.setTitle(R.string.app_name);
-            }
 
-            onInitActionBar(actionBar);
+                onInitActionBar(actionBar);
+            }
         }
     }
 
