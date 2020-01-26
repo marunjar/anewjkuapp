@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -190,12 +190,11 @@ public class MainActivity extends ThemedActivity {
 
         Intent intent = getIntent();
 
-        Fragment f = attachFragment(intent, savedInstanceState, true);
         // attach calendar fragment as default
-        if (f == null) {
-            f = attachFragmentById(R.id.nav_cal, true);
+        if (!attachFragment(intent, savedInstanceState, true)) {
+            attachFragmentById(R.id.nav_cal, true);
         }
-        handleIntent(f, intent);
+        handleIntent(intent);
 
         startCreateAccount();
 
@@ -233,13 +232,13 @@ public class MainActivity extends ThemedActivity {
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
-    private Fragment attachFragmentById(int id, boolean saveLastFragment) {
+    private boolean attachFragmentById(int id, boolean saveLastFragment) {
         if (mNavigationView != null) {
             MenuItem mMenuItem = mNavigationView.getMenu().findItem(id);
 
             return attachFragment(mMenuItem, saveLastFragment);
         }
-        return null;
+        return false;
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -275,8 +274,8 @@ public class MainActivity extends ThemedActivity {
                 });
     }
 
-    private Fragment attachFragment(Intent intent, Bundle savedInstanceState,
-                                    boolean attachStored) {
+    private boolean attachFragment(Intent intent, Bundle savedInstanceState,
+                                   boolean attachStored) {
         if (intent != null && intent.hasExtra(ARG_SHOW_FRAGMENT_ID)) {
             // show fragment from intent
             return attachFragmentById(
@@ -291,18 +290,16 @@ public class MainActivity extends ThemedActivity {
                     .getLastFragment(this), true);
         } else {
             return getSupportFragmentManager().findFragmentByTag(
-                    Consts.ARG_FRAGMENT_TAG);
+                    Consts.ARG_FRAGMENT_TAG) != null;
         }
     }
 
-    private void handleIntent(Fragment f, Intent intent) {
-        if (f == null) {
-            f = getSupportFragmentManager()
+    private void handleIntent(Intent intent) {
+        Fragment fragment = getSupportFragmentManager()
                     .findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
-        }
 
-        if (f instanceof BaseFragment) {
-            ((BaseFragment) f).handleIntent(intent);
+        if (fragment instanceof BaseFragment) {
+            ((BaseFragment) fragment).handleIntent(intent);
         }
     }
 
@@ -310,17 +307,18 @@ public class MainActivity extends ThemedActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-        Fragment f = attachFragment(intent, null, false);
-        handleIntent(f, intent);
+        if (attachFragment(intent, null, false)) {
+            handleIntent(intent);
+        }
     }
 
-    private Fragment attachFragment(MenuItem menuItem, boolean saveLastFragment) {
+    private boolean attachFragment(MenuItem menuItem, boolean saveLastFragment) {
 
         if (menuItem == null) {
-            return null;
+            return false;
         }
 
-        Class<? extends Fragment> startFragment = null;
+        Class<? extends Fragment> startFragment;
 
         switch (menuItem.getItemId()) {
             case R.id.nav_cal:
@@ -358,51 +356,36 @@ public class MainActivity extends ThemedActivity {
                 startFragment = CurriculaFragment.class;
                 break;
             default:
-                break;
+                return false;
         }
 
-        if (startFragment != null) {
-            try {
-                final Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
+        try {
+            Bundle args = new Bundle();
+            args.putCharSequence(Consts.ARG_FRAGMENT_TITLE, menuItem.getTitle());
+            args.putInt(Consts.ARG_FRAGMENT_ID, menuItem.getItemId());
 
-                if (oldFragment != null) {
-                    if (startFragment.getCanonicalName().equals(oldFragment.getClass().getCanonicalName())) {
-                        return oldFragment;
-                    }
-                }
+            final Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
+            final boolean addToBackstack = (oldFragment != null) && !oldFragment.getClass().equals(startFragment);
 
-                Fragment f = startFragment.getConstructor().newInstance();
-
-                Bundle b = new Bundle();
-                b.putCharSequence(Consts.ARG_FRAGMENT_TITLE, menuItem.getTitle());
-                b.putInt(Consts.ARG_FRAGMENT_ID, menuItem.getItemId());
-                f.setArguments(b);
-
-                final boolean addToBackstack = (oldFragment != null) && !oldFragment.getClass().equals(f.getClass());
-
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.container, f, Consts.ARG_FRAGMENT_TAG);
-                if (addToBackstack) {
-                    ft.addToBackStack(f.getClass().getCanonicalName());
-                }
-                ft.commit();
-
-                if (saveLastFragment) {
-                    PreferenceWrapper.setLastFragment(this, menuItem.getItemId());
-                }
-
-                initActionBar();
-
-                return f;
-            } catch (Exception e) {
-                Analytics.sendException(this, e, false, startFragment.getName());
-                if (saveLastFragment) {
-                    PreferenceWrapper.setLastFragment(this, PreferenceWrapper.PREF_LAST_FRAGMENT_DEFAULT);
-                }
-                return null;
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.container, startFragment, args, Consts.ARG_FRAGMENT_TAG);
+            if (addToBackstack) {
+                ft.addToBackStack(startFragment.getCanonicalName());
             }
+            ft.commit();
+
+            if (saveLastFragment) {
+                PreferenceWrapper.setLastFragment(this, menuItem.getItemId());
+            }
+
+            return true;
+        } catch (Exception e) {
+            Analytics.sendException(this, e, false, startFragment.getName());
+            if (saveLastFragment) {
+                PreferenceWrapper.setLastFragment(this, PreferenceWrapper.PREF_LAST_FRAGMENT_DEFAULT);
+            }
+            return false;
         }
-        return null;
     }
 
 
@@ -415,8 +398,6 @@ public class MainActivity extends ThemedActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        initActionBar();
-
         menu.clear();
         getMenuInflater().inflate(R.menu.main, menu);
 

@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,16 +27,16 @@ package org.voidsink.anewjkuapp.base;
 
 import android.os.Bundle;
 
-import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.analytics.Analytics;
-import org.voidsink.anewjkuapp.utils.Consts;
-import org.voidsink.anewjkuapp.utils.UIUtils;
-
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+
+import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.utils.Consts;
+import org.voidsink.anewjkuapp.utils.UIUtils;
 
 public abstract class ThemedActivity extends AppCompatActivity {
 
@@ -64,19 +64,26 @@ public abstract class ThemedActivity extends AppCompatActivity {
     }
 
     protected final void initActionBar() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
+        initActionBar(fragment);
+    }
+
+    public final void initActionBar(Fragment fragment) {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            Fragment f = getSupportFragmentManager().findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
-            if (f instanceof StackedFragment) {
-                actionBar.setDisplayHomeAsUpEnabled(((StackedFragment) f).getDisplayHomeAsUpEnabled());
-                CharSequence title = ((StackedFragment) f).getTitle(this);
-                if (title != null) {
-                    actionBar.setTitle(title);
-                } else {
-                    actionBar.setTitle(R.string.app_name);
-                }
+            boolean setDisplayHomeAsUpEnabled = true;
+            CharSequence title = null;
+
+            if (fragment instanceof StackedFragment) {
+                setDisplayHomeAsUpEnabled = ((StackedFragment) fragment).getDisplayHomeAsUpEnabled();
+                title = ((StackedFragment) fragment).getTitle(this);
+            }
+
+            actionBar.setDisplayHomeAsUpEnabled(setDisplayHomeAsUpEnabled);
+            if (title != null) {
+                actionBar.setTitle(title);
             } else {
-                actionBar.setDisplayHomeAsUpEnabled(true);
+                actionBar.setTitle(R.string.app_name);
             }
 
             onInitActionBar(actionBar);
