@@ -44,7 +44,7 @@ public abstract class SectionedRecyclerViewBaseAdapter extends RecyclerView.Adap
 
     private static final int SECTION_TYPE = 0;
     private boolean mValid = true;
-    final RecyclerView.Adapter mBaseAdapter;
+    protected final RecyclerView.Adapter mBaseAdapter;
     private final SparseArray<Section> mSections = new SparseArray<>();
 
     public SectionedRecyclerViewBaseAdapter(RecyclerView recyclerView,
