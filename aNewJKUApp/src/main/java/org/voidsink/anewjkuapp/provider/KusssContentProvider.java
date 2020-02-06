@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -54,7 +54,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -69,8 +68,6 @@ public class KusssContentProvider extends ContentProvider {
     private static final int CODE_GRADE_ID = 6;
     private static final int CODE_CURRICULA = 7;
     private static final int CODE_CURRICULA_ID = 8;
-
-    private static final Comparator<String> TermComparator = (lhs, rhs) -> rhs.compareTo(lhs);
 
     private static final UriMatcher sUriMatcher = new UriMatcher(
             UriMatcher.NO_MATCH);
@@ -578,7 +575,7 @@ public class KusssContentProvider extends ContentProvider {
         }
         */
 
-        Collections.sort(terms, TermComparator);
+        Collections.sort(terms, (lhs, rhs) -> rhs.compareTo(lhs));
 
         List<Term> objects = new ArrayList<>();
         try {

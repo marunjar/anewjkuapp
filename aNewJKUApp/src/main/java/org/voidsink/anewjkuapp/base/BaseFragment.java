@@ -108,11 +108,7 @@ public class BaseFragment extends Fragment implements StackedFragment, PendingIn
         }
     }
 
-    /**
-     * for handling a pending intent in fragment
-     *
-     * @param intent the intent to handle
-     */
+    @Override
     public void handlePendingIntent(Intent intent) {
     }
 

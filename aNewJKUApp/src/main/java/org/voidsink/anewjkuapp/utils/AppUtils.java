@@ -98,7 +98,6 @@ import java.io.OutputStream;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.HashMap;
@@ -118,65 +117,6 @@ public class AppUtils {
     private static final Logger logger = LoggerFactory.getLogger(AppUtils.class);
 
     private static float mLastHue = new Random(System.currentTimeMillis()).nextFloat() * 360;
-
-    private static final Comparator<Course> CourseComparator = (lhs, rhs) -> {
-        int value = lhs.getTitle().compareTo(rhs.getTitle());
-        if (value == 0) {
-            value = lhs.getTerm().compareTo(rhs.getTerm());
-        }
-        return value;
-    };
-
-    private static final Comparator<LvaWithGrade> LvaWithGradeComparator = new Comparator<LvaWithGrade>() {
-        @Override
-        public int compare(LvaWithGrade lhs, LvaWithGrade rhs) {
-            int value = lhs.getState().compareTo(rhs.getState());
-            if (value == 0) {
-                value = lhs.getCourse().getTitle()
-                        .compareTo(rhs.getCourse().getTitle());
-            }
-            if (value == 0) {
-                value = TermComparator.compare(lhs.getCourse().getTerm(), rhs.getCourse().getTerm());
-            }
-            return value;
-        }
-    };
-
-    private static final Comparator<Curriculum> CurriculaComparator = (lhs, rhs) -> {
-        int value = lhs.getUni().compareToIgnoreCase(rhs.getUni());
-        if (value == 0) {
-            value = lhs.getDtStart().compareTo(rhs.getDtStart());
-        }
-        if (value == 0) {
-            value = lhs.getCid().compareTo(rhs.getCid());
-        }
-        return value;
-    };
-
-    private static final Comparator<Assessment> AssessmentComparator = new Comparator<Assessment>() {
-        @Override
-        public int compare(Assessment lhs, Assessment rhs) {
-            int value = lhs.getAssessmentType().compareTo(rhs.getAssessmentType());
-            if (value == 0) {
-                value = rhs.getDate().compareTo(lhs.getDate());
-            }
-            if (value == 0) {
-                value = TermComparator.compare(rhs.getTerm(), lhs.getTerm());
-            }
-            if (value == 0) {
-                value = lhs.getTitle().compareTo(rhs.getTitle());
-            }
-            return value;
-        }
-    };
-
-    private static final Comparator<Term> TermComparator = (lhs, rhs) -> {
-        if (lhs == null && rhs == null) return 0;
-        if (lhs == null) return -1;
-        if (rhs == null) return 1;
-
-        return rhs.compareTo(lhs);
-    };
 
     private AppUtils() {
         throw new UnsupportedOperationException();
@@ -383,16 +323,51 @@ public class AppUtils {
     }
 
     public static void sortCourses(List<Course> courses) {
-        Collections.sort(courses, CourseComparator);
+        Collections.sort(courses, (lhs, rhs) -> {
+            int value = lhs.getTitle().compareTo(rhs.getTitle());
+            if (value == 0) {
+                value = lhs.getTerm().compareTo(rhs.getTerm());
+            }
+            return value;
+        });
+    }
+
+    private static int compareTerms(Term lhs, Term rhs) {
+        if (lhs == null && rhs == null) return 0;
+        if (lhs == null) return -1;
+        if (rhs == null) return 1;
+
+        return rhs.compareTo(lhs);
     }
 
     private static void sortLVAsWithGrade(List<LvaWithGrade> mCourses) {
-        Collections.sort(mCourses, LvaWithGradeComparator);
-
+        Collections.sort(mCourses, (lhs, rhs) -> {
+            int value = lhs.getState().compareTo(rhs.getState());
+            if (value == 0) {
+                value = lhs.getCourse().getTitle()
+                        .compareTo(rhs.getCourse().getTitle());
+            }
+            if (value == 0) {
+                value = compareTerms(lhs.getCourse().getTerm(), rhs.getCourse().getTerm());
+            }
+            return value;
+        });
     }
 
     public static void sortAssessments(List<Assessment> assessments) {
-        Collections.sort(assessments, AssessmentComparator);
+        Collections.sort(assessments, (lhs, rhs) -> {
+            int value = lhs.getAssessmentType().compareTo(rhs.getAssessmentType());
+            if (value == 0) {
+                value = rhs.getDate().compareTo(lhs.getDate());
+            }
+            if (value == 0) {
+                value = compareTerms(rhs.getTerm(), lhs.getTerm());
+            }
+            if (value == 0) {
+                value = lhs.getTitle().compareTo(rhs.getTitle());
+            }
+            return value;
+        });
     }
 
     private static void removeDuplicates(List<LvaWithGrade> mCourses) {
@@ -673,7 +648,16 @@ public class AppUtils {
     }
 
     public static void sortCurricula(List<Curriculum> mCurricula) {
-        Collections.sort(mCurricula, CurriculaComparator);
+        Collections.sort(mCurricula, (lhs, rhs) -> {
+            int value = lhs.getUni().compareToIgnoreCase(rhs.getUni());
+            if (value == 0) {
+                value = lhs.getDtStart().compareTo(rhs.getDtStart());
+            }
+            if (value == 0) {
+                value = lhs.getCid().compareTo(rhs.getCid());
+            }
+            return value;
+        });
     }
 
     private static boolean isWorkScheduled(Context context, String tag) {
