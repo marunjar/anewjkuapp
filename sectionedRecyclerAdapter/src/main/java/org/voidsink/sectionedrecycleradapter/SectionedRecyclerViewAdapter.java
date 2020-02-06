@@ -43,7 +43,7 @@ public class SectionedRecyclerViewAdapter extends SectionedRecyclerViewBaseAdapt
         List<Section> sections = new ArrayList<>();
 
         if (mBaseAdapter instanceof SectionedAdapter) {
-            long sectionId = 0;
+            long sectionId;
             long lastSectionId = 0;
             SectionedAdapter mDelegate = (SectionedAdapter) mBaseAdapter;
             for (int i = 0; i < mDelegate.getItemCount(); i++) {
