@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onDisplayPreferenceDialog(Preference preference) {
-        if (getFragmentManager().findFragmentByTag(DIALOG_FRAGMENT_TAG) == null) {
+        if (isAdded() && getParentFragmentManager().findFragmentByTag(DIALOG_FRAGMENT_TAG) == null) {
             DialogFragment f = null;
             if (preference instanceof TimePreference) {
                 f = TimePickerDialogFragment.newInstance(preference.getKey());
@@ -69,7 +69,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
 
             if (f != null) {
                 f.setTargetFragment(this, 0);
-                f.show(getFragmentManager(), DIALOG_FRAGMENT_TAG);
+                f.show(getParentFragmentManager(), DIALOG_FRAGMENT_TAG);
                 return;
             }
         }

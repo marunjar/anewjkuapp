@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 
 package org.voidsink.anewjkuapp.base;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,20 +33,21 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.utils.Consts;
 
-public class BaseFragment extends Fragment implements StackedFragment {
+public class BaseFragment extends Fragment implements StackedFragment, PendingIntentHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(StackedFragment.class);
 
-    private Intent mPendingIntent = null;
     private CharSequence mTitle = null;
     private int mId = 0;
     private ContentLoadingProgressBar mProgress;
@@ -97,16 +99,21 @@ public class BaseFragment extends Fragment implements StackedFragment {
         outState.putCharSequence(Consts.ARG_FRAGMENT_TITLE, mTitle);
     }
 
-    public final void handleIntent(Intent intent) {
-        if (getContext() == null) {
-            this.mPendingIntent = intent;
+    public final void handleIntent() {
+        Activity activity = getActivity();
+        if (activity instanceof MainActivity) {
+            ((MainActivity) activity).handlePendingIntent(this);
         } else {
-            handlePendingIntent(intent);
-            this.mPendingIntent = null;
+            logger.warn("no activity, can't handle intent");
         }
     }
 
-    protected void handlePendingIntent(Intent intent) {
+    /**
+     * for handling a pending intent in fragment
+     *
+     * @param intent the intent to handle
+     */
+    public void handlePendingIntent(Intent intent) {
     }
 
     @Override
@@ -132,14 +139,7 @@ public class BaseFragment extends Fragment implements StackedFragment {
             Analytics.sendScreen(getActivity(), screenName);
         }
 
-        if (mPendingIntent != null) {
-            if (getContext() != null) {
-                handlePendingIntent(mPendingIntent);
-            } else {
-                logger.warn("context not set, can't call handlePendingIntent");
-            }
-            this.mPendingIntent = null;
-        }
+        handleIntent();
     }
 
     /*
@@ -162,5 +162,14 @@ public class BaseFragment extends Fragment implements StackedFragment {
     @Override
     public int getId(Context context) {
         return mId;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (getActivity() instanceof ThemedActivity) {
+            ((ThemedActivity) getActivity()).initActionBar(this);
+        }
     }
 }

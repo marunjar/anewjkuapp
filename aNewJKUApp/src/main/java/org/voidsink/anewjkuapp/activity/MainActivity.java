@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -59,6 +59,7 @@ import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
 import org.voidsink.anewjkuapp.base.BaseFragment;
+import org.voidsink.anewjkuapp.base.PendingIntentHandler;
 import org.voidsink.anewjkuapp.base.StackedFragment;
 import org.voidsink.anewjkuapp.base.ThemedActivity;
 import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
@@ -97,8 +98,9 @@ public class MainActivity extends ThemedActivity {
     private DrawerLayout mDrawerLayout;
     private DrawerLayout.DrawerListener mDrawerListener;
     private NavigationView mNavigationView;
+    private Intent mPendingIntent = null;
 
-    private static void StartMyCurricula(Context context) {
+    private static void startMyCurricula(Context context) {
         //
         Intent i = new Intent(context, MainActivity.class)
                 .putExtra(MainActivity.ARG_SHOW_FRAGMENT_ID, R.id.nav_curricula)
@@ -144,8 +146,6 @@ public class MainActivity extends ThemedActivity {
         // initialize graphic factory for mapsforge
         AndroidGraphicFactory.createInstance(this.getApplication());
 
-        getSupportFragmentManager().addOnBackStackChangedListener(this::initActionBar);
-
         // set up drawer
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
@@ -174,7 +174,7 @@ public class MainActivity extends ThemedActivity {
                             mDrawerUser.setOnClickListener(v -> startCreateAccount());
                         } else {
                             mDrawerUser.setText(account.name);
-                            mDrawerUser.setOnClickListener(v -> MainActivity.StartMyCurricula(MainActivity.this));
+                            mDrawerUser.setOnClickListener(v -> MainActivity.startMyCurricula(MainActivity.this));
                         }
                     }
                 }
@@ -189,13 +189,10 @@ public class MainActivity extends ThemedActivity {
         }
 
         Intent intent = getIntent();
-
-        Fragment f = attachFragment(intent, savedInstanceState, true);
         // attach calendar fragment as default
-        if (f == null) {
-            f = attachFragmentById(R.id.nav_cal, true);
+        if (!attachFragment(intent, savedInstanceState, true)) {
+            attachFragmentById(intent, R.id.nav_cal, true);
         }
-        handleIntent(f, intent);
 
         startCreateAccount();
 
@@ -233,13 +230,13 @@ public class MainActivity extends ThemedActivity {
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
-    private Fragment attachFragmentById(int id, boolean saveLastFragment) {
+    private boolean attachFragmentById(Intent intent, int id, boolean saveLastFragment) {
         if (mNavigationView != null) {
             MenuItem mMenuItem = mNavigationView.getMenu().findItem(id);
 
-            return attachFragment(mMenuItem, saveLastFragment);
+            return attachFragmentByMenuItem(intent, mMenuItem, saveLastFragment);
         }
-        return null;
+        return false;
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -266,7 +263,7 @@ public class MainActivity extends ThemedActivity {
                             break;
                         }
                         default:
-                            attachFragment(menuItem, true);
+                            attachFragmentByMenuItem(null, menuItem, true);
                             break;
                     }
 
@@ -275,34 +272,26 @@ public class MainActivity extends ThemedActivity {
                 });
     }
 
-    private Fragment attachFragment(Intent intent, Bundle savedInstanceState,
-                                    boolean attachStored) {
+    private boolean attachFragment(Intent intent, Bundle savedInstanceState,
+                                   boolean attachStored) {
         if (intent != null && intent.hasExtra(ARG_SHOW_FRAGMENT_ID)) {
             // show fragment from intent
             return attachFragmentById(
+                    intent,
                     intent.getIntExtra(ARG_SHOW_FRAGMENT_ID, 0),
                     intent.getBooleanExtra(ARG_SAVE_LAST_FRAGMENT, true));
         } else if (savedInstanceState != null) {
             // restore saved fragment
-            return attachFragmentById(savedInstanceState
+            return attachFragmentById(intent, savedInstanceState
                     .getInt(ARG_SHOW_FRAGMENT_ID), true);
         } else if (attachStored) {
-            return attachFragmentById(PreferenceWrapper
+            return attachFragmentById(intent, PreferenceWrapper
                     .getLastFragment(this), true);
         } else {
+            this.mPendingIntent = intent;
+            handleIntentOnFragment();
             return getSupportFragmentManager().findFragmentByTag(
-                    Consts.ARG_FRAGMENT_TAG);
-        }
-    }
-
-    private void handleIntent(Fragment f, Intent intent) {
-        if (f == null) {
-            f = getSupportFragmentManager()
-                    .findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
-        }
-
-        if (f instanceof BaseFragment) {
-            ((BaseFragment) f).handleIntent(intent);
+                    Consts.ARG_FRAGMENT_TAG) != null;
         }
     }
 
@@ -310,101 +299,102 @@ public class MainActivity extends ThemedActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-        Fragment f = attachFragment(intent, null, false);
-        handleIntent(f, intent);
+        this.mPendingIntent = intent;
+
+        attachFragment(intent, null, false);
     }
 
-    private Fragment attachFragment(MenuItem menuItem, boolean saveLastFragment) {
+    private boolean attachFragmentByMenuItem(Intent intent, MenuItem menuItem, boolean saveLastFragment) {
 
         if (menuItem == null) {
-            return null;
+            return false;
         }
 
-        Class<? extends Fragment> startFragment = null;
-
-        switch (menuItem.getItemId()) {
-            case R.id.nav_cal:
-                if (PreferenceWrapper.getUseCalendarView(this)) {
-                    startFragment = CalendarFragment2.class;
-                } else {
-                    startFragment = CalendarFragment.class;
-                }
-                break;
-            case R.id.nav_exams:
-                startFragment = ExamFragment.class;
-                break;
-            case R.id.nav_grades:
-                startFragment = AssessmentFragment.class;
-                break;
-            case R.id.nav_courses:
-                startFragment = LvaFragment.class;
-                break;
-            case R.id.nav_stats:
-                startFragment = StatFragment.class;
-                break;
-            case R.id.nav_mensa:
-                startFragment = MensaFragment.class;
-                break;
-            case R.id.nav_map:
-                startFragment = MapFragment.class;
-                break;
-            case R.id.nav_oeh_info:
-                startFragment = OehInfoFragment.class;
-                break;
-            case R.id.nav_oeh_rigths:
-                startFragment = OehRightsFragment.class;
-                break;
-            case R.id.nav_curricula:
-                startFragment = CurriculaFragment.class;
-                break;
-            default:
-                break;
+        Class<? extends Fragment> startFragment = getFragmentClassById(menuItem.getItemId());
+        if (startFragment == null) {
+            return false;
         }
 
-        if (startFragment != null) {
-            try {
-                final Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
+        try {
+            this.mPendingIntent = intent;
 
-                if (oldFragment != null) {
-                    if (startFragment.getCanonicalName().equals(oldFragment.getClass().getCanonicalName())) {
-                        return oldFragment;
-                    }
-                }
+            Bundle args = new Bundle();
+            args.putCharSequence(Consts.ARG_FRAGMENT_TITLE, menuItem.getTitle());
+            args.putInt(Consts.ARG_FRAGMENT_ID, menuItem.getItemId());
 
-                Fragment f = startFragment.getConstructor().newInstance();
+            final Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
+            final boolean fragmentChanged = (oldFragment == null) || !oldFragment.getClass().equals(startFragment);
 
-                Bundle b = new Bundle();
-                b.putCharSequence(Consts.ARG_FRAGMENT_TITLE, menuItem.getTitle());
-                b.putInt(Consts.ARG_FRAGMENT_ID, menuItem.getItemId());
-                f.setArguments(b);
-
-                final boolean addToBackstack = (oldFragment != null) && !oldFragment.getClass().equals(f.getClass());
-
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.container, f, Consts.ARG_FRAGMENT_TAG);
-                if (addToBackstack) {
-                    ft.addToBackStack(f.getClass().getCanonicalName());
-                }
-                ft.commit();
-
-                if (saveLastFragment) {
-                    PreferenceWrapper.setLastFragment(this, menuItem.getItemId());
-                }
-
-                initActionBar();
-
-                return f;
-            } catch (Exception e) {
-                Analytics.sendException(this, e, false, startFragment.getName());
-                if (saveLastFragment) {
-                    PreferenceWrapper.setLastFragment(this, PreferenceWrapper.PREF_LAST_FRAGMENT_DEFAULT);
-                }
-                return null;
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.container, startFragment, args, Consts.ARG_FRAGMENT_TAG);
+            if (fragmentChanged && oldFragment != null) {
+                ft.addToBackStack(startFragment.getCanonicalName());
             }
+            ft.commit();
+
+            if (saveLastFragment) {
+                PreferenceWrapper.setLastFragment(this, menuItem.getItemId());
+            }
+
+            if (!fragmentChanged) {
+                handleIntentOnFragment();
+            }
+
+            return true;
+        } catch (Exception e) {
+            Analytics.sendException(this, e, false, startFragment.getName());
+            if (saveLastFragment) {
+                PreferenceWrapper.setLastFragment(this, PreferenceWrapper.PREF_LAST_FRAGMENT_DEFAULT);
+            }
+            return false;
         }
-        return null;
     }
 
+    private Class<? extends Fragment> getFragmentClassById(int itemId) {
+        switch (itemId) {
+            case R.id.nav_cal:
+                if (PreferenceWrapper.getUseCalendarView(this)) {
+                    return CalendarFragment2.class;
+                } else {
+                    return CalendarFragment.class;
+                }
+            case R.id.nav_exams:
+                return ExamFragment.class;
+            case R.id.nav_grades:
+                return AssessmentFragment.class;
+            case R.id.nav_courses:
+                return LvaFragment.class;
+            case R.id.nav_stats:
+                return StatFragment.class;
+            case R.id.nav_mensa:
+                return MensaFragment.class;
+            case R.id.nav_map:
+                return MapFragment.class;
+            case R.id.nav_oeh_info:
+                return OehInfoFragment.class;
+            case R.id.nav_oeh_rigths:
+                return OehRightsFragment.class;
+            case R.id.nav_curricula:
+                return CurriculaFragment.class;
+            default:
+                return null;
+        }
+    }
+
+    private void handleIntentOnFragment() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(Consts.ARG_FRAGMENT_TAG);
+
+        if (fragment instanceof BaseFragment) {
+            ((BaseFragment) fragment).handleIntent();
+        }
+    }
+
+    public void handlePendingIntent(PendingIntentHandler handler) {
+        if (mPendingIntent != null) {
+            handler.handlePendingIntent(mPendingIntent);
+            mPendingIntent = null;
+        }
+    }
 
     @Override
     protected void onInitActionBar(ActionBar actionBar) {
@@ -415,8 +405,6 @@ public class MainActivity extends ThemedActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        initActionBar();
-
         menu.clear();
         getMenuInflater().inflate(R.menu.main, menu);
 
