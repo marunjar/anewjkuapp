@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -149,22 +149,20 @@ public class ExamFragment extends BaseFragment implements ContentObserverListene
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         mAdapter.clear();
 
-        if (data != null) {
-            if (AppUtils.getAccount(getContext()) != null) {
-                CourseMap map = new CourseMap(getContext());
-                List<ExamListExam> mExams = new ArrayList<>();
+        if (data != null && AppUtils.getAccount(getContext()) != null) {
+            CourseMap map = new CourseMap(getContext());
+            List<ExamListExam> mExams = new ArrayList<>();
 
-                data.moveToFirst();
-                data.moveToPrevious();
-                while (data.moveToNext()) {
-                    try {
-                        mExams.add(new ExamListExam(data, map));
-                    } catch (ParseException e) {
-                        Analytics.sendException(getContext(), e, false);
-                    }
+            data.moveToFirst();
+            data.moveToPrevious();
+            while (data.moveToNext()) {
+                try {
+                    mExams.add(new ExamListExam(data, map));
+                } catch (ParseException e) {
+                    Analytics.sendException(getContext(), e, false);
                 }
-                mAdapter.addAll(mExams);
             }
+            mAdapter.addAll(mExams);
         }
         mAdapter.notifyDataSetChanged();
 

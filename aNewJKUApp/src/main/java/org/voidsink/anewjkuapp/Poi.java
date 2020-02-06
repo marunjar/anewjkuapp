@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -103,10 +103,6 @@ public class Poi {
 
     public ContentValues getContentValues(boolean oldIsDefault,
                                           boolean newIsDefault) {
-        if (oldIsDefault) {
-            // no way back
-            newIsDefault = oldIsDefault;
-        }
-        return getContentValues(newIsDefault);
+        return getContentValues(newIsDefault || oldIsDefault); // no way back
     }
 }

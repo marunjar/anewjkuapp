@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,10 +27,10 @@ package org.voidsink.sectionedrecycleradapter;
 
 import android.view.ViewGroup;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.recyclerview.widget.RecyclerView;
 
 public class SectionedRecyclerViewAdapter extends SectionedRecyclerViewBaseAdapter {
 
@@ -43,7 +43,8 @@ public class SectionedRecyclerViewAdapter extends SectionedRecyclerViewBaseAdapt
         List<Section> sections = new ArrayList<>();
 
         if (mBaseAdapter instanceof SectionedAdapter) {
-            long sectionId, lastSectionId = 0;
+            long sectionId = 0;
+            long lastSectionId = 0;
             SectionedAdapter mDelegate = (SectionedAdapter) mBaseAdapter;
             for (int i = 0; i < mDelegate.getItemCount(); i++) {
                 sectionId = mDelegate.getHeaderId(i);
@@ -65,7 +66,7 @@ public class SectionedRecyclerViewAdapter extends SectionedRecyclerViewBaseAdapt
     @Override
     protected void onBindHeaderViewHolder(Section section, RecyclerView.ViewHolder sectionViewHolder, int position) {
         if (mBaseAdapter instanceof SectionedAdapter) {
-            ((SectionedAdapter) mBaseAdapter).onBindHeaderViewHolder(sectionViewHolder, section.firstPosition);
+            ((SectionedAdapter) mBaseAdapter).onBindHeaderViewHolder(sectionViewHolder, section.getFirstPosition());
         }
     }
 }

@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -151,11 +151,11 @@ public class MapFragment extends BaseFragment implements
             this.mName = name;
         }
 
-        LatLong getLatLon() {
+        private LatLong getLatLon() {
             return mLatLon;
         }
 
-        public String getName() {
+        private String getName() {
             return mName;
         }
     }
@@ -251,14 +251,12 @@ public class MapFragment extends BaseFragment implements
 
         try (Cursor c = cr
                 .query(uri, PoiContentContract.Poi.DB.PROJECTION, null, null, null)) {
-            if (c != null) {
-                if (c.moveToNext()) {
-                    String name = c.getString(PoiContentContract.Poi.DB.COL_NAME);
-                    double lon = c.getDouble(PoiContentContract.Poi.DB.COL_LON);
-                    double lat = c.getDouble(PoiContentContract.Poi.DB.COL_LAT);
+            if (c != null && c.moveToNext()) {
+                String name = c.getString(PoiContentContract.Poi.DB.COL_NAME);
+                double lon = c.getDouble(PoiContentContract.Poi.DB.COL_LON);
+                double lat = c.getDouble(PoiContentContract.Poi.DB.COL_LAT);
 
-                    setNewGoal(new MyMarker(lat, lon, name));
-                }
+                setNewGoal(new MyMarker(lat, lon, name));
             }
         }
 

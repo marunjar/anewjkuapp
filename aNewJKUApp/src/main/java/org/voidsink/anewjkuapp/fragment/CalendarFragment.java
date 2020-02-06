@@ -71,7 +71,8 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
 
     private static final Logger logger = LoggerFactory.getLogger(CalendarFragment.class);
 
-    private long now = 0, then = 0;
+    private long now = 0;
+    private long then = 0;
 
     private CalendarEventAdapter mAdapter;
     private RecyclerView mRecyclerView;

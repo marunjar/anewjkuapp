@@ -99,5 +99,6 @@ public class Consts {
     public static final String MENSA_MENU_RAAB = "http://www.sommerhaus-hotel.at/de/linz#speiseplan";
 
     private Consts() {
+        throw new UnsupportedOperationException();
     }
 }

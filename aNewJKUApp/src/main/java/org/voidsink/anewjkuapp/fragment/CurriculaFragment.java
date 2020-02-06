@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,7 +25,6 @@
 
 package org.voidsink.anewjkuapp.fragment;
 
-import android.accounts.Account;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -59,7 +58,6 @@ import org.voidsink.sectionedrecycleradapter.SectionedAdapter;
 import org.voidsink.sectionedrecycleradapter.SectionedRecyclerViewAdapter;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CurriculaFragment extends BaseFragment implements
@@ -149,14 +147,10 @@ public class CurriculaFragment extends BaseFragment implements
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         mAdapter.clear();
 
-        List<Curriculum> mCurriculum = new ArrayList<>();
-        if (data != null) {
-            Account mAccount = AppUtils.getAccount(getContext());
-            if (mAccount != null) {
-                mCurriculum = KusssContentProvider.getCurriculaFromCursor(data);
-            }
+        if (data != null && AppUtils.getAccount(getContext()) != null) {
+            List<Curriculum> mCurriculum = KusssContentProvider.getCurriculaFromCursor(data);
+            mAdapter.addAll(mCurriculum);
         }
-        mAdapter.addAll(mCurriculum);
         mAdapter.notifyDataSetChanged();
     }
 

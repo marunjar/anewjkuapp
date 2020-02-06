@@ -59,7 +59,7 @@ public class KHGMenuLoader extends BaseMenuLoader implements MenuLoader {
                     } else if (columns.size() == 3) {
                         handle3Columns(day, columns);
                     } else {
-                        throw new RuntimeException("Table with columns.size() = " + columns.size() + " found. Expected 3 or 4.");
+                        throw new IllegalStateException("Table with columns.size() = " + columns.size() + " found. Expected 3 or 4.");
                     }
                 }
             }

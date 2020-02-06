@@ -34,6 +34,7 @@ public class Mensen {
     public static final String MENSA_TAGESTELLER = "TAGESTELLER";
 
     private Mensen() {
+        throw new UnsupportedOperationException();
     }
 
 }

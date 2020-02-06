@@ -118,6 +118,8 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
                 }
                 break;
             }
+            default:
+                break;
         }
     }
 

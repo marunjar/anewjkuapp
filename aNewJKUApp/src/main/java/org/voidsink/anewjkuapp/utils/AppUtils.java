@@ -117,10 +117,6 @@ public class AppUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(AppUtils.class);
 
-    public AppUtils() {
-        throw new UnsupportedOperationException();
-    }
-
     private static final Comparator<Course> CourseComparator = (lhs, rhs) -> {
         int value = lhs.getTitle().compareTo(rhs.getTitle());
         if (value == 0) {
@@ -180,6 +176,9 @@ public class AppUtils {
         return rhs.compareTo(lhs);
     };
 
+    private AppUtils() {
+        throw new UnsupportedOperationException();
+    }
 
     public static void doOnNewVersion(Context context) {
         int mLastVersion = PreferenceWrapper.getLastVersion(context);

@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,11 +28,11 @@ package org.voidsink.sectionedrecycleradapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
-import java.util.Arrays;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.Arrays;
 
 /**
  * Adaption of SimpleSectionedListAdapter from google io 2014
@@ -44,11 +44,11 @@ public abstract class SectionedRecyclerViewBaseAdapter extends RecyclerView.Adap
 
     private static final int SECTION_TYPE = 0;
     private boolean mValid = true;
-    final RecyclerView.Adapter mBaseAdapter;
+    final RecyclerView.Adapter<RecyclerView.ViewHolder> mBaseAdapter;
     private final SparseArray<Section> mSections = new SparseArray<>();
 
     public SectionedRecyclerViewBaseAdapter(RecyclerView recyclerView,
-                                            RecyclerView.Adapter baseAdapter) {
+                                            RecyclerView.Adapter<RecyclerView.ViewHolder> baseAdapter) {
 
         mBaseAdapter = baseAdapter;
 
@@ -134,12 +134,12 @@ public abstract class SectionedRecyclerViewBaseAdapter extends RecyclerView.Adap
     private void setSections(Section[] sections) {
         mSections.clear();
 
-        Arrays.sort(sections, (lhs, rhs) -> Integer.compare(lhs.firstPosition, rhs.firstPosition));
+        Arrays.sort(sections, (lhs, rhs) -> Integer.compare(lhs.getFirstPosition(), rhs.getFirstPosition()));
 
         int offset = 0; // offset positions for the headers we're adding
         for (Section section : sections) {
-            section.sectionedPosition = section.firstPosition + offset;
-            mSections.append(section.sectionedPosition, section);
+            section.setSectionedPosition(section.getFirstPosition() + offset);
+            mSections.append(section.getSectionedPosition(), section);
             ++offset;
         }
     }
@@ -147,7 +147,7 @@ public abstract class SectionedRecyclerViewBaseAdapter extends RecyclerView.Adap
     public int positionToSectionedPosition(int position) {
         int offset = 0;
         for (int i = 0; i < mSections.size(); i++) {
-            if (mSections.valueAt(i).firstPosition > position) {
+            if (mSections.valueAt(i).getFirstPosition() > position) {
                 break;
             }
             ++offset;
@@ -162,7 +162,7 @@ public abstract class SectionedRecyclerViewBaseAdapter extends RecyclerView.Adap
 
         int offset = 0;
         for (int i = 0; i < mSections.size(); i++) {
-            if (mSections.valueAt(i).sectionedPosition > sectionedPosition) {
+            if (mSections.valueAt(i).getSectionedPosition() > sectionedPosition) {
                 break;
             }
             --offset;

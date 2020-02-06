@@ -108,7 +108,7 @@ public final class PreferenceWrapper {
     private static final boolean PREF_COURSES_SHOW_WITH_ASSESSMENT_ONLY_DEFAULT = false;
 
     private PreferenceWrapper() {
-
+        throw new UnsupportedOperationException();
     }
 
     public static int getSyncInterval(Context context) {
