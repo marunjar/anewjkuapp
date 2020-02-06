@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -28,9 +28,6 @@ package org.voidsink.anewjkuapp.utils;
 import org.voidsink.anewjkuapp.BuildConfig;
 
 public class Consts {
-
-    private Consts() {
-    }
 
     public static final String ARG_WORKER_CAL_COURSES = "UPDATE_CAL_LVA";
     public static final String ARG_WORKER_CAL_EXAM = "UPDATE_CAL_EXAM";
@@ -101,4 +98,6 @@ public class Consts {
     public static final String MENSA_MENU_KHG = "https://www.dioezese-linz.at/institution/807510/essen/menueplan";
     public static final String MENSA_MENU_RAAB = "http://www.sommerhaus-hotel.at/de/linz#speiseplan";
 
+    private Consts() {
+    }
 }

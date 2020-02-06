@@ -31,6 +31,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.utils.AppUtils;
@@ -38,9 +41,6 @@ import org.voidsink.anewjkuapp.utils.UIUtils;
 import org.voidsink.sectionedrecycleradapter.SectionedAdapter;
 
 import java.text.DateFormat;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, AssessmentListAdapter.GradeViewHolder> implements SectionedAdapter<AssessmentListAdapter.GradeHeaderHolder> {
 
@@ -104,15 +104,15 @@ public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, Asse
     }
 
     static class GradeViewHolder extends RecyclerView.ViewHolder {
-        final TextView mTitle;
-        final TextView mGrade;
-        final TextView mCourseId;
-        final TextView mTerm;
-        final TextView mCid;
-        final TextView mDate;
-        final View mChipBack;
-        final TextView mChipGrade;
-        final TextView mChipInfo;
+        private final TextView mTitle;
+        private final TextView mGrade;
+        private final TextView mCourseId;
+        private final TextView mTerm;
+        private final TextView mCid;
+        private final TextView mDate;
+        private final View mChipBack;
+        private final TextView mChipGrade;
+        private final TextView mChipInfo;
 
         GradeViewHolder(View itemView) {
             super(itemView);
@@ -130,7 +130,7 @@ public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, Asse
     }
 
     static class GradeHeaderHolder extends RecyclerView.ViewHolder {
-        final TextView mText;
+        private final TextView mText;
 
         GradeHeaderHolder(View itemView) {
             super(itemView);

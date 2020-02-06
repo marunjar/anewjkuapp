@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -483,11 +483,11 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
 
     static class StatViewHolder extends RecyclerView.ViewHolder {
 
-        final Toolbar mToolbar;
-        final TextView mTitle;
-        final LinearLayout mItems;
-        final ComboLineColumnChartView mBarChart;
-        final PieChartView mPieChart;
+        private final Toolbar mToolbar;
+        private final TextView mTitle;
+        private final LinearLayout mItems;
+        private final ComboLineColumnChartView mBarChart;
+        private final PieChartView mPieChart;
 
         StatViewHolder(View itemView) {
             super(itemView);

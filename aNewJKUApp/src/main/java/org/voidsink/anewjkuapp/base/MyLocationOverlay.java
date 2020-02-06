@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -34,6 +34,8 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
+
 import org.mapsforge.core.graphics.Bitmap;
 import org.mapsforge.core.graphics.Canvas;
 import org.mapsforge.core.graphics.GraphicFactory;
@@ -48,8 +50,6 @@ import org.mapsforge.map.layer.overlay.Circle;
 import org.mapsforge.map.layer.overlay.Marker;
 import org.mapsforge.map.model.IMapViewPosition;
 
-import androidx.core.app.ActivityCompat;
-
 /**
  * A thread-safe {@link Layer} implementation to display the current location. NOTE: This code really does not reflect
  * Android best practice and used in production leads to bad user experience (e.g. long time to first fix, excessive
@@ -62,6 +62,15 @@ public class MyLocationOverlay extends Layer implements LocationListener {
     private float minDistance = 0.0f;
     private long minTime = 0;
     private final Activity activity;
+
+    private boolean centerAtNextFix;
+    private final Circle circle;
+    private Location lastLocation;
+    private final LocationManager locationManager;
+    private final IMapViewPosition mapViewPosition;
+    private final Marker marker;
+    private boolean myLocationEnabled;
+    private boolean snapToLocationEnabled;
 
     /**
      * @param location the location whose geographical coordinates should be converted.
@@ -86,15 +95,6 @@ public class MyLocationOverlay extends Layer implements LocationListener {
         paint.setStyle(style);
         return paint;
     }
-
-    private boolean centerAtNextFix;
-    private final Circle circle;
-    private Location lastLocation;
-    private final LocationManager locationManager;
-    private final IMapViewPosition mapViewPosition;
-    private final Marker marker;
-    private boolean myLocationEnabled;
-    private boolean snapToLocationEnabled;
 
     /**
      * Constructs a new {@code MyLocationOverlay} with the default circle paints.

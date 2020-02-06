@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -141,7 +141,10 @@ public class KHGMenuLoader extends BaseMenuLoader implements MenuLoader {
             case "SA":
                 cal.add(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
                 break;
+            default:
+                return null;
         }
+
         day = new MensaDay(cal.getTime());
         mensa.addDay(day);
 
