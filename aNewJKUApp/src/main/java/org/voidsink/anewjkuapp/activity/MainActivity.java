@@ -310,45 +310,9 @@ public class MainActivity extends ThemedActivity {
             return false;
         }
 
-        Class<? extends Fragment> startFragment;
-
-        switch (menuItem.getItemId()) {
-            case R.id.nav_cal:
-                if (PreferenceWrapper.getUseCalendarView(this)) {
-                    startFragment = CalendarFragment2.class;
-                } else {
-                    startFragment = CalendarFragment.class;
-                }
-                break;
-            case R.id.nav_exams:
-                startFragment = ExamFragment.class;
-                break;
-            case R.id.nav_grades:
-                startFragment = AssessmentFragment.class;
-                break;
-            case R.id.nav_courses:
-                startFragment = LvaFragment.class;
-                break;
-            case R.id.nav_stats:
-                startFragment = StatFragment.class;
-                break;
-            case R.id.nav_mensa:
-                startFragment = MensaFragment.class;
-                break;
-            case R.id.nav_map:
-                startFragment = MapFragment.class;
-                break;
-            case R.id.nav_oeh_info:
-                startFragment = OehInfoFragment.class;
-                break;
-            case R.id.nav_oeh_rigths:
-                startFragment = OehRightsFragment.class;
-                break;
-            case R.id.nav_curricula:
-                startFragment = CurriculaFragment.class;
-                break;
-            default:
-                return false;
+        Class<? extends Fragment> startFragment = getFragmentClassById(menuItem.getItemId());
+        if (startFragment == null) {
+            return false;
         }
 
         try {
@@ -383,6 +347,37 @@ public class MainActivity extends ThemedActivity {
                 PreferenceWrapper.setLastFragment(this, PreferenceWrapper.PREF_LAST_FRAGMENT_DEFAULT);
             }
             return false;
+        }
+    }
+
+    private Class<? extends Fragment> getFragmentClassById(int itemId) {
+        switch (itemId) {
+            case R.id.nav_cal:
+                if (PreferenceWrapper.getUseCalendarView(this)) {
+                    return CalendarFragment2.class;
+                } else {
+                    return CalendarFragment.class;
+                }
+            case R.id.nav_exams:
+                return ExamFragment.class;
+            case R.id.nav_grades:
+                return AssessmentFragment.class;
+            case R.id.nav_courses:
+                return LvaFragment.class;
+            case R.id.nav_stats:
+                return StatFragment.class;
+            case R.id.nav_mensa:
+                return MensaFragment.class;
+            case R.id.nav_map:
+                return MapFragment.class;
+            case R.id.nav_oeh_info:
+                return OehInfoFragment.class;
+            case R.id.nav_oeh_rigths:
+                return OehRightsFragment.class;
+            case R.id.nav_curricula:
+                return CurriculaFragment.class;
+            default:
+                return null;
         }
     }
 
