@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -534,11 +534,11 @@ public final class CalendarUtils {
             return mAccountNames;
         }
 
-        List<Integer> getIds() {
+        public List<Integer> getIds() {
             return mIds;
         }
 
-        String getDisplayName(String name) {
+        public String getDisplayName(String name) {
             for (int i = 0; i < mNames.size(); i++) {
                 if (mNames.get(i).equals(name)) {
                     return mDisplayNames.get(i);

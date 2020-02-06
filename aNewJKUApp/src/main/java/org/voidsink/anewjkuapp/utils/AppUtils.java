@@ -117,6 +117,8 @@ public class AppUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(AppUtils.class);
 
+    private static float mLastHue = new Random(System.currentTimeMillis()).nextFloat() * 360;
+
     private static final Comparator<Course> CourseComparator = (lhs, rhs) -> {
         int value = lhs.getTitle().compareTo(rhs.getTitle());
         if (value == 0) {
@@ -208,10 +210,8 @@ public class AppUtils {
         if (mLastVersion != mCurrentVersion
                 && mLastVersion != PreferenceWrapper.PREF_LAST_VERSION_NONE) {
             try {
-                if (shouldRemoveOldAccount(mLastVersion, mCurrentVersion)) {
-                    if (!removeAccount(context)) {
-                        errorOccured = true;
-                    }
+                if (shouldRemoveOldAccount(mLastVersion, mCurrentVersion) && !removeAccount(context)) {
+                    errorOccured = true;
                 }
                 if (shouldImportCurricula(mLastVersion, mCurrentVersion)) {
                     triggerSync(context, true, Consts.ARG_WORKER_KUSSS_CURRICULA);
@@ -224,10 +224,8 @@ public class AppUtils {
                     } else {
                         triggerSync(context, true, Consts.ARG_WORKER_CAL_COURSES, Consts.ARG_WORKER_CAL_EXAM);
                     }
-                } else if (shouldDeleteKusssEvents(mLastVersion, mCurrentVersion)) {
-                    if (!deleteKusssEvents(context)) {
-                        errorOccured = true;
-                    }
+                } else if (shouldDeleteKusssEvents(mLastVersion, mCurrentVersion) && !deleteKusssEvents(context)) {
+                    errorOccured = true;
                 }
 
                 PreferenceWrapper.applySyncInterval(context);
@@ -930,8 +928,6 @@ public class AppUtils {
 
         return Color.HSVToColor(hsv);
     }
-
-    private static float mLastHue = new Random(System.currentTimeMillis()).nextFloat() * 360;
 
     public static Locale getLocale(Context context) {
         Locale locale;

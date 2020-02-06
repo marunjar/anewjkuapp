@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -492,8 +492,8 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
 
     private static class CalendarDateTimeInterpreter implements DateTimeInterpreter {
 
-        final DateFormat mDateFormat;
-        final DateFormat mTimeFormat;
+        private final DateFormat mDateFormat;
+        private final DateFormat mTimeFormat;
 
         CalendarDateTimeInterpreter(Context context) {
             Locale locale = AppUtils.getLocale(context);

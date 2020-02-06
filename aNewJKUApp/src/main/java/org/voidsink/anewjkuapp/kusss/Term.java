@@ -40,6 +40,10 @@ import java.util.regex.Pattern;
 
 public class Term implements Comparable<Term> {
 
+    private final int year;
+    private final TermType type;
+    private boolean loaded = false;
+
     private static final Pattern termPattern = Pattern.compile("\\d{4}[WwSs]");
 
     public static Term fromDate(Date date) {
@@ -95,10 +99,6 @@ public class Term implements Comparable<Term> {
             }
         }
     }
-
-    private final int year;
-    private final TermType type;
-    private boolean loaded = false;
 
     private Term(int year, @NonNull TermType type) {
         this.year = year;

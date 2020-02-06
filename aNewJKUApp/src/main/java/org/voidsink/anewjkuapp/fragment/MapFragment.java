@@ -125,14 +125,6 @@ public class MapFragment extends BaseFragment implements
 
     private SearchView mSearchView;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public MapFragment() {
-        super();
-    }
-
     @Override
     public void onPause() {
         if (mMyLocationOverlay != null) {
@@ -140,7 +132,6 @@ public class MapFragment extends BaseFragment implements
         }
         super.onPause();
     }
-
 
     static class MyMarker {
         private final LatLong mLatLon;
@@ -434,10 +425,11 @@ public class MapFragment extends BaseFragment implements
     }
 
     private void restoreMarker(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(KEY_GOAL_LATITUDE) && savedInstanceState.containsKey(KEY_GOAL_LONGITUDE) && savedInstanceState.containsKey(KEY_GOAL_NAME)) {
-                setNewGoal(new MyMarker(savedInstanceState.getDouble(KEY_GOAL_LATITUDE), savedInstanceState.getDouble(KEY_GOAL_LONGITUDE), savedInstanceState.getString(KEY_GOAL_NAME)));
-            }
+        if (savedInstanceState != null &&
+                savedInstanceState.containsKey(KEY_GOAL_LATITUDE) &&
+                savedInstanceState.containsKey(KEY_GOAL_LONGITUDE) &&
+                savedInstanceState.containsKey(KEY_GOAL_NAME)) {
+            setNewGoal(new MyMarker(savedInstanceState.getDouble(KEY_GOAL_LATITUDE), savedInstanceState.getDouble(KEY_GOAL_LONGITUDE), savedInstanceState.getString(KEY_GOAL_NAME)));
         }
     }
 

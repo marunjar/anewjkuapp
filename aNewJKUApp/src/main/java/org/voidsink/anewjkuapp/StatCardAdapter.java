@@ -35,7 +35,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
@@ -454,11 +453,11 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             this.mEcts = ects;
         }
 
-        public LvaState getType() {
+        private LvaState getType() {
             return mType;
         }
 
-        double getEcts() {
+        private double getEcts() {
             return mEcts;
         }
     }
@@ -472,18 +471,17 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             this.mAvgGrade = AppUtils.getAvgGrade(grades, isWeighted, type, positiveOnly);
         }
 
-        public AssessmentType getType() {
+        private AssessmentType getType() {
             return mType;
         }
 
-        double getAvgGrade() {
+        private double getAvgGrade() {
             return mAvgGrade;
         }
     }
 
     static class StatViewHolder extends RecyclerView.ViewHolder {
 
-        private final Toolbar mToolbar;
         private final TextView mTitle;
         private final LinearLayout mItems;
         private final ComboLineColumnChartView mBarChart;
@@ -492,7 +490,6 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         StatViewHolder(View itemView) {
             super(itemView);
 
-            mToolbar = itemView.findViewById(R.id.stat_card_toolbar);
             mTitle = itemView.findViewById(R.id.stat_card_title);
             mItems = itemView.findViewById(R.id.stat_card_items);
             mBarChart = itemView.findViewById(R.id.stat_card_diagram_bar);

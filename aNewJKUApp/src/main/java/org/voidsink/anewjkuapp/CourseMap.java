@@ -44,12 +44,12 @@ import java.util.Map;
 
 public class CourseMap {
 
+    private final Map<String, Course> map;
+
     private static final Comparator<Course> CourseTermComparator = (lhs, rhs) -> {
         // sort courses by term desc
         return rhs.getTerm().compareTo(lhs.getTerm());
     };
-
-    private final Map<String, Course> map;
 
     public CourseMap(Context context) {
         this.map = new HashMap<>();
@@ -72,7 +72,7 @@ public class CourseMap {
         }
     }
 
-    Course getCourse(Term term, String courseId) {
+    public Course getCourse(Term term, String courseId) {
         Course course = this.map.get(KusssHelper.getCourseKey(term, courseId));
         if (course != null) {
             return course;

@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -94,12 +94,12 @@ public class SettingsFragment extends BasePreferenceFragment {
 
             File root = new File(Environment.getExternalStorageDirectory()
                     .getAbsolutePath());
-            IterateDir(root, entries, entryValues);
+            iterateDir(root, entries, entryValues);
 
             progressDialog.dismiss();
         }
 
-        private void IterateDir(File f, ArrayList<String> entries,
+        private void iterateDir(File f, ArrayList<String> entries,
                                 ArrayList<String> entryValues) {
 
             File[] files = f.listFiles(pathname -> pathname.isDirectory()
@@ -108,7 +108,7 @@ public class SettingsFragment extends BasePreferenceFragment {
             if (files != null) {
                 for (File file : files) {
                     if (file.isDirectory()) {
-                        IterateDir(file, entries, entryValues);
+                        iterateDir(file, entries, entryValues);
                     } else {
                         entries.add(file.getPath());
                         entryValues.add(file.getPath());

@@ -72,10 +72,10 @@ import static org.jsoup.Connection.Method.POST;
 
 public class KusssHandler {
 
-    static final String PATTERN_LVA_NR_WITH_DOT = "\\d{3}\\.\\w{3}";
-    static final String PATTERN_LVA_NR = "\\d{3}\\w{3}";
-    static final String PATTERN_TERM = "\\d{4}[swSW]";
-    static final String PATTERN_LVA_NR_COMMA_TERM = "\\("
+    public static final String PATTERN_LVA_NR_WITH_DOT = "\\d{3}\\.\\w{3}";
+    public static final String PATTERN_LVA_NR = "\\d{3}\\w{3}";
+    public static final String PATTERN_TERM = "\\d{4}[swSW]";
+    public static final String PATTERN_LVA_NR_COMMA_TERM = "\\("
             + PATTERN_LVA_NR + "," + PATTERN_TERM + "\\)";
     public static final String PATTERN_LVA_NR_SLASH_TERM = "\\("
             + PATTERN_LVA_NR + "\\/" + PATTERN_TERM + "\\)";
@@ -677,13 +677,11 @@ public class KusssHandler {
 
                 for (Course course : courses) {
                     Assessment grade = gradeCache.get(course.getCourseId());
-                    if (grade != null) {
-                        if ((grade.getGrade() == Grade.G5)
-                                || (grade.getDate().getTime() > (System
-                                .currentTimeMillis() - (182 * DateUtils.DAY_IN_MILLIS)))) {
-                            logger.debug("positive in last 6 Months: {}", grade.getTitle());
-                            grade = null;
-                        }
+                    if (grade != null &&
+                            ((grade.getGrade() == Grade.G5) ||
+                                    (grade.getDate().getTime() > (System.currentTimeMillis() - (182 * DateUtils.DAY_IN_MILLIS))))) {
+                        logger.debug("positive in last 6 Months: {}", grade.getTitle());
+                        grade = null;
                     }
                     if (grade == null) {
                         List<Exam> newExams = getNewExamsByCourseId(c,

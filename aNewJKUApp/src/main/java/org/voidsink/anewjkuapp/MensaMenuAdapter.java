@@ -70,7 +70,7 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
                 return new MenuViewHolder(v);
             }
             default:
-                return null;
+                throw new IllegalArgumentException();
         }
     }
 
@@ -211,7 +211,7 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
 
 
     static class MenuHeaderHolder extends RecyclerView.ViewHolder {
-        final TextView mText;
+        private final TextView mText;
 
         MenuHeaderHolder(View itemView) {
             super(itemView);

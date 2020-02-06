@@ -210,10 +210,8 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
     }
 
     private void loadData() {
-        if (this.isVisible() && !getLoaderManager().hasRunningLoaders()) {
-            if (hasCalendarPermission()) {
-                getLoaderManager().restartLoader(0, null, this);
-            }
+        if (this.isVisible() && !getLoaderManager().hasRunningLoaders() && hasCalendarPermission()) {
+            getLoaderManager().restartLoader(0, null, this);
         }
     }
 
