@@ -36,6 +36,7 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -55,7 +56,6 @@ import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.Analytics;
-import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.utils.AppUtils;
@@ -286,20 +286,20 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
             long interval = PreferenceWrapper.getSyncInterval(KusssAuthenticatorActivity.this) * 60L * 60;
 
             ContentResolver.addPeriodicSync(account,
-                    CalendarContractWrapper.AUTHORITY(), new Bundle(),
+                    CalendarContract.AUTHORITY, new Bundle(),
                     interval);
             ContentResolver.addPeriodicSync(account,
                     KusssContentContract.AUTHORITY, new Bundle(),
                     interval);
             // Inform the system that this account supports sync
             ContentResolver.setIsSyncable(account,
-                    CalendarContractWrapper.AUTHORITY(), 1);
+                    CalendarContract.AUTHORITY, 1);
             ContentResolver.setIsSyncable(account,
                     KusssContentContract.AUTHORITY, 1);
             // Inform the system that this account is eligible for auto sync
             // when the network is up
             ContentResolver.setSyncAutomatically(account,
-                    CalendarContractWrapper.AUTHORITY(), true);
+                    CalendarContract.AUTHORITY, true);
             ContentResolver.setSyncAutomatically(account,
                     KusssContentContract.AUTHORITY, true);
             // Recommend a schedule for automatic synchronization. The system

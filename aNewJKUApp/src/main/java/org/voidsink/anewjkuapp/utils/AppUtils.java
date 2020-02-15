@@ -44,6 +44,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 
@@ -71,7 +72,6 @@ import org.voidsink.anewjkuapp.PreferenceWrapper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.analytics.Analytics;
-import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.fragment.MapFragment;
 import org.voidsink.anewjkuapp.kusss.Assessment;
@@ -760,7 +760,7 @@ public class AppUtils {
                 if (mIsMasterSyncEnabled) {
                     final Account mAccount = getAccount(context);
                     if (mAccount != null) {
-                        mIsCalendarSyncEnabled = ContentResolver.getSyncAutomatically(mAccount, CalendarContractWrapper.AUTHORITY());
+                        mIsCalendarSyncEnabled = ContentResolver.getSyncAutomatically(mAccount, CalendarContract.AUTHORITY);
                     }
                 }
 
@@ -865,12 +865,12 @@ public class AppUtils {
 
     public static void showEventInCalendar(Context context, long eventId, long dtStart) {
         if (eventId > 0) {
-            Uri uri = ContentUris.withAppendedId(CalendarContractWrapper.Events.CONTENT_URI(), eventId);
+            Uri uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventId);
             Intent intent = new Intent(Intent.ACTION_VIEW)
                     .setData(uri);
             context.startActivity(intent);
         } else {
-            Uri.Builder builder = CalendarContractWrapper.CONTENT_URI().buildUpon();
+            Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
             builder.appendPath("time");
             ContentUris.appendId(builder, dtStart);
             Intent intent = new Intent(Intent.ACTION_VIEW)

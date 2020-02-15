@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,8 +27,7 @@
 package org.voidsink.anewjkuapp;
 
 import android.net.Uri;
-
-import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
+import android.provider.CalendarContract;
 
 public class KusssContentContract {
 
@@ -234,11 +233,11 @@ public class KusssContentContract {
         return uri
                 .buildUpon()
                 .appendQueryParameter(
-                        CalendarContractWrapper.CALLER_IS_SYNCADAPTER(), "true")
+                        CalendarContract.CALLER_IS_SYNCADAPTER, "true")
                 .appendQueryParameter(
-                        CalendarContractWrapper.Events.ACCOUNT_NAME(), account)
+                        CalendarContract.Events.ACCOUNT_NAME, account)
                 .appendQueryParameter(
-                        CalendarContractWrapper.Events.ACCOUNT_TYPE(),
+                        CalendarContract.Events.ACCOUNT_TYPE,
                         accountType).build();
     }
 

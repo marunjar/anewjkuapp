@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -34,13 +34,13 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 
 import androidx.preference.PreferenceManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.analytics.Analytics;
-import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import java.io.File;
@@ -128,18 +128,18 @@ public final class PreferenceWrapper {
 
         if (mAccount != null) {
             List<PeriodicSync> syncs = ContentResolver.getPeriodicSyncs(
-                    mAccount, CalendarContractWrapper.AUTHORITY());
+                    mAccount, CalendarContract.AUTHORITY);
             for (PeriodicSync sync : syncs) {
                 logger.debug("old sync: {}", sync.period);
             }
 
             // Inform the system that this account supports sync
             // ContentResolver.setIsSyncable(mAccount,
-            // CalendarContractWrapper.AUTHORITY(), 1);
+            // CalendarContract.AUTHORITY(), 1);
 
             // Remove old sync periode
             ContentResolver.removePeriodicSync(mAccount,
-                    CalendarContractWrapper.AUTHORITY(), new Bundle());
+                    CalendarContract.AUTHORITY, new Bundle());
             ContentResolver.removePeriodicSync(mAccount,
                     KusssContentContract.AUTHORITY, new Bundle());
 
@@ -147,7 +147,7 @@ public final class PreferenceWrapper {
             int interval = getSyncInterval(context);
 
             ContentResolver.addPeriodicSync(mAccount,
-                    CalendarContractWrapper.AUTHORITY(), new Bundle(),
+                    CalendarContract.AUTHORITY, new Bundle(),
                     60 * 60 * interval);
             ContentResolver.addPeriodicSync(mAccount,
                     KusssContentContract.AUTHORITY, new Bundle(),

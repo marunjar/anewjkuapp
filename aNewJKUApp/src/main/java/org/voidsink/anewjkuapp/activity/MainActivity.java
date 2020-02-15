@@ -33,6 +33,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -62,7 +63,6 @@ import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.base.PendingIntentHandler;
 import org.voidsink.anewjkuapp.base.StackedFragment;
 import org.voidsink.anewjkuapp.base.ThemedActivity;
-import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.fragment.AssessmentFragment;
 import org.voidsink.anewjkuapp.fragment.CalendarFragment;
 import org.voidsink.anewjkuapp.fragment.CalendarFragment2;
@@ -210,7 +210,7 @@ public class MainActivity extends ThemedActivity {
                 } else {
                     this.startActivity(new Intent(Settings.ACTION_ADD_ACCOUNT)
                             .putExtra(Settings.EXTRA_AUTHORITIES,
-                                    new String[]{CalendarContractWrapper.AUTHORITY()}));
+                                    new String[]{CalendarContract.AUTHORITY}));
                 }
             }
         } else {
