@@ -49,9 +49,9 @@ import net.fortuna.ical4j.data.CalendarBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
-import org.voidsink.anewjkuapp.PreferenceWrapper;
+import org.voidsink.anewjkuapp.PreferenceHelper;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import java.util.ArrayList;
@@ -168,7 +168,7 @@ public final class CalendarUtils {
 
             return context.getContentResolver().insert(target, values);
         } catch (Exception e) {
-            Analytics.sendException(context, e, true, name);
+            AnalyticsHelper.sendException(context, e, true, name);
             return null;
         }
     }
@@ -285,11 +285,11 @@ public final class CalendarUtils {
         if (usePreferences) {
             switch (name) {
                 case ARG_CALENDAR_EXAM: {
-                    id = PreferenceWrapper.getExamCalendarId(context);
+                    id = PreferenceHelper.getExamCalendarId(context);
                     break;
                 }
                 case ARG_CALENDAR_COURSE: {
-                    id = PreferenceWrapper.getLvaCalendarId(context);
+                    id = PreferenceHelper.getLvaCalendarId(context);
                     break;
                 }
                 default:
@@ -358,7 +358,7 @@ public final class CalendarUtils {
                 }
             }
         } catch (Exception e) {
-            Analytics.sendException(context, e, false);
+            AnalyticsHelper.sendException(context, e, false);
         }
 
         return new CalendarList(ids, names, displayNames, accountNames);
@@ -376,9 +376,9 @@ public final class CalendarUtils {
 
         switch (name) {
             case ARG_CALENDAR_EXAM:
-                return PreferenceWrapper.getSyncCalendarExam(context);
+                return PreferenceHelper.getSyncCalendarExam(context);
             case ARG_CALENDAR_COURSE:
-                return PreferenceWrapper.getSyncCalendarLva(context);
+                return PreferenceHelper.getSyncCalendarLva(context);
             default:
                 return true;
         }
@@ -389,13 +389,13 @@ public final class CalendarUtils {
         if (!deleteKusssEvents(context, getCalIDByName(context, account, ARG_CALENDAR_COURSE, false))) {
             done = false;
         }
-        if (!deleteKusssEvents(context, PreferenceWrapper.getLvaCalendarId(context))) {
+        if (!deleteKusssEvents(context, PreferenceHelper.getLvaCalendarId(context))) {
             done = false;
         }
         if (!deleteKusssEvents(context, getCalIDByName(context, account, ARG_CALENDAR_EXAM, false))) {
             done = false;
         }
-        if (!deleteKusssEvents(context, PreferenceWrapper.getExamCalendarId(context))) {
+        if (!deleteKusssEvents(context, PreferenceHelper.getExamCalendarId(context))) {
             done = false;
         }
         return done;
@@ -465,7 +465,7 @@ public final class CalendarUtils {
                             logger.warn("No batch operations found! Do nothing");
                         }
                     } catch (RemoteException | OperationApplicationException e) {
-                        Analytics.sendException(context, e, true);
+                        AnalyticsHelper.sendException(context, e, true);
                         return false;
                     }
                 }

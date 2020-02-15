@@ -31,7 +31,7 @@ import androidx.annotation.NonNull;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -97,7 +97,7 @@ public class Exam {
                         setRegistered(false);
                     }
                 } catch (ParseException e) {
-                    Analytics.sendException(c, e, false, columns.text());
+                    AnalyticsHelper.sendException(c, e, false, columns.text());
                 }
             }
         } else {
@@ -130,7 +130,7 @@ public class Exam {
                                 .size() == 0);
                     }
                 } catch (ParseException e) {
-                    Analytics.sendException(c, e, false, columns.text());
+                    AnalyticsHelper.sendException(c, e, false, columns.text());
                 }
             }
         }
@@ -206,7 +206,7 @@ public class Exam {
                 applyTime(dtStart, time);
                 applyTime(dtEnd, time);
             } catch (ParseException e) {
-                Analytics.sendException(context, e, false, timeStr);
+                AnalyticsHelper.sendException(context, e, false, timeStr);
             }
         } else if (times.size() == 2) {
             try {
@@ -220,7 +220,7 @@ public class Exam {
                 applyTime(dtStart, timeStart);
                 applyTime(dtEnd, timeEnd);
             } catch (ParseException e) {
-                Analytics.sendException(context, e, false, timeStr);
+                AnalyticsHelper.sendException(context, e, false, timeStr);
             }
         }
     }
@@ -251,7 +251,7 @@ public class Exam {
                 initDateTimes(context, splitted[0]);
             }
         } catch (Exception e) {
-            Analytics.sendException(context, e, false, timeLocation);
+            AnalyticsHelper.sendException(context, e, false, timeLocation);
         }
         this.location = location;
     }

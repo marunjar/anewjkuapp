@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
-import org.voidsink.anewjkuapp.PreferenceWrapper;
+import org.voidsink.anewjkuapp.PreferenceHelper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.calendar.DayOfMonthDrawable;
 import org.voidsink.anewjkuapp.kusss.Assessment;
@@ -81,7 +81,7 @@ public class UIUtils {
     }
 
     private static int getAppThemeResId(Context context) {
-        if (PreferenceWrapper.getUseLightDesign(context)) {
+        if (PreferenceHelper.getUseLightDesign(context)) {
             return R.style.AppTheme_Light;
         } else {
             return R.style.AppTheme;

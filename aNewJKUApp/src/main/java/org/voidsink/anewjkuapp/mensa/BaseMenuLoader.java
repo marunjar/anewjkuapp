@@ -38,7 +38,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.voidsink.anewjkuapp.BuildConfig;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -96,14 +96,14 @@ public abstract class BaseMenuLoader {
                     editor.apply();
                 }
             } catch (Exception e) {
-                Analytics.sendException(context, e, false);
+                AnalyticsHelper.sendException(context, e, false);
                 html = sp.getString(cacheDataKey, null);
             }
         }
         try {
             return html != null ? Jsoup.parse(html) : null;
         } catch (Exception e) {
-            Analytics.sendException(context, e, true, getCacheKey(), getUrl());
+            AnalyticsHelper.sendException(context, e, true, getCacheKey(), getUrl());
 
             SharedPreferences.Editor editor = sp.edit();
             editor.putLong(cacheDateKey, 0);

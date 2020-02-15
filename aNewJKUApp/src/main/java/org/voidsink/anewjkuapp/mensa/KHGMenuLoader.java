@@ -31,7 +31,7 @@ import android.text.TextUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.text.NumberFormat;
@@ -64,7 +64,7 @@ public class KHGMenuLoader extends BaseMenuLoader implements MenuLoader {
                 }
             }
         } catch (Exception e) {
-            Analytics.sendException(context, e, false);
+            AnalyticsHelper.sendException(context, e, false);
             return null;
         }
 

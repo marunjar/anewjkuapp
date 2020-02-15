@@ -33,7 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.PoiContentContract;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 
 public class KusssDatabaseHelper extends SQLiteOpenHelper {
 
@@ -162,7 +162,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
         try {
             context.deleteDatabase(DATABASE_NAME);
         } catch (Exception e) {
-            Analytics.sendException(context, e, true);
+            AnalyticsHelper.sendException(context, e, true);
         }
     }
 
@@ -196,7 +196,7 @@ public class KusssDatabaseHelper extends SQLiteOpenHelper {
                     + KusssContentContract.Curricula.TABLE_NAME);
             db.execSQL(DB_CREATE_CURRICULUM);
         } catch (Exception e) {
-            Analytics.sendException(context, e, true);
+            AnalyticsHelper.sendException(context, e, true);
             drop(context);
         }
     }

@@ -48,7 +48,7 @@ import org.voidsink.anewjkuapp.ExamListAdapter;
 import org.voidsink.anewjkuapp.ExamListExam;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
@@ -159,7 +159,7 @@ public class ExamFragment extends BaseFragment implements ContentObserverListene
                 try {
                     mExams.add(new ExamListExam(data, map));
                 } catch (ParseException e) {
-                    Analytics.sendException(getContext(), e, false);
+                    AnalyticsHelper.sendException(getContext(), e, false);
                 }
             }
             mAdapter.addAll(mExams);

@@ -77,10 +77,10 @@ import org.voidsink.anewjkuapp.LocationOverlay;
 import org.voidsink.anewjkuapp.Poi;
 import org.voidsink.anewjkuapp.PoiAdapter;
 import org.voidsink.anewjkuapp.PoiContentContract;
-import org.voidsink.anewjkuapp.PreferenceWrapper;
+import org.voidsink.anewjkuapp.PreferenceHelper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.anewjkuapp.utils.MapUtils;
@@ -497,7 +497,7 @@ public class MapFragment extends BaseFragment implements
         try {
             return InternalRenderTheme.DEFAULT;
         } catch (Exception e) {
-            Analytics.sendException(getContext(), e, false);
+            AnalyticsHelper.sendException(getContext(), e, false);
         }
 
         return InternalRenderTheme.OSMARENDER;
@@ -564,7 +564,7 @@ public class MapFragment extends BaseFragment implements
     }
 
     private File getMapFile() {
-        File mapFile = PreferenceWrapper.getMapFile(getContext());
+        File mapFile = PreferenceHelper.getMapFile(getContext());
         if (mapFile == null || !mapFile.exists() || !mapFile.canRead()) {
             mapFile = new File(getActivity().getFilesDir(), MAP_FILE_NAME);
             logger.info("use internal map: {}", mapFile.toString());

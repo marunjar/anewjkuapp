@@ -52,7 +52,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.calendar.CalendarEventAdapter;
 import org.voidsink.anewjkuapp.calendar.CalendarListEvent;
@@ -203,7 +203,7 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
             // set button text
             setButtonLoadText();
 
-            Analytics.eventLoadMoreEvents(getContext(), then - now);
+            AnalyticsHelper.eventLoadMoreEvents(getContext(), then - now);
 
             loadData();
         }

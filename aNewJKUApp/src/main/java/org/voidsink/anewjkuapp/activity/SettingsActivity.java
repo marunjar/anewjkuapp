@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -40,9 +40,9 @@ import androidx.preference.PreferenceManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.voidsink.anewjkuapp.PreferenceWrapper;
+import org.voidsink.anewjkuapp.PreferenceHelper;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.base.ThemedActivity;
 import org.voidsink.anewjkuapp.fragment.SettingsFragment;
 import org.voidsink.anewjkuapp.utils.AppUtils;
@@ -110,20 +110,20 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         switch (key) {
-            case PreferenceWrapper.PREF_GET_NEW_EXAMS:
+            case PreferenceHelper.PREF_GET_NEW_EXAMS:
                 AppUtils.triggerSync(this, true, Consts.ARG_WORKER_KUSSS_EXAMS);
                 break;
-            case PreferenceWrapper.PREF_SYNC_INTERVAL_KEY:
-                PreferenceWrapper.applySyncInterval(this);
+            case PreferenceHelper.PREF_SYNC_INTERVAL_KEY:
+                PreferenceHelper.applySyncInterval(this);
                 break;
-            case PreferenceWrapper.PREF_USE_LIGHT_THEME:
-            case PreferenceWrapper.PREF_OVERRIDE_THEME:
+            case PreferenceHelper.PREF_USE_LIGHT_THEME:
+            case PreferenceHelper.PREF_OVERRIDE_THEME:
                 mThemeChanged = true;
                 break;
-            case PreferenceWrapper.PREF_TRACKING_ERRORS:
-                boolean trackingErrors = sharedPreferences.getBoolean(key, PreferenceWrapper.PREF_TRACKING_ERRORS_DEFAULT);
-                Analytics.setEnabled(trackingErrors);
-                Analytics.sendPreferenceChanged(key, Boolean.toString(trackingErrors));
+            case PreferenceHelper.PREF_TRACKING_ERRORS:
+                boolean trackingErrors = sharedPreferences.getBoolean(key, PreferenceHelper.PREF_TRACKING_ERRORS_DEFAULT);
+                AnalyticsHelper.setEnabled(trackingErrors);
+                AnalyticsHelper.sendPreferenceChanged(key, Boolean.toString(trackingErrors));
                 break;
             default:
                 break;

@@ -40,14 +40,14 @@ import androidx.preference.PreferenceManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import java.io.File;
 import java.util.List;
 
-public final class PreferenceWrapper {
-    private static final Logger logger = LoggerFactory.getLogger(PreferenceWrapper.class);
+public final class PreferenceHelper {
+    private static final Logger logger = LoggerFactory.getLogger(PreferenceHelper.class);
 
     public static final String PREF_SYNC_INTERVAL_KEY = "pref_key_sync_interval";
     private static final int PREF_SYNC_INTERVAL_DEFAULT = 85;
@@ -107,7 +107,7 @@ public final class PreferenceWrapper {
     public static final String PREF_COURSES_SHOW_WITH_ASSESSMENT_ONLY = "pref_key_courses_show_with_assessment_only";
     private static final boolean PREF_COURSES_SHOW_WITH_ASSESSMENT_ONLY_DEFAULT = false;
 
-    private PreferenceWrapper() {
+    private PreferenceHelper() {
         throw new UnsupportedOperationException();
     }
 
@@ -234,7 +234,7 @@ public final class PreferenceWrapper {
                 return lightMode == Configuration.UI_MODE_NIGHT_NO;
             }
         } catch (Exception e) {
-            Analytics.sendException(context, e, false);
+            AnalyticsHelper.sendException(context, e, false);
             return PREF_USE_LIGHT_THEME_DEFAULT;
         }
     }
@@ -272,7 +272,7 @@ public final class PreferenceWrapper {
                     .getDefaultSharedPreferences(context);
             sp.edit().putInt(PREF_LAST_FRAGMENT, id).commit();
         } catch (Exception e) {
-            Analytics.sendException(context, e, false);
+            AnalyticsHelper.sendException(context, e, false);
         }
     }
 
@@ -306,7 +306,7 @@ public final class PreferenceWrapper {
                     .getDefaultSharedPreferences(context);
             sp.edit().putInt(PREF_LAST_VERSION, version).commit();
         } catch (Exception e) {
-            Analytics.sendException(context, e, false);
+            AnalyticsHelper.sendException(context, e, false);
         }
     }
 
@@ -340,7 +340,7 @@ public final class PreferenceWrapper {
                     .getDefaultSharedPreferences(context);
             sp.edit().putBoolean(PREF_POSITIVE_GRADES_ONLY, positiveOnly).apply();
         } catch (Exception e) {
-            Analytics.sendException(context, e, false);
+            AnalyticsHelper.sendException(context, e, false);
         }
     }
 
@@ -473,7 +473,7 @@ public final class PreferenceWrapper {
                     .getDefaultSharedPreferences(context);
             sp.edit().putBoolean(PREF_COURSES_SHOW_WITH_ASSESSMENT_ONLY, value).apply();
         } catch (Exception e) {
-            Analytics.sendException(context, e, false);
+            AnalyticsHelper.sendException(context, e, false);
         }
     }
 

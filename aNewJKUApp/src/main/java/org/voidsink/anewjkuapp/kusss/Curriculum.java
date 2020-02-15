@@ -32,7 +32,7 @@ import androidx.annotation.NonNull;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -96,7 +96,7 @@ public class Curriculum {
             }
             return null;
         } catch (ParseException e) {
-            Analytics.sendException(c, e, false, text);
+            AnalyticsHelper.sendException(c, e, false, text);
             return null;
         }
     }

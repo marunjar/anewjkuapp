@@ -41,7 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.base.BaseWorker;
 import org.voidsink.anewjkuapp.kusss.Course;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
@@ -70,7 +70,7 @@ public class ImportCourseWorker extends BaseWorker {
     }
 
     private Result importCourses() {
-        Analytics.eventReloadCourses(getApplicationContext());
+        AnalyticsHelper.eventReloadCourses(getApplicationContext());
 
         final Account mAccount = AppUtils.getAccount(getApplicationContext());
         if (mAccount == null) {
@@ -239,7 +239,7 @@ public class ImportCourseWorker extends BaseWorker {
 
             return getSuccess();
         } catch (Exception e) {
-            Analytics.sendException(getApplicationContext(), e, true);
+            AnalyticsHelper.sendException(getApplicationContext(), e, true);
 
             return getRetry();
         } finally {

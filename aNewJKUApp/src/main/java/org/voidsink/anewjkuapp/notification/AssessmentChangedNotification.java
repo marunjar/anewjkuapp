@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 
-import org.voidsink.anewjkuapp.PreferenceWrapper;
+import org.voidsink.anewjkuapp.PreferenceHelper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.utils.Consts;
@@ -66,7 +66,7 @@ public class AssessmentChangedNotification {
     }
 
     private void showInternal(List<String> lines) {
-        if (PreferenceWrapper.getNotifyGrade(mContext) && (lines.size() > 0)) {
+        if (PreferenceHelper.getNotifyGrade(mContext) && (lines.size() > 0)) {
             PendingIntent pendingIntent = PendingIntent.getActivity(
                     mContext,
                     R.plurals.notification_grades_changed,

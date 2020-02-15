@@ -121,8 +121,9 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
                         eventItem.showOnMap(getContext());
                         return true;
                     }
+                    default:
+                        return false;
                 }
-                return false;
             });
 
             holder.mTitle.setText(eventItem.getTitle());

@@ -29,7 +29,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.kusss.Course;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.kusss.Term;
@@ -59,7 +59,7 @@ public class CourseMap {
                         Course course = KusssHelper.createCourse(c);
                         this.map.put(KusssHelper.getCourseKey(course.getTerm(), course.getCourseId()), course);
                     } catch (ParseException e) {
-                        Analytics.sendException(context, e, true);
+                        AnalyticsHelper.sendException(context, e, true);
                     }
                 }
             }

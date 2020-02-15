@@ -53,9 +53,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.KusssContentContract;
-import org.voidsink.anewjkuapp.PreferenceWrapper;
+import org.voidsink.anewjkuapp.PreferenceHelper;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.utils.AppUtils;
@@ -283,7 +283,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
             mAccountManager.setPassword(account, accountPassword);
 
             // Turn on periodic syncing
-            long interval = PreferenceWrapper.getSyncInterval(KusssAuthenticatorActivity.this) * 60L * 60;
+            long interval = PreferenceHelper.getSyncInterval(KusssAuthenticatorActivity.this) * 60L * 60;
 
             ContentResolver.addPeriodicSync(account,
                     CalendarContract.AUTHORITY, new Bundle(),
@@ -333,6 +333,6 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
     protected void onStart() {
         super.onStart();
 
-        Analytics.sendScreen(this, Consts.SCREEN_LOGIN);
+        AnalyticsHelper.sendScreen(this, Consts.SCREEN_LOGIN);
     }
 }

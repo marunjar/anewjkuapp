@@ -34,7 +34,7 @@ import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 
-import org.voidsink.anewjkuapp.PreferenceWrapper;
+import org.voidsink.anewjkuapp.PreferenceHelper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.utils.Consts;
@@ -74,7 +74,7 @@ public class CalendarChangedNotification {
     }
 
     private void showInternal(List<String> lines, int notificationId, int resIdtitle, int resIdContent) {
-        if (PreferenceWrapper.getNotifyCalendar(mContext) && (lines.size() > 0)) {
+        if (PreferenceHelper.getNotifyCalendar(mContext) && (lines.size() > 0)) {
             PendingIntent pendingIntent = PendingIntent.getActivity(
                     mContext,
                     notificationId,

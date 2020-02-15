@@ -37,7 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.mensa.ChoiceMenuLoader;
 import org.voidsink.anewjkuapp.mensa.ClassicMenuLoader;
 import org.voidsink.anewjkuapp.mensa.IDay;
@@ -170,6 +170,6 @@ public class MensaDashclockExtension extends DashClockExtension {
             publishUpdate(new ExtensionData().visible(false));
         }
 
-        Analytics.sendScreen(null, Consts.SCREEN_DASHCLOCK);
+        AnalyticsHelper.sendScreen(null, Consts.SCREEN_DASHCLOCK);
     }
 }

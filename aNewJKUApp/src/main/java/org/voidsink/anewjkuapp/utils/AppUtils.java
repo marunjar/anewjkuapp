@@ -68,10 +68,10 @@ import com.google.common.util.concurrent.ListenableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
-import org.voidsink.anewjkuapp.PreferenceWrapper;
+import org.voidsink.anewjkuapp.PreferenceHelper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.fragment.MapFragment;
 import org.voidsink.anewjkuapp.kusss.Assessment;
@@ -123,13 +123,13 @@ public class AppUtils {
     }
 
     public static void doOnNewVersion(Context context) {
-        int mLastVersion = PreferenceWrapper.getLastVersion(context);
-        int mCurrentVersion = PreferenceWrapper.getCurrentVersion(context);
+        int mLastVersion = PreferenceHelper.getLastVersion(context);
+        int mCurrentVersion = PreferenceHelper.getCurrentVersion(context);
 
         boolean errorOccured = false;
 
         if (mLastVersion != mCurrentVersion
-                || mLastVersion == PreferenceWrapper.PREF_LAST_VERSION_NONE) {
+                || mLastVersion == PreferenceHelper.PREF_LAST_VERSION_NONE) {
             try {
                 if (!initPreferences(context)) {
                     errorOccured = true;
@@ -141,14 +141,14 @@ public class AppUtils {
                     errorOccured = true;
                 }
             } catch (Exception e) {
-                Analytics.sendException(context, e, false);
+                AnalyticsHelper.sendException(context, e, false);
                 errorOccured = true;
             }
         }
 
         // only if another version was installed before
         if (mLastVersion != mCurrentVersion
-                && mLastVersion != PreferenceWrapper.PREF_LAST_VERSION_NONE) {
+                && mLastVersion != PreferenceHelper.PREF_LAST_VERSION_NONE) {
             try {
                 if (shouldRemoveOldAccount(mLastVersion, mCurrentVersion) && !removeAccount(context)) {
                     errorOccured = true;
@@ -168,14 +168,14 @@ public class AppUtils {
                     errorOccured = true;
                 }
 
-                PreferenceWrapper.applySyncInterval(context);
+                PreferenceHelper.applySyncInterval(context);
             } catch (Exception e) {
-                Analytics.sendException(context, e, false);
+                AnalyticsHelper.sendException(context, e, false);
                 errorOccured = true;
             }
         }
         if (!errorOccured) {
-            PreferenceWrapper.setLastVersion(context, mCurrentVersion);
+            PreferenceHelper.setLastVersion(context, mCurrentVersion);
         }
     }
 
@@ -307,7 +307,7 @@ public class AppUtils {
             }
             return true;
         } catch (IOException e) {
-            Analytics.sendException(context, e, false);
+            AnalyticsHelper.sendException(context, e, false);
             return false;
         }
     }
@@ -689,7 +689,7 @@ public class AppUtils {
         constraints.setRequiredNetworkType(getRequiredNetworkTypeByTags(tags));
         constraints.setRequiresBatteryNotLow(true);
 
-        long interval = PreferenceWrapper.getSyncInterval(context);
+        long interval = PreferenceHelper.getSyncInterval(context);
 
         PeriodicWorkRequest.Builder request = new PeriodicWorkRequest.Builder(workerClass, interval, TimeUnit.HOURS, 6, TimeUnit.HOURS);
         request.setInitialDelay(30, TimeUnit.MINUTES);
@@ -807,7 +807,7 @@ public class AppUtils {
                 }
             }
         } catch (Exception e) {
-            Analytics.sendException(context, e, true);
+            AnalyticsHelper.sendException(context, e, true);
         }
     }
 
@@ -827,7 +827,7 @@ public class AppUtils {
                 }
             }
         } catch (Exception e) {
-            Analytics.sendException(context, e, true, tags);
+            AnalyticsHelper.sendException(context, e, true, tags);
         }
     }
 
@@ -983,7 +983,7 @@ public class AppUtils {
                     mNotificationManager.createNotificationChannel(gradesChannel);
                 }
             } catch (Exception e) {
-                Analytics.sendException(context, e, true);
+                AnalyticsHelper.sendException(context, e, true);
             }
         }
     }

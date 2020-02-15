@@ -59,7 +59,7 @@ import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.Poi;
 import org.voidsink.anewjkuapp.PoiContentContract;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.base.BaseWorker;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.KusssCalendar;
@@ -108,9 +108,9 @@ public class ImportCalendarWorker extends BaseWorker {
 
     private Result importCalendar(String calendarName) {
         if (CalendarUtils.ARG_CALENDAR_COURSE.equals(calendarName)) {
-            Analytics.eventReloadEventsCourse(getApplicationContext());
+            AnalyticsHelper.eventReloadEventsCourse(getApplicationContext());
         } else if (CalendarUtils.ARG_CALENDAR_EXAM.equals(calendarName)) {
-            Analytics.eventReloadEventsExam(getApplicationContext());
+            AnalyticsHelper.eventReloadEventsExam(getApplicationContext());
         }
 
         final Account mAccount = AppUtils.getAccount(getApplicationContext());
@@ -453,7 +453,7 @@ public class ImportCalendarWorker extends BaseWorker {
             mChangedNotification.show();
             return getSuccess();
         } catch (Exception e) {
-            Analytics.sendException(getApplicationContext(), e, true);
+            AnalyticsHelper.sendException(getApplicationContext(), e, true);
 
             return getRetry();
         } finally {
@@ -650,7 +650,7 @@ public class ImportCalendarWorker extends BaseWorker {
 
             return String.format("{\"locations\":[{\"address\":{\"formattedAddress\":\"%s\"},\"geo\":{\"latitude\":%s,\"longitude\":%s},\"mapsClusterId\":\"%s\",\"name\":\"%s\",\"url\":\"http://maps.google.com/maps?q=loc:%s,%s+(%s)&z=19\n\"}]}", formattedAddress, df.format(latitude), df.format(longitude), mapsClusterId, name, df.format(latitude), df.format(longitude), name);
         } catch (Exception e) {
-            Analytics.sendException(getApplicationContext(), e, true);
+            AnalyticsHelper.sendException(getApplicationContext(), e, true);
             return "";
         }
     }

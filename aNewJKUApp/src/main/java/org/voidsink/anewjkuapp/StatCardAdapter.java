@@ -207,7 +207,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
     }
 
     private void initLvaPlot(final StatViewHolder holder) {
-        if (PreferenceWrapper.getUseLvaBarChart(getContext())) {
+        if (PreferenceHelper.getUseLvaBarChart(getContext())) {
             holder.mBarChart.setVisibility(View.VISIBLE);
             initBarChart(holder.mBarChart);
             holder.mPieChart.setVisibility(View.GONE);
@@ -355,7 +355,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
     }
 
     private void initGradePlot(final StatViewHolder holder) {
-        if (PreferenceWrapper.getUseLvaBarChart(getContext())) {
+        if (PreferenceHelper.getUseLvaBarChart(getContext())) {
             holder.mBarChart.setVisibility(View.VISIBLE);
             initBarChart(holder.mBarChart);
             holder.mPieChart.setVisibility(View.GONE);
@@ -435,6 +435,8 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
                 updateLvaPlot(holder, item);
                 break;
             }
+            default:
+                break;
         }
     }
 
