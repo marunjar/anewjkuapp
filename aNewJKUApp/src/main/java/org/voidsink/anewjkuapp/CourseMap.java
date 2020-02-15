@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -37,7 +37,6 @@ import org.voidsink.anewjkuapp.kusss.Term;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,11 +44,6 @@ import java.util.Map;
 public class CourseMap {
 
     private final Map<String, Course> map;
-
-    private static final Comparator<Course> CourseTermComparator = (lhs, rhs) -> {
-        // sort courses by term desc
-        return rhs.getTerm().compareTo(lhs.getTerm());
-    };
 
     public CourseMap(Context context) {
         this.map = new HashMap<>();
@@ -89,7 +83,10 @@ public class CourseMap {
             return null;
         }
 
-        Collections.sort(courses, CourseTermComparator);
+        Collections.sort(courses, (lhs, rhs) -> {
+            // sort courses by term desc
+            return rhs.getTerm().compareTo(lhs.getTerm());
+        });
         return courses.get(0);
     }
 

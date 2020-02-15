@@ -46,11 +46,11 @@ import java.util.Date;
 
 public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent, CalendarEventAdapter.EventItemHolder> implements SectionedAdapter<CalendarEventAdapter.DateHeaderHolder> {
 
+    private OnItemClickListener mItemClickListener;
+
     public interface OnItemClickListener {
         void onItemClick(View view, int viewType, int position);
     }
-
-    private OnItemClickListener mItemClickListener;
 
     public CalendarEventAdapter(Context context) {
         super(context);

@@ -292,6 +292,8 @@ public final class CalendarUtils {
                     id = PreferenceWrapper.getLvaCalendarId(context);
                     break;
                 }
+                default:
+                    break;
             }
             // check id from preferences
             if (id != null) {
