@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.BuildConfig;
-import org.voidsink.anewjkuapp.PreferenceWrapper;
+import org.voidsink.anewjkuapp.PreferenceHelper;
 
 import java.util.List;
 
@@ -79,7 +79,7 @@ public class AnalyticsFlavor implements IAnalytics {
                 mAnalytics.resetAnalyticsData();
             }
 
-            setEnabled(PreferenceWrapper.trackingErrors(mApp));
+            setEnabled(PreferenceHelper.trackingErrors(mApp));
         }
     }
 
