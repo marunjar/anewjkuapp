@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -39,12 +39,12 @@ import java.util.List;
 
 import javax.net.ssl.SSLException;
 
-public class Analytics {
+public class AnalyticsHelper {
     private volatile static IAnalytics sAnalytics;
 
     private static synchronized IAnalytics getAnalytics() {
         if (sAnalytics == null) {
-            synchronized (Analytics.class) {
+            synchronized (AnalyticsHelper.class) {
                 if (sAnalytics == null) sAnalytics = new AnalyticsFlavor();
             }
         }

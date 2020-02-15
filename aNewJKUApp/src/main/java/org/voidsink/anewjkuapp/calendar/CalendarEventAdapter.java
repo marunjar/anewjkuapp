@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,6 +31,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.utils.UIUtils;
@@ -40,17 +44,13 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.RecyclerView;
-
 public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent, CalendarEventAdapter.EventItemHolder> implements SectionedAdapter<CalendarEventAdapter.DateHeaderHolder> {
+
+    private OnItemClickListener mItemClickListener;
 
     public interface OnItemClickListener {
         void onItemClick(View view, int viewType, int position);
     }
-
-    private OnItemClickListener mItemClickListener;
 
     public CalendarEventAdapter(Context context) {
         super(context);
@@ -58,11 +58,11 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
 
     static class EventItemHolder extends RecyclerView.ViewHolder {
 
-        final Toolbar mToolbar;
-        final TextView mTitle;
-        final TextView mDescr;
-        final TextView mLocation;
-        final TextView mTime;
+        private final Toolbar mToolbar;
+        private final TextView mTitle;
+        private final TextView mDescr;
+        private final TextView mLocation;
+        private final TextView mTime;
 
         EventItemHolder(View itemView) {
             super(itemView);
@@ -78,7 +78,7 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
     }
 
     static class DateHeaderHolder extends RecyclerView.ViewHolder {
-        final TextView mText;
+        private final TextView mText;
 
         DateHeaderHolder(View itemView) {
             super(itemView);
@@ -121,8 +121,9 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
                         eventItem.showOnMap(getContext());
                         return true;
                     }
+                    default:
+                        return false;
                 }
-                return false;
             });
 
             holder.mTitle.setText(eventItem.getTitle());

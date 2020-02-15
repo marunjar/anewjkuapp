@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ import android.accounts.Account;
 import android.content.UriMatcher;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,7 +39,6 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
-import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
@@ -80,13 +80,13 @@ public class CalendarPermissionFragment extends BaseFragment implements ContentO
         if (hasCalendarPermission()) {
             // check permission
             UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-            uriMatcher.addURI(CalendarContractWrapper.AUTHORITY(), CalendarContractWrapper.Events.CONTENT_URI().buildUpon().appendPath("#").build().toString(), 0);
+            uriMatcher.addURI(CalendarContract.AUTHORITY, CalendarContract.Events.CONTENT_URI.buildUpon().appendPath("#").build().toString(), 0);
 
             mDataObserver = new BaseContentObserver(uriMatcher, this);
 
             // listen to all changes
             getContext().getContentResolver().registerContentObserver(
-                    CalendarContractWrapper.Events.CONTENT_URI().buildUpon()
+                    CalendarContract.Events.CONTENT_URI.buildUpon()
                             .appendPath("#").build(), false, mDataObserver);
 
             onContentChanged(true);

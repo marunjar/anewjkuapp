@@ -31,7 +31,7 @@ import android.text.TextUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 
 import java.text.NumberFormat;
 import java.util.HashSet;
@@ -68,7 +68,7 @@ public class ClassicMenuLoader extends MensenMenuLoader {
                     titles.add(categoryTitle);
                 }
             } catch (Exception e) {
-                Analytics.sendException(c, e, false, category.text());
+                AnalyticsHelper.sendException(c, e, false, category.text());
             }
         }
 

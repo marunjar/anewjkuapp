@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -104,6 +104,8 @@ public class ExtendedRecyclerView extends RecyclerView {
                         spanCount = getMeasuredHeight() / mFixedColumnWidth;
                         break;
                     }
+                    default:
+                        throw new IllegalArgumentException("wrong orientation");
                 }
                 mGridLM.setSpanCount(checkSpanCount(spanCount));
             } else if (getLayoutManager() instanceof StaggeredGridLayoutManager) {
@@ -118,6 +120,8 @@ public class ExtendedRecyclerView extends RecyclerView {
                         spanCount = getMeasuredHeight() / mFixedColumnWidth;
                         break;
                     }
+                    default:
+                        throw new IllegalArgumentException("wrong orientation");
                 }
                 mStaggeredGridLM.setSpanCount(checkSpanCount(spanCount));
             }

@@ -42,9 +42,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.CourseMap;
 import org.voidsink.anewjkuapp.KusssContentContract;
-import org.voidsink.anewjkuapp.PreferenceWrapper;
+import org.voidsink.anewjkuapp.PreferenceHelper;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.base.BaseWorker;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.Exam;
@@ -76,7 +76,7 @@ public class ImportExamWorker extends BaseWorker {
     }
 
     private Result importExams() {
-        Analytics.eventReloadExams(getApplicationContext());
+        AnalyticsHelper.eventReloadExams(getApplicationContext());
 
         final Account mAccount = AppUtils.getAccount(getApplicationContext());
         if (mAccount == null) {
@@ -110,7 +110,7 @@ public class ImportExamWorker extends BaseWorker {
                 updateNotification(getApplicationContext().getString(R.string.notification_sync_exam_loading));
 
                 List<Exam> exams;
-                if (PreferenceWrapper.getNewExamsByCourseId(getApplicationContext())) {
+                if (PreferenceHelper.getNewExamsByCourseId(getApplicationContext())) {
                     CourseMap courseMap = new CourseMap(getApplicationContext());
                     List<Term> terms = KusssContentProvider.getTerms(getApplicationContext());
 
@@ -257,7 +257,7 @@ public class ImportExamWorker extends BaseWorker {
             mChangedNotification.show();
             return getSuccess();
         } catch (Exception e) {
-            Analytics.sendException(getApplicationContext(), e, true);
+            AnalyticsHelper.sendException(getApplicationContext(), e, true);
 
             return getRetry();
         } finally {

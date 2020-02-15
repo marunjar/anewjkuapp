@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.kusss.Course;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.kusss.Term;
@@ -37,17 +37,11 @@ import org.voidsink.anewjkuapp.kusss.Term;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class CourseMap {
-
-    private static final Comparator<Course> CourseTermComparator = (lhs, rhs) -> {
-        // sort courses by term desc
-        return rhs.getTerm().compareTo(lhs.getTerm());
-    };
 
     private final Map<String, Course> map;
 
@@ -65,14 +59,14 @@ public class CourseMap {
                         Course course = KusssHelper.createCourse(c);
                         this.map.put(KusssHelper.getCourseKey(course.getTerm(), course.getCourseId()), course);
                     } catch (ParseException e) {
-                        Analytics.sendException(context, e, true);
+                        AnalyticsHelper.sendException(context, e, true);
                     }
                 }
             }
         }
     }
 
-    Course getCourse(Term term, String courseId) {
+    public Course getCourse(Term term, String courseId) {
         Course course = this.map.get(KusssHelper.getCourseKey(term, courseId));
         if (course != null) {
             return course;
@@ -89,7 +83,10 @@ public class CourseMap {
             return null;
         }
 
-        Collections.sort(courses, CourseTermComparator);
+        Collections.sort(courses, (lhs, rhs) -> {
+            // sort courses by term desc
+            return rhs.getTerm().compareTo(lhs.getTerm());
+        });
         return courses.get(0);
     }
 

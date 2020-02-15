@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -47,6 +47,7 @@ public abstract class MensenMenuLoader extends BaseMenuLoader implements MenuLoa
 
     private static final String PATTERN_BETRAG = "\\d+,\\d{2}";
     protected static final Pattern betragPattern = Pattern.compile(PATTERN_BETRAG);
+    private static final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 
     @Override
     protected String getUrl() {
@@ -60,8 +61,6 @@ public abstract class MensenMenuLoader extends BaseMenuLoader implements MenuLoa
                 .cookie("mensenExtLocation", "1")
                 .cookie("selectedLocation", "1");
     }
-
-    private static final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 
     private Date parseDate(String value) throws ParseException {
         Date date;
@@ -110,7 +109,7 @@ public abstract class MensenMenuLoader extends BaseMenuLoader implements MenuLoa
                 }
             }
         } catch (Exception e) {
-            Analytics.sendException(context, e, false);
+            AnalyticsHelper.sendException(context, e, false);
             return null;
         }
 

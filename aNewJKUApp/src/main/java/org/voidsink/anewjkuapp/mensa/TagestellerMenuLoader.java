@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ import android.text.TextUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -54,7 +54,7 @@ public class TagestellerMenuLoader extends MensenMenuLoader {
                     titles.add(categoryTitle);
                 }
             } catch (Exception e) {
-                Analytics.sendException(c, e, false, category.text());
+                AnalyticsHelper.sendException(c, e, false, category.text());
             }
         }
 

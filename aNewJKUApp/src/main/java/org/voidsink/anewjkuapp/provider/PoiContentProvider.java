@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -171,7 +171,7 @@ public class PoiContentProvider extends ContentProvider {
                     selection = PoiContentContract.Poi.TABLE_NAME + " MATCH ?";
                     selectionArgs = new String[]{Uri.decode(uri.getLastPathSegment()) + "*"};
                 }
-                if (sortOrder == null || TextUtils.isEmpty(sortOrder)) {
+                if (TextUtils.isEmpty(sortOrder)) {
                     sortOrder = PoiContentContract.Poi.COL_NAME + " ASC";
                 }
                 if (projection == null) {

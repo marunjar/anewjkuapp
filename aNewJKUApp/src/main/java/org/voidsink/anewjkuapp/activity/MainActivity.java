@@ -33,6 +33,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,14 +56,13 @@ import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.PoiContentContract;
-import org.voidsink.anewjkuapp.PreferenceWrapper;
+import org.voidsink.anewjkuapp.PreferenceHelper;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.base.PendingIntentHandler;
 import org.voidsink.anewjkuapp.base.StackedFragment;
 import org.voidsink.anewjkuapp.base.ThemedActivity;
-import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.fragment.AssessmentFragment;
 import org.voidsink.anewjkuapp.fragment.CalendarFragment;
 import org.voidsink.anewjkuapp.fragment.CalendarFragment2;
@@ -164,7 +164,7 @@ public class MainActivity extends ThemedActivity {
                                                 .addCategory(Intent.CATEGORY_DEFAULT)
                                                 .setData(Uri.parse("package:org.voidsink.anewjkuapp")));
                             } catch (Exception e) {
-                                Analytics.sendException(MainActivity.this, e, false);
+                                AnalyticsHelper.sendException(MainActivity.this, e, false);
                             }
                         });
                     } else {
@@ -210,7 +210,7 @@ public class MainActivity extends ThemedActivity {
                 } else {
                     this.startActivity(new Intent(Settings.ACTION_ADD_ACCOUNT)
                             .putExtra(Settings.EXTRA_AUTHORITIES,
-                                    new String[]{CalendarContractWrapper.AUTHORITY()}));
+                                    new String[]{CalendarContract.AUTHORITY}));
                 }
             }
         } else {
@@ -285,7 +285,7 @@ public class MainActivity extends ThemedActivity {
             return attachFragmentById(intent, savedInstanceState
                     .getInt(ARG_SHOW_FRAGMENT_ID), true);
         } else if (attachStored) {
-            return attachFragmentById(intent, PreferenceWrapper
+            return attachFragmentById(intent, PreferenceHelper
                     .getLastFragment(this), true);
         } else {
             this.mPendingIntent = intent;
@@ -333,7 +333,7 @@ public class MainActivity extends ThemedActivity {
             ft.commit();
 
             if (saveLastFragment) {
-                PreferenceWrapper.setLastFragment(this, menuItem.getItemId());
+                PreferenceHelper.setLastFragment(this, menuItem.getItemId());
             }
 
             if (!fragmentChanged) {
@@ -342,9 +342,9 @@ public class MainActivity extends ThemedActivity {
 
             return true;
         } catch (Exception e) {
-            Analytics.sendException(this, e, false, startFragment.getName());
+            AnalyticsHelper.sendException(this, e, false, startFragment.getName());
             if (saveLastFragment) {
-                PreferenceWrapper.setLastFragment(this, PreferenceWrapper.PREF_LAST_FRAGMENT_DEFAULT);
+                PreferenceHelper.setLastFragment(this, PreferenceHelper.PREF_LAST_FRAGMENT_DEFAULT);
             }
             return false;
         }
@@ -353,7 +353,7 @@ public class MainActivity extends ThemedActivity {
     private Class<? extends Fragment> getFragmentClassById(int itemId) {
         switch (itemId) {
             case R.id.nav_cal:
-                if (PreferenceWrapper.getUseCalendarView(this)) {
+                if (PreferenceHelper.getUseCalendarView(this)) {
                     return CalendarFragment2.class;
                 } else {
                     return CalendarFragment.class;
@@ -444,6 +444,6 @@ public class MainActivity extends ThemedActivity {
 
         mDrawerLayout.removeDrawerListener(mDrawerListener);
 
-        Analytics.clearScreen(this);
+        AnalyticsHelper.clearScreen(this);
     }
 }

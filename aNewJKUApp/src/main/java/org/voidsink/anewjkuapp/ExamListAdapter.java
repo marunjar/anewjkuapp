@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,6 +31,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.utils.AppUtils;
@@ -39,10 +43,6 @@ import org.voidsink.sectionedrecycleradapter.SectionedAdapter;
 
 import java.text.DateFormat;
 import java.util.Calendar;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamListAdapter.ExamViewHolder> implements SectionedAdapter<ExamListAdapter.DateHeaderHolder> {
 
@@ -69,8 +69,9 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
                         KusssHelper.showExamInBrowser(getContext(), exam.getCourseId());
                         return true;
                     }
+                    default:
+                        return false;
                 }
-                return false;
             });
 
             holder.mTitle.setText(exam.getTitle());
@@ -124,15 +125,15 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
     }
 
     static class ExamViewHolder extends RecyclerView.ViewHolder {
-        final Toolbar mToolbar;
-        final TextView mLocation;
-        final TextView mTime;
-        final TextView mCid;
-        final TextView mTerm;
-        final TextView mCourseId;
-        final TextView mInfo;
-        final TextView mDescription;
-        final TextView mTitle;
+        private final Toolbar mToolbar;
+        private final TextView mLocation;
+        private final TextView mTime;
+        private final TextView mCid;
+        private final TextView mTerm;
+        private final TextView mCourseId;
+        private final TextView mInfo;
+        private final TextView mDescription;
+        private final TextView mTitle;
 
         ExamViewHolder(View itemView) {
             super(itemView);
@@ -152,7 +153,7 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
     }
 
     static class DateHeaderHolder extends RecyclerView.ViewHolder {
-        final TextView mText;
+        private final TextView mText;
 
         DateHeaderHolder(View itemView) {
             super(itemView);

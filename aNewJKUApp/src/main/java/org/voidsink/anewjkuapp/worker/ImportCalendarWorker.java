@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -59,9 +59,8 @@ import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.Poi;
 import org.voidsink.anewjkuapp.PoiContentContract;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.base.BaseWorker;
-import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.KusssCalendar;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
@@ -109,9 +108,9 @@ public class ImportCalendarWorker extends BaseWorker {
 
     private Result importCalendar(String calendarName) {
         if (CalendarUtils.ARG_CALENDAR_COURSE.equals(calendarName)) {
-            Analytics.eventReloadEventsCourse(getApplicationContext());
+            AnalyticsHelper.eventReloadEventsCourse(getApplicationContext());
         } else if (CalendarUtils.ARG_CALENDAR_EXAM.equals(calendarName)) {
-            Analytics.eventReloadEventsExam(getApplicationContext());
+            AnalyticsHelper.eventReloadEventsExam(getApplicationContext());
         }
 
         final Account mAccount = AppUtils.getAccount(getApplicationContext());
@@ -128,7 +127,7 @@ public class ImportCalendarWorker extends BaseWorker {
             return getFailure();
         }
 
-        final ContentProviderClient mProvider = mResolver.acquireContentProviderClient(CalendarContractWrapper.Events.CONTENT_URI());
+        final ContentProviderClient mProvider = mResolver.acquireContentProviderClient(CalendarContract.Events.CONTENT_URI);
 
         if (mProvider == null) {
             return getFailure();
@@ -165,7 +164,7 @@ public class ImportCalendarWorker extends BaseWorker {
                 logger.debug("loading calendar");
 
                 ArrayList<ContentProviderOperation> batch = new ArrayList<>();
-                Uri calUri = CalendarContractWrapper.Events.CONTENT_URI();
+                Uri calUri = CalendarContract.Events.CONTENT_URI;
 
                 String calendarId = CalendarUtils.getCalIDByName(getApplicationContext(), mAccount, calendarName, true);
 
@@ -362,30 +361,30 @@ public class ImportCalendarWorker extends BaseWorker {
                                     }
 
                                     ContentProviderOperation.Builder builder = ContentProviderOperation
-                                            .newInsert(CalendarContractWrapper.Events.CONTENT_URI());
+                                            .newInsert(CalendarContract.Events.CONTENT_URI);
 
                                     builder.withValue(
-                                            CalendarContractWrapper.Events
-                                                    .CALENDAR_ID(),
+                                            CalendarContract.Events
+                                                    .CALENDAR_ID,
                                             calendarId)
                                             .withValues(getContentValuesFromEvent(v))
                                             .withValue(
-                                                    CalendarContractWrapper.Events
-                                                            .EVENT_TIMEZONE(),
+                                                    CalendarContract.Events
+                                                            .EVENT_TIMEZONE,
                                                     TimeZone.getDefault().getID());
 
                                     if (calendarName.equals(CalendarUtils.ARG_CALENDAR_EXAM)) {
                                         builder.withValue(
-                                                CalendarContractWrapper.Events
-                                                        .AVAILABILITY(),
-                                                CalendarContractWrapper.Events
-                                                        .AVAILABILITY_BUSY());
+                                                CalendarContract.Events
+                                                        .AVAILABILITY,
+                                                CalendarContract.Events
+                                                        .AVAILABILITY_BUSY);
                                     } else {
                                         builder.withValue(
-                                                CalendarContractWrapper.Events
-                                                        .AVAILABILITY(),
-                                                CalendarContractWrapper.Events
-                                                        .AVAILABILITY_FREE());
+                                                CalendarContract.Events
+                                                        .AVAILABILITY,
+                                                CalendarContract.Events
+                                                        .AVAILABILITY_FREE);
                                     }
 
                                     builder.withValue(CalendarContract.Events.STATUS, CalendarContract.Events.STATUS_TENTATIVE);
@@ -454,7 +453,7 @@ public class ImportCalendarWorker extends BaseWorker {
             mChangedNotification.show();
             return getSuccess();
         } catch (Exception e) {
-            Analytics.sendException(getApplicationContext(), e, true);
+            AnalyticsHelper.sendException(getApplicationContext(), e, true);
 
             return getRetry();
         } finally {
@@ -579,11 +578,11 @@ public class ImportCalendarWorker extends BaseWorker {
     private ContentValues getContentValuesFromEvent(VEvent v) {
         ContentValues cv = new ContentValues();
 
-        cv.put(CalendarContractWrapper.Events.EVENT_LOCATION(), v.getLocation().getValue().trim());
-        cv.put(CalendarContractWrapper.Events.TITLE(), v.getSummary().getValue().trim());
-        cv.put(CalendarContractWrapper.Events.DESCRIPTION(), v.getDescription().getValue().trim());
-        cv.put(CalendarContractWrapper.Events.DTSTART(), v.getStartDate().getDate().getTime());
-        cv.put(CalendarContractWrapper.Events.DTEND(), v.getEndDate().getDate().getTime());
+        cv.put(CalendarContract.Events.EVENT_LOCATION, v.getLocation().getValue().trim());
+        cv.put(CalendarContract.Events.TITLE, v.getSummary().getValue().trim());
+        cv.put(CalendarContract.Events.DESCRIPTION, v.getDescription().getValue().trim());
+        cv.put(CalendarContract.Events.DTSTART, v.getStartDate().getDate().getTime());
+        cv.put(CalendarContract.Events.DTEND, v.getEndDate().getDate().getTime());
 
         return cv;
     }
@@ -651,7 +650,7 @@ public class ImportCalendarWorker extends BaseWorker {
 
             return String.format("{\"locations\":[{\"address\":{\"formattedAddress\":\"%s\"},\"geo\":{\"latitude\":%s,\"longitude\":%s},\"mapsClusterId\":\"%s\",\"name\":\"%s\",\"url\":\"http://maps.google.com/maps?q=loc:%s,%s+(%s)&z=19\n\"}]}", formattedAddress, df.format(latitude), df.format(longitude), mapsClusterId, name, df.format(latitude), df.format(longitude), name);
         } catch (Exception e) {
-            Analytics.sendException(getApplicationContext(), e, true);
+            AnalyticsHelper.sendException(getApplicationContext(), e, true);
             return "";
         }
     }

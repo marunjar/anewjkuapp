@@ -28,7 +28,7 @@ package org.voidsink.anewjkuapp.dashclock;
 import android.os.Bundle;
 
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.base.BasePreferenceFragment;
 import org.voidsink.anewjkuapp.base.ThemedActivity;
 import org.voidsink.anewjkuapp.utils.Consts;
@@ -49,7 +49,7 @@ public class MensaDashclockSettings extends ThemedActivity {
     protected void onStart() {
         super.onStart();
 
-        Analytics.sendScreen(this, Consts.SCREEN_SETTINGS_DASHCLOCK);
+        AnalyticsHelper.sendScreen(this, Consts.SCREEN_SETTINGS_DASHCLOCK);
     }
 
     public static class MensaDashclockSettingsFragment extends BasePreferenceFragment {

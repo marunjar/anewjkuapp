@@ -30,6 +30,7 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.text.format.DateUtils;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -51,9 +52,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
-import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarEventAdapter;
 import org.voidsink.anewjkuapp.calendar.CalendarListEvent;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
@@ -71,7 +71,8 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
 
     private static final Logger logger = LoggerFactory.getLogger(CalendarFragment.class);
 
-    private long now = 0, then = 0;
+    private long now = 0;
+    private long then = 0;
 
     private CalendarEventAdapter mAdapter;
     private RecyclerView mRecyclerView;
@@ -202,17 +203,15 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
             // set button text
             setButtonLoadText();
 
-            Analytics.eventLoadMoreEvents(getContext(), then - now);
+            AnalyticsHelper.eventLoadMoreEvents(getContext(), then - now);
 
             loadData();
         }
     }
 
     private void loadData() {
-        if (this.isVisible() && !getLoaderManager().hasRunningLoaders()) {
-            if (hasCalendarPermission()) {
-                getLoaderManager().restartLoader(0, null, this);
-            }
+        if (this.isVisible() && !getLoaderManager().hasRunningLoaders() && hasCalendarPermission()) {
+            getLoaderManager().restartLoader(0, null, this);
         }
     }
 
@@ -242,23 +241,23 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
             calIDExam = "";
         }
 
-        return new CursorLoader(getContext(), CalendarContractWrapper.Events.CONTENT_URI(),
+        return new CursorLoader(getContext(), CalendarContract.Events.CONTENT_URI,
                 CalendarUtils.EVENT_PROJECTION,
                 "("
-                        + CalendarContractWrapper.Events
-                        .CALENDAR_ID()
+                        + CalendarContract.Events
+                        .CALENDAR_ID
                         + " = ? or "
-                        + CalendarContractWrapper.Events
-                        .CALENDAR_ID() + " = ? ) and "
-                        + CalendarContractWrapper.Events.DTEND()
+                        + CalendarContract.Events
+                        .CALENDAR_ID + " = ? ) and "
+                        + CalendarContract.Events.DTEND
                         + " >= ? and "
-                        + CalendarContractWrapper.Events.DTSTART()
+                        + CalendarContract.Events.DTSTART
                         + " <= ? and "
-                        + CalendarContractWrapper.Events.DELETED()
+                        + CalendarContract.Events.DELETED
                         + " != 1",
                 new String[]{calIDExam, calIDLva,
                         Long.toString(now), Long.toString(then)},
-                CalendarContractWrapper.Events.DTSTART() + " ASC");
+                CalendarContract.Events.DTSTART + " ASC");
     }
 
     @Override
@@ -271,11 +270,11 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
             final SparseIntArray mColors = new SparseIntArray();
             ContentResolver cr = getContext().getContentResolver();
 
-            try (Cursor cursor = cr.query(CalendarContractWrapper.Calendars.CONTENT_URI(),
+            try (Cursor cursor = cr.query(CalendarContract.Calendars.CONTENT_URI,
                     new String[]{
-                            CalendarContractWrapper.Calendars._ID(),
-                            CalendarContractWrapper.Calendars
-                                    .CALENDAR_COLOR()}, null, null, null)) {
+                            CalendarContract.Calendars._ID,
+                            CalendarContract.Calendars
+                                    .CALENDAR_COLOR}, null, null, null)) {
                 if (cursor != null) {
                     while (cursor.moveToNext()) {
                         mColors.put(cursor.getInt(0), cursor.getInt(1));

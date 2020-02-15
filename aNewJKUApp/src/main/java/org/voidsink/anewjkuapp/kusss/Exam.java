@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,9 +31,7 @@ import androidx.annotation.NonNull;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,8 +44,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Exam {
-
-    private static final Logger logger = LoggerFactory.getLogger(Exam.class);
 
     private static final Pattern courseIdTermPattern = Pattern
             .compile(KusssHandler.PATTERN_LVA_NR_COMMA_TERM);
@@ -101,7 +97,7 @@ public class Exam {
                         setRegistered(false);
                     }
                 } catch (ParseException e) {
-                    Analytics.sendException(c, e, false, columns.text());
+                    AnalyticsHelper.sendException(c, e, false, columns.text());
                 }
             }
         } else {
@@ -134,7 +130,7 @@ public class Exam {
                                 .size() == 0);
                     }
                 } catch (ParseException e) {
-                    Analytics.sendException(c, e, false, columns.text());
+                    AnalyticsHelper.sendException(c, e, false, columns.text());
                 }
             }
         }
@@ -210,7 +206,7 @@ public class Exam {
                 applyTime(dtStart, time);
                 applyTime(dtEnd, time);
             } catch (ParseException e) {
-                Analytics.sendException(context, e, false, timeStr);
+                AnalyticsHelper.sendException(context, e, false, timeStr);
             }
         } else if (times.size() == 2) {
             try {
@@ -224,7 +220,7 @@ public class Exam {
                 applyTime(dtStart, timeStart);
                 applyTime(dtEnd, timeEnd);
             } catch (ParseException e) {
-                Analytics.sendException(context, e, false, timeStr);
+                AnalyticsHelper.sendException(context, e, false, timeStr);
             }
         }
     }
@@ -255,7 +251,7 @@ public class Exam {
                 initDateTimes(context, splitted[0]);
             }
         } catch (Exception e) {
-            Analytics.sendException(context, e, false, timeLocation);
+            AnalyticsHelper.sendException(context, e, false, timeLocation);
         }
         this.location = location;
     }

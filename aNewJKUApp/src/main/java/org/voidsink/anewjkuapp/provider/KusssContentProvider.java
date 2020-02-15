@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 
 import org.voidsink.anewjkuapp.KusssContentContract;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.kusss.Course;
 import org.voidsink.anewjkuapp.kusss.Curriculum;
@@ -54,7 +54,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -69,8 +68,6 @@ public class KusssContentProvider extends ContentProvider {
     private static final int CODE_GRADE_ID = 6;
     private static final int CODE_CURRICULA = 7;
     private static final int CODE_CURRICULA_ID = 8;
-
-    private static final Comparator<String> TermComparator = (lhs, rhs) -> rhs.compareTo(lhs);
 
     private static final UriMatcher sUriMatcher = new UriMatcher(
             UriMatcher.NO_MATCH);
@@ -177,7 +174,7 @@ public class KusssContentProvider extends ContentProvider {
                 getContext().getContentResolver().notifyChange(uri, null);
             return rowsDeleted;
         } catch (Exception e) {
-            Analytics.sendException(getContext(), e, true, getAdditionalData(null, selection, selectionArgs));
+            AnalyticsHelper.sendException(getContext(), e, true, getAdditionalData(null, selection, selectionArgs));
             throw e;
         }
     }
@@ -256,7 +253,7 @@ public class KusssContentProvider extends ContentProvider {
                 }
             }
         } catch (Exception e) {
-            Analytics.sendException(getContext(), e, true, getAdditionalData(values, null, null));
+            AnalyticsHelper.sendException(getContext(), e, true, getAdditionalData(values, null, null));
             throw e;
         }
     }
@@ -389,7 +386,7 @@ public class KusssContentProvider extends ContentProvider {
                             + " is not supported.");
             }
         } catch (Exception e) {
-            Analytics.sendException(getContext(), e, true, getAdditionalData(values, selection, selectionArgs));
+            AnalyticsHelper.sendException(getContext(), e, true, getAdditionalData(values, selection, selectionArgs));
             throw e;
         }
     }
@@ -405,7 +402,7 @@ public class KusssContentProvider extends ContentProvider {
                     mAssessments.add(KusssHelper.createAssessment(data));
                 }
             } catch (ParseException e) {
-                Analytics.sendException(context, e, false);
+                AnalyticsHelper.sendException(context, e, false);
                 mAssessments.clear();
             }
         }
@@ -445,7 +442,7 @@ public class KusssContentProvider extends ContentProvider {
                     courses.add(KusssHelper.createCourse(c));
                 }
             } catch (ParseException e) {
-                Analytics.sendException(context, e, false);
+                AnalyticsHelper.sendException(context, e, false);
                 courses.clear();
             }
         }
@@ -519,7 +516,7 @@ public class KusssContentProvider extends ContentProvider {
                     mCurriculum.add(new Curriculum(dtStart, null));
                 }
             } catch (Exception e) {
-                Analytics.sendException(context, e, false);
+                AnalyticsHelper.sendException(context, e, false);
             }
         }
 
@@ -578,7 +575,7 @@ public class KusssContentProvider extends ContentProvider {
         }
         */
 
-        Collections.sort(terms, TermComparator);
+        Collections.sort(terms, (lhs, rhs) -> rhs.compareTo(lhs));
 
         List<Term> objects = new ArrayList<>();
         try {
@@ -586,7 +583,7 @@ public class KusssContentProvider extends ContentProvider {
                 objects.add(Term.parseTerm(term));
             }
         } catch (ParseException e) {
-            Analytics.sendException(context, e, true);
+            AnalyticsHelper.sendException(context, e, true);
             objects.clear();
         }
 

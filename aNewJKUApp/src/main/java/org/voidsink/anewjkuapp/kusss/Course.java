@@ -32,7 +32,7 @@ import androidx.annotation.NonNull;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 
 import java.util.regex.Pattern;
 
@@ -82,7 +82,7 @@ public class Course {
                     setCode(columns.get(3).text());
                 }
             } catch (Exception e) {
-                Analytics.sendException(c, e, true, row.text());
+                AnalyticsHelper.sendException(c, e, true, row.text());
             }
         }
     }

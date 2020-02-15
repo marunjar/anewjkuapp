@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.voidsink.anewjkuapp.KusssContentContract;
-import org.voidsink.anewjkuapp.PreferenceWrapper;
+import org.voidsink.anewjkuapp.PreferenceHelper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.StatCard;
 import org.voidsink.anewjkuapp.StatCardAdapter;
@@ -106,7 +106,7 @@ public class StatFragmentDetail extends TermFragment implements
                 return true;
             case R.id.action_toggle_grades:
                 item.setChecked(item.isCheckable() && !item.isChecked());
-                PreferenceWrapper.setPrefPositiveGradesOnly(getContext(), item.isChecked());
+                PreferenceHelper.setPrefPositiveGradesOnly(getContext(), item.isChecked());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -193,6 +193,8 @@ public class StatFragmentDetail extends TermFragment implements
                 mAssessmentCursor = data;
                 break;
             }
+            default:
+                break;
         }
         // fill adapter
         setData(mAdapter, mCourseCursor, mAssessmentCursor);
@@ -211,6 +213,8 @@ public class StatFragmentDetail extends TermFragment implements
                 mAssessmentCursor = null;
                 break;
             }
+            default:
+                break;
         }
         setData(mAdapter, mCourseCursor, mAssessmentCursor);
 
@@ -228,7 +232,7 @@ public class StatFragmentDetail extends TermFragment implements
             // load assessments
             List<Assessment> assessments = AppUtils.filterAssessments(getTerms(), KusssContentProvider.getAssessmentsFromCursor(getContext(), assessmentCursor));
 
-            boolean mPositiveOnly = PreferenceWrapper.getPositiveGradesOnly(getContext());
+            boolean mPositiveOnly = PreferenceHelper.getPositiveGradesOnly(getContext());
 
             mAdapter.add(StatCard.getAssessmentInstance(getTerms(), assessments, true, mPositiveOnly));
             mAdapter.add(StatCard.getAssessmentInstance(getTerms(), assessments, false, mPositiveOnly));
@@ -240,7 +244,7 @@ public class StatFragmentDetail extends TermFragment implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(PreferenceWrapper.PREF_POSITIVE_GRADES_ONLY)) {
+        if (key.equals(PreferenceHelper.PREF_POSITIVE_GRADES_ONLY)) {
             onContentChanged(false);
         }
     }

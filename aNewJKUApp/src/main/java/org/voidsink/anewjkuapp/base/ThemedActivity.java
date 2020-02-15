@@ -34,7 +34,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.anewjkuapp.utils.UIUtils;
 
@@ -107,7 +107,7 @@ public abstract class ThemedActivity extends AppCompatActivity {
 
         final String screenName = getScreenName();
         if (screenName != null && !screenName.isEmpty()) {
-            Analytics.sendScreen(this, screenName);
+            AnalyticsHelper.sendScreen(this, screenName);
         }
     }
 

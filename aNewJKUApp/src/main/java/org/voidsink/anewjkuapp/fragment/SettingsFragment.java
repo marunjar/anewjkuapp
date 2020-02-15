@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,9 +35,9 @@ import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreferenceCompat;
 
 import org.voidsink.anewjkuapp.BuildConfig;
-import org.voidsink.anewjkuapp.PreferenceWrapper;
+import org.voidsink.anewjkuapp.PreferenceHelper;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.base.BasePreferenceFragment;
 import org.voidsink.anewjkuapp.base.TwoLinesListPreference;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
@@ -57,7 +57,7 @@ public class SettingsFragment extends BasePreferenceFragment {
     public void onStart() {
         super.onStart();
 
-        Analytics.sendScreen(getActivity(), Consts.SCREEN_SETTINGS);
+        AnalyticsHelper.sendScreen(getActivity(), Consts.SCREEN_SETTINGS);
     }
 
     public static class KusssSettingsFragment extends BasePreferenceFragment {
@@ -78,7 +78,7 @@ public class SettingsFragment extends BasePreferenceFragment {
         public void onStart() {
             super.onStart();
 
-            Analytics.sendScreen(getActivity(), Consts.SCREEN_SETTINGS_KUSSS);
+            AnalyticsHelper.sendScreen(getActivity(), Consts.SCREEN_SETTINGS_KUSSS);
         }
     }
 
@@ -94,12 +94,12 @@ public class SettingsFragment extends BasePreferenceFragment {
 
             File root = new File(Environment.getExternalStorageDirectory()
                     .getAbsolutePath());
-            IterateDir(root, entries, entryValues);
+            iterateDir(root, entries, entryValues);
 
             progressDialog.dismiss();
         }
 
-        private void IterateDir(File f, ArrayList<String> entries,
+        private void iterateDir(File f, ArrayList<String> entries,
                                 ArrayList<String> entryValues) {
 
             File[] files = f.listFiles(pathname -> pathname.isDirectory()
@@ -108,7 +108,7 @@ public class SettingsFragment extends BasePreferenceFragment {
             if (files != null) {
                 for (File file : files) {
                     if (file.isDirectory()) {
-                        IterateDir(file, entries, entryValues);
+                        iterateDir(file, entries, entryValues);
                     } else {
                         entries.add(file.getPath());
                         entryValues.add(file.getPath());
@@ -130,12 +130,12 @@ public class SettingsFragment extends BasePreferenceFragment {
 
             if (BuildConfig.FOSS_ONLY) {
                 // disable tracking if GA is not used
-                SwitchPreferenceCompat trackingErrors = findPreference(PreferenceWrapper.PREF_TRACKING_ERRORS);
+                SwitchPreferenceCompat trackingErrors = findPreference(PreferenceHelper.PREF_TRACKING_ERRORS);
                 trackingErrors.setEnabled(false);
                 trackingErrors.setChecked(false);
             }
 
-            ListPreference mapFiles = findPreference(PreferenceWrapper.PREF_MAP_FILE);
+            ListPreference mapFiles = findPreference(PreferenceHelper.PREF_MAP_FILE);
             if (mapFiles != null) {
                 ArrayList<String> entries = new ArrayList<>();
                 ArrayList<String> entryValues = new ArrayList<>();
@@ -157,7 +157,7 @@ public class SettingsFragment extends BasePreferenceFragment {
         public void onStart() {
             super.onStart();
 
-            Analytics.sendScreen(getActivity(), Consts.SCREEN_SETTINGS_APP);
+            AnalyticsHelper.sendScreen(getActivity(), Consts.SCREEN_SETTINGS_APP);
         }
     }
 
@@ -175,13 +175,13 @@ public class SettingsFragment extends BasePreferenceFragment {
 
             CalendarUtils.CalendarList calendars = CalendarUtils.getCalendars(getContext(), true);
 
-            TwoLinesListPreference calendarLva = findPreference(PreferenceWrapper.PREF_EXTENDED_CALENDAR_LVA);
+            TwoLinesListPreference calendarLva = findPreference(PreferenceHelper.PREF_EXTENDED_CALENDAR_LVA);
             if (calendarLva != null) {
                 calendarLva.setSummaryProvider(createCalendarSummaryProvider(R.string.pref_kusss_calendar_extended_summary));
                 setEntries(calendars, calendarLva);
             }
 
-            TwoLinesListPreference calendarExam = findPreference(PreferenceWrapper.PREF_EXTENDED_CALENDAR_EXAM);
+            TwoLinesListPreference calendarExam = findPreference(PreferenceHelper.PREF_EXTENDED_CALENDAR_EXAM);
             if (calendarExam != null) {
                 calendarExam.setSummaryProvider(createCalendarSummaryProvider(R.string.pref_kusss_calendar_extended_summary));
                 setEntries(calendars, calendarExam);
@@ -210,7 +210,7 @@ public class SettingsFragment extends BasePreferenceFragment {
         public void onStart() {
             super.onStart();
 
-            Analytics.sendScreen(getActivity(), Consts.SCREEN_SETTINGS_TIMETABLE);
+            AnalyticsHelper.sendScreen(getActivity(), Consts.SCREEN_SETTINGS_TIMETABLE);
         }
     }
 }

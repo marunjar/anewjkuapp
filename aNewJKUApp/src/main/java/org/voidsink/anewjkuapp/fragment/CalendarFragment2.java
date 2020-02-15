@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
+import android.provider.CalendarContract;
 import android.text.format.DateUtils;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
@@ -59,7 +60,6 @@ import com.alamkanak.weekview.WeekViewLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
@@ -254,23 +254,23 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
             calIDExam = "";
         }
 
-        return new CursorLoader(getContext(), CalendarContractWrapper.Events.CONTENT_URI(),
+        return new CursorLoader(getContext(), CalendarContract.Events.CONTENT_URI,
                 CalendarUtils.EVENT_PROJECTION,
                 "("
-                        + CalendarContractWrapper.Events
-                        .CALENDAR_ID()
+                        + CalendarContract.Events
+                        .CALENDAR_ID
                         + " = ? or "
-                        + CalendarContractWrapper.Events
-                        .CALENDAR_ID() + " = ? ) and "
-                        + CalendarContractWrapper.Events.DTSTART()
+                        + CalendarContract.Events
+                        .CALENDAR_ID + " = ? ) and "
+                        + CalendarContract.Events.DTSTART
                         + " >= ? and "
-                        + CalendarContractWrapper.Events.DTSTART()
+                        + CalendarContract.Events.DTSTART
                         + " <= ? and "
-                        + CalendarContractWrapper.Events.DELETED()
+                        + CalendarContract.Events.DELETED
                         + " != 1",
                 new String[]{calIDExam, calIDLva,
                         Long.toString(args.getLong(ARG_CAL_LOAD_NOW)), Long.toString(args.getLong(ARG_CAL_LOAD_THEN))},
-                CalendarContractWrapper.Events.DTSTART() + " ASC");
+                CalendarContract.Events.DTSTART + " ASC");
     }
 
     @Override
@@ -283,11 +283,11 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
             // fetch calendar colors
             final SparseIntArray mColors = new SparseIntArray();
             ContentResolver cr = getContext().getContentResolver();
-            try (Cursor cursor = cr.query(CalendarContractWrapper.Calendars.CONTENT_URI(),
+            try (Cursor cursor = cr.query(CalendarContract.Calendars.CONTENT_URI,
                     new String[]{
-                            CalendarContractWrapper.Calendars._ID(),
-                            CalendarContractWrapper.Calendars
-                                    .CALENDAR_COLOR()}, null, null, null)) {
+                            CalendarContract.Calendars._ID,
+                            CalendarContract.Calendars
+                                    .CALENDAR_COLOR}, null, null, null)) {
                 if (cursor != null) {
                     while (cursor.moveToNext()) {
                         int color = cursor.getInt(1);
@@ -492,8 +492,8 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
 
     private static class CalendarDateTimeInterpreter implements DateTimeInterpreter {
 
-        final DateFormat mDateFormat;
-        final DateFormat mTimeFormat;
+        private final DateFormat mDateFormat;
+        private final DateFormat mTimeFormat;
 
         CalendarDateTimeInterpreter(Context context) {
             Locale locale = AppUtils.getLocale(context);

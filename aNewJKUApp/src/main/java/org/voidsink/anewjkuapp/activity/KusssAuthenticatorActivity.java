@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -36,6 +36,7 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -52,10 +53,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
 import org.voidsink.anewjkuapp.KusssContentContract;
-import org.voidsink.anewjkuapp.PreferenceWrapper;
+import org.voidsink.anewjkuapp.PreferenceHelper;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.analytics.Analytics;
-import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.utils.AppUtils;
@@ -120,13 +120,11 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
             mAuthTokenType = KusssAuthenticator.AUTHTOKEN_TYPE_READ_ONLY;
         }
 
-        if (!mIsNewAccount) {
-            if (accountName != null) {
-                final TextView tvAccountName = findViewById(R.id.accountName);
-                if (tvAccountName != null) {
-                    tvAccountName.setText(accountName);
-                    tvAccountName.setEnabled(false);
-                }
+        if (!mIsNewAccount && accountName != null) {
+            final TextView tvAccountName = findViewById(R.id.accountName);
+            if (tvAccountName != null) {
+                tvAccountName.setText(accountName);
+                tvAccountName.setEnabled(false);
             }
         }
 
@@ -285,23 +283,23 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
             mAccountManager.setPassword(account, accountPassword);
 
             // Turn on periodic syncing
-            long interval = PreferenceWrapper.getSyncInterval(KusssAuthenticatorActivity.this) * 60L * 60;
+            long interval = PreferenceHelper.getSyncInterval(KusssAuthenticatorActivity.this) * 60L * 60;
 
             ContentResolver.addPeriodicSync(account,
-                    CalendarContractWrapper.AUTHORITY(), new Bundle(),
+                    CalendarContract.AUTHORITY, new Bundle(),
                     interval);
             ContentResolver.addPeriodicSync(account,
                     KusssContentContract.AUTHORITY, new Bundle(),
                     interval);
             // Inform the system that this account supports sync
             ContentResolver.setIsSyncable(account,
-                    CalendarContractWrapper.AUTHORITY(), 1);
+                    CalendarContract.AUTHORITY, 1);
             ContentResolver.setIsSyncable(account,
                     KusssContentContract.AUTHORITY, 1);
             // Inform the system that this account is eligible for auto sync
             // when the network is up
             ContentResolver.setSyncAutomatically(account,
-                    CalendarContractWrapper.AUTHORITY(), true);
+                    CalendarContract.AUTHORITY, true);
             ContentResolver.setSyncAutomatically(account,
                     KusssContentContract.AUTHORITY, true);
             // Recommend a schedule for automatic synchronization. The system
@@ -335,6 +333,6 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
     protected void onStart() {
         super.onStart();
 
-        Analytics.sendScreen(this, Consts.SCREEN_LOGIN);
+        AnalyticsHelper.sendScreen(this, Consts.SCREEN_LOGIN);
     }
 }

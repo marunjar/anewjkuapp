@@ -40,7 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.Poi;
 import org.voidsink.anewjkuapp.PoiContentContract;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.base.BaseWorker;
 import org.voidsink.anewjkuapp.notification.PoiNotification;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
@@ -146,7 +146,7 @@ public class ImportPoiWorker extends BaseWorker {
             } catch (ParserConfigurationException | SAXException | IOException
                     | XPathExpressionException e) {
                 poiMap.clear();
-                Analytics.sendException(getApplicationContext(), e, true);
+                AnalyticsHelper.sendException(getApplicationContext(), e, true);
             }
 
             if (!poiMap.isEmpty()) {
@@ -254,7 +254,7 @@ public class ImportPoiWorker extends BaseWorker {
 
             return getSuccess();
         } catch (Exception e) {
-            Analytics.sendException(getApplicationContext(), e, true);
+            AnalyticsHelper.sendException(getApplicationContext(), e, true);
 
             return getRetry();
         } finally {

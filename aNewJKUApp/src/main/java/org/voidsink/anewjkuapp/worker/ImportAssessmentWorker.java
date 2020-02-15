@@ -41,7 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.base.BaseWorker;
 import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.kusss.AssessmentType;
@@ -72,7 +72,7 @@ public class ImportAssessmentWorker extends BaseWorker {
     }
 
     private Result importAssessments() {
-        Analytics.eventReloadAssessments(getApplicationContext());
+        AnalyticsHelper.eventReloadAssessments(getApplicationContext());
 
         final Account mAccount = AppUtils.getAccount(getApplicationContext());
         if (mAccount == null) {
@@ -262,7 +262,7 @@ public class ImportAssessmentWorker extends BaseWorker {
             mChangedNotification.show();
             return getSuccess();
         } catch (Exception e) {
-            Analytics.sendException(getApplicationContext(), e, true);
+            AnalyticsHelper.sendException(getApplicationContext(), e, true);
 
             return getRetry();
         } finally {

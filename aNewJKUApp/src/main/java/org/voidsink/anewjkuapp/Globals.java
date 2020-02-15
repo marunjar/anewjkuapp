@@ -36,7 +36,7 @@ import com.jakewharton.threetenabp.AndroidThreeTen;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.MapTimeZoneCache;
 
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
@@ -49,7 +49,7 @@ public class Globals extends Application implements Configuration.Provider {
         super.onCreate();
 
         // initialize analytics
-        Analytics.init(this);
+        AnalyticsHelper.init(this);
 
         AppUtils.setupNotificationChannels(this);
 

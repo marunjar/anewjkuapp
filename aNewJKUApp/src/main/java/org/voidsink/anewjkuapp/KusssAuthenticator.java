@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -41,7 +42,6 @@ import androidx.annotation.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.activity.KusssAuthenticatorActivity;
-import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.provider.KusssDatabaseHelper;
 import org.voidsink.anewjkuapp.utils.Consts;
@@ -217,12 +217,12 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
         return uri
                 .buildUpon()
                 .appendQueryParameter(
-                        CalendarContractWrapper.CALLER_IS_SYNCADAPTER(), "true")
+                        CalendarContract.CALLER_IS_SYNCADAPTER, "true")
                 .appendQueryParameter(
-                        CalendarContractWrapper.Calendars.ACCOUNT_NAME(),
+                        CalendarContract.Calendars.ACCOUNT_NAME,
                         account)
                 .appendQueryParameter(
-                        CalendarContractWrapper.Calendars.ACCOUNT_TYPE(),
+                        CalendarContract.Calendars.ACCOUNT_TYPE,
                         accountType).build();
     }
 
@@ -235,11 +235,11 @@ public class KusssAuthenticator extends AbstractAccountAuthenticator {
         return uri
                 .buildUpon()
                 .appendQueryParameter(
-                        CalendarContractWrapper.CALLER_IS_SYNCADAPTER(), "true")
+                        CalendarContract.CALLER_IS_SYNCADAPTER, "true")
                 .appendQueryParameter(
-                        CalendarContractWrapper.Events.ACCOUNT_NAME(), account)
+                        CalendarContract.Events.ACCOUNT_NAME, account)
                 .appendQueryParameter(
-                        CalendarContractWrapper.Events.ACCOUNT_TYPE(),
+                        CalendarContract.Events.ACCOUNT_TYPE,
                         accountType).build();
     }
 

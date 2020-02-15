@@ -32,7 +32,7 @@ import androidx.annotation.NonNull;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -100,7 +100,7 @@ public class Assessment {
                     try {
                         setTerm(Term.parseTerm(termMatcher.group()));
                     } catch (ParseException e) {
-                        Analytics.sendException(c, e, true, courseIdTerm);
+                        AnalyticsHelper.sendException(c, e, true, courseIdTerm);
                     }
                 }
 
@@ -124,7 +124,7 @@ public class Assessment {
             try {
                 setDate(dateFormat.parse(columns.get(0).text())); // date
             } catch (ParseException e) {
-                Analytics.sendException(c, e, false, columns.get(0).text());
+                AnalyticsHelper.sendException(c, e, false, columns.get(0).text());
             }
 
             if (term == null && date != null) {
@@ -141,7 +141,7 @@ public class Assessment {
                     setSws(Double.parseDouble(ectsSws[1]));
                 }
             } catch (Exception e) {
-                Analytics.sendException(c, e, false, columns.get(5).text());
+                AnalyticsHelper.sendException(c, e, false, columns.get(5).text());
             }
 
             try {
@@ -150,7 +150,7 @@ public class Assessment {
                     setCid(Integer.parseInt(cidText)); // grade
                 }
             } catch (NumberFormatException e) {
-                Analytics.sendException(c, e, false, columns.get(6).text());
+                AnalyticsHelper.sendException(c, e, false, columns.get(6).text());
             }
             setCode(columns.get(3).text());
         }

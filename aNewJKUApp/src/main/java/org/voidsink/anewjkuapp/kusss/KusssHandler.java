@@ -42,7 +42,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 
 import java.io.BufferedInputStream;
@@ -72,10 +72,10 @@ import static org.jsoup.Connection.Method.POST;
 
 public class KusssHandler {
 
-    static final String PATTERN_LVA_NR_WITH_DOT = "\\d{3}\\.\\w{3}";
-    static final String PATTERN_LVA_NR = "\\d{3}\\w{3}";
-    static final String PATTERN_TERM = "\\d{4}[swSW]";
-    static final String PATTERN_LVA_NR_COMMA_TERM = "\\("
+    public static final String PATTERN_LVA_NR_WITH_DOT = "\\d{3}\\.\\w{3}";
+    public static final String PATTERN_LVA_NR = "\\d{3}\\w{3}";
+    public static final String PATTERN_TERM = "\\d{4}[swSW]";
+    public static final String PATTERN_LVA_NR_COMMA_TERM = "\\("
             + PATTERN_LVA_NR + "," + PATTERN_TERM + "\\)";
     public static final String PATTERN_LVA_NR_SLASH_TERM = "\\("
             + PATTERN_LVA_NR + "\\/" + PATTERN_TERM + "\\)";
@@ -248,7 +248,7 @@ public class KusssHandler {
             logger.warn("login failed: connection timeout", e);
             return null;
         } catch (Exception e) {
-            Analytics.sendException(c, e, true);
+            AnalyticsHelper.sendException(c, e, true);
             return null;
         }
     }
@@ -268,7 +268,7 @@ public class KusssHandler {
             }
         } catch (Exception e) {
             logger.warn("logout failed", e);
-            Analytics.sendException(c, e, true);
+            AnalyticsHelper.sendException(c, e, true);
         }
         mCookies.getCookieStore().removeAll();
     }
@@ -288,7 +288,7 @@ public class KusssHandler {
             // bad connection, timeout
             return false;
         } catch (IOException e) {
-            Analytics.sendException(c, e, true);
+            AnalyticsHelper.sendException(c, e, true);
             return false;
         }
     }
@@ -361,7 +361,7 @@ public class KusssHandler {
                 return null;
             }
         } catch (IOException e) {
-            Analytics.sendException(c, e, true, "loadIcal: selectTerm");
+            AnalyticsHelper.sendException(c, e, true, "loadIcal: selectTerm");
             return null;
         }
 
@@ -420,7 +420,7 @@ public class KusssHandler {
                 iCal = new Calendar();
             }
         } catch (ParserException | IOException e) {
-            Analytics.sendException(c, e, true, "loadIcalJsoup", contentType, body);
+            AnalyticsHelper.sendException(c, e, true, "loadIcalJsoup", contentType, body);
             iCal = null;
         }
         return iCal;
@@ -436,7 +436,7 @@ public class KusssHandler {
                     Term term = Term.parseTerm(termValue);
                     terms.add(term);
                 } catch (ParseException e) {
-                    Analytics.sendException(c, e, true);
+                    AnalyticsHelper.sendException(c, e, true);
                 }
             }
 
@@ -464,7 +464,7 @@ public class KusssHandler {
                 }
             }
         } catch (Exception e) {
-            Analytics.sendException(c, e, true);
+            AnalyticsHelper.sendException(c, e, true);
             return null;
         }
         return terms;
@@ -532,7 +532,7 @@ public class KusssHandler {
                 return null;
             }
         } catch (Exception e) {
-            Analytics.sendException(c, e, true);
+            AnalyticsHelper.sendException(c, e, true);
             return null;
         }
         return courses;
@@ -546,7 +546,7 @@ public class KusssHandler {
             Elements selectable = termSelector.getElementsByAttributeValue("value", term.toString());
             return selectable.size() == 1;
         } catch (Exception e) {
-            Analytics.sendException(c, e, true);
+            AnalyticsHelper.sendException(c, e, true);
             return false;
         }
     }
@@ -562,7 +562,7 @@ public class KusssHandler {
                 }
             }
         } catch (Exception e) {
-            Analytics.sendException(c, e, true);
+            AnalyticsHelper.sendException(c, e, true);
             return false;
         }
         return false;
@@ -598,7 +598,7 @@ public class KusssHandler {
                 return null;
             }
         } catch (IOException e) {
-            Analytics.sendException(c, e, true);
+            AnalyticsHelper.sendException(c, e, true);
             return null;
         }
         logger.debug("{} grades found", grades.size());
@@ -642,7 +642,7 @@ public class KusssHandler {
                 exams = null;
             }
         } catch (Exception e) {
-            Analytics.sendException(c, e, true);
+            AnalyticsHelper.sendException(c, e, true);
             return null;
         }
         return exams;
@@ -677,13 +677,11 @@ public class KusssHandler {
 
                 for (Course course : courses) {
                     Assessment grade = gradeCache.get(course.getCourseId());
-                    if (grade != null) {
-                        if ((grade.getGrade() == Grade.G5)
-                                || (grade.getDate().getTime() > (System
-                                .currentTimeMillis() - (182 * DateUtils.DAY_IN_MILLIS)))) {
-                            logger.debug("positive in last 6 Months: {}", grade.getTitle());
-                            grade = null;
-                        }
+                    if (grade != null &&
+                            ((grade.getGrade() == Grade.G5) ||
+                                    (grade.getDate().getTime() > (System.currentTimeMillis() - (182 * DateUtils.DAY_IN_MILLIS))))) {
+                        logger.debug("positive in last 6 Months: {}", grade.getTitle());
+                        grade = null;
                     }
                     if (grade == null) {
                         List<Exam> newExams = getNewExamsByCourseId(c,
@@ -702,7 +700,7 @@ public class KusssHandler {
             // add registered exams
             loadExams(c, exams);
         } catch (Exception e) {
-            Analytics.sendException(c, e, true);
+            AnalyticsHelper.sendException(c, e, true);
             return null;
         }
         return exams;
@@ -757,7 +755,7 @@ public class KusssHandler {
                 return null;
             }
         } catch (IOException e) {
-            Analytics.sendException(c, e, true);
+            AnalyticsHelper.sendException(c, e, true);
             exams = null;
         }
         return exams;
@@ -815,7 +813,7 @@ public class KusssHandler {
                 return null;
             }
         } catch (Exception e) {
-            Analytics.sendException(c, e, true);
+            AnalyticsHelper.sendException(c, e, true);
             return null;
         }
     }

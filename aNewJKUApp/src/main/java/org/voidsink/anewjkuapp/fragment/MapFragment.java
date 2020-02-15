@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -77,10 +77,10 @@ import org.voidsink.anewjkuapp.LocationOverlay;
 import org.voidsink.anewjkuapp.Poi;
 import org.voidsink.anewjkuapp.PoiAdapter;
 import org.voidsink.anewjkuapp.PoiContentContract;
-import org.voidsink.anewjkuapp.PreferenceWrapper;
+import org.voidsink.anewjkuapp.PreferenceHelper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.anewjkuapp.utils.MapUtils;
@@ -125,14 +125,6 @@ public class MapFragment extends BaseFragment implements
 
     private SearchView mSearchView;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public MapFragment() {
-        super();
-    }
-
     @Override
     public void onPause() {
         if (mMyLocationOverlay != null) {
@@ -140,7 +132,6 @@ public class MapFragment extends BaseFragment implements
         }
         super.onPause();
     }
-
 
     static class MyMarker {
         private final LatLong mLatLon;
@@ -151,11 +142,11 @@ public class MapFragment extends BaseFragment implements
             this.mName = name;
         }
 
-        LatLong getLatLon() {
+        private LatLong getLatLon() {
             return mLatLon;
         }
 
-        public String getName() {
+        private String getName() {
             return mName;
         }
     }
@@ -251,14 +242,12 @@ public class MapFragment extends BaseFragment implements
 
         try (Cursor c = cr
                 .query(uri, PoiContentContract.Poi.DB.PROJECTION, null, null, null)) {
-            if (c != null) {
-                if (c.moveToNext()) {
-                    String name = c.getString(PoiContentContract.Poi.DB.COL_NAME);
-                    double lon = c.getDouble(PoiContentContract.Poi.DB.COL_LON);
-                    double lat = c.getDouble(PoiContentContract.Poi.DB.COL_LAT);
+            if (c != null && c.moveToNext()) {
+                String name = c.getString(PoiContentContract.Poi.DB.COL_NAME);
+                double lon = c.getDouble(PoiContentContract.Poi.DB.COL_LON);
+                double lat = c.getDouble(PoiContentContract.Poi.DB.COL_LAT);
 
-                    setNewGoal(new MyMarker(lat, lon, name));
-                }
+                setNewGoal(new MyMarker(lat, lon, name));
             }
         }
 
@@ -436,10 +425,11 @@ public class MapFragment extends BaseFragment implements
     }
 
     private void restoreMarker(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(KEY_GOAL_LATITUDE) && savedInstanceState.containsKey(KEY_GOAL_LONGITUDE) && savedInstanceState.containsKey(KEY_GOAL_NAME)) {
-                setNewGoal(new MyMarker(savedInstanceState.getDouble(KEY_GOAL_LATITUDE), savedInstanceState.getDouble(KEY_GOAL_LONGITUDE), savedInstanceState.getString(KEY_GOAL_NAME)));
-            }
+        if (savedInstanceState != null &&
+                savedInstanceState.containsKey(KEY_GOAL_LATITUDE) &&
+                savedInstanceState.containsKey(KEY_GOAL_LONGITUDE) &&
+                savedInstanceState.containsKey(KEY_GOAL_NAME)) {
+            setNewGoal(new MyMarker(savedInstanceState.getDouble(KEY_GOAL_LATITUDE), savedInstanceState.getDouble(KEY_GOAL_LONGITUDE), savedInstanceState.getString(KEY_GOAL_NAME)));
         }
     }
 
@@ -507,7 +497,7 @@ public class MapFragment extends BaseFragment implements
         try {
             return InternalRenderTheme.DEFAULT;
         } catch (Exception e) {
-            Analytics.sendException(getContext(), e, false);
+            AnalyticsHelper.sendException(getContext(), e, false);
         }
 
         return InternalRenderTheme.OSMARENDER;
@@ -574,7 +564,7 @@ public class MapFragment extends BaseFragment implements
     }
 
     private File getMapFile() {
-        File mapFile = PreferenceWrapper.getMapFile(getContext());
+        File mapFile = PreferenceHelper.getMapFile(getContext());
         if (mapFile == null || !mapFile.exists() || !mapFile.canRead()) {
             mapFile = new File(getActivity().getFilesDir(), MAP_FILE_NAME);
             logger.info("use internal map: {}", mapFile.toString());

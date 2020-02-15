@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,42 +27,41 @@
 package org.voidsink.anewjkuapp;
 
 import android.net.Uri;
+import android.provider.CalendarContract;
 
-import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
+public interface KusssContentContract {
 
-public class KusssContentContract {
+    String AUTHORITY = BuildConfig.APPLICATION_ID + ".provider";
 
-    public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".provider";
+    String CONTENT_TYPE_DIR = "vnd.android.cursor.dir";
+    String CONTENT_TYPE_ITEM = "vnd.android.cursor.item";
 
-    public static final String CONTENT_TYPE_DIR = "vnd.android.cursor.dir";
-    public static final String CONTENT_TYPE_ITEM = "vnd.android.cursor.item";
-
-    private static final Uri CONTENT_URI = Uri.parse(String.format("content://%1$s",
+    Uri CONTENT_URI = Uri.parse(String.format("content://%1$s",
             AUTHORITY));
 
-    public static class Course {
-        public static final String PATH = "lva";
-        public static final String PATH_CONTENT_CHANGED = "lva_changed";
-        public static final Uri CONTENT_URI = KusssContentContract.CONTENT_URI
+    interface Course {
+        String PATH = "lva";
+        String PATH_CONTENT_CHANGED = "lva_changed";
+        Uri CONTENT_URI = KusssContentContract.CONTENT_URI
                 .buildUpon().appendPath(PATH).build();
-        public static final Uri CONTENT_CHANGED_URI = KusssContentContract.CONTENT_URI
+        Uri CONTENT_CHANGED_URI = KusssContentContract.CONTENT_URI
                 .buildUpon().appendPath(PATH_CONTENT_CHANGED).build();
 
         // DB Table consts
-        public static final String TABLE_NAME = "lva";
-        public static final String COL_ID = "_id";
-        public static final String COL_TERM = "term";
-        public static final String COL_COURSEID = "lvanr";
-        public static final String COL_TITLE = "title";
-        public static final String COL_LVATYPE = "type";
-        public static final String COL_LECTURER = "teacher";
-        public static final String COL_CURRICULA_ID = "skz";
-        public static final String COL_ECTS = "ects";
-        public static final String COL_SWS = "sws";
-        public static final String COL_CLASS_CODE = "code";
+        String TABLE_NAME = "lva";
+        String COL_ID = "_id";
+        String COL_TERM = "term";
+        String COL_COURSEID = "lvanr";
+        String COL_TITLE = "title";
+        String COL_LVATYPE = "type";
+        String COL_LECTURER = "teacher";
+        String COL_CURRICULA_ID = "skz";
+        String COL_ECTS = "ects";
+        String COL_SWS = "sws";
+        String COL_CLASS_CODE = "code";
 
-        public static class DB {
-            public static final String[] PROJECTION = new String[]{
+        interface DB {
+            String[] PROJECTION = new String[]{
                     Course.COL_ID,
                     Course.COL_TERM,
                     Course.COL_COURSEID,
@@ -74,41 +73,41 @@ public class KusssContentContract {
                     Course.COL_ECTS,
                     Course.COL_CLASS_CODE};
 
-            public static final int COL_ID = 0;
-            public static final int COL_TERM = 1;
-            public static final int COL_COURSEID = 2;
-            public static final int COL_TITLE = 3;
-            public static final int COL_CURRICULA_ID = 4;
-            public static final int COL_TYPE = 5;
-            public static final int COL_TEACHER = 6;
-            public static final int COL_SWS = 7;
-            public static final int COL_ECTS = 8;
-            public static final int COL_CODE = 9;
+            int COL_ID = 0;
+            int COL_TERM = 1;
+            int COL_COURSEID = 2;
+            int COL_TITLE = 3;
+            int COL_CURRICULA_ID = 4;
+            int COL_TYPE = 5;
+            int COL_TEACHER = 6;
+            int COL_SWS = 7;
+            int COL_ECTS = 8;
+            int COL_CODE = 9;
         }
     }
 
-    public static class Exam {
-        public static final String PATH = "exam";
-        public static final String PATH_CONTENT_CHANGED = "exam_changed";
-        public static final Uri CONTENT_URI = KusssContentContract.CONTENT_URI
+    interface Exam {
+        String PATH = "exam";
+        String PATH_CONTENT_CHANGED = "exam_changed";
+        Uri CONTENT_URI = KusssContentContract.CONTENT_URI
                 .buildUpon().appendPath(PATH).build();
-        public static final Uri CONTENT_CHANGED_URI = KusssContentContract.CONTENT_URI
+        Uri CONTENT_CHANGED_URI = KusssContentContract.CONTENT_URI
                 .buildUpon().appendPath(PATH_CONTENT_CHANGED).build();
 
-        public static final String TABLE_NAME = "exam";
-        public static final String COL_ID = "_id";
-        public static final String COL_TERM = "term";
-        public static final String COL_COURSEID = "lvanr";
-        public static final String COL_DTSTART = "dtstart";
-        public static final String COL_DTEND = "dtend";
-        public static final String COL_LOCATION = "location";
-        public static final String COL_DESCRIPTION = "description";
-        public static final String COL_INFO = "info";
-        public static final String COL_IS_REGISTERED = "registered";
-        public static final String COL_TITLE = "title";
+        String TABLE_NAME = "exam";
+        String COL_ID = "_id";
+        String COL_TERM = "term";
+        String COL_COURSEID = "lvanr";
+        String COL_DTSTART = "dtstart";
+        String COL_DTEND = "dtend";
+        String COL_LOCATION = "location";
+        String COL_DESCRIPTION = "description";
+        String COL_INFO = "info";
+        String COL_IS_REGISTERED = "registered";
+        String COL_TITLE = "title";
 
-        public static class DB {
-            public static final String[] PROJECTION = new String[]{
+        interface DB {
+            String[] PROJECTION = new String[]{
                     Exam.COL_ID,
                     Exam.COL_TERM,
                     Exam.COL_COURSEID,
@@ -120,43 +119,43 @@ public class KusssContentContract {
                     Exam.COL_IS_REGISTERED,
                     Exam.COL_TITLE};
 
-            public static final int COL_ID = 0;
-            public static final int COL_TERM = 1;
-            public static final int COL_COURSEID = 2;
-            public static final int COL_DTSTART = 3;
-            public static final int COL_DTEND = 4;
-            public static final int COL_LOCATION = 5;
-            public static final int COL_DESCRIPTION = 6;
-            public static final int COL_INFO = 7;
-            public static final int COL_IS_REGISTERED = 8;
-            public static final int COL_TITLE = 9;
+            int COL_ID = 0;
+            int COL_TERM = 1;
+            int COL_COURSEID = 2;
+            int COL_DTSTART = 3;
+            int COL_DTEND = 4;
+            int COL_LOCATION = 5;
+            int COL_DESCRIPTION = 6;
+            int COL_INFO = 7;
+            int COL_IS_REGISTERED = 8;
+            int COL_TITLE = 9;
         }
     }
 
-    public static class Assessment {
-        public static final String PATH = "grade";
-        public static final String PATH_CONTENT_CHANGED = "grade_changed";
-        public static final Uri CONTENT_URI = KusssContentContract.CONTENT_URI
+    interface Assessment {
+        String PATH = "grade";
+        String PATH_CONTENT_CHANGED = "grade_changed";
+        Uri CONTENT_URI = KusssContentContract.CONTENT_URI
                 .buildUpon().appendPath(PATH).build();
-        public static final Uri CONTENT_CHANGED_URI = KusssContentContract.CONTENT_URI
+        Uri CONTENT_CHANGED_URI = KusssContentContract.CONTENT_URI
                 .buildUpon().appendPath(PATH_CONTENT_CHANGED).build();
 
-        public static final String TABLE_NAME = "grade";
-        public static final String COL_ID = "_id";
-        public static final String COL_TERM = "term";
-        public static final String COL_COURSEID = "lvanr";
-        public static final String COL_DATE = "date";
-        public static final String COL_CURRICULA_ID = "skz";
-        public static final String COL_GRADE = "grade";
-        public static final String COL_TYPE = "type";
-        public static final String COL_TITLE = "title";
-        public static final String COL_CODE = "code";
-        public static final String COL_ECTS = "ects";
-        public static final String COL_SWS = "sws";
-        public static final String COL_LVATYPE = "lvatype";
+        String TABLE_NAME = "grade";
+        String COL_ID = "_id";
+        String COL_TERM = "term";
+        String COL_COURSEID = "lvanr";
+        String COL_DATE = "date";
+        String COL_CURRICULA_ID = "skz";
+        String COL_GRADE = "grade";
+        String COL_TYPE = "type";
+        String COL_TITLE = "title";
+        String COL_CODE = "code";
+        String COL_ECTS = "ects";
+        String COL_SWS = "sws";
+        String COL_LVATYPE = "lvatype";
 
-        public static class DB {
-            public static final String[] PROJECTION = new String[]{
+        interface DB {
+            String[] PROJECTION = new String[]{
                     Assessment.COL_ID,
                     Assessment.COL_TERM,
                     Assessment.COL_COURSEID,
@@ -171,42 +170,42 @@ public class KusssContentContract {
                     Assessment.COL_LVATYPE};
 
             // Constants representing column positions from PROJECTION.
-            public static final int COL_ID = 0;
-            public static final int COL_TERM = 1;
-            public static final int COL_COURSEID = 2;
-            public static final int COL_DATE = 3;
-            public static final int COL_CURRICULA_ID = 4;
-            public static final int COL_TYPE = 5;
-            public static final int COL_GRADE = 6;
-            public static final int COL_TITLE = 7;
-            public static final int COL_CODE = 8;
-            public static final int COL_ECTS = 9;
-            public static final int COL_SWS = 10;
-            public static final int COL_LVATYPE = 11;
+            int COL_ID = 0;
+            int COL_TERM = 1;
+            int COL_COURSEID = 2;
+            int COL_DATE = 3;
+            int COL_CURRICULA_ID = 4;
+            int COL_TYPE = 5;
+            int COL_GRADE = 6;
+            int COL_TITLE = 7;
+            int COL_CODE = 8;
+            int COL_ECTS = 9;
+            int COL_SWS = 10;
+            int COL_LVATYPE = 11;
         }
     }
 
-    public static class Curricula {
-        public static final String PATH = "studies";
-        public static final String PATH_CONTENT_CHANGED = "studies_changed";
-        public static final Uri CONTENT_URI = KusssContentContract.CONTENT_URI
+    interface Curricula {
+        String PATH = "studies";
+        String PATH_CONTENT_CHANGED = "studies_changed";
+        Uri CONTENT_URI = KusssContentContract.CONTENT_URI
                 .buildUpon().appendPath(PATH).build();
-        public static final Uri CONTENT_CHANGED_URI = KusssContentContract.CONTENT_URI
+        Uri CONTENT_CHANGED_URI = KusssContentContract.CONTENT_URI
                 .buildUpon().appendPath(PATH_CONTENT_CHANGED).build();
 
-        public static final String TABLE_NAME = "studies";
-        public static final String COL_ID = "_id";
-        public static final String COL_IS_STD = "std";
-        public static final String COL_CURRICULUM_ID = "skz";
-        public static final String COL_TITLE = "title";
-        public static final String COL_STEOP_DONE = "steopDone";
-        public static final String COL_ACTIVE_STATE = "active";
-        public static final String COL_UNI = "uni";
-        public static final String COL_DT_START = "dtStart";
-        public static final String COL_DT_END = "dtEnd";
+        String TABLE_NAME = "studies";
+        String COL_ID = "_id";
+        String COL_IS_STD = "std";
+        String COL_CURRICULUM_ID = "skz";
+        String COL_TITLE = "title";
+        String COL_STEOP_DONE = "steopDone";
+        String COL_ACTIVE_STATE = "active";
+        String COL_UNI = "uni";
+        String COL_DT_START = "dtStart";
+        String COL_DT_END = "dtEnd";
 
-        public static class DB {
-            public static final String[] PROJECTION = new String[]{
+        interface DB {
+            String[] PROJECTION = new String[]{
                     Curricula.COL_ID,
                     Curricula.COL_IS_STD,
                     Curricula.COL_CURRICULUM_ID,
@@ -217,28 +216,28 @@ public class KusssContentContract {
                     Curricula.COL_DT_START,
                     Curricula.COL_DT_END};
 
-            public static final int COL_ID = 0;
-            public static final int COL_IS_STD = 1;
-            public static final int COL_CURRICULUM_ID = 2;
-            public static final int COL_TITLE = 3;
-            public static final int COL_STEOP_DONE = 4;
-            public static final int COL_ACTIVE_STATE = 5;
-            public static final int COL_UNI = 6;
-            public static final int COL_DT_START = 7;
-            public static final int COL_DT_END = 8;
+            int COL_ID = 0;
+            int COL_IS_STD = 1;
+            int COL_CURRICULUM_ID = 2;
+            int COL_TITLE = 3;
+            int COL_STEOP_DONE = 4;
+            int COL_ACTIVE_STATE = 5;
+            int COL_UNI = 6;
+            int COL_DT_START = 7;
+            int COL_DT_END = 8;
         }
     }
 
-    public static Uri asEventSyncAdapter(Uri uri, String account,
-                                         String accountType) {
+    static Uri asEventSyncAdapter(Uri uri, String account,
+                                  String accountType) {
         return uri
                 .buildUpon()
                 .appendQueryParameter(
-                        CalendarContractWrapper.CALLER_IS_SYNCADAPTER(), "true")
+                        CalendarContract.CALLER_IS_SYNCADAPTER, "true")
                 .appendQueryParameter(
-                        CalendarContractWrapper.Events.ACCOUNT_NAME(), account)
+                        CalendarContract.Events.ACCOUNT_NAME, account)
                 .appendQueryParameter(
-                        CalendarContractWrapper.Events.ACCOUNT_TYPE(),
+                        CalendarContract.Events.ACCOUNT_TYPE,
                         accountType).build();
     }
 

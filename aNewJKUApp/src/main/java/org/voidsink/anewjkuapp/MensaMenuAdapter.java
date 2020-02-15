@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,6 +31,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.mensa.IDay;
 import org.voidsink.anewjkuapp.mensa.IMensa;
@@ -42,9 +45,6 @@ import org.voidsink.sectionedrecycleradapter.SectionedAdapter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerView.ViewHolder> implements SectionedAdapter<MensaMenuAdapter.MenuHeaderHolder> {
 
@@ -70,7 +70,7 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
                 return new MenuViewHolder(v);
             }
             default:
-                return null;
+                throw new IllegalArgumentException();
         }
     }
 
@@ -118,6 +118,8 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
                 }
                 break;
             }
+            default:
+                break;
         }
     }
 
@@ -177,12 +179,12 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
 
     static class MenuViewHolder extends RecyclerView.ViewHolder {
 
-        final TextView mName;
-        final TextView mSoup;
-        final TextView mMeal;
-        final TextView mPrice;
-        final TextView mPriceBig;
-        final TextView mOehBonus;
+        private final TextView mName;
+        private final TextView mSoup;
+        private final TextView mMeal;
+        private final TextView mPrice;
+        private final TextView mPriceBig;
+        private final TextView mOehBonus;
 
         MenuViewHolder(View itemView) {
             super(itemView);
@@ -197,8 +199,8 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
     }
 
     static class MensaInfoHolder extends RecyclerView.ViewHolder {
-        final TextView mTitle;
-        final TextView mDescr;
+        private final TextView mTitle;
+        private final TextView mDescr;
 
         MensaInfoHolder(View itemView) {
             super(itemView);
@@ -209,7 +211,7 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
 
 
     static class MenuHeaderHolder extends RecyclerView.ViewHolder {
-        final TextView mText;
+        private final TextView mText;
 
         MenuHeaderHolder(View itemView) {
             super(itemView);

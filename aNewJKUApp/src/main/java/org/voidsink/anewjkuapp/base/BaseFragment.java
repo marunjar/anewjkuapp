@@ -41,7 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 public class BaseFragment extends Fragment implements StackedFragment, PendingIntentHandler {
@@ -108,11 +108,7 @@ public class BaseFragment extends Fragment implements StackedFragment, PendingIn
         }
     }
 
-    /**
-     * for handling a pending intent in fragment
-     *
-     * @param intent the intent to handle
-     */
+    @Override
     public void handlePendingIntent(Intent intent) {
     }
 
@@ -136,7 +132,7 @@ public class BaseFragment extends Fragment implements StackedFragment, PendingIn
 
         final String screenName = getScreenName();
         if (screenName != null && !screenName.isEmpty()) {
-            Analytics.sendScreen(getActivity(), screenName);
+            AnalyticsHelper.sendScreen(getActivity(), screenName);
         }
 
         handleIntent();

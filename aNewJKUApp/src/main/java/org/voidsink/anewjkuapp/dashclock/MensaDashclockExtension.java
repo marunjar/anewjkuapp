@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.mensa.ChoiceMenuLoader;
 import org.voidsink.anewjkuapp.mensa.ClassicMenuLoader;
 import org.voidsink.anewjkuapp.mensa.IDay;
@@ -64,7 +64,8 @@ public class MensaDashclockExtension extends DashClockExtension {
 
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(getApplicationContext());
-        long mFromTime, mToTime;
+        long mFromTime;
+        long mToTime;
         boolean mShowAlays;
         try {
             mFromTime = sp.getLong("pref_key_dashclock_ext_mensa_from",
@@ -169,6 +170,6 @@ public class MensaDashclockExtension extends DashClockExtension {
             publishUpdate(new ExtensionData().visible(false));
         }
 
-        Analytics.sendScreen(null, Consts.SCREEN_DASHCLOCK);
+        AnalyticsHelper.sendScreen(null, Consts.SCREEN_DASHCLOCK);
     }
 }

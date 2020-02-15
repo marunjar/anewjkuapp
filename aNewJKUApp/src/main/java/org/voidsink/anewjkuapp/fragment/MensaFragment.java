@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
 
 import org.voidsink.anewjkuapp.MensaDayTabItem;
-import org.voidsink.anewjkuapp.PreferenceWrapper;
+import org.voidsink.anewjkuapp.PreferenceHelper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.SlidingTabItem;
 import org.voidsink.anewjkuapp.base.SlidingTabsFragment;
@@ -63,7 +63,7 @@ public class MensaFragment extends SlidingTabsFragment implements SharedPreferen
 
     @Override
     protected void fillTabs(List<SlidingTabItem> mTabs) {
-        if (PreferenceWrapper.getGroupMenuByDay(getContext())) {
+        if (PreferenceHelper.getGroupMenuByDay(getContext())) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(new Date());
             // jump to next day if later than 4pm
@@ -105,7 +105,7 @@ public class MensaFragment extends SlidingTabsFragment implements SharedPreferen
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(PreferenceWrapper.PREF_MENSA_GROUP_MENU_BY_DAY)) {
+        if (key.equals(PreferenceHelper.PREF_MENSA_GROUP_MENU_BY_DAY)) {
             createTabs(null);
         }
     }

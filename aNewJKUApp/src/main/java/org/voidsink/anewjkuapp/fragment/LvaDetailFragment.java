@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.voidsink.anewjkuapp.CourseListAdapter;
 import org.voidsink.anewjkuapp.KusssContentContract;
-import org.voidsink.anewjkuapp.PreferenceWrapper;
+import org.voidsink.anewjkuapp.PreferenceHelper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
@@ -103,7 +103,7 @@ public class LvaDetailFragment extends TermFragment implements
 
         MenuItem item = menu.findItem(R.id.action_toggle_visible_lvas);
         if (item != null) {
-            item.setChecked(item.isCheckable() && PreferenceWrapper.getShowCoursesWithAssessmentOnly(getContext()));
+            item.setChecked(item.isCheckable() && PreferenceHelper.getShowCoursesWithAssessmentOnly(getContext()));
         }
     }
 
@@ -116,7 +116,7 @@ public class LvaDetailFragment extends TermFragment implements
                 return true;
             case R.id.action_toggle_visible_lvas:
                 item.setChecked(item.isCheckable() && !item.isChecked());
-                PreferenceWrapper.setShowCoursesWithAssessmentOnly(getContext(), item.isChecked());
+                PreferenceHelper.setShowCoursesWithAssessmentOnly(getContext(), item.isChecked());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -198,6 +198,8 @@ public class LvaDetailFragment extends TermFragment implements
                 mAssessmentCursor = data;
                 break;
             }
+            default:
+                break;
         }
         // fill adapter
         setData(mAdapter, mCourseCursor, mAssessmentCursor);
@@ -214,6 +216,8 @@ public class LvaDetailFragment extends TermFragment implements
                 mAssessmentCursor = null;
                 break;
             }
+            default:
+                break;
         }
         setData(mAdapter, mCourseCursor, mAssessmentCursor);
     }
@@ -222,7 +226,7 @@ public class LvaDetailFragment extends TermFragment implements
         adapter.clear();
 
         if (courseCursor != null) {
-            boolean withAssessmentOnly = PreferenceWrapper.getShowCoursesWithAssessmentOnly(getContext());
+            boolean withAssessmentOnly = PreferenceHelper.getShowCoursesWithAssessmentOnly(getContext());
             // load courses
             List<Course> courses = KusssContentProvider.getCoursesFromCursor(getContext(), courseCursor);
 
@@ -244,7 +248,7 @@ public class LvaDetailFragment extends TermFragment implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(PreferenceWrapper.PREF_COURSES_SHOW_WITH_ASSESSMENT_ONLY)) {
+        if (key.equals(PreferenceHelper.PREF_COURSES_SHOW_WITH_ASSESSMENT_ONLY)) {
             onContentChanged(false);
         }
     }

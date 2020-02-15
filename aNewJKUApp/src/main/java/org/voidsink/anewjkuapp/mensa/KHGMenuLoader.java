@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ import android.text.TextUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.voidsink.anewjkuapp.analytics.Analytics;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.text.NumberFormat;
@@ -59,12 +59,12 @@ public class KHGMenuLoader extends BaseMenuLoader implements MenuLoader {
                     } else if (columns.size() == 3) {
                         handle3Columns(day, columns);
                     } else {
-                        throw new RuntimeException("Table with columns.size() = " + columns.size() + " found. Expected 3 or 4.");
+                        throw new IllegalStateException("Table with columns.size() = " + columns.size() + " found. Expected 3 or 4.");
                     }
                 }
             }
         } catch (Exception e) {
-            Analytics.sendException(context, e, false);
+            AnalyticsHelper.sendException(context, e, false);
             return null;
         }
 
@@ -141,7 +141,10 @@ public class KHGMenuLoader extends BaseMenuLoader implements MenuLoader {
             case "SA":
                 cal.add(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
                 break;
+            default:
+                return null;
         }
+
         day = new MensaDay(cal.getTime());
         mensa.addDay(day);
 

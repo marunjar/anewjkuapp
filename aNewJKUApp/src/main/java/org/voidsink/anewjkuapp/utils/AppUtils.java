@@ -44,6 +44,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 
@@ -67,11 +68,10 @@ import com.google.common.util.concurrent.ListenableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.KusssAuthenticator;
-import org.voidsink.anewjkuapp.PreferenceWrapper;
+import org.voidsink.anewjkuapp.PreferenceHelper;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.activity.MainActivity;
-import org.voidsink.anewjkuapp.analytics.Analytics;
-import org.voidsink.anewjkuapp.calendar.CalendarContractWrapper;
+import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.fragment.MapFragment;
 import org.voidsink.anewjkuapp.kusss.Assessment;
@@ -98,7 +98,6 @@ import java.io.OutputStream;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.HashMap;
@@ -117,78 +116,20 @@ public class AppUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(AppUtils.class);
 
-    public AppUtils() {
+    private static float mLastHue = new Random(System.currentTimeMillis()).nextFloat() * 360;
+
+    private AppUtils() {
         throw new UnsupportedOperationException();
     }
 
-    private static final Comparator<Course> CourseComparator = (lhs, rhs) -> {
-        int value = lhs.getTitle().compareTo(rhs.getTitle());
-        if (value == 0) {
-            value = lhs.getTerm().compareTo(rhs.getTerm());
-        }
-        return value;
-    };
-
-    private static final Comparator<LvaWithGrade> LvaWithGradeComparator = new Comparator<LvaWithGrade>() {
-        @Override
-        public int compare(LvaWithGrade lhs, LvaWithGrade rhs) {
-            int value = lhs.getState().compareTo(rhs.getState());
-            if (value == 0) {
-                value = lhs.getCourse().getTitle()
-                        .compareTo(rhs.getCourse().getTitle());
-            }
-            if (value == 0) {
-                value = TermComparator.compare(lhs.getCourse().getTerm(), rhs.getCourse().getTerm());
-            }
-            return value;
-        }
-    };
-
-    private static final Comparator<Curriculum> CurriculaComparator = (lhs, rhs) -> {
-        int value = lhs.getUni().compareToIgnoreCase(rhs.getUni());
-        if (value == 0) {
-            value = lhs.getDtStart().compareTo(rhs.getDtStart());
-        }
-        if (value == 0) {
-            value = lhs.getCid().compareTo(rhs.getCid());
-        }
-        return value;
-    };
-
-    private static final Comparator<Assessment> AssessmentComparator = new Comparator<Assessment>() {
-        @Override
-        public int compare(Assessment lhs, Assessment rhs) {
-            int value = lhs.getAssessmentType().compareTo(rhs.getAssessmentType());
-            if (value == 0) {
-                value = rhs.getDate().compareTo(lhs.getDate());
-            }
-            if (value == 0) {
-                value = TermComparator.compare(rhs.getTerm(), lhs.getTerm());
-            }
-            if (value == 0) {
-                value = lhs.getTitle().compareTo(rhs.getTitle());
-            }
-            return value;
-        }
-    };
-
-    private static final Comparator<Term> TermComparator = (lhs, rhs) -> {
-        if (lhs == null && rhs == null) return 0;
-        if (lhs == null) return -1;
-        if (rhs == null) return 1;
-
-        return rhs.compareTo(lhs);
-    };
-
-
     public static void doOnNewVersion(Context context) {
-        int mLastVersion = PreferenceWrapper.getLastVersion(context);
-        int mCurrentVersion = PreferenceWrapper.getCurrentVersion(context);
+        int mLastVersion = PreferenceHelper.getLastVersion(context);
+        int mCurrentVersion = PreferenceHelper.getCurrentVersion(context);
 
         boolean errorOccured = false;
 
         if (mLastVersion != mCurrentVersion
-                || mLastVersion == PreferenceWrapper.PREF_LAST_VERSION_NONE) {
+                || mLastVersion == PreferenceHelper.PREF_LAST_VERSION_NONE) {
             try {
                 if (!initPreferences(context)) {
                     errorOccured = true;
@@ -200,19 +141,17 @@ public class AppUtils {
                     errorOccured = true;
                 }
             } catch (Exception e) {
-                Analytics.sendException(context, e, false);
+                AnalyticsHelper.sendException(context, e, false);
                 errorOccured = true;
             }
         }
 
         // only if another version was installed before
         if (mLastVersion != mCurrentVersion
-                && mLastVersion != PreferenceWrapper.PREF_LAST_VERSION_NONE) {
+                && mLastVersion != PreferenceHelper.PREF_LAST_VERSION_NONE) {
             try {
-                if (shouldRemoveOldAccount(mLastVersion, mCurrentVersion)) {
-                    if (!removeAccount(context)) {
-                        errorOccured = true;
-                    }
+                if (shouldRemoveOldAccount(mLastVersion, mCurrentVersion) && !removeAccount(context)) {
+                    errorOccured = true;
                 }
                 if (shouldImportCurricula(mLastVersion, mCurrentVersion)) {
                     triggerSync(context, true, Consts.ARG_WORKER_KUSSS_CURRICULA);
@@ -225,20 +164,18 @@ public class AppUtils {
                     } else {
                         triggerSync(context, true, Consts.ARG_WORKER_CAL_COURSES, Consts.ARG_WORKER_CAL_EXAM);
                     }
-                } else if (shouldDeleteKusssEvents(mLastVersion, mCurrentVersion)) {
-                    if (!deleteKusssEvents(context)) {
-                        errorOccured = true;
-                    }
+                } else if (shouldDeleteKusssEvents(mLastVersion, mCurrentVersion) && !deleteKusssEvents(context)) {
+                    errorOccured = true;
                 }
 
-                PreferenceWrapper.applySyncInterval(context);
+                PreferenceHelper.applySyncInterval(context);
             } catch (Exception e) {
-                Analytics.sendException(context, e, false);
+                AnalyticsHelper.sendException(context, e, false);
                 errorOccured = true;
             }
         }
         if (!errorOccured) {
-            PreferenceWrapper.setLastVersion(context, mCurrentVersion);
+            PreferenceHelper.setLastVersion(context, mCurrentVersion);
         }
     }
 
@@ -370,7 +307,7 @@ public class AppUtils {
             }
             return true;
         } catch (IOException e) {
-            Analytics.sendException(context, e, false);
+            AnalyticsHelper.sendException(context, e, false);
             return false;
         }
     }
@@ -386,16 +323,51 @@ public class AppUtils {
     }
 
     public static void sortCourses(List<Course> courses) {
-        Collections.sort(courses, CourseComparator);
+        Collections.sort(courses, (lhs, rhs) -> {
+            int value = lhs.getTitle().compareTo(rhs.getTitle());
+            if (value == 0) {
+                value = lhs.getTerm().compareTo(rhs.getTerm());
+            }
+            return value;
+        });
+    }
+
+    private static int compareTerms(Term lhs, Term rhs) {
+        if (lhs == null && rhs == null) return 0;
+        if (lhs == null) return -1;
+        if (rhs == null) return 1;
+
+        return rhs.compareTo(lhs);
     }
 
     private static void sortLVAsWithGrade(List<LvaWithGrade> mCourses) {
-        Collections.sort(mCourses, LvaWithGradeComparator);
-
+        Collections.sort(mCourses, (lhs, rhs) -> {
+            int value = lhs.getState().compareTo(rhs.getState());
+            if (value == 0) {
+                value = lhs.getCourse().getTitle()
+                        .compareTo(rhs.getCourse().getTitle());
+            }
+            if (value == 0) {
+                value = compareTerms(lhs.getCourse().getTerm(), rhs.getCourse().getTerm());
+            }
+            return value;
+        });
     }
 
     public static void sortAssessments(List<Assessment> assessments) {
-        Collections.sort(assessments, AssessmentComparator);
+        Collections.sort(assessments, (lhs, rhs) -> {
+            int value = lhs.getAssessmentType().compareTo(rhs.getAssessmentType());
+            if (value == 0) {
+                value = rhs.getDate().compareTo(lhs.getDate());
+            }
+            if (value == 0) {
+                value = compareTerms(rhs.getTerm(), lhs.getTerm());
+            }
+            if (value == 0) {
+                value = lhs.getTitle().compareTo(rhs.getTitle());
+            }
+            return value;
+        });
     }
 
     private static void removeDuplicates(List<LvaWithGrade> mCourses) {
@@ -676,7 +648,16 @@ public class AppUtils {
     }
 
     public static void sortCurricula(List<Curriculum> mCurricula) {
-        Collections.sort(mCurricula, CurriculaComparator);
+        Collections.sort(mCurricula, (lhs, rhs) -> {
+            int value = lhs.getUni().compareToIgnoreCase(rhs.getUni());
+            if (value == 0) {
+                value = lhs.getDtStart().compareTo(rhs.getDtStart());
+            }
+            if (value == 0) {
+                value = lhs.getCid().compareTo(rhs.getCid());
+            }
+            return value;
+        });
     }
 
     private static boolean isWorkScheduled(Context context, String tag) {
@@ -708,7 +689,7 @@ public class AppUtils {
         constraints.setRequiredNetworkType(getRequiredNetworkTypeByTags(tags));
         constraints.setRequiresBatteryNotLow(true);
 
-        long interval = PreferenceWrapper.getSyncInterval(context);
+        long interval = PreferenceHelper.getSyncInterval(context);
 
         PeriodicWorkRequest.Builder request = new PeriodicWorkRequest.Builder(workerClass, interval, TimeUnit.HOURS, 6, TimeUnit.HOURS);
         request.setInitialDelay(30, TimeUnit.MINUTES);
@@ -779,7 +760,7 @@ public class AppUtils {
                 if (mIsMasterSyncEnabled) {
                     final Account mAccount = getAccount(context);
                     if (mAccount != null) {
-                        mIsCalendarSyncEnabled = ContentResolver.getSyncAutomatically(mAccount, CalendarContractWrapper.AUTHORITY());
+                        mIsCalendarSyncEnabled = ContentResolver.getSyncAutomatically(mAccount, CalendarContract.AUTHORITY);
                     }
                 }
 
@@ -826,7 +807,7 @@ public class AppUtils {
                 }
             }
         } catch (Exception e) {
-            Analytics.sendException(context, e, true);
+            AnalyticsHelper.sendException(context, e, true);
         }
     }
 
@@ -846,7 +827,7 @@ public class AppUtils {
                 }
             }
         } catch (Exception e) {
-            Analytics.sendException(context, e, true, tags);
+            AnalyticsHelper.sendException(context, e, true, tags);
         }
     }
 
@@ -884,12 +865,12 @@ public class AppUtils {
 
     public static void showEventInCalendar(Context context, long eventId, long dtStart) {
         if (eventId > 0) {
-            Uri uri = ContentUris.withAppendedId(CalendarContractWrapper.Events.CONTENT_URI(), eventId);
+            Uri uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventId);
             Intent intent = new Intent(Intent.ACTION_VIEW)
                     .setData(uri);
             context.startActivity(intent);
         } else {
-            Uri.Builder builder = CalendarContractWrapper.CONTENT_URI().buildUpon();
+            Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
             builder.appendPath("time");
             ContentUris.appendId(builder, dtStart);
             Intent intent = new Intent(Intent.ACTION_VIEW)
@@ -931,8 +912,6 @@ public class AppUtils {
 
         return Color.HSVToColor(hsv);
     }
-
-    private static float mLastHue = new Random(System.currentTimeMillis()).nextFloat() * 360;
 
     public static Locale getLocale(Context context) {
         Locale locale;
@@ -1004,7 +983,7 @@ public class AppUtils {
                     mNotificationManager.createNotificationChannel(gradesChannel);
                 }
             } catch (Exception e) {
-                Analytics.sendException(context, e, true);
+                AnalyticsHelper.sendException(context, e, true);
             }
         }
     }

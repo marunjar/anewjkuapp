@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,9 +31,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.voidsink.anewjkuapp.base.BaseArrayAdapter;
-
 import androidx.annotation.NonNull;
+
+import org.voidsink.anewjkuapp.base.BaseArrayAdapter;
 
 public class PoiAdapter extends BaseArrayAdapter<Poi> {
 
@@ -55,9 +55,7 @@ public class PoiAdapter extends BaseArrayAdapter<Poi> {
         if (convertView == null) {
             convertView = inflater.inflate(android.R.layout.simple_list_item_2,
                     parent, false);
-            poiHolder = new PoiHolder();
-            poiHolder.text1 = convertView.findViewById(android.R.id.text1);
-            poiHolder.text2 = convertView.findViewById(android.R.id.text2);
+            poiHolder = new PoiHolder(convertView);
             convertView.setTag(poiHolder);
         }
 
@@ -73,7 +71,13 @@ public class PoiAdapter extends BaseArrayAdapter<Poi> {
     }
 
     private static final class PoiHolder {
-        TextView text1;
-        TextView text2;
+        private final TextView text1;
+        private final TextView text2;
+
+        private PoiHolder(View view) {
+            text1 = view.findViewById(android.R.id.text1);
+            text2 = view.findViewById(android.R.id.text2);
+
+        }
     }
 }

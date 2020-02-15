@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -39,6 +39,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Term implements Comparable<Term> {
+
+    private final int year;
+    private final TermType type;
+    private boolean loaded = false;
 
     private static final Pattern termPattern = Pattern.compile("\\d{4}[WwSs]");
 
@@ -96,10 +100,6 @@ public class Term implements Comparable<Term> {
         }
     }
 
-    private final int year;
-    private final TermType type;
-    private boolean loaded = false;
-
     private Term(int year, @NonNull TermType type) {
         this.year = year;
         this.type = type;
@@ -156,6 +156,8 @@ public class Term implements Comparable<Term> {
             case SUMMER:
                 cal.set(year, Calendar.MARCH, 1);
                 break;
+            default:
+                throw new IllegalArgumentException("value is no valid char");
         }
 
         cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -177,6 +179,8 @@ public class Term implements Comparable<Term> {
             case SUMMER:
                 cal.set(year, Calendar.SEPTEMBER, 30, 23, 59, 59);
                 break;
+            default:
+                throw new IllegalArgumentException("value is no valid char");
         }
 
         cal.set(Calendar.HOUR_OF_DAY, cal.getActualMaximum(Calendar.HOUR_OF_DAY));
