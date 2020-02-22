@@ -23,7 +23,7 @@
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
 
             <!-- We use a Toolbar so that our drawer can be displayed
                          in front of the action bar -->

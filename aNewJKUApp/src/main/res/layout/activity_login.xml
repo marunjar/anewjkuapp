@@ -44,9 +44,7 @@
 
     <Button
         android:id="@+id/accountLogin"
+        style="@style/Text.Button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:padding="10dp"
         android:text="@string/account_login" />
 </LinearLayout>

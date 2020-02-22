@@ -37,12 +37,11 @@
     <color name="color_chip_grade_back_default">@color/default_accent</color>
     <color name="color_chip_grade_text">#fff</color>
 
-    <!-- for android-week-view -->
-    <color name="pastBackgroundColor_dark">#11FFFFFF</color>
-    <color name="pastBackgroundColor_light">#11000000</color>
-    <color name="nowLineColor_dark">#90FFFFFF</color>
-    <color name="nowLineColor_light">#90000000</color>
+    <color name="background_launcher">#ffffffff</color>
 
+    <!-- for android-week-view -->
+    <color name="pastBackgroundColor">#11000000</color>
+    <color name="nowLineColor">#90000000</color>
 
     <!-- for themed cards-->
     <color name="fullTransparent">#00000000</color>
