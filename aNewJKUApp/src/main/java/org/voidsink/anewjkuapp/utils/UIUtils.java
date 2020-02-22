@@ -79,9 +79,6 @@ public class UIUtils {
     }
 
     public static void applyTheme(Activity activity) {
-        activity.setTheme(getAppThemeResId(activity));
-    }
-
         activity.setTheme(R.style.AppTheme);
     }
 
