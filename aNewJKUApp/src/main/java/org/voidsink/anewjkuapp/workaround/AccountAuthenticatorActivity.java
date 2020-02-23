@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,6 +31,8 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+
+import org.voidsink.anewjkuapp.utils.UIUtils;
 
 /**
  * Base class for implementing an Activity that is used to help implement an
@@ -74,6 +76,8 @@ public class AccountAuthenticatorActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle icicle) {
+        UIUtils.applyTheme(this);
+
         super.onCreate(icicle);
 
         mAccountAuthenticatorResponse =

@@ -98,7 +98,7 @@
         <item name="android:textSize">@dimen/text_size_subtitle</item>
     </style>
 
-    <style name="Text.Button" parent="@style/Text">
+    <style name="Text.Button" parent="@style/Widget.MaterialComponents.Button">
         <item name="android:textSize">@dimen/text_size_button</item>
         <item name="android:fontFamily">@font/appfont</item>
         <item name="android:textStyle">bold</item>
