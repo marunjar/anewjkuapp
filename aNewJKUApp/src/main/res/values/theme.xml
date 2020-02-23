@@ -12,8 +12,12 @@
         <item name="alertDialogTheme">@style/DialogStyle.Alert</item>
 
         <item name="colorPrimary">@color/default_primary</item>
-        <item name="colorPrimaryDark">@color/default_primaryDark</item>
-        <item name="colorAccent">@color/default_accent</item>
+        <item name="colorPrimaryDark">@color/default_primaryVariant</item>
+        <item name="colorOnPrimary">@color/default_onPrimary</item>
+        <item name="colorAccent">@color/default_secondary</item>
+        <item name="colorSecondary">@color/default_secondary</item>
+        <item name="colorSecondaryVariant">@color/default_secondaryVariant</item>
+        <item name="colorOnSecondary">@color/default_onSecondary</item>
 
         <item name="pastBackgroundColor">@color/pastBackgroundColor</item>
         <item name="nowLineColor">@color/nowLineColor</item>
@@ -29,16 +33,24 @@
 
     <style name="DialogStyle.Base" parent="Theme.MaterialComponents.DayNight.Dialog">
         <item name="colorPrimary">@color/default_primary</item>
-        <item name="colorPrimaryDark">@color/default_primaryDark</item>
-        <item name="colorAccent">@color/default_accent</item>
+        <item name="colorPrimaryDark">@color/default_primaryVariant</item>
+        <item name="colorOnPrimary">@color/default_onPrimary</item>
+        <item name="colorAccent">@color/default_secondary</item>
+        <item name="colorSecondary">@color/default_secondary</item>
+        <item name="colorSecondaryVariant">@color/default_secondaryVariant</item>
+        <item name="colorOnSecondary">@color/default_onSecondary</item>
     </style>
 
     <style name="DialogStyle" parent="DialogStyle.Base"/>
 
     <style name="DialogStyle.Alert.Base" parent="Theme.MaterialComponents.DayNight.Dialog">
         <item name="colorPrimary">@color/default_primary</item>
-        <item name="colorPrimaryDark">@color/default_primaryDark</item>
-        <item name="colorAccent">@color/default_accent</item>
+        <item name="colorPrimaryDark">@color/default_primaryVariant</item>
+        <item name="colorOnPrimary">@color/default_onPrimary</item>
+        <item name="colorAccent">@color/default_secondary</item>
+        <item name="colorSecondary">@color/default_secondary</item>
+        <item name="colorSecondaryVariant">@color/default_secondaryVariant</item>
+        <item name="colorOnSecondary">@color/default_onSecondary</item>
     </style>
 
     <style name="PreferenceTheme" parent="PreferenceThemeOverlay.v14.Material">

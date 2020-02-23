@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--colors for default style-->
-    <color name="default_accent">#19bd0f</color>
+    <color name="default_secondary">#19bd0f</color>
+    <color name="default_secondaryVariant">#128A0B</color>
+
 </resources>
