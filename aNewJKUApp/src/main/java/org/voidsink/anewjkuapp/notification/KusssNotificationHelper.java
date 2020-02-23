@@ -53,7 +53,7 @@ public class KusssNotificationHelper {
                 .setCategory(NotificationCompat.CATEGORY_ERROR)
                 .setAutoCancel(true);
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp);
         } else {
             mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_compat_24dp);

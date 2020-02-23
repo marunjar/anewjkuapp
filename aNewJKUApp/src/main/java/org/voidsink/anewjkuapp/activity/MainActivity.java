@@ -155,7 +155,7 @@ public class MainActivity extends ThemedActivity {
                 TextView mDrawerUser = mNavigationView.getHeaderView(0).findViewById(R.id.drawer_user);
 
                 if (mDrawerUser != null) {
-                    if ((android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.M) && (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED)) {
+                    if ((Build.VERSION.SDK_INT < Build.VERSION_CODES.M) && (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED)) {
                         mDrawerUser.setText(R.string.missing_app_permission);
                         mDrawerUser.setOnClickListener(v -> {
                             try {
@@ -201,9 +201,9 @@ public class MainActivity extends ThemedActivity {
 
     @AfterPermissionGranted(PERMISSIONS_REQUEST_ACCOUNT)
     private void startCreateAccount() {
-        if ((android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) || EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS)) {
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) || EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS)) {
             if (AppUtils.getAccount(this) == null) {
-                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                     this.startActivity(new Intent(Settings.ACTION_ADD_ACCOUNT)
                             .putExtra(Settings.EXTRA_ACCOUNT_TYPES,
                                     new String[]{KusssAuthenticator.ACCOUNT_TYPE}));

@@ -85,7 +85,7 @@ public class NewExamNotification {
                     .setAutoCancel(true)
                     .setNumber(lines.size());
 
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp)
                         .setLargeIcon(
                                 BitmapFactory.decodeResource(
