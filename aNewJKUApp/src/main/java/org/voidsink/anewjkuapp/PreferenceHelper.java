@@ -32,10 +32,11 @@ import android.content.PeriodicSync;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceManager;
 
 import org.slf4j.Logger;
@@ -68,7 +69,7 @@ public final class PreferenceHelper {
     private static final boolean PREF_USE_LIGHT_THEME_DEFAULT = true;
 
     public static final String PREF_OVERRIDE_THEME = "pref_key_override_theme";
-    public static final boolean PREF_OVERRIDE_THEME_DEFAULT = false;
+    private static final boolean PREF_OVERRIDE_THEME_DEFAULT = false;
 
     public static final String PREF_MAP_FILE = "pref_key_map_file";
     private static final String PREF_MAP_FILE_DEFAULT = "";
@@ -216,26 +217,24 @@ public final class PreferenceHelper {
         }
     }
 
-    public static boolean getUseLightDesign(Context context) {
+    public static int getNightMode(Context context) {
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(context);
-
         try {
-            Configuration configuration = context.getResources().getConfiguration();
-            int lightMode = configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK;
-
-            // return override-setting if the system doesn't define a dark mode
-            if (sp.getBoolean(PREF_OVERRIDE_THEME,
-                    PREF_OVERRIDE_THEME_DEFAULT)
-                    || lightMode == Configuration.UI_MODE_NIGHT_UNDEFINED) {
-                return sp.getBoolean(PREF_USE_LIGHT_THEME,
-                        PREF_USE_LIGHT_THEME_DEFAULT);
-            } else { // return true if dark mode is set to no
-                return lightMode == Configuration.UI_MODE_NIGHT_NO;
+            if (!sp.getBoolean(PREF_OVERRIDE_THEME, PREF_OVERRIDE_THEME_DEFAULT)) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+                } else {
+                    return AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY;
+                }
+            } else if (sp.getBoolean(PREF_USE_LIGHT_THEME, PREF_USE_LIGHT_THEME_DEFAULT)) {
+                return AppCompatDelegate.MODE_NIGHT_NO;
+            } else {
+                return AppCompatDelegate.MODE_NIGHT_YES;
             }
         } catch (Exception e) {
             AnalyticsHelper.sendException(context, e, false);
-            return PREF_USE_LIGHT_THEME_DEFAULT;
+            return AppCompatDelegate.MODE_NIGHT_NO;
         }
     }
 

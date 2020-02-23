@@ -131,10 +131,6 @@ public class UIUtils {
     }
 
     public static void setDefaultNightMode(Context context) {
-        if (PreferenceHelper.getUseLightDesign(context)) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        }
+        AppCompatDelegate.setDefaultNightMode(PreferenceHelper.getNightMode(context));
     }
 }
