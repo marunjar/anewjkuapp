@@ -12,7 +12,6 @@
             app:dependency="pref_key_override_theme"
             app:disableDependentsState="false"
             app:key="pref_key_use_light_theme"
-            app:summary="@string/pref_app_use_light_theme_summary"
             app:title="@string/pref_app_use_light_theme_title" />
     </PreferenceCategory>
 
