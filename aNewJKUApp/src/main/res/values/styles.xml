@@ -3,41 +3,13 @@
     <!--colors for default theme-->
     <style name="colorStyle">
         <item name="colorPrimary">@color/default_primary</item>
-        <item name="colorPrimaryDark">@color/default_primaryDark</item>
-        <item name="colorAccent">@color/default_accent</item>
+        <item name="colorPrimaryDark">@color/default_primaryVariant</item>
+        <item name="colorOnPrimary">@color/default_onPrimary</item>
+        <item name="colorAccent">@color/default_secondary</item>
+        <item name="colorSecondary">@color/default_secondary</item>
+        <item name="colorSecondaryVariant">@color/default_secondaryVariant</item>
+        <item name="colorOnSecondary">@color/default_onSecondary</item>
     </style>
-    <!--colors for sowi theme-->
-    <!--
-    <style name="colorStyle.sowi">
-        <item name="colorPrimary">@color/sowi_primary</item>
-        <item name="colorPrimaryDark">@color/sowi_primaryDark</item>
-        <item name="colorAccent">@color/sowi_accent</item>
-    </style>
-    -->
-    <!--colors for re theme-->
-    <!--
-    <style name="colorStyle.re">
-        <item name="colorPrimary">@color/re_primary</item>
-        <item name="colorPrimaryDark">@color/re_primaryDark</item>
-        <item name="colorAccent">@color/re_accent</item>
-    </style>
-    -->
-    <!--colors for tnf theme-->
-    <!--
-    <style name="colorStyle.tnf">
-        <item name="colorPrimary">@color/tnf_primary</item>
-        <item name="colorPrimaryDark">@color/tnf_primaryDark</item>
-        <item name="colorAccent">@color/tnf_accent</item>
-    </style>
-    -->
-    <!--colors for med theme-->
-    <!--
-    <style name="colorStyle.med">
-        <item name="colorPrimary">@color/med_primary</item>
-        <item name="colorPrimaryDark">@color/med_primaryDark</item>
-        <item name="colorAccent">@color/med_accent</item>
-    </style>
-    -->
 
     <style name="chip">
         <item name="android:layout_width">8dp</item>
@@ -98,11 +70,16 @@
         <item name="android:textSize">@dimen/text_size_subtitle</item>
     </style>
 
-    <style name="Text.Button" parent="@style/Text">
+    <style name="Text.Button" parent="@style/Widget.MaterialComponents.Button">
         <item name="android:textSize">@dimen/text_size_button</item>
         <item name="android:fontFamily">@font/appfont</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAllCaps">true</item>
+        <item name="android:padding">10dp</item>>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
     </style>
 
     <attr name="themed_plot_background_color" format="reference" />
@@ -121,13 +98,7 @@
     </style>
 
 <!--this themes are for toolbars in cards-->
-    <style name="cardToolbar.ActionButton.Overflow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
-        <item name="android:minWidth">0dp</item>
-        <item name="android:paddingLeft">0dp</item>
-        <item name="android:paddingRight">0dp</item>
-    </style>
-
-    <style name="cardToolbar.Light.ActionButton.Overflow" parent="@style/Widget.AppCompat.Light.ActionButton.Overflow">
+    <style name="cardToolbar.ActionButton.Overflow" parent="@style/Widget.AppCompat.Light.ActionButton.Overflow">
         <item name="android:minWidth">0dp</item>
         <item name="android:paddingLeft">0dp</item>
         <item name="android:paddingRight">0dp</item>
@@ -141,12 +112,6 @@
         <item name="actionOverflowButtonStyle">@style/cardToolbar.ActionButton.Overflow</item>
     </style>
 
-    <style name="cardToolbar.Light" parent="AppTheme.Light">
-        <item name="colorPrimary">@android:color/transparent</item>
-        <item name="colorPrimaryDark">@android:color/transparent</item>
-        <item name="actionOverflowButtonStyle">@style/cardToolbar.Light.ActionButton.Overflow</item>
-    </style>
-
     <style name="cardToolbarStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -157,7 +122,7 @@
         <item name="contentInsetStart">0dp</item>
     </style>
 
-    <style name="mainToolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <style name="mainToolbar" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
     </style>
 
     <style name="mainToolbarStyle">

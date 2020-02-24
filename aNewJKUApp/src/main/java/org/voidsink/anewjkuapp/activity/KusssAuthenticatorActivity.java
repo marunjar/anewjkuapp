@@ -76,8 +76,6 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        UIUtils.applyTheme(this);
-
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_login);

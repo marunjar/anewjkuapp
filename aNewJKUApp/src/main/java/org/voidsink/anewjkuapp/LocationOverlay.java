@@ -79,7 +79,7 @@ public class LocationOverlay extends MyLocationOverlay {
             if (snapToLocationEnabled) {
                 // get accent color from theme
                 TypedArray themeArray = mContext.getTheme().obtainStyledAttributes(new int[]{R.attr.colorAccent});
-                int mColorAccent = themeArray.getColor(0, ContextCompat.getColor(mContext, R.color.default_accent));
+                int mColorAccent = themeArray.getColor(0, ContextCompat.getColor(mContext, R.color.default_secondary));
                 themeArray.recycle();
 
                 this.snapToLocationItem.getIcon()

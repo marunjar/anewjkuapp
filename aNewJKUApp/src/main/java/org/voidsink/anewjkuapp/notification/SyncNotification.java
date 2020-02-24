@@ -65,7 +65,7 @@ public class SyncNotification {
                 .setOngoing(true)
                 .setPriority(PRIORITY_MIN);
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             this.mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp_anim)
                     .setLargeIcon(
                             BitmapFactory.decodeResource(

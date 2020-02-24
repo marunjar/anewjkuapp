@@ -25,6 +25,5 @@
   -->
 
 <resources>
-    <bool name="pref_visible_override_theme">true</bool>
     <bool name="pref_default_override_theme">false</bool>
 </resources>

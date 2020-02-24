@@ -10,7 +10,7 @@
     <path
         android:pathData="M67.6,0L108,0A0,0 0,0 1,108 0L108,108A0,0 0,0 1,108 108L67.6,108A0,0 0,0 1,67.6 108L67.6,0A0,0 0,0 1,67.6 0z"
         android:fillAlpha="1"
-        android:fillColor="@color/default_accent"/>
+        android:fillColor="@color/default_secondary"/>
     <path
         android:pathData="M32,74l44,0l0,-9.57l-44,0z"
         android:fillAlpha="1"

@@ -36,6 +36,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NavUtils;
 
 import org.voidsink.anewjkuapp.PreferenceHelper;
@@ -48,6 +49,7 @@ import java.util.Calendar;
 public class UIUtils {
 
     private UIUtils() {
+        throw new UnsupportedOperationException();
     }
 
     public static boolean handleUpNavigation(Activity activity, MenuItem item) {
@@ -77,15 +79,7 @@ public class UIUtils {
     }
 
     public static void applyTheme(Activity activity) {
-        activity.setTheme(getAppThemeResId(activity));
-    }
-
-    private static int getAppThemeResId(Context context) {
-        if (PreferenceHelper.getUseLightDesign(context)) {
-            return R.style.AppTheme_Light;
-        } else {
-            return R.style.AppTheme;
-        }
+        activity.setTheme(R.style.AppTheme);
     }
 
     public static String getChipGradeText(Context context, Assessment assessment) {
@@ -134,5 +128,9 @@ public class UIUtils {
             icon.mutate();
             icon.setDrawableByLayerId(R.id.today_icon_day, today);
         }
+    }
+
+    public static void setDefaultNightMode(Context context) {
+        AppCompatDelegate.setDefaultNightMode(PreferenceHelper.getNightMode(context));
     }
 }

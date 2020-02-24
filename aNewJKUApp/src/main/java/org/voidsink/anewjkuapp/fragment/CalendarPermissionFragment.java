@@ -102,7 +102,7 @@ public class CalendarPermissionFragment extends BaseFragment implements ContentO
 
     @AfterPermissionGranted(PERMISSIONS_REQUEST_FULL_CALENDAR)
     private void startCreateCalendars() {
-        if ((android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) || EasyPermissions.hasPermissions(getContext(), Manifest.permission.GET_ACCOUNTS)) {
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) || EasyPermissions.hasPermissions(getContext(), Manifest.permission.GET_ACCOUNTS)) {
             if (EasyPermissions.hasPermissions(getContext(), CALENDAR_PERMISSIONS_FULL)) {
                 Account account = AppUtils.getAccount(getContext());
                 CalendarUtils.createCalendarsIfNecessary(getContext(), account);

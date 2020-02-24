@@ -2,47 +2,21 @@
 <resources>
     <!--colors for default style-->
     <color name="default_primary">#0F60BD</color>
-    <color name="default_primaryDark">#0F4D9D</color>
-    <color name="default_accent">#EE8C2B</color>
+    <color name="default_primaryVariant">#0F4D9D</color>
+    <color name="default_secondary">#EE8C2B</color>
+    <color name="default_secondaryVariant">#C57424</color>
+    <color name="default_onPrimary">#FFFFFF</color>
+    <color name="default_onSecondary">#FFFFFF</color>
 
-    <!--colors for sowi style-->
-    <!--
-    <color name="sowi_primary">#adc258</color>
-    <color name="sowi_primaryDark">#8da252</color>
-    <color name="sowi_accent">#0049ee</color>
-    -->
-
-    <!--colors for re style-->
-    <!--
-    <color name="re_primary">#e2001a</color>
-    <color name="re_primaryDark">#cc001a</color>
-    <color name="re_accent">#eeee00</color>
-    -->
-
-    <!--colors for tnf style-->
-    <!--
-    <color name="tnf_primary">#5799bf</color>
-    <color name="tnf_primaryDark">#ff507a9f</color>
-    <color name="tnf_accent">#ee3b33</color>
-    -->
-
-    <!--colors for med style-->
-    <!--
-    <color name="med_primary">#ebbf00</color>
-    <color name="med_primaryDark">#ffcb9f00</color>
-    <color name="med_accent">#ee3b33</color>
-    -->
-
-    <color name="preference_fallback_accent_color">@color/default_accent</color>
-    <color name="color_chip_grade_back_default">@color/default_accent</color>
+    <color name="preference_fallback_accent_color">@color/default_secondary</color>
+    <color name="color_chip_grade_back_default">@color/default_secondary</color>
     <color name="color_chip_grade_text">#fff</color>
 
-    <!-- for android-week-view -->
-    <color name="pastBackgroundColor_dark">#11FFFFFF</color>
-    <color name="pastBackgroundColor_light">#11000000</color>
-    <color name="nowLineColor_dark">#90FFFFFF</color>
-    <color name="nowLineColor_light">#90000000</color>
+    <color name="background_launcher">#ffffffff</color>
 
+    <!-- for android-week-view -->
+    <color name="pastBackgroundColor">#11000000</color>
+    <color name="nowLineColor">#90000000</color>
 
     <!-- for themed cards-->
     <color name="fullTransparent">#00000000</color>

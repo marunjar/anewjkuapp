@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -39,6 +39,7 @@ import net.fortuna.ical4j.util.MapTimeZoneCache;
 import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.kusss.KusssHandler;
 import org.voidsink.anewjkuapp.utils.AppUtils;
+import org.voidsink.anewjkuapp.utils.UIUtils;
 
 import java.util.concurrent.Executors;
 
@@ -65,6 +66,8 @@ public class Globals extends Application implements Configuration.Provider {
             KusssHandler.getInstance().setUserAgent(new WebView(this).getSettings().getUserAgentString());
         } catch (Exception ignored) {
         }
+
+        UIUtils.setDefaultNightMode(this);
     }
 
     @NonNull

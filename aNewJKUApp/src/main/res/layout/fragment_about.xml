@@ -9,9 +9,7 @@
     <Button
         android:id="@+id/about_changelog"
         style="@style/Text.Button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:layout_width="match_parent"
         android:text="@string/action_changelog"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
