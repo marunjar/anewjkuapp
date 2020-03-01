@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="0.53.0" versioncode="140079">
+        <change>neues Design</change>
+        <change>bessere Unterstützung für automatischen Wechsel zwischen dunklem und hellem Theme</change>
+        <change>kleine Korrektur für Benachrichtigungen</change>
+        <change>viele Korrekturen und Optimierungen</change>
+        <change>neue Karte von OpenStreetMap</change>
+    </release>
     <release version="0.52.5" versioncode="140078">
         <change>unterstützt jetzt auch Android Q</change>
         <change>Fehler beim Login behoben</change>
@@ -9,12 +16,12 @@
     </release>
     <release version="0.51.9" versioncode="140072">
         <change>viele Korrekturen und Optimierungen</change>
-        <change>neue Daten von OpenStreetMap</change>
+        <change>neue Karte von OpenStreetMap</change>
     </release>
     <release version="0.50.3" versioncode="140062">
         <change>Kalender Berechtigungen prüfen</change>
         <change>Fehler beim Laden der Daten von KUSSS behoben</change>
-        <change>neue Daten von OpenStreetMap</change>
+        <change>neue Karte von OpenStreetMap</change>
     </release>
     <release version="0.50.2" versioncode="140061">
         <change>Termine vom kommenden Semester werden auch geladen</change>
@@ -26,34 +33,34 @@
         <change>Mensa sollte wieder ein Weilchen funktionieren</change>
         <change>der Speiseplan kann manuell aktualisiert werden</change>
         <change>Links zu den Speiseplänen der Mensen hinzugefügt</change>
-        <change>neue Daten von OpenStreetMap</change>
+        <change>neue Karte von OpenStreetMap</change>
     </release>
     <release version="0.50.0" versioncode="140059">
         <change>unterstützt jetzt auch Android O</change>
         <change>viele Korrekturen und Optimierungen</change>
-        <change>neue Daten von OpenStreetMap</change>
+        <change>neue Karte von OpenStreetMap</change>
     </release>
     <release version="0.45.4" versioncode="140058">
         <change>kleine Korrekturen und Optimierungen beim Laden der Daten</change>
-        <change>neue Daten von OpenStreetMap</change>
+        <change>neue Karte von OpenStreetMap</change>
     </release>
     <release version="0.45.3" versioncode="140057">
         <change>kleine Korrekturen und Optimierungen</change>
-        <change>neue Daten von OpenStreetMap</change>
+        <change>neue Karte von OpenStreetMap</change>
     </release>
     <release version="0.45.2" versioncode="140056">
         <change>falsche Termine aus Kalender werden nicht mehr gelöscht</change>
         <change>Update der Termine funktioniert wieder</change>
         <change>Korrekturen und Optimierungen</change>
         <change>unnötige Berechtigungen entfernt</change>
-        <change>neue Daten von OpenStreetMap</change>
+        <change>neue Karte von OpenStreetMap</change>
     </release>
     <release version="0.44.1" versioncode="140053">
         <change>genauer Standort für neue Termine wird gespeichert</change>
         <change>Korrekturen und Optimierungen</change>
     </release>
     <release version="0.44" versioncode="140052">
-        <change>neue Daten von OpenStreetMap</change>
+        <change>neue Karte von OpenStreetMap</change>
     </release>
     <release version="0.43.3" versioncode="140051">
         <change>Karte bring App nicht mehr zum Absturz</change>
@@ -61,7 +68,7 @@
         <change>viele kleinere Korrekturen und Optimierungen</change>
     </release>
     <release version="0.43.2" versioncode="140050">
-        <change>neue Daten von OpenStreetMap</change>
+        <change>neue Karte von OpenStreetMap</change>
     </release>
     <release version="0.43" versioncode="140048">
         <change>laden von Noten aus Auslandssemester</change>
@@ -89,7 +96,7 @@
     <release version="0.42" versioncode="140042">
         <change>viele Korrekturen und Optimierungen</change>
         <change>App Design angepasst</change>
-        <change>neue Daten von OpenStreetMap</change>
+        <change>neue Karte von OpenStreetMap</change>
         <change>es können jetzt nur LVAs mit Noten angezeigt werden</change>
     </release>
     <release version="0.41" versioncode="140041">
@@ -99,7 +106,7 @@
         <change>Fehler in Statistik behoben</change>
     </release>
     <release version="0.39" versioncode="140039">
-        <change>neue Daten von OpenStreetMap</change>
+        <change>neue Karte von OpenStreetMap</change>
         <change>App ist jetzt auch über F-Droid verfügbar</change>
     </release>
     <release version="0.38" versioncode="140038">
