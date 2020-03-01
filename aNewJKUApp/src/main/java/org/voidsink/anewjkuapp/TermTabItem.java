@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,13 +27,14 @@ package org.voidsink.anewjkuapp;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import org.voidsink.anewjkuapp.base.SlidingTabItem;
 import org.voidsink.anewjkuapp.kusss.Term;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 import java.util.List;
-
-import androidx.fragment.app.Fragment;
 
 public class TermTabItem extends SlidingTabItem {
 
@@ -45,9 +46,7 @@ public class TermTabItem extends SlidingTabItem {
     }
 
     @Override
-    protected Bundle getArguments() {
-        Bundle b = new Bundle();
-
+    protected void getArguments(@NonNull Bundle arguments) {
         if (mTerms != null) {
 
             String[] mTermStrings = new String[mTerms.size()];
@@ -55,9 +54,7 @@ public class TermTabItem extends SlidingTabItem {
                 mTermStrings[i] = mTerms.get(i).toString();
             }
 
-            b.putStringArray(Consts.ARG_TERMS, mTermStrings);
+            arguments.putStringArray(Consts.ARG_TERMS, mTermStrings);
         }
-
-        return b;
     }
 }

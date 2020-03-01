@@ -75,7 +75,6 @@ public class StatFragmentDetail extends TermFragment implements
         View view = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
         mRecyclerView = view.findViewById(R.id.recyclerView);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         return view;
     }
@@ -84,8 +83,10 @@ public class StatFragmentDetail extends TermFragment implements
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         mAdapter = new StatCardAdapter(getContext());
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setContentDescription(getTitle(getContext()));
 
         getLoaderManager().initLoader(Consts.LOADER_ID_COURSES, null, this);
         getLoaderManager().initLoader(Consts.LOADER_ID_ASSESSMENTS, null, this);

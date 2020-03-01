@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -110,11 +110,10 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
             setButtonLoadText();
         }
 
-        mAdapter = new CalendarEventAdapter(getContext());
-
-//		mListView.addFooterView(loadMore);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mAdapter = new CalendarEventAdapter(getContext());
         mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter(mRecyclerView, mAdapter));
+        mRecyclerView.setContentDescription(getTitle(getContext()));
 
         mAdapter.setOnItemClickListener((view, viewType, position) -> {
             if (position != RecyclerView.NO_POSITION) {

@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -70,6 +70,7 @@ public class MensaDayFragment extends BaseFragment implements LoaderManager.Load
 
     private Date mDate;
     private MensaMenuAdapter mAdapter;
+    private RecyclerView mRecyclerView;
 
     public MensaDayFragment() {
         super();
@@ -80,6 +81,11 @@ public class MensaDayFragment extends BaseFragment implements LoaderManager.Load
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        mAdapter = new MensaMenuAdapter(getContext(), false);
+        mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter(mRecyclerView, mAdapter));
+        mRecyclerView.setContentDescription(getTitle(getContext()));
 
         getLoaderManager().initLoader(0, null, this);
     }
@@ -96,10 +102,7 @@ public class MensaDayFragment extends BaseFragment implements LoaderManager.Load
         View view = inflater.inflate(R.layout.fragment_recycler_view, container,
                 false);
 
-        final RecyclerView mRecyclerView = view.findViewById(R.id.recyclerView);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        mAdapter = new MensaMenuAdapter(getContext(), false);
-        mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter(mRecyclerView, mAdapter));
+        mRecyclerView = view.findViewById(R.id.recyclerView);
 
         return view;
     }

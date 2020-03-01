@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -72,8 +72,6 @@ public class AssessmentDetailFragment extends TermFragment implements
 
         mRecyclerView = view.findViewById(R.id.recyclerView);
 
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-
         return view;
     }
 
@@ -88,8 +86,10 @@ public class AssessmentDetailFragment extends TermFragment implements
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         mAdapter = new AssessmentListAdapter(getContext());
         mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter(mRecyclerView, mAdapter));
+        mRecyclerView.setContentDescription(getTitle(getContext()));
 
         getLoaderManager().initLoader(0, null, this);
     }

@@ -27,9 +27,12 @@ package org.voidsink.anewjkuapp.base;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import org.voidsink.anewjkuapp.utils.Consts;
 
 public class SlidingTabItem {
     private final CharSequence mTitle;
@@ -47,18 +50,17 @@ public class SlidingTabItem {
     public Fragment createFragment() {
         try {
             Fragment f = mFragment.getConstructor().newInstance();
-            Bundle b = getArguments();
-            if (b != null) {
-                f.setArguments(b);
-            }
+            Bundle arguments = new Bundle();
+            getArguments(arguments);
+            arguments.putCharSequence(Consts.ARG_FRAGMENT_TITLE, mTitle);
+            f.setArguments(arguments);
             return f;
         } catch (Exception e) {
             return null;
         }
     }
 
-    protected Bundle getArguments() {
-        return null;
+    protected void getArguments(@NonNull Bundle arguments) {
     }
 
     /**

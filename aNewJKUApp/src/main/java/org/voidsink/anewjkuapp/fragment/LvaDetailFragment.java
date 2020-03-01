@@ -79,8 +79,6 @@ public class LvaDetailFragment extends TermFragment implements
 
         mRecyclerView = view.findViewById(R.id.recyclerView);
 
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-
         return view;
     }
 
@@ -88,8 +86,10 @@ public class LvaDetailFragment extends TermFragment implements
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         mAdapter = new CourseListAdapter(getContext());
         mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter(mRecyclerView, mAdapter));
+        mRecyclerView.setContentDescription(getTitle(getContext()));
 
         getLoaderManager().initLoader(Consts.LOADER_ID_COURSES, null, this);
         getLoaderManager().initLoader(Consts.LOADER_ID_ASSESSMENTS, null, this);

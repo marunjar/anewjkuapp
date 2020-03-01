@@ -80,10 +80,10 @@ public class ExamFragment extends BaseFragment implements ContentObserverListene
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mAdapter = new ExamListAdapter(getContext());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mAdapter = new ExamListAdapter(getContext());
         mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter(mRecyclerView, mAdapter));
-        //mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(mAdapter));
+        mRecyclerView.setContentDescription(getTitle(getContext()));
 
         getLoaderManager().initLoader(0, null, this);
     }
