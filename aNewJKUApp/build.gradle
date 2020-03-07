@@ -108,9 +108,9 @@ dependencies {
     implementation "androidx.preference:preference:1.1.0"
     implementation "com.google.android.material:material:1.1.0"
     implementation "androidx.cardview:cardview:1.0.0"
-    implementation 'androidx.work:work-runtime:2.3.2'
-    googleImplementation 'androidx.work:work-gcm:2.3.2'
-    googleImplementation 'com.google.firebase:firebase-analytics:17.2.2'
+    implementation 'androidx.work:work-runtime:2.3.3'
+    googleImplementation 'androidx.work:work-gcm:2.3.3'
+    googleImplementation 'com.google.firebase:firebase-analytics:17.2.3'
     googleImplementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
