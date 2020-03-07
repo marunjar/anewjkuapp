@@ -46,7 +46,6 @@ public class Course {
     private String title;
     private int cid;
     private String teacher;
-    private double sws;
     private double ects;
     private String lvaType;
     private String code;
@@ -77,8 +76,6 @@ public class Course {
                     }
                     setECTS(Double.parseDouble(columns.get(8).text()
                             .replace(",", "."))); // ECTS
-                    // setSWS(Double.parseDouble(columns.get.child(6).text()
-                    // .replace(",", "."))); // SWS
                     setCode(columns.get(3).text());
                 }
             } catch (Exception e) {
@@ -94,7 +91,6 @@ public class Course {
         this.cid = cid;
         this.teacher = teacher;
         this.ects = ects;
-        this.sws = sws;
         this.lvaType = lvaType;
         this.code = code;
     }
@@ -119,12 +115,8 @@ public class Course {
         return this.teacher;
     }
 
-    private void setSws(double sws) {
-        this.sws = sws;
-    }
-
     public double getSws() {
-        return this.ects * 2 / 3;//this.sws;
+        return this.ects * 2 / 3;
     }
 
     private void setECTS(double ects) {

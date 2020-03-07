@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -66,9 +66,9 @@ public enum AssessmentType {
 
     @SuppressLint("DefaultLocale")
     public static AssessmentType parseGradeType(String text) {
-        text = text.trim().toLowerCase();
+        String normalized = text.trim().toLowerCase();
 
-        switch (text) {
+        switch (normalized) {
             case "vorläufige lehrveranstaltungsbeurteilungen":
             case "interim course assessments":
                 return INTERIM_COURSE_ASSESSMENT;

@@ -84,7 +84,7 @@ public class SettingsFragment extends BasePreferenceFragment {
 
     public static class AppSettingsFragment extends BasePreferenceFragment {
 
-        private void CollectMapFiles(ArrayList<String> entries, ArrayList<String> entryValues) {
+        private void collectMapFiles(ArrayList<String> entries, ArrayList<String> entryValues) {
             entries.add("no .map file");
             entryValues.add("");
 
@@ -140,7 +140,7 @@ public class SettingsFragment extends BasePreferenceFragment {
                 ArrayList<String> entries = new ArrayList<>();
                 ArrayList<String> entryValues = new ArrayList<>();
 
-                CollectMapFiles(entries, entryValues);
+                collectMapFiles(entries, entryValues);
 
                 mapFiles.setEntries(entries.toArray(new CharSequence[0]));
                 mapFiles.setEntryValues(entryValues.toArray(new CharSequence[0]));

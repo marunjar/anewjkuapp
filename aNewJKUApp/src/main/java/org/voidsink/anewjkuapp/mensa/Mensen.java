@@ -25,16 +25,11 @@
 
 package org.voidsink.anewjkuapp.mensa;
 
-public class Mensen {
+public interface Mensen {
 
-    public static final String MENSA_CHOICE = "CHOICE";
-    public static final String MENSA_CLASSIC = "CLASSIC";
-    public static final String MENSA_KHG = "KHG";
-    public static final String MENSA_RAAB = "RAAB";
-    public static final String MENSA_TAGESTELLER = "TAGESTELLER";
-
-    private Mensen() {
-        throw new UnsupportedOperationException();
-    }
-
+    String MENSA_CHOICE = "CHOICE";
+    String MENSA_CLASSIC = "CLASSIC";
+    String MENSA_KHG = "KHG";
+    String MENSA_RAAB = "RAAB";
+    String MENSA_TAGESTELLER = "TAGESTELLER";
 }

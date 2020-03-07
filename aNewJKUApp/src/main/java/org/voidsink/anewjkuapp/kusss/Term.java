@@ -87,9 +87,9 @@ public class Term implements Comparable<Term> {
         }
 
         public static TermType parseTermType(String text) throws ParseException {
-            text = text.trim().toLowerCase();
+            String normalized = text.trim().toLowerCase();
 
-            switch (text) {
+            switch (normalized) {
                 case "w":
                     return WINTER;
                 case "s":

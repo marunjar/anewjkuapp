@@ -31,8 +31,10 @@ import android.app.Application;
 import android.content.Context;
 
 import org.jsoup.HttpStatusException;
+import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import java.net.NoRouteToHostException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -60,18 +62,18 @@ public class AnalyticsHelper {
     }
 
     @SuppressLint("DefaultLocale")
-    public static void sendException(Context context, Exception e, boolean fatal, String... additionalData) {
+    public static void sendException(Context context, Exception e, boolean assumeFatal, String... additionalData) {
         List<String> additionalDataList = additionalData == null ? new ArrayList<>() : Arrays.asList(additionalData);
 
+        boolean fatal = assumeFatal;
         boolean send = true;
-        if (e instanceof java.net.UnknownHostException || e instanceof NoRouteToHostException) {
+        if (e instanceof UnknownHostException || e instanceof NoRouteToHostException) {
             fatal = false;
-        }
-        if (e instanceof HttpStatusException) {
+            send = AppUtils.isNetworkAvailable(context, true);
+        } else if (e instanceof HttpStatusException) {
             additionalDataList.add(String.format("%d: %s", ((HttpStatusException) e).getStatusCode(), ((HttpStatusException) e).getUrl()));
             send = (((HttpStatusException) e).getStatusCode() != 503);
-        }
-        if (e instanceof SSLException) {
+        } else if (e instanceof SSLException) {
             additionalDataList.add(getAnalytics().getPsStatus().toString());
         }
         if (send) {

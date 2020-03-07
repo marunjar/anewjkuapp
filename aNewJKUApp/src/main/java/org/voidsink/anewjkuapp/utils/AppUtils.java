@@ -41,6 +41,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -844,8 +846,7 @@ public class AppUtils {
     }
 
 
-    public static String getEventString(Context c, long eventDTStart, long eventDTEnd,
-                                        String eventTitle, boolean allDay) {
+    public static String getEventString(Context c, long eventDTStart, long eventDTEnd, String eventTitle, boolean allDay) {
         int index = eventTitle.indexOf(", ");
         if (index > 1) {
             eventTitle = eventTitle.substring(0, index);
@@ -1003,4 +1004,19 @@ public class AppUtils {
 
         return extras.getBoolean(ContentResolver.SYNC_EXTRAS_DO_NOT_RETRY, false) || extras.getBoolean(ContentResolver.SYNC_EXTRAS_IGNORE_BACKOFF, false);
     }
+
+    public static boolean isNetworkAvailable(Context context, boolean defaultValue) {
+        try {
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            if (activeNetworkInfo != null) {
+                return activeNetworkInfo.isConnected();
+            }
+            logger.info("network not available");
+        } catch (Exception e) {
+            logger.warn("network not available", e);
+        }
+        return defaultValue;
+    }
+
 }

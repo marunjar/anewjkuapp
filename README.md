@@ -18,4 +18,4 @@ Or simply add yourself to the credits.xml
 Issues
 ------
 
-Please use the github issue tracker: https://github.com/marunjar/anewjkuapp/issues
+Please use the github issue tracker: [https://github.com/marunjar/anewjkuapp/issues]()
