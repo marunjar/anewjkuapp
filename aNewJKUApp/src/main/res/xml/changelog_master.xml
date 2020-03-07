@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
-    <release version="0.53.0" versioncode="140079">
+    <release version="0.53.1" versioncode="140080">
         <change>neues Design</change>
         <change>bessere Unterstützung für automatischen Wechsel zwischen dunklem und hellem Theme</change>
         <change>kleine Korrektur für Benachrichtigungen</change>
