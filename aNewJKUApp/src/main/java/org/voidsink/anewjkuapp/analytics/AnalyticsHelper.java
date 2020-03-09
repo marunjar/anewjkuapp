@@ -34,6 +34,7 @@ import org.jsoup.HttpStatusException;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import java.net.NoRouteToHostException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,7 +68,7 @@ public class AnalyticsHelper {
 
         boolean fatal = assumeFatal;
         boolean send = true;
-        if (e instanceof UnknownHostException || e instanceof NoRouteToHostException) {
+        if (e instanceof UnknownHostException || e instanceof NoRouteToHostException || e instanceof SocketTimeoutException) {
             fatal = false;
             send = AppUtils.isNetworkAvailable(context, true);
         } else if (e instanceof HttpStatusException) {
