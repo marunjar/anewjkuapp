@@ -33,6 +33,7 @@ import android.content.Context;
 import org.jsoup.HttpStatusException;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
+import java.net.ConnectException;
 import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -68,7 +69,7 @@ public class AnalyticsHelper {
 
         boolean fatal = assumeFatal;
         boolean send = true;
-        if (e instanceof UnknownHostException || e instanceof NoRouteToHostException || e instanceof SocketTimeoutException) {
+        if (e instanceof UnknownHostException || e instanceof NoRouteToHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
             fatal = false;
             send = AppUtils.isNetworkAvailable(context, true);
         } else if (e instanceof HttpStatusException) {
