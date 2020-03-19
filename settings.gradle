@@ -1,2 +1,2 @@
-include ':sectionedRecyclerAdapter', ':android-week-view'
+include ':sectionedRecyclerAdapter', ':android-week-view', ':ckChangeLog'
 include ':aNewJKUApp'
