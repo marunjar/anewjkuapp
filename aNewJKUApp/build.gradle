@@ -110,7 +110,7 @@ dependencies {
     implementation "androidx.cardview:cardview:1.0.0"
     implementation 'androidx.work:work-runtime:2.3.4'
     googleImplementation 'androidx.work:work-gcm:2.3.4'
-    googleImplementation 'com.google.firebase:firebase-analytics:17.2.3'
+    googleImplementation 'com.google.firebase:firebase-analytics:17.3.0'
     googleImplementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
@@ -122,13 +122,13 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'org.mnode.ical4j:ical4j:3.0.15'
     implementation 'com.sun.mail:javax.mail:1.6.2'
-    implementation 'org.apache.commons:commons-lang3:3.9'
+    implementation 'org.apache.commons:commons-lang3:3.10'
     implementation 'org.slf4j:slf4j-android:1.7.30'
     implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
     implementation "androidx.recyclerview:recyclerview:1.1.0"
     implementation "androidx.loader:loader:1.1.0"
     implementation "androidx.activity:activity:1.1.0"
-    implementation 'androidx.fragment:fragment:1.2.3'
+    implementation 'androidx.fragment:fragment:1.2.4'
     implementation project(':ckChangeLog')
     implementation project(':sectionedRecyclerAdapter')
     implementation project(':android-week-view')
