@@ -65,7 +65,7 @@ public class AnalyticsHelper {
 
     @SuppressLint("DefaultLocale")
     public static void sendException(Context context, Exception e, boolean assumeFatal, String... additionalData) {
-        List<String> additionalDataList = additionalData == null ? new ArrayList<>() : Arrays.asList(additionalData);
+        List<String> additionalDataList = additionalData == null ? new ArrayList<>() : new ArrayList<>(Arrays.asList(additionalData));
 
         boolean fatal = assumeFatal;
         boolean send = true;
