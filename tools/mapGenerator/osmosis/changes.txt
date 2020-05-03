@@ -1,3 +1,17 @@
+0.47.4 (2020-04-07)
+Refactored with BaseXMLReader and WorkingTaskManagerFactory classes (#60)
+
+0.47.3 (2020-03-24)
+Updated protobuf package to 3.11.4 (#58)
+Replaced custom MultiMemberGZIPInputStream with java.util.zip.GZIPInputStream (#59)
+
+0.47.2 (2020-03-10)
+Removed explicit dependency on xerces in favor of JDK version (PR #51)
+Added $gnupgUserDir to Docker setup (PR #56)
+
+0.47.1 (2020-03-08)
+Update APIDB schema to remove users.nearby column (PR #54)
+
 0.47
 Build using Java 11 now that Java has moved to a 6 month release cycle with no (free) long term support.
 Use https for all replication URLs.
