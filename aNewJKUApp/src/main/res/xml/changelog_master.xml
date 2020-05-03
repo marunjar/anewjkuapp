@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
-    <release version="0.53.1" versioncode="140080">
+    <release version="0.53.2" versioncode="140081">
         <change>neues Design</change>
         <change>bessere Unterstützung für automatischen Wechsel zwischen dunklem und hellem Theme</change>
         <change>kleine Korrektur für Benachrichtigungen</change>
@@ -14,7 +14,7 @@
         <change>Menü von KHG Mensa funktioniert wieder</change>
         <change>viele Korrekturen und Optimierungen</change>
     </release>
-    <release version="0.51.9" versioncode="140072">
+    <release version="0.51.9" versioncode="140072">Teichwer
         <change>viele Korrekturen und Optimierungen</change>
         <change>neue Karte von OpenStreetMap</change>
     </release>
