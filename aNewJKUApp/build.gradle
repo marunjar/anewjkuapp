@@ -6,6 +6,13 @@ if (getGradle().getStartParameter().getTaskRequests().toString().contains("Googl
     logger.warn('io.fabric not applied')
 }
 android {
+    dependenciesInfo {
+        // Disables dependency metadata when building APKs.
+        includeInApk = false
+        // Disables dependency metadata when building Android App Bundles.
+        includeInBundle = false
+    }
+
     signingConfigs {
     }
 
@@ -33,11 +40,6 @@ android {
                 'proguard-rules-streamsupport.pro'
 
         buildConfigField "boolean", "FOSS_ONLY", "false"
-
-//        resValue "string", "config_kusss_provider", applicationId + applicationIdSuffix + '.provider'
-//        resValue "string", "config_kusss_account_type", applicationId + applicationIdSuffix + '.account'
-//        resValue "string", "config_poi_provider", applicationId + applicationIdSuffix + '.provider.poi'
-//        resValue "string", "config_poi_content_uri", "content://" + applicationId + applicationIdSuffix + ".provider.poi/poi"
 
         return void // fix lint warning "Not all execution paths return a value"
     }
@@ -83,12 +85,8 @@ android {
     }
 
     packagingOptions {
-        //exclude 'META-INF/DEPENDENCIES'
-        //exclude 'META-INF/NOTICE'
-        //exclude 'META-INF/LICENSE'
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
-        //exclude 'META-INF/ASL2.0'
 
         return void // fix lint warning "Not all execution paths return a value"
     }
