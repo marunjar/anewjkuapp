@@ -33,12 +33,12 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.security.ProviderInstaller;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,13 +47,12 @@ import org.voidsink.anewjkuapp.PreferenceHelper;
 
 import java.util.List;
 
-import io.fabric.sdk.android.Fabric;
-
 public class AnalyticsFlavor implements IAnalytics {
 
     private static final Logger logger = LoggerFactory.getLogger(AnalyticsFlavor.class);
 
     private FirebaseAnalytics mAnalytics = null;
+    private FirebaseCrashlytics mCrashlytics = null;
 
     private Application mApp = null;
     private PlayServiceStatus mPlayServiceStatus = PlayServiceStatus.PS_NOT_AVAILABLE;
@@ -79,6 +78,8 @@ public class AnalyticsFlavor implements IAnalytics {
                 mAnalytics.resetAnalyticsData();
             }
 
+            mCrashlytics = FirebaseCrashlytics.getInstance();
+
             setEnabled(PreferenceHelper.trackingErrors(mApp));
         }
     }
@@ -86,16 +87,16 @@ public class AnalyticsFlavor implements IAnalytics {
     @Override
     public void sendException(Context c, Exception e, boolean fatal, List<String> additionalData) {
         try {
-            if (e != null) {
-                Crashlytics.setBool("fatal", fatal);
+            if (mCrashlytics != null && e != null) {
+                mCrashlytics.setCustomKey("fatal", fatal);
                 if (additionalData != null) {
                     for (String value : additionalData) {
                         if (!TextUtils.isEmpty(value)) {
-                            Crashlytics.log(value.substring(0, Math.min(value.length(), 4096)));
+                            mCrashlytics.log(value.substring(0, Math.min(value.length(), 4096)));
                         }
                     }
                 }
-                Crashlytics.logException(e);
+                mCrashlytics.recordException(e);
             }
         } catch (Exception e2) {
             logger.error("sendException", e2);
@@ -148,12 +149,8 @@ public class AnalyticsFlavor implements IAnalytics {
                 mAnalytics.setAnalyticsCollectionEnabled(enabled);
             }
 
-            if (enabled) {
-                final Fabric fabric = new Fabric.Builder(mApp)
-                        .kits(new Crashlytics())
-                        .debuggable(BuildConfig.DEBUG)
-                        .build();
-                Fabric.with(fabric);
+            if (mCrashlytics != null) {
+                mCrashlytics.setCrashlyticsCollectionEnabled(enabled);
             }
         }
     }
