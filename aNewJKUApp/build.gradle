@@ -49,7 +49,7 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-            shrinkResources false
+            shrinkResources true
             debuggable false
 
             applicationIdSuffix ""
@@ -59,7 +59,7 @@ android {
         }
         debug {
             minifyEnabled true
-            shrinkResources false
+            shrinkResources true
             debuggable true
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
