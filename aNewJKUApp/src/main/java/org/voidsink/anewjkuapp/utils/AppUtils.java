@@ -1005,7 +1005,7 @@ public class AppUtils {
         return extras.getBoolean(ContentResolver.SYNC_EXTRAS_DO_NOT_RETRY, false) || extras.getBoolean(ContentResolver.SYNC_EXTRAS_IGNORE_BACKOFF, false);
     }
 
-    public static boolean isNetworkAvailable(Context context, boolean defaultValue) {
+    public static boolean isConnected(Context context, boolean defaultValue) {
         try {
             ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();

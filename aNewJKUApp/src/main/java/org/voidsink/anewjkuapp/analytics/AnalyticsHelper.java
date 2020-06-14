@@ -71,13 +71,13 @@ public class AnalyticsHelper {
         boolean send = true;
         if (e instanceof UnknownHostException || e instanceof NoRouteToHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
             fatal = false;
-            send = AppUtils.isNetworkAvailable(context, true);
+            send = AppUtils.isConnected(context, true);
         } else if (e instanceof HttpStatusException) {
             additionalDataList.add(String.format("%d: %s", ((HttpStatusException) e).getStatusCode(), ((HttpStatusException) e).getUrl()));
-            send = (((HttpStatusException) e).getStatusCode() != 503) && AppUtils.isNetworkAvailable(context, true);
+            send = (((HttpStatusException) e).getStatusCode() != 503) && AppUtils.isConnected(context, true);
         } else if (e instanceof SSLException) {
             additionalDataList.add(getAnalytics().getPsStatus().toString());
-            send = AppUtils.isNetworkAvailable(context, true);
+            send = AppUtils.isConnected(context, true);
         }
         if (send) {
             getAnalytics().sendException(context, e, fatal, additionalDataList);

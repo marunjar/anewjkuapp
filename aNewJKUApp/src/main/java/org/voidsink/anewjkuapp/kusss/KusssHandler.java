@@ -124,8 +124,8 @@ public class KusssHandler {
         setUserAgent(userAgent);
     }
 
-    private static boolean isNetworkAvailable(Context context) {
-        return AppUtils.isNetworkAvailable(context, false);
+    private static boolean isConnected(Context context) {
+        return AppUtils.isConnected(context, false);
     }
 
     public static synchronized KusssHandler getInstance() {
@@ -162,7 +162,7 @@ public class KusssHandler {
      * @param response response of a Jsoup connetion.execute()
      * @return Document the parsed html
      */
-    private Document parseWorkaround(Connection.Response response) {
+    private Document parseResponse(Connection.Response response) {
         String body = response.body();
         return Jsoup.parse(body);
     }
@@ -176,9 +176,9 @@ public class KusssHandler {
      * @return Document the parsed html
      * @throws IOException of connection.execute()
      */
-    private Document getWorkaround(Connection connection) throws IOException {
+    private Document getDocument(Connection connection) throws IOException {
         Connection.Response response = connection.method(GET).execute();
-        return parseWorkaround(response);
+        return parseResponse(response);
     }
 
     /**
@@ -190,16 +190,16 @@ public class KusssHandler {
      * @return Document the parsed html
      * @throws IOException of connection.execute()
      */
-    private Document postWorkaround(Connection connection) throws IOException {
+    private Document postAndGetDocument(Connection connection) throws IOException {
         Connection.Response response = connection.method(POST).execute();
-        return parseWorkaround(response);
+        return parseResponse(response);
     }
 
     public synchronized String login(Context c, String user, String password) {
         if (TextUtils.isEmpty(user) || TextUtils.isEmpty(password)) {
             return null;
         }
-        if (!isNetworkAvailable(c)) {
+        if (!isConnected(c)) {
             return null;
         }
 
@@ -211,7 +211,7 @@ public class KusssHandler {
 
             mCookies.getCookieStore().removeAll();
 
-            getWorkaround(Jsoup.connect(URL_KUSSS_INDEX).userAgent(getUserAgent()).timeout(TIMEOUT_LOGIN).followRedirects(true));
+            getDocument(Jsoup.connect(URL_KUSSS_INDEX).userAgent(getUserAgent()).timeout(TIMEOUT_LOGIN).followRedirects(true));
 
             Connection.Response r = Jsoup.connect(URL_LOGIN).userAgent(getUserAgent()).cookies(getCookieMap()).data("j_username", user).data("j_password", password).timeout(TIMEOUT_LOGIN).followRedirects(true).method(POST).execute();
 
@@ -219,7 +219,7 @@ public class KusssHandler {
                 r = Jsoup.connect(r.url().toString()).userAgent(getUserAgent()).cookies(getCookieMap()).method(GET).execute();
             }
 
-            Document doc = parseWorkaround(r);
+            Document doc = parseResponse(r);
 
             String sessionId = getSessionIDFromCookie();
             if (isLoggedIn(c, doc)) {
@@ -252,7 +252,7 @@ public class KusssHandler {
 
     public synchronized void logout(Context c) {
         try {
-            if (isNetworkAvailable(c)) {
+            if (isConnected(c)) {
                 Jsoup.connect(URL_LOGOUT).userAgent(getUserAgent()).cookies(getCookieMap()).method(GET).execute();
             }
         } catch (Exception e) {
@@ -266,11 +266,11 @@ public class KusssHandler {
         if (TextUtils.isEmpty(sessionId)) {
             return false;
         }
-        if (!isNetworkAvailable(c)) {
+        if (!isConnected(c)) {
             return false;
         }
         try {
-            Document doc = getWorkaround(Jsoup.connect(URL_KUSSS_INDEX).userAgent(getUserAgent()).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true));
+            Document doc = getDocument(Jsoup.connect(URL_KUSSS_INDEX).userAgent(getUserAgent()).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true));
 
             return isLoggedIn(c, doc);
         } catch (SocketTimeoutException e) {
@@ -283,7 +283,7 @@ public class KusssHandler {
     }
 
     private boolean isLoggedIn(Context c, Document doc) {
-        if (!isNetworkAvailable(c)) {
+        if (!isConnected(c)) {
             return false;
         }
 
@@ -294,7 +294,7 @@ public class KusssHandler {
 
     public synchronized boolean isAvailable(Context c, String sessionId,
                                             String user, String password) {
-        return isNetworkAvailable(c) && (isLoggedIn(c, sessionId) || login(c, user, password) != null);
+        return isConnected(c) && (isLoggedIn(c, sessionId) || login(c, user, password) != null);
     }
 
     private String getUidPrefix(String calendarName) {
@@ -342,7 +342,7 @@ public class KusssHandler {
             if (!selectTerm(c, term)) {
                 return null;
             }
-            Document doc = getWorkaround(Jsoup.connect(URL_GET_ICAL_FORM).userAgent(getUserAgent()).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true));
+            Document doc = getDocument(Jsoup.connect(URL_GET_ICAL_FORM).userAgent(getUserAgent()).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true));
             if (!isSelectable(c, doc, term)) {
                 return null;
             }
@@ -441,7 +441,7 @@ public class KusssHandler {
 
         Map<String, String> terms = new HashMap<>();
         try {
-            Document doc = getWorkaround(Jsoup.connect(URL_GET_TERMS).userAgent(getUserAgent()).cookies(getCookieMap()));
+            Document doc = getDocument(Jsoup.connect(URL_GET_TERMS).userAgent(getUserAgent()).cookies(getCookieMap()));
             Element termDropdown = doc.getElementById("term");
             if (termDropdown != null) {
                 Elements termDropdownEntries = termDropdown
@@ -463,7 +463,7 @@ public class KusssHandler {
         if (!isLoggedIn(c, getSessionIDFromCookie())) {
             return false;
         }
-        postWorkaround(
+        postAndGetDocument(
                 Jsoup.connect(URL_SELECT_TERM)
                         .userAgent(getUserAgent())
                         .cookies(getCookieMap())
@@ -494,7 +494,7 @@ public class KusssHandler {
             for (Term term : terms) {
                 term.setLoaded(false); // init loaded flag
                 if (selectTerm(c, term)) {
-                    Document doc = getWorkaround(Jsoup.connect(URL_MY_LVAS).userAgent(getUserAgent()).cookies(getCookieMap()));
+                    Document doc = getDocument(Jsoup.connect(URL_MY_LVAS).userAgent(getUserAgent()).cookies(getCookieMap()));
 
                     if (isSelectable(c, doc, term)) {
                         if (isSelected(c, doc, term)) {
@@ -558,12 +558,12 @@ public class KusssHandler {
     }
 
     public List<Assessment> getAssessments(Context c) {
-        if (!isNetworkAvailable(c)) {
+        if (!isConnected(c)) {
             return null;
         }
         List<Assessment> grades = new ArrayList<>();
         try {
-            Document doc = getWorkaround(Jsoup.connect(URL_MY_GRADES).userAgent(getUserAgent()).cookies(getCookieMap()).data("months", "0"));
+            Document doc = getDocument(Jsoup.connect(URL_MY_GRADES).userAgent(getUserAgent()).cookies(getCookieMap()).data("months", "0"));
 
             if (isLoggedIn(c, doc)) {
                 Elements rows = doc.select(SELECT_MY_GRADES);
@@ -595,12 +595,12 @@ public class KusssHandler {
     }
 
     public List<Exam> getNewExams(Context c) {
-        if (!isNetworkAvailable(c)) {
+        if (!isConnected(c)) {
             return null;
         }
         List<Exam> exams = new ArrayList<>();
         try {
-            Document doc = getWorkaround(
+            Document doc = getDocument(
                     Jsoup.connect(URL_GET_NEW_EXAMS)
                             .userAgent(getUserAgent())
                             .cookies(getCookieMap())
@@ -696,7 +696,7 @@ public class KusssHandler {
     }
 
     private List<Exam> getNewExamsByCourseId(Context c, String courseId) {
-        if (!isNetworkAvailable(c)) {
+        if (!isConnected(c)) {
             return null;
         }
 
@@ -705,7 +705,7 @@ public class KusssHandler {
             final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 
             logger.debug("getNewExamsByCourseId: {}", courseId);
-            Document doc = postWorkaround(Jsoup
+            Document doc = postAndGetDocument(Jsoup
                     .connect(URL_GET_NEW_EXAMS)
                     .userAgent(getUserAgent())
                     .cookies(getCookieMap())
@@ -751,13 +751,13 @@ public class KusssHandler {
     }
 
     private void loadExams(Context c, List<Exam> exams) throws IOException {
-        if (!isNetworkAvailable(c)) {
+        if (!isConnected(c)) {
             return;
         }
 
         logger.debug("loadExams");
 
-        Document doc = getWorkaround(Jsoup.connect(URL_GET_EXAMS).userAgent(getUserAgent()).cookies(getCookieMap()));
+        Document doc = getDocument(Jsoup.connect(URL_GET_EXAMS).userAgent(getUserAgent()).cookies(getCookieMap()));
 
         if (isLoggedIn(c, doc)) {
             Elements rows = doc.select(SELECT_EXAMS);
@@ -781,13 +781,13 @@ public class KusssHandler {
     }
 
     public List<Curriculum> getCurricula(Context c) {
-        if (!isNetworkAvailable(c)) {
+        if (!isConnected(c)) {
             return null;
         }
         try {
             List<Curriculum> mCurricula = new ArrayList<>();
 
-            Document doc = getWorkaround(Jsoup.connect(URL_MY_STUDIES).userAgent(getUserAgent()).cookies(getCookieMap()));
+            Document doc = getDocument(Jsoup.connect(URL_MY_STUDIES).userAgent(getUserAgent()).cookies(getCookieMap()));
 
             if (isLoggedIn(c, doc)) {
                 Elements rows = doc.select(SELECT_MY_STUDIES);
