@@ -45,7 +45,7 @@ public class SectionedRecyclerViewAdapter extends SectionedRecyclerViewBaseAdapt
         if (mBaseAdapter instanceof SectionedAdapter) {
             long sectionId;
             long lastSectionId = 0;
-            SectionedAdapter mDelegate = (SectionedAdapter) mBaseAdapter;
+            SectionedAdapter<?> mDelegate = (SectionedAdapter<?>) mBaseAdapter;
             for (int i = 0; i < mDelegate.getItemCount(); i++) {
                 sectionId = mDelegate.getHeaderId(i);
                 if (sectionId != lastSectionId) {
@@ -60,7 +60,7 @@ public class SectionedRecyclerViewAdapter extends SectionedRecyclerViewBaseAdapt
 
     @Override
     protected RecyclerView.ViewHolder onCreateHeaderViewHolder(ViewGroup parent) {
-        return ((SectionedAdapter) mBaseAdapter).onCreateHeaderViewHolder(parent);
+        return ((SectionedAdapter<?>) mBaseAdapter).onCreateHeaderViewHolder(parent);
     }
 
     @Override
