@@ -108,8 +108,8 @@ dependencies {
     implementation 'androidx.preference:preference:1.1.1'
     implementation "com.google.android.material:material:1.1.0"
     implementation "androidx.cardview:cardview:1.0.0"
-    implementation 'androidx.work:work-runtime:2.3.4'
-    googleImplementation 'androidx.work:work-gcm:2.3.4'
+    implementation 'androidx.work:work-runtime:2.4.0'
+    googleImplementation 'androidx.work:work-gcm:2.4.0'
     googleImplementation 'com.google.firebase:firebase-analytics:17.4.4'
     googleImplementation 'com.google.firebase:firebase-crashlytics:17.1.1'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
