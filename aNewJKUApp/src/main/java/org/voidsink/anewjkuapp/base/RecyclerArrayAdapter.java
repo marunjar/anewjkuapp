@@ -38,7 +38,7 @@ public abstract class RecyclerArrayAdapter<T, VH extends RecyclerView.ViewHolder
     private final ArrayList<T> items = new ArrayList<>();
     private final Context mContext;
 
-    public RecyclerArrayAdapter(Context context) {
+    protected RecyclerArrayAdapter(Context context) {
         super();
         this.mContext = context;
         setHasStableIds(true);

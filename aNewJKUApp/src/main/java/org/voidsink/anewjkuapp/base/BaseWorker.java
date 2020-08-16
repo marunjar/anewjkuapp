@@ -42,7 +42,7 @@ public abstract class BaseWorker extends Worker {
 
     private SyncNotification mSyncNotification = null;
 
-    public BaseWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+    protected BaseWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
 

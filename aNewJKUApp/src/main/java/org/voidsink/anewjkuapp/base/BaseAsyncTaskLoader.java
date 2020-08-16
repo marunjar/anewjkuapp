@@ -39,7 +39,7 @@ import androidx.loader.content.AsyncTaskLoader;
 public abstract class BaseAsyncTaskLoader<D> extends AsyncTaskLoader<D> {
     private D mData;
 
-    public BaseAsyncTaskLoader(Context context) {
+    protected BaseAsyncTaskLoader(Context context) {
         super(context);
     }
 
