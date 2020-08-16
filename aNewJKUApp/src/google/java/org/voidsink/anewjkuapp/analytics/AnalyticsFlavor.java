@@ -33,7 +33,6 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.security.ProviderInstaller;
@@ -67,8 +66,6 @@ public class AnalyticsFlavor implements IAnalytics {
                 mPlayServiceStatus = PlayServiceStatus.PS_INSTALLED;
             } catch (GooglePlayServicesRepairableException e) {
                 mPlayServiceStatus = PlayServiceStatus.PS_REPAIRABLE;
-                // Prompt the user to install/update/enable Google Play services.
-                GoogleApiAvailability.getInstance().showErrorNotification(mApp, e.getConnectionStatusCode());
             } catch (GooglePlayServicesNotAvailableException e) {
                 mPlayServiceStatus = PlayServiceStatus.PS_NOT_AVAILABLE;
             }
@@ -109,7 +106,12 @@ public class AnalyticsFlavor implements IAnalytics {
     @Override
     public void sendScreen(Activity activity, String screenName) {
         if (mAnalytics != null && activity != null) {
-            mAnalytics.setCurrentScreen(activity, TextUtils.isEmpty(screenName) ? null : screenName.substring(0, Math.min(screenName.length(), 36)), null);
+            Bundle params = new Bundle();
+
+            params.putString(FirebaseAnalytics.Param.SCREEN_NAME, TextUtils.isEmpty(screenName) ? null : screenName.substring(0, Math.min(screenName.length(), 36)));
+
+            mAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, params);
+
         }
         logger.debug("screen: {}", screenName);
     }
@@ -117,12 +119,12 @@ public class AnalyticsFlavor implements IAnalytics {
     @Override
     public void sendButtonEvent(String label) {
         if (mAnalytics != null && !TextUtils.isEmpty(label)) {
-            Bundle bundle = new Bundle();
+            Bundle params = new Bundle();
 
-            bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, "button");
-            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, label);
+            params.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, "button");
+            params.putString(FirebaseAnalytics.Param.ITEM_NAME, label);
 
-            mAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+            mAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, params);
         }
         logger.debug("buttonEvent: {}", label);
     }
@@ -130,13 +132,13 @@ public class AnalyticsFlavor implements IAnalytics {
     @Override
     public void sendPreferenceChanged(String key, String value) {
         if (mAnalytics != null && !TextUtils.isEmpty(key) && !TextUtils.isEmpty(value)) {
-            Bundle bundle = new Bundle();
+            Bundle params = new Bundle();
 
-            bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, "preference");
-            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, key);
-            bundle.putString(FirebaseAnalytics.Param.VALUE, value);
+            params.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, "preference");
+            params.putString(FirebaseAnalytics.Param.ITEM_NAME, key);
+            params.putString(FirebaseAnalytics.Param.VALUE, value);
 
-            mAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+            mAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, params);
         }
         logger.debug("preferenceChanged: {}={}", key, value);
     }
