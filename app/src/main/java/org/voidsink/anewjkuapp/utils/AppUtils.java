@@ -136,7 +136,7 @@ public class AppUtils {
                 if (!initPreferences(context)) {
                     errorOccured = true;
                 }
-                if (!copyDefaultMap(context)) {
+                if (!copyDefaultMaps(context)) {
                     errorOccured = true;
                 }
                 if (!importDefaultPois(context)) {
@@ -255,28 +255,30 @@ public class AppUtils {
         return true;
     }
 
-    private static boolean copyDefaultMap(Context context) {
-        try {
-            // write file to sd for mapsforge
-            OutputStream mapFileWriter = new BufferedOutputStream(
-                    context.openFileOutput(MapFragment.MAP_FILE_NAME,
-                            Context.MODE_PRIVATE));
-            InputStream assetData = new BufferedInputStream(context.getAssets()
-                    .open(MapFragment.MAP_FILE_NAME));
+    private static boolean copyDefaultMaps(Context context) {
+        for (String mapFileName : MapFragment.MAPS) {
+            try {
+                // write file to sd for mapsforge
+                OutputStream mapFileWriter = new BufferedOutputStream(
+                        context.openFileOutput(mapFileName,
+                                Context.MODE_PRIVATE));
+                InputStream assetData = new BufferedInputStream(context.getAssets()
+                        .open(mapFileName));
 
-            byte[] buffer = new byte[1024];
-            int len = assetData.read(buffer);
-            while (len != -1) {
-                mapFileWriter.write(buffer, 0, len);
-                len = assetData.read(buffer);
+                byte[] buffer = new byte[1024];
+                int len = assetData.read(buffer);
+                while (len != -1) {
+                    mapFileWriter.write(buffer, 0, len);
+                    len = assetData.read(buffer);
+                }
+                mapFileWriter.close();
+            } catch (FileNotFoundException e) {
+                logger.error("copyDefaultMap", e);
+                return false;
+            } catch (IOException e) {
+                logger.error("copyDefaultMap", e);
+                return false;
             }
-            mapFileWriter.close();
-        } catch (FileNotFoundException e) {
-            logger.error("copyDefaultMap", e);
-            return false;
-        } catch (IOException e) {
-            logger.error("copyDefaultMap", e);
-            return false;
         }
         return true;
     }

@@ -31,11 +31,14 @@ import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -62,6 +65,7 @@ import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.mapsforge.map.android.util.AndroidUtil;
 import org.mapsforge.map.android.view.MapView;
 import org.mapsforge.map.datastore.MapDataStore;
+import org.mapsforge.map.datastore.MultiMapDataStore;
 import org.mapsforge.map.layer.Layers;
 import org.mapsforge.map.layer.cache.TileCache;
 import org.mapsforge.map.layer.labels.LabelLayer;
@@ -71,6 +75,7 @@ import org.mapsforge.map.model.IMapViewPosition;
 import org.mapsforge.map.reader.MapFile;
 import org.mapsforge.map.rendertheme.InternalRenderTheme;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
+import org.mapsforge.map.view.InputListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.LocationOverlay;
@@ -101,7 +106,17 @@ public class MapFragment extends BaseFragment implements
 
     private static final Logger logger = LoggerFactory.getLogger(MapFragment.class);
 
-    public static final String MAP_FILE_NAME = "campus.map";
+    private static final String LINZ_MAP = "linz.map";
+    private static final String CAMPUS_MAP = "campus.map";
+    private static final String MED_CAMPUS_MAP = "medcampus.map";
+    private static final String LIFE_SCIENCE_CAMPUS_MAP = "lifesciencecampus.map";
+    private static final String SOFTWAREPARK_HAGENBERG_MAP = "softwareparkhagenberg.map";
+    private static final String PETRIUM_MAP = "petrinum.map";
+
+    public static final String[] MAPS = {
+            LINZ_MAP, MED_CAMPUS_MAP, LIFE_SCIENCE_CAMPUS_MAP, SOFTWAREPARK_HAGENBERG_MAP, PETRIUM_MAP, CAMPUS_MAP
+    };
+
     private static final byte MAX_ZOOM_LEVEL = 19;
     private static final byte MIN_ZOOM_LEVEL = 14; // full campus fits to screen at zoom level 15
     private static final byte DEFAULT_ZOOM_LEVEL = 17;
@@ -133,7 +148,7 @@ public class MapFragment extends BaseFragment implements
         super.onPause();
     }
 
-    static class MyMarker {
+    private static class MyMarker {
         private final LatLong mLatLon;
         private final String mName;
 
@@ -268,7 +283,7 @@ public class MapFragment extends BaseFragment implements
         if (goalLocationOverlay != null) {
             if (marker != null) {
                 this.goalLocation = marker;
-                if (!marker.getName().isEmpty()) {
+                if (!TextUtils.isEmpty(marker.getName())) {
                     // generate Bubble image
                     TextView bubbleView = new TextView(this.getContext());
                     bubbleView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.balloon_overlay));
@@ -286,8 +301,16 @@ public class MapFragment extends BaseFragment implements
                     this.goalLocationOverlay.setHorizontalOffset(0);
                     this.goalLocationOverlay.setVerticalOffset(-bubble.getHeight() / 2);
                 } else {
-                    Drawable d = ContextCompat.getDrawable(getContext(), R.drawable.ic_marker_goal_position);
-                    Bitmap b = AndroidGraphicFactory.convertToBitmap(d);
+                    Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_marker_position);
+
+                    // get accent color from theme
+                    TypedArray themeArray = getContext().getTheme().obtainStyledAttributes(new int[]{R.attr.color});
+                    int mColorAccent = themeArray.getColor(0, ContextCompat.getColor(getContext(), R.color.default_primary));
+                    themeArray.recycle();
+
+                    drawable.setColorFilter(mColorAccent, PorterDuff.Mode.MULTIPLY);
+
+                    Bitmap b = AndroidGraphicFactory.convertToBitmap(drawable);
 
                     // set new goal
                     this.goalLocationOverlay.setLatLong(marker.getLatLon());
@@ -301,34 +324,38 @@ public class MapFragment extends BaseFragment implements
 
                     if (this.mMyLocationOverlay.getLastLocation() != null) {
 
-                        LatLong mLocation = LocationOverlay
+                        LatLong lastLocation = LocationOverlay
                                 .locationToLatLong(this.mMyLocationOverlay
                                         .getLastLocation());
 
-                        // lat long difference for bounding box
-                        double mDLat = Math.abs((mLocation.latitude - marker.getLatLon().latitude));
-                        double mDLong = Math.abs((mLocation.longitude - marker.getLatLon().longitude));
+                        if (this.mapView.getBoundingBox().contains(lastLocation)) {
+                            // lat long difference for bounding box
+                            double mDLat = Math.abs((lastLocation.latitude - marker.getLatLon().latitude));
+                            double mDLong = Math.abs((lastLocation.longitude - marker.getLatLon().longitude));
 
-                        // trunc distance
-                        double distance = mLocation.distance(marker.getLatLon());
-                        if (distance > 0.0088) {
-                            mDLat = (mDLat * 0.0088 / distance);
-                            mDLong = (mDLong * 0.0088 / distance);
+                            // trunc distance
+                            double distance = lastLocation.distance(marker.getLatLon());
+                            if (distance > 0.0088) {
+                                mDLat = (mDLat * 0.0088 / distance);
+                                mDLong = (mDLong * 0.0088 / distance);
+                            }
+
+                            // zoom to bounds
+                            BoundingBox bb = new BoundingBox(
+                                    Math.max(MercatorProjection.LATITUDE_MIN, marker.getLatLon().latitude - mDLat),
+                                    Math.max(-180, marker.getLatLon().longitude - mDLong),
+                                    Math.min(MercatorProjection.LATITUDE_MAX, marker.getLatLon().latitude + mDLat),
+                                    Math.min(180, marker.getLatLon().longitude + mDLong));
+                            Dimension dimension = this.mapView.getModel().mapViewDimension
+                                    .getDimension();
+                            // zoom to bounding box, center at goalPosition
+                            this.mapView.getModel().mapViewPosition
+                                    .setMapPosition(new MapPosition(marker.getLatLon(), LatLongUtils
+                                            .zoomForBounds(dimension, bb, this.mapView
+                                                    .getModel().displayModel.getTileSize())));
+                        } else {
+                            this.mapView.setCenter(marker.getLatLon());
                         }
-
-                        // zoom to bounds
-                        BoundingBox bb = new BoundingBox(
-                                Math.max(MercatorProjection.LATITUDE_MIN, marker.getLatLon().latitude - mDLat),
-                                Math.max(-180, marker.getLatLon().longitude - mDLong),
-                                Math.min(MercatorProjection.LATITUDE_MAX, marker.getLatLon().latitude + mDLat),
-                                Math.min(180, marker.getLatLon().longitude + mDLong));
-                        Dimension dimension = this.mapView.getModel().mapViewDimension
-                                .getDimension();
-                        // zoom to bounding box, center at goalPosition
-                        this.mapView.getModel().mapViewPosition
-                                .setMapPosition(new MapPosition(marker.getLatLon(), LatLongUtils
-                                        .zoomForBounds(dimension, bb, this.mapView
-                                                .getModel().displayModel.getTileSize())));
                     } else {
                         this.mapView.setCenter(marker.getLatLon());
                     }
@@ -353,8 +380,8 @@ public class MapFragment extends BaseFragment implements
         switch (item.getItemId()) {
             case R.id.action_snap_to_location:
                 if (mMyLocationOverlay != null) {
-                    item.setChecked(!item.isChecked());
-                    this.mMyLocationOverlay.setSnapToLocationEnabled(item.isChecked());
+                    this.mMyLocationOverlay.setSnapToLocationEnabled(!item.isChecked());
+                    item.setChecked(this.mMyLocationOverlay.isSnapToLocationEnabled());
                 } else {
                     item.setChecked(false);
                 }
@@ -410,6 +437,18 @@ public class MapFragment extends BaseFragment implements
         this.mapView.getMapZoomControls().setZoomOutResource(R.drawable.zoom_control_out);
         this.mapView.getMapZoomControls().setMarginHorizontal(getContext().getResources().getDimensionPixelSize(R.dimen.map_zoom_control_margin_horizontal));
         this.mapView.getMapZoomControls().setMarginVertical(getContext().getResources().getDimensionPixelSize(R.dimen.map_zoom_control_margin_vertical));
+        this.mapView.addInputListener(new InputListener() {
+            @Override
+            public void onMoveEvent() {
+                if (mMyLocationOverlay != null) {
+                    mMyLocationOverlay.setSnapToLocationEnabled(false);
+                }
+            }
+
+            @Override
+            public void onZoomEvent() {
+            }
+        });
 
 
         return rootView;
@@ -448,7 +487,7 @@ public class MapFragment extends BaseFragment implements
             initializePosition(mapViewPosition);
 
             TileRendererLayer tileRendererLayer = createTileRendererLayer(tileCache, mapViewPosition,
-                    getMapFile(), getRenderTheme());
+                    getMapDataStore(), getRenderTheme());
             layers.add(tileRendererLayer);
 
             LabelLayer labelLayer = new LabelLayer(AndroidGraphicFactory.INSTANCE, tileRendererLayer.getLabelStore());
@@ -476,8 +515,15 @@ public class MapFragment extends BaseFragment implements
             final IMapViewPosition mapViewPosition = this.mapView.getModel().mapViewPosition;
 
             // overlay with a marker to show the actual position
-            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_marker_own_position);
+            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_marker_position);
             if (drawable != null) {
+                // get accent color from theme
+                TypedArray themeArray = getContext().getTheme().obtainStyledAttributes(new int[]{R.attr.colorAccent});
+                int mColorAccent = themeArray.getColor(0, ContextCompat.getColor(getContext(), R.color.default_secondary));
+                themeArray.recycle();
+
+                drawable.setColorFilter(mColorAccent, PorterDuff.Mode.MULTIPLY);
+
                 Bitmap bitmap = AndroidGraphicFactory.convertToBitmap(drawable);
 
                 this.mMyLocationOverlay = new LocationOverlay(getActivity(), mapViewPosition, bitmap);
@@ -521,10 +567,8 @@ public class MapFragment extends BaseFragment implements
     }
 
     private TileRendererLayer createTileRendererLayer(TileCache tileCache,
-                                                      IMapViewPosition mapViewPosition, File mapFile,
+                                                      IMapViewPosition mapViewPosition, MapDataStore mapDataStore,
                                                       XmlRenderTheme renderTheme) {
-        MapDataStore mapDataStore = new MapFile(mapFile);
-
         TileRendererLayer tileRendererLayer = AndroidUtil.createTileRendererLayer(tileCache,
                 mapViewPosition, mapDataStore, renderTheme, false, false, true);
         tileRendererLayer.setTextScale(1.5f);
@@ -542,8 +586,7 @@ public class MapFragment extends BaseFragment implements
     }
 
     private MapPosition getInitialPosition() {
-        File mapFile = getMapFile();
-        MapDataStore mapDataStore = new MapFile(mapFile);
+        MapDataStore mapDataStore = getMapDataStore();
 
         final LatLong uniteich = new LatLong(48.33706, 14.31960);
         final byte zoomLevel = (byte) Math.max(Math.min(DEFAULT_ZOOM_LEVEL /*mapDataStore.startZoomLevel()*/, MAX_ZOOM_LEVEL), MIN_ZOOM_LEVEL);
@@ -563,15 +606,30 @@ public class MapFragment extends BaseFragment implements
         }
     }
 
-    private File getMapFile() {
-        File mapFile = PreferenceHelper.getMapFile(getContext());
-        if (mapFile == null || !mapFile.exists() || !mapFile.canRead()) {
-            mapFile = new File(getActivity().getFilesDir(), MAP_FILE_NAME);
-            logger.info("use internal map: {}", mapFile.toString());
-        } else {
-            logger.info("use external map: {}", mapFile.toString());
+    private MapDataStore getMapDataStore() {
+        MultiMapDataStore internalMap = new MultiMapDataStore(MultiMapDataStore.DataPolicy.DEDUPLICATE);
+
+        for (String mapFileName : MAPS) {
+            File file = new File(getActivity().getFilesDir(), mapFileName);
+            MapFile mapFile = new MapFile(file);
+            internalMap.addMapDataStore(mapFile, true, true);
         }
-        return mapFile;
+
+        File customMapFile = PreferenceHelper.getMapFile(getContext());
+        if (customMapFile == null || !customMapFile.exists() || !customMapFile.canRead()) {
+            logger.info("use internal map");
+            return internalMap;
+        } else {
+            logger.info("use external map: {}", customMapFile.toString());
+
+            MultiMapDataStore customMapDataStore = new MultiMapDataStore(MultiMapDataStore.DataPolicy.RETURN_FIRST);
+
+            MapDataStore customMap = new MapFile(customMapFile);
+            internalMap.addMapDataStore(customMap, true, true);
+            internalMap.addMapDataStore(internalMap, false, false);
+
+            return customMapDataStore;
+        }
     }
 
     @Override
@@ -598,7 +656,6 @@ public class MapFragment extends BaseFragment implements
             outState.putDouble(KEY_GOAL_LONGITUDE, goalLocation.getLatLon().longitude);
             outState.putString(KEY_GOAL_NAME, goalLocation.getName());
         }
-
     }
 
     @Override

@@ -185,7 +185,7 @@ public class MyLocationOverlay extends Layer implements LocationListener {
     /**
      * @return true if the snap-to-location mode is enabled, false otherwise.
      */
-    protected synchronized boolean isSnapToLocationEnabled() {
+    public synchronized boolean isSnapToLocationEnabled() {
         return this.snapToLocationEnabled && isMyLocationEnabled();
     }
 

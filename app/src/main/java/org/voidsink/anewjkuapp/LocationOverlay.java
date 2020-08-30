@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,12 +31,12 @@ import android.content.res.TypedArray;
 import android.graphics.PorterDuff.Mode;
 import android.view.MenuItem;
 
+import androidx.core.content.ContextCompat;
+
 import org.mapsforge.core.graphics.Bitmap;
 import org.mapsforge.core.graphics.Paint;
 import org.mapsforge.map.model.IMapViewPosition;
 import org.voidsink.anewjkuapp.base.MyLocationOverlay;
-
-import androidx.core.content.ContextCompat;
 
 public class LocationOverlay extends MyLocationOverlay {
 
@@ -73,7 +73,7 @@ public class LocationOverlay extends MyLocationOverlay {
 
     private void onSnapToLocationChanged() {
         if (this.snapToLocationItem != null) {
-            final boolean snapToLocationEnabled = isSnapToLocationEnabled() && isMyLocationEnabled();
+            final boolean snapToLocationEnabled = isSnapToLocationEnabled();
 
             this.snapToLocationItem.setChecked(snapToLocationEnabled);
             if (snapToLocationEnabled) {
