@@ -106,7 +106,7 @@ dependencies {
     implementation 'net.sourceforge.streamsupport:streamsupport:1.7.2'
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.4'
     implementation 'androidx.preference:preference:1.1.1'
-    implementation "com.google.android.material:material:1.2.0"
+    implementation 'com.google.android.material:material:1.2.1'
     implementation "androidx.cardview:cardview:1.0.0"
     implementation 'androidx.work:work-runtime:2.4.0'
     googleImplementation 'androidx.work:work-gcm:2.4.0'
