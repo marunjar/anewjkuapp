@@ -88,8 +88,8 @@ public class StatFragmentDetail extends TermFragment implements
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setContentDescription(getTitle(getContext()));
 
-        getLoaderManager().initLoader(Consts.LOADER_ID_COURSES, null, this);
-        getLoaderManager().initLoader(Consts.LOADER_ID_ASSESSMENTS, null, this);
+        LoaderManager.getInstance(this).initLoader(Consts.LOADER_ID_COURSES, null, this);
+        LoaderManager.getInstance(this).initLoader(Consts.LOADER_ID_ASSESSMENTS, null, this);
     }
 
     @Override
@@ -117,8 +117,8 @@ public class StatFragmentDetail extends TermFragment implements
 
     @Override
     public void onContentChanged(boolean selfChange) {
-        getLoaderManager().restartLoader(Consts.LOADER_ID_COURSES, null, this);
-        getLoaderManager().restartLoader(Consts.LOADER_ID_ASSESSMENTS, null, this);
+        LoaderManager.getInstance(this).restartLoader(Consts.LOADER_ID_COURSES, null, this);
+        LoaderManager.getInstance(this).restartLoader(Consts.LOADER_ID_ASSESSMENTS, null, this);
     }
 
     @Override

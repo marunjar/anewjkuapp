@@ -446,11 +446,11 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
                     if (index >= 0) {
                         mLastLoadedPeriods.remove(index);
                         if (hasCalendarPermission()) {
-                            getLoaderManager().restartLoader(periodIndex, args, CalendarFragment2.this);
+                            LoaderManager.getInstance(CalendarFragment2.this).restartLoader(periodIndex, args, CalendarFragment2.this);
                         }
                     } else {
                         if (hasCalendarPermission()) {
-                            getLoaderManager().initLoader(periodIndex, args, CalendarFragment2.this);
+                            LoaderManager.getInstance(CalendarFragment2.this).initLoader(periodIndex, args, CalendarFragment2.this);
                         }
                     }
 
@@ -459,7 +459,7 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
 
                         //logger.debug("period removed {}", removed);
 
-                        getLoaderManager().destroyLoader(removed);
+                        LoaderManager.getInstance(CalendarFragment2.this).destroyLoader(removed);
                     }
                 }
             }).run();
@@ -479,13 +479,13 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
         }
 
         public void stopLoading() {
-            if (getLoaderManager().hasRunningLoaders()) {
+            if (LoaderManager.getInstance(CalendarFragment2.this).hasRunningLoaders()) {
                 logger.debug("stop loading events");
 
                 for (int id : mLastLoadedPeriods) {
-                    getLoaderManager().destroyLoader(id);
+                    LoaderManager.getInstance(CalendarFragment2.this).destroyLoader(id);
                 }
-                getLoaderManager().destroyLoader(mLastPeriodIndex);
+                LoaderManager.getInstance(CalendarFragment2.this).destroyLoader(mLastPeriodIndex);
             }
         }
     }

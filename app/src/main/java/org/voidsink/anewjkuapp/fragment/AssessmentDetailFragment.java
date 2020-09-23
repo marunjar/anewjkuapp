@@ -91,7 +91,7 @@ public class AssessmentDetailFragment extends TermFragment implements
         mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter(mRecyclerView, mAdapter));
         mRecyclerView.setContentDescription(getTitle(getContext()));
 
-        getLoaderManager().initLoader(0, null, this);
+        LoaderManager.getInstance(this).initLoader(0, null, this);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class AssessmentDetailFragment extends TermFragment implements
 
     @Override
     public void onContentChanged(boolean selfChange) {
-        getLoaderManager().restartLoader(0, null, this);
+        LoaderManager.getInstance(this).restartLoader(0, null, this);
     }
 
     @Override

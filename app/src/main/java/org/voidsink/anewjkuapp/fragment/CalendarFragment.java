@@ -130,7 +130,7 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
         super.onStart();
 
         if (hasCalendarPermission()) {
-            getLoaderManager().initLoader(0, null, this);
+            LoaderManager.getInstance(this).initLoader(0, null, this);
         }
     }
 
@@ -138,10 +138,10 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
     public void onPause() {
         super.onPause();
 
-        if (getLoaderManager().hasRunningLoaders()) {
+        if (LoaderManager.getInstance(this).hasRunningLoaders()) {
             logger.debug("stop loading events");
 
-            getLoaderManager().destroyLoader(0);
+            LoaderManager.getInstance(this).destroyLoader(0);
         }
     }
 
@@ -190,7 +190,7 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
     }
 
     private void loadMoreData() {
-        if (this.isVisible() && !getLoaderManager().hasRunningLoaders()) {
+        if (this.isVisible() && !LoaderManager.getInstance(this).hasRunningLoaders()) {
             now = System.currentTimeMillis(); // if someone changed the time since last click
 
             // increase in month steps
@@ -209,8 +209,8 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
     }
 
     private void loadData() {
-        if (this.isVisible() && !getLoaderManager().hasRunningLoaders() && hasCalendarPermission()) {
-            getLoaderManager().restartLoader(0, null, this);
+        if (this.isVisible() && !LoaderManager.getInstance(this).hasRunningLoaders() && hasCalendarPermission()) {
+            LoaderManager.getInstance(this).restartLoader(0, null, this);
         }
     }
 

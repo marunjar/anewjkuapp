@@ -87,12 +87,12 @@ public class MensaDayFragment extends BaseFragment implements LoaderManager.Load
         mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter(mRecyclerView, mAdapter));
         mRecyclerView.setContentDescription(getTitle(getContext()));
 
-        getLoaderManager().initLoader(0, null, this);
+        LoaderManager.getInstance(this).initLoader(0, null, this);
     }
 
     private void updateData() {
-        if (this.isVisible() && !getLoaderManager().hasRunningLoaders()) {
-            getLoaderManager().restartLoader(0, null, this);
+        if (this.isVisible() && !LoaderManager.getInstance(this).hasRunningLoaders()) {
+            LoaderManager.getInstance(this).restartLoader(0, null, this);
         }
     }
 
