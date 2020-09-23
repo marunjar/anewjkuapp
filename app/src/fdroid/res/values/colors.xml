@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--colors for default style-->
-    <color name="default_secondary">#19bd0f</color>
-    <color name="default_secondaryVariant">#128A0B</color>
+    <color name="default_secondary">#19BD0F</color>
+    <color name="default_secondaryVariant">#64F14D</color>
 
 </resources>

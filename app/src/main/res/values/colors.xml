@@ -2,17 +2,17 @@
 <resources>
     <!--colors for default style-->
     <color name="default_primary">#0F60BD</color>
-    <color name="default_primaryVariant">#0F4D9D</color>
+    <color name="default_primaryVariant">#00378c</color>
     <color name="default_secondary">#EE8C2B</color>
-    <color name="default_secondaryVariant">#C57424</color>
+    <color name="default_secondaryVariant">#FFBD5C</color>
     <color name="default_onPrimary">#FFFFFF</color>
-    <color name="default_onSecondary">#FFFFFF</color>
+    <color name="default_onSecondary">#000000</color>
 
     <color name="preference_fallback_accent_color">@color/default_secondary</color>
     <color name="color_chip_grade_back_default">@color/default_secondary</color>
-    <color name="color_chip_grade_text">#fff</color>
+    <color name="color_chip_grade_text">#FFF</color>
 
-    <color name="background_launcher">#ffffffff</color>
+    <color name="background_launcher">#FFFFFFFF</color>
 
     <!-- for android-week-view -->
     <color name="pastBackgroundColor">#11000000</color>
@@ -22,9 +22,9 @@
     <color name="fullTransparent">#00000000</color>
 
     <!-- Material Design -->
-    <color name="divider">#807f7f7f</color>
+    <color name="divider">#807F7F7F</color>
 
     <!-- Tabs -->
-    <color name="tab_selected_text_color">#ffffffff</color>
-    <color name="tab_text_color">#ccffffff</color>
+    <color name="tab_selected_text_color">#FFFFFFFF</color>
+    <color name="tab_text_color">#CCFFFFFF</color>
 </resources>

@@ -2,6 +2,6 @@
 <resources>
     <!--colors for default style-->
     <color name="default_secondary">#EE2B8C</color>
-    <color name="default_secondaryVariant">#C52474</color>
+    <color name="default_secondaryVariant">#FF69BC</color>
 
 </resources>
