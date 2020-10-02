@@ -404,7 +404,10 @@ public class KusssHandler {
 
             body = response.body();
             if (!TextUtils.isEmpty(body)) {
-                iCal = calendarBuilder.build(new ByteArrayInputStream(body.getBytes(response.charset() != null ? response.charset() : Charset.defaultCharset().name())));
+                String charset = response.charset() != null ? response.charset() : Charset.defaultCharset().name();
+                ByteArrayInputStream calStream = new ByteArrayInputStream(body.getBytes(charset));
+                // breaks when upgrading commons.lang3 > 3.9
+                iCal = calendarBuilder.build(calStream);
             } else {
                 iCal = new Calendar();
             }
