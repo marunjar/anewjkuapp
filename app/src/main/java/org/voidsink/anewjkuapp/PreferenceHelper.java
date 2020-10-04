@@ -269,7 +269,7 @@ public final class PreferenceHelper {
         try {
             SharedPreferences sp = PreferenceManager
                     .getDefaultSharedPreferences(context);
-            sp.edit().putInt(PREF_LAST_FRAGMENT, id).commit();
+            sp.edit().putInt(PREF_LAST_FRAGMENT, id).apply();
         } catch (Exception e) {
             AnalyticsHelper.sendException(context, e, false);
         }

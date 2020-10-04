@@ -70,14 +70,14 @@ public class CalendarPermissionFragment extends BaseFragment implements ContentO
         initDataObserver();
     }
 
-    protected boolean hasCalendarPermission() {
+    protected boolean hasCalendarReadPermission() {
         return EasyPermissions.hasPermissions(getContext(), CALENDAR_PERMISSIONS_READ);
     }
 
     @AfterPermissionGranted(PERMISSIONS_REQUEST_READ_CALENDAR)
     private void initDataObserver() {
         mDataObserver = null;
-        if (hasCalendarPermission()) {
+        if (hasCalendarReadPermission()) {
             // check permission
             UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
             uriMatcher.addURI(CalendarContract.AUTHORITY, CalendarContract.Events.CONTENT_URI.buildUpon().appendPath("#").build().toString(), 0);

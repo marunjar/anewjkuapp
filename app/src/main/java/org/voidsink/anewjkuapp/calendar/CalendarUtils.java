@@ -340,25 +340,27 @@ public final class CalendarUtils {
         List<String> accountNames = new ArrayList<>();
         ContentResolver cr = context.getContentResolver();
 
-        try (Cursor c = cr.query(CalendarContract.Calendars.CONTENT_URI,
-                CALENDAR_PROJECTION, null, null, null)) {
-            if (c != null) {
-                while (c.moveToNext()) {
-                    if (!onlyWritable || CalendarUtils.isWriteable(c.getInt(COLUMN_CAL_ACCESS_LEVEL))) {
-                        int id = c.getInt(COLUMN_CAL_ID);
-                        String name = c.getString(COLUMN_CAL_NAME);
-                        String displayName = c.getString(COLUMN_CAL_DISPLAY_NAME);
-                        String accountName = c.getString(COLUMN_CAL_ACCOUNT_NAME);
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+            try (Cursor c = cr.query(CalendarContract.Calendars.CONTENT_URI,
+                    CALENDAR_PROJECTION, null, null, null)) {
+                if (c != null) {
+                    while (c.moveToNext()) {
+                        if (!onlyWritable || CalendarUtils.isWriteable(c.getInt(COLUMN_CAL_ACCESS_LEVEL))) {
+                            int id = c.getInt(COLUMN_CAL_ID);
+                            String name = c.getString(COLUMN_CAL_NAME);
+                            String displayName = c.getString(COLUMN_CAL_DISPLAY_NAME);
+                            String accountName = c.getString(COLUMN_CAL_ACCOUNT_NAME);
 
-                        ids.add(id);
-                        names.add(name);
-                        displayNames.add(displayName);
-                        accountNames.add(accountName);
+                            ids.add(id);
+                            names.add(name);
+                            displayNames.add(displayName);
+                            accountNames.add(accountName);
+                        }
                     }
                 }
+            } catch (Exception e) {
+                AnalyticsHelper.sendException(context, e, false);
             }
-        } catch (Exception e) {
-            AnalyticsHelper.sendException(context, e, false);
         }
 
         return new CalendarList(ids, names, displayNames, accountNames);

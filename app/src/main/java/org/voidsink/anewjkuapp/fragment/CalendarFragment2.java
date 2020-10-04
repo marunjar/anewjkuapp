@@ -445,11 +445,11 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
 //                    logger.debug("loadPeriod {}({}) {} - {}", periodIndex, index, SimpleDateFormat.getDateTimeInstance().format(now.getTime()), SimpleDateFormat.getDateTimeInstance().format(then.getTime()));
                     if (index >= 0) {
                         mLastLoadedPeriods.remove(index);
-                        if (hasCalendarPermission()) {
+                        if (hasCalendarReadPermission()) {
                             LoaderManager.getInstance(CalendarFragment2.this).restartLoader(periodIndex, args, CalendarFragment2.this);
                         }
                     } else {
-                        if (hasCalendarPermission()) {
+                        if (hasCalendarReadPermission()) {
                             LoaderManager.getInstance(CalendarFragment2.this).initLoader(periodIndex, args, CalendarFragment2.this);
                         }
                     }
