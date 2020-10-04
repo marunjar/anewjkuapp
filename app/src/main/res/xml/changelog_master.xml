@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="0.53.3" versioncode="140082">
+        <change>Termine werden wieder synchronisiert</change>
+        <change>Korrekturen und Optimierungen</change>
+        <change>neue Karte von OpenStreetMap</change>
+    </release>
     <release version="0.53.2" versioncode="140081">
         <change>neues Design</change>
         <change>bessere Unterstützung für automatischen Wechsel zwischen dunklem und hellem Theme</change>
