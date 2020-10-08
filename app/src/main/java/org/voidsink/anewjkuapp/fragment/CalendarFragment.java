@@ -129,7 +129,7 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
     public void onStart() {
         super.onStart();
 
-        if (hasCalendarPermission()) {
+        if (hasCalendarReadPermission()) {
             LoaderManager.getInstance(this).initLoader(0, null, this);
         }
     }
@@ -209,7 +209,7 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
     }
 
     private void loadData() {
-        if (this.isVisible() && !LoaderManager.getInstance(this).hasRunningLoaders() && hasCalendarPermission()) {
+        if (this.isVisible() && !LoaderManager.getInstance(this).hasRunningLoaders() && hasCalendarReadPermission()) {
             LoaderManager.getInstance(this).restartLoader(0, null, this);
         }
     }
