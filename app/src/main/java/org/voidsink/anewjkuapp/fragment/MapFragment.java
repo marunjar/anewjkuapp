@@ -625,8 +625,8 @@ public class MapFragment extends BaseFragment implements
             MultiMapDataStore customMapDataStore = new MultiMapDataStore(MultiMapDataStore.DataPolicy.RETURN_FIRST);
 
             MapDataStore customMap = new MapFile(customMapFile);
-            internalMap.addMapDataStore(customMap, true, true);
-            internalMap.addMapDataStore(internalMap, false, false);
+            customMapDataStore.addMapDataStore(customMap, true, true);
+            customMapDataStore.addMapDataStore(internalMap, false, false);
 
             return customMapDataStore;
         }
