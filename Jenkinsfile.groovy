@@ -4,13 +4,16 @@ node {
     timestamps {
         ansiColor('xterm') {
             stage('Checkout') {
-                echo 'Checkout.'
                 checkout scm
             }
-            stage('Build') {
-                echo 'Building..'
+            stage('Setup') {
+                properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '1', daysToKeepStr: '', numToKeepStr: '5')), [$class: 'ScannerJobProperty', doNotScan: false], disableConcurrentBuilds()])
                 withGradle {
                     sh './gradlew cleanBuildCache'
+                }
+            }
+            stage('Build') {
+                withGradle {
                     sh './gradlew assembleFdroid'
                     sh './gradlew assembleGoogle'
                 }
@@ -19,7 +22,6 @@ node {
                 echo 'Testing...'
             }
             stage('Analyze') {
-                echo 'Analyzing....'
                 try {
                     withGradle {
                         sh './gradlew lintFdroidDebug'
@@ -29,11 +31,9 @@ node {
                 }
             }
             stage('Deploy') {
-                echo 'Deploying.....'
                 archiveArtifacts artifacts: '**/*.apk', caseSensitive: false, followSymlinks: false
             }
             stage('Cleanup') {
-                echo 'Cleanup......'
                 withGradle {
                     sh './gradlew clean'
                 }
