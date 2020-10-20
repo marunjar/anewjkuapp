@@ -28,12 +28,12 @@ node {
                         sh './gradlew lintFdroidDebug'
                     }
                 } finally {
-                    recordIssues blameDisabled: true, forensicsDisabled: true, skipPublishingChecks: true, sourceDirectory: './app/src', tools: [androidLintParser(pattern: './app/build/reports/lint-results-fdroidDebug.xml'), errorProne()]
+                    recordIssues blameDisabled: true, forensicsDisabled: true, skipPublishingChecks: true, sourceDirectory: 'app/src', tools: [androidLintParser(pattern: 'app/build/reports/lint-results-fdroidDebug.xml'), errorProne()]
                 }
             }
             stage('Deploy') {
                 echo 'Deploying.....'
-                archiveArtifacts artifacts: './release/**/*.apk', caseSensitive: false, followSymlinks: false
+                archiveArtifacts artifacts: '**/*.apk', caseSensitive: false, followSymlinks: false
             }
         }
     }
