@@ -8,6 +8,7 @@ node {
                 stage('Build') {
                     echo 'Building.'
                     echo workspace
+                    sh 'ls -l'
 
                     withGradle {
                         sh 'gradlew assembleFdroid'
