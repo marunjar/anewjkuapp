@@ -6,14 +6,14 @@ node {
             def workspace = pwd()
             stage('Build') {
                 echo 'Building.'
-                echo "{$workspace}"
+                echo "${workspace}"
 
                 withGradle {
-                    sh 'cd {$workspace} && gradlew assembleFdroid'
+                    sh 'cd ${workspace} && gradlew assembleFdroid'
                 }
                 echo 'Building.'
                 withGradle {
-                    sh 'cd {$workspace} && gradlew assembleGoogle'
+                    sh 'cd ${workspace} && gradlew assembleGoogle'
                 }
             }
             stage('Test') {
@@ -23,7 +23,7 @@ node {
                 echo 'Analyzing...'
                 withGradle {
                     try {
-                        sh 'cd {$workspace} && gradlew lintFdroidDebug'
+                        sh 'cd ${workspace} && gradlew lintFdroidDebug'
                     } finally {
                         scanForIssues blameDisabled: true, forensicsDisabled: true, sourceDirectory: 'app/src', tool: androidLintParser(pattern: 'app/build/reports/lint-results-fdroidDebug.xml')
                     }
