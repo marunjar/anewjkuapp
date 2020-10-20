@@ -33,6 +33,8 @@ node {
                         scanForIssues blameDisabled: true, forensicsDisabled: true, sourceDirectory: './app/src', tool: androidLintParser(pattern: './app/build/reports/lint-results-fdroidDebug.xml')
                     }
                 }
+                
+                publishIssues issues: [], skipPublishingChecks: true
             }
             stage('Deploy') {
                 echo 'Deploying.....'
