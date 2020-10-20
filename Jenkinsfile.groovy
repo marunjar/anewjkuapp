@@ -7,12 +7,13 @@ node {
             stage('Build') {
                 echo 'Building.'
                 echo "{$workspace}"
+
                 withGradle {
-                    sh 'gradlew assembleFdroid'
+                    sh 'cd {$workspace} && gradlew assembleFdroid'
                 }
                 echo 'Building.'
                 withGradle {
-                    sh 'gradlew assembleGoogle'
+                    sh 'cd {$workspace} && gradlew assembleGoogle'
                 }
             }
             stage('Test') {
@@ -22,7 +23,7 @@ node {
                 echo 'Analyzing...'
                 withGradle {
                     try {
-                        sh 'gradlew lintFdroidDebug'
+                        sh 'cd {$workspace} && gradlew lintFdroidDebug'
                     } finally {
                         scanForIssues blameDisabled: true, forensicsDisabled: true, sourceDirectory: 'app/src', tool: androidLintParser(pattern: 'app/build/reports/lint-results-fdroidDebug.xml')
                     }
