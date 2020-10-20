@@ -3,9 +3,10 @@ node {
 
     timestamps {
         ansiColor('xterm') {
-            pwd()
+            def workspace = pwd()
             stage('Build') {
                 echo 'Building.'
+                echo "{$workspace}"
                 withGradle {
                     sh './gradlew assembleFdroid'
                 }
