@@ -23,18 +23,13 @@ node {
             }
             stage('Analyze') {
                 echo 'Analyzing....'
-                scanForIssues blameDisabled: true, forensicsDisabled: true, sourceDirectory: './app/src', tool: errorProne()
-
-                echo 'Analyzing....'
-                withGradle {
-                    try {
+                try {
+                    withGradle {
                         sh './gradlew lintFdroidDebug'
-                    } finally {
-                        scanForIssues blameDisabled: true, forensicsDisabled: true, sourceDirectory: './app/src', tool: androidLintParser(pattern: './app/build/reports/lint-results-fdroidDebug.xml')
                     }
+                } finally {
+                    recordIssues blameDisabled: true, forensicsDisabled: true, skipPublishingChecks: true, sourceDirectory: './app/src', tools: [androidLintParser(pattern: './app/build/reports/lint-results-fdroidDebug.xml'), errorProne()]
                 }
-                
-                publishIssues issues: [], skipPublishingChecks: true
             }
             stage('Deploy') {
                 echo 'Deploying.....'
