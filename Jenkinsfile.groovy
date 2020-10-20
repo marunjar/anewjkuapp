@@ -8,9 +8,6 @@ node {
             }
             stage('Setup') {
                 properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '1', daysToKeepStr: '', numToKeepStr: '5')), [$class: 'ScannerJobProperty', doNotScan: false], disableConcurrentBuilds()])
-                withGradle {
-                    sh './gradlew cleanBuildCache'
-                }
             }
             stage('Build') {
                 withGradle {
@@ -36,6 +33,7 @@ node {
             stage('Cleanup') {
                 withGradle {
                     sh './gradlew clean'
+                    sh './gradlew cleanBuildCache'
                 }
             }
         }
