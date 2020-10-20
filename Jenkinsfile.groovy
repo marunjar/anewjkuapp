@@ -4,7 +4,7 @@ node {
     timestamps {
         ansiColor('xterm') {
             stage('Checkout') {
-                echo 'Checkout. ${BRANCH_NAME}'
+                echo 'Checkout. ${env.BRANCH_NAME}'
                 checkout scm
             }
             stage('Build') {
@@ -12,11 +12,11 @@ node {
                 sh 'ls -l'
 
                 withGradle {
-                    sh 'gradlew assembleFdroid'
+                    sh './gradlew assembleFdroid'
                 }
                 echo 'Building..'
                 withGradle {
-                    sh 'gradlew assembleGoogle'
+                    sh './gradlew assembleGoogle'
                 }
             }
             stage('Test') {
@@ -26,7 +26,7 @@ node {
                 echo 'Analyzing....'
                 withGradle {
                     try {
-                        sh 'gradlew lintFdroidDebug'
+                        sh './gradlew lintFdroidDebug'
                     } finally {
                         scanForIssues blameDisabled: true, forensicsDisabled: true, sourceDirectory: 'app/src', tool: androidLintParser(pattern: 'app/build/reports/lint-results-fdroidDebug.xml')
                     }
