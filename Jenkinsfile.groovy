@@ -1,5 +1,7 @@
 pipeline {
-    agent android
+    agent {
+        label 'android'
+    }
 
     timestamps {
         ansiColor('xterm') {
