@@ -3,6 +3,7 @@ node {
 
     timestamps {
         ansiColor('xterm') {
+            pwd()
             stage('Build') {
                 echo 'Building.'
                 withGradle {
