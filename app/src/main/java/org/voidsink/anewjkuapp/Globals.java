@@ -46,6 +46,7 @@ import java.util.concurrent.Executors;
 public class Globals extends Application implements Configuration.Provider {
 
     @Override
+    @SuppressWarnings("EmptyCatch")
     public void onCreate() {
         super.onCreate();
 

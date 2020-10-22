@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,41 +25,14 @@
 
 package org.voidsink.anewjkuapp.mensa;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 public class MensaMenu implements IMenu {
 
-    private String name;
-    private String soup;
-    private String meal;
-    private double price;
-    private double priceBig;
-    private double oehBonus;
-
-    public MensaMenu(JSONObject jsonObject) {
-        try {
-            this.name = jsonObject.getString("name").trim();
-            if (jsonObject.isNull("soup")) {
-                this.soup = "";
-            } else {
-                this.soup = jsonObject.getString("soup").trim();
-            }
-            this.meal = jsonObject.getString("meal").trim();
-            this.price = jsonObject.getInt("price") / 100f;
-            this.priceBig = jsonObject.getInt("priceBig") / 100f;
-            this.oehBonus = jsonObject.getInt("oeh_bonus") / 100f;
-
-            if (this.priceBig < this.price) {
-                this.priceBig = this.price + this.oehBonus;
-            }
-        } catch (JSONException ignored) {
-        }
-    }
-
-    public MensaMenu(String name, String soup, String meal, double price) {
-        this(name, soup, meal, price, price, 0);
-    }
+    private final String name;
+    private final String soup;
+    private final String meal;
+    private final double price;
+    private final double priceBig;
+    private final double oehBonus;
 
     public MensaMenu(String name, String soup, String meal, double price, double priceBig, double oehBonus) {
         this.name = name;

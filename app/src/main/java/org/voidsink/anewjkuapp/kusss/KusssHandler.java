@@ -109,6 +109,7 @@ public class KusssHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(KusssHandler.class);
 
+    @SuppressWarnings("EmptyCatch")
     private KusssHandler() {
         this.mCookies = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
         CookieHandler.setDefault(mCookies);
