@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,6 +32,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.voidsink.anewjkuapp.R;
 
+import java.util.Locale;
+
 public class ChoiceMenuLoader extends MensenMenuLoader {
 
     @Override
@@ -39,7 +41,7 @@ public class ChoiceMenuLoader extends MensenMenuLoader {
         for (Element category : categories) {
             // filter choice
             String categoryTitle = text(category.getElementsByTag("h2"), " ");
-            if (!TextUtils.isEmpty(categoryTitle) && categoryTitle.toUpperCase().contains("CHOICE")) {
+            if (!TextUtils.isEmpty(categoryTitle) && isMatchingCategoryTitle(categoryTitle)) {
                 Elements paragraphs = category.getElementsByTag("p");
                 String name = null;
                 StringBuilder meal = new StringBuilder();
@@ -71,6 +73,12 @@ public class ChoiceMenuLoader extends MensenMenuLoader {
                 }
             }
         }
+    }
+
+    @Override
+    protected boolean isMatchingCategoryTitle(String categoryTitle) {
+        categoryTitle = categoryTitle.toUpperCase(Locale.getDefault());
+        return categoryTitle.contains("CHOICE") || categoryTitle.contains("WOCHENANGEBOT");
     }
 
     private String parseName(Element element) {

@@ -181,9 +181,9 @@
     <string name="mensa_menu_today">Heute</string>
     <string name="mensa_menu_tomorrow">Morgen</string>
     <string name="mensa_title_classic" translatable="false">Classic</string>
-    <string name="mensa_title_choice" translatable="false">Choice</string>
+    <string name="mensa_title_choice" translatable="false">Wochenangebot</string>
     <string name="mensa_title_khg" translatable="false">KHG</string>
-    <string name="mensa_title_raab" translatable="false">Raab</string>
+    <string name="mensa_title_raab" translatable="false">RaabMensa</string>
     <string name="mensa_title_tagesteller" translatable="false">Tagesteller</string>
     <string name="mensa_open_in_browser">in Browser anzeigen</string>
 

@@ -96,5 +96,5 @@ public interface Consts {
     String MENSA_MENU_CHOICE = "https://menu.mensen.at/index/index/locid/1";
     String MENSA_MENU_TAGESTELLER = "https://menu.mensen.at/index/index/locid/1";
     String MENSA_MENU_KHG = "https://www.dioezese-linz.at/institution/807510/essen/menueplan";
-    String MENSA_MENU_RAAB = "http://www.sommerhaus-hotel.at/de/linz#speiseplan";
+    String MENSA_MENU_RAAB = "https://www.mittag.at/w/raabmensa";
 }

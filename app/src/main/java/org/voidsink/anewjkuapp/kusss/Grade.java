@@ -30,6 +30,8 @@ import android.graphics.Color;
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
+import java.util.Locale;
+
 public enum Grade {
     G1(1, true, true), G2(2, true, true), G3(3, true, true), G4(4, true, true), G5(5, false, true),
     GET(1, true, false), GB(1, true, false), GAB(1, true, false);
@@ -51,7 +53,7 @@ public enum Grade {
     }
 
     public static Grade parseGrade(String text) {
-        String normalized = text.trim().toLowerCase();
+        String normalized = text.trim().toLowerCase(Locale.getDefault());
         switch (normalized) {
             case "sehr gut":
                 return G1;

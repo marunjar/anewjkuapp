@@ -34,6 +34,7 @@ import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 public class TagestellerMenuLoader extends MensenMenuLoader {
@@ -45,19 +46,25 @@ public class TagestellerMenuLoader extends MensenMenuLoader {
             // filter classic menu 1 and classic menu 2
             try {
                 String categoryTitle = text(category.getElementsByTag("h2"), " ");
-                if (!TextUtils.isEmpty(categoryTitle) && categoryTitle.toUpperCase().contains("TAGESTELLER") && !titles.contains(categoryTitle)) {
+                if (!TextUtils.isEmpty(categoryTitle) && isMatchingCategoryTitle(categoryTitle) && !titles.contains(categoryTitle)) {
                     String meal = text(category.getElementsByTag("p"));
+                    if (!TextUtils.isEmpty(meal)) {
+                        MensaMenu menu = new MensaMenu(null, null, meal.trim(), 0, 0, 0);
+                        day.addMenu(menu);
 
-                    MensaMenu menu = new MensaMenu(null, null, meal, 0, 0, 0);
-                    day.addMenu(menu);
-
-                    titles.add(categoryTitle);
+                        titles.add(categoryTitle);
+                    }
                 }
             } catch (Exception e) {
                 AnalyticsHelper.sendException(c, e, false, category.text());
             }
         }
 
+    }
+
+    @Override
+    protected boolean isMatchingCategoryTitle(String categoryTitle) {
+        return categoryTitle.toUpperCase(Locale.getDefault()).contains("TAGESTELLER");
     }
 
     @Override

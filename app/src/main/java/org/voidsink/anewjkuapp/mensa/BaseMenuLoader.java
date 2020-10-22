@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -42,6 +42,10 @@ import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import static org.jsoup.Connection.Method.GET;
 
@@ -49,6 +53,8 @@ public abstract class BaseMenuLoader {
 
     private static final String PREF_DATA_PREFIX = "MENSA_DATA_";
     private static final String PREF_DATE_PREFIX = "MENSA_DATE_";
+
+    private static final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 
     protected double parsePrice(NumberFormat nf, String value) {
         try {
@@ -111,6 +117,23 @@ public abstract class BaseMenuLoader {
 
             return null;
         }
+    }
+
+    protected Date parseDate(String value) throws ParseException {
+        Date date;
+        try {
+            date = df.parse(value);
+        } catch (ParseException e) {
+            Calendar cal = Calendar.getInstance();
+            int year = cal.get(Calendar.YEAR);
+            date = df.parse(value + year);
+            cal.add(Calendar.DAY_OF_MONTH, -7);
+            if (date != null && date.before(cal.getTime())) {
+                date = df.parse(value + (year + 1));
+            }
+        }
+
+        return date;
     }
 
     protected Connection getConnection(String url) {

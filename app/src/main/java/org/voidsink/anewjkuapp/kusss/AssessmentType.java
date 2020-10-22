@@ -29,6 +29,8 @@ import android.annotation.SuppressLint;
 
 import org.voidsink.anewjkuapp.R;
 
+import java.util.Locale;
+
 public enum AssessmentType {
     INTERIM_COURSE_ASSESSMENT, FINAL_COURSE_ASSESSMENT, RECOGNIZED_COURSE_CERTIFICATE, RECOGNIZED_EXAM, RECOGNIZED_ASSESSMENT, FINAL_EXAM, ALL, NONE_AVAILABLE;
 
@@ -66,7 +68,7 @@ public enum AssessmentType {
 
     @SuppressLint("DefaultLocale")
     public static AssessmentType parseGradeType(String text) {
-        String normalized = text.trim().toLowerCase();
+        String normalized = text.trim().toLowerCase(Locale.getDefault());
 
         switch (normalized) {
             case "vorläufige lehrveranstaltungsbeurteilungen":

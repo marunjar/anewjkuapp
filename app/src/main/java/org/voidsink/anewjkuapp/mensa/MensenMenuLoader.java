@@ -34,11 +34,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 import java.util.regex.Pattern;
 
 import static org.voidsink.anewjkuapp.utils.Consts.MENSA_MENU_JKU;
@@ -47,7 +43,6 @@ public abstract class MensenMenuLoader extends BaseMenuLoader implements MenuLoa
 
     private static final String PATTERN_BETRAG = "\\d+,\\d{2}";
     protected static final Pattern betragPattern = Pattern.compile(PATTERN_BETRAG);
-    private static final SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 
     @Override
     protected String getUrl() {
@@ -60,23 +55,6 @@ public abstract class MensenMenuLoader extends BaseMenuLoader implements MenuLoa
                 .cookie("mensenCookieHintClosed", "1")
                 .cookie("mensenExtLocation", "1")
                 .cookie("selectedLocation", "1");
-    }
-
-    private Date parseDate(String value) throws ParseException {
-        Date date;
-        try {
-            date = df.parse(value);
-        } catch (ParseException e) {
-            Calendar cal = Calendar.getInstance();
-            int year = cal.get(Calendar.YEAR);
-            date = df.parse(value + year);
-            cal.add(Calendar.DAY_OF_MONTH, -7);
-            if (date != null && date.before(cal.getTime())) {
-                date = df.parse(value + (year + 1));
-            }
-        }
-
-        return date;
     }
 
     @Override
@@ -117,6 +95,8 @@ public abstract class MensenMenuLoader extends BaseMenuLoader implements MenuLoa
     }
 
     protected abstract void addCategories(Context c, MensaDay day, Elements categories);
+
+    protected abstract boolean isMatchingCategoryTitle(String categoryTitle);
 
     protected abstract String getMensaKey();
 

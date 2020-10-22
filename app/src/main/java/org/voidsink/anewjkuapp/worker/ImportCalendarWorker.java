@@ -75,6 +75,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -590,28 +591,29 @@ public class ImportCalendarWorker extends BaseWorker {
     private String getLocationExtra(VEvent event) {
         try {
             String name = event.getLocation().getValue().trim();
+            String upperCaseName = name.toUpperCase(Locale.getDefault());
 
             String formattedAddress = "Altenbergerstraße 69, 4040 Linz, Österreich";
             double latitude = 48.33706;
             double longitude = 14.31960;
             String mapsClusterId = "CmRSAAAAEgnjqopJd0JVC22GrUK5G1fgukG3Q8gxwJ_4D-NdV1OZMP8oB3v_lA8GImeDVdqUR25xFAXHrRvR3QzA3U9i_OPDMh84Q0YFRX2IUXPhUTPfu1jp17f3APBlagpU-TNEEhAo0CzFCYccX9h60fY53upEGhROUkNAKVsKbGO2faMKyGvmc_26Ig";
 
-            if (name.toUpperCase().startsWith("PE 00")) {
+            if (upperCaseName.startsWith("PE 00")) {
                 formattedAddress = "Petrinumstraße 12, 4040 Linz, Österreich";
                 latitude = 48.319757;
                 longitude = 14.275298;
                 mapsClusterId = "CmRRAAAAVSgRGVv3PnjX7nWhyjLYOPA98MmrhhorKQHiTpKIALBSYkMMxTKTtvDr2KS3l6IKqhDqLicgeIwPl_uwmEN0aRokUojJa7Pryg-K7rLJ9ohiWXJow68suju9NfYzfJ3tEhDPlEQoguNvjwLjC8dXva7jGhTFyeDxDdfdZ8JY-dYjpPHqv_TXuQ";
-            } else if (name.toUpperCase().startsWith("KEP ")) {
+            } else if (upperCaseName.startsWith("KEP ")) {
                 formattedAddress = "Altenbergerstraße 74, 4040 Linz, Österreich";
                 latitude = 48.3374066;
                 longitude = 14.324123;
                 mapsClusterId = "CmRSAAAA2F4LeVYCcAwT4VAT6mP3xqyDEZ40xdCIlUJZjJI0HRDrZYUTsCTrAQu0uXwdgE_Q2Yx-8kYiTg2XfA2pDpU5BkKgHfDKYPfh8_Zv6AiMgf9nxoAth1aUHlbp3iGMugauEhCUsVrMJImZyNojXWN_Nm8tGhQFqVEHQz2b5RCXc7cHik17JV1DCA";
-            } else if (name.toUpperCase().startsWith("KHG ")) {
+            } else if (upperCaseName.startsWith("KHG ")) {
                 formattedAddress = "Mengerstraße 23, 4040 Linz, Österreich";
                 latitude = 48.33565830000001;
                 longitude = 14.3171069;
                 mapsClusterId = "CmRRAAAAzFi-w_zcsubNwMXG9-wpVfq6tFlTl2wxfR59QcybAQuF7k4kwNwTlFQWluOgyKKEtfi5-fP-zzJM_Jwv837jI-QTFQaDXfEpdaXKgHas9VNtHDjMbbTrh2YG5-8NZQz_EhAh0qirheebQ6QJROK39fNOGhQKPJEmyjv_S8iLlpIRtbskq_dThg";
-            } else if (name.toUpperCase().startsWith("ESH ")) {
+            } else if (upperCaseName.startsWith("ESH ")) {
                 formattedAddress = "Julius-Raab-Straße 1-3, 4040 Linz, Österreich";
                 latitude = 48.32893189999999;
                 longitude = 14.3220179;

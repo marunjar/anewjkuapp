@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">JKU App Debug</string>
+    <string name="extension_mensa_title">JKU Cafeteria Debug</string>
+    <string name="calendar_title_exam">Exams Debug</string>
+    <string name="calendar_title_lva">Courses Debug</string>
+</resources>

@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class Course {
@@ -66,7 +67,7 @@ public class Course {
                         .getElementsByClass("assignment-active").size() == 1;
                 String courseIdText = columns.get(6).text();
                 if (active && courseIdPattern.matcher(courseIdText).matches()) {
-                    this.courseId = courseIdText.toUpperCase().replace(".", "");
+                    this.courseId = courseIdText.toUpperCase(Locale.getDefault()).replace(".", "");
                     setTitle(columns.get(5).text());
                     setLvaType(columns.get(4).text()); // type (UE, ...)
                     setTeacher(columns.get(7).text()); // Leiter

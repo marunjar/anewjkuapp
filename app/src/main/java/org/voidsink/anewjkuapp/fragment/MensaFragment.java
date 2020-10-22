@@ -49,7 +49,7 @@ public class MensaFragment extends SlidingTabsFragment implements SharedPreferen
     public void onStart() {
         super.onStart();
 
-        PreferenceManager.getDefaultSharedPreferences(getContext())
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
                 .registerOnSharedPreferenceChangeListener(this);
     }
 
@@ -57,7 +57,7 @@ public class MensaFragment extends SlidingTabsFragment implements SharedPreferen
     public void onStop() {
         super.onStop();
 
-        PreferenceManager.getDefaultSharedPreferences(getContext())
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
 

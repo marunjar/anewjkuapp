@@ -64,6 +64,8 @@ public abstract class SlidingTabsFragment extends BaseFragment {
      */
     private final List<SlidingTabItem> mTabs = new ArrayList<>();
 
+    private TabLayout mTabLayout;
+
     protected abstract void fillTabs(List<SlidingTabItem> mTabs);
 
     /**
@@ -91,9 +93,7 @@ public abstract class SlidingTabsFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         mViewPager = view.findViewById(R.id.viewpager);
-        TabLayout mTabLayout = view.findViewById(R.id.sliding_tabs);
-
-        new TabLayoutMediator(mTabLayout, mViewPager, this::onConfigureTab).attach();
+        mTabLayout = view.findViewById(R.id.sliding_tabs);
     }
 
     private void onConfigureTab(TabLayout.Tab tab, int position) {
@@ -114,6 +114,7 @@ public abstract class SlidingTabsFragment extends BaseFragment {
         fillTabs(mTabs);
 
         mViewPager.setAdapter(new SlidingFragmentPagerAdapter(this));
+        new TabLayoutMediator(mTabLayout, mViewPager, this::onConfigureTab).attach();
     }
 
     /**
