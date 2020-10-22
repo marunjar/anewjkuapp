@@ -30,7 +30,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import org.voidsink.anewjkuapp.utils.Consts;
 
@@ -45,7 +45,7 @@ public class SlidingTabItem {
     }
 
     /**
-     * @return A new {@link Fragment} to be displayed by a {@link ViewPager}
+     * @return A new {@link Fragment} to be displayed by a {@link ViewPager2}
      */
     public Fragment createFragment() {
         try {

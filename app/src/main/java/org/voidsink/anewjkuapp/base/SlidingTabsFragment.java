@@ -32,12 +32,15 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.ViewPager;
+import androidx.lifecycle.Lifecycle;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.utils.Consts;
@@ -46,22 +49,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class represents a tab to be displayed by {@link ViewPager} and it's associated
+ * This class represents a tab to be displayed by {@link ViewPager2} and it's associated
  * {@link TabLayout}.
  */
 public abstract class SlidingTabsFragment extends BaseFragment {
 
     /**
-     * A {@link ViewPager} which will be used in conjunction with the {@link TabLayout} above.
+     * A {@link ViewPager2} which will be used in conjunction with the {@link TabLayout} above.
      */
-    private ViewPager mViewPager;
+    private ViewPager2 mViewPager;
 
     /**
      * List of {@link SlidingTabItem} which represent this sample's tabs.
      */
     private final List<SlidingTabItem> mTabs = new ArrayList<>();
-
-    private TabLayout mTabLayout;
 
     protected abstract void fillTabs(List<SlidingTabItem> mTabs);
 
@@ -79,9 +80,9 @@ public abstract class SlidingTabsFragment extends BaseFragment {
      * This is called after the {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)} has finished.
      * Here we can pick out the {@link View}s we need to configure from the content view.
      * <p/>
-     * We set the {@link ViewPager}'s adapter to be an instance of
+     * We set the {@link ViewPager2}'s adapter to be an instance of
      * {@link org.voidsink.anewjkuapp.base.SlidingTabsFragment.SlidingFragmentPagerAdapter}. The {@link TabLayout} is then given the
-     * {@link ViewPager} so that it can populate itself.
+     * {@link ViewPager2} so that it can populate itself.
      *
      * @param view View created in {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}
      */
@@ -90,7 +91,15 @@ public abstract class SlidingTabsFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         mViewPager = view.findViewById(R.id.viewpager);
-        mTabLayout = view.findViewById(R.id.sliding_tabs);
+        TabLayout mTabLayout = view.findViewById(R.id.sliding_tabs);
+
+        new TabLayoutMediator(mTabLayout, mViewPager, this::onConfigureTab).attach();
+    }
+
+    private void onConfigureTab(TabLayout.Tab tab, int position) {
+        if (position < mTabs.size()) {
+            tab.setText(mTabs.get(position).getTitle());
+        }
     }
 
     @Override
@@ -104,22 +113,26 @@ public abstract class SlidingTabsFragment extends BaseFragment {
         mTabs.clear();
         fillTabs(mTabs);
 
-        mViewPager.setAdapter(new SlidingFragmentPagerAdapter(getChildFragmentManager()));
-        mTabLayout.setupWithViewPager(mViewPager);
+        mViewPager.setAdapter(new SlidingFragmentPagerAdapter(this));
     }
 
     /**
      * The {@link FragmentPagerAdapter} used to display pages in this sample. The individual pages
      * are instances of {@link Fragment}. Each page is
      * created by the relevant {@link SlidingTabItem} for the requested position.
-     * <p/>
-     * The important section of this class is the {@link #getPageTitle(int)} method which controls
-     * what is displayed in the {@link TabLayout}.
      */
-    class SlidingFragmentPagerAdapter extends FragmentStatePagerAdapter {
+    class SlidingFragmentPagerAdapter extends FragmentStateAdapter {
 
-        SlidingFragmentPagerAdapter(@NonNull FragmentManager fm) {
-            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        public SlidingFragmentPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+            super(fragmentActivity);
+        }
+
+        public SlidingFragmentPagerAdapter(@NonNull Fragment fragment) {
+            super(fragment);
+        }
+
+        public SlidingFragmentPagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+            super(fragmentManager, lifecycle);
         }
 
         /**
@@ -129,24 +142,13 @@ public abstract class SlidingTabsFragment extends BaseFragment {
          */
         @Override
         @NonNull
-        public Fragment getItem(int i) {
+        public Fragment createFragment(int i) {
             return mTabs.get(i).createFragment();
         }
 
         @Override
-        public int getCount() {
+        public int getItemCount() {
             return mTabs.size();
-        }
-
-        /**
-         * Return the title of the item at {@code position}. This is important as what this method
-         * returns is what is displayed in the {@link TabLayout}.
-         * <p/>
-         * Here we return the value returned from {@link SlidingTabItem#getTitle()}.
-         */
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mTabs.get(position).getTitle();
         }
     }
 
