@@ -32,6 +32,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import org.voidsink.anewjkuapp.PreferenceHelper;
@@ -51,7 +52,7 @@ public class NewExamNotification {
     private final List<String> mInserts;
     private final List<String> mUpdates;
 
-    public NewExamNotification(Context mContext) {
+    public NewExamNotification(@NonNull Context mContext) {
         this.mContext = mContext;
         this.mInserts = new ArrayList<>();
         this.mUpdates = new ArrayList<>();
@@ -109,7 +110,7 @@ public class NewExamNotification {
             }
 
             if (lines.size() > MAX_LINES) {
-                inBoxStyle.setSummaryText(mContext.getString(R.string.notification_more, lines.size() - MAX_LINES));
+                inBoxStyle.setSummaryText(mContext.getResources().getQuantityString(R.plurals.notification_more, lines.size() - MAX_LINES));
             }
             // Moves the big view style object into the notification object.
             mBuilder.setStyle(inBoxStyle);

@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,10 +27,11 @@ package org.voidsink.anewjkuapp.base;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.Collection;
-
-import androidx.recyclerview.widget.RecyclerView;
 
 
 public abstract class RecyclerArrayAdapter<T, VH extends RecyclerView.ViewHolder>
@@ -38,7 +39,7 @@ public abstract class RecyclerArrayAdapter<T, VH extends RecyclerView.ViewHolder
     private final ArrayList<T> items = new ArrayList<>();
     private final Context mContext;
 
-    protected RecyclerArrayAdapter(Context context) {
+    protected RecyclerArrayAdapter(@NonNull Context context) {
         super();
         this.mContext = context;
         setHasStableIds(true);

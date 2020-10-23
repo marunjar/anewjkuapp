@@ -71,7 +71,7 @@ public class CalendarPermissionFragment extends BaseFragment implements ContentO
     }
 
     protected boolean hasCalendarReadPermission() {
-        return EasyPermissions.hasPermissions(getContext(), CALENDAR_PERMISSIONS_READ);
+        return EasyPermissions.hasPermissions(requireContext(), CALENDAR_PERMISSIONS_READ);
     }
 
     @AfterPermissionGranted(PERMISSIONS_REQUEST_READ_CALENDAR)
@@ -85,7 +85,7 @@ public class CalendarPermissionFragment extends BaseFragment implements ContentO
             mDataObserver = new BaseContentObserver(uriMatcher, this);
 
             // listen to all changes
-            getContext().getContentResolver().registerContentObserver(
+            requireContext().getContentResolver().registerContentObserver(
                     CalendarContract.Events.CONTENT_URI.buildUpon()
                             .appendPath("#").build(), false, mDataObserver);
 
@@ -102,8 +102,8 @@ public class CalendarPermissionFragment extends BaseFragment implements ContentO
 
     @AfterPermissionGranted(PERMISSIONS_REQUEST_FULL_CALENDAR)
     private void startCreateCalendars() {
-        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) || EasyPermissions.hasPermissions(getContext(), Manifest.permission.GET_ACCOUNTS)) {
-            if (EasyPermissions.hasPermissions(getContext(), CALENDAR_PERMISSIONS_FULL)) {
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) || EasyPermissions.hasPermissions(requireContext(), Manifest.permission.GET_ACCOUNTS)) {
+            if (EasyPermissions.hasPermissions(requireContext(), CALENDAR_PERMISSIONS_FULL)) {
                 Account account = AppUtils.getAccount(getContext());
                 CalendarUtils.createCalendarsIfNecessary(getContext(), account);
             } else {
@@ -129,7 +129,7 @@ public class CalendarPermissionFragment extends BaseFragment implements ContentO
         super.onStop();
 
         if (mDataObserver != null) {
-            getContext().getContentResolver().unregisterContentObserver(
+            requireContext().getContentResolver().unregisterContentObserver(
                     mDataObserver);
             mDataObserver = null;
         }

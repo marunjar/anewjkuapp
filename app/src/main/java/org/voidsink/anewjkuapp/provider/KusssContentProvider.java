@@ -38,6 +38,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.voidsink.anewjkuapp.KusssContentContract;
 import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
@@ -391,7 +392,7 @@ public class KusssContentProvider extends ContentProvider {
         }
     }
 
-    public static List<Assessment> getAssessmentsFromCursor(Context context, Cursor data) {
+    public static List<Assessment> getAssessmentsFromCursor(@Nullable Context context, Cursor data) {
         List<Assessment> mAssessments = new ArrayList<>();
 
         if (data != null) {
@@ -431,7 +432,7 @@ public class KusssContentProvider extends ContentProvider {
         return mAssessments;
     }
 
-    public static List<Course> getCoursesFromCursor(Context context, Cursor c) {
+    public static List<Course> getCoursesFromCursor(@Nullable Context context, Cursor c) {
         List<Course> courses = new ArrayList<>();
 
         if (c != null) {

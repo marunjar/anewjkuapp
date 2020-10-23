@@ -29,6 +29,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.format.DateUtils;
 
+import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 
 import org.jsoup.Connection;
@@ -79,7 +80,7 @@ public abstract class BaseMenuLoader {
         return StringUtil.releaseBuilder(sb).trim();
     }
 
-    protected Document getData(Context context) {
+    protected Document getData(@NonNull Context context) {
         String html = null;
         String cacheDateKey = PREF_DATE_PREFIX + getCacheKey();
         String cacheDataKey = PREF_DATA_PREFIX + getCacheKey();

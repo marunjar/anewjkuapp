@@ -77,7 +77,7 @@ public class CurriculaFragment extends BaseFragment implements
                 KusssContentContract.Curricula.PATH_CONTENT_CHANGED, 0);
 
         mObserver = new BaseContentObserver(uriMatcher, this);
-        getActivity().getContentResolver().registerContentObserver(
+        requireContext().getContentResolver().registerContentObserver(
                 KusssContentContract.Curricula.CONTENT_CHANGED_URI, false,
                 mObserver);
     }
@@ -86,7 +86,7 @@ public class CurriculaFragment extends BaseFragment implements
     public void onStop() {
         super.onStop();
 
-        getActivity().getContentResolver().unregisterContentObserver(
+        requireContext().getContentResolver().unregisterContentObserver(
                 mObserver);
         mObserver = null;
     }
@@ -139,7 +139,7 @@ public class CurriculaFragment extends BaseFragment implements
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getContext(), KusssContentContract.Curricula.CONTENT_URI,
+        return new CursorLoader(requireContext(), KusssContentContract.Curricula.CONTENT_URI,
                 KusssContentContract.Curricula.DB.PROJECTION, null, null,
                 KusssContentContract.Curricula.COL_DT_START + " DESC");
     }

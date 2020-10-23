@@ -34,6 +34,7 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -130,7 +131,7 @@ public class UIUtils {
         }
     }
 
-    public static void setDefaultNightMode(Context context) {
+    public static void setDefaultNightMode(@NonNull Context context) {
         AppCompatDelegate.setDefaultNightMode(PreferenceHelper.getNightMode(context));
     }
 }

@@ -42,6 +42,7 @@ import android.provider.CalendarContract;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
@@ -120,7 +121,7 @@ public final class CalendarUtils {
     private CalendarUtils() {
     }
 
-    private static Uri createCalendar(Context context, Account account,
+    private static Uri createCalendar(@NonNull Context context, Account account,
                                       String name, int color) {
         if (context == null || account == null) {
             return null;
@@ -200,7 +201,7 @@ public final class CalendarUtils {
         return true;
     }
 
-    private static boolean createCalendarIfNecessary(Context context,
+    private static boolean createCalendarIfNecessary(@NonNull Context context,
                                                      Account account, String name, int color) {
         String calId = getCalIDByName(context, account, name, false);
         if (calId == null) {
@@ -219,7 +220,7 @@ public final class CalendarUtils {
         return new CalendarBuilder();
     }
 
-    public static boolean createCalendarsIfNecessary(Context context,
+    public static boolean createCalendarsIfNecessary(@NonNull Context context,
                                                      Account account) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             return true;
@@ -272,7 +273,7 @@ public final class CalendarUtils {
         return ids;
     }
 
-    public static String getCalIDByName(Context context, Account account,
+    public static String getCalIDByName(@NonNull Context context, Account account,
                                         String name, boolean usePreferences) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             logger.warn("no id for '{}' found, no permission", name);
@@ -373,9 +374,7 @@ public final class CalendarUtils {
                 accessLevel == CalendarContract.Calendars.CAL_ACCESS_ROOT;
     }
 
-    public static boolean getSyncCalendar(Context context, String name) {
-        if (context == null) return false;
-
+    public static boolean getSyncCalendar(@NonNull Context context, String name) {
         switch (name) {
             case ARG_CALENDAR_EXAM:
                 return PreferenceHelper.getSyncCalendarExam(context);

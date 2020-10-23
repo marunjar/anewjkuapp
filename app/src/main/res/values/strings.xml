@@ -93,7 +93,10 @@
 
     <string name="notification_error">"JKU App" Fehler</string>
     <string name="notification_error_account_is_null">kein Account vorhanden</string>
-    <string name="notification_more">+%d weitere</string>
+    <plurals name="notification_more">
+        <item quantity="one">+1 weitere</item>
+        <item quantity="other">+%d weitere</item>
+    </plurals>
 
     <string name="pref_cat_update_password">Passwort aktualisieren</string>
     <string name="pref_cat_kusss_main">KUSSS</string>

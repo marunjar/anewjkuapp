@@ -36,6 +36,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceManager;
 
@@ -112,7 +113,7 @@ public final class PreferenceHelper {
         throw new UnsupportedOperationException();
     }
 
-    public static int getSyncInterval(Context context) {
+    public static int getSyncInterval(@NonNull Context context) {
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(context);
         try {
@@ -124,7 +125,7 @@ public final class PreferenceHelper {
         }
     }
 
-    public static void applySyncInterval(Context context) {
+    public static void applySyncInterval(@NonNull Context context) {
         Account mAccount = AppUtils.getAccount(context);
 
         if (mAccount != null) {
@@ -157,7 +158,7 @@ public final class PreferenceHelper {
         AppUtils.enableSync(context, true);
     }
 
-    public static boolean getNotifyCalendar(Context context) {
+    public static boolean getNotifyCalendar(@NonNull Context context) {
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(context);
         try {
@@ -169,7 +170,7 @@ public final class PreferenceHelper {
         }
     }
 
-    public static boolean getUseCalendarView(Context context) {
+    public static boolean getUseCalendarView(@NonNull Context context) {
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(context);
         try {
@@ -181,7 +182,7 @@ public final class PreferenceHelper {
         }
     }
 
-    public static boolean getNewExamsByCourseId(Context context) {
+    public static boolean getNewExamsByCourseId(@NonNull Context context) {
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(context);
         try {
@@ -193,7 +194,7 @@ public final class PreferenceHelper {
         }
     }
 
-    public static boolean getNotifyExam(Context context) {
+    public static boolean getNotifyExam(@NonNull Context context) {
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(context);
         try {
@@ -205,7 +206,7 @@ public final class PreferenceHelper {
         }
     }
 
-    public static boolean getNotifyGrade(Context context) {
+    public static boolean getNotifyGrade(@NonNull Context context) {
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(context);
         try {
@@ -217,7 +218,7 @@ public final class PreferenceHelper {
         }
     }
 
-    public static int getNightMode(Context context) {
+    public static int getNightMode(@NonNull Context context) {
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(context);
         try {
@@ -238,7 +239,7 @@ public final class PreferenceHelper {
         }
     }
 
-    public static File getMapFile(Context context) {
+    public static File getMapFile(@NonNull Context context) {
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(context);
         File mapFile;
@@ -254,7 +255,7 @@ public final class PreferenceHelper {
         return mapFile;
     }
 
-    public static int getLastFragment(Context context) {
+    public static int getLastFragment(@NonNull Context context) {
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(context);
         try {
@@ -265,7 +266,7 @@ public final class PreferenceHelper {
         }
     }
 
-    public static void setLastFragment(Context context, int id) {
+    public static void setLastFragment(@NonNull Context context, int id) {
         try {
             SharedPreferences sp = PreferenceManager
                     .getDefaultSharedPreferences(context);
@@ -275,7 +276,7 @@ public final class PreferenceHelper {
         }
     }
 
-    public static int getLastVersion(Context context) {
+    public static int getLastVersion(@NonNull Context context) {
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(context);
         try {
@@ -299,7 +300,7 @@ public final class PreferenceHelper {
 
     }
 
-    public static void setLastVersion(Context context, int version) {
+    public static void setLastVersion(@NonNull Context context, int version) {
         try {
             SharedPreferences sp = PreferenceManager
                     .getDefaultSharedPreferences(context);
@@ -309,7 +310,7 @@ public final class PreferenceHelper {
         }
     }
 
-    public static boolean getUseLvaBarChart(Context context) {
+    public static boolean getUseLvaBarChart(@NonNull Context context) {
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(context);
         try {
@@ -321,7 +322,7 @@ public final class PreferenceHelper {
         }
     }
 
-    public static boolean getPositiveGradesOnly(Context context) {
+    public static boolean getPositiveGradesOnly(@NonNull Context context) {
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(context);
         try {
@@ -333,7 +334,7 @@ public final class PreferenceHelper {
         }
     }
 
-    public static void setPrefPositiveGradesOnly(Context context, boolean positiveOnly) {
+    public static void setPrefPositiveGradesOnly(@NonNull Context context, boolean positiveOnly) {
         try {
             SharedPreferences sp = PreferenceManager
                     .getDefaultSharedPreferences(context);
@@ -343,7 +344,7 @@ public final class PreferenceHelper {
         }
     }
 
-    public static boolean getGroupMenuByDay(Context context) {
+    public static boolean getGroupMenuByDay(@NonNull Context context) {
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(context);
         try {
@@ -355,7 +356,7 @@ public final class PreferenceHelper {
         }
     }
 
-    private static boolean useDefaultExamCalendarId(Context context) {
+    private static boolean useDefaultExamCalendarId(@NonNull Context context) {
         try {
             SharedPreferences sp = PreferenceManager
                     .getDefaultSharedPreferences(context);
@@ -368,7 +369,7 @@ public final class PreferenceHelper {
         }
     }
 
-    public static String getExamCalendarId(Context context) {
+    public static String getExamCalendarId(@NonNull Context context) {
         if (useDefaultExamCalendarId(context))
             return null;
 
@@ -383,7 +384,7 @@ public final class PreferenceHelper {
         }
     }
 
-    private static boolean useDefaultLvaCalendarId(Context context) {
+    private static boolean useDefaultLvaCalendarId(@NonNull Context context) {
         try {
             SharedPreferences sp = PreferenceManager
                     .getDefaultSharedPreferences(context);
@@ -396,7 +397,7 @@ public final class PreferenceHelper {
         }
     }
 
-    public static String getLvaCalendarId(Context context) {
+    public static String getLvaCalendarId(@NonNull Context context) {
         if (useDefaultLvaCalendarId(context))
             return null;
 
@@ -411,7 +412,7 @@ public final class PreferenceHelper {
         }
     }
 
-    public static boolean getSyncCalendarLva(Context context) {
+    public static boolean getSyncCalendarLva(@NonNull Context context) {
         if (useDefaultLvaCalendarId(context))
             return PREF_SYNC_CALENDAR_LVA_DEFAULT;
 
@@ -426,7 +427,7 @@ public final class PreferenceHelper {
         }
     }
 
-    public static boolean getSyncCalendarExam(Context context) {
+    public static boolean getSyncCalendarExam(@NonNull Context context) {
         if (useDefaultExamCalendarId(context))
             return PREF_SYNC_CALENDAR_EXAM_DEFAULT;
 
@@ -441,7 +442,7 @@ public final class PreferenceHelper {
         }
     }
 
-    public static boolean trackingErrors(Context context) {
+    public static boolean trackingErrors(@NonNull Context context) {
         try {
             SharedPreferences sp = PreferenceManager
                     .getDefaultSharedPreferences(context);
@@ -454,7 +455,7 @@ public final class PreferenceHelper {
         }
     }
 
-    public static boolean getShowCoursesWithAssessmentOnly(Context context) {
+    public static boolean getShowCoursesWithAssessmentOnly(@NonNull Context context) {
         try {
             SharedPreferences sp = PreferenceManager
                     .getDefaultSharedPreferences(context);
@@ -466,7 +467,7 @@ public final class PreferenceHelper {
         }
     }
 
-    public static void setShowCoursesWithAssessmentOnly(Context context, boolean value) {
+    public static void setShowCoursesWithAssessmentOnly(@NonNull Context context, boolean value) {
         try {
             SharedPreferences sp = PreferenceManager
                     .getDefaultSharedPreferences(context);
@@ -475,6 +476,4 @@ public final class PreferenceHelper {
             AnalyticsHelper.sendException(context, e, false);
         }
     }
-
-
 }

@@ -103,7 +103,7 @@ public class ExamFragment extends BaseFragment implements ContentObserverListene
                 KusssContentContract.Exam.PATH_CONTENT_CHANGED, 0);
 
         mDataObserver = new BaseContentObserver(uriMatcher, this);
-        getActivity().getContentResolver().registerContentObserver(
+        requireContext().getContentResolver().registerContentObserver(
                 KusssContentContract.Exam.CONTENT_CHANGED_URI, false,
                 mDataObserver);
     }
@@ -112,7 +112,7 @@ public class ExamFragment extends BaseFragment implements ContentObserverListene
     public void onStop() {
         super.onStop();
 
-        getActivity().getContentResolver().unregisterContentObserver(
+        requireContext().getContentResolver().unregisterContentObserver(
                 mDataObserver);
         mDataObserver = null;
     }
@@ -139,7 +139,7 @@ public class ExamFragment extends BaseFragment implements ContentObserverListene
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         showProgressIndeterminate();
 
-        return new CursorLoader(getContext(), KusssContentContract.Exam.CONTENT_URI,
+        return new CursorLoader(requireContext(), KusssContentContract.Exam.CONTENT_URI,
                 KusssContentContract.Exam.DB.PROJECTION, null, null,
                 KusssContentContract.Exam.COL_DTSTART + " ASC");
 

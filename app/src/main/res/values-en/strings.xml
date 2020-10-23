@@ -192,7 +192,10 @@
     <string name="button_ok">OK</string>
     <string name="pref_kusss_use_calendar_view_title">Calendar view</string>
     <string name="pref_kusss_use_calendar_view_summary">Show all events in a calendar view</string>
-    <string name="notification_more">+%d more</string>
+    <plurals name="notification_more">
+        <item quantity="one">+One more"</item>
+        <item quantity="other">+%d more"</item>
+    </plurals>
     <plurals name="notification_events_deleted">
         <item quantity="one">Removed event from "%2$s"</item>
         <item quantity="other">Removed %1$d events from "%2$s"</item>

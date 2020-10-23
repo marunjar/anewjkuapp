@@ -196,7 +196,7 @@ public class MapFragment extends BaseFragment implements
 
         List<Poi> pois = new ArrayList<>();
 
-        ContentResolver cr = getContext().getContentResolver();
+        ContentResolver cr = requireContext().getContentResolver();
         Uri searchUri = PoiContentContract.CONTENT_URI.buildUpon()
                 .appendPath(SearchManager.SUGGEST_URI_PATH_QUERY)
                 .appendPath(query).build();
@@ -253,7 +253,7 @@ public class MapFragment extends BaseFragment implements
         }
 
         // jump to point with given Uri
-        ContentResolver cr = getActivity().getContentResolver();
+        ContentResolver cr = requireContext().getContentResolver();
 
         try (Cursor c = cr
                 .query(uri, PoiContentContract.Poi.DB.PROJECTION, null, null, null)) {
@@ -283,16 +283,17 @@ public class MapFragment extends BaseFragment implements
         if (goalLocationOverlay != null) {
             if (marker != null) {
                 this.goalLocation = marker;
+                final Context context = requireContext();
                 if (!TextUtils.isEmpty(marker.getName())) {
                     // generate Bubble image
                     TextView bubbleView = new TextView(this.getContext());
-                    bubbleView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.balloon_overlay));
+                    bubbleView.setBackground(ContextCompat.getDrawable(context, R.drawable.balloon_overlay));
                     bubbleView.setGravity(Gravity.CENTER);
                     bubbleView.setMaxEms(20);
                     bubbleView.setTextSize(15);
                     bubbleView.setTextColor(Color.BLACK);
                     bubbleView.setText(marker.getName());
-                    Bitmap bubble = MapUtils.viewToBitmap(getContext(), bubbleView);
+                    Bitmap bubble = MapUtils.viewToBitmap(context, bubbleView);
                     bubble.incrementRefCount();
 
                     // set new goal
@@ -301,11 +302,11 @@ public class MapFragment extends BaseFragment implements
                     this.goalLocationOverlay.setHorizontalOffset(0);
                     this.goalLocationOverlay.setVerticalOffset(-bubble.getHeight() / 2);
                 } else {
-                    Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_marker_position);
+                    Drawable drawable = ContextCompat.getDrawable(context, R.drawable.ic_marker_position);
 
                     // get accent color from theme
-                    TypedArray themeArray = getContext().getTheme().obtainStyledAttributes(new int[]{R.attr.color});
-                    int mColorAccent = themeArray.getColor(0, ContextCompat.getColor(getContext(), R.color.default_primary));
+                    TypedArray themeArray = context.getTheme().obtainStyledAttributes(new int[]{R.attr.color});
+                    int mColorAccent = themeArray.getColor(0, ContextCompat.getColor(context, R.color.default_primary));
                     themeArray.recycle();
 
                     drawable.setColorFilter(mColorAccent, PorterDuff.Mode.MULTIPLY);
@@ -435,7 +436,7 @@ public class MapFragment extends BaseFragment implements
         this.mapView.setZoomLevelMax(MAX_ZOOM_LEVEL);
         this.mapView.getMapZoomControls().setZoomInResource(R.drawable.zoom_control_in);
         this.mapView.getMapZoomControls().setZoomOutResource(R.drawable.zoom_control_out);
-        this.mapView.getMapZoomControls().setMarginHorizontal(getContext().getResources().getDimensionPixelSize(R.dimen.map_zoom_control_margin_horizontal));
+        this.mapView.getMapZoomControls().setMarginHorizontal(requireContext().getResources().getDimensionPixelSize(R.dimen.map_zoom_control_margin_horizontal));
         this.mapView.getMapZoomControls().setMarginVertical(getContext().getResources().getDimensionPixelSize(R.dimen.map_zoom_control_margin_vertical));
         this.mapView.addInputListener(new InputListener() {
             @Override
@@ -474,7 +475,7 @@ public class MapFragment extends BaseFragment implements
 
     @AfterPermissionGranted(PERMISSIONS_REQUEST_READ_STORAGE)
     private void createLayers() {
-        if (EasyPermissions.hasPermissions(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        if (EasyPermissions.hasPermissions(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
             TileCache tileCache = AndroidUtil.createTileCache(getContext(),
                     "mapFragment",
                     this.mapView.getModel().displayModel.getTileSize(),
@@ -510,7 +511,7 @@ public class MapFragment extends BaseFragment implements
     @AfterPermissionGranted(PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
     private void createLocationLayer() {
         this.mMyLocationOverlay = null;
-        if (EasyPermissions.hasPermissions(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)) {
+        if (EasyPermissions.hasPermissions(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)) {
             final Layers layers = this.mapView.getLayerManager().getLayers();
             final IMapViewPosition mapViewPosition = this.mapView.getModel().mapViewPosition;
 
@@ -610,12 +611,12 @@ public class MapFragment extends BaseFragment implements
         MultiMapDataStore internalMap = new MultiMapDataStore(MultiMapDataStore.DataPolicy.DEDUPLICATE);
 
         for (String mapFileName : MAPS) {
-            File file = new File(getActivity().getFilesDir(), mapFileName);
+            File file = new File(requireContext().getFilesDir(), mapFileName);
             MapFile mapFile = new MapFile(file);
             internalMap.addMapDataStore(mapFile, true, true);
         }
 
-        File customMapFile = PreferenceHelper.getMapFile(getContext());
+        File customMapFile = PreferenceHelper.getMapFile(requireContext());
         if (customMapFile == null || !customMapFile.exists() || !customMapFile.canRead()) {
             logger.info("use internal map");
             return internalMap;

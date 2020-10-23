@@ -103,7 +103,7 @@ public class LvaDetailFragment extends TermFragment implements
 
         MenuItem item = menu.findItem(R.id.action_toggle_visible_lvas);
         if (item != null) {
-            item.setChecked(item.isCheckable() && PreferenceHelper.getShowCoursesWithAssessmentOnly(getContext()));
+            item.setChecked(item.isCheckable() && PreferenceHelper.getShowCoursesWithAssessmentOnly(requireContext()));
         }
     }
 
@@ -116,7 +116,7 @@ public class LvaDetailFragment extends TermFragment implements
                 return true;
             case R.id.action_toggle_visible_lvas:
                 item.setChecked(item.isCheckable() && !item.isChecked());
-                PreferenceHelper.setShowCoursesWithAssessmentOnly(getContext(), item.isChecked());
+                PreferenceHelper.setShowCoursesWithAssessmentOnly(requireContext(), item.isChecked());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -134,14 +134,14 @@ public class LvaDetailFragment extends TermFragment implements
                 KusssContentContract.Assessment.PATH_CONTENT_CHANGED, 1);
 
         mLvaObserver = new BaseContentObserver(uriMatcher, this);
-        getActivity().getContentResolver().registerContentObserver(
+        requireContext().getContentResolver().registerContentObserver(
                 KusssContentContract.Course.CONTENT_CHANGED_URI, false,
                 mLvaObserver);
-        getActivity().getContentResolver().registerContentObserver(
+        requireContext().getContentResolver().registerContentObserver(
                 KusssContentContract.Assessment.CONTENT_CHANGED_URI, false,
                 mLvaObserver);
 
-        PreferenceManager.getDefaultSharedPreferences(getContext())
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
                 .registerOnSharedPreferenceChangeListener(this);
     }
 
@@ -149,10 +149,10 @@ public class LvaDetailFragment extends TermFragment implements
     public void onStop() {
         super.onStop();
 
-        PreferenceManager.getDefaultSharedPreferences(getContext())
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
                 .unregisterOnSharedPreferenceChangeListener(this);
 
-        getActivity().getContentResolver().unregisterContentObserver(
+        requireContext().getContentResolver().unregisterContentObserver(
                 mLvaObserver);
         mLvaObserver = null;
     }
@@ -168,12 +168,12 @@ public class LvaDetailFragment extends TermFragment implements
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id) {
             case Consts.LOADER_ID_COURSES: {
-                return new CursorLoader(getContext(), KusssContentContract.Course.CONTENT_URI,
+                return new CursorLoader(requireContext(), KusssContentContract.Course.CONTENT_URI,
                         KusssContentContract.Course.DB.PROJECTION, null, null,
                         KusssContentContract.Course.COL_TERM + " DESC");
             }
             case Consts.LOADER_ID_ASSESSMENTS: {
-                return new CursorLoader(getContext(), KusssContentContract.Assessment.CONTENT_URI,
+                return new CursorLoader(requireContext(), KusssContentContract.Assessment.CONTENT_URI,
                         KusssContentContract.Assessment.DB.PROJECTION, null, null,
                         KusssContentContract.Assessment.TABLE_NAME + "."
                                 + KusssContentContract.Assessment.COL_TYPE
@@ -183,7 +183,7 @@ public class LvaDetailFragment extends TermFragment implements
                                 + " DESC");
             }
             default:
-                return new CursorLoader(getContext());
+                return new CursorLoader(requireContext());
         }
     }
 
@@ -226,7 +226,7 @@ public class LvaDetailFragment extends TermFragment implements
         adapter.clear();
 
         if (courseCursor != null) {
-            boolean withAssessmentOnly = PreferenceHelper.getShowCoursesWithAssessmentOnly(getContext());
+            boolean withAssessmentOnly = PreferenceHelper.getShowCoursesWithAssessmentOnly(requireContext());
             // load courses
             List<Course> courses = KusssContentProvider.getCoursesFromCursor(getContext(), courseCursor);
 

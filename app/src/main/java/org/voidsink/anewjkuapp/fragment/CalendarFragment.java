@@ -240,7 +240,7 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
             calIDExam = "";
         }
 
-        return new CursorLoader(getContext(), CalendarContract.Events.CONTENT_URI,
+        return new CursorLoader(requireContext(), CalendarContract.Events.CONTENT_URI,
                 CalendarUtils.EVENT_PROJECTION,
                 "("
                         + CalendarContract.Events
@@ -267,7 +267,7 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
         if (mAccount != null) {
             // fetch calendar colors
             final SparseIntArray mColors = new SparseIntArray();
-            ContentResolver cr = getContext().getContentResolver();
+            ContentResolver cr = requireContext().getContentResolver();
 
             try (Cursor cursor = cr.query(CalendarContract.Calendars.CONTENT_URI,
                     new String[]{

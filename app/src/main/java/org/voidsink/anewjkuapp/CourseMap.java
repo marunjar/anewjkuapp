@@ -29,6 +29,8 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 
+import androidx.annotation.NonNull;
+
 import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.kusss.Course;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
@@ -45,7 +47,7 @@ public class CourseMap {
 
     private final Map<String, Course> map;
 
-    public CourseMap(Context context) {
+    public CourseMap(@NonNull Context context) {
         this.map = new HashMap<>();
 
         ContentResolver cr = context.getContentResolver();

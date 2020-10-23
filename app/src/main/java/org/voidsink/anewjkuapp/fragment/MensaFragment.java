@@ -63,7 +63,7 @@ public class MensaFragment extends SlidingTabsFragment implements SharedPreferen
 
     @Override
     protected void fillTabs(List<SlidingTabItem> mTabs) {
-        if (PreferenceHelper.getGroupMenuByDay(getContext())) {
+        if (PreferenceHelper.getGroupMenuByDay(requireContext())) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(new Date());
             // jump to next day if later than 4pm

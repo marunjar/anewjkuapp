@@ -119,7 +119,7 @@ public class AssessmentDetailFragment extends TermFragment implements
                 KusssContentContract.Assessment.PATH_CONTENT_CHANGED, 0);
 
         mObserver = new BaseContentObserver(uriMatcher, this);
-        getActivity().getContentResolver().registerContentObserver(
+        requireContext().getContentResolver().registerContentObserver(
                 KusssContentContract.Assessment.CONTENT_CHANGED_URI, false,
                 mObserver);
     }
@@ -128,14 +128,14 @@ public class AssessmentDetailFragment extends TermFragment implements
     public void onStop() {
         super.onStop();
 
-        getActivity().getContentResolver().unregisterContentObserver(mObserver);
+        requireContext().getContentResolver().unregisterContentObserver(mObserver);
         mObserver = null;
     }
 
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getContext(), KusssContentContract.Assessment.CONTENT_URI,
+        return new CursorLoader(requireContext(), KusssContentContract.Assessment.CONTENT_URI,
                 KusssContentContract.Assessment.DB.PROJECTION, null, null,
                 KusssContentContract.Assessment.TABLE_NAME + "."
                         + KusssContentContract.Assessment.COL_TYPE

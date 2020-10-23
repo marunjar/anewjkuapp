@@ -124,7 +124,7 @@ public class AppUtils {
         throw new UnsupportedOperationException();
     }
 
-    public static void doOnNewVersion(Context context) {
+    public static void doOnNewVersion(@NonNull Context context) {
         int mLastVersion = PreferenceHelper.getLastVersion(context);
         int mCurrentVersion = PreferenceHelper.getCurrentVersion(context);
 
