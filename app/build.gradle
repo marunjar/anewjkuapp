@@ -104,7 +104,7 @@ dependencies {
     errorproneJavac("com.google.errorprone:javac:${rootProject.ext.errorProneJavacVersion}")
     errorprone("com.google.errorprone:error_prone_core:${rootProject.ext.errorProneVersion}")
     implementation 'net.sourceforge.streamsupport:streamsupport:1.7.2'
-    implementation 'com.jakewharton.threetenabp:threetenabp:1.2.4'
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.3.0'
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'com.google.android.material:material:1.2.1'
     implementation "androidx.cardview:cardview:1.0.0"
@@ -112,7 +112,7 @@ dependencies {
     googleImplementation 'androidx.work:work-gcm:2.4.0'
     googleImplementation 'com.google.firebase:firebase-analytics:17.6.0'
     googleImplementation 'com.google.firebase:firebase-crashlytics:17.2.2'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.3'
     implementation 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
     implementation 'org.mapsforge:mapsforge-core:0.14.0'
     implementation 'org.mapsforge:mapsforge-map:0.14.0'
