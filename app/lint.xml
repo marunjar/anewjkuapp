@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <lint>
     <issue id="MissingTranslation" severity="error" />
+    <issue id="UnusedIds" severity="informational" />
+    <issue id="DuplicateStrings" severity="informational" />
 </lint>

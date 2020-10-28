@@ -21,10 +21,10 @@ node {
             stage('Analyze') {
                 try {
                     withGradle {
-                        sh './gradlew lintFdroidDebug'
+                        sh './gradlew lintFdroidRelease'
                     }
                 } finally {
-                    recordIssues blameDisabled: true, forensicsDisabled: true, skipPublishingChecks: true, sourceDirectory: 'app/src', tools: [androidLintParser(pattern: 'app/build/reports/lint-results-fdroidDebug.xml'), errorProne()]
+                    recordIssues blameDisabled: true, forensicsDisabled: true, skipPublishingChecks: true, sourceDirectory: 'app/src', tools: [androidLintParser(pattern: 'app/build/reports/lint-results-*.xml'), errorProne()]
                 }
             }
             stage('Deploy') {
