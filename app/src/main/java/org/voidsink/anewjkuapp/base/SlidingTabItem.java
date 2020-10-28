@@ -29,7 +29,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import org.voidsink.anewjkuapp.utils.Consts;
@@ -64,8 +63,7 @@ public class SlidingTabItem {
     }
 
     /**
-     * @return the title which represents this tab. In this sample this is used directly by
-     * {@link PagerAdapter#getPageTitle(int)}
+     * @return the title which represents this tab.
      */
     public CharSequence getTitle() {
         return mTitle;
