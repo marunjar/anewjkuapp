@@ -12,7 +12,7 @@ if exist .\input\campus.osm (
 
 echo download new files...
 
-wget -t10 "overpass-api.de/api/map?bbox=14.2225,48.2361,14.5160,48.3629" -O .\input\linz.osm
+wget -t10 "overpass-api.de/api/map?bbox=14.2225,48.2361,14.5176,48.3714" -O .\input\linz.osm
 if %errorlevel% neq 0 goto :error
 
 wget -t10 "overpass-api.de/api/map?bbox=14.3104,48.3288,14.3292,48.3400" -O .\input\campus.osm
@@ -24,7 +24,7 @@ if %errorlevel% neq 0 goto :error
 wget -t10 "overpass-api.de/api/map?bbox=14.2977,48.3043,14.3009,48.3071" -O .\input\lifesciencecampus.osm
 if %errorlevel% neq 0 goto :error
 
-wget -t10 "overpass-api.de/api/map?bbox=14.5104,48.3656,14.5159,48.3714" -O .\input\softwareparkhagenberg.osm
+wget -t10 "overpass-api.de/api/map?bbox=14.5104,48.3656,14.5176,48.3714" -O .\input\softwareparkhagenberg.osm
 if %errorlevel% neq 0 goto :error
 
 wget -t10 "overpass-api.de/api/map?bbox=14.2724,48.3188,14.2780,48.3215" -O .\input\petrinum.osm
