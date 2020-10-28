@@ -212,12 +212,12 @@ public class KusssHandler {
 
             mCookies.getCookieStore().removeAll();
 
-            getDocument(Jsoup.connect(URL_KUSSS_INDEX).userAgent(getUserAgent()).timeout(TIMEOUT_LOGIN).followRedirects(true));
+            getDocument(Jsoup.connect(URL_KUSSS_INDEX).userAgent(this.mUserAgent).timeout(TIMEOUT_LOGIN).followRedirects(true));
 
-            Connection.Response r = Jsoup.connect(URL_LOGIN).userAgent(getUserAgent()).cookies(getCookieMap()).data("j_username", user).data("j_password", password).timeout(TIMEOUT_LOGIN).followRedirects(true).method(POST).execute();
+            Connection.Response r = Jsoup.connect(URL_LOGIN).userAgent(this.mUserAgent).cookies(getCookieMap()).data("j_username", user).data("j_password", password).timeout(TIMEOUT_LOGIN).followRedirects(true).method(POST).execute();
 
             if (r.url() != null) {
-                r = Jsoup.connect(r.url().toString()).userAgent(getUserAgent()).cookies(getCookieMap()).method(GET).execute();
+                r = Jsoup.connect(r.url().toString()).userAgent(this.mUserAgent).cookies(getCookieMap()).method(GET).execute();
             }
 
             Document doc = parseResponse(r);
@@ -254,7 +254,7 @@ public class KusssHandler {
     public synchronized void logout(Context c) {
         try {
             if (isConnected(c)) {
-                Jsoup.connect(URL_LOGOUT).userAgent(getUserAgent()).cookies(getCookieMap()).method(GET).execute();
+                Jsoup.connect(URL_LOGOUT).userAgent(this.mUserAgent).cookies(getCookieMap()).method(GET).execute();
             }
         } catch (Exception e) {
             logger.warn("logout failed", e);
@@ -271,7 +271,7 @@ public class KusssHandler {
             return false;
         }
         try {
-            Document doc = getDocument(Jsoup.connect(URL_KUSSS_INDEX).userAgent(getUserAgent()).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true));
+            Document doc = getDocument(Jsoup.connect(URL_KUSSS_INDEX).userAgent(this.mUserAgent).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true));
 
             return isLoggedIn(c, doc);
         } catch (SocketTimeoutException e) {
@@ -343,7 +343,7 @@ public class KusssHandler {
             if (!selectTerm(c, term)) {
                 return null;
             }
-            Document doc = getDocument(Jsoup.connect(URL_GET_ICAL_FORM).userAgent(getUserAgent()).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true));
+            Document doc = getDocument(Jsoup.connect(URL_GET_ICAL_FORM).userAgent(this.mUserAgent).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true));
             if (!isSelectable(c, doc, term)) {
                 return null;
             }
@@ -358,7 +358,6 @@ public class KusssHandler {
         return loadIcalJsoup(c, calendarBuilder, calendarName);
     }
 
-    @SuppressWarnings("unused")
     private Calendar loadIcalFromFile(Context c, CalendarBuilder calendarBuilder, String calendarname) {
         Calendar iCal;
 
@@ -376,7 +375,7 @@ public class KusssHandler {
 
     private Calendar loadIcalJsoup(Context c, CalendarBuilder calendarBuilder, String calendarName) {
         Connection connection = Jsoup.connect(URL_GET_ICAL)
-                .userAgent(getUserAgent())
+                .userAgent(this.mUserAgent)
                 .cookies(getCookieMap())
                 .timeout(TIMEOUT_CALENDAR_READ)
                 .method(POST);
@@ -445,7 +444,7 @@ public class KusssHandler {
 
         Map<String, String> terms = new HashMap<>();
         try {
-            Document doc = getDocument(Jsoup.connect(URL_GET_TERMS).userAgent(getUserAgent()).cookies(getCookieMap()));
+            Document doc = getDocument(Jsoup.connect(URL_GET_TERMS).userAgent(this.mUserAgent).cookies(getCookieMap()));
             Element termDropdown = doc.getElementById("term");
             if (termDropdown != null) {
                 Elements termDropdownEntries = termDropdown
@@ -469,7 +468,7 @@ public class KusssHandler {
         }
         postAndGetDocument(
                 Jsoup.connect(URL_SELECT_TERM)
-                        .userAgent(getUserAgent())
+                        .userAgent(this.mUserAgent)
                         .cookies(getCookieMap())
                         .data("term", term.toString())
                         .data("previousQueryString", "")
@@ -498,7 +497,7 @@ public class KusssHandler {
             for (Term term : terms) {
                 term.setLoaded(false); // init loaded flag
                 if (selectTerm(c, term)) {
-                    Document doc = getDocument(Jsoup.connect(URL_MY_LVAS).userAgent(getUserAgent()).cookies(getCookieMap()));
+                    Document doc = getDocument(Jsoup.connect(URL_MY_LVAS).userAgent(this.mUserAgent).cookies(getCookieMap()));
 
                     if (isSelectable(c, doc, term)) {
                         if (isSelected(c, doc, term)) {
@@ -567,7 +566,7 @@ public class KusssHandler {
         }
         List<Assessment> grades = new ArrayList<>();
         try {
-            Document doc = getDocument(Jsoup.connect(URL_MY_GRADES).userAgent(getUserAgent()).cookies(getCookieMap()).data("months", "0"));
+            Document doc = getDocument(Jsoup.connect(URL_MY_GRADES).userAgent(this.mUserAgent).cookies(getCookieMap()).data("months", "0"));
 
             if (isLoggedIn(c, doc)) {
                 Elements rows = doc.select(SELECT_MY_GRADES);
@@ -606,7 +605,7 @@ public class KusssHandler {
         try {
             Document doc = getDocument(
                     Jsoup.connect(URL_GET_NEW_EXAMS)
-                            .userAgent(getUserAgent())
+                            .userAgent(this.mUserAgent)
                             .cookies(getCookieMap())
                             .data("search", "true").data("searchType", "mylvas"));
             if (isLoggedIn(c, doc)) {
@@ -711,7 +710,7 @@ public class KusssHandler {
             logger.debug("getNewExamsByCourseId: {}", courseId);
             Document doc = postAndGetDocument(Jsoup
                     .connect(URL_GET_NEW_EXAMS)
-                    .userAgent(getUserAgent())
+                    .userAgent(this.mUserAgent)
                     .cookies(getCookieMap())
                     .timeout(TIMEOUT_SEARCH_EXAM_BY_LVA)
                     .data("search", "true")
@@ -761,7 +760,7 @@ public class KusssHandler {
 
         logger.debug("loadExams");
 
-        Document doc = getDocument(Jsoup.connect(URL_GET_EXAMS).userAgent(getUserAgent()).cookies(getCookieMap()));
+        Document doc = getDocument(Jsoup.connect(URL_GET_EXAMS).userAgent(this.mUserAgent).cookies(getCookieMap()));
 
         if (isLoggedIn(c, doc)) {
             Elements rows = doc.select(SELECT_EXAMS);
@@ -791,7 +790,7 @@ public class KusssHandler {
         try {
             List<Curriculum> mCurricula = new ArrayList<>();
 
-            Document doc = getDocument(Jsoup.connect(URL_MY_STUDIES).userAgent(getUserAgent()).cookies(getCookieMap()));
+            Document doc = getDocument(Jsoup.connect(URL_MY_STUDIES).userAgent(this.mUserAgent).cookies(getCookieMap()));
 
             if (isLoggedIn(c, doc)) {
                 Elements rows = doc.select(SELECT_MY_STUDIES);
@@ -809,10 +808,6 @@ public class KusssHandler {
             AnalyticsHelper.sendException(c, e, true);
             return null;
         }
-    }
-
-    private String getUserAgent() {
-        return this.mUserAgent;
     }
 
     public void setUserAgent(String userAgent) {

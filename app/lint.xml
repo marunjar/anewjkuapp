@@ -3,4 +3,8 @@
     <issue id="MissingTranslation" severity="error" />
     <issue id="UnusedIds" severity="informational" />
     <issue id="DuplicateStrings" severity="informational" />
+    <issue id="SyntheticAccessor" severity="informational" />
+
+    <!-- ignore until kotlin is not in use -->
+    <issue id="UnknownNullness" severity="ignore" />
 </lint>
