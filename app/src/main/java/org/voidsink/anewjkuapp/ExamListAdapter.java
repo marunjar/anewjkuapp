@@ -108,7 +108,7 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
     }
 
     @Override
-    public DateHeaderHolder onCreateHeaderViewHolder(ViewGroup viewGroup) {
+    public DateHeaderHolder onCreateHeaderViewHolder(@NonNull ViewGroup viewGroup) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_header, viewGroup, false);
         return new DateHeaderHolder(v);
     }

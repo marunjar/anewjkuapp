@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,6 +27,8 @@ package org.voidsink.anewjkuapp.dashclock;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
+
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.base.BasePreferenceFragment;
@@ -36,7 +38,7 @@ import org.voidsink.anewjkuapp.utils.Consts;
 public class MensaDashclockSettings extends ThemedActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         getSupportFragmentManager()
@@ -54,7 +56,7 @@ public class MensaDashclockSettings extends ThemedActivity {
 
     public static class MensaDashclockSettingsFragment extends BasePreferenceFragment {
         @Override
-        public void onCreate(Bundle savedInstanceState) {
+        public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 
             addPreferencesFromResource(R.xml.preference_dashclock_extension_mensa);

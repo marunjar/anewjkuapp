@@ -27,6 +27,7 @@ package org.voidsink.sectionedrecycleradapter;
 
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public interface SectionedAdapter<VH extends RecyclerView.ViewHolder> {
@@ -34,7 +35,7 @@ public interface SectionedAdapter<VH extends RecyclerView.ViewHolder> {
 
     long getHeaderId(int position);
 
-    VH onCreateHeaderViewHolder(ViewGroup parent);
+    VH onCreateHeaderViewHolder(@NonNull ViewGroup parent);
 
     void onBindHeaderViewHolder(VH sectionViewHolder, int position);
 }

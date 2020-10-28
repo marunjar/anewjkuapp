@@ -27,6 +27,8 @@ package org.voidsink.anewjkuapp.fragment;
 
 import android.content.SharedPreferences;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
 
 import org.voidsink.anewjkuapp.MensaDayTabItem;
@@ -62,7 +64,7 @@ public class MensaFragment extends SlidingTabsFragment implements SharedPreferen
     }
 
     @Override
-    protected void fillTabs(List<SlidingTabItem> mTabs) {
+    protected void fillTabs(@NonNull List<SlidingTabItem> mTabs) {
         if (PreferenceHelper.getGroupMenuByDay(requireContext())) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(new Date());
@@ -99,6 +101,7 @@ public class MensaFragment extends SlidingTabsFragment implements SharedPreferen
     }
 
     @Override
+    @Nullable
     protected String getScreenName() {
         return Consts.SCREEN_MENSA;
     }

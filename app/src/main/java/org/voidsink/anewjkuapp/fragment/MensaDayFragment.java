@@ -97,8 +97,9 @@ public class MensaDayFragment extends BaseFragment implements LoaderManager.Load
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    @Nullable
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recycler_view, container,
                 false);
 
@@ -125,7 +126,7 @@ public class MensaDayFragment extends BaseFragment implements LoaderManager.Load
 
     @NonNull
     @Override
-    public Loader<List<MensaItem>> onCreateLoader(int id, Bundle args) {
+    public Loader<List<MensaItem>> onCreateLoader(int id, @Nullable Bundle args) {
         showProgressIndeterminate();
 
         return new MenuDayLoader(getContext(), mDate, createLoaders());

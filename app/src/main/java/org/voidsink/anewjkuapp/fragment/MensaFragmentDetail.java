@@ -66,8 +66,9 @@ public abstract class MensaFragmentDetail extends BaseFragment implements Loader
     private RecyclerView mRecyclerView;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    @Nullable
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
         mRecyclerView = view.findViewById(R.id.recyclerView);

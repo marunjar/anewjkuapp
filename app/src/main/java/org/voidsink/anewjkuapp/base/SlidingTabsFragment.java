@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -66,15 +67,16 @@ public abstract class SlidingTabsFragment extends BaseFragment {
 
     private TabLayout mTabLayout;
 
-    protected abstract void fillTabs(List<SlidingTabItem> mTabs);
+    protected abstract void fillTabs(@NonNull List<SlidingTabItem> mTabs);
 
     /**
      * Inflates the {@link android.view.View} which will be displayed by this {@link Fragment}, from the app's
      * resources.
      */
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    @Nullable
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return LayoutInflater.from(getContext()).inflate(R.layout.fragment_sliding_tabs, container, false);
     }
 

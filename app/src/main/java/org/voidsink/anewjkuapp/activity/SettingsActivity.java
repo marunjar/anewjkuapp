@@ -28,6 +28,7 @@ package org.voidsink.anewjkuapp.activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.preference.Preference;
@@ -48,7 +49,7 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
     public static final String ARG_SHOW_FRAGMENT = "show_fragment";
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_toolbar_content);

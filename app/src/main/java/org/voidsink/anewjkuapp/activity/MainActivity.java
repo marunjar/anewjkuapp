@@ -41,6 +41,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
@@ -124,7 +125,7 @@ public class MainActivity extends ThemedActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         logger.debug(KusssContentContract.AUTHORITY);

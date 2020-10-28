@@ -89,7 +89,7 @@ public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, Asse
     }
 
     @Override
-    public GradeHeaderHolder onCreateHeaderViewHolder(ViewGroup viewGroup) {
+    public GradeHeaderHolder onCreateHeaderViewHolder(@NonNull ViewGroup viewGroup) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_header, viewGroup, false);
         return new GradeHeaderHolder(v);
     }

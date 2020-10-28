@@ -79,8 +79,9 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
     private Button mLoadMoreButton;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    @Nullable
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar, container,
                 false);
 
@@ -146,7 +147,7 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // init range
@@ -215,13 +216,14 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
     }
 
     @Override
+    @Nullable
     protected String getScreenName() {
         return Consts.SCREEN_CALENDAR;
     }
 
     @NonNull
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
         showProgressIndeterminate();
 
         Account mAccount = AppUtils.getAccount(getContext());

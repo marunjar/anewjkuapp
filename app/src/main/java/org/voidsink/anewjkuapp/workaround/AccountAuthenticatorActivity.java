@@ -29,6 +29,7 @@ import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
@@ -75,7 +76,7 @@ public class AccountAuthenticatorActivity extends AppCompatActivity {
      * @param icicle the save instance data of this Activity, may be null
      */
     @Override
-    protected void onCreate(Bundle icicle) {
+    protected void onCreate(@Nullable Bundle icicle) {
         UIUtils.applyTheme(this);
 
         super.onCreate(icicle);

@@ -154,7 +154,7 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
     }
 
     @Override
-    public MenuHeaderHolder onCreateHeaderViewHolder(ViewGroup viewGroup) {
+    public MenuHeaderHolder onCreateHeaderViewHolder(@NonNull ViewGroup viewGroup) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_header, viewGroup, false);
         return new MenuHeaderHolder(v);
     }

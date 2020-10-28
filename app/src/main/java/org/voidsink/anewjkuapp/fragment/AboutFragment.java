@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -43,8 +43,9 @@ import de.cketti.library.changelog.ChangeLog;
 public class AboutFragment extends BaseFragment {
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    @Nullable
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_about, container, false);
 
         view.findViewById(R.id.about_changelog)
@@ -54,6 +55,7 @@ public class AboutFragment extends BaseFragment {
     }
 
     @Override
+    @Nullable
     protected String getScreenName() {
         return Consts.SCREEN_ABOUT;
     }

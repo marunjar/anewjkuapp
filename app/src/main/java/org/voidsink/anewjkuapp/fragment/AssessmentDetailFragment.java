@@ -65,8 +65,9 @@ public class AssessmentDetailFragment extends TermFragment implements
     private RecyclerView mRecyclerView;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    @Nullable
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recycler_view, container,
                 false);
 
@@ -134,7 +135,7 @@ public class AssessmentDetailFragment extends TermFragment implements
 
     @NonNull
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
         return new CursorLoader(requireContext(), KusssContentContract.Assessment.CONTENT_URI,
                 KusssContentContract.Assessment.DB.PROJECTION, null, null,
                 KusssContentContract.Assessment.TABLE_NAME + "."

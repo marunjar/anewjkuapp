@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2017 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,6 +25,9 @@
 
 package org.voidsink.anewjkuapp.fragment;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.TermTabItem;
 import org.voidsink.anewjkuapp.base.SlidingTabItem;
@@ -39,7 +42,7 @@ import java.util.List;
 public class LvaFragment extends SlidingTabsFragment {
 
     @Override
-    protected void fillTabs(List<SlidingTabItem> mTabs) {
+    protected void fillTabs(@NonNull List<SlidingTabItem> mTabs) {
         List<Term> mTerms = KusssContentProvider.getTerms(getContext());
 
         mTabs.add(new TermTabItem(getString(R.string.all_terms), null, LvaDetailFragment.class));
@@ -50,6 +53,7 @@ public class LvaFragment extends SlidingTabsFragment {
     }
 
     @Override
+    @Nullable
     protected String getScreenName() {
         return Consts.SCREEN_COURSES;
     }

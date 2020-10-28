@@ -71,6 +71,7 @@ public class StatFragmentDetail extends TermFragment implements
     private RecyclerView mRecyclerView;
 
     @Override
+    @Nullable
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
@@ -157,7 +158,7 @@ public class StatFragmentDetail extends TermFragment implements
 
     @NonNull
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
         switch (id) {
             case Consts.LOADER_ID_COURSES: {
                 showProgressIndeterminate();

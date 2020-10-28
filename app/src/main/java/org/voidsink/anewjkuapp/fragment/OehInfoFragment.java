@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,17 +32,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.utils.Consts;
 
-import androidx.annotation.NonNull;
-
 public class OehInfoFragment extends BaseFragment {
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    @Nullable
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_oeh_info, container,
                 false);
 
@@ -57,6 +59,7 @@ public class OehInfoFragment extends BaseFragment {
     }
 
     @Override
+    @Nullable
     protected String getScreenName() {
         return Consts.SCREEN_OEH_INFO;
     }

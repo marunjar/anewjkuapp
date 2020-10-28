@@ -422,8 +422,9 @@ public class MapFragment extends BaseFragment implements
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    @Nullable
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map, container,
                 false);
 
@@ -644,6 +645,7 @@ public class MapFragment extends BaseFragment implements
     }
 
     @Override
+    @Nullable
     protected String getScreenName() {
         return Consts.SCREEN_MAP;
     }

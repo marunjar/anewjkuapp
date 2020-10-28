@@ -1231,7 +1231,7 @@ public class WeekView extends View {
      * stored in "originalEvent". But the event that corresponds to rectangle the rectangle
      * instance will be stored in "event".
      */
-    private class EventRect {
+    private static class EventRect {
         public WeekViewEvent event;
         public WeekViewEvent originalEvent;
         public RectF rectF;

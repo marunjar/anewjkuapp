@@ -27,6 +27,7 @@ package org.voidsink.anewjkuapp.base;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -45,7 +46,7 @@ public abstract class ThemedActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         UIUtils.applyTheme(this);
 
         super.onCreate(savedInstanceState);
@@ -114,6 +115,7 @@ public abstract class ThemedActivity extends AppCompatActivity {
     /*
      * returns screen name for logging activity
      */
+    @Nullable
     protected String getScreenName() {
         return null;
     }

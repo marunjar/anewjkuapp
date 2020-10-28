@@ -38,6 +38,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
@@ -92,7 +93,9 @@ public class CurriculaFragment extends BaseFragment implements
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    @Nullable
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
         mRecyclerView = view.findViewById(R.id.recyclerView);
@@ -138,7 +141,7 @@ public class CurriculaFragment extends BaseFragment implements
 
     @NonNull
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
         return new CursorLoader(requireContext(), KusssContentContract.Curricula.CONTENT_URI,
                 KusssContentContract.Curricula.DB.PROJECTION, null, null,
                 KusssContentContract.Curricula.COL_DT_START + " DESC");
@@ -201,7 +204,7 @@ public class CurriculaFragment extends BaseFragment implements
         }
 
         @Override
-        public CurriculumHeaderHolder onCreateHeaderViewHolder(ViewGroup viewGroup) {
+        public CurriculumHeaderHolder onCreateHeaderViewHolder(@NonNull ViewGroup viewGroup) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_header, viewGroup, false);
             return new CurriculumHeaderHolder(v);
         }
@@ -245,6 +248,7 @@ public class CurriculaFragment extends BaseFragment implements
     }
 
     @Override
+    @Nullable
     protected String getScreenName() {
         return Consts.SCREEN_CURRICULA;
     }

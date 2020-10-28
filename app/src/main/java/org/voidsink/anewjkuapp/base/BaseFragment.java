@@ -53,7 +53,7 @@ public class BaseFragment extends Fragment implements StackedFragment, PendingIn
     private ContentLoadingProgressBar mProgress;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
@@ -141,6 +141,7 @@ public class BaseFragment extends Fragment implements StackedFragment, PendingIn
     /*
      * returns screen name for logging activity
      */
+    @Nullable
     protected String getScreenName() {
         return null;
     }
