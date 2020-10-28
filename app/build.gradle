@@ -147,5 +147,7 @@ configurations.all {
 tasks.withType(JavaCompile).configureEach {
     options.errorprone {
         disable('JdkObsolete')
+        disable('MissingSummary')
+        disable('EmptyBlockTag')
     }
 }
