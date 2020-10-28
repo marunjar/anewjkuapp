@@ -28,7 +28,7 @@
     <string name="grade_type_none_available">No grades available</string>
     <string name="grade_type_recognized_a">Recognized assessments</string>
     <string name="grade_type_recognized_cc">Recognized course certificates (ILAS)</string>
-    <string name="grade_type_recognized_exam">Recognized assessments</string>
+    <string name="grade_type_recognized_exam">Recognized exams</string>
     <string name="grade_type_unknown">TODO</string>
     <string name="grade_unknown">Not rated</string>
     <string name="kusss_provider_name">KUSSS</string>
