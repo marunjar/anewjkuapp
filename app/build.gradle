@@ -112,7 +112,7 @@ dependencies {
     implementation "androidx.cardview:cardview:1.0.0"
     implementation 'androidx.work:work-runtime:2.4.0'
     googleImplementation 'androidx.work:work-gcm:2.4.0'
-    googleImplementation 'com.google.firebase:firebase-analytics:17.6.0'
+    googleImplementation 'com.google.firebase:firebase-analytics:18.0.0'
     googleImplementation 'com.google.firebase:firebase-crashlytics:17.2.2'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
