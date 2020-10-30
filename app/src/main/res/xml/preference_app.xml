@@ -15,14 +15,14 @@
             app:title="@string/pref_app_use_light_theme_title" />
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/pref_cat_app_map">
+    <PreferenceCategory app:title="@string/title_map">
         <ListPreference
             app:key="pref_key_map_file"
             app:summary=""
             app:title="@string/pref_app_map_file_title" />
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/pref_cat_app_courses">
+    <PreferenceCategory app:title="@string/title_lvas">
         <SwitchPreferenceCompat
             app:defaultValue="false"
             app:key="pref_key_courses_show_with_assessment_only"
@@ -30,7 +30,7 @@
             app:title="@string/pref_courses_show_with_assessment_only_title" />
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/pref_cat_stats">
+    <PreferenceCategory app:title="@string/title_stats">
         <SwitchPreferenceCompat
             app:defaultValue="false"
             app:key="pref_key_use_lva_bar_chart"
@@ -43,7 +43,7 @@
             app:title="@string/pref_stats_positive_grades_only_title" />
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/pref_cat_mensa">
+    <PreferenceCategory app:title="@string/title_mensa">
         <SwitchPreferenceCompat
             app:defaultValue="false"
             app:key="pref_key_group_menu_by_day"

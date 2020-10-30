@@ -416,9 +416,9 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         switch (getItemViewType(position)) {
             case StatCard.TYPE_GRADE: {
                 if (item.isWeighted()) {
-                    holder.mTitle.setText(getContext().getString(R.string.stat_title_grade_weighted));
+                    holder.mTitle.setText(getContext().getString(R.string.title_grades_weighted));
                 } else {
-                    holder.mTitle.setText(getContext().getString(R.string.stat_title_grade));
+                    holder.mTitle.setText(getContext().getString(R.string.title_grades));
                 }
 
                 initGradeListItems(holder, item);
@@ -428,7 +428,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
                 break;
             }
             case StatCard.TYPE_LVA: {
-                holder.mTitle.setText(getContext().getString(R.string.stat_title_lva));
+                holder.mTitle.setText(getContext().getString(R.string.title_lvas));
 
                 initLvaListItems(holder, item);
                 initLvaPlot(holder);

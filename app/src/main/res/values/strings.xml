@@ -99,13 +99,11 @@
     </plurals>
 
     <string name="pref_cat_update_password">Passwort aktualisieren</string>
-    <string name="pref_cat_kusss_main">KUSSS</string>
     <string name="pref_kusss_user_title">Matrikelnummer</string>
     <string name="pref_kusss_pw_title">Passwort</string>
     <string name="pref_kusss_sync_interval_summary">Intervall in dem die Daten synchronisiert werden</string>
     <string name="pref_kusss_sync_interval_title">Synchronisationsintervall</string>
     <string name="pref_kusss_notify_title">Benachrichtigen</string>
-    <string name="pref_cat_kusss_calendar">Stundenplan</string>
     <string name="pref_kusss_use_calendar_view_summary">Termine in einer Kalenderansicht anzeigen</string>
     <string name="pref_kusss_use_calendar_view_title">Kalenderansicht</string>
     <string name="pref_kusss_calendar_sync_summary">Termine vom aktuellen Semester aus KUSSS synchronisieren</string>
@@ -115,9 +113,7 @@
     <string name="pref_kusss_calendar_extend_summary">alle Termine werden in einen bestehenden Kalender importiert</string>
     <string name="pref_kusss_calendar_extended_title">Kalender</string>
     <string name="pref_kusss_calendar_extended_summary">der Kalender in den die Termine importiert werden</string>
-    <string name="pref_cat_kusss_grade">Noten</string>
     <string name="pref_kusss_grade_notify_summary">Benachrichtigen wenn neue Noten vorhanden sind</string>
-    <string name="pref_cat_kusss_exam">Prüfungen</string>
     <string name="pref_kusss_exam_notify_summary">Benachrichtigen wenn neue LVA-Prüfungen zu den eigenen LVAs verfügbar sind</string>
     <string name="pref_kusss_exam_get_from_lva_title">Prüfungen nach LVA-Nr laden</string>
     <string name="pref_kusss_exam_get_from_lva_summary">findet Prüfungen zu LVAs auch aus früheren Semestern, ist dafür aber langsamer …</string>
@@ -125,20 +121,16 @@
     <string name="pref_app_override_theme_title">System-Theme ignorieren</string>
     <string name="pref_app_override_theme_summary">Das Theme wird vom System verwaltet. Wollen sie es ignorieren?</string>
     <string name="pref_app_use_light_theme_title">helles Design verwenden</string>
-    <string name="pref_cat_app_map">Karte</string>
     <string name="pref_app_map_file_title">eigene Kartendatei</string>
-    <string name="pref_cat_stats">Statistik</string>
     <string name="pref_stats_use_lva_bar_chart_summary">Balkendiagramm für offene und erledigte LVAs verwenden</string>
     <string name="pref_stats_use_lva_bar_chart_title">Diagramme</string>
     <string name="pref_stats_positive_grades_only_summary">Notendurchschnitt nur mit positiven Noten berechnen</string>
     <string name="pref_stats_positive_grades_only_title">besserer Notendurchschnitt für LVAs</string>
-    <string name="pref_cat_mensa">Mensa</string>
     <string name="pref_mensa_group_menu_by_day_title">nach Tag gruppieren</string>
     <string name="pref_mensa_group_menu_by_day_summary">Alle Menüs nach Tag gruppieren</string>
     <string name="pref_cat_tracking">Tracking</string>
     <string name="pref_tracking_errors_title">Fehler</string>
     <string name="pref_tracking_errors_summary">Fehler automatisch an Entwickler senden damit schneller darauf reagiert werden kann.</string>
-    <string name="pref_cat_app_courses">LVAs</string>
     <string name="pref_courses_show_with_assessment_only_title">nur LVAs mit Noten anzeigen</string>
     <string name="pref_courses_show_with_assessment_only_summary">Für vergangene Semester werden nur LVAs angezeigt die bereits benotet wurden.</string>
 
@@ -190,9 +182,7 @@
     <string name="mensa_title_tagesteller" translatable="false">Tagesteller</string>
     <string name="mensa_open_in_browser">in Browser anzeigen</string>
 
-    <string name="stat_title_grade_weighted">Noten (gewichtet)</string>
-    <string name="stat_title_grade">Noten</string>
-    <string name="stat_title_lva">LVAs</string>
+    <string name="title_grades_weighted">Noten (gewichtet)</string>
 
     <string name="lva_state_open">Offen</string>
     <string name="lva_state_done">Abgeschlossen</string>
@@ -205,7 +195,6 @@
     <string name="extension_mensa_pref_visible_from">von</string>
     <string name="extension_mensa_pref_visible_to">bis</string>
     <string name="extension_mensa_pref_cat_visibility">Anzeige</string>
-    <string name="extension_mensa_pref_cat_mensa">Mensa</string>
 
     <string name="calendar_title_exam">Prüfungen</string>
     <string name="calendar_title_lva">LVAs</string>

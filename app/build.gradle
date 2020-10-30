@@ -124,7 +124,8 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'org.mnode.ical4j:ical4j:3.0.20'
     implementation 'com.sun.mail:javax.mail:1.6.2'
-    //noinspection GradleDependency, breaks when upgrading commons.lang3 > 3.9
+    //breaks when upgrading commons.lang3 > 3.9
+    //noinspection GradleDependency
     implementation 'org.apache.commons:commons-lang3:3.9'
     implementation 'org.slf4j:slf4j-android:1.7.30'
     implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory app:title="@string/pref_cat_kusss_main">
+    <PreferenceCategory app:title="@string/title_kusss">
         <Preference app:title="@string/pref_cat_update_password">
             <intent android:action="org.voidsink.anewjkuapp.prefs.LOGIN" />
         </Preference>
@@ -15,7 +15,7 @@
             app:title="@string/pref_kusss_sync_interval_title" />
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/pref_cat_kusss_grade">
+    <PreferenceCategory app:title="@string/title_grades">
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:key="pref_key_notify_grade"
@@ -23,7 +23,7 @@
             app:title="@string/pref_kusss_notify_title" />
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/pref_cat_kusss_exam">
+    <PreferenceCategory app:title="@string/title_exams">
         <SwitchPreferenceCompat
             app:defaultValue="true"
             app:key="pref_key_notify_exam"

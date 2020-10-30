@@ -20,7 +20,7 @@
             android:title="@string/extension_mensa_pref_visible_to" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/extension_mensa_pref_cat_mensa">
+    <PreferenceCategory android:title="@string/title_mensa">
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="pref_key_dashclock_ext_mensa_classic"
