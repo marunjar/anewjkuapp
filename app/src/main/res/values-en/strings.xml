@@ -3,7 +3,6 @@
     <string name="mensa_menu_today">Today</string>
     <string name="mensa_menu_tomorrow">Tomorrow</string>
     <string name="about_app_summary">This is a new JKU, KUSSS, ÖH, … App for the students of JKU Linz.\n\nThe development is still in progress but the most needed functions are already implemented.\n\nIf you have any questions, problems or feature requests, write an email to the developer!\nIf you have an existing GitHub account you can also post here: https://github.com/marunjar/anewjkuapp/issues</string>
-    <string name="about_libraries_title">Libraries</string>
     <string name="action_changelog">Change Log</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_settings_summary">Settings for KUSSS, notifications, …</string>
@@ -39,7 +38,6 @@
     <string name="mensa_menu_not_available">Menu not available</string>
     <string name="menu_exam_register">Show in KUSSS</string>
     <string name="notification_error">"JKU App" error</string>
-    <string name="notification_error_account_is_null">Account not found</string>
     <plurals name="notification_events_changed">
         <item quantity="one">Changed event in "%2$s"</item>
         <item quantity="other">Changed %1$d events in "%2$s"</item>

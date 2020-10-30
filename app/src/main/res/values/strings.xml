@@ -92,7 +92,6 @@
     </plurals>
 
     <string name="notification_error">"JKU App" Fehler</string>
-    <string name="notification_error_account_is_null">kein Account vorhanden</string>
     <plurals name="notification_more">
         <item quantity="one">+1 weitere</item>
         <item quantity="other">+%d weitere</item>
@@ -142,7 +141,6 @@
     <string name="settings_timetable_summary">Einstellungen für verwendete Kalender und Stundenplan</string>
 
     <string name="about_app_summary">Das ist eine neue JKU, KUSSS, ÖH, … App für Studenten der JKU Linz.\n\nDie App ist noch in Entwicklung und die am meisten benötigten Funktionen sind bereits implementiert.\n\nWenn Sie Fragen, Probleme oder Wünsche haben, schreiben Sie eine E-Mail an die Entwickler!\nBesitzer eines GitHub-Accounts können auch einfach hier posten: https://github.com/marunjar/anewjkuapp/issues </string>
-    <string name="about_libraries_title">verwendete Bibliotheken</string>
 
     <string name="oeh_info_main_title" translatable="false">Deine ÖH</string>
     <string name="oeh_info_main_summary" translatable="false">Die Österreichische Hochschülerinnen- und Hochschülerschaft ist die gesetzliche Vertretung aller Studierenden. Sie gliedert sich bundesweit in die ÖH-Bundesvertretung (<a href="http://www.oeh.ac.at/">http://www.oeh.ac.at/</a>), in die Universitätsvertretungen an den einzelnen Universitäten, wie beispielsweise die HochschülerInnenschaft an der Johannes Kepler Universität Linz (<a href="http://oeh.jku.at/">http://oeh.jku.at</a>).(</string>
