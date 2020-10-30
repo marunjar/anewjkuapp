@@ -4,6 +4,7 @@
     <issue id="UnusedIds" severity="informational" />
     <issue id="DuplicateStrings" severity="informational" />
     <issue id="SyntheticAccessor" severity="informational" />
+    <issue id="SelectableText" severity="ignore" />
 
     <!-- ignore until kotlin is not in use -->
     <issue id="UnknownNullness" severity="ignore" />

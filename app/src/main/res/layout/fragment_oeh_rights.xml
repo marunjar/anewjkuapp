@@ -11,13 +11,12 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/oeh_rights_1_title"
             style="@style/Text.Title"
             android:layout_width="match_parent"
-            android:textColor="?attr/colorAccent"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:text="@string/oeh_rights_1_title" />
+            android:text="@string/oeh_rights_1_title"
+            android:textColor="?attr/colorAccent" />
 
         <TextView
             android:id="@+id/oeh_rights_1_summary"
@@ -25,9 +24,8 @@
             android:text="@string/oeh_rights_1_summary" />
 
         <TextView
-            android:id="@+id/oeh_rights_2_title"
             style="@style/oeh_text_title"
-            android:text="@string/oeh_rights_2_title"/>
+            android:text="@string/oeh_rights_2_title" />
 
         <TextView
             android:id="@+id/oeh_rights_2_summary"
@@ -35,7 +33,6 @@
             android:text="@string/oeh_rights_2_summary" />
 
         <TextView
-            android:id="@+id/oeh_rights_3_title"
             style="@style/oeh_text_title"
             android:text="@string/oeh_rights_3_title" />
 
@@ -45,7 +42,6 @@
             android:text="@string/oeh_rights_3_summary" />
 
         <TextView
-            android:id="@+id/oeh_rights_4_title"
             style="@style/oeh_text_title"
             android:text="@string/oeh_rights_4_title" />
 
@@ -55,7 +51,6 @@
             android:text="@string/oeh_rights_4_summary" />
 
         <TextView
-            android:id="@+id/oeh_rights_5_title"
             style="@style/oeh_text_title"
             android:text="@string/oeh_rights_5_title" />
 
@@ -65,9 +60,8 @@
             android:text="@string/oeh_rights_5_summary" />
 
         <TextView
-            android:id="@+id/oeh_rights_6_title"
             style="@style/oeh_text_title"
-            android:text="@string/oeh_rights_6_title"/>
+            android:text="@string/oeh_rights_6_title" />
 
         <TextView
             android:id="@+id/oeh_rights_6_summary"

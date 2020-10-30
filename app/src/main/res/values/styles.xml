@@ -97,7 +97,7 @@
         <item name="android:layout_marginBottom">@dimen/card_content_padding</item>
     </style>
 
-<!--this themes are for toolbars in cards-->
+    <!--this themes are for toolbars in cards-->
     <style name="cardToolbar.ActionButton.Overflow" parent="@style/Widget.AppCompat.Light.ActionButton.Overflow">
         <item name="android:minWidth">0dp</item>
         <item name="android:paddingLeft">0dp</item>
@@ -122,9 +122,7 @@
         <item name="contentInsetStart">0dp</item>
     </style>
 
-    <style name="mainToolbar" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
-    </style>
+    <style name="mainToolbar" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
 
-    <style name="mainToolbarStyle">
-    </style>
+    <style name="mainToolbarStyle" />
 </resources>

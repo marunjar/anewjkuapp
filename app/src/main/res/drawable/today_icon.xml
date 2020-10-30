@@ -15,7 +15,6 @@
 
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/today_icon_background"
         android:drawable="@drawable/ic_calendar_blank_white_24dp"
         android:gravity="center" />
     <item

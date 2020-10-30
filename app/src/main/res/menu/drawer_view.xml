@@ -3,9 +3,7 @@
 
     <item android:title="@string/title_kusss">
         <menu>
-            <group
-                android:id="@+id/group_kusss"
-                android:checkableBehavior="none">
+            <group android:checkableBehavior="none">
                 <item
                     android:id="@+id/nav_cal"
                     android:icon="@drawable/ic_event_white_24dp"
@@ -36,9 +34,7 @@
 
     <item android:title="@string/title_campus">
         <menu>
-            <group
-                android:id="@+id/group_campus"
-                android:checkableBehavior="none">
+            <group android:checkableBehavior="none">
                 <item
                     android:id="@+id/nav_mensa"
                     android:icon="@drawable/ic_food_24dp"
@@ -53,9 +49,7 @@
 
     <item android:title="@string/title_oeh">
         <menu>
-            <group
-                android:id="@+id/group_oeh"
-                android:checkableBehavior="none">
+            <group android:checkableBehavior="none">
                 <item
                     android:id="@+id/nav_oeh_info"
                     android:icon="@drawable/ic_info_outline_white_24dp"

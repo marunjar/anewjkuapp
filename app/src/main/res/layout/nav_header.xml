@@ -6,7 +6,6 @@
     android:layout_height="@dimen/drawer_header_height">
 
     <ImageView
-        android:id="@+id/drawer_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@null"

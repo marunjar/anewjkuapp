@@ -10,7 +10,6 @@
     <include layout="@layout/main_toolbar" />
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/about_fragment"
         android:name="org.voidsink.anewjkuapp.fragment.AboutFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
