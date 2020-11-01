@@ -29,11 +29,10 @@ node {
                 }
             }
             stage('Deploy') {
-                echo '${currentBuild}'
                 archiveArtifacts artifacts: '**/*.apk', caseSensitive: false, followSymlinks: false
             }
             stage('Cleanup') {
-                step([$class: 'GitHubCommitStatusSetter', errorHandlers: [[$class: 'ChangingBuildStatusErrorHandler', result: 'UNSTABLE']], statusResultSource: [$class: 'ConditionalStatusResultSource', results: [[$class: 'AnyBuildResult', message: build.description, state: 'SUCCESS']]]])
+                step([$class: 'GitHubCommitStatusSetter', errorHandlers: [[$class: 'ChangingBuildStatusErrorHandler', result: 'UNSTABLE']], statusResultSource: [$class: 'ConditionalStatusResultSource', results: [[$class: 'AnyBuildResult', message: "${build.description}", state: 'SUCCESS']]]])
                 withGradle {
                     sh './gradlew clean'
                     sh './gradlew cleanBuildCache'
