@@ -8,6 +8,7 @@ node {
             }
             stage('Setup') {
                 properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '1', daysToKeepStr: '', numToKeepStr: '5')), [$class: 'ScannerJobProperty', doNotScan: false], disableConcurrentBuilds()])
+                step([$class: 'GitHubCommitStatusSetter', errorHandlers: [[$class: 'ChangingBuildStatusErrorHandler', result: 'UNSTABLE']], reposSource: [$class: 'ManuallyEnteredRepositorySource', url: 'https://github.com/marunjar/anewjkuapp'], statusResultSource: [$class: 'ConditionalStatusResultSource', results: [[$class: 'AnyBuildResult', message: 'Build started', state: 'PENDING']]]])
             }
             stage('Build') {
                 withGradle {
