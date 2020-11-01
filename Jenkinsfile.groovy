@@ -29,6 +29,7 @@ node {
             }
             stage('Deploy') {
                 archiveArtifacts artifacts: '**/*.apk', caseSensitive: false, followSymlinks: false
+                step([$class: 'GitHubCommitStatusSetter', statusBackrefSource: [$class: 'ManuallyEnteredBackrefSource', backref: '']])
             }
             stage('Cleanup') {
                 withGradle {
