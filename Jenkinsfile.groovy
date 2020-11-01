@@ -3,37 +3,42 @@ node {
 
     timestamps {
         ansiColor('xterm') {
-            stage('Checkout') {
-                checkout scm
-            }
-            stage('Setup') {
-                properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '1', daysToKeepStr: '', numToKeepStr: '5')), [$class: 'ScannerJobProperty', doNotScan: false], disableConcurrentBuilds()])
-                step([$class: 'GitHubCommitStatusSetter', errorHandlers: [[$class: 'ChangingBuildStatusErrorHandler', result: 'UNSTABLE']], reposSource: [$class: 'ManuallyEnteredRepositorySource', url: 'https://github.com/marunjar/anewjkuapp']])
-            }
-            stage('Build') {
-                withGradle {
-                    sh './gradlew assembleFdroid'
-                    sh './gradlew assembleGoogle'
+            try {
+                stage('Checkout') {
+                    checkout scm
                 }
-            }
-            stage('Test') {
-                echo 'Testing...'
-            }
-            stage('Analyze') {
-                try {
+                stage('Setup') {
+                    properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '1', daysToKeepStr: '', numToKeepStr: '5')), [$class: 'ScannerJobProperty', doNotScan: false], disableConcurrentBuilds()])
+                    step([$class: 'GitHubCommitStatusSetter', errorHandlers: [[$class: 'ChangingBuildStatusErrorHandler', result: 'UNSTABLE']]])
+                }
+                stage('Build') {
                     withGradle {
-                        sh './gradlew lintFdroidRelease'
+                        sh './gradlew assembleFdroid'
+                        sh './gradlew assembleGoogle'
                     }
-                } finally {
-                    recordIssues blameDisabled: true, forensicsDisabled: true, skipPublishingChecks: true, sourceDirectory: 'app/src', tools: [androidLintParser(pattern: 'app/build/reports/lint-results-*.xml'), errorProne()]
+                    currentBuild.result = 'SUCCESS'
                 }
-            }
-            stage('Deploy') {
-                echo '${currentBuild}'
-                archiveArtifacts artifacts: '**/*.apk', caseSensitive: false, followSymlinks: false
+                stage('Test') {
+                    echo 'Testing...'
+                }
+                stage('Analyze') {
+                    try {
+                        withGradle {
+                            sh './gradlew lintFdroidRelease'
+                        }
+                    } finally {
+                        recordIssues blameDisabled: true, forensicsDisabled: true, skipPublishingChecks: true, sourceDirectory: 'app/src', tools: [androidLintParser(pattern: 'app/build/reports/lint-results-*.xml'), errorProne()]
+                    }
+                }
+                stage('Deploy') {
+                    echo '${currentBuild}'
+                    archiveArtifacts artifacts: '**/*.apk', caseSensitive: false, followSymlinks: false
+                }
+            } catch (ignored) {
+                currentBuild.result = 'FAILURE'
             }
             stage('Cleanup') {
-                step([$class: 'GitHubCommitStatusSetter', errorHandlers: [[$class: 'ChangingBuildStatusErrorHandler', result: 'UNSTABLE']], reposSource: [$class: 'ManuallyEnteredRepositorySource', url: 'https://github.com/marunjar/anewjkuapp'], statusResultSource: [$class: 'ConditionalStatusResultSource', results: [[$class: 'AnyBuildResult', message: 'Build complete', state: 'SUCCESS']]]])
+                step([$class: 'GitHubCommitStatusSetter', errorHandlers: [[$class: 'ChangingBuildStatusErrorHandler', result: 'UNSTABLE']]])
                 withGradle {
                     sh './gradlew clean'
                     sh './gradlew cleanBuildCache'
