@@ -29,11 +29,11 @@ node {
                 }
             }
             stage('Deploy') {
-                echo '${currentBuild.currentResult}'
+                echo '${currentBuild}'
                 archiveArtifacts artifacts: '**/*.apk', caseSensitive: false, followSymlinks: false
-                step([$class: 'GitHubCommitStatusSetter', errorHandlers: [[$class: 'ChangingBuildStatusErrorHandler', result: 'UNSTABLE']], reposSource: [$class: 'ManuallyEnteredRepositorySource', url: 'https://github.com/marunjar/anewjkuapp'], statusResultSource: [$class: 'ConditionalStatusResultSource', results: [[$class: 'AnyBuildResult', message: 'Build complete', state: 'SUCCESS']]]])
             }
             stage('Cleanup') {
+                step([$class: 'GitHubCommitStatusSetter', errorHandlers: [[$class: 'ChangingBuildStatusErrorHandler', result: 'UNSTABLE']], reposSource: [$class: 'ManuallyEnteredRepositorySource', url: 'https://github.com/marunjar/anewjkuapp'], statusResultSource: [$class: 'ConditionalStatusResultSource', results: [[$class: 'AnyBuildResult', message: 'Build complete', state: 'SUCCESS']]]])
                 withGradle {
                     sh './gradlew clean'
                     sh './gradlew cleanBuildCache'
