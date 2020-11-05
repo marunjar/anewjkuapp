@@ -101,6 +101,10 @@ public class MainActivity extends ThemedActivity {
     private TextView mDrawerUser = null;
     private Intent mPendingIntent = null;
 
+    private TextView getDrawerUser() {
+        return mDrawerUser;
+    }
+
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -145,10 +149,10 @@ public class MainActivity extends ThemedActivity {
         mDrawerListener = new DrawerLayout.SimpleDrawerListener() {
             @Override
             public void onDrawerOpened(View drawerView) {
-                if (mDrawerUser != null) {
+                if (getDrawerUser() != null) {
                     if ((Build.VERSION.SDK_INT < Build.VERSION_CODES.M) && (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED)) {
-                        mDrawerUser.setText(R.string.missing_app_permission);
-                        mDrawerUser.setOnClickListener(v -> {
+                        getDrawerUser().setText(R.string.missing_app_permission);
+                        getDrawerUser().setOnClickListener(v -> {
                             try {
                                 MainActivity.this.startActivity(
                                         new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -161,11 +165,11 @@ public class MainActivity extends ThemedActivity {
                     } else {
                         Account account = AppUtils.getAccount(MainActivity.this);
                         if (account == null) {
-                            mDrawerUser.setText(R.string.action_tap_to_login);
-                            mDrawerUser.setOnClickListener(v -> startCreateAccount());
+                            getDrawerUser().setText(R.string.action_tap_to_login);
+                            getDrawerUser().setOnClickListener(v -> startCreateAccount());
                         } else {
-                            mDrawerUser.setText(account.name);
-                            mDrawerUser.setOnClickListener(v -> startMyCurricula());
+                            getDrawerUser().setText(account.name);
+                            getDrawerUser().setOnClickListener(v -> startMyCurricula());
                         }
                     }
                 }

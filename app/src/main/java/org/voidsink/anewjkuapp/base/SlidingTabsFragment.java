@@ -33,10 +33,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -64,10 +61,6 @@ public abstract class SlidingTabsFragment extends BaseFragment {
      * List of {@link SlidingTabItem} which represent this sample's tabs.
      */
     private final List<SlidingTabItem> mTabs = new ArrayList<>();
-
-    private List<SlidingTabItem> getTabs() {
-        return mTabs;
-    }
 
     private TabLayout mTabLayout;
 
@@ -119,7 +112,7 @@ public abstract class SlidingTabsFragment extends BaseFragment {
         mTabs.clear();
         fillTabs(mTabs);
 
-        mViewPager.setAdapter(new SlidingFragmentPagerAdapter(this));
+        mViewPager.setAdapter(new SlidingFragmentPagerAdapter(this, mTabs));
         new TabLayoutMediator(mTabLayout, mViewPager, this::onConfigureTab).attach();
     }
 
@@ -128,18 +121,13 @@ public abstract class SlidingTabsFragment extends BaseFragment {
      * are instances of {@link Fragment}. Each page is
      * created by the relevant {@link SlidingTabItem} for the requested position.
      */
-    class SlidingFragmentPagerAdapter extends FragmentStateAdapter {
+    private static class SlidingFragmentPagerAdapter extends FragmentStateAdapter {
 
-        public SlidingFragmentPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
-            super(fragmentActivity);
-        }
+        private final List<SlidingTabItem> mTabs;
 
-        public SlidingFragmentPagerAdapter(@NonNull Fragment fragment) {
+        public SlidingFragmentPagerAdapter(@NonNull Fragment fragment, List<SlidingTabItem> tabs) {
             super(fragment);
-        }
-
-        public SlidingFragmentPagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
-            super(fragmentManager, lifecycle);
+            this.mTabs = tabs;
         }
 
         /**
@@ -150,12 +138,12 @@ public abstract class SlidingTabsFragment extends BaseFragment {
         @Override
         @NonNull
         public Fragment createFragment(int i) {
-            return getTabs().get(i).createFragment();
+            return mTabs.get(i).createFragment();
         }
 
         @Override
         public int getItemCount() {
-            return getTabs().size();
+            return mTabs.size();
         }
     }
 

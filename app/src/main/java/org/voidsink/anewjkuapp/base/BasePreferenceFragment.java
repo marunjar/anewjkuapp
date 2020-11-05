@@ -81,6 +81,10 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
     public static class TwoLinesListPreferenceDialogFragment extends PreferenceDialogFragmentCompat {
         private int mClickedDialogEntryIndex;
 
+        private int getClickedDialogEntryIndex() {
+            return mClickedDialogEntryIndex;
+        }
+
         public static TwoLinesListPreferenceDialogFragment newInstance(String key) {
             TwoLinesListPreferenceDialogFragment fragment = new TwoLinesListPreferenceDialogFragment();
             Bundle b = new Bundle(1);
@@ -126,7 +130,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
                         holder.getTitle().setText(getListPreference().getEntries()[position]);
                         holder.getSubTitle().setText(getListPreference().getEntriesSubtitles()[position]);
                         if (holder.radio != null) {
-                            holder.getRadio().setChecked(position == mClickedDialogEntryIndex);
+                            holder.getRadio().setChecked(position == getClickedDialogEntryIndex());
                         }
 
                         return convertView;
