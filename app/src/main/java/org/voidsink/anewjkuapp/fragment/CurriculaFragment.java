@@ -181,16 +181,16 @@ public class CurriculaFragment extends BaseFragment implements
         public void onBindViewHolder(@NonNull CurriculumViewHolder holder, int position) {
             Curriculum item = getItem(position);
 
-            holder.isStandard.setText(item.isStandard() ? getContext().getString(R.string.curriculum_is_standard_yes) : getContext().getString(R.string.curriculum_is_standard_no));
-            holder.cid.setText(item.getCid());
-            holder.title.setText(item.getTitle());
-            holder.steopDone.setText(item.isSteopDone() ? getContext().getString(R.string.curriculum_steop_done_yes) : getContext().getString(R.string.curriculum_steop_done_no));
-            holder.activeStatus.setText(item.isActive() ? getContext().getString(R.string.curriculum_active_status_yes) : getContext().getString(R.string.curriculum_active_status_no));
+            holder.getIsStandard().setText(item.isStandard() ? getContext().getString(R.string.curriculum_is_standard_yes) : getContext().getString(R.string.curriculum_is_standard_no));
+            holder.getCid().setText(item.getCid());
+            holder.getTitle().setText(item.getTitle());
+            holder.getSteopDone().setText(item.isSteopDone() ? getContext().getString(R.string.curriculum_steop_done_yes) : getContext().getString(R.string.curriculum_steop_done_no));
+            holder.getActiveStatus().setText(item.isActive() ? getContext().getString(R.string.curriculum_active_status_yes) : getContext().getString(R.string.curriculum_active_status_no));
             if (item.getDtStart() != null) {
-                holder.dtStart.setText(dateFormat.format(item.getDtStart()));
+                holder.getDtStart().setText(dateFormat.format(item.getDtStart()));
             }
             if (item.getDtEnd() != null) {
-                holder.dtEnd.setText(dateFormat.format(item.getDtEnd()));
+                holder.getDtEnd().setText(dateFormat.format(item.getDtEnd()));
             }
         }
 
@@ -212,7 +212,7 @@ public class CurriculaFragment extends BaseFragment implements
         @Override
         public void onBindHeaderViewHolder(CurriculumHeaderHolder curriculumHeaderHolder, int position) {
             Curriculum curriculum = getItem(position);
-            curriculumHeaderHolder.mText.setText(curriculum.getUni());
+            curriculumHeaderHolder.getText().setText(curriculum.getUni());
         }
     }
 
@@ -236,6 +236,34 @@ public class CurriculaFragment extends BaseFragment implements
             dtStart = itemView.findViewById(R.id.curriculum_dt_start);
             dtEnd = itemView.findViewById(R.id.curriculum_dt_end);
         }
+
+        public TextView getIsStandard() {
+            return isStandard;
+        }
+
+        public TextView getCid() {
+            return cid;
+        }
+
+        public TextView getTitle() {
+            return title;
+        }
+
+        public TextView getSteopDone() {
+            return steopDone;
+        }
+
+        public TextView getActiveStatus() {
+            return activeStatus;
+        }
+
+        public TextView getDtStart() {
+            return dtStart;
+        }
+
+        public TextView getDtEnd() {
+            return dtEnd;
+        }
     }
 
     public static class CurriculumHeaderHolder extends RecyclerView.ViewHolder {
@@ -244,6 +272,10 @@ public class CurriculaFragment extends BaseFragment implements
         CurriculumHeaderHolder(View itemView) {
             super(itemView);
             mText = itemView.findViewById(R.id.list_header_text);
+        }
+
+        public TextView getText() {
+            return mText;
         }
     }
 

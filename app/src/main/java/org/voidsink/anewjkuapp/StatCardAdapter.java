@@ -455,11 +455,11 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             this.mEcts = ects;
         }
 
-        private LvaState getType() {
+        public LvaState getType() {
             return mType;
         }
 
-        private double getEcts() {
+        public double getEcts() {
             return mEcts;
         }
     }
@@ -473,11 +473,11 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             this.mAvgGrade = AppUtils.getAvgGrade(grades, isWeighted, type, positiveOnly);
         }
 
-        private AssessmentType getType() {
+        public AssessmentType getType() {
             return mType;
         }
 
-        private double getAvgGrade() {
+        public double getAvgGrade() {
             return mAvgGrade;
         }
     }

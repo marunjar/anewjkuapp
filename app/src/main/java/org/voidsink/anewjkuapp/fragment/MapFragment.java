@@ -157,11 +157,11 @@ public class MapFragment extends BaseFragment implements
             this.mName = name;
         }
 
-        private LatLong getLatLon() {
+        public LatLong getLatLon() {
             return mLatLon;
         }
 
-        private String getName() {
+        public String getName() {
             return mName;
         }
     }

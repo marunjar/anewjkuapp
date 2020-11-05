@@ -34,7 +34,6 @@ import android.graphics.RectF;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Process;
 import android.provider.CalendarContract;
 import android.text.format.DateUtils;
 import android.util.SparseArray;
@@ -417,55 +416,46 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
         }
 
         public void loadPeriod(final int periodIndex, final boolean forceIt) {
+            int index = mLastLoadedPeriods.indexOf(periodIndex);
+            if (index < 0 || forceIt) {
+                mLastLoadedPeriods.add(0, periodIndex);
 
-            ((Runnable) () -> {
-                Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+                int halfDaysInPeriod = mDaysInPeriod / 2;
 
-                int index = mLastLoadedPeriods.indexOf(periodIndex);
-                if (index < 0 || forceIt) {
-                    mLastLoadedPeriods.add(0, periodIndex);
+                Calendar now = Calendar.getInstance();
+                now.add(Calendar.DATE, periodIndex * mDaysInPeriod - halfDaysInPeriod);
+                now.set(Calendar.HOUR_OF_DAY, 0);
+                now.set(Calendar.MINUTE, 0);
+                now.set(Calendar.SECOND, 0);
+                now.set(Calendar.MILLISECOND, 0);
 
-                    int halfDaysInPeriod = mDaysInPeriod / 2;
+                Calendar then = Calendar.getInstance();
+                then.add(Calendar.DATE, periodIndex * mDaysInPeriod + halfDaysInPeriod - 1);
+                then.set(Calendar.HOUR_OF_DAY, 23);
+                then.set(Calendar.MINUTE, 59);
+                then.set(Calendar.SECOND, 59);
+                then.set(Calendar.MILLISECOND, 999);
 
-                    Calendar now = Calendar.getInstance();
-                    now.add(Calendar.DATE, periodIndex * mDaysInPeriod - halfDaysInPeriod);
-                    now.set(Calendar.HOUR_OF_DAY, 0);
-                    now.set(Calendar.MINUTE, 0);
-                    now.set(Calendar.SECOND, 0);
-                    now.set(Calendar.MILLISECOND, 0);
+                Bundle args = new Bundle();
+                args.putLong(ARG_CAL_LOAD_NOW, now.getTimeInMillis());
+                args.putLong(ARG_CAL_LOAD_THEN, then.getTimeInMillis());
 
-                    Calendar then = Calendar.getInstance();
-                    then.add(Calendar.DATE, periodIndex * mDaysInPeriod + halfDaysInPeriod - 1);
-                    then.set(Calendar.HOUR_OF_DAY, 23);
-                    then.set(Calendar.MINUTE, 59);
-                    then.set(Calendar.SECOND, 59);
-                    then.set(Calendar.MILLISECOND, 999);
-
-                    Bundle args = new Bundle();
-                    args.putLong(ARG_CAL_LOAD_NOW, now.getTimeInMillis());
-                    args.putLong(ARG_CAL_LOAD_THEN, then.getTimeInMillis());
-
-//                    logger.debug("loadPeriod {}({}) {} - {}", periodIndex, index, SimpleDateFormat.getDateTimeInstance().format(now.getTime()), SimpleDateFormat.getDateTimeInstance().format(then.getTime()));
-                    if (index >= 0) {
-                        mLastLoadedPeriods.remove(index);
-                        if (hasCalendarReadPermission()) {
-                            LoaderManager.getInstance(CalendarFragment2.this).restartLoader(periodIndex, args, CalendarFragment2.this);
-                        }
-                    } else {
-                        if (hasCalendarReadPermission()) {
-                            LoaderManager.getInstance(CalendarFragment2.this).initLoader(periodIndex, args, CalendarFragment2.this);
-                        }
+                if (index >= 0) {
+                    mLastLoadedPeriods.remove(index);
+                    if (hasCalendarReadPermission()) {
+                        LoaderManager.getInstance(CalendarFragment2.this).restartLoader(periodIndex, args, CalendarFragment2.this);
                     }
-
-                    while (mLastLoadedPeriods.size() > 3) {
-                        int removed = mLastLoadedPeriods.remove(mLastLoadedPeriods.size() - 1);
-
-                        //logger.debug("period removed {}", removed);
-
-                        LoaderManager.getInstance(CalendarFragment2.this).destroyLoader(removed);
+                } else {
+                    if (hasCalendarReadPermission()) {
+                        LoaderManager.getInstance(CalendarFragment2.this).initLoader(periodIndex, args, CalendarFragment2.this);
                     }
                 }
-            }).run();
+
+                while (mLastLoadedPeriods.size() > 3) {
+                    int removed = mLastLoadedPeriods.remove(mLastLoadedPeriods.size() - 1);
+                    LoaderManager.getInstance(CalendarFragment2.this).destroyLoader(removed);
+                }
+            }
         }
 
         @Override
@@ -483,8 +473,6 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
 
         public void stopLoading() {
             if (LoaderManager.getInstance(CalendarFragment2.this).hasRunningLoaders()) {
-                logger.debug("stop loading events");
-
                 for (int id : mLastLoadedPeriods) {
                     LoaderManager.getInstance(CalendarFragment2.this).destroyLoader(id);
                 }
