@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2018 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -58,24 +58,24 @@ public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, Asse
     @Override
     public void onBindViewHolder(@NonNull GradeViewHolder holder, int position) {
         Assessment assessment = getItem(position);
-        holder.mTitle.setText((assessment.getTitle() + " " + assessment.getLvaType()).trim());
+        holder.getTitle().setText((assessment.getTitle() + " " + assessment.getLvaType()).trim());
 
-        UIUtils.setTextAndVisibility(holder.mCourseId, assessment.getCourseId());
-        UIUtils.setTextAndVisibility(holder.mTerm, AppUtils.termToString(assessment.getTerm()));
+        UIUtils.setTextAndVisibility(holder.getCourseId(), assessment.getCourseId());
+        UIUtils.setTextAndVisibility(holder.getTerm(), AppUtils.termToString(assessment.getTerm()));
 
         if (assessment.getCid() > 0) {
-            holder.mCid.setText(AppUtils.format(getContext(), "[%d]", assessment.getCid()));
-            holder.mCid.setVisibility(View.VISIBLE);
+            holder.getCid().setText(AppUtils.format(getContext(), "[%d]", assessment.getCid()));
+            holder.getCid().setVisibility(View.VISIBLE);
         } else {
-            holder.mCid.setVisibility(View.GONE);
+            holder.getCid().setVisibility(View.GONE);
         }
 
-        holder.mChipBack.setBackgroundColor(UIUtils.getChipGradeColor(assessment));
-        holder.mChipGrade.setText(UIUtils.getChipGradeText(getContext(), assessment));
-        holder.mChipInfo.setText(UIUtils.getChipGradeEcts(getContext(), assessment.getEcts()));
+        holder.getChipBack().setBackgroundColor(UIUtils.getChipGradeColor(assessment));
+        holder.getChipGrade().setText(UIUtils.getChipGradeText(getContext(), assessment));
+        holder.getChipInfo().setText(UIUtils.getChipGradeEcts(getContext(), assessment.getEcts()));
 
-        holder.mDate.setText(DateFormat.getDateInstance().format(assessment.getDate()));
-        holder.mGrade.setText(getContext().getString(assessment.getGrade()
+        holder.getDate().setText(DateFormat.getDateInstance().format(assessment.getDate()));
+        holder.getGrade().setText(getContext().getString(assessment.getGrade()
                 .getStringResID()));
     }
 
@@ -98,7 +98,7 @@ public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, Asse
     public void onBindHeaderViewHolder(GradeHeaderHolder gradeHeaderHolder, int position) {
         Assessment grade = getItem(position);
         if (grade != null) {
-            gradeHeaderHolder.mText.setText(getContext().getString(grade.getAssessmentType().getStringResID()));
+            gradeHeaderHolder.getText().setText(getContext().getString(grade.getAssessmentType().getStringResID()));
 
         }
     }
@@ -127,6 +127,42 @@ public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, Asse
             mChipInfo = itemView.findViewById(R.id.grade_chip_info);
             mChipGrade = itemView.findViewById(R.id.grade_chip_grade);
         }
+
+        public TextView getTitle() {
+            return mTitle;
+        }
+
+        public TextView getGrade() {
+            return mGrade;
+        }
+
+        public TextView getCourseId() {
+            return mCourseId;
+        }
+
+        public TextView getTerm() {
+            return mTerm;
+        }
+
+        public TextView getCid() {
+            return mCid;
+        }
+
+        public TextView getDate() {
+            return mDate;
+        }
+
+        public View getChipBack() {
+            return mChipBack;
+        }
+
+        public TextView getChipGrade() {
+            return mChipGrade;
+        }
+
+        public TextView getChipInfo() {
+            return mChipInfo;
+        }
     }
 
     static class GradeHeaderHolder extends RecyclerView.ViewHolder {
@@ -136,6 +172,10 @@ public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, Asse
             super(itemView);
 
             mText = itemView.findViewById(R.id.list_header_text);
+        }
+
+        public TextView getText() {
+            return mText;
         }
     }
 }

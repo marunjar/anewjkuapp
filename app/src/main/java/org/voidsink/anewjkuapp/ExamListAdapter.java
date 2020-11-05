@@ -63,7 +63,7 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
         final ExamListExam exam = getItem(position);
 
         if (exam != null) {
-            holder.mToolbar.setOnMenuItemClickListener(menuItem -> {
+            holder.getToolbar().setOnMenuItemClickListener(menuItem -> {
                 switch (menuItem.getItemId()) {
                     case R.id.menu_exam_register: {
                         KusssHelper.showExamInBrowser(getContext(), exam.getCourseId());
@@ -74,20 +74,20 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
                 }
             });
 
-            holder.mTitle.setText(exam.getTitle());
-            UIUtils.setTextAndVisibility(holder.mDescription, exam.getDescription());
-            UIUtils.setTextAndVisibility(holder.mInfo, exam.getInfo());
-            holder.mCourseId.setText(exam.getCourseId());
-            UIUtils.setTextAndVisibility(holder.mTerm, AppUtils.termToString(exam.getTerm()));
+            holder.getTitle().setText(exam.getTitle());
+            UIUtils.setTextAndVisibility(holder.getDescription(), exam.getDescription());
+            UIUtils.setTextAndVisibility(holder.getInfo(), exam.getInfo());
+            holder.getCourseId().setText(exam.getCourseId());
+            UIUtils.setTextAndVisibility(holder.getTerm(), AppUtils.termToString(exam.getTerm()));
 
             if (exam.getCid() > 0) {
-                holder.mCid.setText(AppUtils.format(getContext(), "[%d]", exam.getCid()));
-                holder.mCid.setVisibility(View.VISIBLE);
+                holder.getCid().setText(AppUtils.format(getContext(), "[%d]", exam.getCid()));
+                holder.getCid().setVisibility(View.VISIBLE);
             } else {
-                holder.mCid.setVisibility(View.GONE);
+                holder.getCid().setVisibility(View.GONE);
             }
-            holder.mTime.setText(AppUtils.getTimeString(getContext(), exam.getDtStart(), exam.getDtEnd(), false));
-            holder.mLocation.setText(exam.getLocation());
+            holder.getTime().setText(AppUtils.getTimeString(getContext(), exam.getDtStart(), exam.getDtEnd(), false));
+            holder.getLocation().setText(exam.getLocation());
         }
     }
 
@@ -118,9 +118,9 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
         ExamListExam exam = getItem(position);
 
         if (exam != null) {
-            dateHeaderHolder.mText.setText(DateFormat.getDateInstance().format(exam.getDtStart()));
+            dateHeaderHolder.getText().setText(DateFormat.getDateInstance().format(exam.getDtStart()));
         } else {
-            dateHeaderHolder.mText.setText("");
+            dateHeaderHolder.getText().setText("");
         }
     }
 
@@ -150,6 +150,42 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
             mTime = itemView.findViewById(R.id.exam_list_item_time);
             mLocation = itemView.findViewById(R.id.exam_list_item_location);
         }
+
+        public Toolbar getToolbar() {
+            return mToolbar;
+        }
+
+        public TextView getLocation() {
+            return mLocation;
+        }
+
+        public TextView getTime() {
+            return mTime;
+        }
+
+        public TextView getCid() {
+            return mCid;
+        }
+
+        public TextView getTerm() {
+            return mTerm;
+        }
+
+        public TextView getCourseId() {
+            return mCourseId;
+        }
+
+        public TextView getInfo() {
+            return mInfo;
+        }
+
+        public TextView getDescription() {
+            return mDescription;
+        }
+
+        public TextView getTitle() {
+            return mTitle;
+        }
     }
 
     static class DateHeaderHolder extends RecyclerView.ViewHolder {
@@ -160,6 +196,9 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
 
             mText = itemView.findViewById(R.id.list_header_text);
         }
-    }
 
+        public TextView getText() {
+            return mText;
+        }
+    }
 }

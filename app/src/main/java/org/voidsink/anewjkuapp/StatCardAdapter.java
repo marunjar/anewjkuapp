@@ -99,7 +99,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             lvaStats.add(lva);
         }
 
-        holder.mItems.removeAllViews();
+        holder.getItems().removeAllViews();
 
         for (LvaStatItem item : lvaStats) {
             final LayoutInflater mInflater = LayoutInflater.from(getContext());
@@ -111,7 +111,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             type.setText(getContext().getString(item.getType().getStringResID()));
             ects.setText(AppUtils.format(getContext(), "%.2f ECTS", item.getEcts()));
 
-            holder.mItems.addView(view);
+            holder.getItems().addView(view);
         }
     }
 
@@ -121,7 +121,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         double mDoneEcts = AppUtils.getECTS(LvaState.DONE, mLvas);
         //double minEcts = (card.getTerms() != null) ? card.getTerms().size() * 30 : 0;
 
-        if (holder.mBarChart.getVisibility() == View.VISIBLE) {
+        if (holder.getBarChart().getVisibility() == View.VISIBLE) {
             ComboLineColumnChartData dataSet = new ComboLineColumnChartData();
 
             ArrayList<Column> yVals = new ArrayList<>();
@@ -145,9 +145,9 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
 
             dataSet.setColumnChartData(new ColumnChartData(yVals));
 
-            holder.mBarChart.setComboLineColumnChartData(dataSet);
+            holder.getBarChart().setComboLineColumnChartData(dataSet);
         }
-        if (holder.mPieChart.getVisibility() == View.VISIBLE) {
+        if (holder.getPieChart().getVisibility() == View.VISIBLE) {
             ArrayList<SliceValue> slices = new ArrayList<>();
             ArrayList<String> captions = new ArrayList<>();
             ArrayList<Integer> colors = new ArrayList<>();
@@ -162,7 +162,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             initPieChartDataSet(dataSet);
             dataSet.setValues(slices);
 
-            holder.mPieChart.setPieChartData(dataSet);
+            holder.getPieChart().setPieChartData(dataSet);
         }
     }
 
@@ -208,13 +208,13 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
 
     private void initLvaPlot(final StatViewHolder holder) {
         if (PreferenceHelper.getUseLvaBarChart(getContext())) {
-            holder.mBarChart.setVisibility(View.VISIBLE);
-            initBarChart(holder.mBarChart);
-            holder.mPieChart.setVisibility(View.GONE);
+            holder.getBarChart().setVisibility(View.VISIBLE);
+            initBarChart(holder.getBarChart());
+            holder.getPieChart().setVisibility(View.GONE);
         } else {
-            holder.mPieChart.setVisibility(View.VISIBLE);
-            initPieChart(holder.mPieChart);
-            holder.mBarChart.setVisibility(View.GONE);
+            holder.getPieChart().setVisibility(View.VISIBLE);
+            initPieChart(holder.getPieChart());
+            holder.getBarChart().setVisibility(View.GONE);
         }
     }
 
@@ -260,7 +260,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             gradeStats.add(new GradeStatItem(AssessmentType.NONE_AVAILABLE, null, card.isWeighted(), card.isPositiveOnly()));
         }
 
-        holder.mItems.removeAllViews();
+        holder.getItems().removeAllViews();
 
         for (GradeStatItem item : gradeStats) {
             final LayoutInflater mInflater = LayoutInflater.from(getContext());
@@ -272,12 +272,12 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             type.setText(getContext().getString(item.getType().getStringResID()));
             avgGrade.setText(AppUtils.format(getContext(), "ø %.2f", item.getAvgGrade()));
 
-            holder.mItems.addView(view);
+            holder.getItems().addView(view);
         }
     }
 
     private void updateGradePlot(StatViewHolder holder, StatCard card) {
-        if (holder.mBarChart.getVisibility() == View.VISIBLE) {
+        if (holder.getBarChart().getVisibility() == View.VISIBLE) {
             ArrayList<Column> yVals = new ArrayList<>();
             ArrayList<AxisValue> axisValues = new ArrayList<>();
 
@@ -305,9 +305,9 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
 
             dataSet.setColumnChartData(new ColumnChartData(yVals));
 
-            holder.mBarChart.setComboLineColumnChartData(dataSet);
+            holder.getBarChart().setComboLineColumnChartData(dataSet);
         }
-        if (holder.mPieChart.getVisibility() == View.VISIBLE) {
+        if (holder.getPieChart().getVisibility() == View.VISIBLE) {
             ArrayList<SliceValue> slices = new ArrayList<>();
             ArrayList<String> captions = new ArrayList<>();
             ArrayList<Integer> colors = new ArrayList<>();
@@ -350,19 +350,19 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             initPieChartDataSet(dataSet);
             dataSet.setValues(slices);
 
-            holder.mPieChart.setPieChartData(dataSet);
+            holder.getPieChart().setPieChartData(dataSet);
         }
     }
 
     private void initGradePlot(final StatViewHolder holder) {
         if (PreferenceHelper.getUseLvaBarChart(getContext())) {
-            holder.mBarChart.setVisibility(View.VISIBLE);
-            initBarChart(holder.mBarChart);
-            holder.mPieChart.setVisibility(View.GONE);
+            holder.getBarChart().setVisibility(View.VISIBLE);
+            initBarChart(holder.getBarChart());
+            holder.getPieChart().setVisibility(View.GONE);
         } else {
-            holder.mPieChart.setVisibility(View.VISIBLE);
-            initPieChart(holder.mPieChart);
-            holder.mBarChart.setVisibility(View.GONE);
+            holder.getPieChart().setVisibility(View.VISIBLE);
+            initPieChart(holder.getPieChart());
+            holder.getBarChart().setVisibility(View.GONE);
         }
     }
 
@@ -416,9 +416,9 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
         switch (getItemViewType(position)) {
             case StatCard.TYPE_GRADE: {
                 if (item.isWeighted()) {
-                    holder.mTitle.setText(getContext().getString(R.string.title_grades_weighted));
+                    holder.getTitle().setText(getContext().getString(R.string.title_grades_weighted));
                 } else {
-                    holder.mTitle.setText(getContext().getString(R.string.title_grades));
+                    holder.getTitle().setText(getContext().getString(R.string.title_grades));
                 }
 
                 initGradeListItems(holder, item);
@@ -428,7 +428,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
                 break;
             }
             case StatCard.TYPE_LVA: {
-                holder.mTitle.setText(getContext().getString(R.string.title_lvas));
+                holder.getTitle().setText(getContext().getString(R.string.title_lvas));
 
                 initLvaListItems(holder, item);
                 initLvaPlot(holder);
@@ -496,6 +496,22 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
             mItems = itemView.findViewById(R.id.stat_card_items);
             mBarChart = itemView.findViewById(R.id.stat_card_diagram_bar);
             mPieChart = itemView.findViewById(R.id.stat_card_diagram_pie);
+        }
+
+        public TextView getTitle() {
+            return mTitle;
+        }
+
+        public LinearLayout getItems() {
+            return mItems;
+        }
+
+        public ComboLineColumnChartView getBarChart() {
+            return mBarChart;
+        }
+
+        public PieChartView getPieChart() {
+            return mPieChart;
         }
     }
 }

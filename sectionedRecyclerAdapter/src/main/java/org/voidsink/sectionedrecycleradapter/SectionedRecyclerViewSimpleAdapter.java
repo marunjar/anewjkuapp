@@ -69,7 +69,7 @@ public class SectionedRecyclerViewSimpleAdapter extends SectionedRecyclerViewBas
         ((SectionViewHolder) sectionViewHolder).title.setText(section.getTitle());
     }
 
-    public static class SectionViewHolder extends RecyclerView.ViewHolder {
+    private static class SectionViewHolder extends RecyclerView.ViewHolder {
         private final TextView title;
 
         SectionViewHolder(View view, int mTextResourceId) {

@@ -64,8 +64,8 @@ public class PoiAdapter extends BaseArrayAdapter<Poi> {
         }
 
         Poi poi = getItem(position);
-        poiHolder.text1.setText(poi.getName());
-        poiHolder.text2.setText(poi.getDescr());
+        poiHolder.getText1().setText(poi.getName());
+        poiHolder.getText2().setText(poi.getDescr());
 
         return convertView;
     }
@@ -77,7 +77,14 @@ public class PoiAdapter extends BaseArrayAdapter<Poi> {
         private PoiHolder(View view) {
             text1 = view.findViewById(android.R.id.text1);
             text2 = view.findViewById(android.R.id.text2);
+        }
 
+        public TextView getText1() {
+            return text1;
+        }
+
+        public TextView getText2() {
+            return text2;
         }
     }
 }

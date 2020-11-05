@@ -87,34 +87,34 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
                 MenuViewHolder mensaMenuItemHolder = (MenuViewHolder) holder;
                 IMenu menu = getItem(position).getMenu();
 
-                UIUtils.setTextAndVisibility(mensaMenuItemHolder.mName, menu.getName());
-                UIUtils.setTextAndVisibility(mensaMenuItemHolder.mSoup, menu.getSoup());
+                UIUtils.setTextAndVisibility(mensaMenuItemHolder.getName(), menu.getName());
+                UIUtils.setTextAndVisibility(mensaMenuItemHolder.getSoup(), menu.getSoup());
 
-                mensaMenuItemHolder.mMeal.setText(menu.getMeal());
+                mensaMenuItemHolder.getMeal().setText(menu.getMeal());
                 if (menu.getPrice() > 0) {
-                    mensaMenuItemHolder.mPrice.setText(AppUtils.format(getContext(), "%.2f €",
+                    mensaMenuItemHolder.getPrice().setText(AppUtils.format(getContext(), "%.2f €",
                             menu.getPrice()));
-                    mensaMenuItemHolder.mPrice.setVisibility(View.VISIBLE);
+                    mensaMenuItemHolder.getPrice().setVisibility(View.VISIBLE);
 
                     if (menu.getPriceBig() > 0 && menu.getPriceBig() != menu.getPrice()) {
-                        mensaMenuItemHolder.mPriceBig.setText(AppUtils.format(getContext(), "%.2f €",
+                        mensaMenuItemHolder.getPriceBig().setText(AppUtils.format(getContext(), "%.2f €",
                                 menu.getPriceBig()));
-                        mensaMenuItemHolder.mPriceBig.setVisibility(View.VISIBLE);
+                        mensaMenuItemHolder.getPriceBig().setVisibility(View.VISIBLE);
                     } else {
-                        mensaMenuItemHolder.mPriceBig.setVisibility(View.GONE);
+                        mensaMenuItemHolder.getPriceBig().setVisibility(View.GONE);
                     }
 
                     if (menu.getOehBonus() > 0) {
-                        mensaMenuItemHolder.mOehBonus.setText(AppUtils.format(getContext(),
+                        mensaMenuItemHolder.getOehBonus().setText(AppUtils.format(getContext(),
                                 "%.2f € ÖH Bonus", menu.getOehBonus()));
-                        mensaMenuItemHolder.mOehBonus.setVisibility(View.VISIBLE);
+                        mensaMenuItemHolder.getOehBonus().setVisibility(View.VISIBLE);
                     } else {
-                        mensaMenuItemHolder.mOehBonus.setVisibility(View.GONE);
+                        mensaMenuItemHolder.getOehBonus().setVisibility(View.GONE);
                     }
                 } else {
-                    mensaMenuItemHolder.mPrice.setVisibility(View.GONE);
-                    mensaMenuItemHolder.mPriceBig.setVisibility(View.GONE);
-                    mensaMenuItemHolder.mOehBonus.setVisibility(View.GONE);
+                    mensaMenuItemHolder.getPrice().setVisibility(View.GONE);
+                    mensaMenuItemHolder.getPriceBig().setVisibility(View.GONE);
+                    mensaMenuItemHolder.getOehBonus().setVisibility(View.GONE);
                 }
                 break;
             }
@@ -166,19 +166,18 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
             if (mUseDateHeader) {
                 final IDay day = item.getDay();
                 if (day != null) {
-                    menuHeaderHolder.mText.setText(df.format(day.getDate()));
+                    menuHeaderHolder.getText().setText(df.format(day.getDate()));
                 }
             } else {
                 IMensa mensa = item.getMensa();
                 if (mensa != null) {
-                    menuHeaderHolder.mText.setText(mensa.getName());
+                    menuHeaderHolder.getText().setText(mensa.getName());
                 }
             }
         }
     }
 
     static class MenuViewHolder extends RecyclerView.ViewHolder {
-
         private final TextView mName;
         private final TextView mSoup;
         private final TextView mMeal;
@@ -196,6 +195,30 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
             mPriceBig = itemView.findViewById(R.id.mensa_menu_item_price_big);
             mOehBonus = itemView.findViewById(R.id.mensa_menu_item_oeh_bonus);
         }
+
+        public TextView getName() {
+            return mName;
+        }
+
+        public TextView getSoup() {
+            return mSoup;
+        }
+
+        public TextView getMeal() {
+            return mMeal;
+        }
+
+        public TextView getPrice() {
+            return mPrice;
+        }
+
+        public TextView getPriceBig() {
+            return mPriceBig;
+        }
+
+        public TextView getOehBonus() {
+            return mOehBonus;
+        }
     }
 
     static class MensaInfoHolder extends RecyclerView.ViewHolder {
@@ -207,8 +230,15 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
             mTitle = itemView.findViewById(R.id.mensa_info_item_title);
             mDescr = itemView.findViewById(R.id.mensa_info_item_descr);
         }
-    }
 
+        public TextView getTitle() {
+            return mTitle;
+        }
+
+        public TextView getDescr() {
+            return mDescr;
+        }
+    }
 
     static class MenuHeaderHolder extends RecyclerView.ViewHolder {
         private final TextView mText;
@@ -216,6 +246,10 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
         MenuHeaderHolder(View itemView) {
             super(itemView);
             mText = itemView.findViewById(R.id.list_header_text);
+        }
+
+        public TextView getText() {
+            return mText;
         }
     }
 }

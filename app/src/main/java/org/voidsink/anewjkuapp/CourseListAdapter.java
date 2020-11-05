@@ -58,22 +58,22 @@ public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, Course
     public void onBindViewHolder(@NonNull LvaViewHolder holder, int position) {
         LvaWithGrade lva = getItem(position);
 
-        holder.mTitle.setText(lva.getCourse().getTitle());
-        UIUtils.setTextAndVisibility(holder.mTeacher, lva.getCourse().getTeacher());
-        holder.mCourseId.setText(lva.getCourse().getCourseId());
+        holder.getTitle().setText(lva.getCourse().getTitle());
+        UIUtils.setTextAndVisibility(holder.getTeacher(), lva.getCourse().getTeacher());
+        holder.getCourseId().setText(lva.getCourse().getCourseId());
         if (lva.getCourse().getCid() > 0) {
-            holder.mCid.setText(AppUtils.format(getContext(), "[%d]", lva.getCourse().getCid()));
-            holder.mCid.setVisibility(View.VISIBLE);
+            holder.getCid().setText(AppUtils.format(getContext(), "[%d]", lva.getCourse().getCid()));
+            holder.getCid().setVisibility(View.VISIBLE);
         } else {
-            holder.mCid.setVisibility(View.GONE);
+            holder.getCid().setVisibility(View.GONE);
         }
-        holder.mCode.setText(lva.getCourse().getCode());
-        UIUtils.setTextAndVisibility(holder.mTerm, AppUtils.termToString(lva.getCourse().getTerm()));
+        holder.getCode().setText(lva.getCourse().getCode());
+        UIUtils.setTextAndVisibility(holder.getTerm(), AppUtils.termToString(lva.getCourse().getTerm()));
 
         Assessment grade = lva.getGrade();
-        holder.mChipBack.setBackgroundColor(UIUtils.getChipGradeColor(grade));
-        holder.mChipGrade.setText(UIUtils.getChipGradeText(getContext(), grade));
-        holder.mChipEcts.setText(UIUtils.getChipGradeEcts(getContext(), lva.getCourse().getEcts()));
+        holder.getChipBack().setBackgroundColor(UIUtils.getChipGradeColor(grade));
+        holder.getChipGrade().setText(UIUtils.getChipGradeText(getContext(), grade));
+        holder.getChipEcts().setText(UIUtils.getChipGradeEcts(getContext(), lva.getCourse().getEcts()));
     }
 
     @Override
@@ -95,7 +95,7 @@ public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, Course
     public void onBindHeaderViewHolder(LvaHeaderHolder lvaHeaderHolder, int position) {
         LvaWithGrade lva = getItem(position);
         if (lva != null) {
-            lvaHeaderHolder.mText.setText(getContext().getString(lva.getState().getStringResID()));
+            lvaHeaderHolder.getText().setText(getContext().getString(lva.getState().getStringResID()));
         }
     }
 
@@ -124,6 +124,42 @@ public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, Course
             mChipEcts = itemView.findViewById(R.id.grade_chip_info);
             mChipGrade = itemView.findViewById(R.id.grade_chip_grade);
         }
+
+        public TextView getTitle() {
+            return mTitle;
+        }
+
+        public TextView getCourseId() {
+            return mCourseId;
+        }
+
+        public TextView getCode() {
+            return mCode;
+        }
+
+        public TextView getCid() {
+            return mCid;
+        }
+
+        public TextView getTeacher() {
+            return mTeacher;
+        }
+
+        public View getChipBack() {
+            return mChipBack;
+        }
+
+        public TextView getChipEcts() {
+            return mChipEcts;
+        }
+
+        public TextView getChipGrade() {
+            return mChipGrade;
+        }
+
+        public TextView getTerm() {
+            return mTerm;
+        }
     }
 
     static class LvaHeaderHolder extends RecyclerView.ViewHolder {
@@ -132,6 +168,10 @@ public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, Course
         LvaHeaderHolder(View itemView) {
             super(itemView);
             mText = itemView.findViewById(R.id.list_header_text);
+        }
+
+        public TextView getText() {
+            return mText;
         }
     }
 }
