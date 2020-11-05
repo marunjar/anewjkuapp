@@ -108,7 +108,7 @@ public abstract class ThemedActivity extends AppCompatActivity {
 
         final String screenName = getScreenName();
         if (screenName != null && !screenName.isEmpty()) {
-            AnalyticsHelper.sendScreen(this, screenName);
+            AnalyticsHelper.sendScreen(screenName);
         }
     }
 

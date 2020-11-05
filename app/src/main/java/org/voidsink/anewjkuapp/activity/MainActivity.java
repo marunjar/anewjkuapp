@@ -445,6 +445,6 @@ public class MainActivity extends ThemedActivity {
 
         mDrawerLayout.removeDrawerListener(mDrawerListener);
 
-        AnalyticsHelper.clearScreen(this);
+        AnalyticsHelper.clearScreen();
     }
 }

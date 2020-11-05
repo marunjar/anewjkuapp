@@ -332,6 +332,6 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
     protected void onStart() {
         super.onStart();
 
-        AnalyticsHelper.sendScreen(this, Consts.SCREEN_LOGIN);
+        AnalyticsHelper.sendScreen(Consts.SCREEN_LOGIN);
     }
 }

@@ -132,7 +132,7 @@ public class BaseFragment extends Fragment implements StackedFragment, PendingIn
 
         final String screenName = getScreenName();
         if (screenName != null && !screenName.isEmpty()) {
-            AnalyticsHelper.sendScreen(getActivity(), screenName);
+            AnalyticsHelper.sendScreen(screenName);
         }
 
         handleIntent();

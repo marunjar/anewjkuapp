@@ -170,6 +170,6 @@ public class MensaDashclockExtension extends DashClockExtension {
             publishUpdate(new ExtensionData().visible(false));
         }
 
-        AnalyticsHelper.sendScreen(null, Consts.SCREEN_DASHCLOCK);
+        AnalyticsHelper.sendScreen(Consts.SCREEN_DASHCLOCK);
     }
 }

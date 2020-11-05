@@ -51,7 +51,7 @@ public class MensaDashclockSettings extends ThemedActivity {
     protected void onStart() {
         super.onStart();
 
-        AnalyticsHelper.sendScreen(this, Consts.SCREEN_SETTINGS_DASHCLOCK);
+        AnalyticsHelper.sendScreen(Consts.SCREEN_SETTINGS_DASHCLOCK);
     }
 
     public static class MensaDashclockSettingsFragment extends BasePreferenceFragment {

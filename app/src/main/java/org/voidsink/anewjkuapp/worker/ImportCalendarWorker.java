@@ -109,9 +109,9 @@ public class ImportCalendarWorker extends BaseWorker {
 
     private Result importCalendar(String calendarName) {
         if (CalendarUtils.ARG_CALENDAR_COURSE.equals(calendarName)) {
-            AnalyticsHelper.eventReloadEventsCourse(getApplicationContext());
+            AnalyticsHelper.eventReloadEventsCourse();
         } else if (CalendarUtils.ARG_CALENDAR_EXAM.equals(calendarName)) {
-            AnalyticsHelper.eventReloadEventsExam(getApplicationContext());
+            AnalyticsHelper.eventReloadEventsExam();
         }
 
         final Account mAccount = AppUtils.getAccount(getApplicationContext());

@@ -203,7 +203,7 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
             // set button text
             setButtonLoadText();
 
-            AnalyticsHelper.eventLoadMoreEvents(getContext(), then - now);
+            AnalyticsHelper.eventLoadMoreEvents();
 
             loadData();
         }

@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,7 +25,6 @@
 
 package org.voidsink.anewjkuapp.analytics;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
@@ -53,7 +52,7 @@ public class AnalyticsFlavor implements IAnalytics {
     }
 
     @Override
-    public void sendScreen(Activity activity, String screenName) {
+    public void sendScreen(String screenName) {
         logger.debug("screen: {}", screenName);
     }
 

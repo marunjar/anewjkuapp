@@ -26,7 +26,6 @@
 package org.voidsink.anewjkuapp.analytics;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
@@ -84,39 +83,39 @@ public class AnalyticsHelper {
         }
     }
 
-    public static void sendScreen(Activity activity, String screenName) {
-        getAnalytics().sendScreen(activity, screenName);
+    public static void sendScreen(String screenName) {
+        getAnalytics().sendScreen(screenName);
     }
 
-    public static void clearScreen(Activity activity) {
-        sendScreen(activity, null);
+    public static void clearScreen() {
+        sendScreen(null);
     }
 
-    public static void eventReloadCourses(Context c) {
+    public static void eventReloadCourses() {
         getAnalytics().sendButtonEvent("reload_courses");
     }
 
-    public static void eventReloadEventsCourse(Context c) {
+    public static void eventReloadEventsCourse() {
         getAnalytics().sendButtonEvent("reload_events_exam");
     }
 
-    public static void eventReloadEventsExam(Context c) {
+    public static void eventReloadEventsExam() {
         getAnalytics().sendButtonEvent("reload_events_course");
     }
 
-    public static void eventLoadMoreEvents(Context c, long value) {
+    public static void eventLoadMoreEvents() {
         getAnalytics().sendButtonEvent("more_events");
     }
 
-    public static void eventReloadExams(Context c) {
+    public static void eventReloadExams() {
         getAnalytics().sendButtonEvent("reload_exams");
     }
 
-    public static void eventReloadAssessments(Context c) {
+    public static void eventReloadAssessments() {
         getAnalytics().sendButtonEvent("reload_assessments");
     }
 
-    public static void eventReloadCurricula(Context c) {
+    public static void eventReloadCurricula() {
         getAnalytics().sendButtonEvent("reload_curricula");
     }
 

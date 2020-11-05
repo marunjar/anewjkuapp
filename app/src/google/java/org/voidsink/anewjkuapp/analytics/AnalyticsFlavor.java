@@ -25,7 +25,6 @@
 
 package org.voidsink.anewjkuapp.analytics;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
@@ -104,8 +103,8 @@ public class AnalyticsFlavor implements IAnalytics {
     }
 
     @Override
-    public void sendScreen(Activity activity, String screenName) {
-        if (mAnalytics != null && activity != null) {
+    public void sendScreen(String screenName) {
+        if (mAnalytics != null) {
             Bundle params = new Bundle();
 
             params.putString(FirebaseAnalytics.Param.SCREEN_NAME, TextUtils.isEmpty(screenName) ? null : screenName.substring(0, Math.min(screenName.length(), 36)));
