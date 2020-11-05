@@ -49,7 +49,7 @@ import org.voidsink.anewjkuapp.utils.UIUtils;
  * is never set or if it is set to null then error {@link AccountManager#ERROR_CODE_CANCELED}
  * will be called on the response.
  */
-public class AccountAuthenticatorActivity extends AppCompatActivity {
+public abstract class AccountAuthenticatorActivity extends AppCompatActivity {
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
