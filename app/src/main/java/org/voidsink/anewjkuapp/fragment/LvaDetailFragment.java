@@ -89,7 +89,7 @@ public class LvaDetailFragment extends TermFragment implements
 
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         mAdapter = new CourseListAdapter(getContext());
-        mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter(mRecyclerView, mAdapter));
+        mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter<>(mRecyclerView, mAdapter));
         mRecyclerView.setContentDescription(getTitle(getContext()));
 
         LoaderManager.getInstance(this).initLoader(Consts.LOADER_ID_COURSES, null, this);

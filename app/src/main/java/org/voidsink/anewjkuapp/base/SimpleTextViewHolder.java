@@ -23,19 +23,25 @@
  *
  */
 
-package org.voidsink.sectionedrecycleradapter;
+package org.voidsink.anewjkuapp.base;
 
-import android.view.ViewGroup;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public interface SectionedAdapter<HVH extends RecyclerView.ViewHolder> {
-    int getItemCount();
+public class SimpleTextViewHolder extends RecyclerView.ViewHolder {
 
-    long getHeaderId(int position);
+    private final TextView mText;
 
-    HVH onCreateHeaderViewHolder(@NonNull ViewGroup parent);
+    public SimpleTextViewHolder(@NonNull View itemView, @NonNull int textResourceId) {
+        super(itemView);
 
-    void onBindHeaderViewHolder(HVH sectionViewHolder, int position);
+        mText = itemView.findViewById(textResourceId);
+    }
+
+    public TextView getText() {
+        return mText;
+    }
 }

@@ -82,7 +82,7 @@ public abstract class MensaFragmentDetail extends BaseFragment implements Loader
 
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         mAdapter = new MensaMenuAdapter(getContext(), true);
-        mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter(mRecyclerView, mAdapter));
+        mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter<>(mRecyclerView, mAdapter));
         mRecyclerView.setContentDescription(getTitle(getContext()));
 
         LoaderManager.getInstance(this).initLoader(0, null, this);

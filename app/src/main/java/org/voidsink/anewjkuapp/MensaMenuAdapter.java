@@ -35,6 +35,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
+import org.voidsink.anewjkuapp.base.SimpleTextViewHolder;
 import org.voidsink.anewjkuapp.mensa.IDay;
 import org.voidsink.anewjkuapp.mensa.IMensa;
 import org.voidsink.anewjkuapp.mensa.IMenu;
@@ -46,7 +47,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerView.ViewHolder> implements SectionedAdapter<MensaMenuAdapter.MenuHeaderHolder> {
+public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerView.ViewHolder> implements SectionedAdapter<SimpleTextViewHolder> {
 
     private static final DateFormat df = SimpleDateFormat.getDateInstance();
 
@@ -154,24 +155,24 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
     }
 
     @Override
-    public MenuHeaderHolder onCreateHeaderViewHolder(@NonNull ViewGroup viewGroup) {
+    public SimpleTextViewHolder onCreateHeaderViewHolder(@NonNull ViewGroup viewGroup) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_header, viewGroup, false);
-        return new MenuHeaderHolder(v);
+        return new SimpleTextViewHolder(v, R.id.list_header_text);
     }
 
     @Override
-    public void onBindHeaderViewHolder(MenuHeaderHolder menuHeaderHolder, int position) {
+    public void onBindHeaderViewHolder(SimpleTextViewHolder sectionViewHolder, int position) {
         MensaItem item = getItem(position);
         if (item != null) {
             if (mUseDateHeader) {
                 final IDay day = item.getDay();
                 if (day != null) {
-                    menuHeaderHolder.getText().setText(df.format(day.getDate()));
+                    sectionViewHolder.getText().setText(df.format(day.getDate()));
                 }
             } else {
                 IMensa mensa = item.getMensa();
                 if (mensa != null) {
-                    menuHeaderHolder.getText().setText(mensa.getName());
+                    sectionViewHolder.getText().setText(mensa.getName());
                 }
             }
         }
@@ -237,19 +238,6 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
 
         public TextView getDescr() {
             return mDescr;
-        }
-    }
-
-    static class MenuHeaderHolder extends RecyclerView.ViewHolder {
-        private final TextView mText;
-
-        MenuHeaderHolder(View itemView) {
-            super(itemView);
-            mText = itemView.findViewById(R.id.list_header_text);
-        }
-
-        public TextView getText() {
-            return mText;
         }
     }
 }

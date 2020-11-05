@@ -35,13 +35,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
+import org.voidsink.anewjkuapp.base.SimpleTextViewHolder;
 import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.kusss.LvaWithGrade;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.UIUtils;
 import org.voidsink.sectionedrecycleradapter.SectionedAdapter;
 
-public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, CourseListAdapter.LvaViewHolder> implements SectionedAdapter<CourseListAdapter.LvaHeaderHolder> {
+public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, CourseListAdapter.LvaViewHolder> implements SectionedAdapter<SimpleTextViewHolder> {
 
     public CourseListAdapter(Context context) {
         super(context);
@@ -86,16 +87,16 @@ public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, Course
     }
 
     @Override
-    public LvaHeaderHolder onCreateHeaderViewHolder(@NonNull ViewGroup viewGroup) {
+    public SimpleTextViewHolder onCreateHeaderViewHolder(@NonNull ViewGroup viewGroup) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_header, viewGroup, false);
-        return new LvaHeaderHolder(v);
+        return new SimpleTextViewHolder(v, R.id.list_header_text);
     }
 
     @Override
-    public void onBindHeaderViewHolder(LvaHeaderHolder lvaHeaderHolder, int position) {
+    public void onBindHeaderViewHolder(SimpleTextViewHolder sectionViewHolder, int position) {
         LvaWithGrade lva = getItem(position);
         if (lva != null) {
-            lvaHeaderHolder.getText().setText(getContext().getString(lva.getState().getStringResID()));
+            sectionViewHolder.getText().setText(getContext().getString(lva.getState().getStringResID()));
         }
     }
 
@@ -159,19 +160,6 @@ public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, Course
 
         public TextView getTerm() {
             return mTerm;
-        }
-    }
-
-    static class LvaHeaderHolder extends RecyclerView.ViewHolder {
-        private final TextView mText;
-
-        LvaHeaderHolder(View itemView) {
-            super(itemView);
-            mText = itemView.findViewById(R.id.list_header_text);
-        }
-
-        public TextView getText() {
-            return mText;
         }
     }
 }

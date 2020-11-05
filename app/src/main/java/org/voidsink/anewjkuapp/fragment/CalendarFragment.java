@@ -113,7 +113,7 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new CalendarEventAdapter(getContext());
-        mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter(mRecyclerView, mAdapter));
+        mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter<>(mRecyclerView, mAdapter));
         mRecyclerView.setContentDescription(getTitle(getContext()));
 
         mAdapter.setOnItemClickListener((view, viewType, position) -> {

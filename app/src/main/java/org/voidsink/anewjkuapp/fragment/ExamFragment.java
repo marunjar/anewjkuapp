@@ -83,7 +83,7 @@ public class ExamFragment extends BaseFragment implements ContentObserverListene
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new ExamListAdapter(getContext());
-        mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter(mRecyclerView, mAdapter));
+        mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter<>(mRecyclerView, mAdapter));
         mRecyclerView.setContentDescription(getTitle(getContext()));
 
         LoaderManager.getInstance(this).initLoader(0, null, this);

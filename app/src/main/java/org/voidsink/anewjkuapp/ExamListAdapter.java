@@ -36,6 +36,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
+import org.voidsink.anewjkuapp.base.SimpleTextViewHolder;
 import org.voidsink.anewjkuapp.kusss.KusssHelper;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.UIUtils;
@@ -44,7 +45,7 @@ import org.voidsink.sectionedrecycleradapter.SectionedAdapter;
 import java.text.DateFormat;
 import java.util.Calendar;
 
-public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamListAdapter.ExamViewHolder> implements SectionedAdapter<ExamListAdapter.DateHeaderHolder> {
+public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamListAdapter.ExamViewHolder> implements SectionedAdapter<SimpleTextViewHolder> {
 
     public ExamListAdapter(Context context) {
         super(context);
@@ -108,19 +109,19 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
     }
 
     @Override
-    public DateHeaderHolder onCreateHeaderViewHolder(@NonNull ViewGroup viewGroup) {
+    public SimpleTextViewHolder onCreateHeaderViewHolder(@NonNull ViewGroup viewGroup) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_header, viewGroup, false);
-        return new DateHeaderHolder(v);
+        return new SimpleTextViewHolder(v, R.id.list_header_text);
     }
 
     @Override
-    public void onBindHeaderViewHolder(DateHeaderHolder dateHeaderHolder, int position) {
+    public void onBindHeaderViewHolder(SimpleTextViewHolder sectionViewHolder, int position) {
         ExamListExam exam = getItem(position);
 
         if (exam != null) {
-            dateHeaderHolder.getText().setText(DateFormat.getDateInstance().format(exam.getDtStart()));
+            sectionViewHolder.getText().setText(DateFormat.getDateInstance().format(exam.getDtStart()));
         } else {
-            dateHeaderHolder.getText().setText("");
+            sectionViewHolder.getText().setText("");
         }
     }
 
@@ -185,20 +186,6 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
 
         public TextView getTitle() {
             return mTitle;
-        }
-    }
-
-    static class DateHeaderHolder extends RecyclerView.ViewHolder {
-        private final TextView mText;
-
-        DateHeaderHolder(View itemView) {
-            super(itemView);
-
-            mText = itemView.findViewById(R.id.list_header_text);
-        }
-
-        public TextView getText() {
-            return mText;
         }
     }
 }

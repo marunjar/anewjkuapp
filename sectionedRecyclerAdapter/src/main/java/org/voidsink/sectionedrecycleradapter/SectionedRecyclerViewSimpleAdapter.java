@@ -31,20 +31,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class SectionedRecyclerViewSimpleAdapter extends SectionedRecyclerViewBaseAdapter {
+public class SectionedRecyclerViewSimpleAdapter<VH extends RecyclerView.ViewHolder> extends SectionedRecyclerViewBaseAdapter<VH, SectionedRecyclerViewSimpleAdapter.SectionViewHolder, RecyclerView.Adapter<VH>> {
 
     private final SectionCreator mDelegate;
     private final int mSectionResourceId;
     private final int mTextResourceId;
     private final Context mContext;
 
-    public SectionedRecyclerViewSimpleAdapter(Context context, RecyclerView recyclerView, RecyclerView.Adapter<RecyclerView.ViewHolder> baseAdapter, SectionCreator delegate) {
+    public SectionedRecyclerViewSimpleAdapter(Context context, RecyclerView recyclerView, RecyclerView.Adapter<VH> baseAdapter, SectionCreator delegate) {
         this(context, android.R.layout.simple_list_item_1, android.R.id.text1, recyclerView, baseAdapter, delegate);
     }
 
-    public SectionedRecyclerViewSimpleAdapter(Context context, int sectionResourceId, int textResourceId, RecyclerView recyclerView, RecyclerView.Adapter<RecyclerView.ViewHolder> baseAdapter, SectionCreator delegate) {
+    public SectionedRecyclerViewSimpleAdapter(Context context, int sectionResourceId, int textResourceId, RecyclerView recyclerView, RecyclerView.Adapter<VH> baseAdapter, SectionCreator delegate) {
         super(recyclerView, baseAdapter);
 
         mContext = context;
@@ -58,23 +59,28 @@ public class SectionedRecyclerViewSimpleAdapter extends SectionedRecyclerViewBas
         return mDelegate.createSections(mBaseAdapter);
     }
 
+    @NonNull
     @Override
-    protected RecyclerView.ViewHolder onCreateHeaderViewHolder(ViewGroup parent) {
+    protected SectionViewHolder onCreateHeaderViewHolder(ViewGroup parent) {
         final View view = LayoutInflater.from(mContext).inflate(mSectionResourceId, parent, false);
         return new SectionViewHolder(view, mTextResourceId);
     }
 
     @Override
-    protected void onBindHeaderViewHolder(Section section, RecyclerView.ViewHolder sectionViewHolder, int position) {
-        ((SectionViewHolder) sectionViewHolder).title.setText(section.getTitle());
+    protected void onBindHeaderViewHolder(Section section, @NonNull SectionViewHolder sectionViewHolder, int position) {
+        sectionViewHolder.getTitle().setText(section.getTitle());
     }
 
-    private static class SectionViewHolder extends RecyclerView.ViewHolder {
+    static class SectionViewHolder extends RecyclerView.ViewHolder {
         private final TextView title;
 
         SectionViewHolder(View view, int mTextResourceId) {
             super(view);
             title = view.findViewById(mTextResourceId);
+        }
+
+        public TextView getTitle() {
+            return title;
         }
     }
 }

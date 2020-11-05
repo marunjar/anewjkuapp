@@ -51,6 +51,7 @@ import org.voidsink.anewjkuapp.base.BaseContentObserver;
 import org.voidsink.anewjkuapp.base.BaseFragment;
 import org.voidsink.anewjkuapp.base.ContentObserverListener;
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
+import org.voidsink.anewjkuapp.base.SimpleTextViewHolder;
 import org.voidsink.anewjkuapp.kusss.Curriculum;
 import org.voidsink.anewjkuapp.provider.KusssContentProvider;
 import org.voidsink.anewjkuapp.utils.AppUtils;
@@ -109,7 +110,7 @@ public class CurriculaFragment extends BaseFragment implements
 
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         mAdapter = new CurriculaAdapter(getContext());
-        mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter(mRecyclerView, mAdapter));
+        mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter<>(mRecyclerView, mAdapter));
         mRecyclerView.setContentDescription(getTitle(getContext()));
 
         LoaderManager.getInstance(this).initLoader(0, null, this);
@@ -164,7 +165,7 @@ public class CurriculaFragment extends BaseFragment implements
         mAdapter.notifyDataSetChanged();
     }
 
-    private static class CurriculaAdapter extends RecyclerArrayAdapter<Curriculum, CurriculumViewHolder> implements SectionedAdapter<CurriculumHeaderHolder> {
+    private static class CurriculaAdapter extends RecyclerArrayAdapter<Curriculum, CurriculumViewHolder> implements SectionedAdapter<SimpleTextViewHolder> {
 
         public CurriculaAdapter(Context context) {
             super(context);
@@ -204,15 +205,15 @@ public class CurriculaFragment extends BaseFragment implements
         }
 
         @Override
-        public CurriculumHeaderHolder onCreateHeaderViewHolder(@NonNull ViewGroup viewGroup) {
+        public SimpleTextViewHolder onCreateHeaderViewHolder(@NonNull ViewGroup viewGroup) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_header, viewGroup, false);
-            return new CurriculumHeaderHolder(v);
+            return new SimpleTextViewHolder(v, R.id.list_header_text);
         }
 
         @Override
-        public void onBindHeaderViewHolder(CurriculumHeaderHolder curriculumHeaderHolder, int position) {
+        public void onBindHeaderViewHolder(SimpleTextViewHolder sectionViewHolder, int position) {
             Curriculum curriculum = getItem(position);
-            curriculumHeaderHolder.getText().setText(curriculum.getUni());
+            sectionViewHolder.getText().setText(curriculum.getUni());
         }
     }
 
@@ -263,19 +264,6 @@ public class CurriculaFragment extends BaseFragment implements
 
         public TextView getDtEnd() {
             return dtEnd;
-        }
-    }
-
-    public static class CurriculumHeaderHolder extends RecyclerView.ViewHolder {
-        private final TextView mText;
-
-        CurriculumHeaderHolder(View itemView) {
-            super(itemView);
-            mText = itemView.findViewById(R.id.list_header_text);
-        }
-
-        public TextView getText() {
-            return mText;
         }
     }
 

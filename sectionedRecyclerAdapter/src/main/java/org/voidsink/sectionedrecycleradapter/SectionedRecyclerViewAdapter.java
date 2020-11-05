@@ -27,14 +27,15 @@ package org.voidsink.sectionedrecycleradapter;
 
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SectionedRecyclerViewAdapter extends SectionedRecyclerViewBaseAdapter {
+public class SectionedRecyclerViewAdapter<VH extends RecyclerView.ViewHolder, HVH extends RecyclerView.ViewHolder, BA extends RecyclerView.Adapter<VH> & SectionedAdapter<HVH>> extends SectionedRecyclerViewBaseAdapter<VH, HVH, BA> {
 
-    public SectionedRecyclerViewAdapter(RecyclerView recyclerView, RecyclerView.Adapter baseAdapter) {
+    public SectionedRecyclerViewAdapter(RecyclerView recyclerView, BA baseAdapter) {
         super(recyclerView, baseAdapter);
     }
 
@@ -42,31 +43,26 @@ public class SectionedRecyclerViewAdapter extends SectionedRecyclerViewBaseAdapt
     protected Section[] createSections() {
         List<Section> sections = new ArrayList<>();
 
-        if (mBaseAdapter instanceof SectionedAdapter) {
-            long sectionId;
-            long lastSectionId = 0;
-            SectionedAdapter<?> mDelegate = (SectionedAdapter<?>) mBaseAdapter;
-            for (int i = 0; i < mDelegate.getItemCount(); i++) {
-                sectionId = mDelegate.getHeaderId(i);
-                if (sectionId != lastSectionId) {
-                    lastSectionId = sectionId;
-                    sections.add(new Section(i, Integer.toString(i)));
-                }
+        long sectionId;
+        long lastSectionId = 0;
+        for (int i = 0; i < mBaseAdapter.getItemCount(); i++) {
+            sectionId = mBaseAdapter.getHeaderId(i);
+            if (sectionId != lastSectionId) {
+                lastSectionId = sectionId;
+                sections.add(new Section(i, Integer.toString(i)));
             }
         }
-
         return sections.toArray(new Section[0]);
     }
 
+    @NonNull
     @Override
-    protected RecyclerView.ViewHolder onCreateHeaderViewHolder(ViewGroup parent) {
-        return ((SectionedAdapter<?>) mBaseAdapter).onCreateHeaderViewHolder(parent);
+    protected HVH onCreateHeaderViewHolder(ViewGroup parent) {
+        return mBaseAdapter.onCreateHeaderViewHolder(parent);
     }
 
     @Override
-    protected void onBindHeaderViewHolder(Section section, RecyclerView.ViewHolder sectionViewHolder, int position) {
-        if (mBaseAdapter instanceof SectionedAdapter) {
-            ((SectionedAdapter) mBaseAdapter).onBindHeaderViewHolder(sectionViewHolder, section.getFirstPosition());
-        }
+    protected void onBindHeaderViewHolder(Section section, @NonNull HVH sectionViewHolder, int position) {
+        mBaseAdapter.onBindHeaderViewHolder(sectionViewHolder, section.getFirstPosition());
     }
 }

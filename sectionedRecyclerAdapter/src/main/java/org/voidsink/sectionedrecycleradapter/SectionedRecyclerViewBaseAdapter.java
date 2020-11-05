@@ -40,15 +40,15 @@ import java.util.Arrays;
  * <p>
  * https://github.com/google/iosched/blob/master/android/src/main/java/com/google/samples/apps/iosched/ui/SimpleSectionedListAdapter.java
  */
-public abstract class SectionedRecyclerViewBaseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public abstract class SectionedRecyclerViewBaseAdapter<VH extends RecyclerView.ViewHolder, HVH extends RecyclerView.ViewHolder, BA extends RecyclerView.Adapter<VH>> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int SECTION_TYPE = 0;
     private boolean mValid = true;
-    protected final RecyclerView.Adapter mBaseAdapter;
+    protected final BA mBaseAdapter;
     private final SparseArray<Section> mSections = new SparseArray<>();
 
     protected SectionedRecyclerViewBaseAdapter(RecyclerView recyclerView,
-                                            RecyclerView.Adapter baseAdapter) {
+                                               BA baseAdapter) {
 
         mBaseAdapter = baseAdapter;
 
@@ -111,18 +111,24 @@ public abstract class SectionedRecyclerViewBaseAdapter extends RecyclerView.Adap
         }
     }
 
-    protected abstract RecyclerView.ViewHolder onCreateHeaderViewHolder(ViewGroup parent);
+    @NonNull
+    protected abstract HVH onCreateHeaderViewHolder(ViewGroup parent);
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder sectionViewHolder, int position) {
         if (isSectionHeaderPosition(position)) {
-            onBindHeaderViewHolder(mSections.get(position), sectionViewHolder, position);
+            onBindHeaderViewHolder(mSections.get(position), getViewHolder(sectionViewHolder), position);
         } else {
-            mBaseAdapter.onBindViewHolder(sectionViewHolder, sectionedPositionToPosition(position));
+            mBaseAdapter.onBindViewHolder(getViewHolder(sectionViewHolder), sectionedPositionToPosition(position));
         }
     }
 
-    protected abstract void onBindHeaderViewHolder(Section section, RecyclerView.ViewHolder sectionViewHolder, int position);
+    @NonNull
+    private <T extends RecyclerView.ViewHolder> T getViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
+        return (T) viewHolder;
+    }
+
+    protected abstract void onBindHeaderViewHolder(Section section, @NonNull HVH sectionViewHolder, int position);
 
     @Override
     public int getItemViewType(int position) {

@@ -37,6 +37,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
+import org.voidsink.anewjkuapp.base.SimpleTextViewHolder;
 import org.voidsink.anewjkuapp.utils.UIUtils;
 import org.voidsink.sectionedrecycleradapter.SectionedAdapter;
 
@@ -44,7 +45,7 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent, CalendarEventAdapter.EventItemHolder> implements SectionedAdapter<CalendarEventAdapter.DateHeaderHolder> {
+public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent, CalendarEventAdapter.EventItemHolder> implements SectionedAdapter<SimpleTextViewHolder> {
 
     private OnItemClickListener mItemClickListener;
 
@@ -74,16 +75,6 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
             mDescr = itemView.findViewById(R.id.calendar_list_item_descr);
             mTime = itemView.findViewById(R.id.calendar_list_item_time);
             mLocation = itemView.findViewById(R.id.calendar_list_item_location);
-        }
-    }
-
-    static class DateHeaderHolder extends RecyclerView.ViewHolder {
-        private final TextView mText;
-
-        DateHeaderHolder(View itemView) {
-            super(itemView);
-
-            mText = itemView.findViewById(R.id.list_header_text);
         }
     }
 
@@ -151,19 +142,19 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
     }
 
     @Override
-    public DateHeaderHolder onCreateHeaderViewHolder(@NonNull ViewGroup viewGroup) {
+    public SimpleTextViewHolder onCreateHeaderViewHolder(@NonNull ViewGroup viewGroup) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_header, viewGroup, false);
-        return new DateHeaderHolder(v);
+        return new SimpleTextViewHolder(v, R.id.list_header_text);
     }
 
     @Override
-    public void onBindHeaderViewHolder(DateHeaderHolder dateHeaderHolder, int position) {
+    public void onBindHeaderViewHolder(SimpleTextViewHolder sectionViewHolder, int position) {
         CalendarListEvent e = getItem(position);
 
         if (e != null) {
-            dateHeaderHolder.mText.setText(DateFormat.getDateInstance().format(new Date(e.getDtStart())));
+            sectionViewHolder.getText().setText(DateFormat.getDateInstance().format(new Date(e.getDtStart())));
         } else {
-            dateHeaderHolder.mText.setText("");
+            sectionViewHolder.getText().setText("");
         }
     }
 }

@@ -35,6 +35,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
+import org.voidsink.anewjkuapp.base.SimpleTextViewHolder;
 import org.voidsink.anewjkuapp.kusss.Assessment;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.UIUtils;
@@ -42,7 +43,7 @@ import org.voidsink.sectionedrecycleradapter.SectionedAdapter;
 
 import java.text.DateFormat;
 
-public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, AssessmentListAdapter.GradeViewHolder> implements SectionedAdapter<AssessmentListAdapter.GradeHeaderHolder> {
+public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, AssessmentListAdapter.GradeViewHolder> implements SectionedAdapter<SimpleTextViewHolder> {
 
     public AssessmentListAdapter(Context context) {
         super(context);
@@ -89,17 +90,16 @@ public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, Asse
     }
 
     @Override
-    public GradeHeaderHolder onCreateHeaderViewHolder(@NonNull ViewGroup viewGroup) {
+    public SimpleTextViewHolder onCreateHeaderViewHolder(@NonNull ViewGroup viewGroup) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_header, viewGroup, false);
-        return new GradeHeaderHolder(v);
+        return new SimpleTextViewHolder(v, R.id.list_header_text);
     }
 
     @Override
-    public void onBindHeaderViewHolder(GradeHeaderHolder gradeHeaderHolder, int position) {
+    public void onBindHeaderViewHolder(SimpleTextViewHolder sectionViewHolder, int position) {
         Assessment grade = getItem(position);
         if (grade != null) {
-            gradeHeaderHolder.getText().setText(getContext().getString(grade.getAssessmentType().getStringResID()));
-
+            sectionViewHolder.getText().setText(getContext().getString(grade.getAssessmentType().getStringResID()));
         }
     }
 
@@ -162,20 +162,6 @@ public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, Asse
 
         public TextView getChipInfo() {
             return mChipInfo;
-        }
-    }
-
-    static class GradeHeaderHolder extends RecyclerView.ViewHolder {
-        private final TextView mText;
-
-        GradeHeaderHolder(View itemView) {
-            super(itemView);
-
-            mText = itemView.findViewById(R.id.list_header_text);
-        }
-
-        public TextView getText() {
-            return mText;
         }
     }
 }
