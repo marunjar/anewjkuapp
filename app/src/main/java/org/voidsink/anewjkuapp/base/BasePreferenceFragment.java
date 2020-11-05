@@ -107,12 +107,6 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
 
                     ViewHolder holder;
 
-                    class ViewHolder {
-                        private TextView title;
-                        private TextView subTitle;
-                        private RadioButton radio;
-                    }
-
                     @NonNull
                     @SuppressLint("InflateParams")
                     @Override
@@ -122,21 +116,17 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
                         if (convertView == null) {
                             convertView = inflater.inflate(R.layout.custom_simple_list_item_2_single_choice, null);
 
-                            holder = new ViewHolder();
-                            holder.title = convertView.findViewById(android.R.id.text1);
-                            holder.subTitle = convertView.findViewById(android.R.id.text2);
-                            holder.radio = convertView.findViewById(R.id.radio);
-
+                            holder = new ViewHolder(convertView);
                             convertView.setTag(holder);
                         } else {
                             // view already defined, retrieve view holder
                             holder = (ViewHolder) convertView.getTag();
                         }
 
-                        holder.title.setText(getListPreference().getEntries()[position]);
-                        holder.subTitle.setText(getListPreference().getEntriesSubtitles()[position]);
+                        holder.getTitle().setText(getListPreference().getEntries()[position]);
+                        holder.getSubTitle().setText(getListPreference().getEntriesSubtitles()[position]);
                         if (holder.radio != null) {
-                            holder.radio.setChecked(position == mClickedDialogEntryIndex);
+                            holder.getRadio().setChecked(position == mClickedDialogEntryIndex);
                         }
 
                         return convertView;
@@ -220,6 +210,30 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat {
 
         protected TimePreference getTimePreference() {
             return (TimePreference) this.getPreference();
+        }
+    }
+
+    static class ViewHolder {
+        private final TextView title;
+        private final TextView subTitle;
+        private final RadioButton radio;
+
+        ViewHolder(View convertView) {
+            this.title = convertView.findViewById(android.R.id.text1);
+            this.subTitle = convertView.findViewById(android.R.id.text2);
+            this.radio = convertView.findViewById(R.id.radio);
+        }
+
+        public TextView getTitle() {
+            return title;
+        }
+
+        public TextView getSubTitle() {
+            return subTitle;
+        }
+
+        public RadioButton getRadio() {
+            return radio;
         }
     }
 }

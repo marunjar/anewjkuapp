@@ -27,7 +27,6 @@ package org.voidsink.anewjkuapp.activity;
 
 import android.Manifest;
 import android.accounts.Account;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -99,15 +98,8 @@ public class MainActivity extends ThemedActivity {
     private DrawerLayout mDrawerLayout;
     private DrawerLayout.DrawerListener mDrawerListener;
     private NavigationView mNavigationView;
+    private TextView mDrawerUser = null;
     private Intent mPendingIntent = null;
-
-    private static void startMyCurricula(Context context) {
-        //
-        Intent i = new Intent(context, MainActivity.class)
-                .putExtra(MainActivity.ARG_SHOW_FRAGMENT_ID, R.id.nav_curricula)
-                .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        context.startActivity(i);
-    }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -153,8 +145,6 @@ public class MainActivity extends ThemedActivity {
         mDrawerListener = new DrawerLayout.SimpleDrawerListener() {
             @Override
             public void onDrawerOpened(View drawerView) {
-                TextView mDrawerUser = mNavigationView.getHeaderView(0).findViewById(R.id.drawer_user);
-
                 if (mDrawerUser != null) {
                     if ((Build.VERSION.SDK_INT < Build.VERSION_CODES.M) && (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED)) {
                         mDrawerUser.setText(R.string.missing_app_permission);
@@ -175,7 +165,7 @@ public class MainActivity extends ThemedActivity {
                             mDrawerUser.setOnClickListener(v -> startCreateAccount());
                         } else {
                             mDrawerUser.setText(account.name);
-                            mDrawerUser.setOnClickListener(v -> MainActivity.startMyCurricula(MainActivity.this));
+                            mDrawerUser.setOnClickListener(v -> startMyCurricula());
                         }
                     }
                 }
@@ -186,6 +176,7 @@ public class MainActivity extends ThemedActivity {
 
         mNavigationView = findViewById(R.id.nav_view);
         if (mNavigationView != null) {
+            mDrawerUser = mNavigationView.getHeaderView(0).findViewById(R.id.drawer_user);
             setupDrawerContent(mNavigationView);
         }
 
@@ -201,7 +192,7 @@ public class MainActivity extends ThemedActivity {
     }
 
     @AfterPermissionGranted(PERMISSIONS_REQUEST_ACCOUNT)
-    private void startCreateAccount() {
+    public void startCreateAccount() {
         if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) || EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS)) {
             if (AppUtils.getAccount(this) == null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
@@ -221,6 +212,13 @@ public class MainActivity extends ThemedActivity {
                     PERMISSIONS_REQUEST_ACCOUNT,
                     ACCOUNT_PERMISSIONS);
         }
+    }
+
+    public void startMyCurricula() {
+        Intent i = new Intent(this, MainActivity.class)
+                .putExtra(MainActivity.ARG_SHOW_FRAGMENT_ID, R.id.nav_curricula)
+                .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        this.startActivity(i);
     }
 
     @Override

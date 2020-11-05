@@ -79,9 +79,9 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         switch (getItemViewType(position)) {
             case MensaItem.TYPE_INFO: {
-                MensaInfoItem mensaInfoItem = (MensaInfoItem) getItem(position);
-                ((MensaInfoHolder) holder).mTitle.setText(mensaInfoItem.getTitle());
-                UIUtils.setTextAndVisibility(((MensaInfoHolder) holder).mDescr, mensaInfoItem.getDescr());
+                MensaInfoItem mensaInfoItem = getItem(position);
+                ((MensaInfoHolder) holder).getTitle().setText(mensaInfoItem.getTitle());
+                UIUtils.setTextAndVisibility(((MensaInfoHolder) holder).getDescr(), mensaInfoItem.getDescr());
                 break;
             }
             case MensaItem.TYPE_MENU: {

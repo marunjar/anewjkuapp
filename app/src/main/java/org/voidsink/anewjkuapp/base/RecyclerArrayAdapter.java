@@ -76,11 +76,11 @@ public abstract class RecyclerArrayAdapter<T, VH extends RecyclerView.ViewHolder
         notifyDataSetChanged();
     }
 
-    public T getItem(int position) {
+    public <S extends T> S getItem(int position) {
         if (position < 0) return null;
         if (position >= getItemCount()) return null;
 
-        return items.get(position);
+        return (S) items.get(position);
     }
 
     @Override

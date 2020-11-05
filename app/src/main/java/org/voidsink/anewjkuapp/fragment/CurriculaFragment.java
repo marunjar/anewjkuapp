@@ -65,7 +65,6 @@ import java.util.List;
 public class CurriculaFragment extends BaseFragment implements
         ContentObserverListener, LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
     private CurriculaAdapter mAdapter;
     private BaseContentObserver mObserver;
     private RecyclerView mRecyclerView;
@@ -166,6 +165,8 @@ public class CurriculaFragment extends BaseFragment implements
     }
 
     private static class CurriculaAdapter extends RecyclerArrayAdapter<Curriculum, CurriculumViewHolder> implements SectionedAdapter<SimpleTextViewHolder> {
+
+        private static final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
 
         public CurriculaAdapter(Context context) {
             super(context);

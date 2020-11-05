@@ -133,6 +133,10 @@ public class MapFragment extends BaseFragment implements
     private Marker goalLocationOverlay;
     private LocationOverlay mMyLocationOverlay;
 
+    private LocationOverlay getLocationOverlay() {
+        return mMyLocationOverlay;
+    }
+
     /**
      * The dummy content this fragment is presenting.
      */
@@ -274,7 +278,7 @@ public class MapFragment extends BaseFragment implements
     @Override
     public void onResume() {
         super.onResume();
-        if (mMyLocationOverlay != null) {
+        if (this.mMyLocationOverlay != null) {
             this.mMyLocationOverlay.enableMyLocation(false);
         }
     }
@@ -365,12 +369,12 @@ public class MapFragment extends BaseFragment implements
                 }
             } else {
                 this.goalLocationOverlay.setLatLong(null);
-                if (mMyLocationOverlay != null) {
+                if (this.mMyLocationOverlay != null) {
                     this.mMyLocationOverlay.setSnapToLocationEnabled(true);
                 }
             }
             this.goalLocationOverlay.requestRedraw();
-            if (mMyLocationOverlay != null) {
+            if (this.mMyLocationOverlay != null) {
                 this.mMyLocationOverlay.requestRedraw();
             }
         }
@@ -380,7 +384,7 @@ public class MapFragment extends BaseFragment implements
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_snap_to_location:
-                if (mMyLocationOverlay != null) {
+                if (this.mMyLocationOverlay != null) {
                     this.mMyLocationOverlay.setSnapToLocationEnabled(!item.isChecked());
                     item.setChecked(this.mMyLocationOverlay.isSnapToLocationEnabled());
                 } else {
@@ -401,10 +405,10 @@ public class MapFragment extends BaseFragment implements
         mSearchView = (SearchView) searchItem.getActionView();
         setupSearchView(mSearchView);
 
-        if (mMyLocationOverlay != null) {
+        if (this.mMyLocationOverlay != null) {
             MenuItem snapToLocationItem = menu
                     .findItem(R.id.action_snap_to_location);
-            mMyLocationOverlay.setSnapToLocationItem(snapToLocationItem);
+            this.mMyLocationOverlay.setSnapToLocationItem(snapToLocationItem);
         }
     }
 
@@ -440,10 +444,11 @@ public class MapFragment extends BaseFragment implements
         this.mapView.getMapZoomControls().setMarginHorizontal(requireContext().getResources().getDimensionPixelSize(R.dimen.map_zoom_control_margin_horizontal));
         this.mapView.getMapZoomControls().setMarginVertical(getContext().getResources().getDimensionPixelSize(R.dimen.map_zoom_control_margin_vertical));
         this.mapView.addInputListener(new InputListener() {
+
             @Override
             public void onMoveEvent() {
-                if (mMyLocationOverlay != null) {
-                    mMyLocationOverlay.setSnapToLocationEnabled(false);
+                if (getLocationOverlay() != null) {
+                    getLocationOverlay().setSnapToLocationEnabled(false);
                 }
             }
 

@@ -65,6 +65,10 @@ public abstract class SlidingTabsFragment extends BaseFragment {
      */
     private final List<SlidingTabItem> mTabs = new ArrayList<>();
 
+    private List<SlidingTabItem> getTabs() {
+        return mTabs;
+    }
+
     private TabLayout mTabLayout;
 
     protected abstract void fillTabs(@NonNull List<SlidingTabItem> mTabs);
@@ -146,12 +150,12 @@ public abstract class SlidingTabsFragment extends BaseFragment {
         @Override
         @NonNull
         public Fragment createFragment(int i) {
-            return mTabs.get(i).createFragment();
+            return getTabs().get(i).createFragment();
         }
 
         @Override
         public int getItemCount() {
-            return mTabs.size();
+            return getTabs().size();
         }
     }
 

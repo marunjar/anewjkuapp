@@ -76,6 +76,26 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
             mTime = itemView.findViewById(R.id.calendar_list_item_time);
             mLocation = itemView.findViewById(R.id.calendar_list_item_location);
         }
+
+        public Toolbar getToolbar() {
+            return mToolbar;
+        }
+
+        public TextView getTitle() {
+            return mTitle;
+        }
+
+        public TextView getDescr() {
+            return mDescr;
+        }
+
+        public TextView getLocation() {
+            return mLocation;
+        }
+
+        public TextView getTime() {
+            return mTime;
+        }
     }
 
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
@@ -102,7 +122,7 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
         final CalendarListEvent eventItem = getItem(position);
 
         if (eventItem != null) {
-            holder.mToolbar.setOnMenuItemClickListener(menuItem -> {
+            holder.getToolbar().setOnMenuItemClickListener(menuItem -> {
                 switch (menuItem.getItemId()) {
                     case R.id.show_in_calendar: {
                         eventItem.showInCalendar(getContext());
@@ -117,11 +137,11 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
                 }
             });
 
-            holder.mTitle.setText(eventItem.getTitle());
+            holder.getTitle().setText(eventItem.getTitle());
 
-            UIUtils.setTextAndVisibility(holder.mDescr, eventItem.getDescr());
-            UIUtils.setTextAndVisibility(holder.mTime, eventItem.getTime());
-            UIUtils.setTextAndVisibility(holder.mLocation, eventItem.getLocation());
+            UIUtils.setTextAndVisibility(holder.getDescr(), eventItem.getDescr());
+            UIUtils.setTextAndVisibility(holder.getTime(), eventItem.getTime());
+            UIUtils.setTextAndVisibility(holder.getLocation(), eventItem.getLocation());
         }
     }
 
