@@ -26,6 +26,7 @@
 package org.voidsink.anewjkuapp.fragment;
 
 import android.accounts.Account;
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.graphics.drawable.LayerDrawable;
@@ -118,7 +119,7 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
 
         mAdapter.setOnItemClickListener((view, viewType, position) -> {
             if (position != RecyclerView.NO_POSITION) {
-                CalendarListEvent item = mAdapter.getItem(position);
+                CalendarListEvent item = mAdapter.getItem(CalendarListEvent.class, position);
                 if (item != null) {
                     item.showOnMap(getContext());
                 }
@@ -266,12 +267,12 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
         mAdapter.clear();
 
         Account mAccount = AppUtils.getAccount(getContext());
-        if (mAccount != null) {
+        if (mAccount != null && hasCalendarReadPermission()) {
             // fetch calendar colors
             final SparseIntArray mColors = new SparseIntArray();
             ContentResolver cr = requireContext().getContentResolver();
 
-            try (Cursor cursor = cr.query(CalendarContract.Calendars.CONTENT_URI,
+            try (@SuppressLint("MissingPermission") Cursor cursor = cr.query(CalendarContract.Calendars.CONTENT_URI,
                     new String[]{
                             CalendarContract.Calendars._ID,
                             CalendarContract.Calendars

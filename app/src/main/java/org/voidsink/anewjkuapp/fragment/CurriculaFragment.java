@@ -181,7 +181,7 @@ public class CurriculaFragment extends BaseFragment implements
 
         @Override
         public void onBindViewHolder(@NonNull CurriculumViewHolder holder, int position) {
-            Curriculum item = getItem(position);
+            Curriculum item = getItem(Curriculum.class, position);
 
             holder.getIsStandard().setText(item.isStandard() ? getContext().getString(R.string.curriculum_is_standard_yes) : getContext().getString(R.string.curriculum_is_standard_no));
             holder.getCid().setText(item.getCid());
@@ -198,7 +198,7 @@ public class CurriculaFragment extends BaseFragment implements
 
         @Override
         public long getHeaderId(int i) {
-            Curriculum curriculum = getItem(i);
+            Curriculum curriculum = getItem(Curriculum.class, i);
             if (curriculum != null) {
                 return (long) curriculum.getUni().hashCode() + (long) Integer.MAX_VALUE; // header id has to be > 0???
             }
@@ -213,7 +213,7 @@ public class CurriculaFragment extends BaseFragment implements
 
         @Override
         public void onBindHeaderViewHolder(SimpleTextViewHolder sectionViewHolder, int position) {
-            Curriculum curriculum = getItem(position);
+            Curriculum curriculum = getItem(Curriculum.class, position);
             sectionViewHolder.getText().setText(curriculum.getUni());
         }
     }
