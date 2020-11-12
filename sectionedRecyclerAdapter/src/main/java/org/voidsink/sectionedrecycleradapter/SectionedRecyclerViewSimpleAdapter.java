@@ -36,16 +36,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class SectionedRecyclerViewSimpleAdapter<VH extends RecyclerView.ViewHolder> extends SectionedRecyclerViewBaseAdapter<VH, SectionedRecyclerViewSimpleAdapter.SectionViewHolder, RecyclerView.Adapter<VH>> {
 
-    private final SectionCreator mDelegate;
+    private final SectionCreator<VH, RecyclerView.Adapter<VH>> mDelegate;
     private final int mSectionResourceId;
     private final int mTextResourceId;
     private final Context mContext;
 
-    public SectionedRecyclerViewSimpleAdapter(Context context, RecyclerView recyclerView, RecyclerView.Adapter<VH> baseAdapter, SectionCreator delegate) {
+    public SectionedRecyclerViewSimpleAdapter(Context context, RecyclerView recyclerView, RecyclerView.Adapter<VH> baseAdapter, SectionCreator<VH, RecyclerView.Adapter<VH>> delegate) {
         this(context, android.R.layout.simple_list_item_1, android.R.id.text1, recyclerView, baseAdapter, delegate);
     }
 
-    public SectionedRecyclerViewSimpleAdapter(Context context, int sectionResourceId, int textResourceId, RecyclerView recyclerView, RecyclerView.Adapter<VH> baseAdapter, SectionCreator delegate) {
+    public SectionedRecyclerViewSimpleAdapter(Context context, int sectionResourceId, int textResourceId, RecyclerView recyclerView, RecyclerView.Adapter<VH> baseAdapter, SectionCreator<VH, RecyclerView.Adapter<VH>> delegate) {
         super(recyclerView, baseAdapter);
 
         mContext = context;

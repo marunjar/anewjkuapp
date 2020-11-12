@@ -61,7 +61,7 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
 
     @Override
     public void onBindViewHolder(@NonNull ExamViewHolder holder, int position) {
-        final ExamListExam exam = getItem(position);
+        final ExamListExam exam = getItem(ExamListExam.class, position);
 
         if (exam != null) {
             holder.getToolbar().setOnMenuItemClickListener(menuItem -> {
@@ -94,7 +94,7 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
 
     @Override
     public long getHeaderId(int position) {
-        ExamListExam exam = getItem(position);
+        ExamListExam exam = getItem(ExamListExam.class, position);
 
         if (exam != null) {
             Calendar cal = Calendar.getInstance(); // locale-specific
@@ -116,7 +116,7 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
 
     @Override
     public void onBindHeaderViewHolder(SimpleTextViewHolder sectionViewHolder, int position) {
-        ExamListExam exam = getItem(position);
+        ExamListExam exam = getItem(ExamListExam.class, position);
 
         if (exam != null) {
             sectionViewHolder.getText().setText(DateFormat.getDateInstance().format(exam.getDtStart()));

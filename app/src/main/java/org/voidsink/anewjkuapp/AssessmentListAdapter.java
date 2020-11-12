@@ -58,7 +58,7 @@ public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, Asse
 
     @Override
     public void onBindViewHolder(@NonNull GradeViewHolder holder, int position) {
-        Assessment assessment = getItem(position);
+        Assessment assessment = getItem(Assessment.class, position);
         holder.getTitle().setText((assessment.getTitle() + " " + assessment.getLvaType()).trim());
 
         UIUtils.setTextAndVisibility(holder.getCourseId(), assessment.getCourseId());
@@ -82,7 +82,7 @@ public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, Asse
 
     @Override
     public long getHeaderId(int position) {
-        Assessment grade = getItem(position);
+        Assessment grade = getItem(Assessment.class, position);
         if (grade != null) {
             return grade.getAssessmentType().getStringResID();
         }
@@ -97,7 +97,7 @@ public class AssessmentListAdapter extends RecyclerArrayAdapter<Assessment, Asse
 
     @Override
     public void onBindHeaderViewHolder(SimpleTextViewHolder sectionViewHolder, int position) {
-        Assessment grade = getItem(position);
+        Assessment grade = getItem(Assessment.class, position);
         if (grade != null) {
             sectionViewHolder.getText().setText(getContext().getString(grade.getAssessmentType().getStringResID()));
         }

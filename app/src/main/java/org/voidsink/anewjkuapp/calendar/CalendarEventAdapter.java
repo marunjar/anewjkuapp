@@ -119,7 +119,7 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
 
     @Override
     public void onBindViewHolder(@NonNull EventItemHolder holder, int position) {
-        final CalendarListEvent eventItem = getItem(position);
+        final CalendarListEvent eventItem = getItem(CalendarListEvent.class, position);
 
         if (eventItem != null) {
             holder.getToolbar().setOnMenuItemClickListener(menuItem -> {
@@ -147,7 +147,7 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
 
     @Override
     public long getHeaderId(int position) {
-        CalendarListEvent e = getItem(position);
+        CalendarListEvent e = getItem(CalendarListEvent.class, position);
 
         if (e != null) {
             Calendar cal = Calendar.getInstance(); // locale-specific
@@ -169,7 +169,7 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
 
     @Override
     public void onBindHeaderViewHolder(SimpleTextViewHolder sectionViewHolder, int position) {
-        CalendarListEvent e = getItem(position);
+        CalendarListEvent e = getItem(CalendarListEvent.class, position);
 
         if (e != null) {
             sectionViewHolder.getText().setText(DateFormat.getDateInstance().format(new Date(e.getDtStart())));

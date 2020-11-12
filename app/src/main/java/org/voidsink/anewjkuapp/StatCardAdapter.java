@@ -412,7 +412,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
 
     @Override
     public void onBindViewHolder(@NonNull StatViewHolder holder, int position) {
-        StatCard item = getItem(position);
+        StatCard item = getItem(StatCard.class, position);
         switch (getItemViewType(position)) {
             case StatCard.TYPE_GRADE: {
                 if (item.isWeighted()) {
@@ -442,7 +442,7 @@ public class StatCardAdapter extends RecyclerArrayAdapter<StatCard, StatCardAdap
 
     @Override
     public int getItemViewType(int position) {
-        return this.getItem(position).getType();
+        return this.getItem(StatCard.class, position).getType();
     }
 
     private static class LvaStatItem {

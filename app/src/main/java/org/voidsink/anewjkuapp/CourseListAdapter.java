@@ -57,7 +57,7 @@ public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, Course
 
     @Override
     public void onBindViewHolder(@NonNull LvaViewHolder holder, int position) {
-        LvaWithGrade lva = getItem(position);
+        LvaWithGrade lva = getItem(LvaWithGrade.class, position);
 
         holder.getTitle().setText(lva.getCourse().getTitle());
         UIUtils.setTextAndVisibility(holder.getTeacher(), lva.getCourse().getTeacher());
@@ -79,7 +79,7 @@ public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, Course
 
     @Override
     public long getHeaderId(int position) {
-        LvaWithGrade lva = getItem(position);
+        LvaWithGrade lva = getItem(LvaWithGrade.class, position);
         if (lva != null) {
             return lva.getState().getStringResID();
         }
@@ -94,7 +94,7 @@ public class CourseListAdapter extends RecyclerArrayAdapter<LvaWithGrade, Course
 
     @Override
     public void onBindHeaderViewHolder(SimpleTextViewHolder sectionViewHolder, int position) {
-        LvaWithGrade lva = getItem(position);
+        LvaWithGrade lva = getItem(LvaWithGrade.class, position);
         if (lva != null) {
             sectionViewHolder.getText().setText(getContext().getString(lva.getState().getStringResID()));
         }

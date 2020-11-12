@@ -79,14 +79,14 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         switch (getItemViewType(position)) {
             case MensaItem.TYPE_INFO: {
-                MensaInfoItem mensaInfoItem = getItem(position);
+                MensaInfoItem mensaInfoItem = getItem(MensaInfoItem.class, position);
                 ((MensaInfoHolder) holder).getTitle().setText(mensaInfoItem.getTitle());
                 UIUtils.setTextAndVisibility(((MensaInfoHolder) holder).getDescr(), mensaInfoItem.getDescr());
                 break;
             }
             case MensaItem.TYPE_MENU: {
                 MenuViewHolder mensaMenuItemHolder = (MenuViewHolder) holder;
-                IMenu menu = getItem(position).getMenu();
+                IMenu menu = getItem(MensaItem.class, position).getMenu();
 
                 UIUtils.setTextAndVisibility(mensaMenuItemHolder.getName(), menu.getName());
                 UIUtils.setTextAndVisibility(mensaMenuItemHolder.getSoup(), menu.getSoup());
@@ -126,12 +126,12 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
 
     @Override
     public int getItemViewType(int position) {
-        return this.getItem(position).getType();
+        return this.getItem(MensaItem.class, position).getType();
     }
 
     @Override
     public long getHeaderId(int position) {
-        MensaItem item = getItem(position);
+        MensaItem item = getItem(MensaItem.class, position);
         if (item != null) {
             if (mUseDateHeader) {
                 final IDay day = item.getDay();
@@ -162,7 +162,7 @@ public class MensaMenuAdapter extends RecyclerArrayAdapter<MensaItem, RecyclerVi
 
     @Override
     public void onBindHeaderViewHolder(SimpleTextViewHolder sectionViewHolder, int position) {
-        MensaItem item = getItem(position);
+        MensaItem item = getItem(MensaItem.class, position);
         if (item != null) {
             if (mUseDateHeader) {
                 final IDay day = item.getDay();

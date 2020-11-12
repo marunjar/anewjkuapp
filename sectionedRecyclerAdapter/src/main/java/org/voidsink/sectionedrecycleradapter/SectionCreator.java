@@ -27,6 +27,6 @@ package org.voidsink.sectionedrecycleradapter;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public interface SectionCreator {
-    Section[] createSections(RecyclerView.Adapter mAdapter);
+public interface SectionCreator<VH extends RecyclerView.ViewHolder, BA extends RecyclerView.Adapter<VH>> {
+    Section[] createSections(BA mAdapter);
 }
