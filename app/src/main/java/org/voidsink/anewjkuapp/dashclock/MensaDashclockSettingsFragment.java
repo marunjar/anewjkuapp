@@ -29,26 +29,19 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
-import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
-import org.voidsink.anewjkuapp.base.ThemedActivity;
-import org.voidsink.anewjkuapp.utils.Consts;
+import org.voidsink.anewjkuapp.R;
+import org.voidsink.anewjkuapp.base.BasePreferenceFragment;
 
-public class MensaDashclockSettings extends ThemedActivity {
-
+public class MensaDashclockSettingsFragment extends BasePreferenceFragment {
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(android.R.id.content, new MensaDashclockSettingsFragment())
-                .commit();
+        addPreferencesFromResource(R.xml.preference_dashclock_extension_mensa);
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    public void onCreatePreferences(Bundle bundle, String s) {
 
-        AnalyticsHelper.sendScreen(Consts.SCREEN_SETTINGS_DASHCLOCK);
     }
 }

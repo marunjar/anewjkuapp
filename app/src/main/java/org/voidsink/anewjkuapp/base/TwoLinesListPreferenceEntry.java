@@ -25,38 +25,21 @@
 
 package org.voidsink.anewjkuapp.base;
 
-import android.content.Context;
-import android.util.AttributeSet;
+public class TwoLinesListPreferenceEntry {
 
-import androidx.preference.ListPreference;
+    private final CharSequence title;
+    private final CharSequence subTitle;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class TwoLinesListPreference extends ListPreference {
-
-    private CharSequence[] mEntriesSubtitles;
-
-    public TwoLinesListPreference(Context context, AttributeSet attrs) {
-        super(context, attrs);
+    public TwoLinesListPreferenceEntry(CharSequence title, CharSequence subTitle) {
+        this.title = title;
+        this.subTitle = subTitle;
     }
 
-    public CharSequence[] getEntriesSubtitles() {
-        return mEntriesSubtitles;
+    public CharSequence getTitle() {
+        return title;
     }
 
-    public void setEntriesSubtitles(CharSequence[] mEntriesSubtitles) {
-        this.mEntriesSubtitles = mEntriesSubtitles;
-    }
-
-    public List<TwoLinesListPreferenceEntry> getPreferenceEntries() {
-        if (getEntries().length != getEntriesSubtitles().length) {
-            throw new IllegalStateException();
-        }
-        List<TwoLinesListPreferenceEntry> entries = new ArrayList<>(getEntries().length);
-        for (int i = 0; i < getEntries().length; i++) {
-            entries.add(new TwoLinesListPreferenceEntry(getEntries()[i], getEntriesSubtitles()[i]));
-        }
-        return entries;
+    public CharSequence getSubTitle() {
+        return subTitle;
     }
 }

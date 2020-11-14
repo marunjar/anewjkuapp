@@ -33,8 +33,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
@@ -82,7 +80,7 @@ public abstract class SlidingTabsFragment extends BaseFragment {
      * Here we can pick out the {@link View}s we need to configure from the content view.
      * <p/>
      * We set the {@link ViewPager2}'s adapter to be an instance of
-     * {@link org.voidsink.anewjkuapp.base.SlidingTabsFragment.SlidingFragmentPagerAdapter}. The {@link TabLayout} is then given the
+     * {@link SlidingTabsFragmentPagerAdapter}. The {@link TabLayout} is then given the
      * {@link ViewPager2} so that it can populate itself.
      *
      * @param view View created in {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}
@@ -112,39 +110,8 @@ public abstract class SlidingTabsFragment extends BaseFragment {
         mTabs.clear();
         fillTabs(mTabs);
 
-        mViewPager.setAdapter(new SlidingFragmentPagerAdapter(this, mTabs));
+        mViewPager.setAdapter(new SlidingTabsFragmentPagerAdapter(this, mTabs));
         new TabLayoutMediator(mTabLayout, mViewPager, this::onConfigureTab).attach();
-    }
-
-    /**
-     * The {@link FragmentPagerAdapter} used to display pages in this sample. The individual pages
-     * are instances of {@link Fragment}. Each page is
-     * created by the relevant {@link SlidingTabItem} for the requested position.
-     */
-    private static class SlidingFragmentPagerAdapter extends FragmentStateAdapter {
-
-        private final List<SlidingTabItem> mTabs;
-
-        public SlidingFragmentPagerAdapter(@NonNull Fragment fragment, List<SlidingTabItem> tabs) {
-            super(fragment);
-            this.mTabs = tabs;
-        }
-
-        /**
-         * Return the {@link Fragment} to be displayed at {@code position}.
-         * <p/>
-         * Here we return the value returned from {@link SlidingTabItem#createFragment()}.
-         */
-        @Override
-        @NonNull
-        public Fragment createFragment(int i) {
-            return mTabs.get(i).createFragment();
-        }
-
-        @Override
-        public int getItemCount() {
-            return mTabs.size();
-        }
     }
 
     @Override

@@ -25,38 +25,40 @@
 
 package org.voidsink.anewjkuapp.base;
 
-import android.content.Context;
-import android.util.AttributeSet;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import androidx.preference.ListPreference;
-
-import java.util.ArrayList;
 import java.util.List;
 
-public class TwoLinesListPreference extends ListPreference {
+/**
+ * The {@link FragmentPagerAdapter} used to display pages in this sample. The individual pages
+ * are instances of {@link Fragment}. Each page is
+ * created by the relevant {@link SlidingTabItem} for the requested position.
+ */
+public class SlidingTabsFragmentPagerAdapter extends FragmentStateAdapter {
 
-    private CharSequence[] mEntriesSubtitles;
+    private final List<SlidingTabItem> mTabs;
 
-    public TwoLinesListPreference(Context context, AttributeSet attrs) {
-        super(context, attrs);
+    public SlidingTabsFragmentPagerAdapter(@NonNull Fragment fragment, List<SlidingTabItem> tabs) {
+        super(fragment);
+        this.mTabs = tabs;
     }
 
-    public CharSequence[] getEntriesSubtitles() {
-        return mEntriesSubtitles;
+    /**
+     * Return the {@link Fragment} to be displayed at {@code position}.
+     * <p/>
+     * Here we return the value returned from {@link SlidingTabItem#createFragment()}.
+     */
+    @Override
+    @NonNull
+    public Fragment createFragment(int i) {
+        return mTabs.get(i).createFragment();
     }
 
-    public void setEntriesSubtitles(CharSequence[] mEntriesSubtitles) {
-        this.mEntriesSubtitles = mEntriesSubtitles;
-    }
-
-    public List<TwoLinesListPreferenceEntry> getPreferenceEntries() {
-        if (getEntries().length != getEntriesSubtitles().length) {
-            throw new IllegalStateException();
-        }
-        List<TwoLinesListPreferenceEntry> entries = new ArrayList<>(getEntries().length);
-        for (int i = 0; i < getEntries().length; i++) {
-            entries.add(new TwoLinesListPreferenceEntry(getEntries()[i], getEntriesSubtitles()[i]));
-        }
-        return entries;
+    @Override
+    public int getItemCount() {
+        return mTabs.size();
     }
 }
