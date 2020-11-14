@@ -65,15 +65,15 @@
     <string name="notification_sync_curricula_loading">Studienrichtungen laden</string>
     <string name="notification_sync_curricula_updating">Studienrichtungen aktualisieren</string>
     <string name="notification_sync_curricula_saving">Studienrichtungen speichern</string>
-    <string name="notification_events_changed_title">Termine in "%s" geändert</string>
+    <string name="notification_events_changed_title">Termine in &#8216;%s&#8217; geändert</string>
     <plurals name="notification_events_changed">
-        <item quantity="one">Termin in "%2$s" geändert</item>
-        <item quantity="other">%1$d Termin(e) in "%2$s" geändert</item>
+        <item quantity="one">Termin in &#8216;%2$s&#8217; geändert</item>
+        <item quantity="other">%1$d Termin(e) in &#8216;%2$s&#8217; geändert</item>
     </plurals>
-    <string name="notification_events_deleted_title">Termine aus "%s" entfernt</string>
+    <string name="notification_events_deleted_title">Termine aus &#8216;%s&#8217; entfernt</string>
     <plurals name="notification_events_deleted">
-        <item quantity="one">Termin aus "%2$s" entfernt</item>
-        <item quantity="other">%1$d Termin(e) aus "%2$s" entfernt</item>
+        <item quantity="one">Termin aus &#8216;%2$s&#8217; entfernt</item>
+        <item quantity="other">%1$d Termin(e) aus &#8216;%2$s&#8217; entfernt</item>
     </plurals>
     <string name="notification_new_exams_title">neue Prüfungen gefunden</string>
     <plurals name="notification_new_exams">
@@ -91,7 +91,7 @@
         <item quantity="other">%d neue Orte verfügbar</item>
     </plurals>
 
-    <string name="notification_error">"JKU App" Fehler</string>
+    <string name="notification_error">&#8216;JKU App&#8217; Fehler</string>
     <plurals name="notification_more">
         <item quantity="one">+1 weitere</item>
         <item quantity="other">+%d weitere</item>
@@ -161,7 +161,7 @@
     <string name="oeh_rights_6_title" translatable="false">Links</string>
     <string name="oeh_rights_6_summary" translatable="false"><a href="http://www.jku.at/content/e262/e239/e3257">Detaillierte Informationen zum Studienrecht der JKU</a>\n\n<a href="http://www.ris.bka.gv.at/GeltendeFassung.wxe?Abfrage=Bundesnormen&amp;Gesetzesnummer=20002128">Das Universitätsgesetz</a></string>
 
-    <string name="map_place_not_found">\'%s\' nicht gefunden</string>
+    <string name="map_place_not_found">&#8216;%s&#8217; nicht gefunden</string>
     <string name="map_search_poi_title">Suche</string>
     <string name="map_search_poi_hint">Hörsaal hier eingeben</string>
     <string name="map_select_location">Hörsaal auswählen</string>

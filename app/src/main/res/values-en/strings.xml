@@ -32,17 +32,17 @@
     <string name="grade_unknown">Not rated</string>
     <string name="kusss_provider_name">KUSSS</string>
     <string name="listview_footer_button">Touch to view events after %s</string>
-    <string name="map_place_not_found">\'%s\' not found</string>
+    <string name="map_place_not_found">&#8216;%s&#8217; not found</string>
     <string name="map_search_poi_hint">Enter lecture room here</string>
     <string name="map_search_poi_title">Search</string>
     <string name="mensa_menu_not_available">Menu not available</string>
     <string name="menu_exam_register">Show in KUSSS</string>
-    <string name="notification_error">"JKU App" error</string>
+    <string name="notification_error">&#8216;JKU App&#8217; error</string>
     <plurals name="notification_events_changed">
-        <item quantity="one">Changed event in "%2$s"</item>
-        <item quantity="other">Changed %1$d events in "%2$s"</item>
+        <item quantity="one">Changed event in &#8216;%2$s&#8217;</item>
+        <item quantity="other">Changed %1$d events in &#8216;%2$s&#8217;</item>
     </plurals>
-    <string name="notification_events_changed_title">Changed events in "%s"</string>
+    <string name="notification_events_changed_title">Changed events in &#8216;%s&#8217;</string>
     <plurals name="notification_grades_changed">
         <item quantity="one">One new grade available</item>
         <item quantity="other">%d new grades available</item>
@@ -184,10 +184,10 @@
         <item quantity="other">+%d more"</item>
     </plurals>
     <plurals name="notification_events_deleted">
-        <item quantity="one">Removed event from "%2$s"</item>
-        <item quantity="other">Removed %1$d events from "%2$s"</item>
+        <item quantity="one">Removed event from &#8216;%2$s&#8217;</item>
+        <item quantity="other">Removed %1$d events from &#8216;%2$s&#8217;</item>
     </plurals>
-    <string name="notification_events_deleted_title">Removed events from "%s"</string>
+    <string name="notification_events_deleted_title">Removed events from &#8216;%s&#8217;</string>
     <string name="extension_mensa_description">Show today\'s menu of selected cafeteria</string>
     <string name="mensa_open_in_browser">show in browser</string>
 </resources>
