@@ -5,7 +5,10 @@
     <issue id="DuplicateStrings" severity="informational" />
     <issue id="SyntheticAccessor" severity="informational" />
     <issue id="SelectableText" severity="ignore" />
+    <issue id="UnusedAttribute" severity="informational" />
 
     <!-- ignore until kotlin is not in use -->
     <issue id="UnknownNullness" severity="ignore" />
+    <!-- ignore until Android Gradle Plugin version 5.0 is not in use -->
+    <issue id="NonConstantResourceId" severity="ignore" />
 </lint>

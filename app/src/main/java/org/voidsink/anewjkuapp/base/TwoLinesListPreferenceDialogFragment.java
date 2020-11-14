@@ -45,7 +45,7 @@ import org.voidsink.anewjkuapp.R;
 public class TwoLinesListPreferenceDialogFragment extends PreferenceDialogFragmentCompat {
     private int mClickedDialogEntryIndex;
 
-    private int getClickedDialogEntryIndex() {
+    protected int getClickedDialogEntryIndex() {
         return mClickedDialogEntryIndex;
     }
 
@@ -90,7 +90,7 @@ public class TwoLinesListPreferenceDialogFragment extends PreferenceDialogFragme
 
                     viewHolder.getTitle().setText(getItem(position).getTitle());
                     viewHolder.getSubTitle().setText(getItem(position).getSubTitle());
-                    if (viewHolder.radio != null) {
+                    if (viewHolder.getRadio() != null) {
                         viewHolder.getRadio().setChecked(position == getClickedDialogEntryIndex());
                     }
 
