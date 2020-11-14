@@ -27,6 +27,7 @@ node {
                 try {
                     withGradle {
                         sh './gradlew lintFdroidRelease'
+                        sh './gradlew lintGoogleRelease'
                     }
                 } finally {
                     recordIssues blameDisabled: true, forensicsDisabled: true, skipPublishingChecks: true, sourceDirectory: 'app/src', tools: [androidLintParser(pattern: 'app/build/reports/lint-results-*.xml'), errorProne()]
