@@ -55,7 +55,7 @@ public class RaabMenuLoader extends BaseMenuLoader implements MenuLoader {
         private final StringBuilder meals;
         private boolean hasData;
 
-        private MealCollection(String name) {
+        public MealCollection(String name) {
             this.name = name;
             this.meals = new StringBuilder();
             this.hasData = false;

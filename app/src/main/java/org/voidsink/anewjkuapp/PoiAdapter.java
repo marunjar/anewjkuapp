@@ -74,7 +74,7 @@ public class PoiAdapter extends BaseArrayAdapter<Poi> {
         private final TextView text1;
         private final TextView text2;
 
-        private PoiHolder(View view) {
+        public PoiHolder(View view) {
             text1 = view.findViewById(android.R.id.text1);
             text2 = view.findViewById(android.R.id.text2);
         }

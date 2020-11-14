@@ -133,7 +133,7 @@ public class MapFragment extends BaseFragment implements
     private Marker goalLocationOverlay;
     private LocationOverlay mMyLocationOverlay;
 
-    private LocationOverlay getLocationOverlay() {
+    protected LocationOverlay getLocationOverlay() {
         return mMyLocationOverlay;
     }
 

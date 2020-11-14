@@ -241,7 +241,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
         }
     }
 
-    private void finishLogin(Intent intent) {
+    protected void finishLogin(Intent intent) {
         String accountName = intent
                 .getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
         String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
