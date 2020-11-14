@@ -116,7 +116,6 @@
     <string name="pref_kusss_exam_notify_summary">Benachrichtigen wenn neue LVA-Prüfungen zu den eigenen LVAs verfügbar sind</string>
     <string name="pref_kusss_exam_get_from_lva_title">Prüfungen nach LVA-Nr laden</string>
     <string name="pref_kusss_exam_get_from_lva_summary">findet Prüfungen zu LVAs auch aus früheren Semestern, ist dafür aber langsamer …</string>
-    <string name="pref_cat_app_main">App</string>
     <string name="pref_app_override_theme_title">System-Theme ignorieren</string>
     <string name="pref_app_override_theme_summary">Das Theme wird vom System verwaltet. Wollen sie es ignorieren?</string>
     <string name="pref_app_use_light_theme_title">helles Design verwenden</string>
