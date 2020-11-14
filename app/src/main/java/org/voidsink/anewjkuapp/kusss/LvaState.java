@@ -39,7 +39,7 @@ public enum LvaState {
             case ALL:
                 return R.string.lva_state_all;
             default:
-                return R.string.lva_state_unknown;
+                throw new IllegalArgumentException(this.name());
         }
     }
 }

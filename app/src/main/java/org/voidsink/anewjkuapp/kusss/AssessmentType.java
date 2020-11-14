@@ -53,7 +53,7 @@ public enum AssessmentType {
             case NONE_AVAILABLE:
                 return R.string.grade_type_none_available;
             default:
-                return R.string.grade_type_unknown;
+                throw new IllegalArgumentException(this.name());
         }
     }
 

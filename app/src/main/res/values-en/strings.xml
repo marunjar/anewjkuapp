@@ -28,7 +28,6 @@
     <string name="grade_type_recognized_a">Recognized assessments</string>
     <string name="grade_type_recognized_cc">Recognized course certificates (ILAS)</string>
     <string name="grade_type_recognized_exam">Recognized exams</string>
-    <string name="grade_type_unknown">TODO</string>
     <string name="grade_unknown">Not rated</string>
     <string name="kusss_provider_name">KUSSS</string>
     <string name="listview_footer_button">Touch to view events after %s</string>
@@ -110,7 +109,6 @@
     <string name="interval_12h">Twice a day</string>
     <string name="interval_7d">Weekly</string>
     <string name="interval_3_5d">Twice a week</string>
-    <string name="lva_state_unknown">TODO</string>
     <string name="extension_mensa_pref_cat_visibility">Display</string>
     <string name="extension_mensa_pref_visible_always">Show always</string>
     <string name="extension_mensa_pref_visible_from">from</string>

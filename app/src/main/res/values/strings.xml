@@ -39,7 +39,6 @@
     <string name="grade_type_recognized_a">Anerkannte Beurteilungen</string>
     <string name="grade_type_recognized_exam">Anerkannte Prüfungen</string>
     <string name="grade_type_final_exam">Prüfungen</string>
-    <string name="grade_type_unknown">TODO</string>
     <string name="grade_type_all">alle Beurteilungen</string>
     <string name="grade_type_none_available">keine Noten verfügbar</string>
 
@@ -183,7 +182,6 @@
     <string name="lva_state_open">Offen</string>
     <string name="lva_state_done">Abgeschlossen</string>
     <string name="lva_state_all">Alle</string>
-    <string name="lva_state_unknown">TODO</string>
 
     <string name="extension_mensa_title">JKU Mensa</string>
     <string name="extension_mensa_description">Zeigt das Menü der ausgewählten JKU Mensa für den aktuellen Tag an.</string>
