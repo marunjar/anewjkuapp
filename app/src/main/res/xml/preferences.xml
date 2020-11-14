@@ -3,7 +3,7 @@
     <Preference
         app:fragment="org.voidsink.anewjkuapp.fragment.SettingsFragment$KusssSettingsFragment"
         app:summary="@string/settings_kusss_summary"
-        app:title="@string/settings_kusss_title" />
+        app:title="@string/title_kusss" />
 
     <Preference
         app:fragment="org.voidsink.anewjkuapp.fragment.SettingsFragment$TimetableSettingsFragment"

@@ -133,7 +133,6 @@
     <string name="pref_courses_show_with_assessment_only_title">nur LVAs mit Noten anzeigen</string>
     <string name="pref_courses_show_with_assessment_only_summary">Für vergangene Semester werden nur LVAs angezeigt die bereits benotet wurden.</string>
 
-    <string name="settings_kusss_title">KUSSS</string>
     <string name="settings_kusss_summary">Einstellungen für KUSSS</string>
     <string name="settings_app_title">App</string>
     <string name="settings_app_summary">Einstellungen für App</string>
