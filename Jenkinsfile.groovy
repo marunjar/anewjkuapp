@@ -35,6 +35,7 @@ node {
             }
             stage('Deploy') {
                 archiveArtifacts artifacts: '**/*.apk', caseSensitive: false, followSymlinks: false
+                influxDbPublisher customPrefix: 'anewjkuapp', customProjectName: '', jenkinsEnvParameterField: '', jenkinsEnvParameterTag: '', selectedTarget: 'jenkins'
             }
             stage('Cleanup') {
                 step([$class: 'GitHubCommitStatusSetter', errorHandlers: [[$class: 'ChangingBuildStatusErrorHandler', result: 'UNSTABLE']], statusResultSource: [$class: 'ConditionalStatusResultSource', results: [[$class: 'AnyBuildResult', message: "Build #${env.BUILD_NUMBER} finished!", state: 'SUCCESS']]]])
