@@ -122,7 +122,7 @@ dependencies {
     implementation 'org.mapsforge:mapsforge-map-android:0.14.0'
     implementation 'pub.devrel:easypermissions:3.0.0'
     implementation 'org.jsoup:jsoup:1.13.1'
-    implementation 'org.mnode.ical4j:ical4j:3.0.20'
+    implementation 'org.mnode.ical4j:ical4j:3.0.21'
     implementation 'com.sun.mail:javax.mail:1.6.2'
     //breaks when upgrading commons.lang3 > 3.9
     //noinspection GradleDependency
