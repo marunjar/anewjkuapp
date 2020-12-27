@@ -140,7 +140,3 @@ dependencies {
     implementation project(':sectionedRecyclerAdapter')
     implementation project(':android-week-view')
 }
-
-configurations.all {
-    exclude module: 'commons-logging'
-}
