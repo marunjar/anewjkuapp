@@ -18,15 +18,6 @@ buildscript {
                 substitute module('net.sf.proguard:proguard-gradle') with module('com.guardsquare:proguard-gradle:7.0.1')
             }
         }
-        exclude module: 'commons-logging'
-    }
-
-    tasks.withType(JavaCompile).configureEach {
-        options.errorprone {
-            disable('JdkObsolete')
-            disable('MissingSummary')
-            disable('EmptyBlockTag')
-        }
     }
 }
 
@@ -47,5 +38,17 @@ allprojects {
     repositories {
         google()
         jcenter()
+    }
+    configurations.all {
+        exclude module: 'commons-logging'
+    }
+    afterEvaluate {
+        tasks.withType(JavaCompile).configureEach {
+            options.errorprone {
+                disable('JdkObsolete')
+                disable('MissingSummary')
+                disable('EmptyBlockTag')
+            }
+        }
     }
 }
