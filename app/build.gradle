@@ -98,6 +98,7 @@ android {
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
             outputFileName = outputFileName.replace(".apk", "-${variant.versionName}.apk")
+            outputFileName = outputFileName.replace(".aab", "-${variant.versionName}.aab")
         }
     }
 }
