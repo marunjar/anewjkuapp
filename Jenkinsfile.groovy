@@ -19,6 +19,8 @@ node {
                 withGradle {
                     sh './gradlew assembleFdroid'
                     sh './gradlew assembleGoogle'
+                    sh './gradlew bundleFdroid'
+                    sh './gradlew bundleGoogle'
                 }
             }
             stage('Test') {
@@ -35,7 +37,7 @@ node {
                 }
             }
             stage('Deploy') {
-                archiveArtifacts artifacts: '**/*.apk', caseSensitive: false, followSymlinks: false
+                archiveArtifacts artifacts: '**/*.apk, **/*.aab', caseSensitive: false, followSymlinks: false
                 influxDbPublisher customPrefix: 'anewjkuapp', customProjectName: '', jenkinsEnvParameterField: '', jenkinsEnvParameterTag: '', selectedTarget: 'jenkins'
             }
             stage('Cleanup') {
