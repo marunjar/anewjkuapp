@@ -117,15 +117,10 @@ public abstract class SectionedRecyclerViewBaseAdapter<VH extends RecyclerView.V
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder sectionViewHolder, int position) {
         if (isSectionHeaderPosition(position)) {
-            onBindHeaderViewHolder(mSections.get(position), getViewHolder(sectionViewHolder), position);
+            onBindHeaderViewHolder(mSections.get(position), (HVH) sectionViewHolder, position);
         } else {
-            mBaseAdapter.onBindViewHolder(getViewHolder(sectionViewHolder), sectionedPositionToPosition(position));
+            mBaseAdapter.onBindViewHolder((VH) sectionViewHolder, sectionedPositionToPosition(position));
         }
-    }
-
-    @NonNull
-    private <T extends RecyclerView.ViewHolder> T getViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
-        return (T) viewHolder;
     }
 
     protected abstract void onBindHeaderViewHolder(Section section, @NonNull HVH sectionViewHolder, int position);

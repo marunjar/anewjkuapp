@@ -249,19 +249,12 @@ public class ImportCalendarWorker extends BaseWorker {
                                     eventKusssId = null;
 
                                     // get kusssId from extended properties
-                                    try (Cursor c2 = mProvider.query(CalendarContract.ExtendedProperties.CONTENT_URI, CalendarUtils.EXTENDED_PROPERTIES_PROJECTION,
+                                    try (Cursor c2 = mProvider.query(CalendarContract.ExtendedProperties.CONTENT_URI, CalendarUtils.getExtendedPropertiesProjection(),
                                             CalendarContract.ExtendedProperties.EVENT_ID + " = ?",
                                             new String[]{eventId},
                                             null)) {
                                         if (c2 != null) {
                                             while (c2.moveToNext()) {
-
-//                                    String extra = "";
-//                                    for (int i = 0; i < c2.getColumnCount(); i++) {
-//                                        extra = extra + i + "=" + c2.getString(i) + ";";
-//                                    }
-//                                    logger.debug("Extended: {}", extra);
-
                                                 if (c2.getString(1).contains(CalendarUtils.EXTENDED_PROPERTY_NAME_KUSSS_ID)) {
                                                     eventKusssId = c2.getString(2);
                                                 }

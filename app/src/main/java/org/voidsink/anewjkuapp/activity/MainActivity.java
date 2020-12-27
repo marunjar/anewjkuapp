@@ -145,7 +145,7 @@ public class MainActivity extends ThemedActivity {
         mDrawerListener = new DrawerLayout.SimpleDrawerListener() {
             @Override
             public void onDrawerOpened(View drawerView) {
-                final TextView drawerUser = mDrawerUser;
+                final TextView drawerUser = getDrawerUser();
                 if (drawerUser != null) {
                     if ((Build.VERSION.SDK_INT < Build.VERSION_CODES.M) && (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED)) {
                         drawerUser.setText(R.string.missing_app_permission);
@@ -190,6 +190,10 @@ public class MainActivity extends ThemedActivity {
         startCreateAccount();
 
         logger.debug("onCreate finished");
+    }
+
+    private TextView getDrawerUser() {
+        return mDrawerUser;
     }
 
     @AfterPermissionGranted(PERMISSIONS_REQUEST_ACCOUNT)

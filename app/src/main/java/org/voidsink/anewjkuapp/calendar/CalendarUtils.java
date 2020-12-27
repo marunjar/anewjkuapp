@@ -108,7 +108,7 @@ public final class CalendarUtils {
     public static final int COLUMN_EVENT_KUSSS_ID_LEGACY = 10;
     public static final int COLUMN_EVENT_ALL_DAY = 11;
 
-    public static final String[] EXTENDED_PROPERTIES_PROJECTION = new String[]{
+    private static final String[] EXTENDED_PROPERTIES_PROJECTION = new String[]{
             CalendarContract.ExtendedProperties.EVENT_ID,
             CalendarContract.ExtendedProperties.NAME,
             CalendarContract.ExtendedProperties.VALUE
@@ -123,6 +123,14 @@ public final class CalendarUtils {
 
     public static String[] getEventProjection() {
         return EVENT_PROJECTION;
+    }
+
+    public static String[] getExtendedPropertiesProjection() {
+        return EXTENDED_PROPERTIES_PROJECTION;
+    }
+
+    public static String[] getCalendarProjection() {
+        return CALENDAR_PROJECTION;
     }
 
     private static Uri createCalendar(@NonNull Context context, Account account,
@@ -263,7 +271,7 @@ public final class CalendarUtils {
         ContentResolver cr = context.getContentResolver();
         // todo: add selection
         try (Cursor c = cr.query(CalendarContract.Calendars.CONTENT_URI,
-                CALENDAR_PROJECTION, null, null, null)) {
+                getCalendarProjection(), null, null, null)) {
             if (c != null) {
                 while (c.moveToNext()) {
                     if (account.name.equals(c.getString(COLUMN_CAL_ACCOUNT_NAME))
@@ -347,7 +355,7 @@ public final class CalendarUtils {
 
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
             try (Cursor c = cr.query(CalendarContract.Calendars.CONTENT_URI,
-                    CALENDAR_PROJECTION, null, null, null)) {
+                    getCalendarProjection(), null, null, null)) {
                 if (c != null) {
                     while (c.moveToNext()) {
                         if (!onlyWritable || CalendarUtils.isWriteable(c.getInt(COLUMN_CAL_ACCESS_LEVEL))) {

@@ -45,9 +45,11 @@ allprojects {
     afterEvaluate {
         tasks.withType(JavaCompile).configureEach {
             options.errorprone {
+                disableWarningsInGeneratedCode = true
                 disable('JdkObsolete')
                 disable('MissingSummary')
                 disable('EmptyBlockTag')
+                disable('UnnecessaryParentheses')
             }
         }
     }
