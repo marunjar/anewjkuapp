@@ -122,7 +122,7 @@ public class RaabMenuLoader extends BaseMenuLoader implements MenuLoader {
                                 }
                             }
                         } else {
-                            String[] dateValues = text.split(",");
+                            String[] dateValues = text.split(",", -1);
                             if (dateValues.length == 2) {
                                 Date date = parseDate(dateValues[1]);
                                 if (date != null) {
