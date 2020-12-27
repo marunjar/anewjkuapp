@@ -33,11 +33,11 @@ node {
                         sh './gradlew lintGoogleRelease'
                     }
                 } finally {
-                    recordIssues blameDisabled: true, forensicsDisabled: true, skipPublishingChecks: true, sourceDirectory: 'app/src', tools: [androidLintParser(pattern: 'app/build/reports/lint-results-*.xml'), errorProne()]
+                    recordIssues blameDisabled: true, forensicsDisabled: true, skipPublishingChecks: true, sourceDirectory: 'app/src', tools: [androidLintParser(pattern: '**/reports/lint-results-*.xml'), errorProne()]
                 }
             }
             stage('Deploy') {
-                archiveArtifacts artifacts: '**/*.apk, **/*.aab', caseSensitive: false, followSymlinks: false
+                archiveArtifacts artifacts: '**/outputs/**/*.apk, **/outputs/**/*.aab', caseSensitive: false, followSymlinks: false
                 influxDbPublisher customPrefix: 'anewjkuapp', customProjectName: '', jenkinsEnvParameterField: '', jenkinsEnvParameterTag: '', selectedTarget: 'jenkins'
             }
             stage('Cleanup') {
