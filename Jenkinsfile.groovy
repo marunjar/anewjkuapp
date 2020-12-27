@@ -4,6 +4,7 @@ node {
     timestamps {
         ansiColor('xterm') {
             stage('Checkout') {
+                echo 'Checkout...'
                 checkout scm
             }
             stage('Setup') {
