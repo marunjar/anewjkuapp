@@ -626,7 +626,7 @@ public class ImportCalendarWorker extends BaseWorker {
                     .appendPath(name).build();
             Poi p = null;
 
-            try (Cursor c = cr.query(searchUri, PoiContentContract.Poi.DB.PROJECTION, null,
+            try (Cursor c = cr.query(searchUri, PoiContentContract.Poi.DB.getProjection(), null,
                     null, null)) {
                 if (c != null) {
                     while (c.moveToNext()) {

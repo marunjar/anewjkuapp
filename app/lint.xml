@@ -6,7 +6,6 @@
     <issue id="SyntheticAccessor" severity="informational" />
     <issue id="SelectableText" severity="ignore" />
     <issue id="UnusedAttribute" severity="informational" />
-    <issue id="EmptyBlockTag" severity="ignore" />
 
     <!-- ignore until kotlin is not in use -->
     <issue id="UnknownNullness" severity="ignore" />

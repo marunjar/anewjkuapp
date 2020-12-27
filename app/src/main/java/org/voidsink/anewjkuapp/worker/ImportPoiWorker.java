@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2019 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -156,7 +156,7 @@ public class ImportPoiWorker extends BaseWorker {
 
                 Uri poiUri = PoiContentContract.Poi.CONTENT_URI;
 
-                try (Cursor c = mProvider.query(poiUri, PoiContentContract.Poi.DB.PROJECTION, null, null,
+                try (Cursor c = mProvider.query(poiUri, PoiContentContract.Poi.DB.getProjection(), null, null,
                         null)) {
 
                     if (c != null) {

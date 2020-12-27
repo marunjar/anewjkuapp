@@ -53,7 +53,7 @@ public class CourseMap {
         ContentResolver cr = context.getContentResolver();
 
         try (Cursor c = cr.query(KusssContentContract.Course.CONTENT_URI,
-                KusssContentContract.Course.DB.PROJECTION, null, null,
+                KusssContentContract.Course.DB.getProjection(), null, null,
                 KusssContentContract.Course.COL_TERM + " DESC")) {
             if (c != null) {
                 while (c.moveToNext()) {

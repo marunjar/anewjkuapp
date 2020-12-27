@@ -113,7 +113,7 @@ public class MapFragment extends BaseFragment implements
     private static final String SOFTWAREPARK_HAGENBERG_MAP = "softwareparkhagenberg.map";
     private static final String PETRIUM_MAP = "petrinum.map";
 
-    public static final String[] MAPS = {
+    private static final String[] MAPS = {
             LINZ_MAP, MED_CAMPUS_MAP, LIFE_SCIENCE_CAMPUS_MAP, SOFTWAREPARK_HAGENBERG_MAP, PETRIUM_MAP, CAMPUS_MAP
     };
 
@@ -143,6 +143,10 @@ public class MapFragment extends BaseFragment implements
     private MapView mapView;
 
     private SearchView mSearchView;
+
+    public static String[] getMaps() {
+        return MAPS;
+    }
 
     @Override
     public void onPause() {
@@ -204,7 +208,7 @@ public class MapFragment extends BaseFragment implements
         Uri searchUri = PoiContentContract.CONTENT_URI.buildUpon()
                 .appendPath(SearchManager.SUGGEST_URI_PATH_QUERY)
                 .appendPath(query).build();
-        try (Cursor c = cr.query(searchUri, PoiContentContract.Poi.DB.PROJECTION, null,
+        try (Cursor c = cr.query(searchUri, PoiContentContract.Poi.DB.getProjection(), null,
                 null, null)) {
             if (c != null) {
                 while (c.moveToNext()) {
@@ -260,7 +264,7 @@ public class MapFragment extends BaseFragment implements
         ContentResolver cr = requireContext().getContentResolver();
 
         try (Cursor c = cr
-                .query(uri, PoiContentContract.Poi.DB.PROJECTION, null, null, null)) {
+                .query(uri, PoiContentContract.Poi.DB.getProjection(), null, null, null)) {
             if (c != null && c.moveToNext()) {
                 String name = c.getString(PoiContentContract.Poi.DB.COL_NAME);
                 double lon = c.getDouble(PoiContentContract.Poi.DB.COL_LON);
@@ -616,7 +620,7 @@ public class MapFragment extends BaseFragment implements
     private MapDataStore getMapDataStore() {
         MultiMapDataStore internalMap = new MultiMapDataStore(MultiMapDataStore.DataPolicy.DEDUPLICATE);
 
-        for (String mapFileName : MAPS) {
+        for (String mapFileName : getMaps()) {
             File file = new File(requireContext().getFilesDir(), mapFileName);
             MapFile mapFile = new MapFile(file);
             internalMap.addMapDataStore(mapFile, true, true);

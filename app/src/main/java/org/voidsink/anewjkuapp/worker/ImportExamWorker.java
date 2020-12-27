@@ -141,7 +141,7 @@ public class ImportExamWorker extends BaseWorker {
 
                     Uri examUri = KusssContentContract.Exam.CONTENT_URI;
 
-                    try (Cursor c = mProvider.query(examUri, KusssContentContract.Exam.DB.PROJECTION,
+                    try (Cursor c = mProvider.query(examUri, KusssContentContract.Exam.DB.getProjection(),
                             null, null, null)) {
                         if (c == null) {
                             logger.warn("selection failed");

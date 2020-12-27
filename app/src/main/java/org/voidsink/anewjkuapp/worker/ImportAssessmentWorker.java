@@ -128,7 +128,7 @@ public class ImportAssessmentWorker extends BaseWorker {
                     ArrayList<ContentProviderOperation> batch = new ArrayList<>();
 
                     Uri examUri = KusssContentContract.Assessment.CONTENT_URI;
-                    try (Cursor c = mProvider.query(examUri, KusssContentContract.Assessment.DB.PROJECTION, null,
+                    try (Cursor c = mProvider.query(examUri, KusssContentContract.Assessment.DB.getProjection(), null,
                             null, null)) {
                         if (c == null) {
                             logger.warn("selection failed");

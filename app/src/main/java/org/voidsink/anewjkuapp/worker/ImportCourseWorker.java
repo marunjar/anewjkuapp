@@ -126,7 +126,7 @@ public class ImportCourseWorker extends BaseWorker {
 
                     Uri lvaUri = KusssContentContract.Course.CONTENT_URI;
 
-                    try (Cursor c = mProvider.query(lvaUri, KusssContentContract.Course.DB.PROJECTION,
+                    try (Cursor c = mProvider.query(lvaUri, KusssContentContract.Course.DB.getProjection(),
                             null, null, null)) {
 
                         if (c == null) {

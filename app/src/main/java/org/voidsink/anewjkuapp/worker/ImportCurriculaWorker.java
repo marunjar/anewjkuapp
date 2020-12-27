@@ -120,7 +120,7 @@ public class ImportCurriculaWorker extends BaseWorker {
 
                     Uri curriculaUri = KusssContentContract.Curricula.CONTENT_URI;
 
-                    try (Cursor c = mProvider.query(curriculaUri, KusssContentContract.Curricula.DB.PROJECTION,
+                    try (Cursor c = mProvider.query(curriculaUri, KusssContentContract.Curricula.DB.getProjection(),
                             null, null, null)) {
                         if (c == null) {
                             logger.warn("selection failed");

@@ -144,11 +144,3 @@ dependencies {
 configurations.all {
     exclude module: 'commons-logging'
 }
-
-tasks.withType(JavaCompile).configureEach {
-    options.errorprone {
-        disable('JdkObsolete')
-        disable('MissingSummary')
-        disable('EmptyBlockTag')
-    }
-}

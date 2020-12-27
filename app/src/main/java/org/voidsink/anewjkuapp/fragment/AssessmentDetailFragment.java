@@ -137,7 +137,7 @@ public class AssessmentDetailFragment extends TermFragment implements
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
         return new CursorLoader(requireContext(), KusssContentContract.Assessment.CONTENT_URI,
-                KusssContentContract.Assessment.DB.PROJECTION, null, null,
+                KusssContentContract.Assessment.DB.getProjection(), null, null,
                 KusssContentContract.Assessment.TABLE_NAME + "."
                         + KusssContentContract.Assessment.COL_TYPE
                         + " ASC,"

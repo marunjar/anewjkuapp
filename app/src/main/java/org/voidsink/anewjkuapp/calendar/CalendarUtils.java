@@ -82,7 +82,7 @@ public final class CalendarUtils {
     private static final int COLUMN_CAL_ACCOUNT_TYPE = 4;
     private static final int COLUMN_CAL_ACCESS_LEVEL = 5;
 
-    public static final String[] EVENT_PROJECTION = new String[]{
+    private static final String[] EVENT_PROJECTION = new String[]{
             CalendarContract.Events._ID, //
             CalendarContract.Events.EVENT_LOCATION, // VEvent.getLocation()
             CalendarContract.Events.TITLE, // VEvent.getSummary()
@@ -119,6 +119,10 @@ public final class CalendarUtils {
     private static final Logger logger = LoggerFactory.getLogger(CalendarUtils.class);
 
     private CalendarUtils() {
+    }
+
+    public static String[] getEventProjection() {
+        return EVENT_PROJECTION;
     }
 
     private static Uri createCalendar(@NonNull Context context, Account account,
@@ -491,7 +495,7 @@ public final class CalendarUtils {
         String[] selectionArgs = new String[]{calendarId, Long.toString(fromDate.getTime())};
 
         try {
-            return mProvider.query(calUri, EVENT_PROJECTION,
+            return mProvider.query(calUri, getEventProjection(),
                     selection, selectionArgs, null);
         } catch (RemoteException e) {
             return null;
@@ -509,7 +513,7 @@ public final class CalendarUtils {
         String[] selectionArgs = new String[]{calendarId, Long.toString(start.getTime()), Long.toString(end.getTime())};
 
         try {
-            return mProvider.query(calUri, EVENT_PROJECTION,
+            return mProvider.query(calUri, getEventProjection(),
                     selection, selectionArgs, null);
         } catch (RemoteException e) {
             return null;

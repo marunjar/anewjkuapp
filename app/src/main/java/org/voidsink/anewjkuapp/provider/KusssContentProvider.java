@@ -417,7 +417,7 @@ public class KusssContentProvider extends ContentProvider {
         if (mAccount != null) {
             ContentResolver cr = context.getContentResolver();
             try (Cursor c = cr.query(KusssContentContract.Assessment.CONTENT_URI,
-                    KusssContentContract.Assessment.DB.PROJECTION, null, null,
+                    KusssContentContract.Assessment.DB.getProjection(), null, null,
                     KusssContentContract.Assessment.TABLE_NAME + "."
                             + KusssContentContract.Assessment.COL_TYPE
                             + " ASC,"
@@ -470,7 +470,7 @@ public class KusssContentProvider extends ContentProvider {
             ContentResolver cr = context.getContentResolver();
 
             try (Cursor c = cr.query(KusssContentContract.Curricula.CONTENT_URI,
-                    KusssContentContract.Curricula.DB.PROJECTION, null, null,
+                    KusssContentContract.Curricula.DB.getProjection(), null, null,
                     KusssContentContract.Curricula.COL_DT_START + " DESC")) {
                 if (c != null) {
                     mCurriculum = getCurriculaFromCursor(c);

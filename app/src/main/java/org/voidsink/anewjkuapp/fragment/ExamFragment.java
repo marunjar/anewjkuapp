@@ -142,7 +142,7 @@ public class ExamFragment extends BaseFragment implements ContentObserverListene
         showProgressIndeterminate();
 
         return new CursorLoader(requireContext(), KusssContentContract.Exam.CONTENT_URI,
-                KusssContentContract.Exam.DB.PROJECTION, null, null,
+                KusssContentContract.Exam.DB.getProjection(), null, null,
                 KusssContentContract.Exam.COL_DTSTART + " ASC");
 
     }

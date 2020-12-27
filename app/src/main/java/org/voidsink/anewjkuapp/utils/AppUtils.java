@@ -256,7 +256,7 @@ public class AppUtils {
     }
 
     private static boolean copyDefaultMaps(Context context) {
-        for (String mapFileName : MapFragment.MAPS) {
+        for (String mapFileName : MapFragment.getMaps()) {
             try {
                 // write file to sd for mapsforge
                 OutputStream mapFileWriter = new BufferedOutputStream(

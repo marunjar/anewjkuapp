@@ -257,7 +257,7 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
         }
 
         return new CursorLoader(requireContext(), CalendarContract.Events.CONTENT_URI,
-                CalendarUtils.EVENT_PROJECTION,
+                CalendarUtils.getEventProjection(),
                 "("
                         + CalendarContract.Events
                         .CALENDAR_ID

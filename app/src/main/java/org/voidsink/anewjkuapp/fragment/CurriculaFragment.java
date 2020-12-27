@@ -138,7 +138,7 @@ public class CurriculaFragment extends BaseFragment implements
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
         return new CursorLoader(requireContext(), KusssContentContract.Curricula.CONTENT_URI,
-                KusssContentContract.Curricula.DB.PROJECTION, null, null,
+                KusssContentContract.Curricula.DB.getProjection(), null, null,
                 KusssContentContract.Curricula.COL_DT_START + " DESC");
     }
 

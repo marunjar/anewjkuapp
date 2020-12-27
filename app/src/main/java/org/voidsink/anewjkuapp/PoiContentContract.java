@@ -64,13 +64,15 @@ public interface PoiContentContract {
         String COL_IS_DEFAULT = "from_user";
 
         interface DB {
-            String[] PROJECTION = new String[]{
-                    Poi.COL_ROWID,
-                    Poi.COL_NAME,
-                    Poi.COL_LON,
-                    Poi.COL_LAT,
-                    Poi.COL_DESCR,
-                    Poi.COL_IS_DEFAULT};
+            static String[] getProjection() {
+                return new String[]{
+                        Poi.COL_ROWID,
+                        Poi.COL_NAME,
+                        Poi.COL_LON,
+                        Poi.COL_LAT,
+                        Poi.COL_DESCR,
+                        Poi.COL_IS_DEFAULT};
+            }
 
             int COL_ID = 0;
             int COL_NAME = 1;

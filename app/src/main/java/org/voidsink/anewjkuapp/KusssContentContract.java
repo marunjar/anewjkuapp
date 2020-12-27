@@ -61,17 +61,19 @@ public interface KusssContentContract {
         String COL_CLASS_CODE = "code";
 
         interface DB {
-            String[] PROJECTION = new String[]{
-                    Course.COL_ID,
-                    Course.COL_TERM,
-                    Course.COL_COURSEID,
-                    Course.COL_TITLE,
-                    Course.COL_CURRICULA_ID,
-                    Course.COL_LVATYPE,
-                    Course.COL_LECTURER,
-                    Course.COL_SWS,
-                    Course.COL_ECTS,
-                    Course.COL_CLASS_CODE};
+            static String[] getProjection() {
+                return new String[]{
+                        Course.COL_ID,
+                        Course.COL_TERM,
+                        Course.COL_COURSEID,
+                        Course.COL_TITLE,
+                        Course.COL_CURRICULA_ID,
+                        Course.COL_LVATYPE,
+                        Course.COL_LECTURER,
+                        Course.COL_SWS,
+                        Course.COL_ECTS,
+                        Course.COL_CLASS_CODE};
+            }
 
             int COL_ID = 0;
             int COL_TERM = 1;
@@ -107,17 +109,19 @@ public interface KusssContentContract {
         String COL_TITLE = "title";
 
         interface DB {
-            String[] PROJECTION = new String[]{
-                    Exam.COL_ID,
-                    Exam.COL_TERM,
-                    Exam.COL_COURSEID,
-                    Exam.COL_DTSTART,
-                    Exam.COL_DTEND,
-                    Exam.COL_LOCATION,
-                    Exam.COL_DESCRIPTION,
-                    Exam.COL_INFO,
-                    Exam.COL_IS_REGISTERED,
-                    Exam.COL_TITLE};
+            static String[] getProjection() {
+                return new String[]{
+                        Exam.COL_ID,
+                        Exam.COL_TERM,
+                        Exam.COL_COURSEID,
+                        Exam.COL_DTSTART,
+                        Exam.COL_DTEND,
+                        Exam.COL_LOCATION,
+                        Exam.COL_DESCRIPTION,
+                        Exam.COL_INFO,
+                        Exam.COL_IS_REGISTERED,
+                        Exam.COL_TITLE};
+            }
 
             int COL_ID = 0;
             int COL_TERM = 1;
@@ -155,19 +159,21 @@ public interface KusssContentContract {
         String COL_LVATYPE = "lvatype";
 
         interface DB {
-            String[] PROJECTION = new String[]{
-                    Assessment.COL_ID,
-                    Assessment.COL_TERM,
-                    Assessment.COL_COURSEID,
-                    Assessment.COL_DATE,
-                    Assessment.COL_CURRICULA_ID,
-                    Assessment.COL_TYPE,
-                    Assessment.COL_GRADE,
-                    Assessment.COL_TITLE,
-                    Assessment.COL_CODE,
-                    Assessment.COL_ECTS,
-                    Assessment.COL_SWS,
-                    Assessment.COL_LVATYPE};
+            static String[] getProjection() {
+                return new String[]{
+                        Assessment.COL_ID,
+                        Assessment.COL_TERM,
+                        Assessment.COL_COURSEID,
+                        Assessment.COL_DATE,
+                        Assessment.COL_CURRICULA_ID,
+                        Assessment.COL_TYPE,
+                        Assessment.COL_GRADE,
+                        Assessment.COL_TITLE,
+                        Assessment.COL_CODE,
+                        Assessment.COL_ECTS,
+                        Assessment.COL_SWS,
+                        Assessment.COL_LVATYPE};
+            }
 
             // Constants representing column positions from PROJECTION.
             int COL_ID = 0;
@@ -205,16 +211,18 @@ public interface KusssContentContract {
         String COL_DT_END = "dtEnd";
 
         interface DB {
-            String[] PROJECTION = new String[]{
-                    Curricula.COL_ID,
-                    Curricula.COL_IS_STD,
-                    Curricula.COL_CURRICULUM_ID,
-                    Curricula.COL_TITLE,
-                    Curricula.COL_STEOP_DONE,
-                    Curricula.COL_ACTIVE_STATE,
-                    Curricula.COL_UNI,
-                    Curricula.COL_DT_START,
-                    Curricula.COL_DT_END};
+            static String[] getProjection() {
+                return new String[]{
+                        Curricula.COL_ID,
+                        Curricula.COL_IS_STD,
+                        Curricula.COL_CURRICULUM_ID,
+                        Curricula.COL_TITLE,
+                        Curricula.COL_STEOP_DONE,
+                        Curricula.COL_ACTIVE_STATE,
+                        Curricula.COL_UNI,
+                        Curricula.COL_DT_START,
+                        Curricula.COL_DT_END};
+            }
 
             int COL_ID = 0;
             int COL_IS_STD = 1;
