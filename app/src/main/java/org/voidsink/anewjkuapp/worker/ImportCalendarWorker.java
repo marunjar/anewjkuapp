@@ -531,7 +531,7 @@ public class ImportCalendarWorker extends BaseWorker {
         String description = ev.getDescription()
                 .getValue().trim();
         // Summary: Lecture / Lecturer / courseId
-        List<String> values = new ArrayList<>(Arrays.asList(summary.split("\\s+/\\s+")));
+        List<String> values = new ArrayList<>(Arrays.asList(summary.split("\\s+/\\s+", -1)));
         if (values.size() >= 3) {
             description = appendWithNewLines(description, values.get(1), lineSeparator);
             values.remove(1);
