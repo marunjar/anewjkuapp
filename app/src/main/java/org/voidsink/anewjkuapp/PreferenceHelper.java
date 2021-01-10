@@ -444,11 +444,16 @@ public final class PreferenceHelper {
 
     public static boolean trackingErrors(@NonNull Context context) {
         try {
-            SharedPreferences sp = PreferenceManager
-                    .getDefaultSharedPreferences(context);
+            if (BuildConfig.FOSS_ONLY) {
+                // ensure tracking is disabled
+                return false;
+            } else {
+                SharedPreferences sp = PreferenceManager
+                        .getDefaultSharedPreferences(context);
 
-            return sp.getBoolean(PREF_TRACKING_ERRORS,
-                    PREF_TRACKING_ERRORS_DEFAULT);
+                return sp.getBoolean(PREF_TRACKING_ERRORS,
+                        PREF_TRACKING_ERRORS_DEFAULT);
+            }
         } catch (Exception e) {
             logger.error("Failure", e);
             return PREF_TRACKING_ERRORS_DEFAULT;
