@@ -43,6 +43,8 @@ android {
 
         buildConfigField "boolean", "FOSS_ONLY", "false"
 
+        archivesBaseName = "${applicationId}-${versionName}-${versionCode}"
+
         return void // fix lint warning "Not all execution paths return a value"
     }
 
@@ -73,11 +75,13 @@ android {
     productFlavors {
         google {
             dimension "tier"
+            versionNameSuffix "-google"
             return void // fix lint warning "Not all execution paths return a value"
         }
         fdroid {
             dimension "tier"
             buildConfigField "boolean", "FOSS_ONLY", "true"
+            versionNameSuffix "-fdroid"
             return void // fix lint warning "Not all execution paths return a value"
         }
     }
@@ -93,12 +97,6 @@ android {
         exclude 'META-INF/NOTICE.txt'
 
         return void // fix lint warning "Not all execution paths return a value"
-    }
-
-    applicationVariants.all { variant ->
-        variant.outputs.all { output ->
-            outputFileName = outputFileName.replace(".apk", "-${variant.versionName}.apk")
-        }
     }
 }
 
