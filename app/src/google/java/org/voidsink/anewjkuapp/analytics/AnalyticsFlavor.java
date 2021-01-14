@@ -35,6 +35,7 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.security.ProviderInstaller;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
@@ -59,6 +60,10 @@ public class AnalyticsFlavor implements IAnalytics {
     public void init(@NonNull Application app) {
         if (mApp == null) {
             mApp = app;
+
+            if (FirebaseApp.getApps(app).isEmpty()) {
+                FirebaseApp.initializeApp(app);
+            }
 
             try {
                 ProviderInstaller.installIfNeeded(mApp);
