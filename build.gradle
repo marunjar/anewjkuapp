@@ -50,6 +50,7 @@ allprojects {
                 disable('MissingSummary')
                 disable('EmptyBlockTag')
                 disable('UnnecessaryParentheses')
+                disable('JavaUtilDate')
             }
         }
     }
