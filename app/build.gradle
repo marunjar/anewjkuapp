@@ -81,7 +81,6 @@ android {
         fdroid {
             dimension "tier"
             buildConfigField "boolean", "FOSS_ONLY", "true"
-            versionNameSuffix "-fdroid"
             return void // fix lint warning "Not all execution paths return a value"
         }
     }
