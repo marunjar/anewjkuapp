@@ -99,7 +99,7 @@ public abstract class MensaFragmentDetail extends BaseFragment implements Loader
     @NonNull
     @Override
     public Loader<ArrayList<MensaItem>> onCreateLoader(int i, Bundle bundle) {
-        showProgressIndeterminate();
+        startProgressIndeterminate();
 
         return new MenuDetailLoader(getContext(), createLoader());
     }

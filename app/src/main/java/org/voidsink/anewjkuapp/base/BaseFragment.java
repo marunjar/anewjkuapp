@@ -34,8 +34,9 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
+
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +51,7 @@ public class BaseFragment extends Fragment implements StackedFragment, PendingIn
 
     private CharSequence mTitle = null;
     private int mId = 0;
-    private ContentLoadingProgressBar mProgress;
+    private LinearProgressIndicator mProgress;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,14 +75,17 @@ public class BaseFragment extends Fragment implements StackedFragment, PendingIn
         }
     }
 
-    protected void showProgressIndeterminate() {
+    protected void startProgressIndeterminate() {
         if (mProgress != null) {
+            mProgress.setIndeterminate(true);
+            mProgress.setProgress(0);
             mProgress.show();
         }
     }
 
     protected void finishProgress() {
         if (mProgress != null) {
+            mProgress.setProgressCompat(100, true);
             mProgress.hide();
         }
     }

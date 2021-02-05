@@ -225,7 +225,7 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        showProgressIndeterminate();
+        startProgressIndeterminate();
 
         Account mAccount = AppUtils.getAccount(getContext());
 

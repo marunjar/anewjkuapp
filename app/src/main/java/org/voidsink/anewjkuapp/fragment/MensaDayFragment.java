@@ -127,7 +127,7 @@ public class MensaDayFragment extends BaseFragment implements LoaderManager.Load
     @NonNull
     @Override
     public Loader<List<MensaItem>> onCreateLoader(int id, @Nullable Bundle args) {
-        showProgressIndeterminate();
+        startProgressIndeterminate();
 
         return new MenuDayLoader(getContext(), mDate, createLoaders());
     }

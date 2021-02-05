@@ -161,14 +161,14 @@ public class StatFragmentDetail extends TermFragment implements
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
         switch (id) {
             case Consts.LOADER_ID_COURSES: {
-                showProgressIndeterminate();
+                startProgressIndeterminate();
 
                 return new CursorLoader(requireContext(), KusssContentContract.Course.CONTENT_URI,
                         KusssContentContract.Course.DB.getProjection(), null, null,
                         KusssContentContract.Course.COL_TERM + " DESC");
             }
             case Consts.LOADER_ID_ASSESSMENTS: {
-                showProgressIndeterminate();
+                startProgressIndeterminate();
 
                 return new CursorLoader(requireContext(), KusssContentContract.Assessment.CONTENT_URI,
                         KusssContentContract.Assessment.DB.getProjection(), null, null,

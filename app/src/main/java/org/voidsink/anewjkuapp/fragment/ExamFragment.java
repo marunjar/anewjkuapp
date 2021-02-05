@@ -139,7 +139,7 @@ public class ExamFragment extends BaseFragment implements ContentObserverListene
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        showProgressIndeterminate();
+        startProgressIndeterminate();
 
         return new CursorLoader(requireContext(), KusssContentContract.Exam.CONTENT_URI,
                 KusssContentContract.Exam.DB.getProjection(), null, null,
