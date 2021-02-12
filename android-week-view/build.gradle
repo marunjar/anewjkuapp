@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: "net.ltgt.errorprone"
+apply plugin: 'net.ltgt.errorprone'
 
 repositories {
     mavenCentral()
@@ -18,7 +18,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
 
-        return void // fix lint warning "Not all execution paths return a value"
+        return void // fix lint warning 'Not all execution paths return a value'
     }
 }
 
@@ -29,8 +29,8 @@ configurations {
 dependencies {
     errorproneJavac("com.google.errorprone:javac:${rootProject.ext.errorProneJavacVersion}")
     errorprone("com.google.errorprone:error_prone_core:${rootProject.ext.errorProneVersion}")
-    implementation "androidx.core:core:1.3.2"
-    implementation "androidx.interpolator:interpolator:1.0.0"
+    implementation 'androidx.core:core:1.3.2'
+    implementation 'androidx.interpolator:interpolator:1.0.0'
 }
 
 //apply from: 'gradle-mvn-push.gradle'

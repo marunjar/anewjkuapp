@@ -39,7 +39,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName '1.0'
     }
 
     buildTypes {
@@ -55,5 +55,5 @@ android {
 dependencies {
     errorproneJavac("com.google.errorprone:javac:${rootProject.ext.errorProneJavacVersion}")
     errorprone("com.google.errorprone:error_prone_core:${rootProject.ext.errorProneVersion}")
-    implementation "androidx.recyclerview:recyclerview:1.1.0"
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
 }
