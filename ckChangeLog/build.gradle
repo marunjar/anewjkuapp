@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: "net.ltgt.errorprone"
+apply plugin: 'net.ltgt.errorprone'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -11,7 +11,7 @@ android {
     }
 
     defaultConfig {
-        versionName "1.2.2"
+        versionName '1.2.2'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
     }

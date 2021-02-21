@@ -1,3 +1,7 @@
+[<img src="https://img.shields.io/github/v/release/marunjar/anewjkuapp.svg?include_prereleases&logo=github" height="20">](https://github.com/marunjar/anewjkuapp/releases)
+[<img src="https://img.shields.io/f-droid/v/org.voidsink.anewjkuapp.svg?include_prereleases" alt="Get it on F-Droid" height="20">](https://f-droid.org/app/org.voidsink.anewjkuapp)
+
+
 JKU APP
 ==========
 
