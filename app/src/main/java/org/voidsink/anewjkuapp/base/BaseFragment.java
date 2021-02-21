@@ -85,7 +85,8 @@ public class BaseFragment extends Fragment implements StackedFragment, PendingIn
 
     protected void finishProgress() {
         if (mProgress != null) {
-            mProgress.setProgressCompat(100, true);
+            mProgress.setProgressCompat(100, false);
+            mProgress.setVisibility(View.GONE);
             mProgress.hide();
         }
     }
