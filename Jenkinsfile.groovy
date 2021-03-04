@@ -3,6 +3,7 @@ node {
 
     timestamps {
         ansiColor('xterm') {
+            try {
             stage('Checkout') {
                 echo 'Checkout...'
                 checkout scm
@@ -42,9 +43,11 @@ node {
             }
             stage('Cleanup') {
             }
+            } finally {
             stage('Notify') {
                 step([$class: 'GitHubCommitStatusSetter', errorHandlers: [[$class: 'ChangingBuildStatusErrorHandler', result: 'UNSTABLE']], statusResultSource: [$class: 'ConditionalStatusResultSource', results: [[$class: 'AnyBuildResult', message: "Build #${env.BUILD_NUMBER} finished!", state: 'SUCCESS']]]])
                 emailext attachLog: true, body: '', recipientProviders: [buildUser(), requestor()], subject: ''
+            }
             }
         }
     }
