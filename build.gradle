@@ -43,7 +43,12 @@ allprojects {
         exclude module: 'commons-logging'
     }
     afterEvaluate {
-        tasks.withType(JavaCompile).configureEach {
+        tasks.withType(JavaCompile).configureEach { task ->
+            if (task.getName().contains('uploadCrashlyticsMappingFile')) {
+                task.enabled = false
+                println "Disabled " + task.getName()
+            }
+
             options.errorprone {
                 disableWarningsInGeneratedCode = true
                 disable('JdkObsolete')
