@@ -77,10 +77,10 @@ android {
             dimension 'tier'
             versionNameSuffix '-google'
 
-            firebaseCrashlytics {
-                mappingFileUploadEnabled false
-                nativeSymbolUploadEnabled false
-            }
+//            firebaseCrashlytics {
+//                mappingFileUploadEnabled false
+//                nativeSymbolUploadEnabled false
+//            }
 
             return void // fix lint warning 'Not all execution paths return a value'
         }
