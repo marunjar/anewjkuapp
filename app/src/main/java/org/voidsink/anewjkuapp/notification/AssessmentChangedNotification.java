@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2021 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -110,7 +110,8 @@ public class AssessmentChangedNotification {
             }
 
             if (lines.size() > MAX_LINES) {
-                inBoxStyle.setSummaryText(mContext.getResources().getQuantityString(R.plurals.notification_more, lines.size() - MAX_LINES));
+                int quantity = lines.size() - MAX_LINES;
+                inBoxStyle.setSummaryText(mContext.getResources().getQuantityString(R.plurals.notification_more, quantity, quantity));
             }
             // Moves the big view style object into the notification object.
             mBuilder.setStyle(inBoxStyle);
