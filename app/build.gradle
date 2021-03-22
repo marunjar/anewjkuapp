@@ -116,7 +116,7 @@ dependencies {
     implementation 'androidx.work:work-runtime:2.5.0'
     googleImplementation 'androidx.work:work-gcm:2.5.0'
     googleImplementation 'com.google.firebase:firebase-analytics:18.0.2'
-    googleImplementation 'com.google.firebase:firebase-crashlytics:17.3.1'
+    googleImplementation 'com.google.firebase:firebase-crashlytics:17.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
     implementation 'org.mapsforge:mapsforge-core:0.15.0'
@@ -125,7 +125,7 @@ dependencies {
     implementation 'org.mapsforge:mapsforge-map-android:0.15.0'
     implementation 'pub.devrel:easypermissions:3.0.0'
     implementation 'org.jsoup:jsoup:1.13.1'
-    implementation 'org.mnode.ical4j:ical4j:3.0.21'
+    implementation 'org.mnode.ical4j:ical4j:3.0.22'
     implementation 'com.sun.mail:javax.mail:1.6.2'
     //breaks when upgrading commons.lang3 > 3.9
     //noinspection GradleDependency
