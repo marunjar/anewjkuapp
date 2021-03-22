@@ -100,7 +100,8 @@ android {
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
-        exclude 'META-INF/INDEX.list'
+//        exclude 'META-INF/INDEX.LIST'
+//        pickFirst 'META-INF/groovy/org.codehaus.groovy.runtime.ExtensionModule'
 
         return void // fix lint warning 'Not all execution paths return a value'
     }
@@ -126,7 +127,7 @@ dependencies {
     implementation 'org.mapsforge:mapsforge-map-android:0.15.0'
     implementation 'pub.devrel:easypermissions:3.0.0'
     implementation 'org.jsoup:jsoup:1.13.1'
-    implementation 'org.mnode.ical4j:ical4j:3.0.22'
+    implementation 'org.mnode.ical4j:ical4j:3.0.21'
     implementation 'com.sun.mail:javax.mail:1.6.2'
     //breaks when upgrading commons.lang3 > 3.9
     //noinspection GradleDependency
