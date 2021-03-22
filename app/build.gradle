@@ -100,6 +100,7 @@ android {
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/INDEX.list'
 
         return void // fix lint warning 'Not all execution paths return a value'
     }
