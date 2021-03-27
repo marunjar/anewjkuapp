@@ -3,7 +3,8 @@
     <issue id="MissingTranslation" severity="error" />
     <issue id="UnusedIds" severity="informational" />
     <issue id="DuplicateStrings" severity="informational" />
-    <issue id="SyntheticAccessor" severity="informational" />
+    <issue id="SyntheticAccessor" severity="error" />
+    <issue id="StaticFieldLeak" severity="error" />
     <issue id="SelectableText" severity="ignore" />
     <issue id="UnusedAttribute" severity="informational" />
 
