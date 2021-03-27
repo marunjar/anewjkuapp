@@ -30,7 +30,6 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -63,6 +62,8 @@ import org.voidsink.anewjkuapp.utils.AppUtils;
 import org.voidsink.anewjkuapp.utils.Consts;
 import org.voidsink.anewjkuapp.utils.UIUtils;
 import org.voidsink.anewjkuapp.workaround.AccountAuthenticatorActivity;
+
+import java.lang.ref.WeakReference;
 
 public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 
@@ -149,7 +150,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
     }
 
     private void submit() {
-        mSubmit.setEnabled(false);
+        getSubmit().setEnabled(false);
 
         final String userName = ((TextView) findViewById(R.id.accountName))
                 .getText().toString();
@@ -162,17 +163,17 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
         new LoginTask(this, accountType, userName, userPass).execute();
     }
 
-    private class LoginTask extends AsyncTask<String, Void, Intent> {
+    private static class LoginTask extends AsyncTask<String, Void, Intent> {
         private final String mAccountType;
         private final String mUserName;
         private final String mUserPass;
         private ProgressDialog progressDialog;
-        private final Context mContext;
+        private final WeakReference<KusssAuthenticatorActivity> activityReference;
 
-        public LoginTask(Context context, String accountType, String userName, String userPass) {
+        public LoginTask(KusssAuthenticatorActivity context, String accountType, String userName, String userPass) {
             super();
 
-            this.mContext = context;
+            this.activityReference = new WeakReference<>(context);
             this.mAccountType = accountType;
             this.mUserName = userName;
             this.mUserPass = userPass;
@@ -180,19 +181,22 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 
         @Override
         protected void onPreExecute() {
+            KusssAuthenticatorActivity activity = activityReference.get();
+
             progressDialog = ProgressDialog.show(
-                    mContext,
-                    mContext.getString(R.string.progress_title),
-                    mContext.getString(R.string.progress_login), true);
+                    activity,
+                    activity.getString(R.string.progress_title),
+                    activity.getString(R.string.progress_login), true);
         }
 
         @Override
         protected Intent doInBackground(String... params) {
             Bundle data = new Bundle();
             try {
-                final String authtoken = KusssHandler.getInstance().login(mContext, mUserName, mUserPass);
+                KusssAuthenticatorActivity activity = activityReference.get();
 
-                KusssHandler.getInstance().logout(mContext);
+                final String authtoken = KusssHandler.getInstance().login(activity, mUserName, mUserPass);
+                KusssHandler.getInstance().logout(activity);
 
                 data.putString(AccountManager.KEY_ACCOUNT_NAME, mUserName);
                 data.putString(AccountManager.KEY_ACCOUNT_TYPE, mAccountType);
@@ -210,34 +214,35 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 
         @Override
         protected void onPostExecute(Intent intent) {
+            KusssAuthenticatorActivity activity = activityReference.get();
+
             String message = null;
             if (TextUtils.isEmpty(intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME))) {
-                message = mContext.getString(R.string.account_login_failed_wrong_user);
+                message = activity.getString(R.string.account_login_failed_wrong_user);
             } else if (TextUtils.isEmpty(intent.getStringExtra(PARAM_USER_PASS))) {
-                message = mContext.getString(R.string.account_login_failed_wrong_pwd);
+                message = activity.getString(R.string.account_login_failed_wrong_pwd);
             } else if (!TextUtils.isEmpty(intent.getStringExtra(KEY_ERROR_MESSAGE))) {
                 message = intent.getStringExtra(KEY_ERROR_MESSAGE);
             } else if (intent.hasExtra(AccountManager.KEY_AUTHTOKEN)) {
                 String authToken = intent
                         .getStringExtra(AccountManager.KEY_AUTHTOKEN);
                 if (!TextUtils.isEmpty(authToken)) {
-                    finishLogin(intent);
+                    activity.finishLogin(intent);
                 } else {
-                    message = mContext.getString(R.string.account_login_failed_wrong_pwd);
+                    message = activity.getString(R.string.account_login_failed_wrong_pwd);
                 }
             } else {
-                message = mContext.getString(R.string.account_login_failed_wrong_auth_token);
+                message = activity.getString(R.string.account_login_failed_wrong_auth_token);
             }
             if (!TextUtils.isEmpty(message)) {
-                Toast.makeText(mContext,
+                Toast.makeText(activity,
                         message,
                         Toast.LENGTH_SHORT).show();
             }
 
-
             progressDialog.dismiss();
 
-            mSubmit.setEnabled(true);
+            activity.getSubmit().setEnabled(true);
         }
     }
 
@@ -333,5 +338,9 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
         super.onStart();
 
         AnalyticsHelper.sendScreen(Consts.SCREEN_LOGIN);
+    }
+
+    protected Button getSubmit() {
+        return mSubmit;
     }
 }

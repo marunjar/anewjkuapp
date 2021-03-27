@@ -192,7 +192,7 @@ public class MainActivity extends ThemedActivity {
         logger.debug("onCreate finished");
     }
 
-    private TextView getDrawerUser() {
+    protected TextView getDrawerUser() {
         return mDrawerUser;
     }
 
