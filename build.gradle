@@ -31,7 +31,7 @@ ext {
     targetSdkVersion = 30
     minSdkVersion = 16
     errorProneVersion = '2.6.0'
-    errorProneJavacVersion = '9+181-r4173-1'
+//    errorProneJavacVersion = '9+181-r4173-1'
 }
 
 allprojects {
