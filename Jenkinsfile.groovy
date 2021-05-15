@@ -17,10 +17,10 @@ node {
             }
             stage('Build') {
                 withGradle {
-                    sh './gradlew assembleFdroid'
                     sh './gradlew assembleGoogle'
-                    sh './gradlew bundleFdroid'
                     sh './gradlew bundleGoogle'
+                    sh './gradlew assembleFdroid'
+                    sh './gradlew bundleFdroid'
                 }
             }
             stage('Test') {
@@ -29,8 +29,8 @@ node {
             stage('Analyze') {
                 try {
                     withGradle {
-                        sh './gradlew lintFdroidRelease'
                         sh './gradlew lintGoogleRelease'
+                        sh './gradlew lintFdroidRelease'
                     }
                 } finally {
                     recordIssues blameDisabled: true, forensicsDisabled: true, skipPublishingChecks: true, sourceDirectory: 'app/src', tools: [androidLintParser(pattern: '**/reports/lint-results-*.xml'), errorProne()]
