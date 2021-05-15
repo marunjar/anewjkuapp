@@ -30,7 +30,7 @@ ext {
     buildToolsVersion = '30.0.3'
     targetSdkVersion = 30
     minSdkVersion = 16
-    errorProneVersion = '2.6.0'
+    errorProneVersion = '2.7.1'
 //    errorProneJavacVersion = '9+181-r4173-1'
 }
 
