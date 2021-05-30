@@ -52,5 +52,5 @@ IF %3 GTR 0 (
 	call .\osmosis\bin\osmosis.bat --read-xml .\input\%1.osm --tf accept-ways highway=* --used-node --mapfile-writer file=.\output\%1.map 
 )
 
-timeout /t 60 /nobreak
+timeout /t 120 /nobreak
 exit /b
