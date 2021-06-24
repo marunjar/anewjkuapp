@@ -116,7 +116,7 @@ dependencies {
     implementation 'androidx.work:work-runtime:2.5.0'
     googleImplementation 'androidx.work:work-gcm:2.5.0'
     googleImplementation 'com.google.firebase:firebase-analytics:19.0.0'
-    googleImplementation 'com.google.firebase:firebase-crashlytics:18.0.1'
+    googleImplementation 'com.google.firebase:firebase-crashlytics:18.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
     implementation 'org.mapsforge:mapsforge-core:0.16.0'
@@ -132,7 +132,7 @@ dependencies {
     //breaks when upgrading commons.lang3 > 3.9
     //noinspection GradleDependency
     implementation 'org.apache.commons:commons-lang3:3.9'
-    implementation 'org.slf4j:slf4j-android:1.7.30'
+    implementation 'org.slf4j:slf4j-android:1.7.31'
     implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.loader:loader:1.1.0'
