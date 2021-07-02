@@ -7,9 +7,9 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.1'
+        classpath 'com.android.tools.build:gradle:4.2.2'
         classpath 'com.google.gms:google-services:4.3.8'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.6.1'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.7.1'
     }
 
     configurations.all {
@@ -22,7 +22,7 @@ buildscript {
 }
 
 plugins {
-    id 'net.ltgt.errorprone' version '2.0.1'
+    id 'net.ltgt.errorprone' version '2.0.2'
 }
 
 ext {
@@ -31,7 +31,6 @@ ext {
     targetSdkVersion = 30
     minSdkVersion = 16
     errorProneVersion = '2.7.1'
-//    errorProneJavacVersion = '9+181-r4173-1'
 }
 
 allprojects {
