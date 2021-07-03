@@ -28,8 +28,8 @@ android {
 
     defaultConfig {
         applicationId 'org.voidsink.anewjkuapp'
-        versionCode 140084
-        versionName '0.53.5'
+        versionCode 140085
+        versionName '0.53.6'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         multiDexEnabled true
