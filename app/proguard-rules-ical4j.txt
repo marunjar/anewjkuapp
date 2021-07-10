@@ -21,3 +21,4 @@
 -dontwarn javax.cache.**
 -dontwarn com.sun.activation.**
 -dontwarn javax.activation.**
+-dontwarn javax.security.sasl.**
