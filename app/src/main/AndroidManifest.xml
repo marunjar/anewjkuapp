@@ -45,6 +45,7 @@
 
         <activity
             android:name="org.voidsink.anewjkuapp.activity.MainActivity"
+            android:exported="true"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
@@ -64,6 +65,7 @@
 
         <activity
             android:name="org.voidsink.anewjkuapp.activity.SettingsActivity"
+            android:exported="false"
             android:launchMode="singleTop"
             android:parentActivityName="org.voidsink.anewjkuapp.activity.MainActivity"
             android:permission="android.permission.MANAGE_ACCOUNTS"
@@ -71,6 +73,7 @@
 
         <activity
             android:name="org.voidsink.anewjkuapp.activity.SyncSettingsActivity"
+            android:exported="true"
             android:launchMode="singleTop"
             android:permission="android.permission.MANAGE_ACCOUNTS"
             android:screenOrientation="portrait">
@@ -85,12 +88,14 @@
         <activity
             android:name="org.voidsink.anewjkuapp.activity.AboutActivity"
             android:parentActivityName="org.voidsink.anewjkuapp.activity.MainActivity"
+            android:exported="false"
             android:screenOrientation="portrait" />
 
         <activity
             android:name="org.voidsink.anewjkuapp.activity.KusssAuthenticatorActivity"
             android:parentActivityName="org.voidsink.anewjkuapp.activity.MainActivity"
             android:permission="android.permission.MANAGE_ACCOUNTS"
+            android:exported="true"
             android:screenOrientation="portrait">
 
             <intent-filter>
@@ -107,6 +112,7 @@
 
         <service
             android:name="org.voidsink.anewjkuapp.service.KusssAuthenticatorService"
+            android:exported="false"
             android:permission="android.permission.AUTHENTICATE_ACCOUNTS">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
@@ -142,6 +148,7 @@
         </service>
         <service
             android:name="org.voidsink.anewjkuapp.dashclock.MensaDashclockExtension"
+            android:exported="true"
             android:label="@string/extension_mensa_title"
             android:permission="com.google.android.apps.dashclock.permission.READ_EXTENSION_DATA">
             <intent-filter>
@@ -181,7 +188,9 @@
             android:exported="false"
             tools:node="remove" />
 
-        <receiver android:name="org.voidsink.anewjkuapp.utils.BootReceiver">
+        <receiver
+            android:name="org.voidsink.anewjkuapp.utils.BootReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

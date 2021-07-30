@@ -132,10 +132,12 @@ public class MyLocationOverlay extends Layer implements LocationListener {
     public synchronized void disableMyLocation() {
         if (this.myLocationEnabled) {
             this.myLocationEnabled = false;
-            try {
-                this.locationManager.removeUpdates(this);
-            } catch (RuntimeException runtimeException) {
-                // do we need to catch security exceptions for this call on Android 6?
+            if (ActivityCompat.checkSelfPermission(this.activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                try {
+                    this.locationManager.removeUpdates(this);
+                } catch (RuntimeException runtimeException) {
+                    // do we need to catch security exceptions for this call on Android 6?
+                }
             }
             // TODO trigger redraw?
         }
