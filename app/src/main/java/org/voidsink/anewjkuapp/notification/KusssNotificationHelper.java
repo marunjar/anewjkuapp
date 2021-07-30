@@ -28,13 +28,11 @@ package org.voidsink.anewjkuapp.notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 
 import org.voidsink.anewjkuapp.R;
-import org.voidsink.anewjkuapp.activity.MainActivity;
 import org.voidsink.anewjkuapp.utils.Consts;
 
 public class KusssNotificationHelper {
@@ -43,9 +41,8 @@ public class KusssNotificationHelper {
 
     public static void showErrorNotification(final Context mContext,
                                              int stringResID, Exception e) {
-        // contenIntent required for all Versions before ICS
-        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
-                new Intent(mContext, MainActivity.class), 0);
+        // pendingIntent required for all Versions before ICS
+        PendingIntent pendingIntent = NotificationUtils.newPendingIntent(mContext, 0);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext, Consts.CHANNEL_ID_DEFAULT)
                 .setContentTitle(mContext.getText(stringResID))

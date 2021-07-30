@@ -68,13 +68,7 @@ public class AssessmentChangedNotification {
 
     private void showInternal(List<String> lines) {
         if (PreferenceHelper.getNotifyGrade(mContext) && (lines.size() > 0)) {
-            PendingIntent pendingIntent = PendingIntent.getActivity(
-                    mContext,
-                    R.plurals.notification_grades_changed,
-                    new Intent(mContext, MainActivity.class).putExtra(
-                            MainActivity.ARG_SHOW_FRAGMENT_ID,
-                            R.id.nav_grades).addFlags(
-                            Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
+            PendingIntent pendingIntent = NotificationUtils.newPendingIntent(mContext, R.plurals.notification_grades_changed, R.id.nav_grades);
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                     mContext, Consts.CHANNEL_ID_GRADES)

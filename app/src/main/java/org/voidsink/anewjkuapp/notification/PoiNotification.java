@@ -70,10 +70,7 @@ public class PoiNotification {
         if (changes > 0) {
             int NOTIFICATION_POI_CHANGED = R.plurals.notification_poi_changed;
 
-            PendingIntent pendingIntent = PendingIntent
-                    .getActivity(mContext, NOTIFICATION_POI_CHANGED, new Intent(mContext,
-                            MainActivity.class).putExtra(MainActivity.ARG_SHOW_FRAGMENT_ID, R.id.nav_map)
-                            .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
+            PendingIntent pendingIntent = NotificationUtils.newPendingIntent(mContext, NOTIFICATION_POI_CHANGED, R.id.nav_map);
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                     mContext, Consts.CHANNEL_ID_DEFAULT)

@@ -75,13 +75,7 @@ public class CalendarChangedNotification {
 
     private void showInternal(List<String> lines, int notificationId, int resIdtitle, int resIdContent) {
         if (PreferenceHelper.getNotifyCalendar(mContext) && (lines.size() > 0)) {
-            PendingIntent pendingIntent = PendingIntent.getActivity(
-                    mContext,
-                    notificationId,
-                    new Intent(mContext, MainActivity.class).putExtra(
-                            MainActivity.ARG_SHOW_FRAGMENT_ID,
-                            R.id.nav_cal).addFlags(
-                            Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
+            PendingIntent pendingIntent = NotificationUtils.newPendingIntent(mContext, notificationId, R.id.nav_cal);
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                     mContext, Consts.CHANNEL_ID_DEFAULT)

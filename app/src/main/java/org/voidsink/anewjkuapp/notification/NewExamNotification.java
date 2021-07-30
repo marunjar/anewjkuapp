@@ -68,13 +68,7 @@ public class NewExamNotification {
 
     private void showInternal(List<String> lines) {
         if (PreferenceHelper.getNotifyExam(mContext) && (lines.size() > 0)) {
-            PendingIntent pendingIntent = PendingIntent.getActivity(
-                    mContext,
-                    R.plurals.notification_new_exams,
-                    new Intent(mContext, MainActivity.class).putExtra(
-                            MainActivity.ARG_SHOW_FRAGMENT_ID,
-                            R.id.nav_exams).addFlags(
-                            Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
+            PendingIntent pendingIntent = NotificationUtils.newPendingIntent(mContext, R.plurals.notification_new_exams, R.id.nav_exams);
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                     mContext, Consts.CHANNEL_ID_EXAMS)

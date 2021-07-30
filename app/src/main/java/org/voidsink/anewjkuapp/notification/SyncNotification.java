@@ -75,9 +75,8 @@ public class SyncNotification {
             this.mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_compat_24dp_anim);
         }
 
-        // contenIntent required for all Versions before ICS
-        PendingIntent pendingIntent = PendingIntent.getActivity(this.mContext,
-                0, new Intent(mContext, MainActivity.class), 0);
+        // pendingIntent required for all Versions before ICS
+        PendingIntent pendingIntent = NotificationUtils.newPendingIntent(mContext, 0);
         this.mBuilder.setContentIntent(pendingIntent);
 
         ((NotificationManager) mContext
