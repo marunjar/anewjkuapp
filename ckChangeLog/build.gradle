@@ -11,7 +11,6 @@ android {
     }
 
     defaultConfig {
-        versionName '1.2.2'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
     }
