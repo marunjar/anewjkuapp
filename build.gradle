@@ -11,14 +11,6 @@ buildscript {
         classpath 'com.google.gms:google-services:4.3.8'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.7.1'
     }
-
-    configurations.all {
-        resolutionStrategy {
-            dependencySubstitution {
-                substitute module('net.sf.proguard:proguard-gradle') with module('com.guardsquare:proguard-gradle:7.1.1')
-            }
-        }
-    }
 }
 
 plugins {
