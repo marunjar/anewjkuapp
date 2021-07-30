@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="0.54.0" versioncode="140086">
+        <change>Login mit JKU Shibboleth</change>
+    </release>
     <release version="0.53.6" versioncode="140085">
         <change>Benachrichtigungstexte korrigiert</change>
         <change>Menü von Raab Mensa funktioniert wieder</change>
