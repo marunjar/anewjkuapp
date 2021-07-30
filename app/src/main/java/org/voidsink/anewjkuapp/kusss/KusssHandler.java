@@ -84,7 +84,6 @@ public class KusssHandler {
     private static final String URL_GET_ICAL = "https://www.kusss.jku.at/kusss/ical-multi-sz.action";
     private static final String URL_GET_ICAL_FORM = "https://www.kusss.jku.at/kusss/ical-multi-form-sz.action";
     private static final String URL_MY_GRADES = "https://www.kusss.jku.at/kusss/gradeinfo.action";
-    private static final String URL_LOGOUT = "https://www.kusss.jku.at/kusss/logout.action";
     private static final String URL_LOGIN = "https://www.kusss.jku.at/Shibboleth.sso/Login";
     private static final String URL_GET_NEW_EXAMS = "https://www.kusss.jku.at/kusss/szsearchexam.action";
     private static final String URL_GET_EXAMS = "https://www.kusss.jku.at/kusss/szexaminationlist.action";
@@ -223,34 +222,25 @@ public class KusssHandler {
                     .data("j_username", user).data("j_password", password).data("_eventId_proceed", "login")
                     .post();
 
-            // parse form
+            // parse form, if one of the expected fields is not found, login failed
             String action = doc.selectFirst("form").attr("action");
             String relayState = doc.selectFirst("input[name=RelayState]").attr("value");
             String samlResponse = doc.selectFirst("input[name=SAMLResponse]").attr("value");
 
-            doc = Jsoup.connect(action).userAgent(this.mUserAgent).cookies(getCookieMap())
+            Jsoup.connect(action).userAgent(this.mUserAgent).cookies(getCookieMap())
                     .data("RelayState", relayState).data("SAMLResponse", samlResponse)
                     .post();
 
-            String sessionId = getSessionIDFromCookie();
-            if (isLoggedIn(c, doc)) {
-                return sessionId;
-            }
-
-            if (isLoggedIn(c, sessionId)) {
-                return sessionId;
-            }
-
-            logger.warn("login failed: isLoggedIn=FALSE");
-            return null;
+            return getSessionIDFromCookie();
+        } catch (NullPointerException ne) {
+            logger.warn("Login failed: Invalid credentials? RelayState/SAMLResponse in response form not found.");
         } catch (SocketTimeoutException e) {
             // bad connection, timeout
             logger.warn("login failed: connection timeout", e);
-            return null;
         } catch (Exception e) {
             AnalyticsHelper.sendException(c, e, true);
-            return null;
         }
+        return null;
     }
 
     private Map<String, String> getCookieMap() {
@@ -262,14 +252,7 @@ public class KusssHandler {
     }
 
     public synchronized void logout(Context c) {
-        try {
-            if (isConnected(c)) {
-                Jsoup.connect(URL_LOGOUT).userAgent(this.mUserAgent).cookies(getCookieMap()).method(GET).execute();
-            }
-        } catch (Exception e) {
-            logger.warn("logout failed", e);
-            AnalyticsHelper.sendException(c, e, true);
-        }
+        // due to SAML, there is no logout button any more -> just deleting the cookies is enough
         mCookies.getCookieStore().removeAll();
     }
 
@@ -297,8 +280,7 @@ public class KusssHandler {
         if (!isConnected(c)) {
             return false;
         }
-
-        Element logoutElement = doc.selectFirst("#login_out");
+        Element logoutElement = doc.selectFirst(SELECT_LOGOUT);
         return logoutElement.text().contains("Logout Info");
     }
 
@@ -576,7 +558,6 @@ public class KusssHandler {
         List<Assessment> grades = new ArrayList<>();
         try {
             Document doc = getDocument(Jsoup.connect(URL_MY_GRADES).userAgent(this.mUserAgent).cookies(getCookieMap()).data("months", "0"));
-
             if (isLoggedIn(c, doc)) {
                 Elements rows = doc.select(SELECT_MY_GRADES);
 
