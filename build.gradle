@@ -30,7 +30,7 @@ ext {
     buildToolsVersion = '30.0.3'
     targetSdkVersion = 30
     minSdkVersion = 16
-    errorProneVersion = '2.7.1'
+    errorProneVersion = '2.8.0'
 }
 
 allprojects {
