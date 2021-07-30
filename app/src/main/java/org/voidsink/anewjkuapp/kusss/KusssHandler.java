@@ -84,14 +84,13 @@ public class KusssHandler {
     private static final String URL_GET_ICAL = "https://www.kusss.jku.at/kusss/ical-multi-sz.action";
     private static final String URL_GET_ICAL_FORM = "https://www.kusss.jku.at/kusss/ical-multi-form-sz.action";
     private static final String URL_MY_GRADES = "https://www.kusss.jku.at/kusss/gradeinfo.action";
-    private static final String URL_LOGOUT = "https://www.kusss.jku.at/kusss/logout.action";
-    private static final String URL_LOGIN = "https://www.kusss.jku.at/kusss/login.action";
+    private static final String URL_LOGIN = "https://www.kusss.jku.at/Shibboleth.sso/Login";
     private static final String URL_GET_NEW_EXAMS = "https://www.kusss.jku.at/kusss/szsearchexam.action";
     private static final String URL_GET_EXAMS = "https://www.kusss.jku.at/kusss/szexaminationlist.action";
     private static final String URL_SELECT_TERM = "https://www.kusss.jku.at/kusss/select-term.action";
     private static final String SELECT_MY_LVAS = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > table > tbody > tr:has(td)";
     private static final String SELECT_MY_GRADES = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > *";
-    private static final String SELECT_LOGOUT = "body > table > tbody > tr > td > div > ul > li > a[href*=logout.action]";
+    private static final String SELECT_LOGOUT = "#login_out";
     // private static final String SELECT_ACTUAL_EXAMS =
     // "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > table > tbody > tr > td > form > table > tbody > tr:has(td)";
     private static final String SELECT_NEW_EXAMS = "body.intra > table > tbody > tr > td > table > tbody > tr > td.contentcell > div.contentcell > div.tabcontainer > div.tabcontent > div.sidetable > form > table > tbody > tr:has(td)";
@@ -212,35 +211,36 @@ public class KusssHandler {
 
             mCookies.getCookieStore().removeAll();
 
-            getDocument(Jsoup.connect(URL_KUSSS_INDEX).userAgent(this.mUserAgent).timeout(TIMEOUT_LOGIN).followRedirects(true));
+            // must request kusss once so you get a proper cookie
+            Jsoup.connect(URL_KUSSS_INDEX).get();
 
-            Connection.Response r = Jsoup.connect(URL_LOGIN).userAgent(this.mUserAgent).cookies(getCookieMap()).data("j_username", user).data("j_password", password).timeout(TIMEOUT_LOGIN).followRedirects(true).method(POST).execute();
+            // follow SAML redirect, (followRedirect is true by default)
+            Connection.Response r = Jsoup.connect(URL_LOGIN).userAgent(this.mUserAgent).cookies(getCookieMap()).execute();
+            String shibUrl = r.url().toString(); // https://shibboleth.im.jku.at/idp/profile/SAML2/Redirect/SSO?execution=e1s1
 
-            if (r.url() != null) {
-                r = Jsoup.connect(r.url().toString()).userAgent(this.mUserAgent).cookies(getCookieMap()).method(GET).execute();
-            }
+            Document doc = Jsoup.connect(shibUrl).userAgent(this.mUserAgent).cookies(getCookieMap())
+                    .data("j_username", user).data("j_password", password).data("_eventId_proceed", "login")
+                    .post();
 
-            Document doc = parseResponse(r);
+            // parse form, if one of the expected fields is not found, login failed
+            String action = doc.selectFirst("form").attr("action");
+            String relayState = doc.selectFirst("input[name=RelayState]").attr("value");
+            String samlResponse = doc.selectFirst("input[name=SAMLResponse]").attr("value");
 
-            String sessionId = getSessionIDFromCookie();
-            if (isLoggedIn(c, doc)) {
-                return sessionId;
-            }
+            Jsoup.connect(action).userAgent(this.mUserAgent).cookies(getCookieMap())
+                    .data("RelayState", relayState).data("SAMLResponse", samlResponse)
+                    .post();
 
-            if (isLoggedIn(c, sessionId)) {
-                return sessionId;
-            }
-
-            logger.warn("login failed: isLoggedIn=FALSE");
-            return null;
+            return getSessionIDFromCookie();
+        } catch (NullPointerException ne) {
+            logger.warn("Login failed: Invalid credentials? RelayState/SAMLResponse in response form not found.");
         } catch (SocketTimeoutException e) {
             // bad connection, timeout
             logger.warn("login failed: connection timeout", e);
-            return null;
         } catch (Exception e) {
             AnalyticsHelper.sendException(c, e, true);
-            return null;
         }
+        return null;
     }
 
     private Map<String, String> getCookieMap() {
@@ -252,14 +252,7 @@ public class KusssHandler {
     }
 
     public synchronized void logout(Context c) {
-        try {
-            if (isConnected(c)) {
-                Jsoup.connect(URL_LOGOUT).userAgent(this.mUserAgent).cookies(getCookieMap()).method(GET).execute();
-            }
-        } catch (Exception e) {
-            logger.warn("logout failed", e);
-            AnalyticsHelper.sendException(c, e, true);
-        }
+        // due to SAML, there is no logout button any more -> just deleting the cookies is enough
         mCookies.getCookieStore().removeAll();
     }
 
@@ -287,10 +280,8 @@ public class KusssHandler {
         if (!isConnected(c)) {
             return false;
         }
-
-        Elements logoutAction = doc.select(SELECT_LOGOUT);
-
-        return (logoutAction.size() > 0);
+        Element logoutElement = doc.selectFirst(SELECT_LOGOUT);
+        return logoutElement.text().contains("Logout Info");
     }
 
     public synchronized boolean isAvailable(Context c, String sessionId,
@@ -567,7 +558,6 @@ public class KusssHandler {
         List<Assessment> grades = new ArrayList<>();
         try {
             Document doc = getDocument(Jsoup.connect(URL_MY_GRADES).userAgent(this.mUserAgent).cookies(getCookieMap()).data("months", "0"));
-
             if (isLoggedIn(c, doc)) {
                 Elements rows = doc.select(SELECT_MY_GRADES);
 
