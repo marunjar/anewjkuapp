@@ -116,7 +116,7 @@ dependencies {
     googleImplementation 'androidx.work:work-gcm:2.5.0'
     googleImplementation 'com.google.firebase:firebase-analytics:19.0.0'
     googleImplementation 'com.google.firebase:firebase-crashlytics:18.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
     implementation 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
     implementation 'org.mapsforge:mapsforge-core:0.16.0'
     implementation 'org.mapsforge:mapsforge-map:0.16.0'
