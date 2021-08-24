@@ -17,8 +17,6 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-
-        return void // fix lint warning 'Not all execution paths return a value'
     }
 }
 
