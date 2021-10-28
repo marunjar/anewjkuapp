@@ -69,7 +69,12 @@
             android:launchMode="singleTop"
             android:parentActivityName="org.voidsink.anewjkuapp.activity.MainActivity"
             android:permission="android.permission.MANAGE_ACCOUNTS"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name="org.voidsink.anewjkuapp.activity.SyncSettingsActivity"
