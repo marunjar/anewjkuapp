@@ -25,10 +25,10 @@
 
 package org.voidsink.anewjkuapp;
 
-import android.app.Application;
 import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
+import androidx.multidex.MultiDexApplication;
 import androidx.work.Configuration;
 
 import com.jakewharton.threetenabp.AndroidThreeTen;
@@ -43,7 +43,7 @@ import org.voidsink.anewjkuapp.utils.UIUtils;
 
 import java.util.concurrent.Executors;
 
-public class Globals extends Application implements Configuration.Provider {
+public class Globals extends MultiDexApplication implements Configuration.Provider {
 
     @Override
     @SuppressWarnings("EmptyCatch")
