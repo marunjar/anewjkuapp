@@ -29,19 +29,19 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 
-import org.voidsink.anewjkuapp.base.BaseArrayAdapter;
+public class PoiAdapter extends ArrayAdapter<Poi> {
 
-public class PoiAdapter extends BaseArrayAdapter<Poi> {
-
-    public PoiAdapter(Context context, int textViewResourceId) {
+    public PoiAdapter(@NonNull Context context, @LayoutRes int textViewResourceId) {
         super(context, textViewResourceId);
     }
 
-    public PoiAdapter(Context context) {
+    public PoiAdapter(@NonNull Context context) {
         this(context, android.R.layout.simple_list_item_2);
     }
 
