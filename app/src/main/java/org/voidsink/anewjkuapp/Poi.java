@@ -54,11 +54,11 @@ public class Poi {
     public Poi(Cursor c) {
         this("", 0, 0);
 
-        this.mName = c.getString(c.getColumnIndex(PoiContentContract.Poi.COL_NAME));
-        this.mLat = c.getDouble(c.getColumnIndex(PoiContentContract.Poi.COL_LAT));
-        this.mLon = c.getDouble(c.getColumnIndex(PoiContentContract.Poi.COL_LON));
-        this.mDescr = c.getString(c.getColumnIndex(PoiContentContract.Poi.COL_DESCR));
-        this.mId = c.getInt(c.getColumnIndex(PoiContentContract.Poi.COL_ROWID));
+        this.mName = c.getString(c.getColumnIndexOrThrow(PoiContentContract.Poi.COL_NAME));
+        this.mLat = c.getDouble(c.getColumnIndexOrThrow(PoiContentContract.Poi.COL_LAT));
+        this.mLon = c.getDouble(c.getColumnIndexOrThrow(PoiContentContract.Poi.COL_LON));
+        this.mDescr = c.getString(c.getColumnIndexOrThrow(PoiContentContract.Poi.COL_DESCR));
+        this.mId = c.getInt(c.getColumnIndexOrThrow(PoiContentContract.Poi.COL_ROWID));
     }
 
     @NonNull
