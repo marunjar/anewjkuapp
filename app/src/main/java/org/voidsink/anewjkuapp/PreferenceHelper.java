@@ -150,10 +150,10 @@ public final class PreferenceHelper {
 
             ContentResolver.addPeriodicSync(mAccount,
                     CalendarContract.AUTHORITY, new Bundle(),
-                    60 * 60 * interval);
+                    60L * 60 * interval);
             ContentResolver.addPeriodicSync(mAccount,
                     KusssContentContract.AUTHORITY, new Bundle(),
-                    60 * 60 * interval);
+                    60L * 60 * interval);
         }
         AppUtils.enableSync(context, true);
     }

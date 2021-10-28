@@ -98,7 +98,7 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
     }
 
     private void setButtonLoadText() {
-        mLoadMoreButton.setText(getContext().getString(R.string.listview_footer_button, SimpleDateFormat.getDateInstance(SimpleDateFormat.MEDIUM).format(then)));
+        mLoadMoreButton.setText(requireContext().getString(R.string.listview_footer_button, SimpleDateFormat.getDateInstance(SimpleDateFormat.MEDIUM).format(then)));
     }
 
     @Override
@@ -113,7 +113,7 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
         }
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new CalendarEventAdapter(getContext());
+        mAdapter = new CalendarEventAdapter(requireContext());
         mRecyclerView.setAdapter(new SectionedRecyclerViewAdapter<>(mRecyclerView, mAdapter));
         mRecyclerView.setContentDescription(getTitle(getContext()));
 
