@@ -34,6 +34,7 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 import org.mapsforge.core.graphics.Bitmap;
@@ -197,7 +198,7 @@ public class MyLocationOverlay extends Layer implements LocationListener {
     }
 
     @Override
-    public void onLocationChanged(Location location) {
+    public void onLocationChanged(@NonNull Location location) {
 
         synchronized (this) {
             this.lastLocation = location;
@@ -222,12 +223,12 @@ public class MyLocationOverlay extends Layer implements LocationListener {
     }
 
     @Override
-    public void onProviderDisabled(String provider) {
+    public void onProviderDisabled(@NonNull String provider) {
         enableBestAvailableProvider();
     }
 
     @Override
-    public void onProviderEnabled(String provider) {
+    public void onProviderEnabled(@NonNull String provider) {
         enableBestAvailableProvider();
     }
 

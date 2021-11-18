@@ -53,7 +53,7 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
         void onItemClick(View view, int viewType, int position);
     }
 
-    public CalendarEventAdapter(Context context) {
+    public CalendarEventAdapter(@NonNull Context context) {
         super(context);
     }
 

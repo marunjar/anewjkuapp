@@ -222,7 +222,7 @@ public class MapFragment extends BaseFragment implements
 
         switch (pois.size()) {
             case 0:
-                Toast.makeText(getContext(), getContext().getString(R.string.map_place_not_found, query), Toast.LENGTH_LONG)
+                Toast.makeText(getContext(), requireContext().getString(R.string.map_place_not_found, query), Toast.LENGTH_LONG)
                         .show();
                 break;
             case 1:
@@ -233,7 +233,7 @@ public class MapFragment extends BaseFragment implements
 
                 poiSelector.setTitle(R.string.map_select_location);
 
-                final PoiAdapter arrayAdapter = new PoiAdapter(getContext());
+                final PoiAdapter arrayAdapter = new PoiAdapter(requireContext());
                 arrayAdapter.addAll(pois);
 
                 poiSelector.setNegativeButton(android.R.string.cancel,
@@ -446,7 +446,7 @@ public class MapFragment extends BaseFragment implements
         this.mapView.getMapZoomControls().setZoomInResource(R.drawable.zoom_control_in);
         this.mapView.getMapZoomControls().setZoomOutResource(R.drawable.zoom_control_out);
         this.mapView.getMapZoomControls().setMarginHorizontal(requireContext().getResources().getDimensionPixelSize(R.dimen.map_zoom_control_margin_horizontal));
-        this.mapView.getMapZoomControls().setMarginVertical(getContext().getResources().getDimensionPixelSize(R.dimen.map_zoom_control_margin_vertical));
+        this.mapView.getMapZoomControls().setMarginVertical(requireContext().getResources().getDimensionPixelSize(R.dimen.map_zoom_control_margin_vertical));
         this.mapView.addInputListener(new InputListener() {
 
             @Override
@@ -486,7 +486,7 @@ public class MapFragment extends BaseFragment implements
     @AfterPermissionGranted(PERMISSIONS_REQUEST_READ_STORAGE)
     private void createLayers() {
         if (EasyPermissions.hasPermissions(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            TileCache tileCache = AndroidUtil.createTileCache(getContext(),
+            TileCache tileCache = AndroidUtil.createTileCache(requireContext(),
                     "mapFragment",
                     this.mapView.getModel().displayModel.getTileSize(),
                     1.0f,
@@ -526,11 +526,11 @@ public class MapFragment extends BaseFragment implements
             final IMapViewPosition mapViewPosition = this.mapView.getModel().mapViewPosition;
 
             // overlay with a marker to show the actual position
-            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_marker_position);
+            Drawable drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_marker_position);
             if (drawable != null) {
                 // get accent color from theme
-                TypedArray themeArray = getContext().getTheme().obtainStyledAttributes(new int[]{R.attr.colorAccent});
-                int mColorAccent = themeArray.getColor(0, ContextCompat.getColor(getContext(), R.color.default_secondary));
+                TypedArray themeArray = requireContext().getTheme().obtainStyledAttributes(new int[]{R.attr.colorAccent});
+                int mColorAccent = themeArray.getColor(0, ContextCompat.getColor(requireContext(), R.color.default_secondary));
                 themeArray.recycle();
 
                 drawable.setColorFilter(mColorAccent, PorterDuff.Mode.MULTIPLY);

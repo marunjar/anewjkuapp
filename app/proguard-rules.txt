@@ -3,6 +3,9 @@
 
 -dontobfuscate
 
+# for multidex
+-keep class org.voidsink.anewjkuapp.Globals
+
 ###############
 # Mapsforge
 -dontwarn org.xmlpull.v1.**

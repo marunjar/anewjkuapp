@@ -28,6 +28,7 @@ package org.voidsink.anewjkuapp.base;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,7 +36,7 @@ public class SimpleTextViewHolder extends RecyclerView.ViewHolder {
 
     private final TextView mText;
 
-    public SimpleTextViewHolder(@NonNull View itemView, @NonNull int textResourceId) {
+    public SimpleTextViewHolder(@NonNull View itemView, @IdRes int textResourceId) {
         super(itemView);
 
         mText = itemView.findViewById(textResourceId);
