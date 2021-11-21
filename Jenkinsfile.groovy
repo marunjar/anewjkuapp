@@ -17,6 +17,7 @@ pipeline {
         }
         stage('Setup') {
             steps {
+                sh 'java -XshowSettings:vm -version'
                 step([$class: 'GitHubSetCommitStatusBuilder'])
                 withGradle {
                     sh './gradlew clean'
