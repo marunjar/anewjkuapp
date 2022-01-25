@@ -1,10 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'net.ltgt.errorprone'
 
-repositories {
-    mavenCentral()
-}
-
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion

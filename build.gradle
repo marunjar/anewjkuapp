@@ -1,11 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-
     dependencies {
         classpath 'com.android.tools.build:gradle:7.1.0'
         classpath 'com.google.gms:google-services:4.3.10'
@@ -17,6 +12,10 @@ plugins {
     id 'net.ltgt.errorprone' version '2.0.2'
 }
 
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
 ext {
     compileSdkVersion = 31
     buildToolsVersion = '31.0.0'
@@ -26,10 +25,6 @@ ext {
 }
 
 allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
     configurations.all {
         exclude module: 'commons-logging'
     }
