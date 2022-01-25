@@ -83,15 +83,16 @@ android {
         }
     }
 
-    lintOptions {
+    lint {
         checkAllWarnings true
         abortOnError false
         lintConfig file('lint.xml')
     }
 
     packagingOptions {
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'
+        resources {
+            excludes += ['META-INF/LICENSE.txt', 'META-INF/NOTICE.txt']
+        }
     }
 }
 
