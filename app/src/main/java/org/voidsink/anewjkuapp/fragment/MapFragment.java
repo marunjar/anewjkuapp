@@ -313,7 +313,7 @@ public class MapFragment extends BaseFragment implements
                     Drawable drawable = ContextCompat.getDrawable(context, R.drawable.ic_marker_position);
 
                     // get accent color from theme
-                    TypedArray themeArray = context.getTheme().obtainStyledAttributes(new int[]{R.attr.color});
+                    TypedArray themeArray = context.getTheme().obtainStyledAttributes(new int[]{android.R.attr.color});
                     int mColorAccent = themeArray.getColor(0, ContextCompat.getColor(context, R.color.default_primary));
                     themeArray.recycle();
 
@@ -529,7 +529,7 @@ public class MapFragment extends BaseFragment implements
             Drawable drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_marker_position);
             if (drawable != null) {
                 // get accent color from theme
-                TypedArray themeArray = requireContext().getTheme().obtainStyledAttributes(new int[]{R.attr.colorAccent});
+                TypedArray themeArray = requireContext().getTheme().obtainStyledAttributes(new int[]{android.R.attr.colorAccent});
                 int mColorAccent = themeArray.getColor(0, ContextCompat.getColor(requireContext(), R.color.default_secondary));
                 themeArray.recycle();
 
@@ -631,7 +631,7 @@ public class MapFragment extends BaseFragment implements
             logger.info("use internal map");
             return internalMap;
         } else {
-            logger.info("use external map: {}", customMapFile.toString());
+            logger.info("use external map: {}", customMapFile);
 
             MultiMapDataStore customMapDataStore = new MultiMapDataStore(MultiMapDataStore.DataPolicy.RETURN_FIRST);
 

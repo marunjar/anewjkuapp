@@ -349,20 +349,20 @@ public class KusssHandler {
         return loadIcalJsoup(c, calendarBuilder, calendarName);
     }
 
-    private Calendar loadIcalFromFile(Context c, CalendarBuilder calendarBuilder, String calendarname) {
-        Calendar iCal;
-
-        try (InputStream assetData = new BufferedInputStream(c.getAssets().open("kusss.ics"))) {
-            iCal = calendarBuilder.build(assetData);
-        } catch (IOException e) {
-            e.printStackTrace();
-            iCal = null;
-        } catch (ParserException e) {
-            e.printStackTrace();
-            iCal = null;
-        }
-        return iCal;
-    }
+//    private Calendar loadIcalFromFile(Context c, CalendarBuilder calendarBuilder, String calendarname) {
+//        Calendar iCal;
+//
+//        try (InputStream assetData = new BufferedInputStream(c.getAssets().open("kusss.ics"))) {
+//            iCal = calendarBuilder.build(assetData);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            iCal = null;
+//        } catch (ParserException e) {
+//            e.printStackTrace();
+//            iCal = null;
+//        }
+//        return iCal;
+//    }
 
     private Calendar loadIcalJsoup(Context c, CalendarBuilder calendarBuilder, String calendarName) {
         Connection connection = Jsoup.connect(URL_GET_ICAL)
