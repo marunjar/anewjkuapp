@@ -23,8 +23,10 @@
  *
  */
 
-apply plugin: 'com.android.library'
-apply plugin: 'net.ltgt.errorprone'
+plugins {
+    id 'com.android.library'
+    id 'net.ltgt.errorprone'
+}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion

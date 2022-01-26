@@ -1,8 +1,12 @@
-apply plugin: 'com.android.application'
-apply plugin: 'net.ltgt.errorprone'
-if (getGradle().getStartParameter().getTaskRequests().toString().contains('Google')) {
+plugins {
+    id 'com.android.application'
+    id 'net.ltgt.errorprone'
+}
+
+if (getGradle().getStartParameter().getTaskRequests().toString().toLowerCase().contains('google')) {
     apply plugin: 'com.google.gms.google-services'
     apply plugin: 'com.google.firebase.crashlytics'
+    logger.warn('google stuff applied')
 } else {
     logger.warn('google stuff not applied')
 }
