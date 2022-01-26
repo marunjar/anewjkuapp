@@ -529,7 +529,7 @@ public class MapFragment extends BaseFragment implements
             Drawable drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_marker_position);
             if (drawable != null) {
                 // get accent color from theme
-                TypedArray themeArray = requireContext().getTheme().obtainStyledAttributes(new int[]{android.R.attr.colorAccent});
+                TypedArray themeArray = requireContext().getTheme().obtainStyledAttributes(new int[]{androidx.appcompat.R.attr.colorAccent});
                 int mColorAccent = themeArray.getColor(0, ContextCompat.getColor(requireContext(), R.color.default_secondary));
                 themeArray.recycle();
 

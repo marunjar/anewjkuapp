@@ -78,7 +78,7 @@ public class LocationOverlay extends MyLocationOverlay {
             this.snapToLocationItem.setChecked(snapToLocationEnabled);
             if (snapToLocationEnabled) {
                 // get accent color from theme
-                TypedArray themeArray = mContext.getTheme().obtainStyledAttributes(new int[]{android.R.attr.colorAccent});
+                TypedArray themeArray = mContext.getTheme().obtainStyledAttributes(new int[]{androidx.appcompat.R.attr.colorAccent});
                 int mColorAccent = themeArray.getColor(0, ContextCompat.getColor(mContext, R.color.default_secondary));
                 themeArray.recycle();
 
