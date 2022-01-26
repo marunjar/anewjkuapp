@@ -125,7 +125,7 @@ dependencies {
     //breaks when upgrading commons.lang3 > 3.9
     //noinspection GradleDependency
     implementation 'org.apache.commons:commons-lang3:3.9'
-    implementation 'org.slf4j:slf4j-android:1.7.33'
+    implementation 'org.slf4j:slf4j-android:1.7.35'
     implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.loader:loader:1.1.0'
