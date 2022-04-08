@@ -217,9 +217,12 @@ public class KusssHandler {
             // follow SAML redirect, (followRedirect is true by default)
             Connection.Response r = Jsoup.connect(URL_LOGIN).userAgent(this.mUserAgent).cookies(getCookieMap()).execute();
             String shibUrl = r.url().toString(); // https://shibboleth.im.jku.at/idp/profile/SAML2/Redirect/SSO?execution=e1s1
+            String csrf = r.parse().selectFirst("input[name=csrf_token]").attr("value");
 
             Document doc = Jsoup.connect(shibUrl).userAgent(this.mUserAgent).cookies(getCookieMap())
-                    .data("j_username", user).data("j_password", password).data("_eventId_proceed", "login")
+                    .data("j_username", user).data("j_password", password)
+                    .data("_eventId_proceed", "login")
+                    .data("csrf_token", csrf)
                     .post();
 
             // parse form, if one of the expected fields is not found, login failed
