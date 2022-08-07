@@ -24,7 +24,7 @@ configurations {
 
 dependencies {
     errorprone("com.google.errorprone:error_prone_core:${rootProject.ext.errorProneVersion}")
-    implementation 'androidx.core:core:1.7.0'
+    implementation 'androidx.core:core:1.8.0'
     implementation 'androidx.interpolator:interpolator:1.0.0'
 }
 

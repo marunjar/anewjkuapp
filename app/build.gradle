@@ -105,21 +105,21 @@ dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
     implementation 'com.jakewharton.threetenabp:threetenabp:1.4.0'
     implementation 'androidx.preference:preference:1.2.0'
-    implementation 'com.google.android.material:material:1.6.0'
+    implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.work:work-runtime:2.7.1'
     googleImplementation 'androidx.work:work-gcm:2.7.1'
     //needs min sdk 19
     //noinspection GradleDependency
     googleImplementation 'com.google.firebase:firebase-analytics:19.0.2'
-    googleImplementation 'com.google.firebase:firebase-crashlytics:18.2.10'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    googleImplementation 'com.google.firebase:firebase-crashlytics:18.2.12'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
     implementation 'org.mapsforge:mapsforge-core:0.17.0'
     implementation 'org.mapsforge:mapsforge-map:0.17.0'
     implementation 'org.mapsforge:mapsforge-themes:0.17.0'
     implementation 'org.mapsforge:mapsforge-map-android:0.17.0'
     implementation 'pub.devrel:easypermissions:3.0.0'
-    implementation 'org.jsoup:jsoup:1.14.3'
+    implementation 'org.jsoup:jsoup:1.15.2'
     //breaks when upgrading ical4j > 3.0.21
     //noinspection GradleDependency
     implementation 'org.mnode.ical4j:ical4j:3.0.21'
@@ -133,7 +133,7 @@ dependencies {
     implementation 'androidx.loader:loader:1.1.0'
     implementation 'androidx.activity:activity:1.4.0'
     implementation 'androidx.fragment:fragment:1.4.1'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'androidx.drawerlayout:drawerlayout:1.1.1'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
     implementation project(':ckChangeLog')
