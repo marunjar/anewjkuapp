@@ -32,7 +32,6 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.RectF;
 import android.graphics.drawable.LayerDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.text.format.DateUtils;
@@ -488,11 +487,7 @@ public class CalendarFragment2 extends CalendarPermissionFragment implements
 
         CalendarDateTimeInterpreter(Context context) {
             Locale locale = AppUtils.getLocale(context);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                mDateFormat = new SimpleDateFormat(android.text.format.DateFormat.getBestDateTimePattern(locale, "EEEMMdd"), locale);
-            } else {
-                mDateFormat = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT, locale);
-            }
+            mDateFormat = new SimpleDateFormat(android.text.format.DateFormat.getBestDateTimePattern(locale, "EEEMMdd"), locale);
             mTimeFormat = android.text.format.DateFormat.getTimeFormat(context);
         }
 

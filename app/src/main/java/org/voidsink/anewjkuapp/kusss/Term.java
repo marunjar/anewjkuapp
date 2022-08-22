@@ -126,16 +126,7 @@ public class Term implements Comparable<Term> {
 
     @Override
     public int hashCode() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            return Objects.hash(this.year, this.type);
-        } else {
-            int result = 1;
-
-            result = 31 * result + this.year;
-            result = 31 * result + this.type.hashCode();
-
-            return result;
-        }
+        return Objects.hash(this.year, this.type);
     }
 
     private int getYear() {

@@ -173,11 +173,9 @@ public final class CalendarUtils {
             values.put(
                     CalendarContract.Calendars.CAN_PARTIALLY_UPDATE, 0);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                values.put(
-                        CalendarContract.Calendars.ALLOWED_ATTENDEE_TYPES,
-                        CalendarContract.Attendees.TYPE_NONE);
-            }
+            values.put(
+                    CalendarContract.Calendars.ALLOWED_ATTENDEE_TYPES,
+                    CalendarContract.Attendees.TYPE_NONE);
 
             return context.getContentResolver().insert(target, values);
         } catch (Exception e) {

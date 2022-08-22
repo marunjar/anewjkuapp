@@ -32,7 +32,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -200,15 +199,9 @@ public class MainActivity extends ThemedActivity {
     public void startCreateAccount() {
         if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) || EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS)) {
             if (AppUtils.getAccount(this) == null) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                    this.startActivity(new Intent(Settings.ACTION_ADD_ACCOUNT)
-                            .putExtra(Settings.EXTRA_ACCOUNT_TYPES,
-                                    new String[]{KusssAuthenticator.ACCOUNT_TYPE}));
-                } else {
-                    this.startActivity(new Intent(Settings.ACTION_ADD_ACCOUNT)
-                            .putExtra(Settings.EXTRA_AUTHORITIES,
-                                    new String[]{CalendarContract.AUTHORITY}));
-                }
+                this.startActivity(new Intent(Settings.ACTION_ADD_ACCOUNT)
+                        .putExtra(Settings.EXTRA_ACCOUNT_TYPES,
+                                new String[]{KusssAuthenticator.ACCOUNT_TYPE}));
             }
         } else {
             EasyPermissions.requestPermissions(
