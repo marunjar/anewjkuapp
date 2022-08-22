@@ -23,6 +23,9 @@ ext {
     targetSdkVersion = 33
     minSdkVersion = 16
     errorProneVersion = '2.15.0'
+    buildUsesGoogle = {
+        return getGradle().getStartParameter().getTaskRequests().toString().toLowerCase().contains('google');
+    }
 }
 
 allprojects {

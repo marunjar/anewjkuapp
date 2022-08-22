@@ -3,7 +3,7 @@ plugins {
     id 'net.ltgt.errorprone'
 }
 
-if (getGradle().getStartParameter().getTaskRequests().toString().toLowerCase().contains('google')) {
+if (buildUsesGoogle()) {
     apply plugin: 'com.google.gms.google-services'
     apply plugin: 'com.google.firebase.crashlytics'
     logger.warn('google stuff applied')
@@ -76,9 +76,9 @@ android {
             dimension 'tier'
             versionNameSuffix '-google'
 
-//            firebaseCrashlytics {
-//                mappingFileUploadEnabled false
-//            }
+            firebaseCrashlytics {
+                mappingFileUploadEnabled false
+            }
         }
         fdroid {
             dimension 'tier'

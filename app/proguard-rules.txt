@@ -10,7 +10,8 @@
 # Mapsforge
 -dontwarn org.xmlpull.v1.**
 -dontwarn com.caverock.androidsvg.**
--dontwarn org.kxml2.io.KXmlParser,org.kxml2.io.KXmlSerializer
+-dontwarn org.kxml2.io.KXmlParser
+-dontwarn org.kxml2.io.KXmlSerializer
 
 ###############
 -keepclasseswithmembernames class * {
