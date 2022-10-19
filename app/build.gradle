@@ -106,7 +106,7 @@ android {
 dependencies {
     errorprone("com.google.errorprone:error_prone_core:${rootProject.ext.errorProneVersion}")
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
-    implementation 'com.jakewharton.threetenabp:threetenabp:1.4.0'
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.4.2'
     implementation 'androidx.preference:preference:1.2.0'
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.work:work-runtime:2.7.1'
@@ -120,7 +120,7 @@ dependencies {
     implementation 'org.mapsforge:mapsforge-themes:0.18.0'
     implementation 'org.mapsforge:mapsforge-map-android:0.18.0'
     implementation 'pub.devrel:easypermissions:3.0.0'
-    implementation 'org.jsoup:jsoup:1.15.2'
+    implementation 'org.jsoup:jsoup:1.15.3'
     //breaks when upgrading ical4j > 3.0.21
     //noinspection GradleDependency
     implementation 'org.mnode.ical4j:ical4j:3.0.21'
