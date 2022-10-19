@@ -35,6 +35,7 @@ allprojects {
     afterEvaluate {
         tasks.withType(JavaCompile).configureEach { task ->
             options.errorprone {
+                enabled = true
                 disableWarningsInGeneratedCode = true
                 disable('JdkObsolete')
                 disable('MissingSummary')
