@@ -215,11 +215,39 @@ public class KusssHandler {
             Jsoup.connect(URL_KUSSS_INDEX).get();
 
             // follow SAML redirect, (followRedirect is true by default)
-            Connection.Response r = Jsoup.connect(URL_LOGIN).userAgent(this.mUserAgent).cookies(getCookieMap()).execute();
-            String shibUrl = r.url().toString(); // https://shibboleth.im.jku.at/idp/profile/SAML2/Redirect/SSO?execution=e1s1
+            Document r = Jsoup.connect(URL_LOGIN).userAgent(this.mUserAgent).cookies(getCookieMap()).get();
+            for(int i=0; r.selectFirst("input[name=csrf_token]") == null || i>=5; i++) {
+                r = Jsoup.connect(URL_LOGIN).userAgent(this.mUserAgent).cookies(getCookieMap()).get();
+            } // Don't know why, but it mostly works on the third request. I guess some cookie issue
+
+            String shibUrl = r.location(); // https://shibboleth.im.jku.at/idp/profile/SAML2/Redirect/SSO?execution=e1s1
+            String csrf = r.selectFirst("input[name=csrf_token]").attr("value");
 
             Document doc = Jsoup.connect(shibUrl).userAgent(this.mUserAgent).cookies(getCookieMap())
-                    .data("j_username", user).data("j_password", password).data("_eventId_proceed", "login")
+                    .data("csrf_token", csrf)
+                    .data("shib_idp_ls_exception.shib_idp_session_ss", "")
+                    .data("shib_idp_ls_success.shib_idp_session_ss", "true")
+                    .data("shib_idp_ls_value.shib_idp_session_ss", "")
+                    .data("shib_idp_ls_exception.shib_idp_persistent_ss", "")
+                    .data("shib_idp_ls_success.shib_idp_persistent_ss", "true")
+                    .data("shib_idp_ls_value.shib_idp_persistent_ss", "")
+                    .data("shib_idp_ls_supported", "true")
+                    .data("_eventId_proceed", "")
+                    .post();
+
+            csrf = doc.selectFirst("input[name=csrf_token]").attr("value");
+            doc = Jsoup.connect(doc.location()).userAgent(this.mUserAgent).cookies(getCookieMap())
+                    .data("j_username", user).data("j_password", password)
+                    .data("_eventId_proceed", "Login")
+                    .data("csrf_token", csrf)
+                    .post();
+
+            csrf = doc.selectFirst("input[name=csrf_token]").attr("value");
+            doc = Jsoup.connect(doc.location()).userAgent(this.mUserAgent).cookies(getCookieMap())
+                    .data("shib_idp_ls_exception.shib_idp_session_ss", "")
+                    .data("shib_idp_ls_success.shib_idp_session_ss", "false")
+                    .data("_eventId_proceed", "")
+                    .data("csrf_token", csrf)
                     .post();
 
             // parse form, if one of the expected fields is not found, login failed
