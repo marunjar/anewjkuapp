@@ -70,7 +70,7 @@
         <item name="android:textSize">@dimen/text_size_subtitle</item>
     </style>
 
-    <style name="Text.Button" parent="@style/Widget.MaterialComponents.Button">
+    <style name="Text.Button" parent="@style/Widget.Material3.Button">
         <item name="android:textSize">@dimen/text_size_button</item>
         <item name="android:fontFamily">@font/appfont</item>
         <item name="android:textStyle">bold</item>
@@ -90,7 +90,7 @@
         <item name="android:padding">3dp</item>
     </style>
 
-    <style name="card" parent="Widget.MaterialComponents.CardView">
+    <style name="card" parent="Widget.Material3.CardView.Elevated">
         <item name="contentPadding">@dimen/card_content_padding</item>
         <item name="android:layout_marginLeft">@dimen/card_content_padding</item>
         <item name="android:layout_marginRight">@dimen/card_content_padding</item>
@@ -122,7 +122,7 @@
         <item name="contentInsetStart">0dp</item>
     </style>
 
-    <style name="mainToolbar" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
+    <style name="mainToolbar" parent="ThemeOverlay.Material3.Dark.ActionBar" />
 
     <style name="mainToolbarStyle" />
 </resources>

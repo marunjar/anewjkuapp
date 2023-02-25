@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme.Base" parent="@style/Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="AppTheme.Base" parent="@style/Theme.Material3.DayNight.NoActionBar">
         <item name="android:fontFamily">@font/appfont</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="preferenceTheme">@style/PreferenceTheme</item>
@@ -31,7 +31,7 @@
 
     <style name="AppTheme.Launch" parent="AppTheme.Base.Launch"/>
 
-    <style name="DialogStyle.Base" parent="Theme.MaterialComponents.DayNight.Dialog">
+    <style name="DialogStyle.Base" parent="Theme.Material3.DayNight.Dialog">
         <item name="colorPrimary">@color/default_primary</item>
         <item name="colorPrimaryDark">@color/default_primaryVariant</item>
         <item name="colorOnPrimary">@color/default_onPrimary</item>
@@ -43,7 +43,7 @@
 
     <style name="DialogStyle" parent="DialogStyle.Base"/>
 
-    <style name="DialogStyle.Alert.Base" parent="Theme.MaterialComponents.DayNight.Dialog">
+    <style name="DialogStyle.Alert.Base" parent="Theme.Material3.DayNight.Dialog">
         <item name="colorPrimary">@color/default_primary</item>
         <item name="colorPrimaryDark">@color/default_primaryVariant</item>
         <item name="colorOnPrimary">@color/default_onPrimary</item>
