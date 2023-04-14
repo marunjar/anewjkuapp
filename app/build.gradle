@@ -138,5 +138,4 @@ dependencies {
     implementation project(':ckChangeLog')
     implementation project(':sectionedRecyclerAdapter')
     implementation project(':android-week-view')
-    implementation 'com.android.support:multidex:1.0.3'
 }
