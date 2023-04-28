@@ -28,10 +28,10 @@ pipeline {
         stage('Build') {
             steps {
                 withGradle {
-                    sh './gradlew assembleGoogle'
-                    sh './gradlew bundleGoogle'
-                    sh './gradlew assembleFdroid'
-                    sh './gradlew bundleFdroid'
+                    sh './gradlew assembleGoogle --stacktrace'
+                    sh './gradlew bundleGoogle --stacktrace'
+                    sh './gradlew assembleFdroid --stacktrace'
+                    sh './gradlew bundleFdroid --stacktrace'
                 }
             }
         }
@@ -46,7 +46,6 @@ pipeline {
                     sh './gradlew lintGoogleRelease'
                     sh './gradlew lintFdroidRelease'
                 }
-                findBuildScans()
             }
         }
         stage('Deploy') {
@@ -67,6 +66,7 @@ pipeline {
         }
         always {
             step([$class: 'GitHubCommitStatusSetter'])
+            findBuildScans()
             emailext attachLog: true, body: '''$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:
 
 Check console output at $BUILD_URL to view the results.''', recipientProviders: [buildUser(), requestor()], subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!'
