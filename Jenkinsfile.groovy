@@ -20,6 +20,7 @@ pipeline {
                 sh 'java -XshowSettings:vm -version'
                 step([$class: 'GitHubSetCommitStatusBuilder'])
                 withGradle {
+                    sh './gradlew --version'
                     sh './gradlew clean'
                 }
             }
@@ -45,6 +46,7 @@ pipeline {
                     sh './gradlew lintGoogleRelease'
                     sh './gradlew lintFdroidRelease'
                 }
+                findBuildScans()
             }
         }
         stage('Deploy') {
