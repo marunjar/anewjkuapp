@@ -132,7 +132,7 @@ dependencies {
     implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
     implementation 'androidx.loader:loader:1.1.0'
     implementation 'androidx.activity:activity:1.6.1'
-    implementation 'androidx.fragment:fragment:1.5.6'
+    implementation 'androidx.fragment:fragment:1.5.7'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation project(':ckChangeLog')
