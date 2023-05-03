@@ -1,6 +1,5 @@
 plugins {
     id 'com.android.library'
-    id 'net.ltgt.errorprone'
 }
 
 android {
@@ -24,7 +23,6 @@ configurations {
 }
 
 dependencies {
-    errorprone("com.google.errorprone:error_prone_core:${rootProject.ext.errorProneVersion}")
     implementation 'androidx.core:core:1.9.0'
     implementation 'androidx.interpolator:interpolator:1.0.0'
 }

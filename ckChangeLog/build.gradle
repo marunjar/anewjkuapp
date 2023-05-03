@@ -1,6 +1,5 @@
 plugins {
     id 'com.android.library'
-    id 'net.ltgt.errorprone'
 }
 
 android {
@@ -20,7 +19,6 @@ android {
 }
 
 dependencies {
-    errorprone("com.google.errorprone:error_prone_core:${rootProject.ext.errorProneVersion}")
     implementation 'androidx.preference:preference:1.2.0'
     implementation 'androidx.webkit:webkit:1.6.1'
 }
