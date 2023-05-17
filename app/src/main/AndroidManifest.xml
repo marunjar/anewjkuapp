@@ -9,6 +9,7 @@
         android:smallScreens="true" />
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.READ_SYNC_STATS" />
@@ -31,13 +32,15 @@
         android:maxSdkVersion="22" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
 
     <application
         android:name=".Globals"
         android:allowBackup="false"
-        android:fullBackupContent="false"
         android:dataExtractionRules="@xml/backup_rules_api31"
+        android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -93,15 +96,15 @@
 
         <activity
             android:name="org.voidsink.anewjkuapp.activity.AboutActivity"
-            android:parentActivityName="org.voidsink.anewjkuapp.activity.MainActivity"
             android:exported="false"
+            android:parentActivityName="org.voidsink.anewjkuapp.activity.MainActivity"
             android:screenOrientation="portrait" />
 
         <activity
             android:name="org.voidsink.anewjkuapp.activity.KusssAuthenticatorActivity"
+            android:exported="true"
             android:parentActivityName="org.voidsink.anewjkuapp.activity.MainActivity"
             android:permission="android.permission.MANAGE_ACCOUNTS"
-            android:exported="true"
             android:screenOrientation="portrait">
 
             <intent-filter>
