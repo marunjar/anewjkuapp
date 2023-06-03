@@ -18,7 +18,7 @@ task clean(type: Delete) {
 
 ext {
     compileSdkVersion = 33
-    buildToolsVersion = '33.0.0'
+    buildToolsVersion = '33.0.2'
     targetSdkVersion = 33
     minSdkVersion = 19
     buildUsesGoogle = {
