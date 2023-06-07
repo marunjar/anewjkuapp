@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2023 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -110,18 +110,17 @@ public class LvaDetailFragment extends TermFragment implements
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_refresh_lvas:
-                AppUtils.triggerSync(getContext(), true, Consts.ARG_WORKER_KUSSS_COURSES, Consts.ARG_WORKER_KUSSS_ASSESSMENTS);
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_refresh_lvas) {
+            AppUtils.triggerSync(getContext(), true, Consts.ARG_WORKER_KUSSS_COURSES, Consts.ARG_WORKER_KUSSS_ASSESSMENTS);
 
-                return true;
-            case R.id.action_toggle_visible_lvas:
-                item.setChecked(item.isCheckable() && !item.isChecked());
-                PreferenceHelper.setShowCoursesWithAssessmentOnly(requireContext(), item.isChecked());
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            return true;
+        } else if (itemId == R.id.action_toggle_visible_lvas) {
+            item.setChecked(item.isCheckable() && !item.isChecked());
+            PreferenceHelper.setShowCoursesWithAssessmentOnly(requireContext(), item.isChecked());
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

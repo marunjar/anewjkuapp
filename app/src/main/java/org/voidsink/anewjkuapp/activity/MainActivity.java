@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2023 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -250,18 +250,13 @@ public class MainActivity extends ThemedActivity {
 
         navigationView.setNavigationItemSelectedListener(
                 menuItem -> {
-                    switch (menuItem.getItemId()) {
-                        case R.id.nav_settings: {
-                            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                            break;
-                        }
-                        case R.id.nav_about: {
-                            startActivity(new Intent(MainActivity.this, AboutActivity.class));
-                            break;
-                        }
-                        default:
-                            attachFragmentByMenuItem(null, menuItem, true);
-                            break;
+                    int itemId = menuItem.getItemId();
+                    if (itemId == R.id.nav_settings) {
+                        startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                    } else if (itemId == R.id.nav_about) {
+                        startActivity(new Intent(MainActivity.this, AboutActivity.class));
+                    } else {
+                        attachFragmentByMenuItem(null, menuItem, true);
                     }
 
                     mDrawerLayout.closeDrawers();
@@ -348,34 +343,32 @@ public class MainActivity extends ThemedActivity {
     }
 
     private Class<? extends Fragment> getFragmentClassById(int itemId) {
-        switch (itemId) {
-            case R.id.nav_cal:
-                if (PreferenceHelper.getUseCalendarView(this)) {
-                    return CalendarFragment2.class;
-                } else {
-                    return CalendarFragment.class;
-                }
-            case R.id.nav_exams:
-                return ExamFragment.class;
-            case R.id.nav_grades:
-                return AssessmentFragment.class;
-            case R.id.nav_courses:
-                return LvaFragment.class;
-            case R.id.nav_stats:
-                return StatFragment.class;
-            case R.id.nav_mensa:
-                return MensaFragment.class;
-            case R.id.nav_map:
-                return MapFragment.class;
-            case R.id.nav_oeh_info:
-                return OehInfoFragment.class;
-            case R.id.nav_oeh_rigths:
-                return OehRightsFragment.class;
-            case R.id.nav_curricula:
-                return CurriculaFragment.class;
-            default:
-                return null;
+        if (itemId == R.id.nav_cal) {
+            if (PreferenceHelper.getUseCalendarView(this)) {
+                return CalendarFragment2.class;
+            } else {
+                return CalendarFragment.class;
+            }
+        } else if (itemId == R.id.nav_exams) {
+            return ExamFragment.class;
+        } else if (itemId == R.id.nav_grades) {
+            return AssessmentFragment.class;
+        } else if (itemId == R.id.nav_courses) {
+            return LvaFragment.class;
+        } else if (itemId == R.id.nav_stats) {
+            return StatFragment.class;
+        } else if (itemId == R.id.nav_mensa) {
+            return MensaFragment.class;
+        } else if (itemId == R.id.nav_map) {
+            return MapFragment.class;
+        } else if (itemId == R.id.nav_oeh_info) {
+            return OehInfoFragment.class;
+        } else if (itemId == R.id.nav_oeh_rigths) {
+            return OehRightsFragment.class;
+        } else if (itemId == R.id.nav_curricula) {
+            return CurriculaFragment.class;
         }
+        return null;
     }
 
     private void handleIntentOnFragment() {
@@ -410,13 +403,11 @@ public class MainActivity extends ThemedActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            mDrawerLayout.openDrawer(GravityCompat.START);
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

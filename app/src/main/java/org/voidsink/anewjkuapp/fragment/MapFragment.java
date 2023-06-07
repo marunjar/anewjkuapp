@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2023 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -386,18 +386,16 @@ public class MapFragment extends BaseFragment implements
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_snap_to_location:
-                if (this.mMyLocationOverlay != null) {
-                    this.mMyLocationOverlay.setSnapToLocationEnabled(!item.isChecked());
-                    item.setChecked(this.mMyLocationOverlay.isSnapToLocationEnabled());
-                } else {
-                    item.setChecked(false);
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.action_snap_to_location) {
+            if (this.mMyLocationOverlay != null) {
+                this.mMyLocationOverlay.setSnapToLocationEnabled(!item.isChecked());
+                item.setChecked(this.mMyLocationOverlay.isSnapToLocationEnabled());
+            } else {
+                item.setChecked(false);
+            }
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

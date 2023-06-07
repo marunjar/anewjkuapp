@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2023 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -201,37 +201,36 @@ public class MensaDayFragment extends BaseFragment implements LoaderManager.Load
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_refresh_mensa_day:
-                updateData();
-                return true;
-            case R.id.action_open_in_browser_classic:
-                if (getContext() != null) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Consts.MENSA_MENU_CLASSIC));
-                    getContext().startActivity(intent);
-                }
-                return true;
-            case R.id.action_open_in_browser_choice:
-                if (getContext() != null) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Consts.MENSA_MENU_CHOICE));
-                    getContext().startActivity(intent);
-                }
-                return true;
-            case R.id.action_open_in_browser_khg:
-                if (getContext() != null) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Consts.MENSA_MENU_KHG));
-                    getContext().startActivity(intent);
-                }
-                return true;
-            case R.id.action_open_in_browser_raab:
-                if (getContext() != null) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Consts.MENSA_MENU_RAAB));
-                    getContext().startActivity(intent);
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_refresh_mensa_day) {
+            updateData();
+            return true;
+        } else if (itemId == R.id.action_open_in_browser_classic) {
+            if (getContext() != null) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Consts.MENSA_MENU_CLASSIC));
+                getContext().startActivity(intent);
+            }
+            return true;
+        } else if (itemId == R.id.action_open_in_browser_choice) {
+            if (getContext() != null) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Consts.MENSA_MENU_CHOICE));
+                getContext().startActivity(intent);
+            }
+            return true;
+        } else if (itemId == R.id.action_open_in_browser_khg) {
+            if (getContext() != null) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Consts.MENSA_MENU_KHG));
+                getContext().startActivity(intent);
+            }
+            return true;
+        } else if (itemId == R.id.action_open_in_browser_raab) {
+            if (getContext() != null) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Consts.MENSA_MENU_RAAB));
+                getContext().startActivity(intent);
+            }
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
 

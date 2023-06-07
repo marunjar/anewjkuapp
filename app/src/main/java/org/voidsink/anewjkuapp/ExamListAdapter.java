@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2023 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -65,14 +65,11 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
 
         if (exam != null) {
             holder.getToolbar().setOnMenuItemClickListener(menuItem -> {
-                switch (menuItem.getItemId()) {
-                    case R.id.menu_exam_register: {
-                        KusssHelper.showExamInBrowser(getContext(), exam.getCourseId());
-                        return true;
-                    }
-                    default:
-                        return false;
+                if (menuItem.getItemId() == R.id.menu_exam_register) {
+                    KusssHelper.showExamInBrowser(getContext(), exam.getCourseId());
+                    return true;
                 }
+                return false;
             });
 
             holder.getTitle().setText(exam.getTitle());

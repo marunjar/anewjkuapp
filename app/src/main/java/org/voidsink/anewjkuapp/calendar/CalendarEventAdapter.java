@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2023 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -123,18 +123,15 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
 
         if (eventItem != null) {
             holder.getToolbar().setOnMenuItemClickListener(menuItem -> {
-                switch (menuItem.getItemId()) {
-                    case R.id.show_in_calendar: {
-                        eventItem.showInCalendar(getContext());
-                        return true;
-                    }
-                    case R.id.show_on_map: {
-                        eventItem.showOnMap(getContext());
-                        return true;
-                    }
-                    default:
-                        return false;
+                int itemId = menuItem.getItemId();
+                if (itemId == R.id.show_in_calendar) {
+                    eventItem.showInCalendar(getContext());
+                    return true;
+                } else if (itemId == R.id.show_on_map) {
+                    eventItem.showOnMap(getContext());
+                    return true;
                 }
+                return false;
             });
 
             holder.getTitle().setText(eventItem.getTitle());

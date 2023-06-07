@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2023 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -54,20 +54,18 @@ public class UIUtils {
     }
 
     public static boolean handleUpNavigation(Activity activity, MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                if (activity instanceof AppCompatActivity) {
-                    ActionBar actionBar = ((AppCompatActivity) activity).getSupportActionBar();
-                    if (actionBar != null && (actionBar.getDisplayOptions() & ActionBar.DISPLAY_HOME_AS_UP) != 0) {
-                        // app icon in action bar clicked; goto parent activity.
-                        NavUtils.navigateUpFromSameTask(activity);
-                        return true;
-                    }
+        if (item.getItemId() == android.R.id.home) {
+            if (activity instanceof AppCompatActivity) {
+                ActionBar actionBar = ((AppCompatActivity) activity).getSupportActionBar();
+                if (actionBar != null && (actionBar.getDisplayOptions() & ActionBar.DISPLAY_HOME_AS_UP) != 0) {
+                    // app icon in action bar clicked; goto parent activity.
+                    NavUtils.navigateUpFromSameTask(activity);
+                    return true;
                 }
-                return false;
-            default:
-                return false;
+            }
+            return false;
         }
+        return false;
     }
 
     public static void setTextAndVisibility(TextView v, String text) {

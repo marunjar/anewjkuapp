@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2023 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -174,20 +174,19 @@ public abstract class MensaFragmentDetail extends BaseFragment implements Loader
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_refresh_mensa:
-                updateData();
-                return true;
-            case R.id.action_open_in_browser:
-                String link = getMensaLink();
-                if (!TextUtils.isEmpty(link) && getContext() != null) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
-                    getContext().startActivity(intent);
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_refresh_mensa) {
+            updateData();
+            return true;
+        } else if (itemId == R.id.action_open_in_browser) {
+            String link = getMensaLink();
+            if (!TextUtils.isEmpty(link) && getContext() != null) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+                getContext().startActivity(intent);
+            }
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     protected abstract String getMensaLink();

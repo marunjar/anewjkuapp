@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2023 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -178,17 +178,15 @@ public class CalendarFragment extends CalendarPermissionFragment implements Cont
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.action_refresh_calendar:
-                AppUtils.triggerSync(getContext(), true, Consts.ARG_WORKER_CAL_COURSES, Consts.ARG_WORKER_CAL_EXAM);
-                return true;
-            case R.id.action_cal_goto_today:
-                mRecyclerView.smoothScrollToPosition(0);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_refresh_calendar) {
+            AppUtils.triggerSync(getContext(), true, Consts.ARG_WORKER_CAL_COURSES, Consts.ARG_WORKER_CAL_EXAM);
+            return true;
+        } else if (itemId == R.id.action_cal_goto_today) {
+            mRecyclerView.smoothScrollToPosition(0);
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void loadMoreData() {

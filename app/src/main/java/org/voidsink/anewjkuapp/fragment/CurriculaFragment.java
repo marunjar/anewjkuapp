@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2023 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -119,14 +119,11 @@ public class CurriculaFragment extends BaseFragment implements
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_refresh_curricula: {
-                AppUtils.triggerSync(getContext(), true, Consts.ARG_WORKER_KUSSS_CURRICULA);
-                return true;
-            }
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.action_refresh_curricula) {
+            AppUtils.triggerSync(getContext(), true, Consts.ARG_WORKER_KUSSS_CURRICULA);
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
