@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2023 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,6 +25,9 @@
 
 package org.voidsink.anewjkuapp.kusss;
 
+import static org.jsoup.Connection.Method.GET;
+import static org.jsoup.Connection.Method.POST;
+
 import android.content.Context;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -33,6 +36,7 @@ import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -44,10 +48,8 @@ import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
@@ -65,9 +67,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import static org.jsoup.Connection.Method.GET;
-import static org.jsoup.Connection.Method.POST;
 
 public class KusssHandler {
 
@@ -205,7 +204,8 @@ public class KusssHandler {
 
         try {
 
-            if ((user.length() > 0) && (user.charAt(0) != 'k')) {
+            user = user.toUpperCase(Locale.ROOT);
+            if ((user.length() > 0) && StringUtils.isNumeric(user)) {
                 user = "k" + user;
             }
 
@@ -216,7 +216,7 @@ public class KusssHandler {
 
             // follow SAML redirect, (followRedirect is true by default)
             Document r = Jsoup.connect(URL_LOGIN).userAgent(this.mUserAgent).cookies(getCookieMap()).get();
-            for(int i=0; r.selectFirst("input[name=csrf_token]") == null || i>=5; i++) {
+            for (int i = 0; r.selectFirst("input[name=csrf_token]") == null || i >= 5; i++) {
                 r = Jsoup.connect(URL_LOGIN).userAgent(this.mUserAgent).cookies(getCookieMap()).get();
             } // Don't know why, but it mostly works on the third request. I guess some cookie issue
 
