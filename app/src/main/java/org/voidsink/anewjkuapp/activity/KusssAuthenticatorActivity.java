@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2023 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -45,9 +45,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +83,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
 
         setContentView(R.layout.activity_login);
 
-        Toolbar toolbar = findViewById(R.id.main_toolbar);
+        MaterialToolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
 
         initActionBar();
@@ -131,7 +132,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
         mSubmit = findViewById(R.id.accountLogin);
         mSubmit.setOnClickListener(v -> {
             if ((Build.VERSION.SDK_INT < Build.VERSION_CODES.M) && (ContextCompat.checkSelfPermission(KusssAuthenticatorActivity.this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED)) {
-                new AlertDialog.Builder(KusssAuthenticatorActivity.this)
+                new MaterialAlertDialogBuilder(KusssAuthenticatorActivity.this)
                         .setMessage(R.string.alert_permission_get_accounts)
                         .setPositiveButton(R.string.button_ok, null)
                         .setCancelable(false)

@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2023 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -31,8 +31,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+
+import com.google.android.material.appbar.MaterialToolbar;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
@@ -58,7 +59,7 @@ public abstract class ThemedActivity extends AppCompatActivity {
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
 
-        Toolbar toolbar = findViewById(R.id.main_toolbar);
+        MaterialToolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
 
         initActionBar();

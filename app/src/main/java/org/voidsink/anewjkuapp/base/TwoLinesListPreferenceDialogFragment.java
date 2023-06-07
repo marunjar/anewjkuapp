@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2023 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -62,7 +62,7 @@ public class TwoLinesListPreferenceDialogFragment extends PreferenceDialogFragme
     }
 
     @Override
-    protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {
+    protected void onPrepareDialogBuilder(@NonNull AlertDialog.Builder builder) {
         super.onPrepareDialogBuilder(builder);
 
         TwoLinesListPreference preference = this.getListPreference();

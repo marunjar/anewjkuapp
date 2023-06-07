@@ -6,7 +6,7 @@
  *  \________|____|__ \______/   \____|__  /   __/|   __/
  *                   \/                  \/|__|   |__|
  *
- *  Copyright (c) 2014-2020 Paul "Marunjar" Pretsch
+ *  Copyright (c) 2014-2023 Paul "Marunjar" Pretsch
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -78,7 +78,7 @@ public class LocationOverlay extends MyLocationOverlay {
             this.snapToLocationItem.setChecked(snapToLocationEnabled);
             if (snapToLocationEnabled) {
                 // get accent color from theme
-                TypedArray themeArray = mContext.getTheme().obtainStyledAttributes(new int[]{androidx.appcompat.R.attr.colorAccent});
+                TypedArray themeArray = mContext.getTheme().obtainStyledAttributes(new int[]{com.google.android.material.R.attr.colorAccent});
                 int mColorAccent = themeArray.getColor(0, ContextCompat.getColor(mContext, R.color.default_secondary));
                 themeArray.recycle();
 

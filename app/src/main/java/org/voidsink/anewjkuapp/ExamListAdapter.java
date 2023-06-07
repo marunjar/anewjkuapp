@@ -32,8 +32,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.appbar.MaterialToolbar;
 
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
 import org.voidsink.anewjkuapp.base.SimpleTextViewHolder;
@@ -123,7 +124,7 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
     }
 
     static class ExamViewHolder extends RecyclerView.ViewHolder {
-        private final Toolbar mToolbar;
+        private final MaterialToolbar mToolbar;
         private final TextView mLocation;
         private final TextView mTime;
         private final TextView mCid;
@@ -149,7 +150,7 @@ public class ExamListAdapter extends RecyclerArrayAdapter<ExamListExam, ExamList
             mLocation = itemView.findViewById(R.id.exam_list_item_location);
         }
 
-        public Toolbar getToolbar() {
+        public MaterialToolbar getToolbar() {
             return mToolbar;
         }
 

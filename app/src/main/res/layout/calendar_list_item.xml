@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/calendar_list_item_toolbar"
         style="@style/cardToolbarStyle"
         android:clickable="true"
@@ -69,5 +69,5 @@
                 tools:text="(133337/2014S), Lva-LeiterIn: Ich" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.MaterialToolbar>
 </com.google.android.material.card.MaterialCardView>

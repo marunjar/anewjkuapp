@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/exam_list_item_toolbar"
         style="@style/cardToolbarStyle"
         android:theme="?attr/cardToolbarTheme">
@@ -112,5 +112,5 @@
                 tools:text="Description" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.MaterialToolbar>
 </com.google.android.material.card.MaterialCardView>

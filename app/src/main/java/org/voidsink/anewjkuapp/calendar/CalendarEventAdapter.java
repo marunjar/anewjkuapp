@@ -32,8 +32,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.appbar.MaterialToolbar;
 
 import org.voidsink.anewjkuapp.R;
 import org.voidsink.anewjkuapp.base.RecyclerArrayAdapter;
@@ -59,7 +60,7 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
 
     static class EventItemHolder extends RecyclerView.ViewHolder {
 
-        private final Toolbar mToolbar;
+        private final MaterialToolbar mToolbar;
         private final TextView mTitle;
         private final TextView mDescr;
         private final TextView mLocation;
@@ -77,7 +78,7 @@ public class CalendarEventAdapter extends RecyclerArrayAdapter<CalendarListEvent
             mLocation = itemView.findViewById(R.id.calendar_list_item_location);
         }
 
-        public Toolbar getToolbar() {
+        public MaterialToolbar getToolbar() {
             return mToolbar;
         }
 
