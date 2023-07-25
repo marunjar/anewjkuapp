@@ -14,6 +14,10 @@
 -dontwarn org.kxml2.io.KXmlSerializer
 
 ###############
+# jsoup
+-dontwarn javax.annotation.**
+
+###############
 -keepclasseswithmembernames class * {
 public <init>(android.content.Context);
 }

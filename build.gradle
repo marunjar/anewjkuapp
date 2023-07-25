@@ -3,7 +3,7 @@
 buildscript {
     dependencies {
         classpath 'com.google.gms:google-services:4.3.15'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.5'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.7'
     }
 }
 
@@ -12,7 +12,7 @@ plugins {
     id 'com.android.library' version '8.1.0' apply false
 }
 
-task clean(type: Delete) {
+tasks.register('clean', Delete) {
     delete rootProject.buildDir
 }
 
@@ -27,7 +27,7 @@ ext {
 }
 
 allprojects {
-    configurations.all {
+    configurations.configureEach {
         exclude module: 'commons-logging'
     }
 }
