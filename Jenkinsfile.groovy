@@ -67,12 +67,19 @@ pipeline {
         always {
             step([$class: 'GitHubCommitStatusSetter'])
             findBuildScans()
-            emailext attachLog: true, body: '''$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:
-
-Check console output at $BUILD_URL to view the results.''', recipientProviders: [buildUser(), requestor()], subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!'
         }
         cleanup {
-            echo 'Cleanup...'
+            mail to: 'jenkins.paul@inzinghof.at',
+            subject: "Built '${JOB_NAME}' (${BUILD_NUMBER})",
+            body: '''${JOB_URL}'''
+
+            emailext to: 'jenkins.paul@inzinghof.at',
+            body: '''$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:
+
+Check console output at $BUILD_URL to view the results.''', 
+            recipientProviders: [buildUser(), requestor()], 
+            subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!',
+            attachLog: true
         }
     }
 }
