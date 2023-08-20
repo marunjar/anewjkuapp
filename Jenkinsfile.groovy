@@ -70,8 +70,8 @@ pipeline {
         }
         cleanup {
             mail to: 'jenkins.paul@inzinghof.at',
-            subject: "${JOB_BASE_NAME} » ${BRANCH_NAME} - Build ${BUILD_DISPLAY_NAME} - ${currentBuild.currentResult}",
-            body: '''${JOB_URL}'''
+            subject: "${JOB_NAME} » ${BRANCH_NAME} - Build ${BUILD_DISPLAY_NAME} - ${currentBuild.currentResult}",
+            body: "for details see ${BUILD_URL}"
 
             emailext to: 'jenkins.paul@inzinghof.at',
             body: '''$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:
