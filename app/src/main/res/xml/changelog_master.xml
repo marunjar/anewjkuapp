@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="0.55.0" versioncode="140087">
+        <change>unterstützt jetzt auch Android 13</change>
+    </release>
     <release version="0.54.0" versioncode="140086">
         <change>Login mit JKU Shibboleth</change>
     </release>
