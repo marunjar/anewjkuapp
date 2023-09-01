@@ -9,6 +9,9 @@ pipeline {
         buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '2', daysToKeepStr: '', numToKeepStr: '5'))
         disableConcurrentBuilds()
     }
+    tools {
+        jdk 'android-temurin-jdk-11'
+    }
     stages {
         stage('Checkout') {
             steps {
@@ -21,17 +24,17 @@ pipeline {
                 step([$class: 'GitHubSetCommitStatusBuilder'])
                 withGradle {
                     sh './gradlew --version'
-                    sh './gradlew clean'
+                    sh './gradlew clean --no-build-cache'
                 }
             }
         }
         stage('Build') {
             steps {
                 withGradle {
-                    sh './gradlew assembleGoogle --stacktrace'
-                    sh './gradlew bundleGoogle --stacktrace'
-                    sh './gradlew assembleFdroid --stacktrace'
-                    sh './gradlew bundleFdroid --stacktrace'
+                    sh './gradlew assembleGoogle --stacktrace --no-build-cache'
+                    sh './gradlew bundleGoogle --stacktrace --no-build-cache'
+                    sh './gradlew assembleFdroid --stacktrace --no-build-cache'
+                    sh './gradlew bundleFdroid --stacktrace --no-build-cache'
                 }
             }
         }
@@ -43,8 +46,8 @@ pipeline {
         stage('Analyze') {
             steps {
                 withGradle {
-                    sh './gradlew lintGoogleRelease'
-                    sh './gradlew lintFdroidRelease'
+                    sh './gradlew lintGoogleRelease --no-build-cache'
+                    sh './gradlew lintFdroidRelease --no-build-cache'
                 }
             }
         }
