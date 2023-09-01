@@ -10,7 +10,7 @@ pipeline {
         disableConcurrentBuilds()
     }
     tools {
-        jdk 'android-temurin-jdk-11.0.20.1'
+        jdk 'android-temurin-jdk-17.0.8.1'
     }
     stages {
         stage('Checkout') {
