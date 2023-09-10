@@ -63,15 +63,11 @@ public class SyncNotification {
                 .setOngoing(true)
                 .setPriority(PRIORITY_MIN);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            this.mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp_anim)
-                    .setLargeIcon(
-                            BitmapFactory.decodeResource(
-                                    this.mContext.getResources(),
-                                    R.drawable.ic_refresh_white_24dp));
-        } else {
-            this.mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_compat_24dp_anim);
-        }
+        this.mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp_anim)
+                .setLargeIcon(
+                        BitmapFactory.decodeResource(
+                                this.mContext.getResources(),
+                                R.drawable.ic_refresh_white_24dp));
 
         // pendingIntent required for all Versions before ICS
         PendingIntent pendingIntent = NotificationUtils.newPendingIntent(mContext, 0);

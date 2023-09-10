@@ -50,11 +50,7 @@ public class KusssNotificationHelper {
                 .setCategory(NotificationCompat.CATEGORY_ERROR)
                 .setAutoCancel(true);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp);
-        } else {
-            mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_compat_24dp);
-        }
+        mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp);
 
         if (e != null) {
             mBuilder.setContentText(e.getLocalizedMessage());

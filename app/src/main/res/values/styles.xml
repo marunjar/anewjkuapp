@@ -11,19 +11,6 @@
         <item name="colorOnSecondary">@color/default_onSecondary</item>
     </style>
 
-    <style name="chip">
-        <item name="android:layout_width">8dp</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_marginRight">8dp</item>
-        <item name="android:background">#ff339bff</item>
-    </style>
-
-    <style name="card_expand" parent="Text.Body2">
-        <item name="android:paddingLeft">@dimen/card_content_padding</item>
-        <item name="android:paddingRight">@dimen/card_content_padding</item>
-        <item name="android:gravity">center_vertical</item>
-    </style>
-
     <style name="oeh_text_title" parent="Text.Body1">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

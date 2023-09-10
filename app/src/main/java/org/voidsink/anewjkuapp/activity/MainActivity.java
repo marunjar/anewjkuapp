@@ -127,11 +127,9 @@ public class MainActivity extends ThemedActivity {
         logger.debug(PoiContentContract.AUTHORITY);
         logger.debug(this.getResources().getString(R.string.config_poi_provider));
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // set Statusbar color to transparent if a drawer exists
-            // in this case status bar is colored by DrawerLayout.setStatusBarBackgroundColor(). which is default primaryDark
-            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.fullTransparent));
-        }
+        // set Statusbar color to transparent if a drawer exists
+        // in this case status bar is colored by DrawerLayout.setStatusBarBackgroundColor(). which is default primaryDark
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.fullTransparent));
 
         setContentView(R.layout.activity_main);
 

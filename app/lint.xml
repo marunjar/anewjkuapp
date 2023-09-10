@@ -10,6 +10,4 @@
 
     <!-- ignore until kotlin is not in use -->
     <issue id="UnknownNullness" severity="ignore" />
-    <!-- ignore until Android Gradle Plugin version 5.0 is not in use -->
-    <issue id="NonConstantResourceId" severity="ignore" />
 </lint>

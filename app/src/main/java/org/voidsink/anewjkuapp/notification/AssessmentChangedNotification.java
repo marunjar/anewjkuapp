@@ -78,15 +78,11 @@ public class AssessmentChangedNotification {
                     .setAutoCancel(true)
                     .setNumber(lines.size());
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp)
-                        .setLargeIcon(
-                                BitmapFactory.decodeResource(
-                                        this.mContext.getResources(),
-                                        R.drawable.ic_list_white_24dp));
-            } else {
-                mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_compat_24dp);
-            }
+            mBuilder.setSmallIcon(R.drawable.ic_stat_notify_kusss_24dp)
+                    .setLargeIcon(
+                            BitmapFactory.decodeResource(
+                                    this.mContext.getResources(),
+                                    R.drawable.ic_list_white_24dp));
 
             // creates big view with all grades in inbox style
             NotificationCompat.InboxStyle inBoxStyle = new NotificationCompat.InboxStyle();

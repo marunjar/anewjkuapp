@@ -38,7 +38,10 @@
         <item name="postSplashScreenTheme">@style/AppTheme</item>
     </style>
 
-    <style name="AppTheme" parent="AppTheme.Base" />
+    <style name="AppTheme" parent="AppTheme.Base">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:popupTheme">@style/ThemeOverlay.Material3.Dark</item>
+    </style>
 
     <style name="AppTheme.Launch" parent="AppTheme.Base.Launch" />
 

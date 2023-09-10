@@ -8,7 +8,6 @@
     <color name="default_onPrimary">#FFFFFF</color>
     <color name="default_onSecondary">#000000</color>
 
-    <color name="preference_fallback_accent_color">@color/default_secondary</color>
     <color name="color_chip_grade_back_default">@color/default_secondary</color>
     <color name="color_chip_grade_text">#FFF</color>
 
