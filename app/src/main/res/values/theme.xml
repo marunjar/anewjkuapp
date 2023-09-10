@@ -23,13 +23,24 @@
         <item name="nowLineColor">@color/nowLineColor</item>
     </style>
 
-    <style name="AppTheme.Base.Launch" parent="AppTheme.Base">
-      <item name="android:windowBackground">@drawable/launch_screen</item>
+    <style name="AppTheme.Base.Launch" parent="Theme.SplashScreen">
+        <!-- Set the splash screen background, animated icon, and animation duration. -->
+        <item name="windowSplashScreenBackground">@color/background_launcher</item>
+
+        <!-- Use windowSplashScreenAnimatedIcon to add either a drawable or an
+             animated drawable. One of these is required. -->
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <!-- Required for animated icons -->
+        <item name="windowSplashScreenAnimationDuration">200</item>
+
+        <!-- Set the theme of the Activity that directly follows your splash screen. -->
+        <!-- Required -->
+        <item name="postSplashScreenTheme">@style/AppTheme</item>
     </style>
 
-    <style name="AppTheme" parent="AppTheme.Base"/>
+    <style name="AppTheme" parent="AppTheme.Base" />
 
-    <style name="AppTheme.Launch" parent="AppTheme.Base.Launch"/>
+    <style name="AppTheme.Launch" parent="AppTheme.Base.Launch" />
 
     <style name="DialogStyle.Base" parent="Theme.Material3.DayNight.Dialog">
         <item name="colorPrimary">@color/default_primary</item>
@@ -41,7 +52,7 @@
         <item name="colorOnSecondary">@color/default_onSecondary</item>
     </style>
 
-    <style name="DialogStyle" parent="DialogStyle.Base"/>
+    <style name="DialogStyle" parent="DialogStyle.Base" />
 
     <style name="DialogStyle.Alert.Base" parent="Theme.Material3.DayNight.Dialog">
         <item name="colorPrimary">@color/default_primary</item>
@@ -54,10 +65,11 @@
     </style>
 
     <style name="PreferenceTheme" parent="PreferenceThemeOverlay.v14.Material">
-        <item name="android:activatedBackgroundIndicator">?android:attr/selectableItemBackground</item>
+        <item name="android:activatedBackgroundIndicator">?android:attr/selectableItemBackground
+        </item>
     </style>
 
-    <style name="DialogStyle.Alert" parent="DialogStyle.Alert.Base"/>
+    <style name="DialogStyle.Alert" parent="DialogStyle.Alert.Base" />
 
     <dimen name="drawer_header_height">96dp</dimen>
 </resources>
