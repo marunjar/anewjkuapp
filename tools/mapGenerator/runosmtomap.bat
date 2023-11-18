@@ -13,8 +13,6 @@ if exist .\input\campus.osm (
 echo download new files...
 echo.
 
-call :download_file linz "14.2225,48.2361,14.5176,48.3714" 0
-
 call :download_file campus "14.3104,48.3288,14.3292,48.3400" 1
 
 call :download_file medcampus "14.2993,48.2998,14.3116,48.3058" 1
@@ -24,6 +22,8 @@ call :download_file lifesciencecampus "14.2977,48.3043,14.3009,48.3071" 1
 call :download_file softwareparkhagenberg "14.5104,48.3656,14.5176,48.3714" 1
 
 call :download_file petrinum "14.2724,48.3188,14.2780,48.3215" 1
+
+call :download_file linz "14.2225,48.2361,14.5176,48.3714" 0
 
 pause
 
