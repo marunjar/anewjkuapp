@@ -21,6 +21,10 @@ android {
     signingConfigs {
     }
 
+    buildFeatures {
+        buildConfig true
+    }
+
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
