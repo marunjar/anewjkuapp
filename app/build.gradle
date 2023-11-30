@@ -109,8 +109,8 @@ dependencies {
     implementation 'com.jakewharton.threetenabp:threetenabp:1.4.6'
     implementation 'androidx.preference:preference:1.2.1'
     implementation 'com.google.android.material:material:1.10.0'
-    implementation 'androidx.work:work-runtime:2.8.1'
-    googleImplementation 'androidx.work:work-gcm:2.8.1'
+    implementation 'androidx.work:work-runtime:2.9.0'
+    googleImplementation 'androidx.work:work-gcm:2.9.0'
     googleImplementation 'com.google.firebase:firebase-analytics:21.5.0'
     googleImplementation 'com.google.firebase:firebase-crashlytics:18.6.0'
     implementation 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
@@ -119,7 +119,7 @@ dependencies {
     implementation 'org.mapsforge:mapsforge-themes:0.20.0'
     implementation 'org.mapsforge:mapsforge-map-android:0.20.0'
     implementation 'pub.devrel:easypermissions:3.0.0'
-    implementation 'org.jsoup:jsoup:1.16.2'
+    implementation 'org.jsoup:jsoup:1.17.1'
     //breaks when upgrading ical4j > 3.0.21
     //noinspection GradleDependency
     implementation 'org.mnode.ical4j:ical4j:3.0.21'
