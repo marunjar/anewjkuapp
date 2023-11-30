@@ -11,6 +11,10 @@ if (buildUsesGoogle()) {
 }
 
 android {
+    namespace 'org.voidsink.anewjkuapp'
+
+    compileSdk rootProject.ext.compileSdk
+
     dependenciesInfo {
         // Disables dependency metadata when building APKs.
         includeInApk = false
@@ -25,9 +29,6 @@ android {
         buildConfig true
     }
 
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
-
     compileOptions {
         coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -38,8 +39,8 @@ android {
         applicationId 'org.voidsink.anewjkuapp'
         versionCode 140087
         versionName '0.55.0'
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdk rootProject.ext.minSdk
+        targetSdk rootProject.ext.targetSdk
         multiDexEnabled true
 
         vectorDrawables.useSupportLibrary = true // Android Plugin for Gradle 2.0.0
@@ -72,7 +73,7 @@ android {
         }
     }
 
-    flavorDimensions 'tier'
+    flavorDimensions = ['tier']
 
     productFlavors {
         google {
@@ -103,7 +104,6 @@ android {
             excludes += ['META-INF/LICENSE.txt', 'META-INF/NOTICE.txt']
         }
     }
-    namespace 'org.voidsink.anewjkuapp'
 }
 
 dependencies {

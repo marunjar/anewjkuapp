@@ -28,8 +28,9 @@ plugins {
 }
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    namespace 'org.voidsink.sectionedrecycleradapter'
+
+    compileSdk rootProject.ext.compileSdk
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -37,8 +38,8 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdk rootProject.ext.minSdk
+        targetSdk rootProject.ext.targetSdk
     }
 
     buildTypes {
@@ -47,7 +48,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    namespace 'org.voidsink.sectionedrecycleradapter'
 }
 
 dependencies {
