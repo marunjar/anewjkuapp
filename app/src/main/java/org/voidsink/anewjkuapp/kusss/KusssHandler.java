@@ -46,6 +46,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.voidsink.anewjkuapp.analytics.AnalyticsHelper;
 import org.voidsink.anewjkuapp.calendar.CalendarUtils;
+import org.voidsink.anewjkuapp.mock.DummyLogin;
+import org.voidsink.anewjkuapp.mock.IDummyLogin;
 import org.voidsink.anewjkuapp.utils.AppUtils;
 
 import java.io.ByteArrayInputStream;
@@ -77,6 +79,7 @@ public class KusssHandler {
             + PATTERN_LVA_NR + "," + PATTERN_TERM + "\\)";
     public static final String PATTERN_LVA_NR_SLASH_TERM = "\\("
             + PATTERN_LVA_NR + "\\/" + PATTERN_TERM + "\\)";
+    private static final String URL_KUSSS = "https://www.kusss.jku.at/";
     private static final String URL_KUSSS_INDEX = "https://www.kusss.jku.at/kusss/index.action";
     private static final String URL_MY_LVAS = "https://www.kusss.jku.at/kusss/assignment-results.action";
     private static final String URL_GET_TERMS = "https://www.kusss.jku.at/kusss/listmystudentlvas.action";
@@ -104,6 +107,7 @@ public class KusssHandler {
     private volatile static KusssHandler handler = null;
     private final CookieManager mCookies;
     private String mUserAgent;
+    private final IDummyLogin dummyLogin = new DummyLogin();
 
     private static final Logger logger = LoggerFactory.getLogger(KusssHandler.class);
 
@@ -139,7 +143,7 @@ public class KusssHandler {
     private String getSessionIDFromCookie() {
         try {
             List<HttpCookie> cookies = mCookies.getCookieStore().get(
-                    new URI("https://www.kusss.jku.at/"));
+                    new URI(URL_KUSSS));
 
             for (HttpCookie cookie : cookies) {
                 if (cookie.getName().equals("JSESSIONID")) {
@@ -201,74 +205,78 @@ public class KusssHandler {
         if (!isConnected(c)) {
             return null;
         }
+        if (dummyLogin.isGoogleLogin(user, password)) {
+            dummyLogin.prepareCookies(mCookies.getCookieStore(), URL_KUSSS);
+            return dummyLogin.getSessionId();
+        } else {
+            try {
 
-        try {
+                user = user.toUpperCase(Locale.ROOT);
+                if ((user.length() > 0) && StringUtils.isNumeric(user)) {
+                    user = "k" + user;
+                }
 
-            user = user.toUpperCase(Locale.ROOT);
-            if ((user.length() > 0) && StringUtils.isNumeric(user)) {
-                user = "k" + user;
+                mCookies.getCookieStore().removeAll();
+
+                // must request kusss once so you get a proper cookie
+                Jsoup.connect(URL_KUSSS_INDEX).get();
+
+                // follow SAML redirect, (followRedirect is true by default)
+                Document r = Jsoup.connect(URL_LOGIN).userAgent(this.mUserAgent).cookies(getCookieMap()).get();
+                for (int i = 0; r.selectFirst("input[name=csrf_token]") == null || i >= 5; i++) {
+                    r = Jsoup.connect(URL_LOGIN).userAgent(this.mUserAgent).cookies(getCookieMap()).get();
+                } // Don't know why, but it mostly works on the third request. I guess some cookie issue
+
+                String shibUrl = r.location(); // https://shibboleth.im.jku.at/idp/profile/SAML2/Redirect/SSO?execution=e1s1
+                String csrf = r.selectFirst("input[name=csrf_token]").attr("value");
+
+                Document doc = Jsoup.connect(shibUrl).userAgent(this.mUserAgent).cookies(getCookieMap())
+                        .data("csrf_token", csrf)
+                        .data("shib_idp_ls_exception.shib_idp_session_ss", "")
+                        .data("shib_idp_ls_success.shib_idp_session_ss", "true")
+                        .data("shib_idp_ls_value.shib_idp_session_ss", "")
+                        .data("shib_idp_ls_exception.shib_idp_persistent_ss", "")
+                        .data("shib_idp_ls_success.shib_idp_persistent_ss", "true")
+                        .data("shib_idp_ls_value.shib_idp_persistent_ss", "")
+                        .data("shib_idp_ls_supported", "true")
+                        .data("_eventId_proceed", "")
+                        .post();
+
+                csrf = doc.selectFirst("input[name=csrf_token]").attr("value");
+                doc = Jsoup.connect(doc.location()).userAgent(this.mUserAgent).cookies(getCookieMap())
+                        .data("j_username", user).data("j_password", password)
+                        .data("_eventId_proceed", "Login")
+                        .data("csrf_token", csrf)
+                        .post();
+
+                csrf = doc.selectFirst("input[name=csrf_token]").attr("value");
+                doc = Jsoup.connect(doc.location()).userAgent(this.mUserAgent).cookies(getCookieMap())
+                        .data("shib_idp_ls_exception.shib_idp_session_ss", "")
+                        .data("shib_idp_ls_success.shib_idp_session_ss", "false")
+                        .data("_eventId_proceed", "")
+                        .data("csrf_token", csrf)
+                        .post();
+
+                // parse form, if one of the expected fields is not found, login failed
+                String action = doc.selectFirst("form").attr("action");
+                String relayState = doc.selectFirst("input[name=RelayState]").attr("value");
+                String samlResponse = doc.selectFirst("input[name=SAMLResponse]").attr("value");
+
+                Jsoup.connect(action).userAgent(this.mUserAgent).cookies(getCookieMap())
+                        .data("RelayState", relayState).data("SAMLResponse", samlResponse)
+                        .post();
+
+                return getSessionIDFromCookie();
+            } catch (NullPointerException ne) {
+                logger.warn("Login failed: Invalid credentials? RelayState/SAMLResponse in response form not found.");
+            } catch (SocketTimeoutException e) {
+                // bad connection, timeout
+                logger.warn("login failed: connection timeout", e);
+            } catch (Exception e) {
+                AnalyticsHelper.sendException(c, e, true);
             }
-
-            mCookies.getCookieStore().removeAll();
-
-            // must request kusss once so you get a proper cookie
-            Jsoup.connect(URL_KUSSS_INDEX).get();
-
-            // follow SAML redirect, (followRedirect is true by default)
-            Document r = Jsoup.connect(URL_LOGIN).userAgent(this.mUserAgent).cookies(getCookieMap()).get();
-            for (int i = 0; r.selectFirst("input[name=csrf_token]") == null || i >= 5; i++) {
-                r = Jsoup.connect(URL_LOGIN).userAgent(this.mUserAgent).cookies(getCookieMap()).get();
-            } // Don't know why, but it mostly works on the third request. I guess some cookie issue
-
-            String shibUrl = r.location(); // https://shibboleth.im.jku.at/idp/profile/SAML2/Redirect/SSO?execution=e1s1
-            String csrf = r.selectFirst("input[name=csrf_token]").attr("value");
-
-            Document doc = Jsoup.connect(shibUrl).userAgent(this.mUserAgent).cookies(getCookieMap())
-                    .data("csrf_token", csrf)
-                    .data("shib_idp_ls_exception.shib_idp_session_ss", "")
-                    .data("shib_idp_ls_success.shib_idp_session_ss", "true")
-                    .data("shib_idp_ls_value.shib_idp_session_ss", "")
-                    .data("shib_idp_ls_exception.shib_idp_persistent_ss", "")
-                    .data("shib_idp_ls_success.shib_idp_persistent_ss", "true")
-                    .data("shib_idp_ls_value.shib_idp_persistent_ss", "")
-                    .data("shib_idp_ls_supported", "true")
-                    .data("_eventId_proceed", "")
-                    .post();
-
-            csrf = doc.selectFirst("input[name=csrf_token]").attr("value");
-            doc = Jsoup.connect(doc.location()).userAgent(this.mUserAgent).cookies(getCookieMap())
-                    .data("j_username", user).data("j_password", password)
-                    .data("_eventId_proceed", "Login")
-                    .data("csrf_token", csrf)
-                    .post();
-
-            csrf = doc.selectFirst("input[name=csrf_token]").attr("value");
-            doc = Jsoup.connect(doc.location()).userAgent(this.mUserAgent).cookies(getCookieMap())
-                    .data("shib_idp_ls_exception.shib_idp_session_ss", "")
-                    .data("shib_idp_ls_success.shib_idp_session_ss", "false")
-                    .data("_eventId_proceed", "")
-                    .data("csrf_token", csrf)
-                    .post();
-
-            // parse form, if one of the expected fields is not found, login failed
-            String action = doc.selectFirst("form").attr("action");
-            String relayState = doc.selectFirst("input[name=RelayState]").attr("value");
-            String samlResponse = doc.selectFirst("input[name=SAMLResponse]").attr("value");
-
-            Jsoup.connect(action).userAgent(this.mUserAgent).cookies(getCookieMap())
-                    .data("RelayState", relayState).data("SAMLResponse", samlResponse)
-                    .post();
-
-            return getSessionIDFromCookie();
-        } catch (NullPointerException ne) {
-            logger.warn("Login failed: Invalid credentials? RelayState/SAMLResponse in response form not found.");
-        } catch (SocketTimeoutException e) {
-            // bad connection, timeout
-            logger.warn("login failed: connection timeout", e);
-        } catch (Exception e) {
-            AnalyticsHelper.sendException(c, e, true);
+            return null;
         }
-        return null;
     }
 
     private Map<String, String> getCookieMap() {
@@ -291,6 +299,10 @@ public class KusssHandler {
         if (!isConnected(c)) {
             return false;
         }
+        if (dummyLogin.isGoogleSession(sessionId)) {
+            dummyLogin.prepareCookies(mCookies.getCookieStore(), URL_KUSSS);
+            return true;
+        }
         try {
             Document doc = getDocument(Jsoup.connect(URL_KUSSS_INDEX).userAgent(this.mUserAgent).cookies(getCookieMap()).timeout(TIMEOUT_LOGIN).followRedirects(true));
 
@@ -309,7 +321,7 @@ public class KusssHandler {
             return false;
         }
         Element logoutElement = doc.selectFirst(SELECT_LOGOUT);
-        return logoutElement.text().contains("Logout Info");
+        return logoutElement != null && logoutElement.text().contains("Logout Info");
     }
 
     public synchronized boolean isAvailable(Context c, String sessionId,
