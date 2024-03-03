@@ -115,15 +115,15 @@ dependencies {
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.work:work-runtime:2.9.0'
     googleImplementation 'androidx.work:work-gcm:2.9.0'
-    googleImplementation 'com.google.firebase:firebase-analytics:21.5.0'
-    googleImplementation 'com.google.firebase:firebase-crashlytics:18.6.0'
+    googleImplementation 'com.google.firebase:firebase-analytics:21.5.1'
+    googleImplementation 'com.google.firebase:firebase-crashlytics:18.6.2'
     implementation 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
     implementation 'org.mapsforge:mapsforge-core:0.20.0'
     implementation 'org.mapsforge:mapsforge-map:0.20.0'
     implementation 'org.mapsforge:mapsforge-themes:0.20.0'
     implementation 'org.mapsforge:mapsforge-map-android:0.20.0'
     implementation 'pub.devrel:easypermissions:3.0.0'
-    implementation 'org.jsoup:jsoup:1.17.1'
+    implementation 'org.jsoup:jsoup:1.17.2'
     //breaks when upgrading ical4j > 3.0.21
     //noinspection GradleDependency
     implementation 'org.mnode.ical4j:ical4j:3.0.21'
