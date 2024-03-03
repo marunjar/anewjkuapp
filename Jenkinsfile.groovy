@@ -64,7 +64,7 @@ pipeline {
     }
     post {
         success {
-            recordIssues skipBlames: true, skipPublishingChecks: true, sourceDirectories: ['app/src'], tools: [androidLintParser(pattern: '**/reports/lint-results-*.xml')]
+            recordIssues skipBlames: true, skipPublishingChecks: true, sourceDirectories: [[path: 'app/src']], tools: [androidLintParser(pattern: '**/reports/lint-results-*.xml')]
             influxDbPublisher customPrefix: 'anewjkuapp', customProjectName: '', jenkinsEnvParameterField: '', jenkinsEnvParameterTag: '', selectedTarget: 'jenkins'
         }
         always {
