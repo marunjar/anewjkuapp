@@ -23,7 +23,7 @@ configurations {
 }
 
 dependencies {
-    implementation 'androidx.core:core:1.13.0'
+    implementation 'androidx.core:core:1.13.1'
     implementation 'androidx.interpolator:interpolator:1.0.0'
 }
 
