@@ -211,9 +211,9 @@ public class ImportCalendarWorker extends BaseWorker {
                             if (e instanceof VEvent) {
                                 VEvent ev = ((VEvent) e);
 
-                                if ((ev.getStartDate().getDate().getTime() >= calendar.getTerm().getStart().getTime()) &&
-                                        (ev.getStartDate().getDate().getTime() <= calendar.getTerm().getEnd().getTime())) {
-                                    String uid = ev.getUid().getValue();
+                                if ((getStartDate(ev) >= calendar.getTerm().getStart().getTime()) &&
+                                        (getStartDate(ev) <= calendar.getTerm().getEnd().getTime())) {
+                                    String uid = getUid(ev);
                                     // compense DST
                                     eventsMap.put(uid, ev);
                                 }
@@ -288,14 +288,13 @@ public class ImportCalendarWorker extends BaseWorker {
                                             eventsMap.remove(eventKusssId);
 
                                             // update only changes after notifiyFrom
-                                            if ((match.getStartDate().getDate().getTime() > notifyFrom || eventDTStart > notifyFrom) &&
+                                            if ((getStartDate(match) > notifyFrom || eventDTStart > notifyFrom) &&
                                                     // check to see if the entry needs to be updated
-                                                    ((match.getStartDate().getDate().getTime() != eventDTStart) ||
-                                                            (match.getEndDate().getDate().getTime() != eventDTEnd) ||
-                                                            !match.getSummary().getValue().trim().equals(eventTitle.trim()) ||
-                                                            !match.getSummary().getValue().trim().equals(eventTitle.trim()) ||
-                                                            !match.getLocation().getValue().trim().equals(eventLocation.trim()) ||
-                                                            !match.getDescription().getValue().trim().equals(eventDescription.trim())
+                                                    ((getStartDate(match) != eventDTStart) ||
+                                                            (getEndDate(match) != eventDTEnd) ||
+                                                            !getSummary(match).equals(eventTitle.trim()) ||
+                                                            !getLocation(match).equals(eventLocation.trim()) ||
+                                                            !getDescription(match).equals(eventDescription.trim())
                                                     )) {
                                                 Uri existingUri = calUri.buildUpon()
                                                         .appendPath(eventId).build();
@@ -346,11 +345,12 @@ public class ImportCalendarWorker extends BaseWorker {
 
                             // Add new items
                             for (VEvent v : eventsMap.values()) {
-                                if ((v.getUid().getValue().startsWith(calendar.getUidPrefix()) &&
-                                        (v.getStartDate().getDate().getTime() >= calendar.getTerm().getStart().getTime()) &&
-                                        (v.getStartDate().getDate().getTime() <= calendar.getTerm().getEnd().getTime()))) {
+                                String uid = getUid(v);
+                                if ((uid.startsWith(calendar.getUidPrefix()) &&
+                                        (getStartDate(v) >= calendar.getTerm().getStart().getTime()) &&
+                                        (getStartDate(v) <= calendar.getTerm().getEnd().getTime()))) {
                                     // notify only future changes
-                                    if (v.getStartDate().getDate().getTime() > notifyFrom) {
+                                    if (getStartDate(v) > notifyFrom) {
                                         mChangedNotification.addInsert(getEventString(getApplicationContext(), v));
                                     }
 
@@ -387,7 +387,7 @@ public class ImportCalendarWorker extends BaseWorker {
                                     builder.withValue(CalendarContract.Events.HAS_EXTENDED_PROPERTIES, "1");
 
                                     ContentProviderOperation op = builder.build();
-                                    logger.debug("Scheduling insert: {}", v.getUid().getValue());
+                                    logger.debug("Scheduling insert: {}", uid);
                                     batch.add(op);
 
                                     int eventIndex = batch.size() - 1;
@@ -402,7 +402,7 @@ public class ImportCalendarWorker extends BaseWorker {
                                                                     mAccount.type))
                                             .withValueBackReference(CalendarContract.ExtendedProperties.EVENT_ID, eventIndex)
                                             .withValue(CalendarContract.ExtendedProperties.NAME, CalendarUtils.EXTENDED_PROPERTY_NAME_KUSSS_ID)
-                                            .withValue(CalendarContract.ExtendedProperties.VALUE, v.getUid().getValue()).build());
+                                            .withValue(CalendarContract.ExtendedProperties.VALUE, uid).build());
                                     // add location extra for google maps
                                     batch.add(ContentProviderOperation
                                             .newInsert(
@@ -482,10 +482,8 @@ public class ImportCalendarWorker extends BaseWorker {
     }
 
     private boolean splitSummaryV1(VEvent ev, String lineSeparator) {
-        String summary = ev.getSummary().getValue()
-                .trim();
-        String description = ev.getDescription()
-                .getValue().trim();
+        String summary = getSummary(ev);
+        String description = getDescription(ev);
 
         Matcher courseIdTermMatcher = courseIdTermPattern
                 .matcher(summary); // (courseId/term)
@@ -519,10 +517,9 @@ public class ImportCalendarWorker extends BaseWorker {
     }
 
     private boolean splitSummaryV2(VEvent ev, String lineSeparator) {
-        String summary = ev.getSummary().getValue().trim()
+        String summary = getSummary(ev)
                 .replaceAll("([\\r\\n]|\\\\n)+", ", ").trim();
-        String description = ev.getDescription()
-                .getValue().trim();
+        String description = getDescription(ev);
         // Summary: Lecture / Lecturer / courseId
         List<String> values = new ArrayList<>(Arrays.asList(summary.split("\\s+/\\s+", -1)));
         if (values.size() >= 3) {
@@ -564,26 +561,24 @@ public class ImportCalendarWorker extends BaseWorker {
     }
 
     private String getEventString(Context c, VEvent v) {
-        return AppUtils.getEventString(c, v.getStartDate().getDate().getTime(), v
-                .getEndDate().getDate().getTime(), v.getSummary().getValue()
-                .trim(), false);
+        return AppUtils.getEventString(c, getStartDate(v), getEndDate(v), getSummary(v), false);
     }
 
     private ContentValues getContentValuesFromEvent(VEvent v) {
         ContentValues cv = new ContentValues();
 
-        cv.put(CalendarContract.Events.EVENT_LOCATION, v.getLocation().getValue().trim());
-        cv.put(CalendarContract.Events.TITLE, v.getSummary().getValue().trim());
-        cv.put(CalendarContract.Events.DESCRIPTION, v.getDescription().getValue().trim());
-        cv.put(CalendarContract.Events.DTSTART, v.getStartDate().getDate().getTime());
-        cv.put(CalendarContract.Events.DTEND, v.getEndDate().getDate().getTime());
+        cv.put(CalendarContract.Events.EVENT_LOCATION, getLocation(v));
+        cv.put(CalendarContract.Events.TITLE, getSummary(v));
+        cv.put(CalendarContract.Events.DESCRIPTION, getDescription(v));
+        cv.put(CalendarContract.Events.DTSTART, getStartDate(v));
+        cv.put(CalendarContract.Events.DTEND, getEndDate(v));
 
         return cv;
     }
 
     private String getLocationExtra(VEvent event) {
         try {
-            String name = event.getLocation().getValue().trim();
+            String name = getLocation(event);
             String upperCaseName = name.toUpperCase(Locale.getDefault());
 
             String formattedAddress = "Altenbergerstraße 69, 4040 Linz, Österreich";
@@ -649,4 +644,29 @@ public class ImportCalendarWorker extends BaseWorker {
             return "";
         }
     }
+
+    private long getStartDate(VEvent event) {
+        return event.getStartDate().getDate().getTime();
+    }
+
+    private long getEndDate(VEvent event) {
+        return event.getEndDate().getDate().getTime();
+    }
+
+    private String getSummary(VEvent event) {
+        return event.getSummary().getValue().trim();
+    }
+
+    private String getDescription(VEvent event) {
+        return event.getDescription().getValue().trim();
+    }
+
+    private String getLocation(VEvent event) {
+        return event.getLocation().getValue().trim();
+    }
+
+    private String getUid(VEvent event) {
+        return event.getUid().getValue();
+    }
+
 }
