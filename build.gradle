@@ -17,9 +17,11 @@ tasks.register('clean', Delete) {
 }
 
 ext {
-    compileSdk = 34
-    targetSdk = 34
+    compileSdk = 35
+    targetSdk = 35
     minSdk = 21
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
     buildUsesGoogle = {
         return getGradle().getStartParameter().getTaskRequests().toString().toLowerCase().contains('google')
     }
