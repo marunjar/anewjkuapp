@@ -109,7 +109,7 @@ android {
 dependencies {
     //dependent on AGP
     //noinspection GradleDependency
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
     implementation 'com.jakewharton.threetenabp:threetenabp:1.4.8'
     implementation 'androidx.preference:preference:1.2.1'
     implementation 'com.google.android.material:material:1.12.0'

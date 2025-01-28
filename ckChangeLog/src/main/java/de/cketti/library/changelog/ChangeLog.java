@@ -466,9 +466,7 @@ public class ChangeLog {
                 }
                 eventType = xml.next();
             }
-        } catch (XmlPullParserException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
-        } catch (IOException e) {
+        } catch (XmlPullParserException | IOException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
         }
 
