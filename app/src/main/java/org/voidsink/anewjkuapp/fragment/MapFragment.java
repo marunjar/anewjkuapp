@@ -72,9 +72,9 @@ import org.mapsforge.map.layer.cache.TileCache;
 import org.mapsforge.map.layer.labels.LabelLayer;
 import org.mapsforge.map.layer.overlay.Marker;
 import org.mapsforge.map.layer.renderer.TileRendererLayer;
-import org.mapsforge.map.model.IMapViewPosition;
+import org.mapsforge.map.model.MapViewPosition;
 import org.mapsforge.map.reader.MapFile;
-import org.mapsforge.map.rendertheme.InternalRenderTheme;
+import org.mapsforge.map.rendertheme.internal.MapsforgeThemes;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
 import org.mapsforge.map.view.InputListener;
 import org.slf4j.Logger;
@@ -492,7 +492,7 @@ public class MapFragment extends BaseFragment implements
                     this.mapView.getModel().frameBufferModel.getOverdrawFactor());
 
             final Layers layers = this.mapView.getLayerManager().getLayers();
-            final IMapViewPosition mapViewPosition = this.mapView.getModel().mapViewPosition;
+            final MapViewPosition mapViewPosition = this.mapView.getModel().mapViewPosition;
 
             initializePosition(mapViewPosition);
 
@@ -522,7 +522,7 @@ public class MapFragment extends BaseFragment implements
         this.mMyLocationOverlay = null;
         if (EasyPermissions.hasPermissions(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)) {
             final Layers layers = this.mapView.getLayerManager().getLayers();
-            final IMapViewPosition mapViewPosition = this.mapView.getModel().mapViewPosition;
+            final MapViewPosition mapViewPosition = this.mapView.getModel().mapViewPosition;
 
             // overlay with a marker to show the actual position
             Drawable drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_marker_position);
@@ -551,12 +551,12 @@ public class MapFragment extends BaseFragment implements
 
     private XmlRenderTheme getRenderTheme() {
         try {
-            return InternalRenderTheme.DEFAULT;
+            return MapsforgeThemes.DEFAULT;
         } catch (Exception e) {
             AnalyticsHelper.sendException(getContext(), e, false);
         }
 
-        return InternalRenderTheme.OSMARENDER;
+        return MapsforgeThemes.OSMARENDER;
     }
 
     @Override
@@ -577,7 +577,7 @@ public class MapFragment extends BaseFragment implements
     }
 
     private TileRendererLayer createTileRendererLayer(TileCache tileCache,
-                                                      IMapViewPosition mapViewPosition, MapDataStore mapDataStore,
+                                                      MapViewPosition mapViewPosition, MapDataStore mapDataStore,
                                                       XmlRenderTheme renderTheme) {
         TileRendererLayer tileRendererLayer = AndroidUtil.createTileRendererLayer(tileCache,
                 mapViewPosition, mapDataStore, renderTheme, false, false, true);
@@ -586,7 +586,7 @@ public class MapFragment extends BaseFragment implements
         return tileRendererLayer;
     }
 
-    private IMapViewPosition initializePosition(IMapViewPosition mvp) {
+    private MapViewPosition initializePosition(MapViewPosition mvp) {
         LatLong center = mvp.getCenter();
 
         if (center.equals(new LatLong(0, 0))) {
