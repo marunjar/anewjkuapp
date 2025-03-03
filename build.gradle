@@ -20,8 +20,8 @@ ext {
     compileSdk = 35
     targetSdk = 35
     minSdk = 21
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
     buildUsesGoogle = {
         return getGradle().getStartParameter().getTaskRequests().toString().toLowerCase().contains('google')
     }
