@@ -27,7 +27,6 @@ package org.voidsink.anewjkuapp;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.PorterDuff.Mode;
 import android.view.MenuItem;
 
@@ -78,9 +77,7 @@ public class LocationOverlay extends MyLocationOverlay {
             this.snapToLocationItem.setChecked(snapToLocationEnabled);
             if (snapToLocationEnabled) {
                 // get accent color from theme
-                TypedArray themeArray = mContext.getTheme().obtainStyledAttributes(new int[]{com.google.android.material.R.attr.colorAccent});
-                int mColorAccent = themeArray.getColor(0, ContextCompat.getColor(mContext, R.color.default_secondary));
-                themeArray.recycle();
+                int mColorAccent = ContextCompat.getColor(mContext, R.color.default_secondary);
 
                 this.snapToLocationItem.getIcon()
                         .setColorFilter(mColorAccent, Mode.MULTIPLY);

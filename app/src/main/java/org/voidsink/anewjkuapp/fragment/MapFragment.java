@@ -74,8 +74,8 @@ import org.mapsforge.map.layer.overlay.Marker;
 import org.mapsforge.map.layer.renderer.TileRendererLayer;
 import org.mapsforge.map.model.MapViewPosition;
 import org.mapsforge.map.reader.MapFile;
-import org.mapsforge.map.rendertheme.internal.MapsforgeThemes;
 import org.mapsforge.map.rendertheme.XmlRenderTheme;
+import org.mapsforge.map.rendertheme.internal.MapsforgeThemes;
 import org.mapsforge.map.view.InputListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -528,9 +528,7 @@ public class MapFragment extends BaseFragment implements
             Drawable drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_marker_position);
             if (drawable != null) {
                 // get accent color from theme
-                TypedArray themeArray = requireContext().getTheme().obtainStyledAttributes(new int[]{com.google.android.material.R.attr.colorAccent});
-                int mColorAccent = themeArray.getColor(0, ContextCompat.getColor(requireContext(), R.color.default_secondary));
-                themeArray.recycle();
+                int mColorAccent = ContextCompat.getColor(requireContext(), R.color.default_secondary);
 
                 drawable.setColorFilter(mColorAccent, PorterDuff.Mode.MULTIPLY);
 
