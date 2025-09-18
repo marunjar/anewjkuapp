@@ -112,20 +112,20 @@ dependencies {
     //dependent on AGP
     //noinspection GradleDependency
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
-    implementation 'com.jakewharton.threetenabp:threetenabp:1.4.8'
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.4.9'
     implementation 'androidx.preference:preference:1.2.1'
-    implementation 'com.google.android.material:material:1.12.0'
-    implementation 'androidx.work:work-runtime:2.10.0'
-    googleImplementation 'androidx.work:work-gcm:2.10.0'
-    googleImplementation 'com.google.firebase:firebase-analytics:22.3.0'
-    googleImplementation 'com.google.firebase:firebase-crashlytics:19.4.1'
+    implementation 'com.google.android.material:material:1.13.0'
+    implementation 'androidx.work:work-runtime:2.10.4'
+    googleImplementation 'androidx.work:work-gcm:2.10.4'
+    googleImplementation 'com.google.firebase:firebase-analytics:23.0.0'
+    googleImplementation 'com.google.firebase:firebase-crashlytics:20.0.2'
     implementation 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
-    implementation 'org.mapsforge:mapsforge-core:0.24.0'
-    implementation 'org.mapsforge:mapsforge-map:0.24.0'
-    implementation 'org.mapsforge:mapsforge-themes:0.24.0'
-    implementation 'org.mapsforge:mapsforge-map-android:0.24.0'
+    implementation 'org.mapsforge:mapsforge-core:0.25.0'
+    implementation 'org.mapsforge:mapsforge-map:0.25.0'
+    implementation 'org.mapsforge:mapsforge-themes:0.25.0'
+    implementation 'org.mapsforge:mapsforge-map-android:0.25.0'
     implementation 'pub.devrel:easypermissions:3.0.0'
-    implementation 'org.jsoup:jsoup:1.18.3'
+    implementation 'org.jsoup:jsoup:1.21.2'
     //breaks when upgrading ical4j > 3.0.21
     //noinspection GradleDependency
     implementation 'org.mnode.ical4j:ical4j:3.0.21'
@@ -137,7 +137,7 @@ dependencies {
     implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
     implementation 'androidx.core:core-splashscreen:1.0.1'
     implementation 'androidx.loader:loader:1.1.0'
-    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation project(':ckChangeLog')
     implementation project(':sectionedRecyclerAdapter')
