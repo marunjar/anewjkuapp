@@ -51,8 +51,6 @@ android {
                 'proguard-rules-keep-names.txt'
 
         buildConfigField 'boolean', 'FOSS_ONLY', 'false'
-
-        archivesBaseName = "${applicationId}-${versionName}-${versionCode}"
     }
 
     buildTypes {
@@ -104,6 +102,10 @@ android {
             excludes += ['META-INF/LICENSE.txt', 'META-INF/NOTICE.txt']
         }
     }
+}
+
+base {
+    archivesName = "${android.defaultConfig.applicationId}-${android.defaultConfig.versionName}-${android.defaultConfig.versionCode}"
 }
 
 dependencies {
