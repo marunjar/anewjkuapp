@@ -2,7 +2,7 @@
 
 buildscript {
     dependencies {
-        classpath 'com.google.gms:google-services:4.4.3'
+        classpath 'com.google.gms:google-services:4.4.4'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.6'
     }
 }
@@ -19,7 +19,7 @@ tasks.register('clean', Delete) {
 ext {
     compileSdk = 36
     targetSdk = 36
-    minSdk = 21
+    minSdk = 23
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
     buildUsesGoogle = {
