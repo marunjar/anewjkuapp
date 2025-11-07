@@ -25,7 +25,6 @@
 
 package org.voidsink.anewjkuapp.utils;
 
-import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerFuture;
@@ -39,7 +38,6 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -51,7 +49,6 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 import androidx.work.BackoffPolicy;
 import androidx.work.Constraints;
@@ -225,11 +222,7 @@ public class AppUtils {
     }
 
     public static void removeAccout(AccountManager accountManager, Account account) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            accountManager.removeAccount(account, null, null, null);
-        } else {
-            accountManager.removeAccount(account, null, null);
-        }
+        accountManager.removeAccount(account, null, null, null);
         logger.debug("account removed");
     }
 
@@ -449,11 +442,6 @@ public class AppUtils {
 
     public static Account getAccount(Context context) {
         if (context == null) {
-            return null;
-        }
-
-        if ((Build.VERSION.SDK_INT < Build.VERSION_CODES.M) && (ContextCompat.checkSelfPermission(context, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED)) {
-            logger.warn("getAccount failed, no permission");
             return null;
         }
 

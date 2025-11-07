@@ -28,9 +28,6 @@ package org.voidsink.anewjkuapp.activity;
 import android.Manifest;
 import android.accounts.Account;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.Menu;
@@ -147,27 +144,13 @@ public class MainActivity extends ThemedActivity {
             public void onDrawerOpened(View drawerView) {
                 final TextView drawerUser = getDrawerUser();
                 if (drawerUser != null) {
-                    if ((Build.VERSION.SDK_INT < Build.VERSION_CODES.M) && (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED)) {
-                        drawerUser.setText(R.string.missing_app_permission);
-                        drawerUser.setOnClickListener(v -> {
-                            try {
-                                MainActivity.this.startActivity(
-                                        new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                                                .addCategory(Intent.CATEGORY_DEFAULT)
-                                                .setData(Uri.parse("package:org.voidsink.anewjkuapp")));
-                            } catch (Exception e) {
-                                AnalyticsHelper.sendException(MainActivity.this, e, false);
-                            }
-                        });
+                    Account account = AppUtils.getAccount(MainActivity.this);
+                    if (account == null) {
+                        drawerUser.setText(R.string.action_tap_to_login);
+                        drawerUser.setOnClickListener(v -> startCreateAccount());
                     } else {
-                        Account account = AppUtils.getAccount(MainActivity.this);
-                        if (account == null) {
-                            drawerUser.setText(R.string.action_tap_to_login);
-                            drawerUser.setOnClickListener(v -> startCreateAccount());
-                        } else {
-                            drawerUser.setText(account.name);
-                            drawerUser.setOnClickListener(v -> startMyCurricula());
-                        }
+                        drawerUser.setText(account.name);
+                        drawerUser.setOnClickListener(v -> startMyCurricula());
                     }
                 }
 
@@ -198,18 +181,10 @@ public class MainActivity extends ThemedActivity {
 
     @AfterPermissionGranted(PERMISSIONS_REQUEST_ACCOUNT)
     public void startCreateAccount() {
-        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) || EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS)) {
-            if (AppUtils.getAccount(this) == null) {
-                this.startActivity(new Intent(Settings.ACTION_ADD_ACCOUNT)
-                        .putExtra(Settings.EXTRA_ACCOUNT_TYPES,
-                                new String[]{KusssAuthenticator.ACCOUNT_TYPE}));
-            }
-        } else {
-            EasyPermissions.requestPermissions(
-                    this,
-                    getString(R.string.alert_permission_get_accounts),
-                    PERMISSIONS_REQUEST_ACCOUNT,
-                    ACCOUNT_PERMISSIONS);
+        if (AppUtils.getAccount(this) == null) {
+            this.startActivity(new Intent(Settings.ACTION_ADD_ACCOUNT)
+                    .putExtra(Settings.EXTRA_ACCOUNT_TYPES,
+                            new String[]{KusssAuthenticator.ACCOUNT_TYPE}));
         }
     }
 

@@ -25,15 +25,12 @@
 
 package org.voidsink.anewjkuapp.activity;
 
-import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.text.TextUtils;
@@ -45,10 +42,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,17 +125,7 @@ public class KusssAuthenticatorActivity extends AccountAuthenticatorActivity {
         }
 
         mSubmit = findViewById(R.id.accountLogin);
-        mSubmit.setOnClickListener(v -> {
-            if ((Build.VERSION.SDK_INT < Build.VERSION_CODES.M) && (ContextCompat.checkSelfPermission(KusssAuthenticatorActivity.this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED)) {
-                new MaterialAlertDialogBuilder(KusssAuthenticatorActivity.this)
-                        .setMessage(R.string.alert_permission_get_accounts)
-                        .setPositiveButton(R.string.button_ok, null)
-                        .setCancelable(false)
-                        .show();
-            } else {
-                submit();
-            }
-        });
+        mSubmit.setOnClickListener(v -> submit());
     }
 
     private void initActionBar() {

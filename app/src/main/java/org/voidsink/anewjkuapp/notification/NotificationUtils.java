@@ -28,7 +28,6 @@ package org.voidsink.anewjkuapp.notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 
 import org.voidsink.anewjkuapp.activity.MainActivity;
 
@@ -54,9 +53,7 @@ public class NotificationUtils {
 
     private static int getDefaultPendingIntentFlags() {
         int flags = PendingIntent.FLAG_UPDATE_CURRENT;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            flags |= PendingIntent.FLAG_IMMUTABLE;
-        }
+        flags |= PendingIntent.FLAG_IMMUTABLE;
         return flags;
     }
 
