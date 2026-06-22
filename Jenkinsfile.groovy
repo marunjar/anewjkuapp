@@ -24,17 +24,15 @@ pipeline {
                 step([$class: 'GitHubSetCommitStatusBuilder'])
                 withGradle {
                     sh './gradlew --version'
-                    sh './gradlew clean --no-build-cache --no-configuration-cache'
+                    sh './gradlew clean --refresh-dependencies'
                 }
             }
         }
         stage('Build') {
             steps {
                 withGradle {
-                    sh './gradlew assembleGoogle --stacktrace --no-build-cache --no-configuration-cache'
-                    sh './gradlew bundleGoogle --stacktrace --no-build-cache --no-configuration-cache'
-                    sh './gradlew assembleFdroid --stacktrace --no-build-cache --no-configuration-cache'
-                    sh './gradlew bundleFdroid --stacktrace --no-build-cache --no-configuration-cache'
+                    sh './gradlew assembleFdroid assembleGoogle --stacktrace'
+                    sh './gradlew bundleFdroid bundleGoogle --stacktrace'
                 }
             }
         }
@@ -46,8 +44,7 @@ pipeline {
         stage('Analyze') {
             steps {
                 withGradle {
-                    sh './gradlew lintGoogleRelease --no-build-cache --no-configuration-cache'
-                    sh './gradlew lintFdroidRelease --no-build-cache --no-configuration-cache'
+                    sh './gradlew lintFdroidRelease lintGoogleRelease --warning-mode all --stacktrace'
                 }
             }
         }
