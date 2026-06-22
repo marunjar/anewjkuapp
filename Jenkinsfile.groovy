@@ -31,8 +31,8 @@ pipeline {
         stage('Build') {
             steps {
                 withGradle {
-                    sh './gradlew assembleFdroid assembleGoogle --stacktrace'
-                    sh './gradlew bundleFdroid bundleGoogle --stacktrace'
+                    sh './gradlew assembleFdroid bundleFdroid --stacktrace'
+                    sh './gradlew assembleGoogle bundleGoogle --stacktrace'
                 }
             }
         }
