@@ -5,16 +5,22 @@ plugins {
 android {
     namespace 'de.cketti.library.changelog'
 
-    compileSdk rootProject.ext.compileSdk
+    compileSdk {
+        version = release(rootProject.ext.compileSdk)
+    }
 
     compileOptions {
-        sourceCompatibility rootProject.ext.sourceCompatibility
-        targetCompatibility rootProject.ext.targetCompatibility
+        sourceCompatibility = rootProject.ext.sourceCompatibility
+        targetCompatibility = rootProject.ext.targetCompatibility
     }
 
     defaultConfig {
-        minSdk rootProject.ext.minSdk
-        targetSdk rootProject.ext.targetSdk
+        minSdk {
+            version = release(rootProject.ext.minSdk)
+        }
+        targetSdk {
+            version = release(rootProject.ext.targetSdk)
+        }
     }
 }
 

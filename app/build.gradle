@@ -13,7 +13,9 @@ if (buildUsesGoogle()) {
 android {
     namespace 'org.voidsink.anewjkuapp'
 
-    compileSdk rootProject.ext.compileSdk
+    compileSdk {
+        version = release(rootProject.ext.compileSdk)
+    }
 
     dependenciesInfo {
         // Disables dependency metadata when building APKs.
@@ -30,17 +32,21 @@ android {
     }
 
     compileOptions {
-        coreLibraryDesugaringEnabled true
-        sourceCompatibility rootProject.ext.sourceCompatibility
-        targetCompatibility rootProject.ext.targetCompatibility
+        coreLibraryDesugaringEnabled = true
+        sourceCompatibility = rootProject.ext.sourceCompatibility
+        targetCompatibility = rootProject.ext.targetCompatibility
     }
 
     defaultConfig {
         applicationId 'org.voidsink.anewjkuapp'
+        minSdk {
+            version = release(rootProject.ext.minSdk)
+        }
+        targetSdk {
+            version = release(rootProject.ext.targetSdk)
+        }
         versionCode 140087
         versionName '0.55.0'
-        minSdk rootProject.ext.minSdk
-        targetSdk rootProject.ext.targetSdk
         multiDexEnabled true
 
         vectorDrawables.useSupportLibrary = true // Android Plugin for Gradle 2.0.0
@@ -51,12 +57,14 @@ android {
                 'proguard-rules-keep-names.txt'
 
         buildConfigField 'boolean', 'FOSS_ONLY', 'false'
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
             minifyEnabled true
-            shrinkResources true
+            shrinkResources = true
             debuggable false
 
             applicationIdSuffix ''
@@ -64,7 +72,7 @@ android {
         }
         debug {
             minifyEnabled true
-            shrinkResources true
+            shrinkResources = true
             debuggable true
             applicationIdSuffix '.debug'
             versionNameSuffix '-debug'
@@ -92,9 +100,20 @@ android {
     }
 
     lint {
-        checkAllWarnings true
-        abortOnError false
-        lintConfig file('lint.xml')
+        checkAllWarnings = true
+        abortOnError = false
+        lintConfig = file('lint.xml')
+    }
+
+    testOptions {
+        animationsDisabled = false
+        unitTests {
+            all {
+                testLogging {
+                    exceptionFormat = "full"
+                }
+            }
+        }
     }
 
     packagingOptions {
