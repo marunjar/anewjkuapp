@@ -44,7 +44,8 @@ pipeline {
         stage('Analyze') {
             steps {
                 withGradle {
-                    sh './gradlew lintFdroidRelease lintGoogleRelease --warning-mode all --stacktrace'
+                    sh './gradlew lintFdroidRelease --warning-mode all --stacktrace'
+                    sh './gradlew lintGoogleRelease --warning-mode all --stacktrace'
                 }
             }
         }
