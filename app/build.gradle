@@ -47,7 +47,6 @@ android {
         }
         versionCode 140087
         versionName '0.55.0'
-        multiDexEnabled true
 
         vectorDrawables.useSupportLibrary = true // Android Plugin for Gradle 2.0.0
 
@@ -157,7 +156,6 @@ dependencies {
     implementation 'androidx.core:core-splashscreen:1.2.0'
     implementation 'androidx.loader:loader:1.1.0'
     implementation 'androidx.appcompat:appcompat:1.7.1'
-    implementation 'androidx.multidex:multidex:2.0.1'
     implementation project(':ckChangeLog')
     implementation project(':sectionedRecyclerAdapter')
     implementation project(':android-week-view')
